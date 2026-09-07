@@ -188,7 +188,9 @@ window.addEventListener('scroll', () => {
         'modules',
         'prof-galeria',
         'manual',
-        'portales-visord'
+        'portales-visord',
+        'bsoc-cta',
+        'community'
     ];
     
     let current = '';
