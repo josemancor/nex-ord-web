@@ -205,7 +205,7 @@ window.addEventListener('scroll', () => {
     
     document.querySelectorAll('.vertical-reading-menu .nav-step').forEach(step => {
         const target = step.getAttribute('data-target');
-        if (target === current || (target === 'prof-galeria' && current === 'modules')) {
+        if (target === current || (target === 'about' && (current === 'hero' || current === '')) || (target === 'prof-galeria' && current === 'modules')) {
             step.classList.add('active');
         } else {
             step.classList.remove('active');
