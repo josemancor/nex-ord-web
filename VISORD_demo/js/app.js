@@ -539,8 +539,27 @@ class VisordApp {
                     changeLanguage(target.dataset.lang);
                 }
             });
+        // Configurar botones del Dock de Acción Inferior (#bottom-action-dock)
+        document.querySelectorAll('#bottom-action-dock .dock-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#bottom-action-dock .dock-btn').forEach(b => b.classList.remove('active'));
+                const target = e.target.closest('.dock-btn');
+                target.classList.add('active');
+                const mode = target.dataset.mode || 'radar';
+                if (this.uiPanels) {
+                    this.uiPanels.showGraphics(mode);
+                }
+            });
         });
-        
+
+        // Botón de Cierre del Dock Modal
+        const btnCloseDock = document.getElementById('btn-close-dock');
+        if (btnCloseDock) {
+            btnCloseDock.addEventListener('click', () => {
+                if (this.uiPanels) this.uiPanels.closeDock();
+            });
+        }
+
         // Toggles de Índices & Planos
         const toggleDensity = document.getElementById('toggle-density');
         if (toggleDensity) {

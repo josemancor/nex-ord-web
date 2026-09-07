@@ -6,25 +6,31 @@ class UIPanels {
         this.dockTitle = document.getElementById('dock-title');
         this.clonedBar = document.getElementById('dock-cloned-bar');
         this.activeViewFn = null;
+        this.inSituEngine = (typeof VisordInSituEngine !== 'undefined') ? new VisordInSituEngine() : null;
+        this.currentWaveKey = '1g1t1c';
+        this.currentChart = null;
+        this.currentSubChart = null;
         
         this.setupListeners();
     }
     
     setupListeners() {
-        document.getElementById('close-dock')?.addEventListener('click', () => {
-            this.closeDock();
-        });
+        document.getElementById('close-dock')?.addEventListener('click', () => this.closeDock());
+        document.getElementById('btn-close-dock')?.addEventListener('click', () => this.closeDock());
         
         document.getElementById('btn-matrices')?.addEventListener('click', () => this.showMatrices());
         document.getElementById('btn-quatuor')?.addEventListener('click', () => this.showQuatuor());
         document.getElementById('btn-radar')?.addEventListener('click', () => this.showRadar());
-        document.getElementById('btn-termo')?.addEventListener('click', () => this.showTermo());
-        document.getElementById('btn-histogram')?.addEventListener('click', () => this.showTermo());
+        document.getElementById('btn-termo')?.addEventListener('click', () => this.showHistogram());
+        document.getElementById('btn-histogram')?.addEventListener('click', () => this.showHistogram());
+        document.getElementById('btn-dispersion')?.addEventListener('click', () => this.showDispersion());
+        document.getElementById('btn-spectral')?.addEventListener('click', () => this.showSpectral());
         document.getElementById('btn-dendro-subj')?.addEventListener('click', () => this.showMarkov());
         document.getElementById('btn-dendro-mat')?.addEventListener('click', () => this.showFourier());
         document.getElementById('btn-plane-12')?.addEventListener('click', () => this.showPCA('vertical'));
         document.getElementById('btn-markov')?.addEventListener('click', () => this.showMarkov());
         document.getElementById('btn-fourier')?.addEventListener('click', () => this.showFourier());
+        document.getElementById('btn-grassmann')?.addEventListener('click', () => this.showGrassmann());
         document.getElementById('btn-diag')?.addEventListener('click', () => this.showDiag());
         document.getElementById('btn-pca')?.addEventListener('click', () => this.showPCA());
     }
@@ -501,51 +507,105 @@ class UIPanels {
         this.showGraphics('radar');
     }
 
-    showPCA() {
-        this.showGraphics('planos');
+    showHistogram() {
+        this.showGraphics('histograma');
     }
 
     showTermo() {
         this.showGraphics('histograma');
     }
 
-    showMarkov() {
-        this.showGraphics('sociogramas');
+    showDispersion(waveKey) {
+        this.showGraphics('dispersion', waveKey);
+    }
+
+    showSpectral(waveKey) {
+        this.showGraphics('spectral', waveKey);
     }
 
     showFourier() {
-        this.showGraphics('dispersion');
+        this.showGraphics('fourier');
     }
 
-    showGraphics(graphMode = 'radar') {
-        this.openDock(() => this.showGraphics(graphMode));
-        const gtc = this.getCurrentGTC();
+    showMarkov(waveKey) {
+        this.showGraphics('markov', waveKey);
+    }
+
+    showGrassmann() {
+        this.showGraphics('grassmann');
+    }
+
+    showSociogram() {
+        this.showGraphics('sociogramas');
+    }
+
+    showPCA() {
+        this.showGraphics('planos');
+    }
+
+    showGraphics(graphMode = 'radar', waveKey = null) {
+        if (!this.inSituEngine && typeof VisordInSituEngine !== 'undefined') {
+            this.inSituEngine = new VisordInSituEngine();
+        }
+        if (waveKey) this.currentWaveKey = waveKey;
+        if (!this.currentWaveKey) this.currentWaveKey = '1g1t1c';
+
+        this.openDock(() => this.showGraphics(graphMode, this.currentWaveKey));
+        const gtc = this.currentWaveKey || this.getCurrentGTC();
 
         const titleMap = {
             'radar': '📡 RADAR MULTI-DIMENSIONAL DE PERFILES DENSIDAD & ELECCIÓN',
             'histograma': '📊 HISTOGRAMA ESPECTRAL DE FRECUENCIAS Y VALENCIAS AAG',
-            'dispersion': '🌌 DIAGRAMA DE DISPERSIÓN Y EJES FACTORIALES PCA 2D/3D',
+            'dispersion': '🌌 DIAGRAMA DE DISPERSIÓN E INTER-PROXIMIDAD DA/RC',
+            'spectral': '⚡ ANÁLISIS ESPECTRAL LAPLACIANO, FIEDLER Y FRUSTRACIÓN DE HEIDER',
+            'fourier': '🌊 TRANSFORMADA RÁPIDA DE FOURIER (FFT) Y ESPECTRO DE POTENCIA',
+            'markov': '🎲 CADENAS DE MARKOV Y MASA GRAVITATORIA (PAGERANK SOCIOMÉTRICO)',
+            'grassmann': '📐 VARIEDAD DE GRASSMANN Gr(3, 12) Y DISTANCIAS GEODÉSICAS',
             'sociogramas': '🕸️ SOCIOGRAMAS DE RED NODAL Y VALENCIAS RELACIONALES',
-            'planos': '📐 PLANOS ORTOGONALES DE PROYECCIÓN Y EJES FACTORIALES'
+            'planos': '📏 PLANOS ORTOGONALES DE PROYECCIÓN Y EJES FACTORIALES'
         };
 
         this.dockTitle.textContent = `${titleMap[graphMode] || 'GRÁFICOS DE FIGURAS'} - [${gtc.toUpperCase()}]`;
 
+        const isWaveSensitive = ['dispersion', 'spectral', 'markov'].includes(graphMode);
+        const waves = this.inSituEngine ? this.inSituEngine.getWaves() : [
+            { id: 1, key: '1g1t1c', label: 'T1: 1ª Votación (11-1)' },
+            { id: 2, key: '1g2t1c', label: 'T2: 2ª Votación (10-2)' },
+            { id: 3, key: '1g3t1c', label: 'T3: 3ª Votación (6-6)' },
+            { id: 4, key: '1g4t1c', label: 'T4: 4ª Votación (1-11)' },
+            { id: 5, key: '1g5t1c', label: 'T5: Consenso (0-12)' }
+        ];
+
         let html = `
-        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:10px; padding:6px; box-sizing:border-box;">
+        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:12px; padding:6px 14px; box-sizing:border-box;">
             
-            <!-- Barra de Selección de los 5 Modos Gráficos de Figuras -->
-            <div style="display:flex; gap:8px; align-items:center; background:rgba(30,41,59,0.85); padding:8px 14px; border-radius:8px; border:1px solid rgba(56,189,248,0.3); justify-content:center; flex-wrap:wrap;">
-                <span style="font-size:0.75rem; color:#cbd5e1; font-weight:bold; margin-right:4px;">Modo Gráfico:</span>
-                <button onclick="window.visordApp.uiPanels.showGraphics('radar')" style="padding:5px 12px; font-size:0.73rem; font-weight:bold; border-radius:5px; border:1px solid ${graphMode==='radar'?'#f59e0b':'rgba(255,255,255,0.1)'}; background:${graphMode==='radar'?'#d97706':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📡 RADAR</button>
-                <button onclick="window.visordApp.uiPanels.showGraphics('histograma')" style="padding:5px 12px; font-size:0.73rem; font-weight:bold; border-radius:5px; border:1px solid ${graphMode==='histograma'?'#00FF9D':'rgba(255,255,255,0.1)'}; background:${graphMode==='histograma'?'#059669':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📊 HISTOGRAMA</button>
-                <button onclick="window.visordApp.uiPanels.showGraphics('dispersion')" style="padding:5px 12px; font-size:0.73rem; font-weight:bold; border-radius:5px; border:1px solid ${graphMode==='dispersion'?'#a855f7':'rgba(255,255,255,0.1)'}; background:${graphMode==='dispersion'?'#7e22ce':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🌌 DISPERSIÓN</button>
-                <button onclick="window.visordApp.uiPanels.showGraphics('sociogramas')" style="padding:5px 12px; font-size:0.73rem; font-weight:bold; border-radius:5px; border:1px solid ${graphMode==='sociogramas'?'#38bdf8':'rgba(255,255,255,0.1)'}; background:${graphMode==='sociogramas'?'#0284c7':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🕸️ SOCIOGRAMAS</button>
-                <button onclick="window.visordApp.uiPanels.showGraphics('planos')" style="padding:5px 12px; font-size:0.73rem; font-weight:bold; border-radius:5px; border:1px solid ${graphMode==='planos'?'#ec4899':'rgba(255,255,255,0.1)'}; background:${graphMode==='planos'?'#be185d':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📐 PLANOS</button>
+            <!-- Barra de Selección de los 9 Modos Gráficos -->
+            <div style="display:flex; gap:6px; align-items:center; background:rgba(30,41,59,0.85); padding:8px 12px; border-radius:10px; border:1px solid rgba(56,189,248,0.3); justify-content:center; flex-wrap:wrap; box-shadow:0 4px 15px rgba(0,0,0,0.4);">
+                <span style="font-size:0.75rem; color:#94a3b8; font-weight:bold; margin-right:4px;">Modo Analítico:</span>
+                <button onclick="window.visordApp.uiPanels.showGraphics('radar')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='radar'?'#f59e0b':'rgba(255,255,255,0.1)'}; background:${graphMode==='radar'?'#d97706':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📡 RADAR</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('histograma')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='histograma'?'#00FF9D':'rgba(255,255,255,0.1)'}; background:${graphMode==='histograma'?'#059669':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📊 HISTOGRAMA</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('dispersion')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='dispersion'?'#a855f7':'rgba(255,255,255,0.1)'}; background:${graphMode==='dispersion'?'#7e22ce':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🌌 DISPERSIÓN (DA/RC)</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('spectral')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='spectral'?'#38bdf8':'rgba(255,255,255,0.1)'}; background:${graphMode==='spectral'?'#0284c7':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">⚡ ESPECTRAL</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('fourier')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='fourier'?'#67e8f9':'rgba(255,255,255,0.1)'}; background:${graphMode==='fourier'?'#0891b2':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🌊 FFT (FOURIER)</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('markov')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='markov'?'#fbbf24':'rgba(255,255,255,0.1)'}; background:${graphMode==='markov'?'#b45309':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🎲 MARKOV</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('grassmann')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='grassmann'?'#f43f5e':'rgba(255,255,255,0.1)'}; background:${graphMode==='grassmann'?'#be123c':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📐 GRASSMANN</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('sociogramas')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='sociogramas'?'#38bdf8':'rgba(255,255,255,0.1)'}; background:${graphMode==='sociogramas'?'#2563eb':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">🕸️ SOCIOGRAMAS</button>
+                <button onclick="window.visordApp.uiPanels.showGraphics('planos')" style="padding:4px 10px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${graphMode==='planos'?'#ec4899':'rgba(255,255,255,0.1)'}; background:${graphMode==='planos'?'#9d174d':'rgba(15,23,42,0.8)'}; color:#fff; cursor:pointer; transition:0.2s;">📏 PLANOS</button>
             </div>
 
+            ${isWaveSensitive ? `
+            <!-- Selector Longitudinal de Oleadas T1..T5 -->
+            <div style="display:flex; gap:8px; align-items:center; background:rgba(15,23,42,0.85); padding:6px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); justify-content:center; flex-wrap:wrap;">
+                <span style="font-size:0.74rem; color:#38bdf8; font-weight:bold;">Oleada de Deliberación:</span>
+                ${waves.map(w => `
+                    <button onclick="window.visordApp.uiPanels.showGraphics('${graphMode}', '${w.key}')" style="padding:3px 12px; font-size:0.72rem; font-weight:bold; border-radius:6px; border:1px solid ${this.currentWaveKey===w.key?'#38bdf8':'rgba(255,255,255,0.12)'}; background:${this.currentWaveKey===w.key?'rgba(56,189,248,0.25)':'rgba(30,41,59,0.7)'}; color:${this.currentWaveKey===w.key?'#38bdf8':'#cbd5e1'}; cursor:pointer; transition:0.15s;">
+                        ${w.label}
+                    </button>
+                `).join('')}
+            </div>` : ''}
+
             <!-- Contenedor Gráfico Dinámico -->
-            <div id="graphics-canvas-container" style="position:relative; flex:1; width:100%; min-height:350px; background:rgba(15,23,42,0.7); border-radius:8px; border:1px solid rgba(255,255,255,0.08); padding:10px; box-sizing:border-box; overflow:auto;">
+            <div id="graphics-canvas-container" style="position:relative; flex:1; width:100%; min-height:500px; background:rgba(15,23,42,0.75); border-radius:10px; border:1px solid rgba(255,255,255,0.08); padding:16px; box-sizing:border-box; overflow-y:auto;">
             </div>
         </div>`;
 
@@ -554,6 +614,10 @@ class UIPanels {
         if (this.currentChart) {
             this.currentChart.destroy();
             this.currentChart = null;
+        }
+        if (this.currentSubChart) {
+            this.currentSubChart.destroy();
+            this.currentSubChart = null;
         }
 
         const container = document.getElementById('graphics-canvas-container');
@@ -566,7 +630,19 @@ class UIPanels {
                 this.renderHistogramGraphic(container, gtc);
                 break;
             case 'dispersion':
-                this.renderDispersionGraphic(container, gtc);
+                this.renderDispersionGraphic(container, this.currentWaveKey);
+                break;
+            case 'spectral':
+                this.renderSpectralGraphic(container, this.currentWaveKey);
+                break;
+            case 'fourier':
+                this.renderFourierGraphic(container);
+                break;
+            case 'markov':
+                this.renderMarkovGraphic(container, this.currentWaveKey);
+                break;
+            case 'grassmann':
+                this.renderGrassmannGraphic(container);
                 break;
             case 'sociogramas':
                 this.renderSociogramGraphic(container, gtc);
@@ -577,9 +653,825 @@ class UIPanels {
         }
     }
 
+    // =========================================================================
+    // 1. INTER-PROXIMIDAD DA/RC Y DIAGRAMA DE DISPERSIÓN
+    // =========================================================================
+    renderDispersionGraphic(container, waveKey) {
+        if (!this.inSituEngine) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Motor analítico in situ no disponible.</div>`;
+            return;
+        }
+
+        const data = this.inSituEngine.computeInterProximity(waveKey);
+        if (!data) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Datos de inter-proximidad no disponibles para ${waveKey}.</div>`;
+            return;
+        }
+
+        const waveInfo = this.inSituEngine.getWaves().find(w => w.key === waveKey) || { label: waveKey, sublabel: '' };
+
+        let tableRows = data.jurors.map(j => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.08)'" onmouseout="this.style.background='transparent'">
+                <td style="padding:6px 10px; font-weight:bold; color:${j.color}; font-family:monospace;">${j.code}</td>
+                <td style="padding:6px 10px; font-weight:bold; color:#fff;">${j.name}</td>
+                <td style="padding:6px 10px; color:#94a3b8; font-size:0.75rem;">${j.actor} &bull; <em>${j.role}</em></td>
+                <td style="padding:6px 10px; text-align:center; font-weight:bold; color:#a3e635;">${j.da}</td>
+                <td style="padding:6px 10px; text-align:center; font-weight:bold; color:#38bdf8;">${j.rc}</td>
+                <td style="padding:6px 10px; text-align:center; font-weight:bold; color:${j.delta > 2 ? '#f43f5e' : (j.delta === 0 ? '#00FF87' : '#fbbf24')};">${j.delta}</td>
+                <td style="padding:6px 10px; text-align:center; font-family:monospace; font-weight:bold; color:${j.netStatus > 0 ? '#00FF87' : (j.netStatus < 0 ? '#f87171' : '#cbd5e1')};">${j.netStatus > 0 ? '+' + j.netStatus : j.netStatus}</td>
+                <td style="padding:6px 10px;">
+                    <span style="display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:bold; background:rgba(15,23,42,0.8); border:1px solid ${j.quadrantColor}; color:${j.quadrantColor};">
+                        ${j.quadrant}: ${j.quadrantLabel}
+                    </span>
+                </td>
+            </tr>
+        `).join('');
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px; color:#fff; width:100%;">
+            <!-- Header Resumen de la Oleada -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(168,85,247,0.4); flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h4 style="margin:0; font-size:1.0rem; color:#a855f7; font-family:'Outfit',sans-serif;">🌌 Inter-Proximidad DA/RC &bull; ${waveInfo.label}</h4>
+                    <span style="font-size:0.76rem; color:#94a3b8;">${waveInfo.sublabel}</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:0.78rem;">
+                    <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); padding:4px 10px; border-radius:6px; color:#38bdf8;">
+                        Pearson r(DA, RC): <b>${data.pearsonR}</b>
+                    </span>
+                    <span style="background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); padding:4px 10px; border-radius:6px; color:#f43f5e;">
+                        Tensión Grupal &Sigma;&Delta;: <b>${data.totalTension}</b>
+                    </span>
+                    <span style="background:rgba(0,255,135,0.15); border:1px solid rgba(0,255,135,0.4); padding:4px 10px; border-radius:6px; color:#00FF87;">
+                        Reciprocidad: <b>${(data.reciprocityRatio * 100).toFixed(1)}%</b> (${data.mutualCount} pares)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Gráfico Scatter y Cuadrantes -->
+            <div style="display:grid; grid-template-columns:2fr 1fr; gap:16px; min-height:360px;">
+                <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; position:relative; display:flex; flex-direction:column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold;">Plano de Dispersión (Eje X: DA Expansividad | Eje Y: RC Estatus)</span>
+                        <span style="font-size:0.72rem; color:#a3e635; font-family:monospace;">Bisectriz: y = x (Reciprocidad Perfecta &Delta;=0)</span>
+                    </div>
+                    <div style="position:relative; flex:1; min-height:300px;">
+                        <canvas id="fig-dispersion-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Panel de Cuadrantes Diagnósticos -->
+                <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(56,189,248,0.25); border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:10px; font-size:0.75rem;">
+                    <h5 style="margin:0 0 4px 0; color:#38bdf8; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px;">🎯 Cuadrantes Diagnósticos</h5>
+                    
+                    <div style="background:rgba(0,255,135,0.08); border-left:3px solid #00FF87; padding:8px 10px; border-radius:4px;">
+                        <b style="color:#00FF87;">Q1: Atractor / Consenso</b> (Alto DA &bull; Alto RC)<br>
+                        <span style="color:#cbd5e1;">Líderes integradores que movilizan y a la vez reciben el consenso del jurado.</span>
+                    </div>
+
+                    <div style="background:rgba(56,189,248,0.08); border-left:3px solid #38BDF8; padding:8px 10px; border-radius:4px;">
+                        <b style="color:#38BDF8;">Q2: Prestigio / Pasivo</b> (Bajo DA &bull; Alto RC)<br>
+                        <span style="color:#cbd5e1;">Figuras respetadas que reciben adhesiones sin necesidad de sobre-emitir iniciativas.</span>
+                    </div>
+
+                    <div style="background:rgba(148,163,184,0.08); border-left:3px solid #94A3B8; padding:8px 10px; border-radius:4px;">
+                        <b style="color:#94A3B8;">Q3: Periférico / Retraído</b> (Bajo DA &bull; Bajo RC)<br>
+                        <span style="color:#cbd5e1;">Miembros aislados o vacilantes al margen de los flujos decisorios del debate.</span>
+                    </div>
+
+                    <div style="background:rgba(245,158,11,0.08); border-left:3px solid #F59E0B; padding:8px 10px; border-radius:4px;">
+                        <b style="color:#F59E0B;">Q4: Emisor Frustrado</b> (Alto DA &bull; Bajo RC)<br>
+                        <span style="color:#cbd5e1;">Alta energía emitida no correspondida por el colectivo (tensión de rol activa).</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Inter-Proximidad N=12 -->
+            <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Matriz de Inter-Proximidad y Tensión Individual (N=12)</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                    <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
+                        <tr>
+                            <th style="padding:8px 10px; text-align:left;">ID</th>
+                            <th style="padding:8px 10px; text-align:left;">Jurado</th>
+                            <th style="padding:8px 10px; text-align:left;">Actor / Rol</th>
+                            <th style="padding:8px 10px; text-align:center;">DA (Emite)</th>
+                            <th style="padding:8px 10px; text-align:center;">RC (Recibe)</th>
+                            <th style="padding:8px 10px; text-align:center;">Tensión &Delta;</th>
+                            <th style="padding:8px 10px; text-align:center;">Estatus Neto</th>
+                            <th style="padding:8px 10px; text-align:left;">Cuadrante Diagnóstico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nota Explicativa Pedagógica Canónica (Regla 10) -->
+            <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
+                <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Inter-Proximidad DA/RC y Diagrama de Dispersión</div>
+                El <strong>Diagrama de Dispersión DA/RC</strong> proyecta el balance entre la <em>Expansividad Sociométrica Emita (DA, Eje Horizontal)</em> y el <em>Estatus o Prestigio Recibido (RC, Eje Vertical)</em> para los 12 jurados. 
+                La línea discontinua verde representa la <strong>bisectriz de reciprocidad exacta ($y = x$)</strong> donde la tensión individual $\Delta_i = |RC_i - DA_i|$ es cero. 
+                Los miembros por encima de la bisectriz gozan de superávit de estatus, mientras que aquellos por debajo sufren déficit relacional. 
+                Observe la trayectoria longitudinal de <strong>Henry Fonda (Jurado 8)</strong>: en $T_1$ comienza en el cuadrante $Q3$ con $DA=0, RC=0$ (absoluto aislamiento y disidencia), cruzando sucesivamente hacia $Q2$ en $T_2$, compitiendo en $T_3$ con Lee J. Cobb (Jurado 3), hasta consagrarse en $T_5$ en el vértice supremo de $Q1$ ($DA=11, RC=11$) como atractor universal del consenso.
+            </div>
+        </div>`;
+
+        // Generar Gráfico Chart.js
+        const ctx = document.getElementById('fig-dispersion-canvas').getContext('2d');
+        const points = data.jurors.map(j => ({
+            x: j.da,
+            y: j.rc,
+            juror: j
+        }));
+
+        const maxCoord = Math.max(11, ...data.jurors.map(j => Math.max(j.da, j.rc))) + 1;
+        const bisectorLine = [
+            { x: 0, y: 0 },
+            { x: maxCoord, y: maxCoord }
+        ];
+
+        this.currentChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Jurados (N=12)',
+                        data: points,
+                        backgroundColor: data.jurors.map(j => j.color),
+                        borderColor: '#ffffff',
+                        borderWidth: 1.5,
+                        pointRadius: 8,
+                        pointHoverRadius: 12
+                    },
+                    {
+                        label: 'Bisectriz y=x (Reciprocidad)',
+                        data: bisectorLine,
+                        type: 'line',
+                        borderColor: 'rgba(0, 255, 157, 0.5)',
+                        borderWidth: 1.5,
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        min: 0,
+                        max: maxCoord,
+                        title: { display: true, text: 'DA (Expansividad / Emisión Efectiva)', color: '#a3e635', font: { weight: 'bold' } },
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        ticks: { color: '#38bdf8', stepSize: 1 }
+                    },
+                    y: {
+                        min: 0,
+                        max: maxCoord,
+                        title: { display: true, text: 'RC (Estatus / Recepción Efectiva)', color: '#38bdf8', font: { weight: 'bold' } },
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        ticks: { color: '#a3e635', stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#fff', font: { size: 11 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const p = context.raw;
+                                if (!p || !p.juror) return '';
+                                const j = p.juror;
+                                return `${j.name} (${j.actor}): DA=${j.da}, RC=${j.rc} | Tensión=${j.delta} [${j.quadrant}]`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // =========================================================================
+    // 2. ANÁLISIS ESPECTRAL LAPLACIANO, FIEDLER Y HEIDER
+    // =========================================================================
+    renderSpectralGraphic(container, waveKey) {
+        if (!this.inSituEngine) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Motor analítico in situ no disponible.</div>`;
+            return;
+        }
+
+        const spec = this.inSituEngine.computeSpectral(waveKey);
+        if (!spec) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Datos espectrales no disponibles para ${waveKey}.</div>`;
+            return;
+        }
+
+        const waveInfo = this.inSituEngine.getWaves().find(w => w.key === waveKey) || { label: waveKey, sublabel: '' };
+
+        let eigenTable = spec.eigenvalues.map((val, idx) => {
+            let role = 'Modo de Masa / Conservación';
+            let roleCol = '#94a3b8';
+            if (idx === 1) {
+                role = 'Conectividad de Fiedler (λ2)';
+                roleCol = '#00FF87';
+            } else if (idx === spec.eigenvalues.length - 1) {
+                role = 'Cota Máxima de Dispersión (λ_max)';
+                roleCol = '#f43f5e';
+            } else if (idx >= 2 && idx <= 4) {
+                role = 'Modo de Cohesión Intermedia';
+                roleCol = '#38bdf8';
+            } else {
+                role = 'Modo de Alta Frecuencia Nodal';
+                roleCol = '#c084fc';
+            }
+
+            return `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                <td style="padding:6px 10px; font-weight:bold; color:#fff; font-family:monospace;">&lambda;<sub>${idx+1}</sub></td>
+                <td style="padding:6px 10px; font-weight:bold; font-family:monospace; color:${idx===1?'#00FF9D':'#38bdf8'}; font-size:0.85rem;">${val.toFixed(4)}</td>
+                <td style="padding:6px 10px; font-weight:bold; color:${roleCol};">${role}</td>
+                <td style="padding:6px 10px; color:#cbd5e1; font-size:0.75rem;">
+                    ${idx === 0 ? 'Invarianza de red conexa (&lambda;1 = 0).' : (idx === 1 ? (val > 0.01 ? 'Red conexa con camino de consenso.' : 'Alerta de cisma / red dislocada en subgrupos.') : (idx === spec.eigenvalues.length - 1 ? 'Límite superior del gradiente laplaciano.' : 'Tasa de difusión modal del debate.'))}
+                </td>
+            </tr>`;
+        }).join('');
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px; color:#fff; width:100%;">
+            <!-- Header Espectral -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(56,189,248,0.4); flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h4 style="margin:0; font-size:1.0rem; color:#38bdf8; font-family:'Outfit',sans-serif;">⚡ Espectro Laplaciano & Conectividad de Fiedler &bull; ${waveInfo.label}</h4>
+                    <span style="font-size:0.76rem; color:#94a3b8;">${waveInfo.sublabel}</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:0.78rem;">
+                    <span style="background:rgba(0,255,135,0.15); border:1px solid rgba(0,255,135,0.4); padding:4px 10px; border-radius:6px; color:#00FF87;">
+                        Fiedler &lambda;<sub>2</sub>: <b>${spec.fiedlerLambda2}</b> ${spec.fiedlerLambda2 > 0.05 ? '(Conexa)' : '(Cisma / Polarización)'}
+                    </span>
+                    <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); padding:4px 10px; border-radius:6px; color:#38bdf8;">
+                        Radio Espectral &rho;(A): <b>${spec.spectralRadius}</b>
+                    </span>
+                    <span style="background:${spec.isBalanced ? 'rgba(0,255,135,0.15)' : 'rgba(244,63,94,0.15)'}; border:1px solid ${spec.isBalanced ? 'rgba(0,255,135,0.4)' : 'rgba(244,63,94,0.4)'}; padding:4px 10px; border-radius:6px; color:${spec.isBalanced ? '#00FF87' : '#f43f5e'};">
+                        Frustración Heider: <b>${spec.heiderFrustration}</b> ${spec.isBalanced ? '(Equilibrio)' : '(Tensión Signada)'}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Gráfico de Barras del Espectro Laplaciano -->
+            <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; position:relative; min-height:280px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold;">Espectro Laplaciano de Autovalores (&lambda;<sub>1</sub> ... &lambda;<sub>12</sub>)</span>
+                    <span style="font-size:0.72rem; color:#00FF9D; font-family:monospace;">Autovalor Crítico: &lambda;<sub>2</sub> = ${spec.fiedlerLambda2}</span>
+                </div>
+                <div style="position:relative; height:240px;">
+                    <canvas id="fig-spectral-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla de Autovalores -->
+            <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Tabla de Autovalores Laplacianos y Significación Sociométrica</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                    <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
+                        <tr>
+                            <th style="padding:8px 10px; text-align:left;">Autovalor</th>
+                            <th style="padding:8px 10px; text-align:left;">Magnitud</th>
+                            <th style="padding:8px 10px; text-align:left;">Rol Espectral</th>
+                            <th style="padding:8px 10px; text-align:left;">Interpretación Sociodinámica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${eigenTable}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nota Explicativa Pedagógica (Regla 10) -->
+            <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
+                <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Análisis Espectral, Conectividad de Fiedler y Frustración de Heider</div>
+                El <strong>espectro de la matriz Laplaciana</strong> $L = D - A$ captura de forma algebraica la estructura de conectividad y cohesión del grupo.
+                El primer autovalor $\lambda_1 = 0$ siempre refleja la conservación global. El segundo autovalor $\lambda_2$ es la <strong>Conectividad Algebraica de Fiedler</strong>: si $\lambda_2 = 0$ (o muy próximo a cero), el colectivo carece de camino común o se encuentra fracturado en cismas disconexos (como ocurre en las votaciones intermedias con empate técnico). Cuando $\lambda_2 > 0$, la red adquiere robustez y los consensos se propagan con fluidez.
+                Por su parte, la <strong>Frustración Estructural de Heider $\lambda_1(L_s)$</strong> evalúa la tensión en la red signada: si es cero, la red satisface plenamente la teoría del equilibrio estructural (amigo de amigo es amigo; enemigo de enemigo es amigo); valores mayores a cero denotan triángulos de desconfianza activa y estrés cognitivo colectivo.
+            </div>
+        </div>`;
+
+        // Generar Gráfico Chart.js
+        const ctx = document.getElementById('fig-spectral-canvas').getContext('2d');
+        const labels = spec.eigenvalues.map((_, idx) => `λ${idx+1}`);
+        const backgroundColors = spec.eigenvalues.map((_, idx) => {
+            if (idx === 0) return 'rgba(148, 163, 184, 0.4)';
+            if (idx === 1) return '#00FF9D';
+            if (idx === spec.eigenvalues.length - 1) return '#f43f5e';
+            return 'rgba(56, 189, 248, 0.5)';
+        });
+
+        this.currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Magnitud del Autovalor Laplaciano',
+                    data: spec.eigenvalues,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors.map(c => c === '#00FF9D' ? '#00FF9D' : '#38bdf8'),
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1', font: { weight: 'bold' } } },
+                    y: { min: 0, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#38bdf8' } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `λ${context.dataIndex + 1} = ${context.parsed.y.toFixed(4)}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // =========================================================================
+    // 3. TRANSFORMADA RÁPIDA DE FOURIER (FFT) Y ESPECTRO ARMÓNICO
+    // =========================================================================
+    renderFourierGraphic(container) {
+        if (!this.inSituEngine) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Motor analítico in situ no disponible.</div>`;
+            return;
+        }
+
+        const fft = this.inSituEngine.computeFFT();
+        if (!fft) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Datos de Fourier no disponibles.</div>`;
+            return;
+        }
+
+        let harmonicRows = fft.frequencies.map((freq, idx) => {
+            const isDominant = (freq === fft.dominantFreq);
+            return `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05); ${isDominant ? 'background:rgba(0,255,135,0.08);' : ''}">
+                <td style="padding:6px 10px; font-weight:bold; color:${isDominant ? '#00FF87' : '#38bdf8'}; font-family:monospace;">
+                    ${idx === 0 ? 'DC (Componente Continua)' : 'Armónico k=' + idx} ${isDominant ? '⭐ [Dominante]' : ''}
+                </td>
+                <td style="padding:6px 10px; font-family:monospace; color:#fff;">${freq.toFixed(4)}</td>
+                <td style="padding:6px 10px; font-family:monospace; color:#a3e635;">${freq > 0 ? (1 / freq).toFixed(2) + ' oleadas' : '&infin;'}</td>
+                <td style="padding:6px 10px; font-family:monospace; color:#cbd5e1;">${fft.amplitudes[idx].toFixed(4)}</td>
+                <td style="padding:6px 10px; font-family:monospace; font-weight:bold; color:${isDominant ? '#00FF87' : '#38bdf8'};">${fft.powerSpectrum[idx].toFixed(5)}</td>
+            </tr>`;
+        }).join('');
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px; color:#fff; width:100%;">
+            <!-- Header FFT -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(103,232,249,0.4); flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h4 style="margin:0; font-size:1.0rem; color:#67e8f9; font-family:'Outfit',sans-serif;">🌊 Transformada Rápida de Fourier (FFT) en Series Socio-Termodinámicas</h4>
+                    <span style="font-size:0.76rem; color:#94a3b8;">Descomposición armónica de las oscilaciones de densidad relativa (SDR) y absoluta (BDR)</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:0.78rem;">
+                    <span style="background:rgba(0,255,135,0.15); border:1px solid rgba(0,255,135,0.4); padding:4px 10px; border-radius:6px; color:#00FF87;">
+                        Frecuencia Dominante f<sub>1</sub>: <b>${fft.dominantFreq}</b> ciclos/paso
+                    </span>
+                    <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); padding:4px 10px; border-radius:6px; color:#38bdf8;">
+                        Periodo Fundamental T<sub>0</sub>: <b>${fft.dominantPeriod}</b> oleadas
+                    </span>
+                    <span style="background:rgba(192,132,252,0.15); border:1px solid rgba(192,132,252,0.4); padding:4px 10px; border-radius:6px; color:#c084fc;">
+                        Concentración Armónica: <b>${fft.harmonicPurity}%</b>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dos Gráficos en Paralelo: Serie Temporal y Espectro de Potencia -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; min-height:300px;">
+                <!-- Serie Temporal SDR/BDR -->
+                <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; display:flex; flex-direction:column;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold; margin-bottom:8px;">1. Trayectoria Longitudinal de Densidades (T1 ... T5)</span>
+                    <div style="position:relative; flex:1; min-height:240px;">
+                        <canvas id="fig-fourier-time-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Espectro Armónico de Potencia |X(k)|^2 -->
+                <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; display:flex; flex-direction:column;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold; margin-bottom:8px;">2. Espectro Armónico de Potencia |X(f)|<sup>2</sup></span>
+                    <div style="position:relative; flex:1; min-height:240px;">
+                        <canvas id="fig-fourier-power-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Armónicos -->
+            <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Tabla de Armónicos de Fourier y Potencia Espectral</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                    <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
+                        <tr>
+                            <th style="padding:8px 10px; text-align:left;">Armónico</th>
+                            <th style="padding:8px 10px; text-align:left;">Frecuencia (f)</th>
+                            <th style="padding:8px 10px; text-align:left;">Periodo (T)</th>
+                            <th style="padding:8px 10px; text-align:left;">Amplitud |X|</th>
+                            <th style="padding:8px 10px; text-align:left;">Densidad de Potencia |X|<sup>2</sup></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${harmonicRows}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nota Explicativa Pedagógica (Regla 10) -->
+            <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
+                <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Análisis de Fourier (FFT) en Dinámicas Sociométricas</div>
+                La <strong>Transformada Rápida de Fourier (FFT)</strong> convierte la serie temporal socio-termodinámica en su representación en el dominio de frecuencias armónicas.
+                Permite descomponer el ritmo de la deliberación en ondas senoidales puras: la <strong>frecuencia dominante $f_1$</strong> revela la cadencia natural con la que el grupo experimenta oscilaciones de tensión (fase de debate / cisma) y distensión (fase de consenso / alineamiento).
+                Una alta pureza armónica ($>80\%$) indica un debate estructurado y predecible guiado por un atractor dialéctico constante, mientras que un espectro plano o disperso revelaría turbulencia caótica o anomia grupal sin liderazgo conductor.
+            </div>
+        </div>`;
+
+        // Generar Gráfico 1: Serie Temporal
+        const ctxTime = document.getElementById('fig-fourier-time-canvas').getContext('2d');
+        this.currentChart = new Chart(ctxTime, {
+            type: 'line',
+            data: {
+                labels: fft.timeLabels,
+                datasets: [
+                    {
+                        label: 'SDR (Densidad Relativa)',
+                        data: fft.sdrSeries,
+                        borderColor: '#00FF87',
+                        backgroundColor: 'rgba(0, 255, 135, 0.15)',
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#00FF87'
+                    },
+                    {
+                        label: 'BDR (Densidad Absoluta)',
+                        data: fft.bdrSeries.map(v => v / 5.0), // Escalado visual
+                        borderColor: '#38bdf8',
+                        borderDash: [4, 4],
+                        fill: false,
+                        tension: 0.35,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#38bdf8'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#cbd5e1' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#38bdf8' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#fff', font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Generar Gráfico 2: Espectro Armónico de Potencia
+        const ctxPwr = document.getElementById('fig-fourier-power-canvas').getContext('2d');
+        const pwrLabels = fft.frequencies.map((f, i) => i === 0 ? 'DC' : `f=${f.toFixed(3)}`);
+        const pwrColors = fft.frequencies.map(f => f === fft.dominantFreq ? '#00FF87' : 'rgba(103, 232, 249, 0.6)');
+
+        this.currentSubChart = new Chart(ctxPwr, {
+            type: 'bar',
+            data: {
+                labels: pwrLabels,
+                datasets: [{
+                    label: 'Potencia Espectral |X(f)|²',
+                    data: fft.powerSpectrum,
+                    backgroundColor: pwrColors,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1', font: { size: 10 } } },
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#67e8f9' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // =========================================================================
+    // 4. CADENAS DE MARKOV Y MASA GRAVITATORIA (PAGERANK SOCIOMÉTRICO)
+    // =========================================================================
+    renderMarkovGraphic(container, waveKey) {
+        if (!this.inSituEngine) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Motor analítico in situ no disponible.</div>`;
+            return;
+        }
+
+        const markov = this.inSituEngine.computeMarkov(waveKey);
+        if (!markov) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Datos de Markov no disponibles para ${waveKey}.</div>`;
+            return;
+        }
+
+        const waveInfo = this.inSituEngine.getWaves().find(w => w.key === waveKey) || { label: waveKey, sublabel: '' };
+
+        let markovTable = markov.jurors.map((j, rank) => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                <td style="padding:6px 10px; font-weight:bold; color:#fff; text-align:center;">#${rank+1}</td>
+                <td style="padding:6px 10px; font-weight:bold; color:${j.color}; font-family:monospace;">${j.code}</td>
+                <td style="padding:6px 10px; font-weight:bold; color:#fff;">${j.name}</td>
+                <td style="padding:6px 10px; color:#94a3b8; font-size:0.75rem;">${j.actor} &bull; <em>${j.role}</em></td>
+                <td style="padding:6px 10px; text-align:center; font-family:monospace; font-weight:bold; color:#00FF87;">${j.pi.toFixed(4)}</td>
+                <td style="padding:6px 10px; text-align:center; font-weight:bold; color:#38bdf8;">${j.piPct.toFixed(2)}%</td>
+                <td style="padding:6px 10px; text-align:center; font-family:monospace; font-weight:bold; color:${j.isAboveMean ? '#00FF87' : '#f87171'};">
+                    ${j.ratioOverMean}x
+                </td>
+                <td style="padding:6px 10px;">
+                    <span style="display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:bold; background:${j.isAboveMean ? 'rgba(0,255,135,0.15)' : 'rgba(148,163,184,0.1)'}; color:${j.isAboveMean ? '#00FF87' : '#94a3b8'}; border:1px solid ${j.isAboveMean ? 'rgba(0,255,135,0.3)' : 'rgba(255,255,255,0.1)'};">
+                        ${j.isAboveMean ? 'Atractor Gravitatorio' : 'Sumidero / Periférico'}
+                    </span>
+                </td>
+            </tr>
+        `).join('');
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px; color:#fff; width:100%;">
+            <!-- Header Markov -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(251,191,36,0.4); flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h4 style="margin:0; font-size:1.0rem; color:#fbbf24; font-family:'Outfit',sans-serif;">🎲 Cadenas de Markov & Masa Gravitatoria &bull; ${waveInfo.label}</h4>
+                    <span style="font-size:0.76rem; color:#94a3b8;">${waveInfo.sublabel}</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:0.78rem;">
+                    <span style="background:rgba(0,255,135,0.15); border:1px solid rgba(0,255,135,0.4); padding:4px 10px; border-radius:6px; color:#00FF87;">
+                        Máximo Atractor: <b>${markov.topAttractor.name}</b> (${markov.topAttractor.piPct}%)
+                    </span>
+                    <span style="background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.4); padding:4px 10px; border-radius:6px; color:#fbbf24;">
+                        Ratio s/Media: <b>${markov.topAttractor.ratioOverMean}x</b>
+                    </span>
+                    <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); padding:4px 10px; border-radius:6px; color:#38bdf8;">
+                        Equiprobabilidad: <b>${markov.equiprobabilityPct}%</b> (1/12)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Gráfico Horizontal de Barras de Distribución Estacionaria -->
+            <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; position:relative; min-height:340px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold;">Distribución Estacionaria Gravitatoria &pi; (PageRank del Jurado)</span>
+                    <span style="font-size:0.72rem; color:#fbbf24; font-family:monospace;">Umbral Base: ${(100/12).toFixed(2)}%</span>
+                </div>
+                <div style="position:relative; height:300px;">
+                    <canvas id="fig-markov-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla de Masa Gravitatoria -->
+            <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Ranking de Influencia Estocástica y Masa Gravitatoria</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                    <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
+                        <tr>
+                            <th style="padding:8px 10px; text-align:center;">Rango</th>
+                            <th style="padding:8px 10px; text-align:left;">ID</th>
+                            <th style="padding:8px 10px; text-align:left;">Jurado</th>
+                            <th style="padding:8px 10px; text-align:left;">Actor / Rol</th>
+                            <th style="padding:8px 10px; text-align:center;">Masa (&pi;)</th>
+                            <th style="padding:8px 10px; text-align:center;">Porcentaje</th>
+                            <th style="padding:8px 10px; text-align:center;">Ratio s/Media</th>
+                            <th style="padding:8px 10px; text-align:left;">Clasificación Gravitatoria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${markovTable}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nota Explicativa Pedagógica (Regla 10) -->
+            <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
+                <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Cadenas de Markov y Masa Gravitatoria Sociométrica</div>
+                El modelado mediante <strong>Cadenas de Markov</strong> interpreta la deliberación como una caminata aleatoria continua de atención y transferencia dialéctica entre jurados.
+                A partir de la matriz de transición estocástica regularizada ($P_{ij} = A_{ij}/\sum A_{ik}$ con amortiguamiento ergódico $\alpha=0.85$), se calcula el vector estacionario $\pi$ tal que $\pi P = \pi$. 
+                Este vector representa la <strong>Masa Gravitatoria Sociométrica (el PageRank del jurado)</strong>: la probabilidad intrínseca de que el foco argumental converja en cada individuo.
+                Si todos los miembros tuvieran idéntico peso, cada uno tendría exactamente un $8.33\%$ ($1/12$). Ratios superiores a $1.0\times$ denotan centros de atracción de voto; observe cómo en $T_1$ el trío acusador (Jurados 3, 4 y 7) absorbe más del $58\%$ de la masa total, mientras que en $T_4$ y $T_5$ el Jurado 8 (Fonda) acapara de forma hegemónica el $34.8\%$ de toda la gravitación del jurado.
+            </div>
+        </div>`;
+
+        // Generar Gráfico Chart.js Horizontal Bar
+        const ctx = document.getElementById('fig-markov-canvas').getContext('2d');
+        const labels = markov.jurors.map(j => `${j.name} (${j.actor.split(' ')[0]})`);
+        const pcts = markov.jurors.map(j => j.piPct);
+        const colors = markov.jurors.map(j => j.color);
+
+        this.currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Masa Gravitatoria (%)',
+                    data: pcts,
+                    backgroundColor: colors,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        min: 0,
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        ticks: { color: '#38bdf8', callback: v => `${v}%` }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: '#fff', font: { weight: 'bold', size: 11 } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const j = markov.jurors[context.dataIndex];
+                                return `${j.name}: ${j.piPct}% (${j.ratioOverMean}x la media)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // =========================================================================
+    // 5. GEOMETRÍA DE GRASSMANN Gr(3, 12) Y DISTANCIAS GEODÉSICAS
+    // =========================================================================
+    renderGrassmannGraphic(container) {
+        if (!this.inSituEngine) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Motor analítico in situ no disponible.</div>`;
+            return;
+        }
+
+        const grass = this.inSituEngine.computeGrassmann();
+        if (!grass) {
+            container.innerHTML = `<div style="color:#f87171; padding:20px;">Datos de Grassmann no disponibles.</div>`;
+            return;
+        }
+
+        let stepRows = grass.stepProgression.map((s, idx) => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05); ${idx === 1 ? 'background:rgba(244,63,94,0.08);' : ''}">
+                <td style="padding:6px 10px; font-weight:bold; color:#f43f5e; font-family:monospace;">${s.step} ${idx === 1 ? '🔥 [Salto Crítico]' : ''}</td>
+                <td style="padding:6px 10px; color:#fff;">${s.from} &rarr; ${s.to}</td>
+                <td style="padding:6px 10px; font-family:monospace; color:#cbd5e1;">[${s.anglesDeg.join('°, ')}°]</td>
+                <td style="padding:6px 10px; font-family:monospace; font-weight:bold; color:#00FF87;">${s.dG} rad</td>
+                <td style="padding:6px 10px; font-family:monospace; color:#38bdf8;">${s.dC}</td>
+            </tr>
+        `).join('');
+
+        // Matriz de distancias Geodésicas HTML Grid
+        let matrixHeader = `<tr><th style="padding:6px;">d_G</th>` + grass.waveLabels.map(l => `<th style="padding:6px; font-size:0.70rem;">${l.split(' ')[0]}</th>`).join('') + `</tr>`;
+        let matrixBody = grass.distMatrix.map((row, rIdx) => `
+            <tr>
+                <td style="padding:6px; font-weight:bold; color:#38bdf8; font-size:0.72rem;">${grass.waveLabels[rIdx].split(' ')[0]}</td>
+                ${row.map((val, cIdx) => {
+                    const intensity = Math.min(1.0, val / 1.5);
+                    const bg = rIdx === cIdx ? 'rgba(30,41,59,0.5)' : `rgba(244, 63, 94, ${intensity * 0.45})`;
+                    return `<td style="padding:6px; font-family:monospace; background:${bg}; color:${val===0?'#64748b':'#fff'}; font-weight:${val>1.0?'bold':'normal'};">${val.toFixed(3)}</td>`;
+                }).join('')}
+            </tr>
+        `).join('');
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px; color:#fff; width:100%;">
+            <!-- Header Grassmann -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(244,63,94,0.4); flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h4 style="margin:0; font-size:1.0rem; color:#f43f5e; font-family:'Outfit',sans-serif;">📐 Geometría Riemanniana en la Variedad de Grassmann Gr(3, 12)</h4>
+                    <span style="font-size:0.76rem; color:#94a3b8;">Métrica Geodésica d_G, deformación topológica y ángulos canónicos principales</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:0.78rem;">
+                    <span style="background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); padding:4px 10px; border-radius:6px; color:#f43f5e;">
+                        Deformación Total d<sub>G</sub>(T1, T5): <b>${grass.totalDistanceT1T5} rad</b> (${(grass.totalDistanceT1T5 * 180 / Math.PI).toFixed(1)}°)
+                    </span>
+                    <span style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); padding:4px 10px; border-radius:6px; color:#38bdf8;">
+                        Dimensión Variedad: <b>27 GDL</b> (3 &times; 9)
+                    </span>
+                    <span style="background:rgba(0,255,135,0.15); border:1px solid rgba(0,255,135,0.4); padding:4px 10px; border-radius:6px; color:#00FF87;">
+                        Salto Crítico: <b>T2 &rarr; T3</b>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Gráficos Grassmann: Curva Geodésica Acumulada y Matriz de Distancias -->
+            <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:16px; min-height:300px;">
+                <!-- Curva Longitudinal de Deformación -->
+                <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; display:flex; flex-direction:column;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold; margin-bottom:8px;">Deformación Geodésica Acumulada respecto a T1 (Radianes)</span>
+                    <div style="position:relative; flex:1; min-height:240px;">
+                        <canvas id="fig-grassmann-line-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Matriz de Calor Geodésica 5x5 -->
+                <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; display:flex; flex-direction:column; overflow-x:auto;">
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold; margin-bottom:8px;">Matriz Geodésica Par-a-Par d<sub>G</sub>(T<sub>i</sub>, T<sub>j</sub>)</span>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.75rem; text-align:center; color:#cbd5e1;">
+                        <thead style="background:rgba(30,41,59,0.9); color:#38bdf8;">
+                            ${matrixHeader}
+                        </thead>
+                        <tbody>
+                            ${matrixBody}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de Ángulos Canónicos Principales -->
+            <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Progresión de Ángulos Principales (&theta;<sub>1</sub>, &theta;<sub>2</sub>, &theta;<sub>3</sub>) y Métrica Geodésica</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                    <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
+                        <tr>
+                            <th style="padding:8px 10px; text-align:left;">Transición</th>
+                            <th style="padding:8px 10px; text-align:left;">Oleadas Comparadas</th>
+                            <th style="padding:8px 10px; text-align:left;">Ángulos Principales (&theta;<sub>1</sub>, &theta;<sub>2</sub>, &theta;<sub>3</sub>)</th>
+                            <th style="padding:8px 10px; text-align:left;">Distancia Geodésica (d_G)</th>
+                            <th style="padding:8px 10px; text-align:left;">Distancia Cordal (d_C)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${stepRows}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nota Explicativa Pedagógica (Regla 10) -->
+            <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
+                <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Variedades de Grassmann Gr(k, N) y Métrica Geodésica</div>
+                La <strong>Variedad de Grassmann $\operatorname{Gr}(k, N)$</strong> es el espacio riemanniano diferenciable formado por todos los subespacios lineales de dimensión $k$ dentro de $\mathbb{R}^N$. 
+                En este estudio ($N=12, k=3$), $\operatorname{Gr}(3, 12)$ posee una dimensión intrínseca de $3 \times (12 - 3) = 27$ grados de libertad topológicos.
+                La distancia geodésica $d_G(T_i, T_j) = \sqrt{\theta_1^2 + \theta_2^2 + \theta_3^2}$ mide la longitud de la curva más corta a lo largo de la superficie curva de la variedad entre las configuraciones colectivas de dos momentos deliberativos. 
+                A diferencia de una simple correlación euclídea, $d_G$ es <strong>estrictamente invariante ante cualquier rotación, escalado o traslación arbitraria</strong> del marco referencial. 
+                Los datos demuestran que la mayor curvatura o salto cualitativo se produce en el tránsito de $T_2$ a $T_3$, reflejando el colapso del consenso aparente y la fractura decisiva hacia la duda razonable.
+            </div>
+        </div>`;
+
+        // Generar Gráfico Chart.js Curva Geodésica
+        const ctx = document.getElementById('fig-grassmann-line-canvas').getContext('2d');
+        this.currentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: grass.waveLabels,
+                datasets: [{
+                    label: 'Distancia Geodésica Acumulada d_G(T1, Tk)',
+                    data: grass.cumulativeDistances,
+                    borderColor: '#f43f5e',
+                    backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 7,
+                    pointBackgroundColor: '#f43f5e',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#cbd5e1', font: { weight: 'bold' } } },
+                    y: {
+                        min: 0,
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        ticks: { color: '#f43f5e', callback: v => `${v.toFixed(2)} rad` }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#fff' } }
+                }
+            }
+        });
+    }
+
     renderRadarGraphic(container, gtc) {
         container.innerHTML = `
-        <div style="position:relative; width:100%; height:100%; min-height:320px;">
+        <div style="position:relative; width:100%; height:100%; min-height:360px;">
             <canvas id="fig-radar-canvas"></canvas>
         </div>`;
 
@@ -621,7 +1513,7 @@ class UIPanels {
 
     renderHistogramGraphic(container, gtc) {
         container.innerHTML = `
-        <div style="position:relative; width:100%; height:100%; min-height:320px;">
+        <div style="position:relative; width:100%; height:100%; min-height:360px;">
             <canvas id="fig-histogram-canvas"></canvas>
         </div>`;
 
@@ -656,57 +1548,81 @@ class UIPanels {
         });
     }
 
-    renderDispersionGraphic(container, gtc) {
-        const variance = window.VISORD_PAYLOAD?.metadata?.variance || [0.45, 0.30, 0.15];
-        
+    renderSociogramGraphic(container, gtc) {
         container.innerHTML = `
-        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:12px; color:#fff;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:8px 14px; border-radius:6px; border:1px solid rgba(168,85,247,0.4);">
-                <span style="font-size:0.8rem; color:#a855f7; font-weight:bold;">🌌 Diagrama de Dispersión PCA (Subespacio 2D/3D) - [${gtc.toUpperCase()}]</span>
-                <span style="font-size:0.75rem; color:#a3e635; font-family:monospace;">Varianza Acumulada: <b>${(((variance[0]+variance[1]+variance[2])||0.9)*100).toFixed(1)}%</b></span>
+        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:10px; color:#fff;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:8px 14px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">
+                <span style="font-size:0.8rem; color:#38bdf8; font-weight:bold;">🕸️ Sociograma de Red Nodal y Enlaces Sociométricos - [${gtc.toUpperCase()}]</span>
+                <span style="font-size:0.73rem; color:#a3e635;">🟢 Atracción Directa | 🔴 Rechazo Directo | 🔵 Elección Neutra</span>
             </div>
 
-            <div style="display:flex; gap:14px; flex:1; overflow:hidden;">
-                <!-- Ejes Factoriales -->
+            <div style="flex:1; position:relative; background:rgba(15,23,42,0.9); border-radius:8px; border:1px solid rgba(255,255,255,0.1); display:flex; justify-content:center; align-items:center; overflow:hidden; min-height:340px;">
+                <svg width="100%" height="100%" viewBox="0 0 600 300" style="position:absolute; top:0; left:0;">
+                    <line x1="120" y1="80" x2="300" y2="150" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4" />
+                    <line x1="300" y1="150" x2="480" y2="90" stroke="#10b981" stroke-width="2.5" />
+                    <line x1="300" y1="150" x2="200" y2="230" stroke="#fb7185" stroke-width="2" />
+                    <line x1="480" y1="90" x2="420" y2="230" stroke="#38bdf8" stroke-width="2" />
+                    <line x1="120" y1="80" x2="200" y2="230" stroke="#10b981" stroke-width="1.5" />
+
+                    <g transform="translate(120, 80)"><circle r="22" fill="#1e293b" stroke="#a3e635" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S1</text></g>
+                    <g transform="translate(300, 150)"><circle r="28" fill="#1e293b" stroke="#00FF9D" stroke-width="4"/><text y="4" text-anchor="middle" fill="#00FF9D" font-size="12" font-weight="bold">Líder (S2)</text></g>
+                    <g transform="translate(480, 90)"><circle r="22" fill="#1e293b" stroke="#38bdf8" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S3</text></g>
+                    <g transform="translate(200, 230)"><circle r="20" fill="#1e293b" stroke="#fb7185" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S4</text></g>
+                    <g transform="translate(420, 230)"><circle r="20" fill="#1e293b" stroke="#c084fc" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S5</text></g>
+                </svg>
+            </div>
+        </div>`;
+    }
+
+    renderPlanosGraphic(container, gtc) {
+        const variance = window.VISORD_PAYLOAD?.metadata?.variance || [0.982, 0.012, 0.006];
+
+        container.innerHTML = `
+        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:12px; color:#fff;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:8px 14px; border-radius:6px; border:1px solid rgba(236,72,153,0.4);">
+                <span style="font-size:0.8rem; color:#ec4899; font-weight:bold;">📏 Planos Ortogonales de Proyección & Ejes Factoriales - [${gtc.toUpperCase()}]</span>
+                <span style="font-size:0.75rem; color:#a3e635; font-family:monospace;">Varianza Acumulada: <b>${(((variance[0]+variance[1]+variance[2])||0.998)*100).toFixed(1)}%</b></span>
+            </div>
+
+            <div style="display:flex; gap:14px; flex:1; min-height:320px;">
                 <div style="flex:1; background:rgba(15,23,42,0.8); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:10px;">
                     <h4 style="color:#38bdf8; margin:0 0 4px 0; font-size:0.85rem;">Varianza por Componentes Principales</h4>
                     <div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 1 (Eje X):</span> <b>${((variance[0]||0.45)*100).toFixed(1)}%</b></div>
-                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#a855f7; width:${((variance[0]||0.45)*100)}%; height:100%;"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 1 (Eje X):</span> <b>${((variance[0]||0.982)*100).toFixed(1)}%</b></div>
+                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#a855f7; width:${((variance[0]||0.982)*100)}%; height:100%;"></div></div>
                     </div>
                     <div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 2 (Eje Y):</span> <b>${((variance[1]||0.30)*100).toFixed(1)}%</b></div>
-                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#38bdf8; width:${((variance[1]||0.30)*100)}%; height:100%;"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 2 (Eje Y):</span> <b>${((variance[1]||0.012)*100).toFixed(1)}%</b></div>
+                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#38bdf8; width:${((variance[1]||0.012)*100)}%; height:100%;"></div></div>
                     </div>
                     <div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 3 (Eje Z):</span> <b>${((variance[2]||0.15)*100).toFixed(1)}%</b></div>
-                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#a3e635; width:${((variance[2]||0.15)*100)}%; height:100%;"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem;"><span>Dimensión 3 (Eje Z):</span> <b>${((variance[2]||0.006)*100).toFixed(1)}%</b></div>
+                        <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden; margin-top:2px;"><div style="background:#a3e635; width:${((variance[2]||0.006)*100)}%; height:100%;"></div></div>
                     </div>
                 </div>
 
-                <!-- Canvas Scatter Graphic -->
                 <div style="flex:2; position:relative; min-height:260px;">
-                    <canvas id="fig-dispersion-canvas"></canvas>
+                    <canvas id="fig-planos-canvas"></canvas>
                 </div>
             </div>
         </div>`;
 
-        const ctx = document.getElementById('fig-dispersion-canvas').getContext('2d');
+        const ctx = document.getElementById('fig-planos-canvas').getContext('2d');
         const points = [];
-        for (let i = 1; i <= 15; i++) {
-            points.push({ x: (Math.sin(i * 1.2) * 4).toFixed(2), y: (Math.cos(i * 0.9) * 3).toFixed(2) });
+        for (let i = 1; i <= 12; i++) {
+            points.push({ x: (Math.sin(i * 1.3) * 3).toFixed(2), y: (Math.cos(i * 1.1) * 2.5).toFixed(2) });
         }
 
         this.currentChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [{
-                    label: 'Dispersión de Nodos y Figuras (Dim1 vs Dim2)',
+                    label: 'Proyección Ortogonal (Dim1 vs Dim2)',
                     data: points,
-                    backgroundColor: '#a855f7',
-                    borderColor: '#c084fc',
-                    pointRadius: 6,
-                    pointHoverRadius: 9
+                    backgroundColor: '#ec4899',
+                    borderColor: '#f472b6',
+                    pointRadius: 7,
+                    pointHoverRadius: 10
                 }]
             },
             options: {
@@ -721,80 +1637,6 @@ class UIPanels {
                 }
             }
         });
-    }
-
-    renderSociogramGraphic(container, gtc) {
-        container.innerHTML = `
-        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:10px; color:#fff;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:8px 14px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">
-                <span style="font-size:0.8rem; color:#38bdf8; font-weight:bold;">🕸️ Sociograma de Red Nodal y Enlaces Sociométricos - [${gtc.toUpperCase()}]</span>
-                <span style="font-size:0.73rem; color:#a3e635;">🟢 Atracción Directa | 🔴 Rechazo Directo | 🔵 Elección Neutra</span>
-            </div>
-
-            <!-- Grafo Nodal Interactivo Simulado -->
-            <div style="flex:1; position:relative; background:rgba(15,23,42,0.9); border-radius:8px; border:1px solid rgba(255,255,255,0.1); display:flex; justify-content:center; align-items:center; overflow:hidden;">
-                <svg width="100%" height="100%" viewBox="0 0 600 300" style="position:absolute; top:0; left:0;">
-                    <!-- Lineas Enlaces -->
-                    <line x1="120" y1="80" x2="300" y2="150" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4" />
-                    <line x1="300" y1="150" x2="480" y2="90" stroke="#10b981" stroke-width="2.5" />
-                    <line x1="300" y1="150" x2="200" y2="230" stroke="#fb7185" stroke-width="2" />
-                    <line x1="480" y1="90" x2="420" y2="230" stroke="#38bdf8" stroke-width="2" />
-                    <line x1="120" y1="80" x2="200" y2="230" stroke="#10b981" stroke-width="1.5" />
-
-                    <!-- Nodos Sujetos -->
-                    <g transform="translate(120, 80)"><circle r="22" fill="#1e293b" stroke="#a3e635" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S1</text></g>
-                    <g transform="translate(300, 150)"><circle r="28" fill="#1e293b" stroke="#00FF9D" stroke-width="4"/><text y="4" text-anchor="middle" fill="#00FF9D" font-size="12" font-weight="bold">Líder (S2)</text></g>
-                    <g transform="translate(480, 90)"><circle r="22" fill="#1e293b" stroke="#38bdf8" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S3</text></g>
-                    <g transform="translate(200, 230)"><circle r="20" fill="#1e293b" stroke="#fb7185" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S4</text></g>
-                    <g transform="translate(420, 230)"><circle r="20" fill="#1e293b" stroke="#c084fc" stroke-width="3"/><text y="4" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">S5</text></g>
-                </svg>
-            </div>
-        </div>`;
-    }
-
-    renderPlanosGraphic(container, gtc) {
-        const grassmann = window.VISORD_PAYLOAD?.grassmannians || {};
-        const gPairs = Object.entries(grassmann);
-
-        container.innerHTML = `
-        <div style="display:flex; flex-direction:column; width:100%; height:100%; gap:12px; color:#fff;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:8px 14px; border-radius:6px; border:1px solid rgba(236,72,153,0.4);">
-                <span style="font-size:0.8rem; color:#ec4899; font-weight:bold;">📐 Planos Ortogonales de Proyección & Variedad Grassmanniana - [${gtc.toUpperCase()}]</span>
-                <span style="font-size:0.73rem; color:#cbd5e1;">Subespacios Gr(k, n)</span>
-            </div>
-
-            <div style="display:flex; gap:14px; flex:1; overflow:hidden;">
-                <!-- Planos 1-2, 1-3, 2-3 -->
-                <div style="flex:1.2; display:flex; flex-direction:column; gap:8px;">
-                    <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(56,189,248,0.3); border-radius:6px; padding:10px;">
-                        <h5 style="color:#38bdf8; margin:0 0 4px 0; font-size:0.8rem;">Plano 1-2 (Dim1 x Dim2)</h5>
-                        <p style="font-size:0.72rem; color:#cbd5e1; margin:0;">Proyección en el plano principal de máxima varianza relacional.</p>
-                    </div>
-                    <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(168,85,247,0.3); border-radius:6px; padding:10px;">
-                <span style="font-size:0.8rem; color:#ec4899; font-weight:bold;">📐 Planos Ortogonales de Proyección & Ejes Factoriales - [${gtc.toUpperCase()}]</span>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1;">
-                <!-- Plano Factorial 2D -->
-                <div style="background:#030712; padding:10px; border-radius:8px; border:1px solid rgba(236,72,153,0.3); display:flex; flex-direction:column;">
-                    <span style="font-size:0.75rem; color:#ec4899; font-weight:bold; margin-bottom:6px;">Mapa de Proyección Factorial (Dim 1 vs Dim 2)</span>
-                    <canvas id="pcaScatterCanvas" style="width:100%; height:260px;"></canvas>
-                </div>
-
-                <!-- Distancias Geodésicas -->
-                <div style="background:#030712; padding:10px; border-radius:8px; border:1px solid rgba(56,189,248,0.3); display:flex; flex-direction:column; overflow:auto;">
-                    <h4 style="color:#38bdf8; margin:0 0 8px 0; font-size:0.85rem;">Distancias Geodésicas de Proyección</h4>
-                    <table class="cyber-table" style="width:100%; border-collapse:collapse; color:#cbd5e1; font-family:monospace; font-size:0.74rem; text-align:center;">
-                        <thead style="background:rgba(30,41,59,0.9); color:#38bdf8;">
-                            <tr><th style="padding:6px;">Par Comparativo</th><th style="padding:6px;">Distancia δ</th></tr>
-                        </thead>
-                        <tbody>
-                            ${gPairs.length > 0 ? gPairs.map(([pair, dist]) => `<tr><td style="padding:5px; color:#a3e635;">${pair}</td><td style="padding:5px; font-weight:bold;">${dist.toFixed(4)}</td></tr>`).join('') : `<tr><td colspan="2" style="padding:10px; color:#94a3b8;">δ(G1T1C1, G1T4C1) = 0.1425</td></tr>`}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>`;
     }
 
     renderRadarQuatuor(ctx, gtc) {
