@@ -205,7 +205,7 @@ A_{1,ij} \text{ [pDA]} &= \begin{cases} +1 & \text{si } r_{ij} \le aE_i \text{ (
 ### A. Geometría Topológica: El Grasmaniano de las Relaciones
 La geometría de Grassmann (1844) permite modelar las preferencias colectivas no como vectores individuales aislados, sino como subespacios de dimensión variable, capturando la emergencia topológica de estructuras grupales que no se reducen a la suma de sus miembros.
 *   **Variedad Grasmaniana ($Gr(k, n)$):** El espacio topológico multidimensional donde "habitan" las estructuras grupales. Un punto en un Grasmaniano no es una coordenada, sino un *subespacio entero de k dimensiones* proyectado desde un universo de *n* dimensiones (el grupo). Cuando NEX_ORD calcula el PCA, está seleccionando el "punto" Grasmaniano óptimo que resume el poder del grupo.
-*   **Prisma Sociométrico como Subespacio:** En NEX_ORD, un "Prisma" es matemáticamente un subespacio Grasmaniano específico (un plano de proyección) elegido intencionalmente para revelar una simetría o asimetría pura (ej. fricción, idealización).
+*   **Subespacio Grasmaniano de Proyección:** En NEX_ORD, el tensor sociométrico se proyecta en subespacios de Grassmann para revelar simetrías o asimetrías puras (ej. fricción, cohesión, idealización) mediante el agrupamiento progresivo de las matrices Q81(9, 9).
 *   **Difracción Espectral:** El proceso topológico mediante el cual el tensor bruto de interacciones (SMIa) se descompone al atravesar los diferentes subespacios Grasmanianos, revelando las "frecuencias de onda" del comportamiento social (espectros de luz relacional).
 *   **Distancia Grasmaniana ($d_G$):** La medida pura del cambio estructural. En lugar de restar votos, mide el *ángulo de rotación geodésica* entre el "plano de poder" de un grupo en $T_1$ y su nuevo plano en $T_2$, ignorando las posiciones individuales y enfocándose en la esencia del campo.
 
@@ -230,17 +230,16 @@ $$\mathcal{S}_i = \frac{BDR_i - |SDA_i + SRC_i|}{BDR_i} \in [0.0, 1.0]$$
     *   **$\mathcal{S}_i = 1.0$ (Entropía Máxima / Caos de Campo):** Máxima fricción por cancelación vectorial. Ocurre cuando el nodo acumula la misma cantidad de atracción que de marginación ($BDR_i > 0$ pero $SDR_i = 0.0$), disipando toda su energía en ambivalencia estructural.
     *   **Entropía Macroscópica del Grupo ($\mathcal{S}_{\text{grupo}}$):** Promedio de desorden disipativo del ecosistema: $\mathcal{S}_{\text{grupo}} = 1 - \frac{\sum |SDR_{\text{bruto}, i}|}{\sum BDR_i}$.
 
-### C. Los 6 Prismas Relacionales, Ópticas Especializadas
-Los **PRISMAS** ($P_1$ al $P_6$) son matrices específicas compuestas por el producto cartesiano de 9 combinaciones conjugadas de pares ordenados:
-*   **PRISMA 1 ($P_1 = A_1 \times A_4$):** "Cámaras de Eco". Cruza las expectativas emitidas ($A_1$) con las expectativas recibidas ($A_4$). Evalúa las meta-percepciones subjetivas. Caracterizado por las 9 combinaciones conjugadas: `'<..>'`, `'<..!'`, `'<..]'`, `'¡..>'`, `'¡..!'`, `'¡..]'`, `'[..>'`, `'[..!'`, `'[..]'`.
-*   **PRISMA 2 ($P_2 = A_2 \times A_3$):** "Matriz de Preferencias Dadas por la Díada". Cruza la preferencia efectiva emitida ($A_2$) con la respuesta efectiva recibida ($A_3$). Evalúa colaboración genuina vs antagonismo abierto. Caracterizado por las 9 combinaciones conjugadas: `'.Ee.'`, `'.E?.'`, `'.Er.'`, `'.¿e.'`, `'.¿?.'`, `'.¿r.'`, `'.Re.'`, `'.R?.'`, `'.Rr.'`.
-*   **PRISMA 3 ($P_3 = A_1 \times A_3$):** "Realismo Perceptivo del Emisor". Cruza la expectativa emitida ($A_1$) frente a la respuesta real recibida del partner ($A_3$). Caracterizado por las 9 combinaciones conjugadas: `'<.e.'`, `'<.?.'`, `'<.r.'`, `'¡.e.'`, `'¡.?.'`, `'¡.r.'`, `'[.e.'`, `'[.?.'`, `'[.r.'`. Métrica de diferencia derivada: $\Delta P_3(i,j) = A_{1,ij} - A_{3,ij}$.
-*   **PRISMA 4 ($P_4 = A_4 \times A_2$):** "Espejo Invertido". Cruza lo que el partner supone que se le responderá ($A_4$) frente a la preferencia efectiva declarada ($A_2$). Caracterizado por las 9 combinaciones conjugadas: `'.E.>'`, `'.E.!'`, `'.E.]'`, `'.¿.>'`, `'.¿.!'`, `'.¿.]'`, `'.R.>'`, `'.R.!'`, `'.R.]'`.
-*   **PRISMA 5 ($P_5 = A_1 \times A_2$):** "Sinceridad Operativa". Evalúa si las expectativas del emisor ($A_1$) coinciden con su preferencia efectiva ($A_2$). Caracterizado por las 9 combinaciones conjugadas: `'<E..'`, `'<¿..'`, `'<R..'`, `'¡E..'`, `'¡¿..'`, `'¡R..'`, `'[E..'`, `'[¿..'`, `'[R..'`.
-*   **PRISMA 6 ($P_6 = A_4 \times A_3$):** "Ceguera al Rechazo/Afecto". Cruza lo que el receptor supone que se hará ($A_4$) con la respuesta efectiva del emisor ($A_3$). Caracterizado por las 9 combinaciones conjugadas: `'..e>'`, `'..e!'`, `'..e]'`, `'..?>'`, `'..?!'`, `'..?]'`, `'..r>'`, `'..r!'`, `'..r]'`. Métrica de diferencia derivada: $\Delta P_6(i,j) = A_{4,ij} - A_{3,ij}$.
+### C. El Agrupamiento Progresivo de las Matrices Q81(9, 9) de Densidad Relacional
+El tensor relacional se estructura en la **Matriz Canónica $Q_{81}(9, 9)$ de Densidad Relacional**, compuesta por el producto tensorial de las 9 modalidades de emisión (filas) y las 9 de recepción (columnas). Su análisis y reducción baricéntrica se articula mediante la pirámide de **Agrupamiento Progresivo**:
+*   **Retículas Duales ($Q_{81a}$ vs. $Q_{81b}$):** Factorizaciones canónicas según el índice rector: $Q_{81a}$ (Primacía Conductual: Acción macro $\times$ Expectativa micro) frente a $Q_{81b}$ (Primacía Cognitiva: Expectativa macro $\times$ Acción micro).
+*   **Nivel Micro 18:** Densidades relacionales y frecuencias de las 9 emisiones conjugadas y 9 recepciones conjugadas del tensor diádico.
+*   **Nivel Meso 12:** Las 3 cápsulas polares cuádruples: Cohesión (`<Ee>`), Indiferencia (`¡¿?!`) y Fricción/Ostracismo (`[Rr]`).
+*   **Nivel Macro 6:** Los 3 polos fundamentales de emisión ($E, ¿, R$) frente a los 3 polos de recepción ($e, ?, r$).
+*   **Conservación Baricéntrica:** Preservación matemática estricta de la masa de actividad bruta ($BDR$) y la densidad relativa neta ($SDR$) a lo largo de toda la condensación multiescala.
 
 ### D. Indicadores Dinámicos de Campo
-*   **SINTONÍA RELACIONAL ($SR$ / Resonancia Dinámica):** Es la medida macroscópica de Acoplamiento Estructural. Evalúa el grado en que la percepción general del grupo coincide con la realidad de sus acciones. Se calcula como la proporción de coincidencia escalar entre las expectativas ($P_1$) y la realidad efectivizada ($P_2$):
+*   **SINTONÍA RELACIONAL ($SR$ / Resonancia Dinámica):** Es la medida macroscópica de Acoplamiento Estructural. Evalúa el grado en que la percepción general del grupo coincide con la realidad de sus acciones. Se calcula como la proporción de coincidencia escalar entre las expectativas subjetivas y la realidad efectivizada en el tensor $Q_{81}$:
 $$SR = \frac{1}{N(N-1)} \sum_{i \neq j} \text{Coincidencia}\left(P_{1,ij}, P_{2,ij}\right)$$
     *   **Alta Sintonía ($SR > 0.5$):** Grupo maduro (Sincronía Existencial); los miembros saben con quién cuentan y a quién marginan.
     *   **Baja Sintonía ($SR < 0.5$):** Disonancia de campo; cegueras masivas y vínculos basados en falsas expectativas.
@@ -264,12 +263,8 @@ Esta tabla agrupa la notación formal de NEX_ORD. Cada símbolo reúne su defini
 | $A_{2,ij} \text{ [DA]}$ | Acción Directa / Preferencia Emitida | $\{-1, 0, +1\}$ | Elección o marginación efectiva declarada por $S_i$ hacia $S_j$. | Realidad de las preferencias emitidas. |
 | $A_{3,ij} \text{ [REC]}$ | Recepción Efectiva Recibida | $\{-1, 0, +1\}$ | Elección o marginación efectiva seleccionada por $S_j$ hacia $S_i$ ($A_{3,ij} = A_{2,ji}$). | Realidad del estatus recibido del colectivo. |
 | $A_{4,ij} \text{ [pREC]}$ | Percepción de Recepción | $\{-1, 0, +1\}$ | Lo que $S_i$ presupone o adivina que $S_j$ ha respondido sobre él. | Percepción de aceptación o marginación en la red. |
-| $P_1$ | Prisma 1: Cámaras de Eco | $A_1 \times A_4$ | Matriz conjugada de 9 pares $P_1(i,j) = (A_{1,ij}, A_{4,ij})$. | Idealización y meta-percepciones subjetivas. |
-| $P_2$ | Prisma 2: Preferencias de la Díada | $A_2 \times A_3$ | Matriz conjugada de 9 pares $P_2(i,j) = (A_{2,ij}, A_{3,ij})$. | Preferencias reales dadas por la díada. |
-| $P_3$ | Prisma 3: Realismo Perceptivo Emisor | $A_1 \times A_3$ | Matriz conjugada de 9 pares $P_3(i,j) = (A_{1,ij}, A_{3,ij})$. | Ajuste perceptivo entre expectativa y respuesta real. |
-| $P_4$ | Prisma 4: Espejo Invertido | $A_4 \times A_2$ | Matriz conjugada de 9 pares $P_4(i,j) = (A_{4,ij}, A_{2,ij})$. | Grado de acierto en la auto-percepción frente a pares. |
-| $P_5$ | Prisma 5: Sinceridad Operativa | $A_1 \times A_2$ | Matriz conjugada de 9 pares $P_5(i,j) = (A_{1,ij}, A_{2,ij})$. | Consistencia entre el deseo ideal y la acción real. |
-| $P_6$ | Prisma 6: Ceguera al Rechazo/Afecto| $A_4 \times A_3$ | Matriz conjugada de 9 pares $P_6(i,j) = (A_{4,ij}, A_{3,ij})$. | Ceguera relacional; incapacidad de percibir la marginación. |
+| $Q_{81}(9, 9)$ | Matriz de Densidad Relacional | $\mathcal{M}_{9 \times 9}$ | Matriz de 81 figuras relacionales por producto de 9 emisiones $\times$ 9 recepciones. | Espacio tensorial completo de interacción diádica. |
+| $Q_{81a} / Q_{81b}$ | Retículas Duales de Agrupamiento | $\mathcal{M}_{9 \times 9}$ | Factorizaciones canónicas según primacía conductual ($Q_{81a}$) o cognitiva ($Q_{81b}$). | Cambio ortogonal de base analítica. |
 | $SDA_i$ | Densidad Relacional Emitida | $\mathbb{R}$ | $\sum_{j \neq i} (A_{1,ij} + A_{2,ij}) \cdot w_{\text{rango}}$ | Gasto energético total o expansividad relacional. |
 | $SRC_i$ | Densidad Relacional Recibida | $\mathbb{R}$ | $\sum_{j \neq i} (A_{3,ij} + A_{4,ij}) \cdot w_{\text{estatus}}$ | Estatus o gravitación recibida del colectivo. |
 | $SDR_i$ | Densidad Relacional Total | $[-1.0, +1.0]$ | $\frac{SDA_i + SRC_i}{\text{Máximo Teórico}}$ | Tensión estructural neta del nodo (Normalizada). |
@@ -315,10 +310,10 @@ Para ilustrar de forma concreta la notación y trazabilidad de NEX_ORD con total
 
 ---
 
-### 2. Matriz Conjugada de Preferencias Dadas por la Díada (Prisma 2: $A_2 \times A_3$)
+### 2. Matriz Conjugada de Preferencias Dadas por la Díada ($A_2 \times A_3$)
 Al cruzar la preferencia efectiva emitida ($A_2$) con la recepción real ($A_3$), aislamos el tipo de vínculo diádico entre pares:
 
-| Par Diádico ($S_i \leftrightarrow S_j$) | Emitido ($A_{2,ij}$) | Recibido ($A_{3,ij}$) | Código Prisma 2 | Diagnóstico Ecosistémico del Vínculo |
+| Par Diádico ($S_i \leftrightarrow S_j$) | Emitido ($A_{2,ij}$) | Recibido ($A_{3,ij}$) | Código Relacional | Diagnóstico Ecosistémico del Vínculo |
 | :--- | :---: | :---: | :---: | :--- |
 | **$S_1 \leftrightarrow S_2$** | $+1.0$ (`E1`) | $+1.0$ (`e1`) | `'.Ee.'` | **Elección Recíproca de $1^{\circ}$ Rango (Sinergia Máxima)** |
 | **$S_1 \leftrightarrow S_3$** | $0.0$ (`¿0`) | $-1.0$ (`r1`) | `'.¿r.'` | **Marginación Unilateral Sufrida (Asimetría)** |

@@ -21,7 +21,7 @@ Estas 81 figuras emergen de cruzar la doble dimensión del vínculo relacional (
 
 La matriz sociométrica fundamental del motor NEX_ORD es la **Sociomatriz Integrada Bipolar (SMIb)** de 4 vías ($A_1, A_2, A_3, A_4$).
 
-El motor establece una **Regla Arquitectónica Inviolable**:
+El motor establece una **Regla Arquitectónica Fundamental**:
 > ⚠️ La matriz SMIb se genera **SIEMPRE a partir del Formato MORENO AMPLIADO a $E_{-k_1}$ y $R_{-k_2}$ y sus hipótesis selectivas automáticas**, NUNCA directamente desde el ordenamiento bruto de BREVE.
 
 $$\text{BREVE} \xrightarrow{\mathcal{F}_{\text{B}\to\text{M}}} \text{MORENO AMPLIADO } (E_{-k_1}, R_{-k_2}) \xrightarrow{\text{Hipótesis Selectivas Automáticas}} \text{SMIb (4 Vías)}$$
@@ -40,15 +40,14 @@ Mientras SMIb preserva toda la intensidad ordinal fina y el orden de elección j
 
 ---
 
-## 4. LOS 6 PRISMAS RELACIONALES Y TRAZABILIDAD MATRICIAL
+## 4. EL AGRUPAMIENTO PROGRESIVO DE LAS MATRICES Q81(9, 9) DE DENSIDAD RELACIONAL Y TRAZABILIDAD MATRICIAL
 
-El tensor diádico SMIb de 4 vías se descompone en **6 Prismas Relacionales ($P_1 \dots P_6$)**, compuestos por el producto cartesiano de 9 pares ordenados conjugados:
+El tensor diádico SMIb de 4 vías se estructura en la **Matriz Canónica $Q_{81}(9, 9)$ de Densidad Relacional**, compuesta por el producto tensorial de las 9 modalidades de emisión (filas) y las 9 de recepción (columnas). Su análisis se articula mediante la pirámide de **Agrupamiento Progresivo**:
 
-1. **Prisma 1 ($P_1 = A_1 \times A_4$)**: *Cámaras de Eco* (expectativas emitidas vs. recibidas).
-2. **Prisma 2 ($P_2 = A_2 \times A_3$)**: *Matriz de Preferencias Dadas por la Díada* (colaboración real vs. antagonismo directo).
-3. **Prisma 3 ($P_3 = A_1 \times A_3$)**: *Realismo Perceptivo del Emisor* (cruce entre expectativa $A_1$ y respuesta real $A_3$).
-4. **Prisma 4 ($P_4 = A_4 \times A_2$)**: *Espejo Invertido* (auto-percepción frente a la respuesta real emitida por el partner).
-5. **Prisma 5 ($P_5 = A_1 \times A_2$)**: *Sinceridad Operativa* (coincidencia entre el deseo ideal $A_1$ y la acción declarada $A_2$).
-6. **Prisma 6 ($P_6 = A_4 \times A_3$)**: *Ceguera Relacional* (incapacidad de percibir el rechazo o el afecto).
+1. **Retículas Duales ($Q_{81a}$ vs. $Q_{81b}$)**: Cambio ortogonal según primacía conductual (Acción macro $\times$ Expectativa micro) o cognitiva (Expectativa macro $\times$ Acción micro).
+2. **Nivel Micro 18**: Densidades relacionales y frecuencias de las 9 emisiones conjugadas y 9 recepciones conjugadas.
+3. **Nivel Meso 12**: Las 3 cápsulas polares cuádruples: Cohesión (`<Ee>`), Indiferencia (`¡¿?!`), y Fricción/Ostracismo (`[Rr]`).
+4. **Nivel Macro 6**: Los 3 polos fundamentales de emisión ($E, ¿, R$) frente a los 3 polos de recepción ($e, ?, r$).
+5. **Conservación Baricéntrica**: Preservación matemática estricta de la masa de actividad bruta ($BDR$) y la densidad relativa neta ($SDR$) a lo largo de toda la condensación multiescala.
 
 Esta formulación garantiza una **trazabilidad paso a paso estricta con anonimato nominal completo ($S_1, S_2, S_3, S_4$)** en matrices de $N$ sujetos.
