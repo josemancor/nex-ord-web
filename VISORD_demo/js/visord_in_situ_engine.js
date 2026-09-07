@@ -21,26 +21,26 @@
 }(typeof self !== 'undefined' ? self : this, function() {
 
     const JURORS = [
-        { id: 1, code: 'S1', name: 'Jurado 1', actor: 'Martin Balsam', role: 'Presidente del Jurado / Moderador', color: '#38BDF8' },
-        { id: 2, code: 'S2', name: 'Jurado 2', actor: 'John Fiedler', role: 'Empleado tímido y vacilante', color: '#818CF8' },
-        { id: 3, code: 'S3', name: 'Jurado 3', actor: 'Lee J. Cobb', role: 'Empresario colérico / Antagonista', color: '#FF007F' },
-        { id: 4, code: 'S4', name: 'Jurado 4', actor: 'E.G. Marshall', role: 'Corredor de bolsa analítico', color: '#38BDF8' },
-        { id: 5, code: 'S5', name: 'Jurado 5', actor: 'Jack Klugman', role: 'Joven criado en suburbios', color: '#FBBF24' },
-        { id: 6, code: 'S6', name: 'Jurado 6', actor: 'Edward Binns', role: 'Pintor de brocha gorda honesto', color: '#34D399' },
-        { id: 7, code: 'S7', name: 'Jurado 7', actor: 'Jack Warden', role: 'Vendedor cínico con prisa de beisbol', color: '#F87171' },
-        { id: 8, code: 'S8', name: 'Jurado 8', actor: 'Henry Fonda', role: 'Arquitecto disidente / Duda razonable', color: '#00FF87' },
-        { id: 9, code: 'S9', name: 'Jurado 9', actor: 'Joseph Sweeney', role: 'Anciano sabio y perceptivo (McArdle)', color: '#A78BFA' },
-        { id: 10, code: 'S10', name: 'Jurado 10', actor: 'Ed Begley', role: 'Comerciante amargado y racista', color: '#F43F5E' },
-        { id: 11, code: 'S11', name: 'Jurado 11', actor: 'George Voskovec', role: 'Relojero inmigrante europeo / Cívico', color: '#67E8F9' },
-        { id: 12, code: 'S12', name: 'Jurado 12', actor: 'Robert Webber', role: 'Publicista superficial y cambiante', color: '#CBD5E1' }
+        { id: 1, code: '1A1a', name: 'Sujeto 1 (1A1a)', actor: '1A1a', role: 'Nodo Coordinador / Moderador', color: '#38BDF8' },
+        { id: 2, code: '2A1a', name: 'Sujeto 2 (2A1a)', actor: '2A1a', role: 'Nodo Consonante', color: '#818CF8' },
+        { id: 3, code: '3A1a', name: 'Sujeto 3 (3A1a)', actor: '3A1a', role: 'Polo de Oposición / Fricción', color: '#FF007F' },
+        { id: 4, code: '4A1a', name: 'Sujeto 4 (4A1a)', actor: '4A1a', role: 'Nodo Analítico', color: '#38BDF8' },
+        { id: 5, code: '5A1a', name: 'Sujeto 5 (5A1a)', actor: '5A1a', role: 'Nodo Periférico', color: '#FBBF24' },
+        { id: 6, code: '6A1a', name: 'Sujeto 6 (6A1a)', actor: '6A1a', role: 'Nodo Protector', color: '#34D399' },
+        { id: 7, code: '7A1a', name: 'Sujeto 7 (7A1a)', actor: '7A1a', role: 'Nodo Volátil', color: '#F87171' },
+        { id: 8, code: '8A1a', name: 'Sujeto 8 (8A1a)', actor: '8A1a', role: 'Disidente Racional / Polarizador', color: '#00FF87' },
+        { id: 9, code: '9A1a', name: 'Sujeto 9 (9A1a)', actor: '9A1a', role: 'Ancla Cohesiva', color: '#A78BFA' },
+        { id: 10, code: '10A1a', name: 'Sujeto 10 (10A1a)', actor: '10A1a', role: 'Polo Tradicional', color: '#F43F5E' },
+        { id: 11, code: '11A1a', name: 'Sujeto 11 (11A1a)', actor: '11A1a', role: 'Integrador Cívico', color: '#67E8F9' },
+        { id: 12, code: '12A1a', name: 'Sujeto 12 (12A1a)', actor: '12A1a', role: 'Nodo Adaptativo', color: '#CBD5E1' }
     ];
 
     const WAVES_INFO = [
-        { id: 1, key: '1g1t1c', keyCrit2: '1g1t2c', label: 'T1: 1ª Votación (11-1)', sublabel: '11 Culpables vs 1 No Culpable (Fonda disidente)', voteCount: '11-1' },
-        { id: 2, key: '1g2t1c', keyCrit2: '1g2t2c', label: 'T2: 2ª Votación (10-2)', sublabel: 'El Anciano McArdle apoya la duda razonable', voteCount: '10-2' },
-        { id: 3, key: '1g3t1c', keyCrit2: '1g3t2c', label: 'T3: 3ª Votación (6-6)', sublabel: 'Empate técnico y fractura bipolar del jurado', voteCount: '6-6' },
-        { id: 4, key: '1g4t1c', keyCrit2: '1g4t2c', label: 'T4: 4ª Votación (1-11)', sublabel: 'Solo el Jurado 3 sostiene la condena', voteCount: '1-11' },
-        { id: 5, key: '1g5t1c', keyCrit2: '1g5t2c', label: 'T5: Consenso (0-12)', sublabel: 'Unanimidad absoluta: No Culpable', voteCount: '0-12' }
+        { id: 1, key: '1g1t1c', keyCrit2: '1g1t2c', label: 'T1: Estado Inicial', sublabel: 'Configuración asimétrica de bloque inicial', voteCount: '11-1' },
+        { id: 2, key: '1g2t1c', keyCrit2: '1g2t2c', label: 'T2: Emergencia de Díada', sublabel: 'Formación del primer núcleo alternativo resonante', voteCount: '10-2' },
+        { id: 3, key: '1g3t1c', keyCrit2: '1g3t2c', label: 'T3: Bifurcación Relacional', sublabel: 'Empate técnico y fractura dipolar simétrica', voteCount: '6-6' },
+        { id: 4, key: '1g4t1c', keyCrit2: '1g4t2c', label: 'T4: Transición de Fase', sublabel: 'Reconfiguración masiva hacia el atractor central', voteCount: '1-11' },
+        { id: 5, key: '1g5t1c', keyCrit2: '1g5t2c', label: 'T5: Atractor Consonante', sublabel: 'Consenso pleno y minimización entrópica', voteCount: '0-12' }
     ];
 
     const DATASET = {

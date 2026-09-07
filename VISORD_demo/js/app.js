@@ -16,8 +16,8 @@ class VisordApp {
 
         const applySelectedStudy = (studyKey) => {
             let activePayload = window.VISORD_PAYLOAD;
-            let titleText = 'PROYECCIÓN ACTIVA: 12 Hombres sin Piedad (HSPD)';
-            let subText = 'Código: HSPD-G1-T3-C2-V10-A4-ES-12 &bull; 12 Jurados &bull; Deliberación a Puerta Cerrada';
+            let titleText = 'PROYECCIÓN ACTIVA: V_Demo — Simulador Grupal (N < 51)';
+            let subText = 'Código: SIMUL-DEMO-G1-T4-C2-V10-A16-ES-12 &bull; Dinámica Grupal (N &lt; 51) &bull; Matrices SMIb';
 
             if (studyKey === 'G2T1C1' && window.VISORD_PAYLOAD_G2T1C1) {
                 activePayload = window.VISORD_PAYLOAD_G2T1C1;

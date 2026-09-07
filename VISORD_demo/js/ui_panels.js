@@ -726,7 +726,7 @@ class UIPanels {
                     
                     <div style="background:rgba(0,255,135,0.08); border-left:3px solid #00FF87; padding:8px 10px; border-radius:4px;">
                         <b style="color:#00FF87;">Q1: Atractor / Consenso</b> (Alto DA &bull; Alto RC)<br>
-                        <span style="color:#cbd5e1;">Líderes integradores que movilizan y a la vez reciben el consenso del jurado.</span>
+                        <span style="color:#cbd5e1;">Líderes integradores que movilizan y a la vez reciben el consenso del colectivo.</span>
                     </div>
 
                     <div style="background:rgba(56,189,248,0.08); border-left:3px solid #38BDF8; padding:8px 10px; border-radius:4px;">
@@ -736,7 +736,7 @@ class UIPanels {
 
                     <div style="background:rgba(148,163,184,0.08); border-left:3px solid #94A3B8; padding:8px 10px; border-radius:4px;">
                         <b style="color:#94A3B8;">Q3: Periférico / Retraído</b> (Bajo DA &bull; Bajo RC)<br>
-                        <span style="color:#cbd5e1;">Miembros aislados o vacilantes al margen de los flujos decisorios del debate.</span>
+                        <span style="color:#cbd5e1;">Miembros aislados o vacilantes al margen de los flujos decisorios del colectivo.</span>
                     </div>
 
                     <div style="background:rgba(245,158,11,0.08); border-left:3px solid #F59E0B; padding:8px 10px; border-radius:4px;">
@@ -746,15 +746,15 @@ class UIPanels {
                 </div>
             </div>
 
-            <!-- Tabla de Inter-Proximidad N=12 -->
+            <!-- Tabla de Inter-Proximidad N=12 (N < 51) -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
-                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Matriz de Inter-Proximidad y Tensión Individual (N=12)</h5>
+                <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Matriz de Inter-Proximidad y Tensión Individual (N=12, N &lt; 51)</h5>
                 <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:left;">ID</th>
-                            <th style="padding:8px 10px; text-align:left;">Jurado</th>
-                            <th style="padding:8px 10px; text-align:left;">Actor / Rol</th>
+                            <th style="padding:8px 10px; text-align:left;">Sujeto</th>
+                            <th style="padding:8px 10px; text-align:left;">Código / Rol</th>
                             <th style="padding:8px 10px; text-align:center;">DA (Emite)</th>
                             <th style="padding:8px 10px; text-align:center;">RC (Recibe)</th>
                             <th style="padding:8px 10px; text-align:center;">Tensión &Delta;</th>
@@ -771,10 +771,10 @@ class UIPanels {
             <!-- Nota Explicativa Pedagógica Canónica (Regla 10) -->
             <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
                 <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Inter-Proximidad DA/RC y Diagrama de Dispersión</div>
-                El <strong>Diagrama de Dispersión DA/RC</strong> proyecta el balance entre la <em>Expansividad Sociométrica Emita (DA, Eje Horizontal)</em> y el <em>Estatus o Prestigio Recibido (RC, Eje Vertical)</em> para los 12 jurados. 
+                El <strong>Diagrama de Dispersión DA/RC</strong> proyecta el balance entre la <em>Expansividad Sociométrica Emita (DA, Eje Horizontal)</em> y el <em>Estatus o Prestigio Recibido (RC, Eje Vertical)</em> para los participantes del colectivo ($N &lt; 51$). 
                 La línea discontinua verde representa la <strong>bisectriz de reciprocidad exacta ($y = x$)</strong> donde la tensión individual $\Delta_i = |RC_i - DA_i|$ es cero. 
                 Los miembros por encima de la bisectriz gozan de superávit de estatus, mientras que aquellos por debajo sufren déficit relacional. 
-                Observe la trayectoria longitudinal de <strong>Henry Fonda (Jurado 8)</strong>: en $T_1$ comienza en el cuadrante $Q3$ con $DA=0, RC=0$ (absoluto aislamiento y disidencia), cruzando sucesivamente hacia $Q2$ en $T_2$, compitiendo en $T_3$ con Lee J. Cobb (Jurado 3), hasta consagrarse en $T_5$ en el vértice supremo de $Q1$ ($DA=11, RC=11$) como atractor universal del consenso.
+                Observe la trayectoria longitudinal del nodo <strong>Sujeto 8A1a</strong>: en $T_1$ comienza en el cuadrante $Q3$ con $DA=0, RC=0$ (aislamiento inicial frente a la inercia del grupo), cruzando sucesivamente hacia $Q2$ en $T_2$, compitiendo en $T_3$ con el nodo 3A1a, hasta consagrarse en $T_5$ en el vértice de $Q1$ ($DA=11, RC=11$) como atractor universal del consenso grupal.
             </div>
         </div>`;
 
@@ -797,7 +797,7 @@ class UIPanels {
             data: {
                 datasets: [
                     {
-                        label: 'Jurados (N=12)',
+                        label: 'Participantes (N=12, N < 51)',
                         data: points,
                         backgroundColor: data.jurors.map(j => j.color),
                         borderColor: '#ffffff',
@@ -1230,7 +1230,7 @@ class UIPanels {
             <!-- Gráfico Horizontal de Barras de Distribución Estacionaria -->
             <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; position:relative; min-height:340px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold;">Distribución Estacionaria Gravitatoria &pi; (PageRank del Jurado)</span>
+                    <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold;">Distribución Estacionaria Gravitatoria &pi; (PageRank del Colectivo N &lt; 51)</span>
                     <span style="font-size:0.72rem; color:#fbbf24; font-family:monospace;">Umbral Base: ${(100/12).toFixed(2)}%</span>
                 </div>
                 <div style="position:relative; height:300px;">
@@ -1246,8 +1246,8 @@ class UIPanels {
                         <tr>
                             <th style="padding:8px 10px; text-align:center;">Rango</th>
                             <th style="padding:8px 10px; text-align:left;">ID</th>
-                            <th style="padding:8px 10px; text-align:left;">Jurado</th>
-                            <th style="padding:8px 10px; text-align:left;">Actor / Rol</th>
+                            <th style="padding:8px 10px; text-align:left;">Sujeto</th>
+                            <th style="padding:8px 10px; text-align:left;">Código / Rol</th>
                             <th style="padding:8px 10px; text-align:center;">Masa (&pi;)</th>
                             <th style="padding:8px 10px; text-align:center;">Porcentaje</th>
                             <th style="padding:8px 10px; text-align:center;">Ratio s/Media</th>
@@ -1263,10 +1263,10 @@ class UIPanels {
             <!-- Nota Explicativa Pedagógica (Regla 10) -->
             <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
                 <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Cadenas de Markov y Masa Gravitatoria Sociométrica</div>
-                El modelado mediante <strong>Cadenas de Markov</strong> interpreta la deliberación como una caminata aleatoria continua de atención y transferencia dialéctica entre jurados.
+                El modelado mediante <strong>Cadenas de Markov</strong> interpreta la dinámica grupal como una caminata aleatoria continua de atención y transferencia de consenso entre participantes.
                 A partir de la matriz de transición estocástica regularizada ($P_{ij} = A_{ij}/\sum A_{ik}$ con amortiguamiento ergódico $\alpha=0.85$), se calcula el vector estacionario $\pi$ tal que $\pi P = \pi$. 
-                Este vector representa la <strong>Masa Gravitatoria Sociométrica (el PageRank del jurado)</strong>: la probabilidad intrínseca de que el foco argumental converja en cada individuo.
-                Si todos los miembros tuvieran idéntico peso, cada uno tendría exactamente un $8.33\%$ ($1/12$). Ratios superiores a $1.0\times$ denotan centros de atracción de voto; observe cómo en $T_1$ el trío acusador (Jurados 3, 4 y 7) absorbe más del $58\%$ de la masa total, mientras que en $T_4$ y $T_5$ el Jurado 8 (Fonda) acapara de forma hegemónica el $34.8\%$ de toda la gravitación del jurado.
+                Este vector representa la <strong>Masa Gravitatoria Sociométrica (el PageRank del colectivo)</strong>: la probabilidad intrínseca de que el foco interactivo converja en cada individuo.
+                Si todos los miembros tuvieran idéntico peso, cada uno tendría exactamente un $8.33\%$ ($1/12$). Ratios superiores a $1.0\times$ denotan centros de atracción de consenso; observe cómo en $T_1$ el subgrupo inicial polarizado absorbe más del $58\%$ de la masa total, mientras que en $T_4$ y $T_5$ el nodo central 8A1a acapara de forma hegemónica el $34.8\%$ de toda la gravitación del colectivo.
             </div>
         </div>`;
 
