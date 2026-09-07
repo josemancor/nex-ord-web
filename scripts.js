@@ -148,3 +148,65 @@ window.openLightbox = function(src) {
     }
 };
 
+
+// Función maestra para navegación en el Menú de Lectura
+window.openSection = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    // Si la sección es desplegable (.prof-section), asegurar visibilidad
+    if (el.classList.contains('prof-section')) {
+        el.style.display = 'block';
+    }
+    
+    const yOffset = -70;
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    
+    // Si estamos en vista móvil, cerrar el menú desplegable tras pulsar
+    const menu = document.getElementById('reading-nav');
+    if (menu && window.innerWidth <= 1024) {
+        menu.classList.remove('menu-open');
+    }
+};
+
+window.toggleReadingMenu = function() {
+    const menu = document.getElementById('reading-nav');
+    if (menu) {
+        menu.classList.toggle('menu-open');
+    }
+};
+
+// ScrollSpy: Sincronización del paso activo en el Menú de Lectura
+window.addEventListener('scroll', () => {
+    const sectionIds = [
+        'hero',
+        'about',
+        'prof-termodinamica',
+        'prof-figuras',
+        'prof-rigor',
+        'modules',
+        'prof-galeria',
+        'manual',
+        'portales-visord'
+    ];
+    
+    let current = '';
+    const scrollPos = window.scrollY + 160;
+    
+    sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollPos && el.style.display !== 'none') {
+            current = id;
+        }
+    });
+    
+    document.querySelectorAll('.vertical-reading-menu .nav-step').forEach(step => {
+        const target = step.getAttribute('data-target');
+        if (target === current || (target === 'prof-galeria' && current === 'modules')) {
+            step.classList.add('active');
+        } else {
+            step.classList.remove('active');
+        }
+    });
+});
