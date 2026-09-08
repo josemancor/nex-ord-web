@@ -264,6 +264,11 @@ class VisordApp {
                 }
             });
         }
+
+        // Precarga de datos del simulador en background
+        if (window.VISORD_PAYLOAD) {
+            this.loadAndStart(window.VISORD_PAYLOAD);
+        }
     }
     
     showRoleDashboard(role) {
@@ -533,6 +538,7 @@ class VisordApp {
                     changeLanguage(target.dataset.lang);
                 }
             });
+        });
         // Configurar botones del Dock de Acción Inferior (#bottom-action-dock)
         document.querySelectorAll('#bottom-action-dock .dock-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
