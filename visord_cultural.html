@@ -696,22 +696,33 @@
             text-decoration: underline;
         }
         .cyber-table .cell-diag {
-            background: rgba(30, 41, 59, 0.5);
-            color: #475569;
-            font-weight: bold;
+            background: rgba(30, 41, 59, 0.6);
+            color: #64748B;
+            font-weight: 700;
         }
         .cyber-table .cell-pos {
-            background: rgba(6, 78, 59, 0.5);
+            background: rgba(6, 78, 59, 0.45);
             color: #00FF87;
-            font-weight: bold;
+            font-weight: 700;
         }
         .cyber-table .cell-neg {
-            background: rgba(131, 24, 67, 0.5);
+            background: rgba(131, 24, 67, 0.45);
             color: #FF007F;
-            font-weight: bold;
+            font-weight: 700;
+        }
+        .cyber-table .cell-mix {
+            background: rgba(180, 83, 9, 0.4);
+            color: #FF9F1C;
+            font-weight: 700;
         }
         .cyber-table .cell-neu {
-            color: #475569;
+            color: #64748B;
+        }
+        .cyber-table .sub-code {
+            font-size: 0.62rem;
+            opacity: 0.85;
+            font-weight: 600;
+            margin-left: 2px;
         }
         .cyber-table .marginal-header {
             background: rgba(30, 58, 138, 0.6);
@@ -722,6 +733,21 @@
             background: rgba(15, 23, 42, 0.8);
             font-weight: bold;
             color: #FDE047;
+        }
+        .layer-info-strip {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 0.74rem;
+            line-height: 1.45;
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         /* Tooltip de Personaje */
@@ -973,13 +999,13 @@
             <div style="display:flex; align-items:center; gap:6px;">
                 <span style="color:#94A3B8; font-weight:bold; font-size:0.70rem;">Capa Matricial:</span>
                 <div style="display:flex; gap:3px;" id="matrix-layer-buttons">
-                    <button class="btn-edge-filter active" data-layer="SMIb" title="Sociomatriz Individual Bipolar Ordinal">SMIb</button>
-                    <button class="btn-edge-filter" data-layer="SMIa" title="Sociomatriz Cualitativa (E / R / 0)">SMIa</button>
-                    <button class="btn-edge-filter" data-layer="A1" title="A1: Expectativa del Emisor (p_DA)">A1 (p_DA)</button>
-                    <button class="btn-edge-filter" data-layer="A2" title="A2: Preferencia Efectiva del Emisor (DA)">A2 (DA)</button>
-                    <button class="btn-edge-filter" data-layer="A3" title="A3: Preferencia Efectiva del Partner (RECIBE)">A3 (RECIBE)</button>
-                    <button class="btn-edge-filter" data-layer="A4" title="A4: Expectativa del Partner (p_RECIBE)">A4 (p_REC)</button>
-                    <button class="btn-edge-filter" data-layer="DIADA" title="Configuración Diádica (&lt;Ee&gt;, [Rr], etc.)">Díadas</button>
+                    <button class="btn-edge-filter active" data-layer="SMIb" title="SMIb: Tetragrama Ordinal Completo [A1 A2 A3 A4]">SMIb</button>
+                    <button class="btn-edge-filter" data-layer="SMIa" title="SMIa: Tensor Diádico Q81 Completo [A1 A2 A3 A4]">SMIa</button>
+                    <button class="btn-edge-filter" data-layer="A1" title="A1: Densidad de Expectativas del Emisor (p_DA)">A1 (p_DA)</button>
+                    <button class="btn-edge-filter" data-layer="A2" title="A2: Densidad de Preferencias Emitidas (DA)">A2 (DA)</button>
+                    <button class="btn-edge-filter" data-layer="A3" title="A3: Densidad de Preferencias Recibidas (RECIBE)">A3 (RECIBE)</button>
+                    <button class="btn-edge-filter" data-layer="A4" title="A4: Densidad de Expectativas del Partner (p_RECIBE)">A4 (p_REC)</button>
+                    <button class="btn-edge-filter" data-layer="DIADA" title="Díadas: Acoplamiento Factual Directo A2 × A3 (&lt;Ee&gt;, [Rr], etc.)">Díadas</button>
                 </div>
             </div>
             <div style="color:#94A3B8; font-size:0.70rem;">
@@ -1757,46 +1783,204 @@
             }
         }
 
-        // Pestaña 1: Matriz NxN
+        // =========================================================================
+        // HELPERS MATRICIALES CANÓNICOS (SMIb, SMIa, DENSIDADES A1-A4, DÍADAS)
+        // =========================================================================
+        function parseCellChar(c) {
+            if (!c || c === '0') {
+                return { char: '0', isPos: false, isNeg: false, isNeu: true, rank: 0, weight: 0.0, label: '0.00' };
+            }
+            const isUpper = (c === c.toUpperCase() && isNaN(c));
+            const isLower = (c === c.toLowerCase() && isNaN(c));
+            if (isUpper) {
+                const rank = c.charCodeAt(0) - 64; // A=1, B=2, C=3...
+                const weight = 1.0 / rank;
+                return { char: c, isPos: true, isNeg: false, isNeu: false, rank: rank, weight: weight, label: '+' + weight.toFixed(2) };
+            } else if (isLower) {
+                const rank = c.toUpperCase().charCodeAt(0) - 64; // a=1, b=2, c=3...
+                const weight = -1.0 / rank;
+                return { char: c, isPos: false, isNeg: true, isNeu: false, rank: -rank, weight: weight, label: weight.toFixed(2) };
+            }
+            return { char: c, isPos: false, isNeg: false, isNeu: true, rank: 0, weight: 0.0, label: '0.00' };
+        }
+
+        function smibToSMIaFigure(cell) {
+            if (!cell || cell === '0000' || cell.length < 4) return '¡¿?!';
+            const c0 = cell[0], c1 = cell[1], c2 = cell[2], c3 = cell[3];
+            const isPos = ch => (ch !== '0' && ch === ch.toUpperCase() && isNaN(ch));
+            const p0 = (c0 === '0') ? '¡' : (isPos(c0) ? '<' : '[');
+            const p1 = (c1 === '0') ? '¿' : (isPos(c1) ? 'E' : 'R');
+            const p2 = (c2 === '0') ? '?' : (isPos(c2) ? 'e' : 'r');
+            const p3 = (c3 === '0') ? '!' : (isPos(c3) ? '>' : ']');
+            return `${p0}${p1}${p2}${p3}`;
+        }
+
+        function renderSMIbCellHTML(cell) {
+            if (!cell || cell === '0000') {
+                return '<span style="color:#64748B; letter-spacing:1.5px;">0000</span>';
+            }
+            let res = '';
+            for (let k = 0; k < 4; k++) {
+                const c = cell[k] || '0';
+                if (c === '0') {
+                    res += `<span style="color:#64748B;">0</span>`;
+                } else if (c === c.toUpperCase() && isNaN(c)) {
+                    res += `<span style="color:#00FF87; font-weight:700;">${c}</span>`;
+                } else {
+                    res += `<span style="color:#FF007F; font-weight:700;">${c}</span>`;
+                }
+            }
+            return `<span style="letter-spacing:1.5px; font-family:'Roboto Mono',monospace;">${res}</span>`;
+        }
+
+        function renderSMIaCellHTML(fig) {
+            const escaped = fig.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const hasPos = fig.includes('E') || fig.includes('e') || fig.includes('<') || fig.includes('>');
+            const hasNeg = fig.includes('R') || fig.includes('r') || fig.includes('[') || fig.includes(']');
+            let col = '#64748B';
+            if (hasPos && !hasNeg) col = '#00FF87';
+            else if (hasNeg && !hasPos) col = '#FF007F';
+            else if (hasPos && hasNeg) col = '#FF9F1C';
+            return `<span style="color:${col}; font-weight:800; letter-spacing:1.5px; font-family:'Roboto Mono',monospace;">${escaped}</span>`;
+        }
+
+        // =========================================================================
+        // PESTAÑA 1: SUITE DE MATRICES NXN Y DENSIDADES RELACIONALES
+        // =========================================================================
         function renderMatrixTableHTML(wConf, tcData) {
             const chars = wConf.characters;
             const N = chars.length;
             const smib = tcData.smib_matrix || [];
+            const layer = activeMatrixLayer; // 'SMIb', 'SMIa', 'A1', 'A2', 'A3', 'A4', 'DIADA'
 
-            // Calcular marginales
-            const daPos = new Array(N).fill(0);
-            const daNeg = new Array(N).fill(0);
-            const rcPos = new Array(N).fill(0);
-            const rcNeg = new Array(N).fill(0);
+            // Configuración de encabezados y descripciones según la capa activa
+            let layerTitle = '';
+            let layerDesc = '';
+            let colMarginalHeader1 = '';
+            let colMarginalHeader2 = '';
+            let rowMarginalHeader1 = '';
+            let rowMarginalHeader2 = '';
+
+            if (layer === 'SMIb') {
+                layerTitle = '📐 Matriz SMIb Completa (Tetragrama Ordinal)';
+                layerDesc = 'Presenta el vector completo de 4 vías <code>[A1, A2, A3, A4]</code> con su ranking jerárquico de intensidad (A=1º, B=2º... Mayúsculas = Elección, Minúsculas = Rechazo, 0 = Neutro).';
+                colMarginalHeader1 = 'DA+';
+                colMarginalHeader2 = 'DA-';
+                rowMarginalHeader1 = 'RC+ (Elec. Recibidas)';
+                rowMarginalHeader2 = 'RC- (Rech. Recibidos)';
+            } else if (layer === 'SMIa') {
+                layerTitle = '✨ Matriz SMIa Integrada (Tensor Q81 Completo)';
+                layerDesc = 'Tipificación categórica pura de las 81 figuras relacionales diádicas <code>[A1, A2, A3, A4]</code> en sus 81 estados (&lt;Ee&gt; Cohesión mutua, [Rr] Tensión/Fricción, ¡¿?! Ausencia de vínculo).';
+                colMarginalHeader1 = 'DA+';
+                colMarginalHeader2 = 'DA-';
+                rowMarginalHeader1 = 'RC+ (Elec. Recibidas)';
+                rowMarginalHeader2 = 'RC- (Rech. Recibidos)';
+            } else if (layer === 'A1') {
+                layerTitle = '🧠 Capa Vectorial A1 — Densidades de Expectativa del Emisor (p_DA)';
+                layerDesc = 'Muestra la densidad continua <code>W ∈ [-1.00, +1.00]</code> y el código ordinal que el emisor (fila) anticipa respecto a la conducta del partner (columna).';
+                colMarginalHeader1 = 'p_DA+';
+                colMarginalHeader2 = 'p_DA-';
+                rowMarginalHeader1 = 'p_REC+ (Exp. hacia j)';
+                rowMarginalHeader2 = 'p_REC- (Rech. hacia j)';
+            } else if (layer === 'A2') {
+                layerTitle = '⚡ Capa Vectorial A2 — Densidades de Preferencia Emitida (DA)';
+                layerDesc = 'Muestra la densidad continua <code>W ∈ [-1.00, +1.00]</code> y el orden de elección efectivo que el emisor (fila) otorga al partner (columna).';
+                colMarginalHeader1 = 'DA+';
+                colMarginalHeader2 = 'DA-';
+                rowMarginalHeader1 = 'RC+ (Elec. Recibidas)';
+                rowMarginalHeader2 = 'RC- (Rech. Recibidos)';
+            } else if (layer === 'A3') {
+                layerTitle = '📥 Capa Vectorial A3 — Densidades de Preferencia Recibida (RECIBE)';
+                layerDesc = 'Muestra la densidad continua <code>W ∈ [-1.00, +1.00]</code> y el orden de elección efectivo que el partner (columna) otorga al emisor (fila). Transpuesta factual de A2.';
+                colMarginalHeader1 = 'REC+';
+                colMarginalHeader2 = 'REC-';
+                rowMarginalHeader1 = 'DA+ (Emitidas por j)';
+                rowMarginalHeader2 = 'DA- (Rechazos de j)';
+            } else if (layer === 'A4') {
+                layerTitle = '🔮 Capa Vectorial A4 — Densidades de Expectativa del Partner (p_RECIBE)';
+                layerDesc = 'Muestra la densidad continua <code>W ∈ [-1.00, +1.00]</code> y la expectativa que el partner (columna) anticipa sobre el emisor (fila). Transpuesta cognitiva de A1.';
+                colMarginalHeader1 = 'p_REC+';
+                colMarginalHeader2 = 'p_REC-';
+                rowMarginalHeader1 = 'p_DA+ (Exp. de j)';
+                rowMarginalHeader2 = 'p_DA- (Rech. de j)';
+            } else if (layer === 'DIADA') {
+                layerTitle = '🔗 Configuración Diádica Factual (A2 × A3)';
+                layerDesc = 'Acoplamiento directo de reciprocidad entre la acción emitida y recibida (&lt;Ee&gt; atracción mutua, [Rr] rechazo mutuo, &lt;Er]/[Re&gt; oposición de sentimientos, 00 neutralidad).';
+                colMarginalHeader1 = 'Mutuas';
+                colMarginalHeader2 = 'Asim.';
+                rowMarginalHeader1 = 'Mutuas (Total j)';
+                rowMarginalHeader2 = 'Asim. (Total j)';
+            }
+
+            // Calcular Marginales Dinámicos según la Capa Activa
+            const rowM1 = new Array(N).fill(0);
+            const rowM2 = new Array(N).fill(0);
+            const colM1 = new Array(N).fill(0);
+            const colM2 = new Array(N).fill(0);
 
             for (let i = 0; i < N; i++) {
                 for (let j = 0; j < N; j++) {
                     if (i === j) continue;
                     const cell = (smib[i] && smib[i][j]) ? smib[i][j] : '0000';
-                    const a2 = cell[1];
-                    const a3 = cell[2];
-                    if (a2 && a2 !== '0') {
-                        if (a2 === a2.toUpperCase()) daPos[i]++; else daNeg[i]++;
-                    }
-                    if (a3 && a3 !== '0') {
-                        if (a3 === a3.toUpperCase()) rcPos[i]++; else rcNeg[i]++;
+                    const p0 = parseCellChar(cell[0]);
+                    const p1 = parseCellChar(cell[1]);
+                    const p2 = parseCellChar(cell[2]);
+                    const p3 = parseCellChar(cell[3]);
+
+                    if (layer === 'SMIb' || layer === 'SMIa' || layer === 'A2') {
+                        if (p1.isPos) rowM1[i]++;
+                        if (p1.isNeg) rowM2[i]++;
+                        if (p2.isPos) colM1[j]++;
+                        if (p2.isNeg) colM2[j]++;
+                    } else if (layer === 'A1') {
+                        if (p0.isPos) rowM1[i]++;
+                        if (p0.isNeg) rowM2[i]++;
+                        if (p3.isPos) colM1[j]++;
+                        if (p3.isNeg) colM2[j]++;
+                    } else if (layer === 'A3') {
+                        if (p2.isPos) rowM1[i]++;
+                        if (p2.isNeg) rowM2[i]++;
+                        if (p1.isPos) colM1[j]++;
+                        if (p1.isNeg) colM2[j]++;
+                    } else if (layer === 'A4') {
+                        if (p3.isPos) rowM1[i]++;
+                        if (p3.isNeg) rowM2[i]++;
+                        if (p0.isPos) colM1[j]++;
+                        if (p0.isNeg) colM2[j]++;
+                    } else if (layer === 'DIADA') {
+                        const isMutE = p1.isPos && p2.isPos;
+                        const isMutR = p1.isNeg && p2.isNeg;
+                        const isMut = isMutE || isMutR;
+                        const isAsim = (p1.isPos && !p2.isPos) || (p1.isNeg && !p2.isNeg) || (p1.isPos && p2.isNeg) || (p1.isNeg && p2.isPos);
+                        if (isMut) { rowM1[i]++; colM1[j]++; }
+                        if (isAsim) { rowM2[i]++; colM2[j]++; }
                     }
                 }
             }
 
             let html = `
+            <div class="layer-info-strip">
+                <div>
+                    <span style="font-size:0.85rem; font-weight:800; color:#38BDF8; margin-right:8px;">${layerTitle}</span>
+                    <span>${layerDesc}</span>
+                </div>
+                <div style="font-size:0.70rem; color:#FDE047; font-family:'Roboto Mono',monospace; white-space:nowrap;">
+                    <span>🎯 Célula (i, j): Emisor fila → Receptor col.</span>
+                </div>
+            </div>
+
             <div style="overflow-x:auto;">
                 <table class="cyber-table">
                     <thead>
                         <tr>
-                            <th style="text-align:left; min-width:140px;">Emisor (i) \ Receptor (j)</th>
+                            <th style="text-align:left; min-width:140px;">Emisor (i) \\ Receptor (j)</th>
             `;
             chars.forEach((c, idx) => {
                 html += `<th title="${c.name} (${c.role})">S${idx+1}</th>`;
             });
             html += `
-                            <th class="marginal-header" title="Elecciones Emitidas (DA+)">DA+</th>
-                            <th class="marginal-header" title="Rechazos Emitidos (DA-)">DA-</th>
+                            <th class="marginal-header" title="${colMarginalHeader1}">${colMarginalHeader1}</th>
+                            <th class="marginal-header" title="${colMarginalHeader2}">${colMarginalHeader2}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1812,78 +1996,138 @@
 
                 for (let j = 0; j < N; j++) {
                     if (i === j) {
-                        html += `<td class="cell-diag" title="Diagonal Basal (Auto-referencia)">0</td>`;
+                        let diagHtml = '<span style="color:#FFE600; font-weight:700;">0</span>';
+                        if (layer === 'SMIb') diagHtml = '<span style="color:#FFE600; font-weight:700;">[Auto]</span>';
+                        else if (layer === 'SMIa') diagHtml = '<span style="color:#FFE600; font-weight:800;">&lt;Ee&gt;</span>';
+                        else if (layer === 'DIADA') diagHtml = '<span style="color:#FFE600; font-weight:700;">[Auto]</span>';
+                        else diagHtml = '<span style="color:#FFE600; font-weight:700;">0.00</span> <sub class="sub-code" style="color:#FDE047;">[Auto]</sub>';
+                        html += `<td class="cell-diag" title="Diagonal Basal (Auto-referencia de ${c1.name})">${diagHtml}</td>`;
                     } else {
                         const cell = (smib[i] && smib[i][j]) ? smib[i][j] : '0000';
-                        const a1 = cell[0];
-                        const a2 = cell[1];
-                        const a3 = cell[2];
-                        const a4 = cell[3];
+                        const p0 = parseCellChar(cell[0]);
+                        const p1 = parseCellChar(cell[1]);
+                        const p2 = parseCellChar(cell[2]);
+                        const p3 = parseCellChar(cell[3]);
 
-                        let displayVal = a2;
+                        let cellDisplay = '';
                         let cellClass = 'cell-neu';
+                        let tooltipText = '';
 
-                        if (activeMatrixLayer === 'SMIb') {
-                            displayVal = a2;
-                            cellClass = a2 === '0' ? 'cell-neu' : (a2 === a2.toUpperCase() ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'SMIa') {
-                            displayVal = a2 === '0' ? '0' : (a2 === a2.toUpperCase() ? 'E' : 'R');
-                            cellClass = displayVal === '0' ? 'cell-neu' : (displayVal === 'E' ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'A1') {
-                            displayVal = a1;
-                            cellClass = a1 === '0' ? 'cell-neu' : (a1 === a1.toUpperCase() ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'A2') {
-                            displayVal = a2;
-                            cellClass = a2 === '0' ? 'cell-neu' : (a2 === a2.toUpperCase() ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'A3') {
-                            displayVal = a3;
-                            cellClass = a3 === '0' ? 'cell-neu' : (a3 === a3.toUpperCase() ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'A4') {
-                            displayVal = a4;
-                            cellClass = a4 === '0' ? 'cell-neu' : (a4 === a4.toUpperCase() ? 'cell-pos' : 'cell-neg');
-                        } else if (activeMatrixLayer === 'DIADA') {
-                            const isMutE = (a2 !== '0' && a2 === a2.toUpperCase() && a3 !== '0' && a3 === a3.toUpperCase());
-                            const isMutR = (a2 !== '0' && a2 === a2.toLowerCase() && a3 !== '0' && a3 === a3.toLowerCase());
-                            if (isMutE) { displayVal = '<Ee>'; cellClass = 'cell-pos'; }
-                            else if (isMutR) { displayVal = '[Rr]'; cellClass = 'cell-neg'; }
-                            else if (a2 !== '0' && a2 === a2.toUpperCase()) { displayVal = 'E0'; cellClass = 'cell-pos'; }
-                            else if (a2 !== '0' && a2 === a2.toLowerCase()) { displayVal = 'R0'; cellClass = 'cell-neg'; }
-                            else { displayVal = '00'; cellClass = 'cell-neu'; }
+                        if (layer === 'SMIb') {
+                            cellDisplay = renderSMIbCellHTML(cell);
+                            const hasPos = p0.isPos || p1.isPos || p2.isPos || p3.isPos;
+                            const hasNeg = p0.isNeg || p1.isNeg || p2.isNeg || p3.isNeg;
+                            if (hasPos && !hasNeg) cellClass = 'cell-pos';
+                            else if (hasNeg && !hasPos) cellClass = 'cell-neg';
+                            else if (hasPos && hasNeg) cellClass = 'cell-mix';
+                            else cellClass = 'cell-neu';
+                            tooltipText = `${c1.name} → ${chars[j].name} | Tetragrama SMIb: ${cell}\n• A1 (p_DA): ${cell[0]} [Exp. Emisor]\n• A2 (DA): ${cell[1]} [Pref. Emitida]\n• A3 (RECIBE): ${cell[2]} [Pref. Recibida]\n• A4 (p_REC): ${cell[3]} [Exp. Partner]`;
+                        } else if (layer === 'SMIa') {
+                            const fig = smibToSMIaFigure(cell);
+                            cellDisplay = renderSMIaCellHTML(fig);
+                            const hasPos = fig.includes('E') || fig.includes('e') || fig.includes('<') || fig.includes('>');
+                            const hasNeg = fig.includes('R') || fig.includes('r') || fig.includes('[') || fig.includes(']');
+                            if (hasPos && !hasNeg) cellClass = 'cell-pos';
+                            else if (hasNeg && !hasPos) cellClass = 'cell-neg';
+                            else if (hasPos && hasNeg) cellClass = 'cell-mix';
+                            else cellClass = 'cell-neu';
+                            tooltipText = `${c1.name} → ${chars[j].name} | Figura Q81: ${fig} | SMIb: ${cell}`;
+                        } else if (layer === 'A1' || layer === 'A2' || layer === 'A3' || layer === 'A4') {
+                            const targetP = (layer === 'A1') ? p0 : ((layer === 'A2') ? p1 : ((layer === 'A3') ? p2 : p3));
+                            const vecName = (layer === 'A1') ? 'A1 (p_DA - Exp. Emisor)' : ((layer === 'A2') ? 'A2 (DA - Pref. Emitida)' : ((layer === 'A3') ? 'A3 (RECIBE - Pref. Recibida)' : 'A4 (p_REC - Exp. Partner)'));
+                            
+                            if (targetP.isPos) {
+                                cellDisplay = `<span style="color:#00FF87; font-weight:700;">${targetP.label}</span> <sub class="sub-code" style="color:#6EE7B7;">[${targetP.char}]</sub>`;
+                                cellClass = 'cell-pos';
+                            } else if (targetP.isNeg) {
+                                cellDisplay = `<span style="color:#FF007F; font-weight:700;">${targetP.label}</span> <sub class="sub-code" style="color:#F472B6;">[${targetP.char}]</sub>`;
+                                cellClass = 'cell-neg';
+                            } else {
+                                cellDisplay = `<span style="color:#64748B;">0.00</span>`;
+                                cellClass = 'cell-neu';
+                            }
+                            tooltipText = `${c1.name} → ${chars[j].name} | ${vecName} | Densidad W = ${targetP.label} | Rango: ${targetP.rank !== 0 ? Math.abs(targetP.rank) + 'º' : 'Neutro'}`;
+                        } else if (layer === 'DIADA') {
+                            const isMutE = p1.isPos && p2.isPos;
+                            const isMutR = p1.isNeg && p2.isNeg;
+                            const isOpp1 = p1.isPos && p2.isNeg;
+                            const isOpp2 = p1.isNeg && p2.isPos;
+                            const isUnilEmitE = p1.isPos && p2.isNeu;
+                            const isUnilRecE = p1.isNeu && p2.isPos;
+                            const isUnilEmitR = p1.isNeg && p2.isNeu;
+                            const isUnilRecR = p1.isNeu && p2.isNeg;
+
+                            if (isMutE) {
+                                cellDisplay = `<span style="color:#00FF87; font-weight:800;">&lt;Ee&gt;</span>`;
+                                cellClass = 'cell-pos';
+                                tooltipText = `${c1.name} ↔ ${chars[j].name} | Elección Mutua Recíproca (<Ee>)`;
+                            } else if (isMutR) {
+                                cellDisplay = `<span style="color:#FF007F; font-weight:800;">[Rr]</span>`;
+                                cellClass = 'cell-neg';
+                                tooltipText = `${c1.name} ↔ ${chars[j].name} | Rechazo Mutuo Recíproco ([Rr])`;
+                            } else if (isOpp1) {
+                                cellDisplay = `<span style="color:#FF9F1C; font-weight:800;">&lt;Er]</span>`;
+                                cellClass = 'cell-mix';
+                                tooltipText = `${c1.name} elige a ${chars[j].name}, pero recibe rechazo (<Er])`;
+                            } else if (isOpp2) {
+                                cellDisplay = `<span style="color:#FF9F1C; font-weight:800;">[Re&gt;</span>`;
+                                cellClass = 'cell-mix';
+                                tooltipText = `${c1.name} rechaza a ${chars[j].name}, pero recibe elección ([Re>)`;
+                            } else if (isUnilEmitE) {
+                                cellDisplay = `<span style="color:#6EE7B7; font-weight:700;">&lt;E·]</span>`;
+                                cellClass = 'cell-pos';
+                                tooltipText = `${c1.name} elige a ${chars[j].name} (unilateral no correspondida)`;
+                            } else if (isUnilRecE) {
+                                cellDisplay = `<span style="color:#38BDF8; font-weight:700;">[·e&gt;</span>`;
+                                cellClass = 'cell-pos';
+                                tooltipText = `${c1.name} recibe elección de ${chars[j].name} (unilateral)`;
+                            } else if (isUnilEmitR) {
+                                cellDisplay = `<span style="color:#FB7185; font-weight:700;">[R·&gt;</span>`;
+                                cellClass = 'cell-neg';
+                                tooltipText = `${c1.name} rechaza a ${chars[j].name} (unilateral)`;
+                            } else if (isUnilRecR) {
+                                cellDisplay = `<span style="color:#C084FC; font-weight:700;">&lt;·r]</span>`;
+                                cellClass = 'cell-neg';
+                                tooltipText = `${c1.name} recibe rechazo de ${chars[j].name} (unilateral)`;
+                            } else {
+                                cellDisplay = `<span style="color:#64748B;">00</span>`;
+                                cellClass = 'cell-neu';
+                                tooltipText = `${c1.name} ↔ ${chars[j].name} | Neutralidad mutua (00)`;
+                            }
                         }
 
-                        const tooltipText = `${c1.name} -> ${chars[j].name} | Tetragrama: ${cell} (A1:${a1}, A2:${a2}, A3:${a3}, A4:${a4})`;
                         html += `<td class="${cellClass}" title="${tooltipText}" style="cursor:pointer;" onmouseenter="highlightLink3D(${i}, ${j})" onmouseleave="unhighlightLink3D()">
-                                    ${displayVal}
+                                    ${cellDisplay}
                                  </td>`;
                     }
                 }
 
-                html += `<td class="marginal-val" style="color:#00FF87;">${daPos[i]}</td>`;
-                html += `<td class="marginal-val" style="color:#FF007F;">${daNeg[i]}</td>`;
+                html += `<td class="marginal-val" style="color:#00FF87;">${rowM1[i]}</td>`;
+                html += `<td class="marginal-val" style="color:#FF007F;">${rowM2[i]}</td>`;
                 html += `</tr>`;
             }
 
-            // Fila de Marginales Recibidos
+            // Fila de Marginales Inferiores
             html += `
                     <tr>
-                        <td class="marginal-header" style="text-align:left; padding-left:8px;">RC+ (Elec. Recibidas)</td>
+                        <td class="marginal-header" style="text-align:left; padding-left:8px;">${rowMarginalHeader1}</td>
             `;
             for (let j = 0; j < N; j++) {
-                html += `<td class="marginal-val" style="color:#00FF87;">${rcPos[j]}</td>`;
+                html += `<td class="marginal-val" style="color:#00FF87;">${colM1[j]}</td>`;
             }
             html += `
-                        <td class="marginal-val" style="color:#FFE600;">${daPos.reduce((a,b)=>a+b, 0)}</td>
-                        <td class="marginal-val" style="color:#FFE600;">${daNeg.reduce((a,b)=>a+b, 0)}</td>
+                        <td class="marginal-val" style="color:#FFE600;">${rowM1.reduce((a,b)=>a+b, 0)}</td>
+                        <td class="marginal-val" style="color:#FFE600;">${rowM2.reduce((a,b)=>a+b, 0)}</td>
                     </tr>
                     <tr>
-                        <td class="marginal-header" style="text-align:left; padding-left:8px;">RC- (Rech. Recibidos)</td>
+                        <td class="marginal-header" style="text-align:left; padding-left:8px;">${rowMarginalHeader2}</td>
             `;
             for (let j = 0; j < N; j++) {
-                html += `<td class="marginal-val" style="color:#FF007F;">${rcNeg[j]}</td>`;
+                html += `<td class="marginal-val" style="color:#FF007F;">${colM2[j]}</td>`;
             }
             html += `
-                        <td class="marginal-val" style="color:#FFE600;">${rcPos.reduce((a,b)=>a+b, 0)}</td>
-                        <td class="marginal-val" style="color:#FFE600;">${rcNeg.reduce((a,b)=>a+b, 0)}</td>
+                        <td class="marginal-val" style="color:#FFE600;">${colM1.reduce((a,b)=>a+b, 0)}</td>
+                        <td class="marginal-val" style="color:#FFE600;">${colM2.reduce((a,b)=>a+b, 0)}</td>
                     </tr>
                     </tbody>
                 </table>
