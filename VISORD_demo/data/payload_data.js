@@ -1078,14 +1078,14 @@ window.VISORD_PAYLOAD = {
     }
   },
   "active_features": {
-    "+Duda_Razonable": {
+    "+Cohesion_Cooperativa": {
       "coords": [
         -4.0,
         2.0,
         1.5
       ]
     },
-    "-Prejuicio_Culpabilidad": {
+    "-Tension_Grupal": {
       "coords": [
         4.0,
         -2.5,

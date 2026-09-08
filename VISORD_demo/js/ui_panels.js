@@ -749,7 +749,7 @@ class UIPanels {
             <!-- Tabla de Inter-Proximidad N=12 (N < 51) -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Matriz de Inter-Proximidad y Tensión Individual (N=12, N &lt; 51)</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:left;">ID</th>
@@ -933,7 +933,7 @@ class UIPanels {
             <!-- Tabla de Autovalores -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Tabla de Autovalores Laplacianos y Significación Sociométrica</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:left;">Autovalor</th>
@@ -1073,7 +1073,7 @@ class UIPanels {
             <!-- Tabla de Armónicos -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Tabla de Armónicos de Fourier y Potencia Espectral</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:left;">Armónico</th>
@@ -1241,7 +1241,7 @@ class UIPanels {
             <!-- Tabla de Masa Gravitatoria -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Ranking de Influencia Estocástica y Masa Gravitatoria</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:center;">Rango</th>
@@ -1272,7 +1272,7 @@ class UIPanels {
 
         // Generar Gráfico Chart.js Horizontal Bar
         const ctx = document.getElementById('fig-markov-canvas').getContext('2d');
-        const labels = markov.jurors.map(j => `${j.name} (${j.actor.split(' ')[0]})`);
+        const labels = markov.jurors.map(j => `${j.code}: ${j.name}`);
         const pcts = markov.jurors.map(j => j.piPct);
         const colors = markov.jurors.map(j => j.color);
 
@@ -1391,7 +1391,7 @@ class UIPanels {
                 <!-- Matriz de Calor Geodésica 5x5 -->
                 <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; display:flex; flex-direction:column; overflow-x:auto;">
                     <span style="font-size:0.80rem; color:#cbd5e1; font-weight:bold; margin-bottom:8px;">Matriz Geodésica Par-a-Par d<sub>G</sub>(T<sub>i</sub>, T<sub>j</sub>)</span>
-                    <table style="width:100%; border-collapse:collapse; font-size:0.75rem; text-align:center; color:#cbd5e1;">
+                    <table class="cyber-table" style="width:100%; font-size:0.75rem; text-align:center; color:#cbd5e1;">
                         <thead style="background:rgba(30,41,59,0.9); color:#38bdf8;">
                             ${matrixHeader}
                         </thead>
@@ -1405,7 +1405,7 @@ class UIPanels {
             <!-- Tabla de Ángulos Canónicos Principales -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Progresión de Ángulos Principales (&theta;<sub>1</sub>, &theta;<sub>2</sub>, &theta;<sub>3</sub>) y Métrica Geodésica</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:0.78rem; color:#cbd5e1;">
+                <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
                     <thead style="background:rgba(30,41,59,0.9); color:#38bdf8; border-bottom:2px solid rgba(56,189,248,0.4);">
                         <tr>
                             <th style="padding:8px 10px; text-align:left;">Transición</th>
@@ -1427,8 +1427,7 @@ class UIPanels {
                 La <strong>Variedad de Grassmann $\operatorname{Gr}(k, N)$</strong> es el espacio riemanniano diferenciable formado por todos los subespacios lineales de dimensión $k$ dentro de $\mathbb{R}^N$. 
                 En este estudio ($N=12, k=3$), $\operatorname{Gr}(3, 12)$ posee una dimensión intrínseca de $3 \times (12 - 3) = 27$ grados de libertad topológicos.
                 La distancia geodésica $d_G(T_i, T_j) = \sqrt{\theta_1^2 + \theta_2^2 + \theta_3^2}$ mide la longitud de la curva más corta a lo largo de la superficie curva de la variedad entre las configuraciones colectivas de dos momentos deliberativos. 
-                A diferencia de una simple correlación euclídea, $d_G$ es <strong>estrictamente invariante ante cualquier rotación, escalado o traslación arbitraria</strong> del marco referencial. 
-                Los datos demuestran que la mayor curvatura o salto cualitativo se produce en el tránsito de $T_2$ a $T_3$, reflejando el colapso del consenso aparente y la fractura decisiva hacia la duda razonable.
+                Los datos demuestran que la mayor curvatura o salto cualitativo se produce en el tránsito de $T_2$ a $T_3$, reflejando el colapso de la estabilidad inicial y la bifurcación decisiva hacia la reconfiguración del sistema.
             </div>
         </div>`;
 

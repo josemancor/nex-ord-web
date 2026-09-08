@@ -36,11 +36,11 @@
     ];
 
     const WAVES_INFO = [
-        { id: 1, key: '1g1t1c', keyCrit2: '1g1t2c', label: 'T1: Estado Inicial', sublabel: 'Configuración asimétrica de bloque inicial', voteCount: '11-1' },
-        { id: 2, key: '1g2t1c', keyCrit2: '1g2t2c', label: 'T2: Emergencia de Díada', sublabel: 'Formación del primer núcleo alternativo resonante', voteCount: '10-2' },
-        { id: 3, key: '1g3t1c', keyCrit2: '1g3t2c', label: 'T3: Bifurcación Relacional', sublabel: 'Empate técnico y fractura dipolar simétrica', voteCount: '6-6' },
-        { id: 4, key: '1g4t1c', keyCrit2: '1g4t2c', label: 'T4: Transición de Fase', sublabel: 'Reconfiguración masiva hacia el atractor central', voteCount: '1-11' },
-        { id: 5, key: '1g5t1c', keyCrit2: '1g5t2c', label: 'T5: Atractor Consonante', sublabel: 'Consenso pleno y minimización entrópica', voteCount: '0-12' }
+        { id: 1, key: '1g1t1c', keyCrit2: '1g1t2c', label: 'T1: Estado Inicial', sublabel: 'Configuración asimétrica de bloque inicial', balance: '11:1' },
+        { id: 2, key: '1g2t1c', keyCrit2: '1g2t2c', label: 'T2: Emergencia de Díada', sublabel: 'Formación del primer núcleo alternativo resonante', balance: '10:2' },
+        { id: 3, key: '1g3t1c', keyCrit2: '1g3t2c', label: 'T3: Bifurcación Relacional', sublabel: 'Empate técnico y fractura dipolar simétrica', balance: '6:6' },
+        { id: 4, key: '1g4t1c', keyCrit2: '1g4t2c', label: 'T4: Transición de Fase', sublabel: 'Reconfiguración masiva hacia el atractor central', balance: '1:11' },
+        { id: 5, key: '1g5t1c', keyCrit2: '1g5t2c', label: 'T5: Atractor Consonante', sublabel: 'Consenso pleno y minimización entrópica', balance: '0:12' }
     ];
 
     const DATASET = {
@@ -430,8 +430,8 @@
     "sdr": "+0.58",
     "f1": "98.2%",
     "grassmann": "d_G = 0.320 rad",
-    "regime": "Monopolio de Culpabilidad",
-    "synopsis_tc": "1\u00aa Votaci\u00f3n a mano alzada (11 Culpables vs 1 No Culpable). Davis (Jurado 8) vota en solitario invocando la duda razonable frente a la inercia punitiva masiva.",
+    "regime": "Asimetría Polarizada Inicial",
+    "synopsis_tc": "Configuración asimétrica inicial de bloque hegemónico (11 a 1). El nodo disidente 8A1a sostiene una posición divergente frente a la inercia del colectivo.",
     "t": 1,
     "c": 1
   },
@@ -758,8 +758,8 @@
     "sdr": "-0.45",
     "f1": "98.2%",
     "grassmann": "d_G = 0.320 rad",
-    "regime": "Coerci\u00f3n Punitiva Masiva",
-    "synopsis_tc": "Furia inmediata del Jurado 3 y del Jurado 10 contra Davis. La prisa por clausurar el caso choca con la exigencia \u00e9tica de deliberar.",
+    "regime": "Coerción de Bloque Hegemónico",
+    "synopsis_tc": "Tensión relacional reactiva de los polos 3A1a y 10A1a hacia el nodo 8A1a. La inercia del grupo presiona por clausurar la divergencia.",
     "t": 1,
     "c": 2
   },
@@ -1114,8 +1114,8 @@
     "sdr": "+0.42",
     "f1": "96.8%",
     "grassmann": "d_G = 0.410 rad",
-    "regime": "Emergencia de D\u00edada Cr\u00edtica",
-    "synopsis_tc": "2\u00aa Votaci\u00f3n secreta (10 a 2). McArdle (Jurado 9) apoya a Davis respetando su coraje moral. Se consolida la primera d\u00edada de duda razonable.",
+    "regime": "Emergencia de Díada Resonante",
+    "synopsis_tc": "Consolidación de la primera díada cooperativa (10 a 2). El nodo 9A1a converge con el nodo 8A1a, fracturando el monopolio de consenso inicial.",
     "t": 2,
     "c": 1
   },
@@ -1435,8 +1435,8 @@
     "sdr": "-0.52",
     "f1": "96.8%",
     "grassmann": "d_G = 0.410 rad",
-    "regime": "Paranoia y Sospecha Fraterna",
-    "synopsis_tc": "El Jurado 3 estalla en ira y acusa con violencia al Jurado 5 de haber cambiado el voto, evidenciando su rencor latente.",
+    "regime": "Activación de Fricción Dialéctica",
+    "synopsis_tc": "Dispersión de fricción interna en el bloque dominante. Reconfiguración de expectativas de rol ante la consolidación de la nueva díada.",
     "t": 2,
     "c": 2
   },
@@ -1868,8 +1868,8 @@
     "sdr": "+0.08",
     "f1": "94.5%",
     "grassmann": "d_G = 0.590 rad",
-    "regime": "Bipolaridad Equitativa (Cisma)",
-    "synopsis_tc": "3\u00aa Votaci\u00f3n (6 a 6). El jurado se parte exactamente a la mitad tras la demostraci\u00f3n de la navaja autom\u00e1tica y el paso del tren.",
+    "regime": "Bifurcación Relacional Simétrica",
+    "synopsis_tc": "Punto de máxima entropía y fractura dipolar simétrica (6 a 6). El sistema colectivo oscila en un régimen de bifurcación crítica con igual número de adhesiones.",
     "t": 3,
     "c": 1
   },
@@ -2245,8 +2245,8 @@
     "sdr": "-0.68",
     "f1": "94.5%",
     "grassmann": "d_G = 0.590 rad",
-    "regime": "M\u00e1xima Fricci\u00f3n Geod\u00e9sica",
-    "synopsis_tc": "Tensi\u00f3n l\u00edmite: el Jurado 3 pierde el control y grita a Davis '\u00a1Voy a matarlo!', demostrando que sus palabras no son literales.",
+    "regime": "Máxima Tensión Geodésica",
+    "synopsis_tc": "Fricción geodésica extrema entre polos opuestos. La polaridad dialéctica alcanza su cota máxima antes del salto de fase.",
     "t": 3,
     "c": 2
   },
@@ -2657,8 +2657,8 @@
     "sdr": "+0.68",
     "f1": "97.1%",
     "grassmann": "d_G = 0.680 rad",
-    "regime": "Hegemon\u00eda de la Raz\u00f3n C\u00edvica",
-    "synopsis_tc": "4\u00aa Votaci\u00f3n (1 Culpable vs 11 No Culpables). El an\u00e1lisis de las marcas de gafas convence al racional Jurado 4. Todos se vuelven de espaldas al racismo del Jurado 10.",
+    "regime": "Transición de Fase Colectiva",
+    "synopsis_tc": "Reconfiguración masiva acelerada hacia el nuevo atractor central (1 a 11). Convergencia del nodo analítico 4A1a y la periferia.",
     "t": 4,
     "c": 1
   },
@@ -3020,8 +3020,8 @@
     "sdr": "-0.32",
     "f1": "97.1%",
     "grassmann": "d_G = 0.680 rad",
-    "regime": "Ostracismo del Prejuicio",
-    "synopsis_tc": "El Jurado 3 queda acorralado como atractor residual \u00fanico, resisti\u00e9ndose desesperadamente a admitir el fracaso de su venganza personal.",
+    "regime": "Aislamiento del Polo Residual",
+    "synopsis_tc": "El nodo de oposición 3A1a queda aislado como atractor residual excéntrico frente a la nueva mayoría estructurada.",
     "t": 4,
     "c": 2
   },
@@ -3475,7 +3475,7 @@
     "f1": "99.4%",
     "grassmann": "d_G = 0.745 rad",
     "regime": "Consenso Estacionario Total",
-    "synopsis_tc": "Consenso Un\u00e1nime (12 No Culpables). El Jurado 3 rompe la foto de su hijo, llora y musita 'No culpable'. Davis le alcanza el abrigo con respeto humano.",
+    "synopsis_tc": "Consenso unánime pleno (0 a 12). Colapso final del polo residual y convergencia universal armónica en el espacio de fases.",
     "t": 5,
     "c": 1
   },
@@ -3746,8 +3746,8 @@
     "sdr": "0.00",
     "f1": "99.4%",
     "grassmann": "d_G = 0.745 rad",
-    "regime": "Entrop\u00eda Cero / Paz Relacional",
-    "synopsis_tc": "Disipaci\u00f3n de la hostilidad. El campo grupal alcanza el estado estacionario arm\u00f3nico y los jurados abandonan la sala bajo la lluvia reconciliadora.",
+    "regime": "Entropía Cero / Estabilidad Armónica",
+    "synopsis_tc": "Disipación completa de tensiones de fricción. El campo relacional alcanza el estado estacionario armónico y equilibrio invariante.",
     "t": 5,
     "c": 2
   }

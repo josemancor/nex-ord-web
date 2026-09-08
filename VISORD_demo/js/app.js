@@ -9,7 +9,7 @@ class VisordApp {
         this.uiPanels = new UIPanels(this);
         this.setupUI();
         
-        // Selector de Estudios Demo (12 Hombres sin Piedad | La Casa de Bernarda Alba)
+        // Selector de Estudios Demo (Simulador Grupal N < 51)
         const selectStudy = document.getElementById('select-active-study');
         const studySubtitle = document.getElementById('study-active-subtitle');
         const btnOpenInfo = document.getElementById('btn-open-study-info');

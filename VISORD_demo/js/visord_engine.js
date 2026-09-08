@@ -571,40 +571,39 @@ class VisordHubEngine {
                 const numMatch = key.match(/^\d+/);
                 const num = numMatch ? parseInt(numMatch[0]) : null;
                 
-                let mesh;
-                if (!this.isMultiGroup && num >= 1 && num <= 12) {
-                    // Usar textura de avatar en recorte circular ajustado con anillo neón
-                    const tex = this.createCircularFaceTexture(`assets/faces/${num}.jpg`);
-                    const matMicro = new THREE.SpriteMaterial({ map: tex });
-                    mesh = new THREE.Sprite(matMicro);
-                    
-                    
-                    // Fetch Markov Mass if available
-                    let markovMass = 0;
-                    try {
-                        let g = (subject.group === 'ALL' || !subject.group) ? 'g1' : subject.group.toLowerCase();
-                        let t = (subject.time === 'ALL' || !subject.time) ? 't1' : subject.time.toLowerCase();
-                        let c = (subject.criterio && subject.criterio !== 'ALL') ? subject.criterio.toLowerCase() : 'c1';
-                        let mObj = this.payload.raw_matrices[g+t+c]?.Markov;
-                        let sName = num.toString();
-                        if (mObj) markovMass = mObj[sName] || 0;
-                    } catch(e) {}
-                    
-                    let scaleMult = 1.0 + (markovMass * 5); // Exaggerate Gravity
-                    
-                    // Hacerlos un poco más pequeños si son sub-condensados (8_c1)
-                    if (key.includes('_c')) {
-                        mesh.scale.set(1, 1, 1);
-                        matMicro.opacity = 0.7;
-                    } else {
-                        mesh.scale.set(1.5, 1.5, 1);
-                    }
-                } else {
-                    // Fallback
-                    const color = new THREE.Color().setHSL(0.6 - (density * 0.6), 1, 0.5);
-                    const matMicro = new THREE.MeshPhongMaterial({ color: color });
-                    mesh = new THREE.Mesh(geoMicro, matMicro);
+                const canonicalPalette = [
+                    '#38BDF8', '#818CF8', '#FF007F', '#38BDF8', '#FBBF24', '#34D399',
+                    '#F87171', '#00FF87', '#A78BFA', '#F43F5E', '#67E8F9', '#CBD5E1'
+                ];
+                const nodeColor = num ? canonicalPalette[(num - 1) % canonicalPalette.length] : '#38BDF8';
+
+                // Fetch Markov Mass if available
+                let markovMass = 0;
+                try {
+                    let g = (subject.group === 'ALL' || !subject.group) ? 'g1' : subject.group.toLowerCase();
+                    let t = (subject.time === 'ALL' || !subject.time) ? 't1' : subject.time.toLowerCase();
+                    let c = (subject.criterio && subject.criterio !== 'ALL') ? subject.criterio.toLowerCase() : 'c1';
+                    let mObj = this.payload.raw_matrices[g+t+c]?.Markov;
+                    let sName = num ? num.toString() : key;
+                    if (mObj) markovMass = mObj[sName] || 0;
+                } catch(e) {}
+
+                let scaleMult = 1.0 + (markovMass * 3.5);
+                const baseRadius = key.includes('_c') ? 0.28 : 0.42;
+
+                const matMicro = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(nodeColor),
+                    emissive: new THREE.Color(nodeColor),
+                    emissiveIntensity: 0.35,
+                    roughness: 0.3,
+                    metalness: 0.15
+                });
+                if (key.includes('_c')) {
+                    matMicro.opacity = 0.75;
+                    matMicro.transparent = true;
                 }
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(baseRadius, 24, 24), matMicro);
+                mesh.scale.set(scaleMult, scaleMult, scaleMult);
                 
                 const pos = new THREE.Vector3(
                     subject.coords[0] * scaleFactor,
@@ -612,18 +611,17 @@ class VisordHubEngine {
                     subject.coords[2] * scaleFactor
                 );
                 mesh.position.copy(pos);
-                mesh.position.copy(pos);
-                let markovMassRaw = 0;
-                try {
-                    let g = (subject.group === 'ALL' || !subject.group) ? 'g1' : subject.group.toLowerCase();
-                    let t = (subject.time === 'ALL' || !subject.time) ? 't1' : subject.time.toLowerCase();
-                    let c = (subject.criterio && subject.criterio !== 'ALL') ? subject.criterio.toLowerCase() : 'c1';
-                    let mObj = this.payload.raw_matrices[g+t+c]?.Markov;
-                    if (mObj && num) markovMassRaw = mObj[num.toString()] || 0;
-                } catch(e) {}
                 
+                let markovMassRaw = markovMass;
                 mesh.userData = { type: 'Sujeto', ...subject, name: key.replace('_CONDENSED', ''), markovMass: markovMassRaw };
                 this.layers['MICRO'].add(mesh);
+
+                // Etiqueta de Código Canónico
+                const labelCode = num ? `${num}A1a` : key.replace('_CONDENSED', '');
+                const labelSprite = this.createTextSprite(labelCode, nodeColor, 0.75);
+                labelSprite.position.set(pos.x, pos.y + (baseRadius * scaleMult) + 0.55, pos.z);
+                labelSprite.userData = { type: 'SujetoLabel', name: labelCode };
+                this.layers['MICRO'].add(labelSprite);
             });
         }
         
@@ -1085,16 +1083,20 @@ class VisordHubEngine {
             
             let mesh;
             if (!item.isAag) {
-                if (!this.isMultiGroup && parseInt(item.id) >= 1 && parseInt(item.id) <= 12) {
-                    // Avatar del sujeto con recorte circular perfecto y anillo neón
-                    const tex = this.createCircularFaceTexture(`assets/faces/${item.id}.jpg`);
-                    const mat = new THREE.SpriteMaterial({ map: tex });
-                    mesh = new THREE.Sprite(mat);
-                    mesh.scale.set(1.4, 1.4, 1);
-                } else {
-                    const mat = new THREE.MeshBasicMaterial({ color: 0x10b981 }); // Verde neutro
-                    mesh = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16), new THREE.MeshPhongMaterial({ color: 0xa3e635 }));
-                }
+                const canonicalPalette = [
+                    '#38BDF8', '#818CF8', '#FF007F', '#38BDF8', '#FBBF24', '#34D399',
+                    '#F87171', '#00FF87', '#A78BFA', '#F43F5E', '#67E8F9', '#CBD5E1'
+                ];
+                const sId = parseInt(item.id);
+                const sColor = (!isNaN(sId) && sId >= 1) ? canonicalPalette[(sId - 1) % canonicalPalette.length] : '#00FF87';
+                const mat = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(sColor),
+                    emissive: new THREE.Color(sColor),
+                    emissiveIntensity: 0.45,
+                    roughness: 0.25,
+                    metalness: 0.2
+                });
+                mesh = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 24), mat);
                 
                 // Etiqueta de ID flotante si está activa
                 if (this.activeLabels && this.activeLabels.has(item.id) && this.labelsCache[item.id]) {

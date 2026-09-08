@@ -209,18 +209,45 @@ function changeLanguage(lang) {
         }
     }
     
-    // Update active button state in language bar
-    document.querySelectorAll('.lang-btn').forEach(btn => {
+    // Update active state in buttons and dropdown options
+    document.querySelectorAll('.lang-btn, .lang-opt').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
     });
+
+    // Update flag and code on dropdown trigger
+    const flags = { es: '🇪🇸', en: '🇬🇧', fr: '🇫🇷', it: '🇮🇹', de: '🇩🇪', pt: '🇵🇹', ru: '🇷🇺', zh: '🇨🇳' };
+    const curFlag = document.getElementById('lang-current-flag');
+    const curCode = document.getElementById('lang-current-code');
+    if (curFlag) curFlag.innerText = flags[lang] || '🌐';
+    if (curCode) curCode.innerText = lang.toUpperCase();
+
+    // Close dropdown
+    const picker = document.getElementById('nexord-lang-picker');
+    if (picker) picker.classList.remove('open');
 }
 
 // Bind click events on startup
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.lang-btn').forEach(btn => {
+    // Dropdown trigger toggle
+    const picker = document.getElementById('nexord-lang-picker');
+    const trigger = document.getElementById('lang-picker-btn');
+    if (trigger && picker) {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            picker.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!picker.contains(e.target)) {
+                picker.classList.remove('open');
+            }
+        });
+    }
+
+    // Language options
+    document.querySelectorAll('.lang-btn, .lang-opt').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const lang = e.currentTarget.dataset.lang;
-            changeLanguage(lang);
+            if (lang) changeLanguage(lang);
         });
     });
 });
