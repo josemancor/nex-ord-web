@@ -286,6 +286,11 @@
             border-color: #00FF87;
             box-shadow: 0 0 10px rgba(0, 255, 135, 0.25);
         }
+        .char-item.ego-isolated {
+            background: rgba(251, 191, 36, 0.22);
+            border-color: #FBBF24;
+            box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+        }
         .char-name { font-weight: 600; color: #F1F5F9; }
         .char-role-badge {
             font-size: 0.65rem;
@@ -1030,7 +1035,7 @@
                     { id: "S1", name: "Jurado 1", role: "Presidente / Moderador", color: "#38BDF8" },
                     { id: "S2", name: "Jurado 2", role: "Empleado tímido y vacilante", color: "#818CF8" },
                     { id: "S3", name: "Jurado 3", role: "Empresario colérico / Antagonista", color: "#FF007F" },
-                    { id: "S4", name: "Jurado 4", role: "Corredor de bolsa analítico", color: "#38BDF8" },
+                    { id: "S4", name: "Jurado 4", role: "Corredor de bolsa analítico", color: "#06B6D4" },
                     { id: "S5", name: "Jurado 5", role: "Joven criado en suburbios", color: "#FBBF24" },
                     { id: "S6", name: "Jurado 6", role: "Pintor de brocha gorda honesto", color: "#34D399" },
                     { id: "S7", name: "Jurado 7", role: "Vendedor cínico con prisa de beisbol", color: "#F87171" },
@@ -1038,7 +1043,7 @@
                     { id: "S9", name: "Jurado 9 (McArdle)", role: "Anciano sabio y perceptivo", color: "#A78BFA" },
                     { id: "S10", name: "Jurado 10", role: "Comerciante amargado y racista", color: "#F43F5E" },
                     { id: "S11", name: "Jurado 11", role: "Relojero inmigrante europeo", color: "#67E8F9" },
-                    { id: "S12", name: "Jurado 12", role: "Publicista superficial y cambiante", color: "#CBD5E1" }
+                    { id: "S12", name: "Jurado 12", role: "Publicista superficial y cambiante", color: "#F472B6" }
                 ]
             },
             "lorca": {
@@ -1055,7 +1060,7 @@
                     { id: "S1", name: "Bernarda Alba", role: "Matriarca tiránica (El Bastón)", color: "#FF007F" },
                     { id: "S2", name: "Angustias", role: "Hija mayor (39 años) / Prometida Pepe", color: "#C084FC" },
                     { id: "S3", name: "Magdalena", role: "Segunda hija / Resignación y llanto", color: "#818CF8" },
-                    { id: "S4", name: "Amelia", role: "Tercera hija / Sumisa y temerosa", color: "#94A3B8" },
+                    { id: "S4", name: "Amelia", role: "Tercera hija / Sumisa y temerosa", color: "#60A5FA" },
                     { id: "S5", name: "Martirio", role: "Cuarta hija / Envidia ponzoñosa", color: "#FB7185" },
                     { id: "S6", name: "Adela", role: "Hija menor / Pasión y libertad", color: "#00FF87" },
                     { id: "S7", name: "La Poncia", role: "Criada principal / Voz del pueblo", color: "#F59E0B" },
@@ -1081,7 +1086,7 @@
                     { id: "S5", name: "Roger", role: "Ejecutor sádico / Violencia pura", color: "#EF4444" },
                     { id: "S6", name: "Samneric", role: "Los gemelos / Lealtad vacilante", color: "#FBBF24" },
                     { id: "S7", name: "Maurice", role: "Coro de cazadores / Complicidad", color: "#FB923C" },
-                    { id: "S8", name: "Littluns", role: "Los pequeños / Terror supersticioso", color: "#94A3B8" }
+                    { id: "S8", name: "Littluns", role: "Los pequeños / Terror supersticioso", color: "#A3E635" }
                 ]
             },
             "la_ola": {
@@ -1101,7 +1106,7 @@
                     { id: "S4", name: "Marco", role: "Novio de Karo / Atrapado en la Ola", color: "#818CF8" },
                     { id: "S5", name: "Tim", role: "Marginado fanatizado / Guardaespaldas", color: "#EF4444" },
                     { id: "S6", name: "Sinan", role: "Adherente al movimiento", color: "#34D399" },
-                    { id: "S7", name: "Lisa", role: "Periférica / Aceptación del uniforme", color: "#CBD5E1" }
+                    { id: "S7", name: "Lisa", role: "Periférica / Aceptación del uniforme", color: "#2DD4BF" }
                 ]
             }
         };
@@ -1114,6 +1119,7 @@
         let currentC = 1;
         let activeEdgeFilter = 'all'; // 'all', 'E', 'R', 'mutual'
         let activeEgoIndex = null;   // null = global, integer = focused character
+        let egoIsolationState = 0;   // 0 = Red Global, 1 = Contexto en Sordina, 2 = Aislamiento Puro
         let isMoviolaPlaying = false;
         let moviolaTimer = null;
         let isSpinning = false;
@@ -1139,7 +1145,8 @@
         // =========================================================================
         function initScene() {
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x080D1A, 0.024);
+            // Atenuación de niebla sutil (no oscurece los nodos distantes)
+            scene.fog = new THREE.FogExp2(0x080D1A, 0.007);
 
             const w = container.clientWidth || window.innerWidth;
             const h = container.clientHeight || window.innerHeight;
@@ -1157,15 +1164,26 @@
             controls.maxDistance = 60;
             controls.minDistance = 3;
 
-            // Iluminación
-            const ambient = new THREE.AmbientLight(0xffffff, 0.75);
+            // Iluminación Escénica Vibrante (Anti-Oscurecimiento)
+            const ambient = new THREE.AmbientLight(0xffffff, 1.15);
             scene.add(ambient);
 
-            const p1 = new THREE.PointLight(0x00FF87, 1.2, 50);
+            // Luz Frontal Directa Blanca
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.30);
+            dirLight1.position.set(12, 22, 25);
+            scene.add(dirLight1);
+
+            // Luz de Relleno Lateral Blanca
+            const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.85);
+            dirLight2.position.set(-16, -10, -15);
+            scene.add(dirLight2);
+
+            // Luces de Acento Cromático
+            const p1 = new THREE.PointLight(0x00FF87, 1.0, 50);
             p1.position.set(10, 15, 10);
             scene.add(p1);
 
-            const p2 = new THREE.PointLight(0xFF007F, 1.2, 50);
+            const p2 = new THREE.PointLight(0xFF007F, 1.0, 50);
             p2.position.set(-10, -10, -10);
             scene.add(p2);
 
@@ -1193,6 +1211,7 @@
             currentT = 1;
             currentC = 1;
             activeEgoIndex = null;
+            egoIsolationState = 0;
             updateEgoBanner();
 
             const wConf = WORKS_CONFIG[workKey];
@@ -1275,16 +1294,16 @@
             });
             subjectMeshes.length = 0;
 
-            const sphereGeo = new THREE.SphereGeometry(0.24, 32, 32);
+            const sphereGeo = new THREE.SphereGeometry(0.28, 32, 32);
 
             characters.forEach((char, idx) => {
                 const colorHex = parseInt(char.color.replace('#', '0x'), 16);
                 const mat = new THREE.MeshStandardMaterial({
                     color: colorHex,
-                    roughness: 0.25,
-                    metalness: 0.85,
+                    roughness: 0.15,
+                    metalness: 0.06,
                     emissive: colorHex,
-                    emissiveIntensity: 0.45,
+                    emissiveIntensity: 0.65,
                     transparent: true,
                     opacity: 1.0
                 });
@@ -1477,18 +1496,24 @@
         }
 
         // =========================================================================
-        // MODO EGO-RED CON CONTEXTUALIZACIÓN 'EN SORDINA'
+        // MODO EGO-RED CON CONTEXTUALIZACIÓN 'EN SORDINA' & AISLAMIENTO PURO (3 ESTADOS)
         // =========================================================================
         function toggleEgoFocus(index) {
             if (activeEgoIndex === index) {
-                resetEgoFocus();
+                // Si el nodo ya estaba seleccionado, ciclar de Estado 1 a Estado 2, o de Estado 2 a Estado 0
+                if (egoIsolationState === 1) {
+                    setEgoFocus(index, 2); // 2º clic: Queda el nodo aislado
+                } else {
+                    resetEgoFocus();       // 3er clic: Vuelve a aparecer el contexto
+                }
             } else {
-                setEgoFocus(index);
+                setEgoFocus(index, 1);     // 1er clic: Aparece en sordina su contexto grupal
             }
         }
 
-        function setEgoFocus(index) {
+        function setEgoFocus(index, state = 1) {
             activeEgoIndex = index;
+            egoIsolationState = state;
             const targetChar = subjectMeshes[index];
             if (!targetChar) return;
 
@@ -1498,7 +1523,9 @@
 
             // Resaltar en lista de personajes
             document.querySelectorAll('.char-item').forEach(el => {
-                el.classList.toggle('ego-focused', parseInt(el.getAttribute('data-char-idx')) === index);
+                const itemIdx = parseInt(el.getAttribute('data-char-idx'));
+                el.classList.toggle('ego-focused', itemIdx === index && state === 1);
+                el.classList.toggle('ego-isolated', itemIdx === index && state === 2);
             });
 
             applyEgoAttenuation();
@@ -1507,17 +1534,25 @@
 
         function resetEgoFocus() {
             activeEgoIndex = null;
-            document.querySelectorAll('.char-item').forEach(el => el.classList.remove('ego-focused'));
+            egoIsolationState = 0;
+            document.querySelectorAll('.char-item').forEach(el => {
+                el.classList.remove('ego-focused');
+                el.classList.remove('ego-isolated');
+            });
 
-            // Restaurar opacidad y escalas de todos los nodos
+            // Restaurar visibilidad, opacidad y escalas de todos los nodos
             subjectMeshes.forEach(s => {
+                s.mesh.visible = true;
+                s.sprite.visible = true;
                 s.mesh.scale.set(1, 1, 1);
                 s.mesh.material.opacity = 1.0;
+                s.mesh.material.emissiveIntensity = 0.65;
                 s.sprite.material.opacity = 1.0;
             });
 
             // Restaurar aristas
             edgeObjects.forEach(line => {
+                line.visible = true;
                 line.material.opacity = line.userData.mutual ? 0.90 : (line.userData.type === 'E' ? 0.65 : 0.75);
             });
             applyEdgeFilterUI();
@@ -1544,42 +1579,80 @@
                 }
             });
 
-            // Modificar esferas: sujeto principal al 100%, vecinos incidentes al 100%, restantes 'EN SORDINA' (0.18)
-            subjectMeshes.forEach((s, i) => {
-                if (i === idx) {
-                    s.mesh.scale.set(1.28, 1.28, 1.28);
-                    s.mesh.material.opacity = 1.0;
-                    s.sprite.material.opacity = 1.0;
-                } else if (incidentNeighbors.has(i)) {
-                    s.mesh.scale.set(1.0, 1.0, 1.0);
-                    s.mesh.material.opacity = 0.95;
-                    s.sprite.material.opacity = 0.95;
-                } else {
-                    // RESTANTES ELEMENTOS EN SORDINA
-                    s.mesh.scale.set(0.85, 0.85, 0.85);
-                    s.mesh.material.opacity = 0.18;
-                    s.sprite.material.opacity = 0.18;
-                }
-            });
+            if (egoIsolationState === 1) {
+                // =============================================================
+                // ESTADO 1: Nodo enfocado + Contexto grupal 'EN SORDINA'
+                // =============================================================
+                subjectMeshes.forEach((s, i) => {
+                    s.mesh.visible = true;
+                    s.sprite.visible = true;
+                    if (i === idx) {
+                        s.mesh.scale.set(1.35, 1.35, 1.35);
+                        s.mesh.material.opacity = 1.0;
+                        s.mesh.material.emissiveIntensity = 0.85;
+                        s.sprite.material.opacity = 1.0;
+                    } else if (incidentNeighbors.has(i)) {
+                        s.mesh.scale.set(1.05, 1.05, 1.05);
+                        s.mesh.material.opacity = 0.92;
+                        s.mesh.material.emissiveIntensity = 0.65;
+                        s.sprite.material.opacity = 0.88;
+                    } else {
+                        // RESTANTES ELEMENTOS DEL CONTEXTO 'EN SORDINA'
+                        s.mesh.scale.set(0.70, 0.70, 0.70);
+                        s.mesh.material.opacity = 0.16;
+                        s.mesh.material.emissiveIntensity = 0.15;
+                        s.sprite.material.opacity = 0.14;
+                    }
+                });
 
-            // Modificar aristas: incidentes a plena intensidad (1.0), no incidentes 'EN SORDINA' (0.06)
-            edgeObjects.forEach(line => {
-                const u = line.userData;
-                const isIncident = (u.src === idx || u.tgt === idx);
-                if (isIncident) {
-                    line.material.opacity = 1.0;
-                    line.material.linewidth = 2.8;
-                } else {
-                    // ARISTAS EN SORDINA (visibles pero tenues como hilos fantasma de contexto)
-                    line.material.opacity = 0.06;
-                    line.material.linewidth = 1.0;
-                }
-            });
+                // Aristas: incidentes al 100%, aristas de contexto 'EN SORDINA'
+                edgeObjects.forEach(line => {
+                    const u = line.userData;
+                    const isIncident = (u.src === idx || u.tgt === idx);
+                    if (isIncident) {
+                        line.visible = true;
+                        line.material.opacity = 1.0;
+                        line.material.linewidth = 2.8;
+                    } else {
+                        // ARISTAS EN SORDINA (hilos fantasma sutiles de contexto)
+                        line.visible = true;
+                        line.material.opacity = 0.05;
+                        line.material.linewidth = 1.0;
+                    }
+                });
 
-            // Actualizar estadísticas del banner
-            const statsEl = document.getElementById('ego-stats');
-            if (statsEl) {
-                statsEl.innerHTML = `Emitidas (DA): <strong style="color:#00FF87">${daCount}</strong> &bull; Recibidas (RC): <strong style="color:#38BDF8">${rcCount}</strong>`;
+                const statsEl = document.getElementById('ego-stats');
+                if (statsEl) {
+                    statsEl.innerHTML = `Emitidas (DA): <strong style="color:#00FF87">${daCount}</strong> &bull; Recibidas (RC): <strong style="color:#38BDF8">${rcCount}</strong> &bull; <span style="color:#FBBF24; font-size:0.75rem;">(Clic de nuevo para aislar nodo)</span>`;
+                }
+            } else if (egoIsolationState === 2) {
+                // =============================================================
+                // ESTADO 2: Aislamiento Puro del Nodo (Solo el nodo queda visible)
+                // =============================================================
+                subjectMeshes.forEach((s, i) => {
+                    if (i === idx) {
+                        s.mesh.visible = true;
+                        s.sprite.visible = true;
+                        s.mesh.scale.set(1.45, 1.45, 1.45);
+                        s.mesh.material.opacity = 1.0;
+                        s.mesh.material.emissiveIntensity = 0.95;
+                        s.sprite.material.opacity = 1.0;
+                    } else {
+                        // Todo el resto del contexto queda oculto
+                        s.mesh.visible = false;
+                        s.sprite.visible = false;
+                    }
+                });
+
+                // Todas las aristas ocultas para aislamiento visual puro
+                edgeObjects.forEach(line => {
+                    line.visible = false;
+                });
+
+                const statsEl = document.getElementById('ego-stats');
+                if (statsEl) {
+                    statsEl.innerHTML = `<span style="color:#FBBF24; font-weight:700;">🔍 Nodo Aislado Puro</span> &bull; Coordenadas individuales &bull; <span style="color:#38BDF8; font-size:0.75rem;">(Clic de nuevo para restaurar contexto)</span>`;
+                }
             }
         }
 
@@ -1591,7 +1664,18 @@
             } else {
                 banner.style.display = 'flex';
                 const char = subjectMeshes[activeEgoIndex]?.charData;
-                document.getElementById('ego-char-name').textContent = char ? `${char.name} (${char.role})` : '';
+                const nameEl = document.getElementById('ego-char-name');
+                if (nameEl && char) {
+                    if (egoIsolationState === 1) {
+                        banner.style.borderColor = '#00FF87';
+                        banner.style.boxShadow = '0 0 20px rgba(0, 255, 135, 0.3)';
+                        nameEl.innerHTML = `🎯 Contexto en Sordina: <span style="color:#00FF87">${char.name}</span> (${char.role})`;
+                    } else if (egoIsolationState === 2) {
+                        banner.style.borderColor = '#FBBF24';
+                        banner.style.boxShadow = '0 0 20px rgba(251, 191, 36, 0.35)';
+                        nameEl.innerHTML = `🔍 Nodo Aislado Puro: <span style="color:#FBBF24">${char.name}</span> (${char.role})`;
+                    }
+                }
             }
         }
 
@@ -1686,7 +1770,7 @@
                 const c1 = chars[i];
                 const isEgo = (activeEgoIndex === i);
                 html += `<tr style="${isEgo ? 'background:rgba(0,255,135,0.15);' : ''}">`;
-                html += `<td class="row-header" onclick="setEgoFocus(${i})" title="Clic para enfocar Ego-Red de ${c1.name}">
+                html += `<td class="row-header" onclick="toggleEgoFocus(${i})" title="Clic para alternar Ego-Red / Aislamiento de ${c1.name}">
                             <span style="color:${c1.color};">●</span> S${i+1}: ${c1.name}
                          </td>`;
 
@@ -1832,7 +1916,7 @@
                 const isEgo = (activeEgoIndex === i);
                 html += `
                     <tr style="${isEgo ? 'background:rgba(0,255,135,0.15);' : ''}">
-                        <td class="row-header" onclick="setEgoFocus(${i})" title="Clic para enfocar en 3D">
+                        <td class="row-header" onclick="toggleEgoFocus(${i})" title="Clic para alternar Ego-Red / Aislamiento de ${char.name}">
                             <span style="color:${char.color};">●</span> S${i+1}: ${char.name}
                         </td>
                         <td style="color:#00FF87; font-weight:bold;">${da_p}</td>
@@ -2101,11 +2185,23 @@
                     tooltip.style.left = (e.clientX + 14) + 'px';
                     tooltip.style.top = (e.clientY + 14) + 'px';
                     tooltip.style.borderColor = charData.color;
+
+                    let actionHint = "Clic: Aislar con contexto 'en sordina'";
+                    let hintColor = "#A3E635";
+                    if (activeEgoIndex === charData.index) {
+                        if (egoIsolationState === 1) {
+                            actionHint = "Clic de nuevo: Aislar nodo (sin contexto)";
+                            hintColor = "#FBBF24";
+                        } else if (egoIsolationState === 2) {
+                            actionHint = "Clic de nuevo: Restaurar contexto grupal";
+                            hintColor = "#38BDF8";
+                        }
+                    }
                     tooltip.innerHTML = `
                         <strong style="color:${charData.color}; font-size:0.88rem;">${charData.name}</strong><br>
                         <span style="color:#94A3B8;">${charData.role}</span><br>
                         <span style="font-family:monospace; font-size:0.70rem; color:#38BDF8;">Pos: (${hit.position.x.toFixed(2)}, ${hit.position.y.toFixed(2)}, ${hit.position.z.toFixed(2)})</span><br>
-                        <span style="color:#A3E635; font-size:0.68rem; font-weight:bold;">Clic: Aislar Ego-Red ('en sordina')</span>
+                        <span style="color:${hintColor}; font-size:0.68rem; font-weight:bold;">${actionHint}</span>
                     `;
                 } else {
                     tooltip.style.display = 'none';
@@ -2129,7 +2225,7 @@
                     const hit = intersects[0].object;
                     toggleEgoFocus(hit.userData.index);
                 } else {
-                    // Clic en el espacio vacío desactiva Ego-Red
+                    // Clic en el espacio vacío restaura la Red Global (Aparece el contexto)
                     if (activeEgoIndex !== null) {
                         resetEgoFocus();
                     }
@@ -2145,7 +2241,7 @@
                 const item = subjectMeshes[i];
                 if (item.targetPos) {
                     item.mesh.position.lerp(item.targetPos, 0.075);
-                    item.sprite.position.copy(item.mesh.position).add(new THREE.Vector3(0, 0.38, 0));
+                    item.sprite.position.copy(item.mesh.position).add(new THREE.Vector3(0, 0.44, 0));
                 }
             }
 
