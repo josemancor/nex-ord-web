@@ -3095,6 +3095,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         let container = document.getElementById('matrix-container');
         if (!container) return;
         
+        let currentEntropia = (typeof window.entropia !== 'undefined' && typeof window.entropia === 'number') ? window.entropia : 0.0;
+        
         let indicators = [
             { id: 'IND-L0-01', nivel: 'L0', nombre: 'Densidad Absoluta BDR', valor: (currentStats ? currentStats.densidad : 0).toFixed(3), ambito: 'Global', formula: 'Σ|A1| + Σ|A2|' },
             { id: 'IND-L0-02', nivel: 'L0', nombre: 'Densidad Relativa SDR', valor: (currentStats ? currentStats.densidad_relativa || currentStats.densidad : 0).toFixed(3), ambito: 'Global', formula: 'Σ(A1 + A2) / BDR' },
@@ -3106,9 +3108,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             { id: 'IND-L3-03', nivel: 'L3', nombre: 'Entropía von Neumann', valor: res.entropy_vn.toFixed(4), ambito: 'Espectral', formula: '-Tr(ρ ln ρ)' },
             { id: 'IND-L3-04', nivel: 'L3', nombre: 'Índice de Estrada (EE)', valor: res.estrada.toFixed(2), ambito: 'Espectral', formula: 'Σ exp(μᵢ)' },
             { id: 'IND-L4-01', nivel: 'L4', nombre: 'Distancia Grassmann Gr(2,N)', valor: res.grassmann_dist.toFixed(4), ambito: 'Grassmanniano', formula: '||sin Θ(V, V₀)||₂' },
-            { id: 'IND-L5-01', nivel: 'L5', nombre: 'Entropía Shannon H(x)', valor: (entropia || 0).toFixed(3), ambito: 'Termodinámico', formula: '-Σ pᵢ log₂ pᵢ' },
+            { id: 'IND-L5-01', nivel: 'L5', nombre: 'Entropía Shannon H(x)', valor: currentEntropia.toFixed(3), ambito: 'Termodinámico', formula: '-Σ pᵢ log₂ pᵢ' },
             { id: 'IND-L6-01', nivel: 'L6', nombre: 'Índice de Centralidad Vectorial', valor: '0.742', ambito: 'Morfología', formula: 'v₁(A)' },
-            { id: 'IND-L7-01', nivel: 'L7', nombre: 'Parámetro de Orden Ψ', valor: (1.0 - (entropia || 0)/2.0).toFixed(3), ambito: 'Macro-Fase', formula: '1 - H/H_max' }
+            { id: 'IND-L7-01', nivel: 'L7', nombre: 'Parámetro de Orden Ψ', valor: (1.0 - Math.min(2.0, currentEntropia)/2.0).toFixed(3), ambito: 'Macro-Fase', formula: '1 - H/H_max' }
         ];
         
         let rows = '';
@@ -3952,6 +3954,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             
             // Actualizar ECG
             drawECG(currentStats.densidad, entropia);
+            window.entropia = entropia;
             window.currentMatrix = currentMatrix;
             window.n_nodes = n_nodes;
             if (typeof update2026MetricsUI === 'function') {
@@ -4013,10 +4016,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 tr.style.cursor = "pointer";
                 tr.onclick = () => selectNodeById(i.toString());
                 
-                let sda_val = currentStats.sda_emisores[i].toFixed(2);
-                let src_val = currentStats.sda_receptores[i].toFixed(2);
-                let dis_val = (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2); // Disonancia local
-                let rol_val = currentStats.roles[i];
+                let sda_val = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '0.00';
+                let src_val = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '0.00';
+                let dis_val = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '0.00';
+                let rol_val = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : 'NEUTRO';
                 
                 if (tbody) {
                     tr.innerHTML = `<td>${i+1}</td><td>${sda_val}</td><td>${src_val}</td><td>${dis_val}</td><td style="font-size:10px;">${rol_val}</td>`;
@@ -4091,7 +4094,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         const container = document.getElementById('mini-matrix');
         if (!container) return;
         
-        let nodesArray = Array.from(selectedNodes).map(id => parseInt(id)).sort((a,b) => a-b);
+        let nodesArray = Array.from(selectedNodes)
+            .map(id => parseInt(id))
+            .filter(id => !isNaN(id) && id >= 0 && id < n_nodes)
+            .sort((a,b) => a-b);
         
         if (nodesArray.length >= 1 && nodesArray.length <= 3) {
             // Mostrar filas de los seleccionados contra TODA la red (1..n_nodes)
@@ -4124,10 +4130,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                         html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
                     }
                 }
-                let sda = currentStats ? currentStats.sda_emisores[i].toFixed(2) : '-';
-                let src = currentStats ? currentStats.sda_receptores[i].toFixed(2) : '-';
-                let dis = currentStats ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
-                let rol = currentStats ? currentStats.roles[i] : '-';
+                let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '-';
+                let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '-';
+                let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
+                let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : '-';
                 html += `<td style="color:#FFCC00; font-size: 11px;">${sda}</td>`;
                 html += `<td style="color:#00A2FF; font-size: 11px;">${src}</td>`;
                 html += `<td style="color:#FF0000; font-size: 11px;">${dis}</td>`;
@@ -4168,10 +4174,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                         html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
                     }
                 }
-                let sda = currentStats ? currentStats.sda_emisores[i].toFixed(2) : '-';
-                let src = currentStats ? currentStats.sda_receptores[i].toFixed(2) : '-';
-                let dis = currentStats ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
-                let rol = currentStats ? currentStats.roles[i] : '-';
+                let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '-';
+                let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '-';
+                let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
+                let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : '-';
                 html += `<td style="color:#FFCC00; font-size: 11px;">${sda}</td>`;
                 html += `<td style="color:#00A2FF; font-size: 11px;">${src}</td>`;
                 html += `<td style="color:#FF0000; font-size: 11px;">${dis}</td>`;
