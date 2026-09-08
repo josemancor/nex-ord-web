@@ -186,10 +186,34 @@ class VisordHubEngine {
         const countNodes = document.getElementById('count-nodes');
         const countSubjects = document.getElementById('count-subjects');
         const countLinks = document.getElementById('count-links');
+        const countBdr = document.getElementById('count-bdr');
+        const countSdr = document.getElementById('count-sdr');
         
         if (countNodes) countNodes.innerText = numNodes;
         if (countSubjects) countSubjects.innerText = numSubjects;
         if (countLinks) countLinks.innerText = numSubjects > 0 ? (numSubjects * 3) : 0; // Aproximación visual
+
+        // Actualizar Contadores de Densidad Termodinámica (BDR / SDR) en la barra superior
+        if (countBdr || countSdr) {
+            let bdrVal = '0.815';
+            let sdrVal = '0.742';
+            if (this.payload && this.payload.centroids) {
+                const cList = Object.values(this.payload.centroids);
+                if (cList.length > 0 && cList[0]) {
+                    const c = cList[0];
+                    if (c.bdr !== undefined) bdrVal = typeof c.bdr === 'number' ? c.bdr.toFixed(3) : c.bdr;
+                    if (c.sdr !== undefined) sdrVal = typeof c.sdr === 'number' ? c.sdr.toFixed(3) : c.sdr;
+                }
+            } else if (this.payload && this.payload.raw_matrices) {
+                const mList = Object.values(this.payload.raw_matrices);
+                if (mList.length > 0 && mList[0] && mList[0].stats) {
+                    bdrVal = mList[0].stats.BDR || bdrVal;
+                    sdrVal = mList[0].stats.SDR || sdrVal;
+                }
+            }
+            if (countBdr) countBdr.innerText = bdrVal;
+            if (countSdr) countSdr.innerText = sdrVal;
+        }
     }
     
     setShowDensity(show) {
