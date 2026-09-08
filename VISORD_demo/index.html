@@ -2,611 +2,158 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=index_demo.html">
-    <title>Redirigiendo a VISORD Demo — Simulador Grupal (N &lt; 51)...</title>
-    <script>window.location.replace("index_demo.html");</script>
-    <link rel="stylesheet" href="../styles.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html {
-            width: 100%; height: 100%; overflow: hidden;
-            background-color: #0B132B;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #F8FAFC;
-            user-select: none;
-        }
-
-        #canvas-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-        }
-
-        /* Cabecera Superior */
-        header.hud-header {
-            position: absolute; top: 12px; left: 14px; right: 14px; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 135, 0.25); border-radius: 12px;
-            padding: 10px 18px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-        }
-        .brand-left {
-            display: flex; align-items: center; gap: 12px;
-        }
-        .brand-title {
-            font-size: 1.15rem; font-weight: 800; letter-spacing: 1px; color: #FFFFFF;
-        }
-        .brand-title span {
-            color: #00FF87;
-        }
-        .brand-sub {
-            font-size: 0.75rem; color: #94A3B8; font-family: monospace; letter-spacing: 0.5px;
-        }
-        .header-actions {
-            display: flex; align-items: center; gap: 10px;
-        }
-        .btn-action {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700;
-            text-decoration: none; cursor: pointer; transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #F1F5F9; background: rgba(255, 255, 255, 0.08);
-        }
-        .btn-action:hover {
-            background: rgba(255, 255, 255, 0.18); transform: translateY(-1px);
-        }
-        .btn-portal {
-            background: linear-gradient(135deg, #00A2FF, #0055FF);
-            border: 1px solid rgba(0, 162, 255, 0.5);
-            color: #FFFFFF; box-shadow: 0 2px 10px rgba(0, 162, 255, 0.3);
-        }
-        .btn-portal:hover {
-            background: linear-gradient(135deg, #1AB0FF, #1A66FF);
-            box-shadow: 0 4px 15px rgba(0, 162, 255, 0.5);
-        }
-
-        /* Panel Lateral de Métricas */
-        aside.metrics-panel {
-            position: absolute; bottom: 16px; right: 14px; z-index: 100;
-            width: 320px; max-width: 90vw;
-            background: rgba(11, 19, 43, 0.88); backdrop-filter: blur(12px);
-            border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px;
-            padding: 14px 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            font-size: 0.82rem;
-        }
-        .panel-title {
-            font-size: 0.82rem; font-weight: 800; color: #38BDF8; letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between;
-        }
-        .metric-row {
-            display: flex; justify-content: space-between; margin-bottom: 6px;
-            padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .metric-label { color: #CBD5E1; }
-        .metric-val { font-weight: 700; font-family: monospace; }
-        .val-g1 { color: #00FF87; }
-        .val-g2 { color: #FF007F; }
-        .val-gold { color: #FFE600; }
-
-        /* Panel de Controles de Cámara / Capas */
-        aside.controls-panel {
-            position: absolute; bottom: 16px; left: 14px; z-index: 100;
-            display: flex; flex-direction: column; gap: 8px;
-        }
-        .btn-ctrl {
-            padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
-            background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15); color: #E2E8F0;
-            cursor: pointer; transition: all 0.15s ease;
-        }
-        .btn-ctrl:hover {
-            background: rgba(30, 41, 59, 0.9); border-color: #38BDF8; color: #38BDF8;
-        }
-
-        /* Tooltip de Nodo */
-        #node-tooltip {
-            position: absolute; display: none; z-index: 200; pointer-events: none;
-            background: rgba(11, 19, 43, 0.95); backdrop-filter: blur(8px);
-            border: 1px solid #00FF87; border-radius: 8px;
-            padding: 10px 14px; font-size: 0.8rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            max-width: 260px; line-height: 1.4;
-        }
-        #node-tooltip.g2 { border-color: #FF007F; }
-        #node-tooltip.ostracismo { border-color: #FF007F; box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); }
-
-        /* Nota Explicativa Modal */
-        #modal-nota {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 300;
-            background: rgba(3, 7, 18, 0.75); backdrop-filter: blur(6px);
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-card {
-            background: #0B132B; border: 1px solid #38BDF8; border-radius: 14px;
-            max-width: 650px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            font-size: 0.9rem; line-height: 1.6; color: #E2E8F0;
-        }
-        .modal-card h3 {
-            color: #00FF87; font-size: 1.15rem; margin-bottom: 12px;
-        }
-        .modal-card p { margin-bottom: 12px; }
-        .modal-card strong { color: #FFFFFF; }
-        .btn-close-modal {
-            margin-top: 14px; padding: 8px 20px; background: #38BDF8; color: #0B132B;
-            border: none; border-radius: 6px; font-weight: 800; cursor: pointer; float: right;
-        }
-
-        /* Leyenda de Color */
-        .legend-bar {
-            position: absolute; top: 76px; left: 14px; z-index: 90;
-            display: flex; gap: 14px; background: rgba(11, 19, 43, 0.8); backdrop-filter: blur(8px);
-            padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.75rem; font-weight: 600;
-        }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-        .dot-g1 { background: #00FF87; box-shadow: 0 0 8px #00FF87; }
-        .dot-g2 { background: #FF007F; box-shadow: 0 0 8px #FF007F; }
-        .dot-cent { background: #FFE600; box-shadow: 0 0 8px #FFE600; }
-        .dot-ost { background: #FF007F; border: 2px solid #FFFFFF; box-shadow: 0 0 12px #FF007F; }
-    </style>
+    <title>NEX_ORD - VISORD V_Demo (Simulador Grupal N < 51)</title>
+    
+    <!-- Evitar caché del navegador -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
+    <!-- Diagnostics Logger -->
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('GLOBAL ERROR:', msg, url, lineNo, error);
+            return false;
+        };
+    </script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;800&family=Fira+Code:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- 🌌 Canvas WebGL Three.js -->
+    <!-- Pantalla de Carga Interactiva (MODO DEMO PÚBLICA PROMOCIONAL) -->
+    <div id="loader" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;">
+        <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(56, 189, 248, 0.25); padding: 60px 90px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); text-align: center; backdrop-filter: blur(16px); min-width: 650px; max-width: 750px;">
+            <div style="display:inline-block; padding:4px 14px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); color:#38bdf8; border-radius:20px; font-size:0.82rem; font-weight:700; letter-spacing:1px; margin-bottom:15px;">
+                🌐 V_DEMO — SIMULADOR GRUPAL (N < 51)
+            </div>
+            <h1 style="font-family:'Outfit',sans-serif; margin-bottom: 10px; font-size: 2.8rem; letter-spacing: 2px; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">VISORD OMNI-HUB</h1>
+            <p style="color:#94a3b8; margin-bottom: 35px; font-weight: 300; font-size: 1.15rem; letter-spacing: 1px;">Visualización Sociométrica 4D &bull; <em>Simulador Dinámico de Grupos (N &lt; 51)</em></p>
+            
+            <div style="background:rgba(15, 23, 42, 0.75); border:1px solid rgba(255,255,255,0.08); padding:20px; border-radius:16px; margin-bottom:35px; text-align:left; font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
+                <div style="font-weight:700; color:#38bdf8; margin-bottom:6px; font-size:0.95rem;">🔬 Motor Termodinámico Grupal (N < 51)</div>
+                Esta demostración ilustra el motor socio-termodinámico en dinámica interactiva de grupos ($N < 51$), calculando densidades BDR/SDR, descomposición espectral laplaciana, transformadas FFT y proyecciones tensoriales sobre variedades de Grassmann procesadas mediante matrices ordinales SMIb.
+            </div>
+
+            <div style="display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <button id="btn-enter-visor" style="padding: 16px 36px; font-size: 1.1rem; background: linear-gradient(135deg, rgba(0, 255, 157, 0.2), rgba(0, 255, 157, 0.05)); border: 1px solid rgba(0, 255, 157, 0.8); color: #00FF9D; border-radius: 12px; cursor: pointer; font-weight: 700; transition: all 0.25s; box-shadow:0 0 20px rgba(0,255,157,0.25);">👁️ Explorar Simulador 3D</button>
+                <button id="btn-tour" style="padding: 16px 36px; font-size: 1.1rem; background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05)); border: 1px solid rgba(56, 189, 248, 0.8); color: #38bdf8; border-radius: 12px; cursor: pointer; font-weight: 700; transition: all 0.25s; box-shadow:0 0 20px rgba(56,189,248,0.25);">🧭 Iniciar Tour Guiado (Demo)</button>
+            </div>
+            
+            <p id="loading-msg" style="color:#00FF9D; margin-top:25px; display:none; font-weight: 500; font-size: 1.1rem;">Calculando Variedad de Grassmann...</p>
+        </div>
+    </div>
+
+    <!-- 🌌 Canvas Principal 3D -->
     <div id="canvas-container"></div>
 
-    <!-- 👑 Cabecera HUD -->
-    <header class="hud-header">
-        <div class="brand-left">
-            <div>
-                <div class="brand-title">VISORD <span>3D</span> &bull; Caso Empírico G2T1C1</div>
-                <div class="brand-sub">PROPIO-AA-G2-T1-C1-V10-A16-ES-5 | Ecosistema Socio-Termodinámico VISORD (2026)</div>
+    <!-- 👑 1. CABECERA HUD FRONTAL -->
+    <div id="top-bar">
+        <div class="hud-brand-left">
+            <img src="assets/logo.png" alt="NEX_ORD Logo" class="hud-logo" />
+            <span class="hud-app-name">VISORD</span>
+            <div id="projection-title-badge">
+                <span class="badge-dot"></span>
+                <span id="active-projection-title">PROYECCIÓN ACTIVA: V_Demo (Simulador Grupal N < 51)</span>
             </div>
         </div>
-        <div class="header-actions">
-            <a href="../suite_g2t1c1.html" data-i18n="vis_btn_suite" class="btn-action" style="background: rgba(56, 189, 248, 0.15); border-color: #38BDF8; color: #38BDF8; text-decoration: none;">📊 Suite Diagnóstica (Tablas &amp; Gráficos)</a>
-            <button class="btn-action" id="btn-open-nota">💡 Nota Explicativa</button>
-            <a href="../index.html" data-i18n="vis_btn_portal" class="btn-action btn-portal" id="btn-link-portal">🌐 Web Principal</a>
-            <!-- SELECTOR INTERNACIONAL DE 8 IDIOMAS -->
-            <div class="lang-picker" id="nexord-lang-picker">
-                <button class="lang-picker-btn" id="lang-picker-btn" type="button" aria-label="Seleccionar Idioma">
-                    <span class="lang-flag" id="lang-current-flag">🇪🇸</span>
-                    <span class="lang-code" id="lang-current-code">ES</span>
-                    <span class="lang-arrow">▾</span>
-                </button>
-                <div class="lang-dropdown" id="lang-dropdown">
-                    <button type="button" class="lang-opt active" data-lang="es"><span class="lang-flag">🇪🇸</span> Español <span class="lang-short">ES</span></button>
-                    <button type="button" class="lang-opt" data-lang="en"><span class="lang-flag">🇬🇧</span> English <span class="lang-short">EN</span></button>
-                    <button type="button" class="lang-opt" data-lang="fr"><span class="lang-flag">🇫🇷</span> Français <span class="lang-short">FR</span></button>
-                    <button type="button" class="lang-opt" data-lang="it"><span class="lang-flag">🇮🇹</span> Italiano <span class="lang-short">IT</span></button>
-                    <button type="button" class="lang-opt" data-lang="de"><span class="lang-flag">🇩🇪</span> Deutsch <span class="lang-short">DE</span></button>
-                    <button type="button" class="lang-opt" data-lang="pt"><span class="lang-flag">🇵🇹</span> Português <span class="lang-short">PT</span></button>
-                    <button type="button" class="lang-opt" data-lang="ru"><span class="lang-flag">🇷🇺</span> Русский <span class="lang-short">RU</span></button>
-                    <button type="button" class="lang-opt" data-lang="zh"><span class="lang-flag">🇨🇳</span> 中文 <span class="lang-short">ZH</span></button>
-                </div>
+
+        <div class="hud-right-group">
+            <a href="../index.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); color:#38bdf8; border-radius:8px; font-weight:700; font-size:0.80rem; margin-right:8px;">🏠 ← Volver al Inicio</a>
+            <div id="tour-status-badge" style="display:none; background:rgba(30, 41, 59, 0.85); border:1px solid rgba(56, 189, 248, 0.35); color:#38bdf8; border-radius:12px; padding:3px 12px; font-size:0.72rem; font-weight:600; cursor:pointer;" title="Clic para detener el tour">
+                ▶ Tour Guiado (Clic para detener)
             </div>
-        </div>
-    </header>
-
-    <!-- 🏷️ Leyenda de Colores -->
-    <div class="legend-bar">
-        <div class="legend-item"><span class="legend-dot dot-g1"></span> Grupo A (G1: Cohesión)</div>
-        <div class="legend-item"><span class="legend-dot dot-g2"></span> Grupo B (G2: Conflicto)</div>
-        <div class="legend-item"><span class="legend-dot dot-ost"></span> 5B1a (Ostracismo)</div>
-        <div class="legend-item"><span class="legend-dot dot-cent"></span> Centroides (1g1t1c, 2g1t1c)</div>
-    </div>
-
-    <!-- 🕹️ Controles de Cámara -->
-    <aside class="controls-panel">
-        <button class="btn-ctrl" id="btn-reset-cam">🎯 Centrar Cámara</button>
-        <button class="btn-ctrl" id="btn-toggle-vectors">📐 Alternar Vectores</button>
-        <button class="btn-ctrl" id="btn-toggle-grassmann">🌐 Subespacio Grassmann</button>
-    </aside>
-
-    <!-- 📊 Panel de Métricas Socio-Termodinámicas -->
-    <aside class="metrics-panel">
-        <div class="panel-title">
-            <span>Socio-Termodinámica</span>
-            <span style="color:#00FF87;">N = 10</span>
-        </div>
-        <div class="metric-row">
-            <span class="metric-label">Masa Invariante BDR̄:</span>
-            <span class="metric-val val-gold">8,00</span>
-        </div>
-        <div class="metric-row">
-            <span class="metric-label">SDR G1 (Cohesión):</span>
-            <span class="metric-val val-g1">-0,91</span>
-        </div>
-        <div class="metric-row">
-            <span class="metric-label">SDR G2 (Fricción):</span>
-            <span class="metric-val val-g2">-1,47</span>
-        </div>
-        <div class="metric-row">
-            <span class="metric-label">Dif-DR Ostracismo (5B1a):</span>
-            <span class="metric-val val-g2">9,47</span>
-        </div>
-        <div class="metric-row" style="border-bottom:none;">
-            <span class="metric-label">Dist. Grassmann d_G(G1, G2):</span>
-            <span class="metric-val" style="color:#38BDF8;">1,455 rad (83,37°)</span>
-        </div>
-    </aside>
-
-    <!-- 💬 Tooltip Flotante -->
-    <div id="node-tooltip"></div>
-
-    <!-- 💡 Modal: Nota Explicativa de Interpretación (Regla 10) -->
-    <div id="modal-nota">
-        <div class="modal-card">
-            <h3>💡 Nota Explicativa de Interpretación Socio-Termodinámica</h3>
-            <p><strong>Diseño G2T1C1:</strong> Dos grupos de 5 participantes evaluados en un tiempo T1 y criterio de elección/rechazo C1. La conservación de la masa relacional bruta <strong>BDR̄ = 8,00</strong> demuestra que ambos colectivos intercambian idéntico volumen de interacción.</p>
-            <p><strong>Estructura Bimodal:</strong> El Grupo 1 (verde) presenta un polo denso y consonante con baja dispersión interna y ausencia de rechazos severos (SDR = -0,91). El Grupo 2 (magenta) evidencia una fractura interna donde el participante <strong>5B1a</strong> es proyectado a la periferia crítica (Dif-DR = 9,47), formalizando cuantitativamente el ostracismo invisible.</p>
-            <p><strong>Variedad de Grassmann Gr(2, 5):</strong> La distancia geodésica <em>d_G = 1,455 rad</em> (próxima a la ortogonalidad π/2 ≈ 1,57 rad) prueba que ambos grupos operan en regímenes socio-dinámicos cualitativamente desconectados.</p>
-            <button class="btn-close-modal" id="btn-close-nota">Entendido</button>
+            <div class="lang-selector">
+                <button class="lang-btn active" data-lang="es">🇪🇸 ES</button>
+                <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                <button class="lang-btn" data-lang="fr">🇫🇷 FR</button>
+                <button class="lang-btn" data-lang="it">🇮🇹 IT</button>
+                <button class="lang-btn" data-lang="de">🇩🇪 DE</button>
+                <button class="lang-btn" data-lang="pt">🇵🇹 PT</button>
+                <button class="lang-btn" data-lang="ru">🇷🇺 RU</button>
+                <button class="lang-btn" data-lang="zh">🇨🇳 ZH</button>
+            </div>
         </div>
     </div>
 
-    <!-- Librerías 100% Locales (Sin dependencias externas que causen pantallas negras) -->
+    <!-- Docks & Panels (Módulo de Animación 3D) -->
+    <div id="left-sidebar" class="hud-panel glass-panel">
+        <div class="panel-header">
+            <h3>🧭 CONTROL DE OLEADAS</h3>
+            <span class="badge-time">T1 - T4</span>
+        </div>
+        <div class="timeline-controls">
+            <button id="btn-prev-wave" class="timeline-btn">◀ Previa</button>
+            <button id="btn-play-pause" class="timeline-btn play-btn">▶ Reproducir</button>
+            <button id="btn-next-wave" class="timeline-btn">Siguiente ▶</button>
+        </div>
+        <div class="wave-slider-container">
+            <input type="range" id="wave-slider" min="1" max="4" value="1" step="1">
+            <div class="wave-labels">
+                <span>T1</span><span>T2</span><span>T3</span><span>T4</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="right-sidebar" class="hud-panel glass-panel">
+        <div class="panel-header">
+            <h3>📊 MÉTRICAS & DENSIDAD</h3>
+        </div>
+        <div id="metrics-content">
+            <div class="metric-row"><span class="metric-label">Densidad Absoluta (BDR):</span> <span id="val-bdr" class="metric-val">1.84</span></div>
+            <div class="metric-row"><span class="metric-label">Densidad Relativa (SDR):</span> <span id="val-sdr" class="metric-val">0.42</span></div>
+            <div class="metric-row"><span class="metric-label">Varianza Explicada (3D):</span> <span id="val-var" class="metric-val">99.8%</span></div>
+        </div>
+    </div>
+
+    <!-- Dock Inferior -->
+    <div id="bottom-action-dock" class="hud-dock glass-dock">
+        <div class="dock-row">
+            <button class="dock-btn pill-mode active" data-mode="radar">📡 RADAR</button>
+            <button class="dock-btn pill-mode" data-mode="histogram">📊 HISTOGRAMA</button>
+            <button class="dock-btn pill-mode" data-mode="dispersion">🌌 DISPERSIÓN (DA/RC)</button>
+            <button class="dock-btn pill-mode" data-mode="spectral">⚡ ESPECTRAL</button>
+            <button class="dock-btn pill-mode" data-mode="fourier">🌊 FFT (FOURIER)</button>
+            <button class="dock-btn pill-mode" data-mode="markov">🎲 MARKOV</button>
+            <button class="dock-btn pill-mode" data-mode="grassmann">📐 GRASSMANN</button>
+            <button class="dock-btn pill-mode" data-mode="sociogram">🕸️ SOCIOGRAMA</button>
+            <button class="dock-btn pill-mode" data-mode="planes">📏 PLANOS</button>
+        </div>
+    </div>
+
+    <div id="bottom-dock" class="dock-panel glass-panel" style="display: none;">
+        <div class="dock-header">
+            <h4 id="dock-title">PANEL DE FIGURAS Y DIAGNÓSTICO</h4>
+            <button id="btn-close-dock" class="btn-close">✖</button>
+        </div>
+        <div id="dock-content"></div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip"></div>
+
+    <!-- Scripts -->
     <script src="lib/three.min.js"></script>
     <script src="lib/OrbitControls.js"></script>
-
+    <script src="lib/d3.v7.min.js"></script>
+    <script src="lib/chart.min.js"></script>
+    <script src="data/payload_data.js?v=20260907_5"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/visord_in_situ_engine.js?v=20260907_5"></script>
+    <script src="js/visord_engine.js?v=20260907_5"></script>
+    <script src="js/i18n.js?v=20260907_5"></script>
+    <script src="js/ui_panels.js?v=20260907_5"></script>
+    <script src="js/app.js?v=20260907_5"></script>
+    
     <script>
-        // DATOS CANÓNICOS DEL CASO EMPÍRICO G2T1C1 (Estudio de Caso Empírico)
-        const PAYLOAD_G2T1C1 = {
-            metadata: {
-                title: "Dossier General del Caso Empírico G2T1C1",
-                clave: "PROPIO-AA-G2-T1-C1-V10-A16-ES-5",
-                bdr: 8.00,
-                sdr_g1: -0.91,
-                sdr_g2: -1.47,
-                grassmann_dG: 1.455
-            },
-            centroids: [
-                { id: "1g1t1c", name: "Centroide G1 (1g1t1c)", group: "G1", x: -4.0, y: -1.5, z: 0.0, color: "#FFE600" },
-                { id: "2g1t1c", name: "Centroide G2 (2g1t1c)", group: "G2", x: 4.0, y: 1.5, z: 0.0, color: "#FFE600" }
-            ],
-            subjects: [
-                // Grupo 1: Cohesión (Verde Neón #00FF87)
-                { id: "1A1a", group: "G1", name: "1A1a (Cohesión G1)", x: -4.07, y: -2.97, z: -0.5, sdr: -0.91, dif_dr: 8.91, status: "Cohesión" },
-                { id: "2A1a", group: "G1", name: "2A1a (Cohesión G1)", x: -3.85, y: -2.65, z: 0.6, sdr: -0.91, dif_dr: 8.91, status: "Cohesión" },
-                { id: "3A1a", group: "G1", name: "3A1a (Cohesión G1)", x: -4.49, y: 0.88, z: -0.3, sdr: -0.91, dif_dr: 8.91, status: "Cohesión" },
-                { id: "4A1a", group: "G1", name: "4A1a (Cohesión G1)", x: -3.50, y: 1.80, z: 0.4, sdr: -0.91, dif_dr: 8.91, status: "Cohesión" },
-                { id: "5A1a", group: "G1", name: "5A1a (Cohesión G1)", x: -4.10, y: -0.50, z: -0.2, sdr: -0.91, dif_dr: 8.91, status: "Cohesión" },
-
-                // Grupo 2: Fricción y Ostracismo (Rosa Neón #FF007F)
-                { id: "1B1a", group: "G2", name: "1B1a (Fricción G2)", x: 3.84, y: -4.04, z: -0.5, sdr: -1.47, dif_dr: 9.47, status: "Fricción" },
-                { id: "2B1a", group: "G2", name: "2B1a (Fricción G2)", x: 3.28, y: 1.06, z: 0.6, sdr: -1.47, dif_dr: 9.47, status: "Fricción" },
-                { id: "3B1a", group: "G2", name: "3B1a (Fricción G2)", x: 4.34, y: -2.34, z: -0.4, sdr: -1.47, dif_dr: 9.47, status: "Fricción" },
-                { id: "4B1a", group: "G2", name: "4B1a (Fricción G2)", x: 3.90, y: 0.80, z: 0.3, sdr: -1.47, dif_dr: 9.47, status: "Fricción" },
-                { id: "5B1a", group: "G2", name: "5B1a [Ostracismo Periférico]", x: 7.20, y: 5.60, z: 1.2, sdr: -1.47, dif_dr: 9.47, status: "Ostracismo Severo" }
-            ]
-        };
-
-        // INICIALIZACIÓN DEL MOTOR 3D BLINDADO
-        let scene, camera, renderer, controls;
-        let interactiveObjects = [];
-        let vectorLines = [];
-        let grassmannGroup = null;
-        let showVectors = true;
-        let showGrassmann = true;
-
-        const container = document.getElementById('canvas-container');
-        const tooltip = document.getElementById('node-tooltip');
-
-        function init() {
-            // Protección ante dimensiones
-            const width = Math.max(container.clientWidth || 0, window.innerWidth || 1);
-            const height = Math.max(container.clientHeight || 0, window.innerHeight || 1);
-
-            // Escena y fondo canónico Azul Marino Oscuro #0B132B
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0B132B);
-
-            // Cámara
-            camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 2000);
-            camera.position.set(0, -5, 24);
-
-            // Renderizador
-            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-            renderer.setSize(width, height);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-            container.appendChild(renderer.domElement);
-
-            // Controles de Órbita
-            const ControlsClass = THREE.OrbitControls || window.OrbitControls;
-            if (typeof ControlsClass === 'function') {
-                controls = new ControlsClass(camera, renderer.domElement);
-                controls.enableDamping = true;
-                controls.dampingFactor = 0.08;
-                controls.target.set(0.5, 0, 0);
+        window.addEventListener('load', () => {
+            if (!window.visordApp && typeof VisordApp !== 'undefined') {
+                window.visordApp = new VisordApp();
+                window.visordApp.init();
             }
-
-            // Iluminación
-            const ambient = new THREE.AmbientLight(0xffffff, 0.85);
-            scene.add(ambient);
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight1.position.set(20, 30, 20);
-            scene.add(dirLight1);
-            const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.4);
-            dirLight2.position.set(-20, -20, -20);
-            scene.add(dirLight2);
-
-            // Rejilla de Fondo Sutil
-            const grid = new THREE.GridHelper(30, 30, 0x1E293B, 0x131E3A);
-            grid.rotation.x = Math.PI / 2;
-            grid.position.z = -2;
-            scene.add(grid);
-
-            // Ejes Factoriales F1 (Horizontal) y F2 (Vertical)
-            const axisMat = new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: 0.6 });
-            const axisGeoX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-15, 0, 0), new THREE.Vector3(15, 0, 0)]);
-            const axisGeoY = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -12, 0), new THREE.Vector3(0, 12, 0)]);
-            scene.add(new THREE.LineSegments(axisGeoX, axisMat));
-            scene.add(new THREE.LineSegments(axisGeoY, axisMat));
-
-            // Construir Nodos, Centroides y Vínculos
-            buildEntities();
-
-            // Eventos
-            window.addEventListener('resize', onResize);
-            window.addEventListener('mousemove', onPointerMove);
-            window.addEventListener('touchmove', onTouchMove, { passive: false });
-
-            // UI Listeners
-            setupUI();
-
-            // Ciclo de Render
-            animate();
-        }
-
-        // Helper para crear Sprite de Texto Nítido
-        function makeTextSprite(message, colorStr, fontSize) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 256;
-            canvas.height = 128;
-            ctx.font = `bold ${fontSize || 38}px Arial`;
-            ctx.fillStyle = colorStr;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(message, 128, 64);
-
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.needsUpdate = true;
-            const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
-            const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(3.2, 1.6, 1.0);
-            return sprite;
-        }
-
-        function buildEntities() {
-            const sphereGeo = new THREE.SphereGeometry(0.48, 32, 32);
-            const ostracismoGeo = new THREE.SphereGeometry(0.65, 32, 32);
-
-            // 1. Sujetos
-            PAYLOAD_G2T1C1.subjects.forEach(sub => {
-                const isG1 = sub.group === "G1";
-                const isOst = sub.id === "5B1a";
-                const baseColor = isG1 ? 0x00FF87 : (isOst ? 0xFF007F : 0xFF2D87);
-
-                const mat = new THREE.MeshStandardMaterial({
-                    color: baseColor,
-                    emissive: baseColor,
-                    emissiveIntensity: isOst ? 0.65 : 0.35,
-                    roughness: 0.2,
-                    metalness: 0.3
-                });
-
-                const mesh = new THREE.Mesh(isOst ? ostracismoGeo : sphereGeo, mat);
-                mesh.position.set(sub.x, sub.y, sub.z);
-                mesh.userData = { ...sub, type: 'subject' };
-                scene.add(mesh);
-                interactiveObjects.push(mesh);
-
-                // Etiqueta flotante
-                const labelColor = isG1 ? '#00FF87' : (isOst ? '#FF007F' : '#FF99C8');
-                const label = makeTextSprite(sub.id, labelColor, isOst ? 44 : 36);
-                label.position.set(sub.x, sub.y + (isOst ? 0.95 : 0.75), sub.z);
-                scene.add(label);
-
-                // Halo pulsante para 5B1a
-                if (isOst) {
-                    const haloGeo = new THREE.RingGeometry(0.85, 1.05, 32);
-                    const haloMat = new THREE.MeshBasicMaterial({ color: 0xFF007F, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
-                    const halo = new THREE.Mesh(haloGeo, haloMat);
-                    halo.position.set(sub.x, sub.y, sub.z);
-                    scene.add(halo);
-                    mesh.userData.halo = halo;
-                }
-            });
-
-            // 2. Centroides
-            const octGeo = new THREE.OctahedronGeometry(0.7, 0);
-            PAYLOAD_G2T1C1.centroids.forEach(cent => {
-                const mat = new THREE.MeshStandardMaterial({
-                    color: 0xFFE600,
-                    emissive: 0xFFE600,
-                    emissiveIntensity: 0.5,
-                    roughness: 0.1,
-                    metalness: 0.5
-                });
-                const mesh = new THREE.Mesh(octGeo, mat);
-                mesh.position.set(cent.x, cent.y, cent.z);
-                mesh.userData = { ...cent, type: 'centroid' };
-                scene.add(mesh);
-                interactiveObjects.push(mesh);
-
-                const label = makeTextSprite(cent.id, '#FFE600', 40);
-                label.position.set(cent.x, cent.y - 0.95, cent.z);
-                scene.add(label);
-            });
-
-            // 3. Vectores de cohesión hacia centroides
-            PAYLOAD_G2T1C1.subjects.forEach(sub => {
-                const cent = sub.group === "G1" ? PAYLOAD_G2T1C1.centroids[0] : PAYLOAD_G2T1C1.centroids[1];
-                const pts = [new THREE.Vector3(sub.x, sub.y, sub.z), new THREE.Vector3(cent.x, cent.y, cent.z)];
-                const col = sub.group === "G1" ? 0x00FF87 : (sub.id === "5B1a" ? 0xFF007F : 0xFF2D87);
-                const lineMat = new THREE.LineDashedMaterial({
-                    color: col,
-                    dashSize: 0.3,
-                    gapSize: 0.2,
-                    transparent: true,
-                    opacity: sub.id === "5B1a" ? 0.85 : 0.35
-                });
-                const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
-                const line = new THREE.Line(lineGeo, lineMat);
-                line.computeLineDistances();
-                scene.add(line);
-                vectorLines.push(line);
-            });
-
-            // 4. Subespacio de Grassmann y Arco Geodésico
-            grassmannGroup = new THREE.Group();
-            const g1Cent = PAYLOAD_G2T1C1.centroids[0];
-            const g2Cent = PAYLOAD_G2T1C1.centroids[1];
-
-            // Curva Bézier entre ambos grupos para simbolizar la distancia geodésica
-            const curve = new THREE.QuadraticBezierCurve3(
-                new THREE.Vector3(g1Cent.x, g1Cent.y, g1Cent.z),
-                new THREE.Vector3(0, 4.5, 3),
-                new THREE.Vector3(g2Cent.x, g2Cent.y, g2Cent.z)
-            );
-            const curvePoints = curve.getPoints(30);
-            const curveGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
-            const curveMat = new THREE.LineDashedMaterial({
-                color: 0x38BDF8,
-                dashSize: 0.4,
-                gapSize: 0.25,
-                transparent: true,
-                opacity: 0.85
-            });
-            const grassmannArc = new THREE.Line(curveGeo, curveMat);
-            grassmannArc.computeLineDistances();
-            grassmannGroup.add(grassmannArc);
-
-            const grassLabel = makeTextSprite("d_Gr = 1,455 rad (83,37°)", "#38BDF8", 32);
-            grassLabel.position.set(0, 5.2, 3);
-            grassLabel.scale.set(4.2, 2.1, 1);
-            grassmannGroup.add(grassLabel);
-
-            scene.add(grassmannGroup);
-        }
-
-        // Raycaster para interactividad
-        const raycaster = new THREE.Raycaster();
-        const pointer = new THREE.Vector2();
-
-        function handlePointer(x, y) {
-            pointer.x = (x / window.innerWidth) * 2 - 1;
-            pointer.y = -(y / window.innerHeight) * 2 + 1;
-            raycaster.setFromCamera(pointer, camera);
-
-            const intersects = raycaster.intersectObjects(interactiveObjects);
-            if (intersects.length > 0) {
-                const data = intersects[0].object.userData;
-                showTooltip(data, x, y);
-                document.body.style.cursor = 'pointer';
-            } else {
-                tooltip.style.display = 'none';
-                document.body.style.cursor = 'default';
-            }
-        }
-
-        function onPointerMove(e) {
-            handlePointer(e.clientX, e.clientY);
-        }
-
-        function onTouchMove(e) {
-            if (e.touches.length > 0) {
-                handlePointer(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        }
-
-        function showTooltip(data, x, y) {
-            let html = '';
-            tooltip.className = '';
-            if (data.type === 'subject') {
-                const isG1 = data.group === 'G1';
-                const isOst = data.id === '5B1a';
-                if (!isG1) tooltip.classList.add('g2');
-                if (isOst) tooltip.classList.add('ostracismo');
-
-                html = `
-                    <div style="font-weight:800; color:${isG1 ? '#00FF87' : '#FF007F'}; margin-bottom:4px;">
-                        ${data.name}
-                    </div>
-                    <div><strong>Grupo:</strong> ${data.group} | <strong>Condición:</strong> ${data.status}</div>
-                    <div><strong>Densidad SDR:</strong> ${data.sdr.toFixed(2)}</div>
-                    <div><strong>Desajuste Dif-DR:</strong> ${data.dif_dr.toFixed(2)}</div>
-                    <div style="color:#94A3B8; font-size:0.7rem; margin-top:4px;">Posición F1, F2: (${data.x.toFixed(2)}, ${data.y.toFixed(2)})</div>
-                `;
-            } else if (data.type === 'centroid') {
-                html = `
-                    <div style="font-weight:800; color:#FFE600; margin-bottom:4px;">${data.name}</div>
-                    <div><strong>Grupo:</strong> ${data.group} (Centroide Factorial)</div>
-                    <div><strong>Densidad Media BDR̄:</strong> 8,00</div>
-                    <div><strong>Coordenadas:</strong> (${data.x.toFixed(2)}, ${data.y.toFixed(2)})</div>
-                `;
-            }
-            tooltip.innerHTML = html;
-            tooltip.style.display = 'block';
-            tooltip.style.left = Math.min(x + 15, window.innerWidth - 270) + 'px';
-            tooltip.style.top = Math.min(y + 15, window.innerHeight - 150) + 'px';
-        }
-
-        function onResize() {
-            const w = Math.max(container.clientWidth || 0, window.innerWidth || 1);
-            const h = Math.max(container.clientHeight || 0, window.innerHeight || 1);
-            if (h === 0) return;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        }
-
-        function setupUI() {
-            document.getElementById('btn-reset-cam').addEventListener('click', () => {
-                camera.position.set(0, -5, 24);
-                if (controls) {
-                    controls.target.set(0.5, 0, 0);
-                    controls.update();
-                }
-            });
-
-            document.getElementById('btn-toggle-vectors').addEventListener('click', () => {
-                showVectors = !showVectors;
-                vectorLines.forEach(l => l.visible = showVectors);
-            });
-
-            document.getElementById('btn-toggle-grassmann').addEventListener('click', () => {
-                showGrassmann = !showGrassmann;
-                if (grassmannGroup) grassmannGroup.visible = showGrassmann;
-            });
-
-            const modal = document.getElementById('modal-nota');
-            document.getElementById('btn-open-nota').addEventListener('click', () => modal.style.display = 'flex');
-            document.getElementById('btn-close-nota').addEventListener('click', () => modal.style.display = 'none');
-            modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-        }
-
-        let clock = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            clock += 0.02;
-
-            if (controls) controls.update();
-
-            // Animación suave del halo de 5B1a
-            const ost = interactiveObjects.find(o => o.userData.id === "5B1a");
-            if (ost && ost.userData.halo) {
-                const scale = 1.0 + Math.sin(clock * 3) * 0.15;
-                ost.userData.halo.scale.set(scale, scale, 1);
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        // Ejecutar al cargar la ventana
-        window.addEventListener('load', init);
+        });
     </script>
-    <script src="../i18n_nav.js"></script>
 </body>
 </html>

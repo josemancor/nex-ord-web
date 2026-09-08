@@ -11,7 +11,7 @@
 
 El proyecto NEX_ORD rechaza explícitamente la opacidad de los desarrollos propietarios o de "caja negra". La investigación social y clínica requiere herramientas transparentes cuya formulación pueda ser auditada y replicada por la comunidad científica internacional.
 
-Toda la arquitectura de cálculo (`ENGINE_Simulator.py`) y el configurador de parámetros por oleadas (`NEXORD_ConfigWizard.py`) se ofrecen como **código abierto de autoría**, manteniendo la sincronización entre el repositorio de GitHub y el registro oficial en Zenodo (`DOI: 10.5281/zenodo.18941691`).
+Toda la arquitectura de cálculo (`ENGINE_Simulator.py`) y el configurador de parámetros por oleadas (`NEXORD_ConfigWizard.py`) se ofrecen como **código abierto de autoría**, avalado por el registro científico oficial en CERN Zenodo (`DOI: 10.5281/zenodo.18941691`).
 
 ---
 
@@ -74,7 +74,7 @@ NEX_ORD incluye el módulo **ConText / VISORD Cultural** para el análisis socio
 Para preservar la homogeneidad y la legibilidad del sistema, los archivos de entrada y control (`.txt`) leídos por el motor de simulación siguen la **Estricta Norma de Autor en Español**:
 
 ```text
-# CLAVE MAESTRA: AA-GxTyCz-Vn-An-ES-N
+# CLAVE MAESTRA: SIMUL-AA-G2-T3-C2-V10-A16-ES-6
 TAMANOS_GRUPO: 12, 15, 20
 TIEMPOS: T1, T2, T3
 CRITERIOS: Tarea, Lúdico

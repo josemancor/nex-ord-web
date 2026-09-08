@@ -19,11 +19,7 @@ class VisordApp {
             let titleText = 'PROYECCIÓN ACTIVA: V_Demo — Simulador Grupal (N < 51)';
             let subText = 'Código: SIMUL-DEMO-G1-T4-C2-V10-A16-ES-12 &bull; Dinámica Grupal (N &lt; 51) &bull; Matrices SMIb';
 
-            if (studyKey === 'G2T1C1' && window.VISORD_PAYLOAD_G2T1C1) {
-                activePayload = window.VISORD_PAYLOAD_G2T1C1;
-                titleText = 'PROYECCIÓN ACTIVA: Dossier General del Caso Empírico G2T1C1';
-                subText = 'Código: PROPIO-AA-G2-T1-C1-V10-A16-ES-5 &bull; N=10 &bull; G1 Cohesión vs G2 Ostracismo';
-            } else if (studyKey === 'LCBA' && window.VISORD_PAYLOAD_BERNARDA_ALBA) {
+            if (studyKey === 'LCBA' && window.VISORD_PAYLOAD_BERNARDA_ALBA) {
                 activePayload = window.VISORD_PAYLOAD_BERNARDA_ALBA;
                 titleText = 'PROYECCIÓN ACTIVA: La Casa de Bernarda Alba (LCBA)';
                 subText = 'Código: LCBA-G1-T3-C3-V10-A4-ES-8 &bull; 8 Personajes &bull; Drama Lorquiano 4D';
@@ -68,15 +64,13 @@ class VisordApp {
             });
         }
 
-        // Cargar estudio por defecto o por parámetro URL (?study=G2T1C1)
+        // Cargar estudio por defecto o por parámetro URL (?study=HSPD)
         const urlParams = new URLSearchParams(window.location.search);
         const queryStudy = urlParams.get('study') || urlParams.get('escenario');
         let initialStudy = selectStudy ? selectStudy.value : 'HSPD';
         if (queryStudy) {
             const norm = queryStudy.toUpperCase();
-            if (norm === 'G2T1C1' || norm === 'G2' || norm.includes('G2-T1-C1')) {
-                initialStudy = 'G2T1C1';
-            } else if (norm === 'LCBA') {
+            if (norm === 'LCBA') {
                 initialStudy = 'LCBA';
             } else if (norm === 'MOSCAS') {
                 initialStudy = 'MOSCAS';
@@ -1383,7 +1377,7 @@ class VisordApp {
                 const pad = (n) => String(n).padStart(2, '0');
                 const stamp = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
                 
-                // Formato Estricto Obligatorio: SIM/REAL + GxTyCz + Nombre + Fecha.json
+                // Formato Canónico: TIPO + GTC + Nombre + Fecha.json
                 const filename = `${defaultTipo}_${defaultGTC}_${sanitizedName}_${stamp}.json`;
                 window.VISORD_PAYLOAD.metadata.file_code = `${defaultTipo}_${defaultGTC}_${sanitizedName}_${stamp}`;
                 
