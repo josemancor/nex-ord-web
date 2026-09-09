@@ -61,17 +61,23 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 58px 24px 20px 460px;
             position: relative;
+            box-sizing: border-box;
+            transition: padding-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .workspace.mirror-minimized {
+            padding-left: 360px;
         }
 
         .header-bar {
             position: absolute;
-            top: 18px;
-            left: 28px;
+            top: 16px;
+            left: 20px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             z-index: 10;
         }
 
@@ -101,9 +107,11 @@
         .mirror-board {
             position: absolute;
             top: 58px;
-            left: 28px;
-            width: 440px;
-            max-width: calc(100vw - 460px);
+            left: 20px;
+            width: 410px;
+            max-width: 410px;
+            max-height: calc(100vh - 75px);
+            overflow-y: auto;
             background: rgba(11, 19, 43, 0.94);
             border: 1.5px solid rgba(0, 240, 255, 0.45);
             border-radius: 12px;
@@ -119,8 +127,12 @@
             gap: 8px;
         }
 
+        .mirror-board::-webkit-scrollbar { width: 4px; }
+        .mirror-board::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.4); border-radius: 4px; }
+
         .mirror-board.minimized {
             width: 320px;
+            max-width: 320px;
             padding: 8px 12px;
         }
         .mirror-board.minimized .mb-body {
@@ -318,8 +330,11 @@
 
         /* LIENZO DE VISUALIZACIÓN ACLARADO */
         .viewer {
-            width: min(82vh, calc(100vw - 440px));
-            height: min(82vh, calc(100vw - 440px));
+            width: min(84vh, calc(100vw - 920px));
+            height: min(84vh, calc(100vw - 920px));
+            max-width: 100%;
+            max-height: calc(100vh - 80px);
+            aspect-ratio: 1 / 1;
             background: var(--viewer-bg);
             display: flex;
             justify-content: center;
@@ -330,6 +345,11 @@
             border-radius: 14px;
             overflow: hidden;
             backdrop-filter: blur(12px);
+        }
+
+        .workspace.mirror-minimized .viewer {
+            width: min(84vh, calc(100vw - 820px));
+            height: min(84vh, calc(100vw - 820px));
         }
 
         #matrixCanvas {
@@ -901,6 +921,60 @@
             border-color: var(--red);
             color: #FF708F;
             background: rgba(255, 51, 102, 0.12);
+        }
+
+        /* RESPONSIVE ADAPTABILITY */
+        @media (max-width: 1440px) {
+            .workspace {
+                padding: 58px 18px 16px 440px;
+            }
+            .workspace.mirror-minimized {
+                padding-left: 340px;
+            }
+            .mirror-board {
+                width: 390px;
+                max-width: 390px;
+                left: 16px;
+            }
+            .sidebar {
+                width: 380px;
+                min-width: 380px;
+                padding: 18px 18px;
+            }
+            .viewer {
+                width: min(82vh, calc(100vw - 860px));
+                height: min(82vh, calc(100vw - 860px));
+            }
+            .workspace.mirror-minimized .viewer {
+                width: min(82vh, calc(100vw - 760px));
+                height: min(82vh, calc(100vw - 760px));
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .workspace {
+                padding: 58px 12px 12px 370px;
+            }
+            .workspace.mirror-minimized {
+                padding-left: 300px;
+            }
+            .mirror-board {
+                width: 340px;
+                max-width: 340px;
+                left: 10px;
+            }
+            .sidebar {
+                width: 340px;
+                min-width: 340px;
+                padding: 14px 14px;
+            }
+            .viewer {
+                width: min(80vh, calc(100vw - 740px));
+                height: min(80vh, calc(100vw - 740px));
+            }
+            .header-title {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1711,9 +1785,11 @@
 
         function toggleMirrorBoard() {
             const mb = document.getElementById('tablero-espejo');
+            const ws = document.querySelector('.workspace');
             const btn = document.getElementById('mb-btn-toggle');
             isMirrorBoardMinimized = !isMirrorBoardMinimized;
             mb.classList.toggle('minimized', isMirrorBoardMinimized);
+            if (ws) ws.classList.toggle('mirror-minimized', isMirrorBoardMinimized);
             btn.innerText = isMirrorBoardMinimized ? '⛶' : '_';
             btn.title = isMirrorBoardMinimized ? 'Expandir Tablero-Espejo' : 'Minimizar Tablero-Espejo';
         }
