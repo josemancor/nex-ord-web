@@ -851,6 +851,26 @@
             margin-top: 4px;
         }
 
+        /* MINI-WIDGET DE DENSIDADES 10D */
+        .mini-penta-box {
+            background: #0E172C;
+            border: 1px solid var(--border-panel);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+        }
+        .mini-penta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* INSPECTOR DE CELDA HOVER */
         .cell-inspector {
             background: #0E172C;
@@ -1193,6 +1213,22 @@
             Posicione el cursor sobre la retícula para inspección quirúrgica...
         </div>
 
+        <!-- MINI-WIDGET COMPACTO DE DENSIDADES 10D (TELEMETRÍA VECTORIAL EN TIEMPO REAL) -->
+        <div class="mini-penta-box">
+            <div class="mini-penta-header">
+                <span>📊 Perfil Vectorial 10D</span>
+                <span id="mini-penta-coord" style="color:var(--text-muted); font-size:9.5px; font-family:'Fira Code', monospace;">[-- , --]</span>
+            </div>
+            <div style="position:relative; width:100%; height:75px;">
+                <canvas id="miniPentaCanvas" style="width:100%; height:100%; display:block; border-radius:4px;"></canvas>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:9px; color:#94A3B8;">
+                <span style="display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:8px; height:2px; background:#00F0FF;"></span> Señalado</span>
+                <span style="display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:8px; height:2px; background:#E9B913; border-top:1px dashed #E9B913;"></span> Conjunto</span>
+                <a href="javascript:void(0)" onclick="setView('penta')" style="color:var(--cyan); text-decoration:none; font-weight:700; font-size:9px;">🎼 Expandir ➔</a>
+            </div>
+        </div>
+
         <!-- BOTÓN REINICIO -->
         <button class="btn-reset" onclick="resetGrid()">🧹 Purgar Lienzo y Reiniciar Sistema</button>
     </div>
@@ -1390,6 +1426,7 @@
             initGridData(currentSize);
             drawMatrix();
             updateHUD();
+            drawMiniPentagram(null);
         }
 
         function initGridData(N) {
@@ -2298,6 +2335,122 @@
         }
 
         // --- CÁLCULOS TERMODINÁMICOS Y HUD ---
+                // --- MINI-WIDGET DE DENSIDADES 10D (TELEMETRÍA EN TIEMPO REAL) ---
+        function drawMiniPentagram(cellUnderCursor) {
+            const canvas = document.getElementById('miniPentaCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const w = container.clientWidth || 240;
+            const h = container.clientHeight || 75;
+            const dpr = window.devicePixelRatio || 1;
+
+            if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+            }
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            // Fondo oscuro
+            ctx.fillStyle = '#080D1A';
+            ctx.fillRect(0, 0, w, h);
+
+            // Línea de cero (neutro)
+            const zeroY = h / 2.0;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(8, zeroY);
+            ctx.lineTo(w - 8, zeroY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            const PENTA_KEYS = ['BDA', 'SDA', 'A1', 'A2', 'A3', 'A4', 'SRC', 'BRC', 'SDR', 'BDR'];
+            const nPts = PENTA_KEYS.length;
+            const padX = 12;
+            const usableW = w - 2 * padX;
+            const stepX = usableW / (nPts - 1);
+
+            // 1. Datos Globales
+            const g = computeGlobal10D();
+            const gBDA = Math.abs(g.A1) + Math.abs(g.A2);
+            const gBRC = Math.abs(g.A3) + Math.abs(g.A4);
+            const gVals = [gBDA, g.SDA, g.A1, g.A2, g.A3, g.A4, g.SRC, gBRC, g.SDR, g.BDR];
+
+            // 2. Datos Locales
+            let lVals = null;
+            if (cellUnderCursor) {
+                const d = computeCell10D(cellUnderCursor.r, cellUnderCursor.c);
+                const lBDA = Math.abs(d.A1) + Math.abs(d.A2);
+                const lBRC = Math.abs(d.A3) + Math.abs(d.A4);
+                lVals = [lBDA, d.SDA, d.A1, d.A2, d.A3, d.A4, d.SRC, lBRC, d.SDR_Raw || (d.SDA + d.SRC), d.BDR];
+                const coordEl = document.getElementById('mini-penta-coord');
+                if (coordEl) coordEl.innerText = `[F:${String(cellUnderCursor.r + 1).padStart(2,'0')} / C:${String(cellUnderCursor.c + 1).padStart(2,'0')}]`;
+            } else {
+                const coordEl = document.getElementById('mini-penta-coord');
+                if (coordEl) coordEl.innerText = '[-- , --]';
+            }
+
+            // Rango dinámico para escalar
+            let maxAbs = 1;
+            gVals.forEach(v => { maxAbs = Math.max(maxAbs, Math.abs(v)); });
+            if (lVals) lVals.forEach(v => { maxAbs = Math.max(maxAbs, Math.abs(v)); });
+
+            const getY = (val) => {
+                const norm = val / (maxAbs || 1);
+                return zeroY - norm * (h * 0.40);
+            };
+
+            // Dibujar Curva Global (Dashed Ocre/Oro #E9B913)
+            ctx.strokeStyle = '#E9B913';
+            ctx.lineWidth = 1.2;
+            ctx.setLineDash([2, 2]);
+            ctx.beginPath();
+            for (let i = 0; i < nPts; i++) {
+                const x = padX + i * stepX;
+                const y = getY(gVals[i]);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Dibujar Curva Local (Sólida Cian Neón #00F0FF con Puntos Brillantes)
+            if (lVals) {
+                ctx.strokeStyle = '#00F0FF';
+                ctx.lineWidth = 2.0;
+                ctx.beginPath();
+                for (let i = 0; i < nPts; i++) {
+                    const x = padX + i * stepX;
+                    const y = getY(lVals[i]);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // Puntos brillantes
+                for (let i = 0; i < nPts; i++) {
+                    const x = padX + i * stepX;
+                    const y = getY(lVals[i]);
+                    ctx.fillStyle = lVals[i] >= 0 ? '#00FF87' : '#FF5E85';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Micro-etiquetas inferiores de los 10 puntos (7.5px)
+            ctx.fillStyle = '#64748B';
+            ctx.font = '7.5px "Fira Code", monospace';
+            ctx.textAlign = 'center';
+            for (let i = 0; i < nPts; i++) {
+                const x = padX + i * stepX;
+                ctx.fillText(PENTA_KEYS[i], x, h - 2);
+            }
+        }
+
         function updateHUD(cellUnderCursor) {
             const sdr = totalBDR > 0 ? (totalHitsPos - totalHitsNeg) / totalBDR : 0;
             const elSdr = document.getElementById('hud-sdr');
@@ -2357,6 +2510,7 @@
             computeGlobal10D();
             updateMirrorBoard(cellUnderCursor);
             updatePolarityScreenOverlay();
+            drawMiniPentagram(cellUnderCursor);
 
             // Actualizar inspector
             const insp = document.getElementById('cell-inspector');
