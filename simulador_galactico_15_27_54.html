@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VISORD — Radiografía Relacional Múltiple (15 - 27 - 54)</title>
+    <title>VISORD — Radiografías Relacionales (15 - 27 - 54)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -691,8 +691,11 @@
             <a href="index.html" style="text-decoration:none; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.22); color:#FFFFFF; padding:5px 12px; border-radius:6px; font-size:11.5px; font-weight:700; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(0,240,255,0.2)'; this.style.borderColor='#00F0FF';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.22)';">
                 <span>🏠</span> <span>Web Principal</span>
             </a>
+            <a href="pentagrama_densidades.html" target="_blank" style="text-decoration:none; display:flex; align-items:center; gap:6px; background:rgba(0,255,135,0.12); border:1px solid rgba(0,255,135,0.35); color:#00FF87; padding:5px 12px; border-radius:6px; font-size:11.5px; font-weight:700; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(0,255,135,0.25)';" onmouseout="this.style.background='rgba(0,255,135,0.12)';">
+                <span>🎼</span> <span>Pentagrama 10D (Ayer)</span>
+            </a>
             <span class="badge-brand">VISORD ENGINE</span>
-            <span class="header-title">Radiografía Relacional Múltiple (15 - 27 - 54) &bull; Tablero-Espejo D(n, 10)</span>
+            <span class="header-title">Radiografías Relacionales (15 - 27 - 54) &bull; Tablero-Espejo D(n, 10) &bull; Pentagrama 10D</span>
         </div>
 
         <!-- TABLERO-ESPEJO TOP-LEFT (Lectura Micro-Local vs. Macro-Conjunto & 10 Densidades D10) -->
@@ -761,14 +764,22 @@
         <div class="viewer" id="viewer-container">
             <canvas id="matrixCanvas"></canvas>
             <div id="chart-view"><canvas id="demographicCurve"></canvas></div>
+            <div id="penta-view" style="display:none; position:relative; width:100%; height:100%; min-height:500px; background:#0B132B; border-radius:8px; overflow:hidden;">
+                <div style="position:absolute; top:12px; right:14px; z-index:15; display:flex; gap:6px; background:rgba(11,19,43,0.92); padding:5px 9px; border-radius:6px; border:1px solid rgba(0,245,212,0.3); font-size:11px; align-items:center;">
+                    <button id="penta-btn-curve" style="background:#00F5D4; color:#0B132B; font-weight:700; padding:4px 9px; border-radius:4px; border:none; cursor:pointer; font-size:11px;" onclick="togglePentaCurve()">Quebrada Pura</button>
+                    <button id="penta-btn-volume" style="background:rgba(255,255,255,0.08); color:#CBD5E1; padding:4px 9px; border-radius:4px; border:none; cursor:pointer; font-size:11px;" onclick="togglePentaVolume()">Cinta 3D</button>
+                    <a href="pentagrama_densidades.html" target="_blank" style="text-decoration:none; background:rgba(0,255,135,0.18); color:#00FF87; border:1px solid rgba(0,255,135,0.4); font-weight:700; padding:4px 9px; border-radius:4px; font-size:11px; display:inline-flex; align-items:center; gap:4px;"><span>🎼 Completo ➔</span></a>
+                </div>
+                <canvas id="pentaCanvas" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
         </div>
     </div>
 
     <div class="sidebar">
         <div class="logo-title">
-            <span>⚡ RADIOGRAFÍA</span> <span class="hl">RELACIONAL</span>
+            <span>⚡ RADIOGRAFÍAS</span> <span class="hl">RELACIONALES</span>
         </div>
-        <div class="logo-sub">Multiescala (15 - 27 - 54) &bull; Tablero-Espejo D(n, 10)</div>
+        <div class="logo-sub">Multiescala (15 - 27 - 54) &bull; Tablero-Espejo D(n, 10) &bull; Pentagrama 10D</div>
 
         <!-- RADIOGRAFÍA FACTUAL DE CASOS COMPLEJOS -->
         <div class="factual-box">
@@ -808,12 +819,13 @@
             </div>
         </div>
 
-        <!-- MODALIDAD DE VISTA -->
+        <!-- MODALIDAD DE VISTA (3 MOTORES) -->
         <div class="control-group">
-            <label><span>Modalidad de Vista</span></label>
-            <div class="btn-dual-row">
+            <label><span>Modalidad de Vista</span> <span>3 Motores</span></label>
+            <div class="btn-grid-row">
                 <button id="btn-matrix" class="mode-btn active" onclick="setView('matrix')">Radiografía 2D</button>
-                <button id="btn-chart" class="mode-btn" onclick="setView('chart')">Curva Espectral 1D</button>
+                <button id="btn-chart" class="mode-btn" onclick="setView('chart')">Curva 1D</button>
+                <button id="btn-penta" class="mode-btn" onclick="setView('penta')" style="color:#00FF87;">🎼 Penta 10D</button>
             </div>
         </div>
 
@@ -1190,6 +1202,7 @@
             updateHUD(hoverCell ? gridData[hoverCell.r][hoverCell.c] : null);
             drawMatrix();
             if (currentView === 'chart') updateChartLine();
+            if (currentView === 'penta') renderLivePentagrama();
         }
 
         function drawMatrix() {
@@ -1380,6 +1393,7 @@
             drawMatrix();
             updateHUD();
             if (currentView === 'chart') updateChartLine();
+            if (currentView === 'penta') renderLivePentagrama();
         }
 
         function boxMuller() {
@@ -1500,6 +1514,7 @@
             drawMatrix();
             updateHUD();
             if (currentView === 'chart') updateChartLine();
+            if (currentView === 'penta') renderLivePentagrama();
         }
 
         function handleFileUpload(event) {
@@ -1568,6 +1583,7 @@
             drawMatrix();
             updateHUD();
             if (currentView === 'chart') updateChartLine();
+            if (currentView === 'penta') renderLivePentagrama();
             document.getElementById('cell-inspector').innerHTML = `<strong>MATRIZ SMIb CARGADA:</strong> ${loaded} díadas mapeadas con éxito en retícula ${N}x${N}.`;
         }
 
@@ -1658,6 +1674,7 @@
                 hoverCell = { r: r, c: c };
                 updateHUD(gridData[r][c]);
                 drawMatrix();
+                if (currentView === 'penta') renderLivePentagrama();
             }
         });
 
@@ -1665,6 +1682,7 @@
             hoverCell = null;
             updateHUD(null);
             drawMatrix();
+            if (currentView === 'penta') renderLivePentagrama();
         });
 
         // --- SISTEMA UI GENERAL ---
@@ -1672,17 +1690,28 @@
             currentView = viewType;
             document.getElementById('btn-matrix').classList.toggle('active', viewType === 'matrix');
             document.getElementById('btn-chart').classList.toggle('active', viewType === 'chart');
+            const btnP = document.getElementById('btn-penta');
+            if (btnP) btnP.classList.toggle('active', viewType === 'penta');
 
             const canvasEl = document.getElementById('matrixCanvas');
             const chartDiv = document.getElementById('chart-view');
+            const pentaDiv = document.getElementById('penta-view');
 
             if (viewType === 'chart') {
                 chartDiv.style.display = 'block';
+                if (pentaDiv) pentaDiv.style.display = 'none';
                 canvasEl.style.opacity = '0.08';
                 updateChartLine();
+            } else if (viewType === 'penta') {
+                chartDiv.style.display = 'none';
+                if (pentaDiv) pentaDiv.style.display = 'block';
+                canvasEl.style.opacity = '0.08';
+                renderLivePentagrama();
             } else {
                 chartDiv.style.display = 'none';
+                if (pentaDiv) pentaDiv.style.display = 'none';
                 canvasEl.style.opacity = '1';
+                drawMatrix();
             }
         }
 
@@ -1701,6 +1730,7 @@
             drawMatrix();
             updateHUD();
             if (currentView === 'chart') updateChartLine();
+            if (currentView === 'penta') renderLivePentagrama();
         }
 
         // --- CHART JS (CURVA ESPECTRAL DUAL) ---
@@ -1812,12 +1842,362 @@
                 chartInstance.data.datasets[0].data = rowVal;
                 chartInstance.data.datasets[1].data = colVal;
             }
-            chartInstance.update();
+        // --- MOTOR LIVE: PENTAGRAMA DE DENSIDADES RELACIONALES (10D CON QUEBRADAS) ---
+        let pentaCurveMode = 'straight'; // 'straight' | 'curved'
+        let pentaVolumeMode = false;
+        let hoveredPentaIdx = null;
+
+        const STATIONS_10 = [
+            { code: 'BDA', name: 'Densidad Bruta Dador', isTetra: false, desc: 'Masa total emitida (|A1| + |A2|)' },
+            { code: 'SDA', name: 'Densidad Neta Dador', isTetra: false, desc: 'Balance neto de emisión (A1 + A2)' },
+            { code: 'A1',  name: 'A1: p_DA (Expectativa Emisor)', isTetra: true, desc: 'Expectativa que el emisor tiene del partner' },
+            { code: 'A2',  name: 'A2: DA (Preferencia Emitida)', isTetra: true, desc: 'Preferencia efectiva otorgada al partner' },
+            { code: 'A3',  name: 'A3: REC (Preferencia Recibida)', isTetra: true, desc: 'Preferencia efectiva que el partner otorga' },
+            { code: 'A4',  name: 'A4: p_REC (Expectativa Partner)', isTetra: true, desc: 'Expectativa que el partner tiene del emisor' },
+            { code: 'SRC', name: 'Densidad Neta Receptor', isTetra: false, desc: 'Balance neto de recepción (A3 + A4)' },
+            { code: 'BRC', name: 'Densidad Bruta Receptor', isTetra: false, desc: 'Masa total recibida (|A3| + |A4|)' },
+            { code: 'SDR', name: 'Densidad Neta Relacional', isTetra: false, desc: 'Balance relacional global (SDA + SRC)' },
+            { code: 'BDR', name: 'Densidad Bruta Relacional', isTetra: false, desc: 'Masa invariable total de vínculos' }
+        ];
+
+        function togglePentaCurve() {
+            pentaCurveMode = (pentaCurveMode === 'straight') ? 'curved' : 'straight';
+            const btn = document.getElementById('penta-btn-curve');
+            if (btn) btn.textContent = (pentaCurveMode === 'straight') ? 'Quebrada Pura' : 'Perfil Curvado';
+            renderLivePentagrama();
+        }
+
+        function togglePentaVolume() {
+            pentaVolumeMode = !pentaVolumeMode;
+            const btn = document.getElementById('penta-btn-volume');
+            if (btn) {
+                btn.style.background = pentaVolumeMode ? '#FFE600' : 'rgba(255,255,255,0.08)';
+                btn.style.color = pentaVolumeMode ? '#0B132B' : '#CBD5E1';
+                btn.style.fontWeight = pentaVolumeMode ? '700' : 'normal';
+            }
+            renderLivePentagrama();
+        }
+
+        function renderLivePentagrama() {
+            const canvas = document.getElementById('pentaCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+
+            const w = container.clientWidth || 800;
+            const h = container.clientHeight || 520;
+            const dpr = window.devicePixelRatio || 1;
+
+            if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+            }
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            // Fondo azul marino oscuro canónico
+            ctx.fillStyle = '#0B132B';
+            ctx.fillRect(0, 0, w, h);
+
+            // Datos Globales
+            const g = computeGlobal10D();
+            const gBDA = Math.abs(g.A1) + Math.abs(g.A2);
+            const gBRC = Math.abs(g.A3) + Math.abs(g.A4);
+            const globalVals = {
+                BDA: gBDA,
+                SDA: g.SDA,
+                A1: g.A1,
+                A2: g.A2,
+                A3: g.A3,
+                A4: g.A4,
+                SRC: g.SRC,
+                BRC: gBRC,
+                SDR: g.SDR,
+                BDR: g.BDR
+            };
+
+            // Datos Locales (celda señalada)
+            let localVals = null;
+            let localLabel = "Ningún punto señalado";
+            if (hoverCell && hoverCell.r >= 0 && hoverCell.r < currentSize && hoverCell.c >= 0 && hoverCell.c < currentSize) {
+                const d = computeCell10D(hoverCell.r, hoverCell.c);
+                const lBDA = Math.abs(d.A1) + Math.abs(d.A2);
+                const lBRC = Math.abs(d.A3) + Math.abs(d.A4);
+                localVals = {
+                    BDA: lBDA,
+                    SDA: d.SDA,
+                    A1: d.A1,
+                    A2: d.A2,
+                    A3: d.A3,
+                    A4: d.A4,
+                    SRC: d.SRC,
+                    BRC: lBRC,
+                    SDR: d.SDR,
+                    BDR: d.BDR
+                };
+                localLabel = `Celda Señalada [F:${hoverCell.r + 1}, C:${hoverCell.c + 1}]`;
+            }
+
+            // Calcular escala dinámica
+            let allVals = STATIONS_10.map(s => globalVals[s.code]);
+            if (localVals) {
+                allVals = allVals.concat(STATIONS_10.map(s => localVals[s.code]));
+            }
+            let vMin = Math.min(0, ...allVals);
+            let vMax = Math.max(0.5, ...allVals);
+            const pad = Math.max(0.4, (vMax - vMin) * 0.15);
+            vMin -= pad;
+            vMax += pad;
+            const vRange = Math.max(0.1, vMax - vMin);
+
+            // Márgenes del lienzo
+            const mLeft = 70;
+            const mRight = 50;
+            const mTop = 55;
+            const mBottom = 70;
+            const plotW = Math.max(100, w - mLeft - mRight);
+            const plotH = Math.max(100, h - mTop - mBottom);
+
+            const getY = (val) => mTop + plotH - ((val - vMin) / vRange) * plotH;
+            const getX = (i) => mLeft + (i / (STATIONS_10.length - 1)) * plotW;
+
+            // 1. Líneas de guía de fondo (Pentagrama / Retícula horizontal)
+            const nLines = 6;
+            for (let i = 0; i <= nLines; i++) {
+                const val = vMin + (i / nLines) * vRange;
+                const y = getY(val);
+
+                const isZero = Math.abs(val) < (vRange / (nLines * 2.2));
+                ctx.strokeStyle = isZero ? '#00F5D4' : 'rgba(255, 255, 255, 0.08)';
+                ctx.lineWidth = isZero ? 1.4 : 0.8;
+                if (isZero) ctx.setLineDash([4, 4]);
+                else ctx.setLineDash([]);
+
+                ctx.beginPath();
+                ctx.moveTo(mLeft, y);
+                ctx.lineTo(mLeft + plotW, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Etiqueta del valor en el eje Y
+                ctx.fillStyle = isZero ? '#00F5D4' : '#64748B';
+                ctx.font = '10px "Roboto Mono", monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText((val >= 0 ? '+' : '') + val.toFixed(2), mLeft - 8, y + 3);
+            }
+
+            // 2. Líneas verticales para cada una de las 10 estaciones
+            STATIONS_10.forEach((st, i) => {
+                const x = getX(i);
+                const isHover = (hoveredPentaIdx === i);
+                const isActiveLayer = (activeDensityLayer === st.code);
+
+                // Banda destacada de fondo si es una de las 4 posiciones SMIb
+                if (st.isTetra) {
+                    ctx.fillStyle = 'rgba(0, 255, 135, 0.03)';
+                    const halfW = plotW / ((STATIONS_10.length - 1) * 2);
+                    ctx.fillRect(x - halfW, mTop, halfW * 2, plotH);
+                }
+
+                ctx.strokeStyle = isActiveLayer ? 'rgba(0, 240, 255, 0.4)' : (isHover ? 'rgba(0, 245, 212, 0.3)' : 'rgba(255, 255, 255, 0.05)');
+                ctx.lineWidth = (isActiveLayer || isHover) ? 1.8 : 1;
+                ctx.beginPath();
+                ctx.moveTo(x, mTop);
+                ctx.lineTo(x, mTop + plotH);
+                ctx.stroke();
+
+                // Etiqueta inferior de estación
+                ctx.fillStyle = isActiveLayer ? '#00F0FF' : (isHover ? '#00FF87' : (st.isTetra ? '#00F5D4' : '#CBD5E1'));
+                ctx.font = 'bold 11px "Space Grotesk", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(st.code, x, mTop + plotH + 20);
+
+                ctx.fillStyle = '#64748B';
+                ctx.font = '8.5px "Outfit", sans-serif';
+                const sub = st.isTetra ? (st.code === 'A1' ? 'Exp.Em' : st.code === 'A2' ? 'Pref.Em' : st.code === 'A3' ? 'Pref.Rec' : 'Exp.Part') : '';
+                ctx.fillText(sub, x, mTop + plotH + 32);
+            });
+
+            // Puntos de cada serie
+            const globalPts = STATIONS_10.map((st, i) => ({ x: getX(i), y: getY(globalVals[st.code]), val: globalVals[st.code] }));
+            const localPts = localVals ? STATIONS_10.map((st, i) => ({ x: getX(i), y: getY(localVals[st.code]), val: localVals[st.code] })) : null;
+
+            // 3. Cinta 3D Interfacial (si está activa y hay serie local)
+            if (pentaVolumeMode && localPts) {
+                ctx.beginPath();
+                if (pentaCurveMode === 'curved') {
+                    ctx.moveTo(globalPts[0].x, globalPts[0].y);
+                    for (let i = 0; i < globalPts.length - 1; i++) {
+                        const p0 = (i > 0) ? globalPts[i - 1] : globalPts[i];
+                        const p1 = globalPts[i];
+                        const p2 = globalPts[i + 1];
+                        const p3 = (i < globalPts.length - 2) ? globalPts[i + 2] : p2;
+                        ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
+                    }
+                    for (let i = localPts.length - 1; i >= 0; i--) {
+                        const p0 = (i < localPts.length - 1) ? localPts[i + 1] : localPts[i];
+                        const p1 = localPts[i];
+                        const p2 = (i > 0) ? localPts[i - 1] : localPts[i];
+                        const p3 = (i > 1) ? localPts[i - 2] : p2;
+                        ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
+                    }
+                } else {
+                    ctx.moveTo(globalPts[0].x, globalPts[0].y);
+                    for (let i = 1; i < globalPts.length; i++) ctx.lineTo(globalPts[i].x, globalPts[i].y);
+                    for (let i = localPts.length - 1; i >= 0; i--) ctx.lineTo(localPts[i].x, localPts[i].y);
+                }
+                ctx.closePath();
+                const grad = ctx.createLinearGradient(0, mTop, 0, mTop + plotH);
+                grad.addColorStop(0, 'rgba(0, 255, 135, 0.22)');
+                grad.addColorStop(1, 'rgba(0, 240, 255, 0.12)');
+                ctx.fillStyle = grad;
+                ctx.fill();
+            }
+
+            // 4. Trazado Quebrada / Curva del Conjunto Global (Verde Neón)
+            ctx.strokeStyle = '#00FF87';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = 'rgba(0, 255, 135, 0.6)';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            if (pentaCurveMode === 'curved') {
+                ctx.moveTo(globalPts[0].x, globalPts[0].y);
+                for (let i = 0; i < globalPts.length - 1; i++) {
+                    const p0 = (i > 0) ? globalPts[i - 1] : globalPts[i];
+                    const p1 = globalPts[i];
+                    const p2 = globalPts[i + 1];
+                    const p3 = (i < globalPts.length - 2) ? globalPts[i + 2] : p2;
+                    ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
+                }
+            } else {
+                ctx.moveTo(globalPts[0].x, globalPts[0].y);
+                for (let i = 1; i < globalPts.length; i++) ctx.lineTo(globalPts[i].x, globalPts[i].y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Puntos del Conjunto Global
+            globalPts.forEach((pt, i) => {
+                ctx.fillStyle = '#00FF87';
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#E2E8F0';
+                ctx.font = '9px "Roboto Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText((pt.val >= 0 ? '+' : '') + pt.val.toFixed(2), pt.x, pt.y - 8);
+            });
+
+            // 5. Trazado Quebrada / Curva del Espacio Señalado (Amarillo / Neón)
+            if (localPts) {
+                ctx.strokeStyle = '#FFE600';
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(255, 230, 0, 0.7)';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                if (pentaCurveMode === 'curved') {
+                    ctx.moveTo(localPts[0].x, localPts[0].y);
+                    for (let i = 0; i < localPts.length - 1; i++) {
+                        const p0 = (i > 0) ? localPts[i - 1] : localPts[i];
+                        const p1 = localPts[i];
+                        const p2 = localPts[i + 1];
+                        const p3 = (i < localPts.length - 2) ? localPts[i + 2] : p2;
+                        ctx.bezierCurveTo(p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6, p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6, p2.x, p2.y);
+                    }
+                } else {
+                    ctx.moveTo(localPts[0].x, localPts[0].y);
+                    for (let i = 1; i < localPts.length; i++) ctx.lineTo(localPts[i].x, localPts[i].y);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                localPts.forEach((pt, i) => {
+                    ctx.fillStyle = '#FFE600';
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#FFE600';
+                    ctx.font = 'bold 9px "Roboto Mono", monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText((pt.val >= 0 ? '+' : '') + pt.val.toFixed(2), pt.x, pt.y + 14);
+                });
+            }
+
+            // 6. Leyenda Superior
+            ctx.textAlign = 'left';
+            ctx.font = 'bold 11px "Outfit", sans-serif';
+
+            ctx.fillStyle = '#00FF87';
+            ctx.fillRect(mLeft, 22, 10, 10);
+            ctx.fillText('Conjunto Global (μ)', mLeft + 15, 31);
+
+            if (localPts) {
+                ctx.fillStyle = '#FFE600';
+                ctx.fillRect(mLeft + 160, 22, 10, 10);
+                ctx.fillText(localLabel, mLeft + 175, 31);
+            } else {
+                ctx.fillStyle = '#64748B';
+                ctx.fillText('(Pasa el cursor por la retícula para radiografiar la quebrada local)', mLeft + 160, 31);
+            }
+        }
+
+        // Eventos interactivos para pentaCanvas
+        function initPentaEvents() {
+            const pCanvas = document.getElementById('pentaCanvas');
+            if (!pCanvas) return;
+
+            pCanvas.addEventListener('mousemove', (e) => {
+                const rect = pCanvas.getBoundingClientRect();
+                const mX = e.clientX - rect.left;
+                const mLeft = 70;
+                const mRight = 50;
+                const plotW = Math.max(100, rect.width - mLeft - mRight);
+
+                let closestIdx = null;
+                let minDist = 35;
+                for (let i = 0; i < STATIONS_10.length; i++) {
+                    const stX = mLeft + (i / (STATIONS_10.length - 1)) * plotW;
+                    const d = Math.abs(mX - stX);
+                    if (d < minDist) {
+                        minDist = d;
+                        closestIdx = i;
+                    }
+                }
+                if (hoveredPentaIdx !== closestIdx) {
+                    hoveredPentaIdx = closestIdx;
+                    renderLivePentagrama();
+                }
+            });
+
+            pCanvas.addEventListener('mouseleave', () => {
+                hoveredPentaIdx = null;
+                renderLivePentagrama();
+            });
+
+            pCanvas.addEventListener('click', () => {
+                if (hoveredPentaIdx !== null) {
+                    const st = STATIONS_10[hoveredPentaIdx];
+                    setActiveDensityLayer(st.code);
+                    renderLivePentagrama();
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             initCanvas();
             initChart();
+            initPentaEvents();
+            window.addEventListener('resize', () => {
+                if (currentView === 'penta') renderLivePentagrama();
+            });
         });
     </script>
 </body>
