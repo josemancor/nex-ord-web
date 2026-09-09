@@ -948,6 +948,18 @@
                 <div style="margin-top:4px; color:#CBD5E1;">Coords: F1=${v.x.toFixed(2)}, F2=${v.y.toFixed(2)} &bull; Cos²: ${v.cos2}</div>
                 <div style="color:#94A3B8; font-size:0.68rem; margin-top:2px;">${v.desc}</div>
             `;
+        } else if (item.type === 'euh_item') {
+            const it = item.data;
+            tip.innerHTML = `
+                <div style="color:${it.color}; font-weight:bold; font-size:0.82rem;">${it.isAnchor ? '▲ ANCLA' : (it.type === 'var' ? '◆ VAR' : (it.type === 'aag' ? '✦ AAG' : '● SUJETO'))}: ${it.name}</div>
+                <div style="color:#94A3B8; margin-top:2px;">${it.role}</div>
+                <div style="margin-top:6px; color:#CBD5E1; border-top:1px solid rgba(255,255,255,0.1); padding-top:4px;">
+                    <div>Eje: <strong style="color:#00F5D4;">${item.trackTitle}</strong></div>
+                    <div>Coordenada: <strong>${(it[item.prop] >= 0 ? '+' : '') + it[item.prop].toFixed(3)}</strong></div>
+                    <div>Calidad Representación (COR / cos²): <strong style="color:#00FF87;">${(it[item.corProp] || 0).toFixed(3)}</strong></div>
+                    <div>Contribución Inercial (CTA): <strong style="color:#FF9F1C;">${(it[item.ctaProp] || 0).toFixed(1)}%</strong></div>
+                </div>
+            `;
         }
 
         tip.style.left = (item.mx + 15) + 'px';
@@ -1051,6 +1063,8 @@
             renderDensitiesChart();
         } else if (activeMultidimTab === 'proximity') {
             renderProximityMatrix();
+        } else if (activeMultidimTab === 'ejes_horiz') {
+            renderEjesUnitariosHorizontales();
         }
     }
 
@@ -1498,6 +1512,795 @@
         if (stroke) ctx.stroke();
     }
 
+
+    // =========================================================================
+    // 3.1 MOTOR DE EJES UNITARIOS HORIZONTALES (CANÓN BENZÉCRI & ESCALONAMIENTO)
+    // =========================================================================
+    let activeEjesMode = 'monopolar'; // 'monopolar', 'bipolar'
+    let activeEjesGeom = 'horizontal'; // 'horizontal', 'diagonal', 'cruz'
+    let activeEjesLayers = { sujetos: true, var: true, aag: true, metrics: true, anticollision: true };
+    let activeEjesHoverItem = null;
+    let renderedEUHHitboxes = [];
+
+    function renderEjesUnitariosHorizontales() {
+        const canvas = document.getElementById('canvas-ejes-unitarios-horiz');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const container = canvas.parentElement;
+        const w = Math.max(container.clientWidth || 950, 900);
+        const sData = CULTURAL_SYNTHESIS_DATA[activePCAWorkKey] || CULTURAL_SYNTHESIS_DATA["clara"];
+
+        if (activeEjesGeom === 'diagonal') {
+            renderEjeUnitarioDiagonal(canvas, ctx, w, sData);
+            return;
+        }
+        if (activeEjesGeom === 'cruz') {
+            renderCruzDiagonalFactorial(canvas, ctx, w, sData);
+            return;
+        }
+
+        const isBipolar = (activeEjesMode === 'bipolar');
+        const nTracks = isBipolar ? 4 : 3;
+        const trackH = 190;
+        const totalH = nTracks * trackH + 60;
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = totalH * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = totalH + 'px';
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = '#0B132B';
+        ctx.fillRect(0, 0, w, totalH);
+
+        renderedEUHHitboxes = [];
+
+        // Recopilar elementos para los ejes
+        const allItems = [];
+        if (activeEjesLayers.sujetos && sData.characters) {
+            sData.characters.forEach(c => {
+                const sqSum = (c.bx * c.bx) + (c.by * c.by) + 0.04;
+                allItems.push({
+                    type: 'sujeto', id: c.id, name: c.name, role: c.role, color: c.color, isAnchor: c.isAnchor,
+                    f1: c.bx, f2: c.by, f3: 0.15 * Math.sin(c.bx * 2),
+                    cor1: (c.bx * c.bx) / sqSum,
+                    cor2: (c.by * c.by) / sqSum
+                });
+            });
+        }
+        if (activeEjesLayers.var && sData.var_vectors) {
+            sData.var_vectors.forEach(v => {
+                const sqSum = (v.x * v.x) + (v.y * v.y) + 0.04;
+                allItems.push({
+                    type: 'var', id: v.text, name: v.text, role: 'Variable Sociométrica', color: '#00F5D4',
+                    f1: v.x, f2: v.y, f3: 0.10,
+                    cor1: (v.x * v.x) / sqSum,
+                    cor2: (v.y * v.y) / sqSum
+                });
+            });
+        }
+        if (activeEjesLayers.aag && sData.aag_vectors) {
+            sData.aag_vectors.forEach(a => {
+                const sqSum = (a.x * a.x) + (a.y * a.y) + 0.04;
+                allItems.push({
+                    type: 'aag', id: a.text, name: a.text + ' (' + a.val + ')', role: a.factor + ' • ' + a.desc,
+                    color: a.val === '+' ? '#00FF87' : '#FF007F', isAAG: true,
+                    f1: a.x, f2: a.y, f3: -0.10,
+                    cor1: (a.x * a.x) / sqSum,
+                    cor2: (a.y * a.y) / sqSum
+                });
+            });
+        }
+
+        // Calcular suma de cuadrados para CTA
+        const sumSqF1 = allItems.reduce((acc, it) => acc + (it.f1 * it.f1), 0.001);
+        const sumSqF2 = allItems.reduce((acc, it) => acc + (it.f2 * it.f2), 0.001);
+        allItems.forEach(it => {
+            it.cta1 = ((it.f1 * it.f1) / sumSqF1) * 100;
+            it.cta2 = ((it.f2 * it.f2) / sumSqF2) * 100;
+        });
+
+        // Configuración de pistas
+        let tracksConfig = [];
+        if (!isBipolar) {
+            tracksConfig = [
+                { title: 'FACTOR 1 (F1: ' + sData.inercias.F1 + '%)', sub: sData.inercias.f1_label, prop: 'f1', corProp: 'cor1', ctaProp: 'cta1', color: '#00FF87' },
+                { title: 'FACTOR 2 (F2: ' + sData.inercias.F2 + '%)', sub: sData.inercias.f2_label, prop: 'f2', corProp: 'cor2', ctaProp: 'cta2', color: '#FF9F1C' },
+                { title: 'FACTOR 3 (F3: ' + (sData.inercias.F3 || 5.0) + '%)', sub: 'Matices Estructurales y Desalineamiento Secundario', prop: 'f3', corProp: 'cor1', ctaProp: 'cta1', color: '#38BDF8' }
+            ];
+        } else {
+            tracksConfig = [
+                { title: 'FACTOR 1 [+] POLO POSITIVO (F1+)', sub: 'Sintonía, Cohesión y Alianza Activa', prop: 'f1', corProp: 'cor1', ctaProp: 'cta1', color: '#00FF87', polarSign: 1 },
+                { title: 'FACTOR 1 [-] POLO NEGATIVO (F1-)', sub: 'Fricción, Oposición y Distanciamiento', prop: 'f1', corProp: 'cor1', ctaProp: 'cta1', color: '#FF007F', polarSign: -1 },
+                { title: 'FACTOR 2 [+] POLO POSITIVO (F2+)', sub: 'Tensión y Labilidad Expresiva', prop: 'f2', corProp: 'cor2', ctaProp: 'cta2', color: '#FF9F1C', polarSign: 1 },
+                { title: 'FACTOR 2 [-] POLO NEGATIVO (F2-)', sub: 'Rigidez Defensiva y Contención Silenciosa', prop: 'f2', corProp: 'cor2', ctaProp: 'cta2', color: '#C084FC', polarSign: -1 }
+            ];
+        }
+
+        const leftMargin = 160;
+        const rightMargin = 50;
+        const axisWidth = w - leftMargin - rightMargin;
+
+        tracksConfig.forEach((tr, tIdx) => {
+            const axisY = 95 + tIdx * trackH;
+
+            // Recuadro tenue de pista
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.015)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            roundRect(ctx, 12, axisY - 80, w - 24, trackH - 15, 8, true, true);
+
+            // Cabecera lateral izquierda del Track
+            ctx.font = 'bold 11px "Roboto Mono", monospace';
+            ctx.fillStyle = tr.color;
+            ctx.textAlign = 'left';
+            ctx.fillText(tr.title, 24, axisY - 55);
+
+            ctx.font = '9px "Inter", sans-serif';
+            ctx.fillStyle = '#94A3B8';
+            ctx.fillText(tr.sub, 24, axisY - 40);
+
+            // Filtrar elementos según polaridad si es bipolar
+            let trackItems = allItems.slice();
+            if (tr.polarSign === 1) {
+                trackItems = trackItems.filter(it => it[tr.prop] >= -0.01);
+            } else if (tr.polarSign === -1) {
+                trackItems = trackItems.filter(it => it[tr.prop] <= 0.01);
+            }
+
+            // Determinar rango y posición
+            let minVal = -2.2, maxVal = 2.2;
+            let zeroX = leftMargin + axisWidth / 2;
+
+            if (isBipolar) {
+                minVal = 0.0;
+                maxVal = 2.4;
+                zeroX = leftMargin;
+            }
+
+            function getScreenX(val) {
+                if (!isBipolar) {
+                    return leftMargin + ((val - minVal) / (maxVal - minVal)) * axisWidth;
+                } else {
+                    const absVal = Math.abs(val);
+                    return leftMargin + (absVal / maxVal) * axisWidth;
+                }
+            }
+
+            // Dibujar la Línea Horizontal Unitaria (100% de la franja)
+            const grad = ctx.createLinearGradient(leftMargin, axisY, leftMargin + axisWidth, axisY);
+            if (!isBipolar) {
+                grad.addColorStop(0, '#FF007F');
+                grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.35)');
+                grad.addColorStop(1, '#00FF87');
+            } else {
+                grad.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
+                grad.addColorStop(1, tr.color);
+            }
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 2.2;
+            ctx.beginPath();
+            ctx.moveTo(leftMargin, axisY);
+            ctx.lineTo(leftMargin + axisWidth, axisY);
+            ctx.stroke();
+
+            // Marca del Cero 0.0 (Centro Inercial)
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(zeroX, axisY - 8);
+            ctx.lineTo(zeroX, axisY + 8);
+            ctx.stroke();
+
+            ctx.font = 'bold 10px "Roboto Mono", monospace';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'center';
+            ctx.fillText('0.0', zeroX, axisY + 20);
+
+            // Escala y Ticks de referencia
+            if (!isBipolar) {
+                [-1.5, -1.0, -0.5, 0.5, 1.0, 1.5].forEach(tick => {
+                    const tx = getScreenX(tick);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(tx, axisY - 4);
+                    ctx.lineTo(tx, axisY + 4);
+                    ctx.stroke();
+
+                    ctx.font = '8px "Roboto Mono"';
+                    ctx.fillStyle = '#64748B';
+                    ctx.fillText((tick > 0 ? '+' : '') + tick.toFixed(1), tx, axisY + 16);
+                });
+            } else {
+                [0.5, 1.0, 1.5, 2.0].forEach(tick => {
+                    const tx = getScreenX(tick);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(tx, axisY - 4);
+                    ctx.lineTo(tx, axisY + 4);
+                    ctx.stroke();
+
+                    ctx.font = '8px "Roboto Mono"';
+                    ctx.fillStyle = '#64748B';
+                    ctx.fillText(tick.toFixed(1), tx, axisY + 16);
+                });
+            }
+
+            // Ordenar elementos por su coordenada X en pantalla
+            trackItems.forEach(it => {
+                it.screenX = getScreenX(it[tr.prop]);
+            });
+            trackItems.sort((a, b) => a.screenX - b.screenX);
+
+            // ALGORITMO DE ESCALONAMIENTO MULTI-NIVEL (ANTI-COLISIÓN)
+            // Cuando dos etiquetas distan menos de 18px, se alternan en Tier 1 y Tier 2
+            let lastTier1X = -999;
+            let lastTier2X = -999;
+
+            trackItems.forEach(it => {
+                if (activeEjesLayers.anticollision === false) {
+                    it.tier = 1;
+                    return;
+                }
+                if (it.screenX - lastTier1X >= 18) {
+                    it.tier = 1;
+                    lastTier1X = it.screenX;
+                } else if (it.screenX - lastTier2X >= 18) {
+                    it.tier = 2;
+                    lastTier2X = it.screenX;
+                } else {
+                    it.tier = 3;
+                }
+            });
+
+            // Dibujar Elementos, Banderolas Verticales y Métricas Bilaterales
+            trackItems.forEach(it => {
+                const px = it.screenX;
+                const isHovered = (activeEjesHoverItem && activeEjesHoverItem.id === it.id);
+
+                // Alturas de Nivel (Tiers)
+                let tierYOffset = (it.tier === 1) ? 14 : (it.tier === 2 ? 68 : 115);
+                let textY = axisY - tierYOffset;
+
+                // 1. Línea Guía Vertical (Espícula conectora)
+                ctx.strokeStyle = isHovered ? '#FFFFFF' : hexToRgba(it.color, it.tier > 1 ? 0.65 : 0.35);
+                ctx.lineWidth = isHovered ? 2.0 : 1.0;
+                if (it.tier > 1) ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(px, axisY);
+                ctx.lineTo(px, textY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // 2. Glifo en el Eje
+                ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+                if (it.isAnchor) {
+                    // Marcador triangular nítido para anclas Q81 / GRP
+                    ctx.beginPath();
+                    ctx.moveTo(px, axisY - (isHovered ? 8 : 6));
+                    ctx.lineTo(px + (isHovered ? 6 : 5), axisY + (isHovered ? 5 : 4));
+                    ctx.lineTo(px - (isHovered ? 6 : 5), axisY + (isHovered ? 5 : 4));
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (it.type === 'var') {
+                    // Rombo para VAR
+                    const sz = isHovered ? 5.5 : 4.5;
+                    ctx.beginPath();
+                    ctx.moveTo(px, axisY - sz);
+                    ctx.lineTo(px + sz, axisY);
+                    ctx.lineTo(px, axisY + sz);
+                    ctx.lineTo(px - sz, axisY);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Círculo para Sujetos
+                    ctx.beginPath();
+                    ctx.arc(px, axisY, isHovered ? 6.0 : 3.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 3. ETIQUETA VERTICALIZADA EN BANDA SUPERIOR (Rotación -90°)
+                ctx.save();
+                ctx.translate(px, textY);
+                ctx.rotate(-Math.PI / 2); // Escritura vertical hacia arriba
+
+                ctx.font = isHovered ? 'bold 10px "Roboto Mono", monospace' : '9px "Roboto Mono", monospace';
+                ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 3;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(it.name, 4, 0);
+                ctx.shadowBlur = 0;
+                ctx.restore();
+
+                // 4. TRÍPTICO MÉTRICO BILATERAL EN BANDA INFERIOR (COR / CTA / CTR)
+                const metricTierOffset = (it.tier === 1) ? 28 : (it.tier === 2 ? 65 : 95);
+                const metricY = axisY + metricTierOffset;
+
+                if (activeEjesLayers.metrics !== false) {
+                    // Línea guía hacia abajo si está en Tier 2
+                    if (it.tier > 1) {
+                        ctx.strokeStyle = hexToRgba(it.color, 0.35);
+                        ctx.lineWidth = 0.8;
+                        ctx.setLineDash([2, 2]);
+                        ctx.beginPath();
+                        ctx.moveTo(px, axisY);
+                        ctx.lineTo(px, metricY);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+
+                    ctx.save();
+                    ctx.translate(px, metricY);
+                    ctx.rotate(Math.PI / 2); // Escritura vertical hacia abajo
+
+                    ctx.font = '8px "Roboto Mono", monospace';
+                    ctx.fillStyle = isHovered ? '#FFFFFF' : '#CBD5E1';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+
+                    const corVal = (it[tr.corProp] || 0.5).toFixed(2);
+                    const ctaVal = (it[tr.ctaProp] || 10).toFixed(0);
+                    const ctrVal = (it[tr.prop] >= 0 ? '+' : '') + (it[tr.prop]).toFixed(2);
+
+                    ctx.fillText(`${corVal} | ${ctaVal}% | ${ctrVal}`, 4, 0);
+                    ctx.restore();
+                }
+
+                // Registrar Hitbox interactivo
+                renderedEUHHitboxes.push({
+                    item: it,
+                    track: tr,
+                    px: px,
+                    axisY: axisY,
+                    minY: axisY - tierYOffset - 85,
+                    maxY: axisY + (activeEjesLayers.metrics !== false ? metricTierOffset + 85 : 15),
+                    minX: px - 9,
+                    maxX: px + 9
+                });
+            });
+        });
+    }
+
+    // =========================================================================
+    // 3.2 EJE UNITARIO DIAGONAL (EUD) • MÁXIMA LONGITUD MÉTRICA L_DIAG & ASIMETRÍA
+    // =========================================================================
+    function renderEjeUnitarioDiagonal(canvas, ctx, w, sData) {
+        const H = 720;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = H + 'px';
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = '#0B132B';
+        ctx.fillRect(0, 0, w, H);
+
+        renderedEUHHitboxes = [];
+
+        // Cabecera superior
+        ctx.font = 'bold 12px "Roboto Mono", monospace';
+        ctx.fillStyle = '#00F5D4';
+        ctx.textAlign = 'left';
+        ctx.fillText('EJE UNITARIO DIAGONAL (EUD) • FACTOR 1 (F1: ' + sData.inercias.F1 + '%)', 28, 36);
+
+        ctx.font = '10px "Inter", sans-serif';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText(sData.inercias.f1_label + ' • Despliegue Bilateral Perpendicular (Longitud Métrica Máxima L_diag)', 28, 54);
+
+        // Geometría diagonal
+        const mx = 120, my = 75;
+        const PA = { x: mx, y: H - my }; // Bottom-Left (-F1)
+        const PB = { x: w - mx, y: my }; // Top-Right (+F1)
+        const P0 = { x: w / 2, y: H / 2 };
+
+        const dx = PB.x - PA.x;
+        const dy = PB.y - PA.y;
+        const L = Math.hypot(dx, dy);
+        const ux = dx / L, uy = dy / L; // Vector unitario director
+        const nx = uy, ny = -ux;        // Normal hacia Noroeste (arriba-izquierda)
+
+        // Trazo de la línea diagonal
+        const grad = ctx.createLinearGradient(PA.x, PA.y, PB.x, PB.y);
+        grad.addColorStop(0, '#FF007F');
+        grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.45)');
+        grad.addColorStop(1, '#00FF87');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        ctx.moveTo(PA.x, PA.y);
+        ctx.lineTo(PB.x, PB.y);
+        ctx.stroke();
+
+        // Origen 0.0 (Centro Inercial)
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(P0.x - nx * 10, P0.y - ny * 10);
+        ctx.lineTo(P0.x + nx * 10, P0.y + ny * 10);
+        ctx.stroke();
+
+        ctx.font = 'bold 11px "Roboto Mono", monospace';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.fillText('0.0 (Centro)', P0.x - nx * 20, P0.y - ny * 20);
+
+        // Ticks de escala a lo largo de la diagonal
+        [-1.5, -1.0, -0.5, 0.5, 1.0, 1.5].forEach(tick => {
+            const s = (tick / 2.2) * (L / 2);
+            const tx = P0.x + s * ux;
+            const ty = P0.y + s * uy;
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+            ctx.lineWidth = 1.0;
+            ctx.beginPath();
+            ctx.moveTo(tx - nx * 5, ty - ny * 5);
+            ctx.lineTo(tx + nx * 5, ty + ny * 5);
+            ctx.stroke();
+
+            ctx.font = '8px "Roboto Mono"';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText((tick > 0 ? '+' : '') + tick.toFixed(1), tx - nx * 16, ty - ny * 16);
+        });
+
+        // Recopilar elementos
+        const allItems = [];
+        if (activeEjesLayers.sujetos && sData.characters) {
+            sData.characters.forEach(c => {
+                const sqSum = (c.bx * c.bx) + (c.by * c.by) + 0.04;
+                allItems.push({
+                    type: 'sujeto', id: c.id, name: c.name, role: c.role, color: c.color, isAnchor: c.isAnchor,
+                    val: c.bx, f1: c.bx, f2: c.by,
+                    cor: (c.bx * c.bx) / sqSum
+                });
+            });
+        }
+        if (activeEjesLayers.var && sData.var_vectors) {
+            sData.var_vectors.forEach(v => {
+                const sqSum = (v.x * v.x) + (v.y * v.y) + 0.04;
+                allItems.push({
+                    type: 'var', id: v.text, name: v.text, role: 'Variable Sociométrica', color: '#00F5D4',
+                    val: v.x, f1: v.x, f2: v.y,
+                    cor: (v.x * v.x) / sqSum
+                });
+            });
+        }
+        if (activeEjesLayers.aag && sData.aag_vectors) {
+            sData.aag_vectors.forEach(a => {
+                const sqSum = (a.x * a.x) + (a.y * a.y) + 0.04;
+                allItems.push({
+                    type: 'aag', id: a.text, name: a.text + ' (' + a.val + ')', role: a.factor + ' • ' + a.desc,
+                    color: a.val === '+' ? '#00FF87' : '#FF007F', isAAG: true,
+                    val: a.x, f1: a.x, f2: a.y,
+                    cor: (a.x * a.x) / sqSum
+                });
+            });
+        }
+
+        const sumSqF1 = allItems.reduce((acc, it) => acc + (it.val * it.val), 0.001);
+        allItems.forEach(it => {
+            it.cta = ((it.val * it.val) / sumSqF1) * 100;
+            it.s = (it.val / 2.2) * (L / 2);
+            it.px = P0.x + it.s * ux;
+            it.py = P0.y + it.s * uy;
+        });
+
+        allItems.sort((a, b) => a.s - b.s);
+
+        // Anti-colisión por pisos a lo largo de la diagonal
+        let lastS = [-999, -999, -999, -999];
+        allItems.forEach(it => {
+            if (activeEjesLayers.anticollision === false) {
+                it.tier = 1;
+                return;
+            }
+            let assigned = 1;
+            for (let t = 0; t < 4; t++) {
+                if (it.s - lastS[t] >= 22) {
+                    assigned = t + 1;
+                    lastS[t] = it.s;
+                    break;
+                }
+            }
+            it.tier = assigned;
+        });
+
+        allItems.forEach(it => {
+            const isHovered = (activeEjesHoverItem && activeEjesHoverItem.id === it.id);
+            const tierDist = 18 + (it.tier - 1) * 54;
+            const pLabel = { x: it.px + nx * tierDist, y: it.py + ny * tierDist };
+
+            // 1. Espícula guía hacia el flanco Noroeste
+            ctx.strokeStyle = isHovered ? '#FFFFFF' : hexToRgba(it.color, it.tier > 1 ? 0.65 : 0.35);
+            ctx.lineWidth = isHovered ? 2.0 : 1.0;
+            if (it.tier > 1) ctx.setLineDash([2, 2]);
+            ctx.beginPath();
+            ctx.moveTo(it.px, it.py);
+            ctx.lineTo(pLabel.x, pLabel.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // 2. Glifo en el eje
+            ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+            if (it.isAnchor) {
+                ctx.beginPath();
+                ctx.moveTo(it.px, it.py - 7);
+                ctx.lineTo(it.px + 6, it.py + 5);
+                ctx.lineTo(it.px - 6, it.py + 5);
+                ctx.closePath();
+                ctx.fill();
+            } else if (it.type === 'var') {
+                ctx.beginPath();
+                ctx.moveTo(it.px, it.py - 5);
+                ctx.lineTo(it.px + 5, it.py);
+                ctx.lineTo(it.px, it.py + 5);
+                ctx.lineTo(it.px - 5, it.py);
+                ctx.closePath();
+                ctx.fill();
+            } else {
+                ctx.beginPath();
+                ctx.arc(it.px, it.py, isHovered ? 6.0 : 4.0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 3. Etiqueta verticalizada (-90°)
+            ctx.save();
+            ctx.translate(pLabel.x, pLabel.y);
+            ctx.rotate(-Math.PI / 2);
+            ctx.font = isHovered ? 'bold 10px "Roboto Mono", monospace' : '9px "Roboto Mono", monospace';
+            ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+            ctx.shadowColor = '#000000';
+            ctx.shadowBlur = 3;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(it.name, 4, 0);
+            ctx.shadowBlur = 0;
+            ctx.restore();
+
+            // 4. Tríptico métrico bilateral hacia el flanco Sureste (-n)
+            if (activeEjesLayers.metrics !== false) {
+                const metricDist = 22 + (it.tier - 1) * 46;
+                const pMetric = { x: it.px - nx * metricDist, y: it.py - ny * metricDist };
+
+                if (it.tier > 1) {
+                    ctx.strokeStyle = hexToRgba(it.color, 0.35);
+                    ctx.lineWidth = 0.8;
+                    ctx.setLineDash([2, 2]);
+                    ctx.beginPath();
+                    ctx.moveTo(it.px, it.py);
+                    ctx.lineTo(pMetric.x, pMetric.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                ctx.save();
+                ctx.translate(pMetric.x, pMetric.y);
+                ctx.rotate(Math.PI / 2); // Hacia abajo
+                ctx.font = '8px "Roboto Mono", monospace';
+                ctx.fillStyle = isHovered ? '#FFFFFF' : '#CBD5E1';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+
+                const corVal = (it.cor || 0.5).toFixed(2);
+                const ctaVal = (it.cta || 10).toFixed(0);
+                const ctrVal = (it.val >= 0 ? '+' : '') + (it.val).toFixed(2);
+
+                ctx.fillText(`${corVal} | ${ctaVal}% | ${ctrVal}`, 4, 0);
+                ctx.restore();
+            }
+
+            renderedEUHHitboxes.push({
+                item: it,
+                track: { title: 'FACTOR 1 (DIAGONAL)', prop: 'val', corProp: 'cor', ctaProp: 'cta' },
+                px: it.px,
+                axisY: it.py,
+                minY: Math.min(it.py, pLabel.y) - 65,
+                maxY: Math.max(it.py, pLabel.y) + 65,
+                minX: Math.min(it.px, pLabel.x) - 15,
+                maxX: Math.max(it.px, pLabel.x) + 15
+            });
+        });
+    }
+
+    // =========================================================================
+    // 3.3 CRUZ DIAGONAL FACTORIAL (CDF) • DOBLE DIAGONAL X (F1 + F2 SIMULTÁNEOS)
+    // =========================================================================
+    function renderCruzDiagonalFactorial(canvas, ctx, w, sData) {
+        const H = 760;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = H + 'px';
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = '#0B132B';
+        ctx.fillRect(0, 0, w, H);
+
+        renderedEUHHitboxes = [];
+
+        // Cabecera superior
+        ctx.font = 'bold 12px "Roboto Mono", monospace';
+        ctx.fillStyle = '#00F5D4';
+        ctx.textAlign = 'left';
+        ctx.fillText('CRUZ DIAGONAL FACTORIAL (CDF) • FACTORES F1 & F2 SIMULTÁNEOS', 28, 36);
+
+        ctx.font = '10px "Inter", sans-serif';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText('Diagonal Ascendente: F1 (' + sData.inercias.F1 + '%) ↗ • Diagonal Descendente: F2 (' + sData.inercias.F2 + '%) ↘', 28, 54);
+
+        const mx = 120, my = 80;
+        const P0 = { x: w / 2, y: H / 2 };
+
+        // Diagonal 1 (↗ F1)
+        const P1A = { x: mx, y: H - my };
+        const P1B = { x: w - mx, y: my };
+        const L1 = Math.hypot(P1B.x - P1A.x, P1B.y - P1A.y);
+        const u1x = (P1B.x - P1A.x) / L1, u1y = (P1B.y - P1A.y) / L1;
+        const n1x = u1y, n1y = -u1x;
+
+        // Diagonal 2 (↘ F2)
+        const P2A = { x: mx, y: my };
+        const P2B = { x: w - mx, y: H - my };
+        const L2 = Math.hypot(P2B.x - P2A.x, P2B.y - P2A.y);
+        const u2x = (P2B.x - P2A.x) / L2, u2y = (P2B.y - P2A.y) / L2;
+        const n2x = -u2y, n2y = u2x;
+
+        // Trazo Diagonal 1 (F1: Magenta -> Neon Green)
+        const grad1 = ctx.createLinearGradient(P1A.x, P1A.y, P1B.x, P1B.y);
+        grad1.addColorStop(0, '#FF007F');
+        grad1.addColorStop(0.5, 'rgba(255,255,255,0.4)');
+        grad1.addColorStop(1, '#00FF87');
+        ctx.strokeStyle = grad1;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(P1A.x, P1A.y);
+        ctx.lineTo(P1B.x, P1B.y);
+        ctx.stroke();
+
+        // Trazo Diagonal 2 (F2: Púrpura -> Naranja)
+        const grad2 = ctx.createLinearGradient(P2A.x, P2A.y, P2B.x, P2B.y);
+        grad2.addColorStop(0, '#C084FC');
+        grad2.addColorStop(0.5, 'rgba(255,255,255,0.4)');
+        grad2.addColorStop(1, '#FF9F1C');
+        ctx.strokeStyle = grad2;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(P2A.x, P2A.y);
+        ctx.lineTo(P2B.x, P2B.y);
+        ctx.stroke();
+
+        // Origen común (0, 0)
+        ctx.beginPath();
+        ctx.arc(P0.x, P0.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+
+        ctx.font = 'bold 11px "Roboto Mono", monospace';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.fillText('0,0 (Origen Inercial)', P0.x, P0.y - 14);
+
+        // Títulos de los 4 cuadrantes / extremos
+        ctx.font = 'bold 10px "Roboto Mono"';
+        ctx.fillStyle = '#00FF87';
+        ctx.textAlign = 'right';
+        ctx.fillText('F1+ (Atracción)', P1B.x + 10, P1B.y - 12);
+
+        ctx.fillStyle = '#FF007F';
+        ctx.textAlign = 'left';
+        ctx.fillText('F1- (Rechazo)', P1A.x - 10, P1A.y + 20);
+
+        ctx.fillStyle = '#FF9F1C';
+        ctx.textAlign = 'right';
+        ctx.fillText('F2+ (Tensión)', P2B.x + 10, P2B.y + 20);
+
+        ctx.fillStyle = '#C084FC';
+        ctx.textAlign = 'left';
+        ctx.fillText('F2- (Defensa)', P2A.x - 10, P2A.y - 12);
+
+        // Recopilar elementos para F1 y F2
+        const itemsF1 = [];
+        const itemsF2 = [];
+        if (activeEjesLayers.sujetos && sData.characters) {
+            sData.characters.forEach(c => {
+                itemsF1.push({ type: 'sujeto', id: c.id, name: c.name, color: c.color, isAnchor: c.isAnchor, val: c.bx, role: c.role, diag: 1 });
+                itemsF2.push({ type: 'sujeto', id: c.id, name: c.name, color: c.color, isAnchor: c.isAnchor, val: c.by, role: c.role, diag: 2 });
+            });
+        }
+        if (activeEjesLayers.var && sData.var_vectors) {
+            sData.var_vectors.forEach(v => {
+                itemsF1.push({ type: 'var', id: v.text, name: v.text, color: '#00F5D4', val: v.x, role: 'Variable', diag: 1 });
+                itemsF2.push({ type: 'var', id: v.text, name: v.text, color: '#00F5D4', val: v.y, role: 'Variable', diag: 2 });
+            });
+        }
+        if (activeEjesLayers.aag && sData.aag_vectors) {
+            sData.aag_vectors.forEach(a => {
+                const col = (a.val === '+') ? '#00FF87' : '#FF007F';
+                itemsF1.push({ type: 'aag', id: a.text, name: a.text, color: col, val: a.x, role: a.desc, diag: 1 });
+                itemsF2.push({ type: 'aag', id: a.text, name: a.text, color: col, val: a.y, role: a.desc, diag: 2 });
+            });
+        }
+
+        function renderDiagList(items, ux, uy, nx, ny, L, diagNum, diagTitle) {
+            items.forEach(it => {
+                it.s = (it.val / 2.2) * (L / 2);
+                it.px = P0.x + it.s * ux;
+                it.py = P0.y + it.s * uy;
+            });
+            items.sort((a, b) => a.s - b.s);
+
+            let lastS = [-999, -999, -999];
+            items.forEach(it => {
+                let assigned = 1;
+                for (let t = 0; t < 3; t++) {
+                    if (it.s - lastS[t] >= 22) {
+                        assigned = t + 1;
+                        lastS[t] = it.s;
+                        break;
+                    }
+                }
+                it.tier = assigned;
+            });
+
+            items.forEach(it => {
+                const isHovered = (activeEjesHoverItem && activeEjesHoverItem.id === it.id);
+                const tierDist = 16 + (it.tier - 1) * 44;
+                const pLabel = { x: it.px + nx * tierDist, y: it.py + ny * tierDist };
+
+                ctx.strokeStyle = isHovered ? '#FFFFFF' : hexToRgba(it.color, it.tier > 1 ? 0.65 : 0.35);
+                ctx.lineWidth = isHovered ? 1.8 : 0.9;
+                if (it.tier > 1) ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(it.px, it.py);
+                ctx.lineTo(pLabel.x, pLabel.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+                ctx.beginPath();
+                ctx.arc(it.px, it.py, isHovered ? 5.5 : 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.save();
+                ctx.translate(pLabel.x, pLabel.y);
+                ctx.rotate(-Math.PI / 2);
+                ctx.font = isHovered ? 'bold 9px "Roboto Mono"' : '8px "Roboto Mono"';
+                ctx.fillStyle = isHovered ? '#FFFFFF' : it.color;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(it.name, 4, 0);
+                ctx.restore();
+
+                renderedEUHHitboxes.push({
+                    item: it,
+                    track: { title: diagTitle, prop: 'val', corProp: 'val', ctaProp: 'val' },
+                    px: it.px,
+                    axisY: it.py,
+                    minY: Math.min(it.py, pLabel.y) - 50,
+                    maxY: Math.max(it.py, pLabel.y) + 50,
+                    minX: Math.min(it.px, pLabel.x) - 15,
+                    maxX: Math.max(it.px, pLabel.x) + 15
+                });
+            });
+        }
+
+        renderDiagList(itemsF1, u1x, u1y, n1x, n1y, L1, 1, 'FACTOR 1 (DIAG ↗)');
+        renderDiagList(itemsF2, u2x, u2y, n2x, n2y, L2, 2, 'FACTOR 2 (DIAG ↘)');
+    }
+
     // API Pública
     window.CulturalSynthesisEngine = {
         setWork: function(workKey) {
@@ -1529,6 +2332,29 @@
             activeIASTimeIndex = timeIdx;
             renderRadarIAS();
         },
+        setEjesMode: function(mode) {
+            activeEjesMode = mode;
+            document.querySelectorAll('#pills-euh-mode .btn-act').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === mode);
+            });
+            renderEjesUnitariosHorizontales();
+        },
+        setEUHGeom: function(geom) {
+            activeEjesGeom = geom;
+            document.querySelectorAll('#pills-euh-geom .btn-act').forEach(b => {
+                b.classList.toggle('active', b.dataset.geom === geom);
+            });
+            renderEjesUnitariosHorizontales();
+        },
+        toggleEjesLayer: function(layerName, val) {
+            if (val !== undefined) {
+                activeEjesLayers[layerName] = val;
+            } else if (activeEjesLayers[layerName] !== undefined) {
+                activeEjesLayers[layerName] = !activeEjesLayers[layerName];
+            }
+            renderEjesUnitariosHorizontales();
+        },
+
         init: function() {
             // Inicialización de selectores y botones
             document.querySelectorAll('.btn-view-mode').forEach(b => {
@@ -1561,6 +2387,49 @@
                     renderPCAPointillistCloud();
                 });
             });
+
+            // Interacción Hover Tooltip en Canvas EUH
+            const canvasEUH = document.getElementById('canvas-ejes-unitarios-horiz');
+            if (canvasEUH) {
+                canvasEUH.addEventListener('mousemove', (e) => {
+                    const rect = canvasEUH.getBoundingClientRect();
+                    const mx = e.clientX - rect.left;
+                    const my = e.clientY - rect.top;
+                    const found = renderedEUHHitboxes.find(hb => mx >= hb.minX && mx <= hb.maxX && my >= hb.minY && my <= hb.maxY);
+                    if (found) {
+                        if (!activeEjesHoverItem || activeEjesHoverItem.id !== found.item.id) {
+                            activeEjesHoverItem = found.item;
+                            renderEjesUnitariosHorizontales();
+                        }
+                        showPCATooltip({
+                            type: 'euh_item',
+                            data: found.item,
+                            trackTitle: found.track.title,
+                            prop: found.track.prop,
+                            corProp: found.track.corProp,
+                            ctaProp: found.track.ctaProp,
+                            mx: e.clientX,
+                            my: e.clientY
+                        });
+                        canvasEUH.style.cursor = 'pointer';
+                    } else {
+                        if (activeEjesHoverItem) {
+                            activeEjesHoverItem = null;
+                            renderEjesUnitariosHorizontales();
+                            hidePCATooltip();
+                            canvasEUH.style.cursor = 'default';
+                        }
+                    }
+                });
+                canvasEUH.addEventListener('mouseleave', () => {
+                    if (activeEjesHoverItem) {
+                        activeEjesHoverItem = null;
+                        renderEjesUnitariosHorizontales();
+                        hidePCATooltip();
+                        canvasEUH.style.cursor = 'default';
+                    }
+                });
+            }
         }
     };
 

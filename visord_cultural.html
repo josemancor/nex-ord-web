@@ -7,6 +7,8 @@
     <!-- Three.js & OrbitControls -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Motor de Síntesis Factorial PCA y Diagnóstico Multidimensional (Canón 8 & 10) -->
+    <script src="js/cultural_synthesis_engine.js"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,6 +143,7 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .cultural-hub-overlay.hidden {
+            display: none !important;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -1813,6 +1816,9 @@
             <button class="btn-multidim-tab" data-tab="proximity">
                 📐 Inter-Proximidad Ranquica
             </button>
+            <button class="btn-multidim-tab" data-tab="ejes_horiz">
+                📏 Ejes Unitarios Horizontales (EUH)
+            </button>
         </div>
 
         <!-- SUB-VISTA 1: RADARES DE ALUCINACIÓN SOCIOMÉTRICA (IAS) -->
@@ -1938,6 +1944,71 @@
                 </div>
                 <div class="note-card-body">
                     <p><strong>Geometría de la Proximidad Ranquica:</strong> Mide la distancia de posición ordinal entre los vectores sociométricos de cada par de personajes. Celdas con fondo azul oscuro indican <em>máxima cercanía y afinidad relacional</em> (d &rarr; 0); celdas con gradiente cian y magenta señalan divergencia de intereses o conflicto polarizado.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-VISTA 5: EJES UNITARIOS HORIZONTALES (EUH) CON PACKING VERTICALIZADO Y MULTI-NIVEL -->
+        <div class="multidim-subview hidden" data-view="ejes_horiz">
+            <div class="multidim-controls-row" style="flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-size:0.75rem; color:#94A3B8; font-weight:bold;">GEOMETRÍA DEL EJE:</label>
+                    <div class="act-pills" id="pills-euh-geom">
+                        <button class="btn-act active" data-geom="horizontal" onclick="window.CulturalSynthesisEngine.setEUHGeom('horizontal')">↔ Horizontal (3 Ejes)</button>
+                        <button class="btn-act" data-geom="diagonal" onclick="window.CulturalSynthesisEngine.setEUHGeom('diagonal')">↗ Diagonal (L_max)</button>
+                        <button class="btn-act" data-geom="cruz" onclick="window.CulturalSynthesisEngine.setEUHGeom('cruz')">✕ Cruz Factorial (F1 + F2)</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-size:0.75rem; color:#94A3B8; font-weight:bold;">MODO POLAR:</label>
+                    <div class="act-pills" id="pills-euh-mode">
+                        <button class="btn-act active" data-mode="monopolar" onclick="window.CulturalSynthesisEngine.setEjesMode('monopolar')">Monopolar (Centro 0,0)</button>
+                        <button class="btn-act" data-mode="bipolar" onclick="window.CulturalSynthesisEngine.setEjesMode('bipolar')">Bipolar Disjunto (F+ / F-)</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 14px; font-size: 0.72rem; color: #CBD5E1; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="chk-euh-sujetos" checked onchange="window.CulturalSynthesisEngine.toggleEjesLayer('sujetos', this.checked)">
+                        <span style="color:#00F5D4; font-weight:bold;">Sujetos / Baricentros (B<sub>i</sub>)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="chk-euh-var" checked onchange="window.CulturalSynthesisEngine.toggleEjesLayer('var', this.checked)">
+                        <span style="color:#38BDF8; font-weight:bold;">Variables (VAR)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="chk-euh-aag" checked onchange="window.CulturalSynthesisEngine.toggleEjesLayer('aag', this.checked)">
+                        <span style="color:#FF9F1C; font-weight:bold;">Adjetivos (AAG)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="chk-euh-metrics" checked onchange="window.CulturalSynthesisEngine.toggleEjesLayer('metrics', this.checked)">
+                        <span style="color:#A78BFA; font-weight:bold;">Métricas COR / CTA / CTR</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="chk-euh-anticollision" checked onchange="window.CulturalSynthesisEngine.toggleEjesLayer('anticollision', this.checked)">
+                        <span style="color:#00FF87; font-weight:bold;">Anti-Colisión Multi-Nivel</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="multidim-content-grid" style="grid-template-columns: 1fr;">
+                <div class="multidim-canvas-card" style="width: 100%; min-height: 580px; overflow-x: auto; background: #0B132B; padding: 12px; border-radius: 8px; border: 1px solid rgba(0, 245, 212, 0.25);">
+                    <canvas id="canvas-ejes-unitarios-horiz" style="width: 100%; display: block;"></canvas>
+                </div>
+            </div>
+
+            <!-- Regla 10: Inviolable Nota Explicativa Ejes Unitarios Horizontales -->
+            <div class="pedagogical-note-card" style="margin-top:16px;">
+                <div class="note-card-header">
+                    💡 Nota Explicativa Pedagógica de Interpretación: Ejes Unitarios Horizontales (EUH) con Rotación Vertical y Despliegue Bilateral
+                </div>
+                <div class="note-card-body">
+                    <p><strong>1. Topología del Eje Unitario (1D):</strong> Despliega sobre una línea horizontal continua de pantalla completa ($100\text{vw}$) la proyección métrica dimensional de cada factor (F1, F2, F3) con origen inercial en el centro exacto $0.0$. A la izquierda se proyectan las coordenadas de inhibición, rechazo u oposición dramática (polo negativo), y a la derecha los valores de atracción, afinidad y cohesión estructural (polo positivo).</p>
+                    <p><strong>2. Packing de Alta Densidad con Escritura Verticalizada:</strong> La orientación del texto a $-90^\circ$ (vertical hacia arriba) reduce la huella espacial horizontal de cada etiqueta de $\approx 85\text{px}$ a menos de $16\text{px}$, multiplicando por $+550\%$ la densidad de información legible de personajes, variables y adjetivos sobre la misma franja horizontal sin solapamiento.</p>
+                    <p><strong>3. Algoritmo Anti-Colisión Multi-Nivel (Staggering por Pisos):</strong> Cuando dos o más elementos se encuentran a una distancia horizontal menor a $18\text{px}$, el motor eleva automáticamente la segunda etiqueta a un segundo o tercer piso (Tier 2: $y - 68\text{px}$, Tier 3: $y - 115\text{px}$) mediante una espícula guía punteada de color atenuado, erradicando el 100% de las colisiones visuales incluso ante duplicidades exactas de coordenada.</p>
+                    <p><strong>4. Bilateralidad Métrica Factorial (COR / CTA / CTR):</strong> En el hemisferio inferior opuesto a los nombres de los personajes, se proyecta verticalmente hacia abajo el tríptico métrico de validación factorial: <em>COR</em> (Calidad de Representación / Coseno Cuadrado $\cos^2 \in [0, 1]$), <em>CTA</em> (Contribución Absoluta a la Inercia del Eje en %) y <em>CTR</em> (Coordenada Ranquica Factual), permitiendo al investigador auditar de inmediato la solidez geométrica de cada nodo.</p>
+                    <p><strong>5. Desdoblamiento Bipolar para Escenarios Densos:</strong> Para corpus saturados o análisis con las 81 figuras del ancla $Q81$, el modo <em>Bipolar Disjunto</em> divide cada factor en dos líneas independientes a pantalla completa ($F_k^+$ y $F_k^-$), duplicando la resolución métrica de visualización.</p>
                 </div>
             </div>
         </div>
@@ -2348,15 +2419,25 @@
             setupRaycaster();
             setupUI();
 
-            // Comprobar si hay parámetro ?work= en la URL
+            // Comprobar si hay parámetro ?work=, ?view= y ?tab= en la URL
             const urlParams = new URLSearchParams(window.location.search);
             const reqWork = urlParams.get('work');
+            const reqView = urlParams.get('view');
+            const reqTab = urlParams.get('tab');
+
             if (reqWork && WORKS_CONFIG[reqWork]) {
                 openWorkFromHub(reqWork);
             } else {
                 // Cargar obra base en segundo plano y mostrar Menú Inicial
                 loadWork('hombres12');
                 showHubMenu();
+            }
+
+            if (reqView && window.CulturalSynthesisEngine) {
+                window.CulturalSynthesisEngine.setView(reqView);
+                if (reqTab) {
+                    window.CulturalSynthesisEngine.setMultidimTab(reqTab);
+                }
             }
         }
 
@@ -3790,12 +3871,15 @@
             renderer.render(scene, camera);
         }
 
-        window.addEventListener('load', () => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                initScene();
+                animate();
+            });
+        } else {
             initScene();
             animate();
-        });
+        }
     </script>
-    <!-- Motor de Síntesis Factorial PCA y Diagnóstico Multidimensional (Canón 8 & 10) -->
-    <script src="js/cultural_synthesis_engine.js"></script>
 </body>
 </html>
