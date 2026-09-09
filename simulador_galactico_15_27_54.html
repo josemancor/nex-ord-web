@@ -1236,17 +1236,37 @@
         // Estado de visualización de extremos de polaridad en pantalla
         let showPolarityExtremes = true;
 
-        // Colores de zonas aclarados y vibrantes
+        // Colores canónicos de los 4 anillos concéntricos (Paleta Original Autor)
         const COLORS = {
-            CORE: '#1D4ED8',      // Azul royal luminoso
-            INNER: '#059669',     // Esmeralda vivo
-            OUTER: '#D97706',     // Ámbar dorado
-            EDGE: '#DC2626',      // Coral carmesí
+            CORE: '#00A0FC',      // Azul celeste luminoso (Núcleo Cuasi-Neutro)
+            INNER: '#2CEE0E',     // Verde brillante vivo (Transición Interna)
+            OUTER: '#E9B913',     // Amarillo mostaza cálido (Transición Externa)
+            EDGE: '#D1600D',      // Marrón terracota intenso (Borde Perimetral Polar)
             HOVER: 'rgba(255,255,255,0.35)',
             DOT_POS: '#00FF87',   // Verde neón brillante
             DOT_NEG: '#FF3366',   // Rosa/rojo neón brillante
             DOT_MIX: '#FFD600'    // Oro de fricción
         };
+
+        // Los 16 Balances Canónicos del Tetragrama SMIb y su Densidad Relacional (dr)
+        const CANONICAL_16_BALANCES = [
+            { idx: '01', code: '++--', dr: 5.8, zone: 'EDGE', name: 'Polaridad Positiva Extrema' },
+            { idx: '02', code: '+---', dr: 3.2, zone: 'OUTER', name: 'Preponderancia Emisora' },
+            { idx: '03', code: '+++-', dr: 3.0, zone: 'OUTER', name: 'Alianza Fuerte' },
+            { idx: '04', code: '-+--', dr: 2.8, zone: 'INNER', name: 'Preferencia Efectiva' },
+            { idx: '05', code: '++-+', dr: 2.6, zone: 'INNER', name: 'Expectativa Cruzada' },
+            { idx: '06', code: '+-+-', dr: 0.4, zone: 'CORE', name: 'Alternancia Positiva' },
+            { idx: '07', code: '----', dr: 0.2, zone: 'CORE', name: 'Vínculo Frío / Latente' },
+            { idx: '08', code: '-++-', dr: 0.0, zone: 'CORE', name: 'Punto Cero Isobárico A' },
+            { idx: '09', code: '+--+', dr: 0.0, zone: 'CORE', name: 'Punto Cero Isobárico B' },
+            { idx: '10', code: '++++', dr: -0.2, zone: 'CORE', name: 'Saturación Total Atrayente' },
+            { idx: '11', code: '-+-+', dr: -0.4, zone: 'CORE', name: 'Alternancia Negativa' },
+            { idx: '12', code: '--+-', dr: -2.6, zone: 'INNER', name: 'Rechazo Efectivo' },
+            { idx: '13', code: '+-++', dr: -2.8, zone: 'INNER', name: 'Expectativa Discrepante' },
+            { idx: '14', code: '---+', dr: -3.0, zone: 'OUTER', name: 'Fractura Receptiva' },
+            { idx: '15', code: '-+++', dr: -3.2, zone: 'OUTER', name: 'Preponderancia Disruptiva' },
+            { idx: '16', code: '--++', dr: -5.8, zone: 'EDGE', name: 'Polaridad Negativa Extrema' }
+        ];
 
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
@@ -1269,22 +1289,52 @@
             for (let r = 0; r < N; r++) {
                 let row = [];
                 for (let c = 0; c < N; c++) {
-                    const distR = Math.abs(r - center);
-                    const distC = Math.abs(c - center);
-                    const maxDist = Math.max(distR, distC);
-                    const normDist = maxDist / (center || 1);
-
                     let color, zoneName, bias;
-                    if (normDist <= 0.28) { color = COLORS.CORE; zoneName = 'Núcleo Central (Atracción Directa)'; bias = 1.0; } 
-                    else if (normDist <= 0.60) { color = COLORS.INNER; zoneName = 'Transición Interna (Flujo Operativo)'; bias = 0.5; } 
-                    else if (normDist <= 0.88) { color = COLORS.OUTER; zoneName = 'Transición Externa (Fricción Latente)'; bias = -0.3; } 
-                    else { color = COLORS.EDGE; zoneName = 'Periferia Relacional (Marginalidad / Rechazo)'; bias = -0.8; }
+
+                    if (N === 16) {
+                        // Mapeo concéntrico exacto del Tablero Canónico 16x16
+                        const isEdge = (r === 0 || r === 15 || c === 0 || c === 15);
+                        const isOuter = (r <= 2 || r >= 13 || c <= 2 || c >= 13);
+                        const isInner = (r <= 4 || r >= 11 || c <= 4 || c >= 11);
+                        if (isEdge) {
+                            color = COLORS.EDGE;
+                            zoneName = 'Borde Perimetral (Polaridad Extrema ±5.8)';
+                            bias = -0.8;
+                        } else if (isOuter) {
+                            color = COLORS.OUTER;
+                            zoneName = 'Corona Externa (Tensión Térmica ±3.0)';
+                            bias = -0.3;
+                        } else if (isInner) {
+                            color = COLORS.INNER;
+                            zoneName = 'Corona Interna (Modulación Diádica ±2.7)';
+                            bias = 0.5;
+                        } else {
+                            color = COLORS.CORE;
+                            zoneName = 'Núcleo Central 6x6 (Cuasi-Neutro / Isobárico)';
+                            bias = 1.0;
+                        }
+                    } else {
+                        const distR = Math.abs(r - center);
+                        const distC = Math.abs(c - center);
+                        const maxDist = Math.max(distR, distC);
+                        const normDist = maxDist / (center || 1);
+
+                        if (normDist <= 0.28) { color = COLORS.CORE; zoneName = 'Núcleo Central (Atracción Directa)'; bias = 1.0; } 
+                        else if (normDist <= 0.60) { color = COLORS.INNER; zoneName = 'Transición Interna (Flujo Operativo)'; bias = 0.5; } 
+                        else if (normDist <= 0.88) { color = COLORS.OUTER; zoneName = 'Transición Externa (Fricción Latente)'; bias = -0.3; } 
+                        else { color = COLORS.EDGE; zoneName = 'Periferia Relacional (Marginalidad / Rechazo)'; bias = -0.8; }
+                    }
+
+                    const bR = (N === 16) ? CANONICAL_16_BALANCES[r] : null;
+                    const bC = (N === 16) ? CANONICAL_16_BALANCES[c] : null;
 
                     row.push({
                         r: r, c: c,
                         baseColor: color,
                         zoneName: zoneName,
                         normBias: bias,
+                        balanceR: bR,
+                        balanceC: bC,
                         hitsPos: 0,
                         hitsNeg: 0,
                         a1: null,
@@ -2166,7 +2216,15 @@
             const insp = document.getElementById('cell-inspector');
             if (cellUnderCursor) {
                 const localSdr = cellUnderCursor.total > 0 ? ((cellUnderCursor.hitsPos - cellUnderCursor.hitsNeg) / cellUnderCursor.total).toFixed(2) : '0.00';
-                insp.innerHTML = `<strong>Celda [F:${String(cellUnderCursor.r).padStart(2,'0')} / C:${String(cellUnderCursor.c).padStart(2,'0')}]</strong> &bull; ${cellUnderCursor.zoneName}<br>` +
+                let tetra16Info = '';
+                if (currentSize === 16 && cellUnderCursor.balanceR && cellUnderCursor.balanceC) {
+                    const bR = cellUnderCursor.balanceR;
+                    const bC = cellUnderCursor.balanceC;
+                    tetra16Info = `<div style="font-size:10px; color:#00F0FF; font-family:'Fira Code', monospace; margin:2px 0;">` +
+                        `Fila ${bR.idx}: <strong>${bR.code}</strong> (dr:${bR.dr >= 0 ? '+' : ''}${bR.dr}) ➔ Col ${bC.idx}: <strong>${bC.code}</strong> (dr:${bC.dr >= 0 ? '+' : ''}${bC.dr})</div>`;
+                }
+                insp.innerHTML = `<strong>Celda [F:${String(cellUnderCursor.r + 1).padStart(2,'0')} / C:${String(cellUnderCursor.c + 1).padStart(2,'0')}]</strong> &bull; ${cellUnderCursor.zoneName}<br>` +
+                    tetra16Info +
                     `<span style="color:var(--green)">Impactos (+): ${cellUnderCursor.hitsPos}</span> &bull; ` +
                     `<span style="color:#FF5E85">Impactos (-): ${cellUnderCursor.hitsNeg}</span> &bull; ` +
                     `SDR Local: <strong>${localSdr}</strong>`;
