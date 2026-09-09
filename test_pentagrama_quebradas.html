@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISORD • Pentagrama Socio-Termodinámico de 10 Estaciones con Líneas Quebradas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #080D1A;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
+            background: #0B132B;
+            border: 1px solid rgba(0, 245, 212, 0.25);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .header-title h1 {
+            font-size: 1.3rem;
+            color: #00F5D4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-title p {
+            font-size: 0.82rem;
+            color: #94A3B8;
+            margin-top: 4px;
+        }
+        .header-badge {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(0, 245, 212, 0.12);
+            color: #00FF87;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+        .controls-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ctrl-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .btn-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #CBD5E1;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-toggle:hover {
+            background: rgba(0, 245, 212, 0.15);
+            border-color: #00F5D4;
+            color: #FFFFFF;
+        }
+        .btn-toggle.active {
+            background: #00F5D4;
+            border-color: #00F5D4;
+            color: #0B132B;
+            font-weight: 700;
+        }
+        .canvas-wrapper {
+            position: relative;
+            background: #0B132B;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+        }
+        .pedagogical-card {
+            margin-top: 20px;
+            background: rgba(0, 245, 212, 0.03);
+            border: 1px solid rgba(0, 245, 212, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+        .pedagogical-title {
+            color: #00F5D4;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pedagogical-body {
+            font-size: 0.78rem;
+            color: #CBD5E1;
+            line-height: 1.5;
+        }
+        .pedagogical-body strong {
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header">
+        <div class="header-title">
+            <h1>🎼 Pentagrama Socio-Termodinámico Graduado • 10 Estaciones</h1>
+            <p>Perfil de Densidades y Tetragrama Relacional SMIb con Líneas Quebradas Punto a Punto (Estudio: Clara, N=9)</p>
+        </div>
+        <div class="header-badge">
+            CLAVE: CULTURAL-AA-G1-T4-C2-V07-A16-ES-9
+        </div>
+    </div>
+
+    <div class="controls-toolbar">
+        <div class="ctrl-group">
+            <span class="ctrl-label">Sesión T:</span>
+            <button class="btn-toggle active" data-t="all">Todas (T1→T4)</button>
+            <button class="btn-toggle" data-t="1">T1 (Apertura)</button>
+            <button class="btn-toggle" data-t="2">T2 (Confrontación)</button>
+            <button class="btn-toggle" data-t="3">T3 (Desarme)</button>
+            <button class="btn-toggle" data-t="4">T4 (Autonomía)</button>
+        </div>
+
+        <div class="ctrl-group" style="margin-left: 16px;">
+            <span class="ctrl-label">Criterio C:</span>
+            <button class="btn-toggle active" data-c="both">Ambos (C1 & C2)</button>
+            <button class="btn-toggle" data-c="1">C1 (Apoyo)</button>
+            <button class="btn-toggle" data-c="2">C2 (Tensión)</button>
+        </div>
+
+        <div class="ctrl-group" style="margin-left: auto;">
+            <span class="ctrl-label">Escala:</span>
+            <button class="btn-toggle active" data-scale="empirical">Empírica (Dmin..Dmax)</button>
+            <button class="btn-toggle" data-scale="normalized">Normalizada [0..1]</button>
+        </div>
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="pentagrama-canvas" height="500"></canvas>
+    </div>
+
+    <!-- Regla 10: Inviolable Nota Explicativa Pedagógica -->
+    <div class="pedagogical-card">
+        <div class="pedagogical-title">
+            💡 Nota Explicativa Pedagógica de Interpretación: Pentagrama Graduado y Secuencia de 10 Estaciones
+        </div>
+        <div class="pedagogical-body">
+            <p>
+                <strong>Lectura Diacrónica del Ecosistema:</strong> El pentagrama organiza en 5 líneas horizontales equidistantes el espectro continuo de densidad grupal entre la cota mínima (<em>D<sub>min</sub></em>, línea 1 inferior) y la cota máxima (<em>D<sub>max</sub></em>, línea 5 superior). El eje horizontal descompone el circuito vincular en <strong>10 estaciones canónicas consecutivas</strong>: la masa de emisión (<strong>BDA</strong>, <strong>SDA</strong>), el núcleo cognitivo-diádico del Tetragrama SMIb (<strong>A1: p_DA</strong>, <strong>A2: DA</strong>, <strong>A3: RECIBE</strong>, <strong>A4: p_RECIBE</strong>), la masa de recepción (<strong>SRC</strong>, <strong>BRC</strong>) y la síntesis sistémica global (<strong>SDR</strong>, <strong>BDR</strong>).
+            </p>
+            <p style="margin-top: 6px;">
+                <strong>Líneas Quebradas Puras:</strong> Cada serie temporal se traza exclusivamente mediante segmentos rectos que unen los 10 puntos en estricto orden posicional sin interpolaciones artificiales. La forma del perfil revela de inmediato la morfología socio-termodinámica: un perfil con un valle profundo en el Tetragrama y un pico en BDR evidencia polarización estructural, mientras que un ascenso armónico de SDA, SRC y SDR hacia la franja superior denota madurez, baja alucinación sociométrica y cohesión empática.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CLARA_TC_DATA = {
+        "1g1t1c": { t: 1, c: 1, label: "T1C1: Apertura (Apoyo)", color: "#00FF87", bda: 3.00, sda: 0.56, a1: 0.42, a2: 0.69, a3: 0.87, a4: 0.26, src: 0.70, brc: 2.14, sdr: -0.86, bdr: 8.89 },
+        "1g1t2c": { t: 1, c: 2, label: "T1C2: Apertura (Tensión)", color: "#FF007F", bda: 2.85, sda: -0.30, a1: 0.21, a2: -0.37, a3: -0.45, a4: 0.09, src: -0.36, brc: 1.89, sdr: -1.75, bdr: 8.89 },
+        "1g2t1c": { t: 2, c: 1, label: "T2C1: Confrontación (Apoyo)", color: "#38BDF8", bda: 3.11, sda: 0.22, a1: 0.83, a2: 0.28, a3: 0.54, a4: 0.57, src: 0.43, brc: 2.14, sdr: -1.09, bdr: 8.89 },
+        "1g2t2c": { t: 2, c: 2, label: "T2C2: Confrontación (Tensión)", color: "#F43F5E", bda: 3.17, sda: -0.28, a1: -0.07, a2: -0.35, a3: -0.81, a4: -0.20, src: -0.64, brc: 2.24, sdr: -2.82, bdr: 8.89 },
+        "1g3t1c": { t: 3, c: 1, label: "T3C1: Desarme (Apoyo)", color: "#A855F7", bda: 3.17, sda: 0.17, a1: 0.07, a2: 0.21, a3: 0.40, a4: -0.01, src: 0.32, brc: 2.25, sdr: -1.40, bdr: 8.89 },
+        "1g3t2c": { t: 3, c: 2, label: "T3C2: Desarme (Tensión)", color: "#FB7185", bda: 3.19, sda: -0.19, a1: 0.42, a2: -0.23, a3: -0.32, a4: 0.21, src: -0.25, brc: 2.25, sdr: -1.54, bdr: 8.89 },
+        "1g4t1c": { t: 4, c: 1, label: "T4C1: Autonomía (Apoyo)", color: "#FFE600", bda: 3.11, sda: 0.11, a1: 0.62, a2: 0.14, a3: 0.30, a4: 0.46, src: 0.24, brc: 2.41, sdr: -1.39, bdr: 8.89 },
+        "1g4t2c": { t: 4, c: 2, label: "T4C2: Autonomía (Tensión)", color: "#F59E0B", bda: 3.19, sda: -0.19, a1: 0.69, a2: -0.23, a3: -0.30, a4: 0.53, src: -0.24, brc: 2.27, sdr: -1.27, bdr: 8.89 }
+    };
+
+    const STATIONS = [
+        { id: "bda", code: "BDA", l1: "B", l2: "D", l3: "A", name: "Densidad Bruta Dador (Atracción)", desc: "Masa absoluta de preferencias emitidas" },
+        { id: "sda", code: "SDA", l1: "S", l2: "D", l3: "A", name: "Densidad Neta Dador (Atracción)", desc: "Balance neto emitido (+ vs -)" },
+        { id: "a1",  code: "A1",  l1: "A", l2: "1", l3: " ", name: "A1 = p_DA (Expectativa Emisor)", desc: "Expectativa que el emisor tiene del partner" },
+        { id: "a2",  code: "A2",  l1: "A", l2: "2", l3: " ", name: "A2 = DA (Preferencia Emitida)", desc: "Preferencia efectiva otorgada al partner" },
+        { id: "a3",  code: "A3",  l1: "A", l2: "3", l3: " ", name: "A3 = RECIBE (Preferencia Recibida)", desc: "Preferencia efectiva recibida del partner" },
+        { id: "a4",  code: "A4",  l1: "A", l2: "4", l3: " ", name: "A4 = p_RECIBE (Expectativa Partner)", desc: "Expectativa atribuida que el partner tiene del emisor" },
+        { id: "src", code: "SRC", l1: "S", l2: "R", l3: "C", name: "Densidad Neta Receptor", desc: "Balance neto recibido (+ vs -)" },
+        { id: "brc", code: "BRC", l1: "B", l2: "R", l3: "C", name: "Densidad Bruta Receptor", desc: "Masa absoluta de preferencias recibidas" },
+        { id: "sdr", code: "SDR", l1: "S", l2: "D", l3: "R", name: "Densidad Neta Relacional", desc: "Balance neta global del sistema diádico" },
+        { id: "bdr", code: "BDR", l1: "B", l2: "D", l3: "R", name: "Densidad Bruta Relacional", desc: "Masa invariante total de vínculos del ecosistema" }
+    ];
+
+    let currentFilterT = "all";
+    let currentFilterC = "both";
+    let currentScale = "empirical";
+
+    function renderPentagrama() {
+        const canvas = document.getElementById("pentagrama-canvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const container = canvas.parentElement;
+        const w = container.clientWidth || 1300;
+        const h = 500;
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+
+        ctx.resetTransform();
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = "#0B132B";
+        ctx.fillRect(0, 0, w, h);
+
+        const padLeft = 120;
+        const padRight = 60;
+        const padTop = 60;
+        const padBottom = 110;
+
+        const staveH = h - padTop - padBottom;
+        const staveW = w - padLeft - padRight;
+        const nLines = 5;
+        const lineSpacing = staveH / (nLines - 1);
+
+        const activeTCs = Object.values(CLARA_TC_DATA).filter(d => {
+            const matchT = (currentFilterT === "all") || (d.t === parseInt(currentFilterT));
+            const matchC = (currentFilterC === "both") || (d.c === parseInt(currentFilterC));
+            return matchT && matchC;
+        });
+
+        let dMin = -3.0;
+        let dMax = 9.0;
+        if (currentScale === "normalized") {
+            dMin = 0.0;
+            dMax = 1.0;
+        }
+
+        function valToY(v) {
+            let norm = 0;
+            if (currentScale === "normalized") {
+                norm = v;
+            } else {
+                norm = (v - dMin) / (dMax - dMin);
+            }
+            norm = Math.max(-0.05, Math.min(1.05, norm));
+            return (padTop + staveH) - norm * staveH;
+        }
+
+        // 1. DIBUJAR LAS 5 LÍNEAS DEL PENTAGRAMA
+        for (let i = 0; i < nLines; i++) {
+            const y = padTop + i * lineSpacing;
+            const lineNum = 5 - i;
+            const isCenterLine = (i === 2);
+
+            ctx.strokeStyle = isCenterLine ? "rgba(0, 245, 212, 0.45)" : "rgba(255, 255, 255, 0.20)";
+            ctx.lineWidth = isCenterLine ? 1.6 : 1.0;
+
+            ctx.beginPath();
+            ctx.moveTo(padLeft - 20, y);
+            ctx.lineTo(w - padRight + 20, y);
+            ctx.stroke();
+
+            ctx.font = '600 10px "Roboto Mono", monospace';
+            ctx.fillStyle = isCenterLine ? "#00F5D4" : "#64748B";
+            ctx.textAlign = "right";
+
+            let lineValText = "";
+            if (currentScale === "normalized") {
+                const lv = 1.0 - i * 0.25;
+                lineValText = lv.toFixed(2);
+            } else {
+                const lv = dMax - i * ((dMax - dMin) / 4);
+                lineValText = (lv >= 0 ? "+" : "") + lv.toFixed(2);
+            }
+
+            ctx.fillText("L" + lineNum + " [" + lineValText + "]", padLeft - 28, y + 3.5);
+        }
+
+        // Clave Musical / Institucional
+        ctx.font = '700 26px "Inter", sans-serif';
+        ctx.fillStyle = "#00F5D4";
+        ctx.textAlign = "center";
+        ctx.fillText("𝄢", padLeft - 80, padTop + staveH / 2 - 8);
+        ctx.font = '700 9px "Roboto Mono", monospace';
+        ctx.fillStyle = "#94A3B8";
+        ctx.fillText("VISORD", padLeft - 80, padTop + staveH / 2 + 16);
+        ctx.fillText("STAVE", padLeft - 80, padTop + staveH / 2 + 28);
+
+        // 2. DIBUJAR LAS 10 COLUMNAS DE ESTACIONES (EJE X)
+        const nStations = STATIONS.length;
+        const stepX = staveW / (nStations - 1);
+        const stationXCoords = [];
+
+        STATIONS.forEach((st, idx) => {
+            const x = padLeft + idx * stepX;
+            stationXCoords.push(x);
+
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 4]);
+            ctx.beginPath();
+            ctx.moveTo(x, padTop - 10);
+            ctx.lineTo(x, padTop + staveH + 10);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // ETIQUETAS VERTICALIZADAS
+            const yLabelBase = padTop + staveH + 28;
+            ctx.font = '700 13px "Roboto Mono", monospace';
+            ctx.textAlign = "center";
+
+            let colColor = "#CBD5E1";
+            if (st.id === "bdr" || st.id === "sdr") colColor = "#FFE600";
+            else if (st.id.startsWith("a")) colColor = "#00F5D4";
+            else if (st.id.includes("da")) colColor = "#38BDF8";
+            else if (st.id.includes("rc")) colColor = "#C084FC";
+
+            ctx.fillStyle = colColor;
+            ctx.fillText(st.l1, x, yLabelBase);
+            ctx.fillText(st.l2, x, yLabelBase + 16);
+            if (st.l3.trim() !== "") {
+                ctx.fillText(st.l3, x, yLabelBase + 32);
+            }
+
+            ctx.font = '600 9px "Roboto Mono", monospace';
+            ctx.fillStyle = "#64748B";
+            ctx.fillText(st.code, x, yLabelBase + 52);
+        });
+
+        // 3. TRAZADO DE LÍNEAS QUEBRADAS (PUNTO A PUNTO)
+        activeTCs.forEach(tc => {
+            const points = [];
+
+            STATIONS.forEach((st, sIdx) => {
+                let rawVal = tc[st.id] !== undefined ? tc[st.id] : 0.0;
+                let plotVal = rawVal;
+                if (currentScale === "normalized") {
+                    if (st.id === "bdr" || st.id === "bda" || st.id === "brc") {
+                        plotVal = rawVal / 8.89;
+                    } else if (st.id === "sdr") {
+                        plotVal = (rawVal + 3.0) / 6.0;
+                    } else if (st.id === "sda" || st.id === "src") {
+                        plotVal = (rawVal + 1.0) / 2.0;
+                    } else {
+                        plotVal = (rawVal + 1.0) / 2.0;
+                    }
+                }
+
+                const px = stationXCoords[sIdx];
+                const py = valToY(plotVal);
+                points.push({ x: px, y: py, raw: rawVal, plot: plotVal, st: st });
+            });
+
+            // Línea quebrada pura
+            ctx.strokeStyle = tc.color;
+            ctx.lineWidth = (activeTCs.length <= 2) ? 3.2 : 2.0;
+            ctx.beginPath();
+            points.forEach((pt, pIdx) => {
+                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+
+            // Resplandor tenue
+            ctx.save();
+            ctx.strokeStyle = tc.color;
+            ctx.lineWidth = (activeTCs.length <= 2) ? 6.5 : 4.0;
+            ctx.globalAlpha = 0.25;
+            ctx.beginPath();
+            points.forEach((pt, pIdx) => {
+                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+            ctx.restore();
+
+            // Puntos / vértices elípticos
+            points.forEach(pt => {
+                ctx.save();
+                ctx.translate(pt.x, pt.y);
+                ctx.rotate(-15 * Math.PI / 180);
+
+                ctx.fillStyle = "#0B132B";
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 6.5, 4.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = tc.color;
+                ctx.lineWidth = 2.4;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 6.5, 4.8, 0, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = tc.color;
+                ctx.beginPath();
+                ctx.arc(0, 0, 2.4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+
+                // Valor numérico flotante en vista enfocada
+                if (activeTCs.length <= 2) {
+                    ctx.font = '700 10px "Roboto Mono", monospace';
+                    ctx.fillStyle = tc.color;
+                    ctx.textAlign = "center";
+                    const offsetVal = (tc.c === 2) ? 17 : -12;
+                    ctx.fillText((pt.raw >= 0 && pt.raw < 10 ? '+' : '') + pt.raw.toFixed(2), pt.x, pt.y + offsetVal);
+                }
+            });
+        });
+
+        // 4. LEYENDA SUPERIOR
+        const legendX = padLeft;
+        const legendY = padTop - 24;
+        ctx.font = '600 11px "Inter", sans-serif';
+        let curLegX = legendX;
+
+        activeTCs.forEach(tc => {
+            ctx.fillStyle = tc.color;
+            ctx.fillRect(curLegX, legendY - 9, 14, 4);
+
+            ctx.fillStyle = "#FFFFFF";
+            ctx.textAlign = "left";
+            ctx.fillText(tc.label, curLegX + 20, legendY - 5);
+
+            curLegX += ctx.measureText(tc.label).width + 35;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Leer parámetros URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("t")) currentFilterT = params.get("t");
+        if (params.get("c")) currentFilterC = params.get("c");
+        if (params.get("scale")) currentScale = params.get("scale");
+
+        // Actualizar UI activa
+        document.querySelectorAll("[data-t]").forEach(b => {
+            b.classList.toggle("active", b.dataset.t === currentFilterT);
+        });
+        document.querySelectorAll("[data-c]").forEach(b => {
+            b.classList.toggle("active", b.dataset.c === currentFilterC);
+        });
+        document.querySelectorAll("[data-scale]").forEach(b => {
+            b.classList.toggle("active", b.dataset.scale === currentScale);
+        });
+
+        renderPentagrama();
+
+        document.querySelectorAll("[data-t]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll("[data-t]").forEach(b => b.classList.remove("active"));
+                e.currentTarget.classList.add("active");
+                currentFilterT = e.currentTarget.dataset.t;
+                renderPentagrama();
+            });
+        });
+
+        document.querySelectorAll("[data-c]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll("[data-c]").forEach(b => b.classList.remove("active"));
+                e.currentTarget.classList.add("active");
+                currentFilterC = e.currentTarget.dataset.c;
+                renderPentagrama();
+            });
+        });
+
+        document.querySelectorAll("[data-scale]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll("[data-scale]").forEach(b => b.classList.remove("active"));
+                e.currentTarget.classList.add("active");
+                currentScale = e.currentTarget.dataset.scale;
+                renderPentagrama();
+            });
+        });
+
+        window.addEventListener("resize", renderPentagrama);
+    });
+</script>
+
+</body>
+</html>

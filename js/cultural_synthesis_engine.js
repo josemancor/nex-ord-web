@@ -152,14 +152,14 @@
             ],
             // Valores Oficiales de las 10 Densidades Socio-Termodinámicas (FULL_SINTESIS V07)
             densidades_tc: {
-                "1g1t1c": { tc: "1g1t1c", t: 1, c: 1, bdr: 8.89, sdr: -0.86, bda: 8.89, sda: 0.42, brc: 8.89, src: 0.45, h: 4.92, iir: 9.12, isv: 0.38, g: 10.52, label: "Sesión 1: Apertura (Apoyo)" },
-                "1g1t2c": { tc: "1g1t2c", t: 1, c: 2, bdr: 8.89, sdr: -1.75, bda: 8.89, sda: -0.88, brc: 8.89, src: -0.87, h: 4.61, iir: 9.74, isv: 0.48, g: 10.11, label: "Sesión 1: Apertura (Tensión)" },
-                "1g2t1c": { tc: "1g2t1c", t: 2, c: 1, bdr: 8.89, sdr: -1.09, bda: 8.89, sda: 0.30, brc: 8.89, src: 0.35, h: 4.86, iir: 9.37, isv: 0.41, g: 10.71, label: "Sesión 2: Confrontación (Apoyo)" },
-                "1g2t2c": { tc: "1g2t2c", t: 2, c: 2, bdr: 8.89, sdr: -2.82, bda: 8.89, sda: -1.41, brc: 8.89, src: -1.41, h: 4.18, iir: 9.42, isv: 0.56, g: 9.71, label: "Sesión 2: Confrontación (Tensión)" },
-                "1g3t1c": { tc: "1g3t1c", t: 3, c: 1, bdr: 8.89, sdr: -1.40, bda: 8.89, sda: -0.70, brc: 8.89, src: -0.70, h: 4.61, iir: 9.43, isv: 0.47, g: 9.61, label: "Sesión 3: Desarme (Apoyo)" },
-                "1g3t2c": { tc: "1g3t2c", t: 3, c: 2, bdr: 8.89, sdr: -1.54, bda: 8.89, sda: -0.77, brc: 8.89, src: -0.77, h: 4.75, iir: 9.24, isv: 0.42, g: 10.63, label: "Sesión 3: Desarme (Tensión)" },
-                "1g4t1c": { tc: "1g4t1c", t: 4, c: 1, bdr: 8.89, sdr: -1.39, bda: 8.89, sda: -0.69, brc: 8.89, src: -0.70, h: 4.71, iir: 9.37, isv: 0.44, g: 10.25, label: "Sesión 4: Autonomía (Apoyo)" },
-                "1g4t2c": { tc: "1g4t2c", t: 4, c: 2, bdr: 8.89, sdr: -1.27, bda: 8.89, sda: -0.63, brc: 8.89, src: -0.64, h: 4.67, iir: 9.24, isv: 0.47, g: 9.35, label: "Sesión 4: Autonomía (Tensión)" }
+                "1g1t1c": { tc: "1g1t1c", t: 1, c: 1, bda: 3.00, sda: 0.56, a1: 0.42, a2: 0.69, a3: 0.87, a4: 0.26, src: 0.70, brc: 2.14, sdr: -0.86, bdr: 8.89, h: 4.92, iir: 9.12, isv: 0.38, g: 10.52, label: "T1C1: Apertura (Apoyo)", color: "#00FF87" },
+                "1g1t2c": { tc: "1g1t2c", t: 1, c: 2, bda: 2.85, sda: -0.30, a1: 0.21, a2: -0.37, a3: -0.45, a4: 0.09, src: -0.36, brc: 1.89, sdr: -1.75, bdr: 8.89, h: 4.61, iir: 9.74, isv: 0.48, g: 10.11, label: "T1C2: Apertura (Tensión)", color: "#FF007F" },
+                "1g2t1c": { tc: "1g2t1c", t: 2, c: 1, bda: 3.11, sda: 0.22, a1: 0.83, a2: 0.28, a3: 0.54, a4: 0.57, src: 0.43, brc: 2.14, sdr: -1.09, bdr: 8.89, h: 4.86, iir: 9.37, isv: 0.41, g: 10.71, label: "T2C1: Confrontación (Apoyo)", color: "#38BDF8" },
+                "1g2t2c": { tc: "1g2t2c", t: 2, c: 2, bda: 3.17, sda: -0.28, a1: -0.07, a2: -0.35, a3: -0.81, a4: -0.20, src: -0.64, brc: 2.24, sdr: -2.82, bdr: 8.89, h: 4.18, iir: 9.42, isv: 0.56, g: 9.71, label: "T2C2: Confrontación (Tensión)", color: "#F43F5E" },
+                "1g3t1c": { tc: "1g3t1c", t: 3, c: 1, bda: 3.17, sda: 0.17, a1: 0.07, a2: 0.21, a3: 0.40, a4: -0.01, src: 0.32, brc: 2.25, sdr: -1.40, bdr: 8.89, h: 4.61, iir: 9.43, isv: 0.47, g: 9.61, label: "T3C1: Desarme (Apoyo)", color: "#A855F7" },
+                "1g3t2c": { tc: "1g3t2c", t: 3, c: 2, bda: 3.19, sda: -0.19, a1: 0.42, a2: -0.23, a3: -0.32, a4: 0.21, src: -0.25, brc: 2.25, sdr: -1.54, bdr: 8.89, h: 4.75, iir: 9.24, isv: 0.42, g: 10.63, label: "T3C2: Desarme (Tensión)", color: "#FB7185" },
+                "1g4t1c": { tc: "1g4t1c", t: 4, c: 1, bda: 3.11, sda: 0.11, a1: 0.62, a2: 0.14, a3: 0.30, a4: 0.46, src: 0.24, brc: 2.41, sdr: -1.39, bdr: 8.89, h: 4.71, iir: 9.37, isv: 0.44, g: 10.25, label: "T4C1: Autonomía (Apoyo)", color: "#FFE600" },
+                "1g4t2c": { tc: "1g4t2c", t: 4, c: 2, bda: 3.19, sda: -0.19, a1: 0.69, a2: -0.23, a3: -0.30, a4: 0.53, src: -0.24, brc: 2.27, sdr: -1.27, bdr: 8.89, h: 4.67, iir: 9.24, isv: 0.47, g: 9.35, label: "T4C2: Autonomía (Tensión)", color: "#F59E0B" }
             },
             // Radares de Alucinación Sociométrica (IAS: p_DA vs RECIBE)
             radares_ias: {
@@ -430,6 +430,9 @@
         kde: true
     };
     let pcaHoverItem = null;
+    let activePentaT = 'all';
+    let activePentaC = 'both';
+    let activePentaScale = 'empirical';
 
     function initPCASynthesisCanvas(canvasElement, workKey) {
         activePCACanvas = canvasElement;
@@ -1296,14 +1299,14 @@
         }
     }
 
-    // Render del Gráfico de las 10 Densidades Socio-Termodinámicas
+    // Render del Pentagrama Socio-Termodinámico Graduado (10 Estaciones canónicas con Líneas Quebradas)
     function renderDensitiesChart() {
         const canvas = document.getElementById('canvas-densities-chart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const container = canvas.parentElement;
-        const w = container.clientWidth || 650;
-        const h = 380;
+        const w = container.clientWidth || 900;
+        const h = 480;
 
         const dpr = window.devicePixelRatio || 1;
         canvas.width = w * dpr;
@@ -1318,79 +1321,240 @@
         ctx.fillRect(0, 0, w, h);
 
         const sData = CULTURAL_SYNTHESIS_DATA[activePCAWorkKey] || CULTURAL_SYNTHESIS_DATA["clara"];
-        const dList = Object.values(sData.densidades_tc || {});
-        if (dList.length === 0) return;
+        const allTCs = Object.values(sData.densidades_tc || {});
+        if (allTCs.length === 0) return;
 
-        const padX = 55;
-        const padY = 40;
-        const nPoints = dList.length;
-        const stepX = (w - 2 * padX) / (nPoints - 1);
+        const STATIONS = [
+            { id: "bda", code: "BDA", l1: "B", l2: "D", l3: "A", name: "Densidad Bruta Dador (Atracción)" },
+            { id: "sda", code: "SDA", l1: "S", l2: "D", l3: "A", name: "Densidad Neta Dador (Atracción)" },
+            { id: "a1",  code: "A1",  l1: "A", l2: "1", l3: " ", name: "A1 = p_DA (Expectativa Emisor)" },
+            { id: "a2",  code: "A2",  l1: "A", l2: "2", l3: " ", name: "A2 = DA (Preferencia Emitida)" },
+            { id: "a3",  code: "A3",  l1: "A", l2: "3", l3: " ", name: "A3 = RECIBE (Preferencia Recibida)" },
+            { id: "a4",  code: "A4",  l1: "A", l2: "4", l3: " ", name: "A4 = p_RECIBE (Expectativa Partner)" },
+            { id: "src", code: "SRC", l1: "S", l2: "R", l3: "C", name: "Densidad Neta Receptor" },
+            { id: "brc", code: "BRC", l1: "B", l2: "R", l3: "C", name: "Densidad Bruta Receptor" },
+            { id: "sdr", code: "SDR", l1: "S", l2: "D", l3: "R", name: "Densidad Neta Relacional" },
+            { id: "bdr", code: "BDR", l1: "B", l2: "D", l3: "R", name: "Densidad Bruta Relacional" }
+        ];
 
-        // Ejes
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(padX, h - padY);
-        ctx.lineTo(w - padX, h - padY);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(padX, padY);
-        ctx.lineTo(padX, h - padY);
-        ctx.stroke();
-
-        // 1. Curva BDR (Masa Invariante Bruta) en Amarillo Dorado #FFE600
-        ctx.strokeStyle = '#FFE600';
-        ctx.lineWidth = 2.2;
-        ctx.beginPath();
-        dList.forEach((d, i) => {
-            const x = padX + i * stepX;
-            const y = h - padY - ((d.bdr - 0) / 12) * (h - 2 * padY);
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
+        // Filtrado por T y C
+        const activeTCs = allTCs.filter(d => {
+            const matchT = (activePentaT === 'all') || (d.t === parseInt(activePentaT));
+            const matchC = (activePentaC === 'both') || (d.c === parseInt(activePentaC));
+            return matchT && matchC;
         });
-        ctx.stroke();
 
-        // 2. Curva SDR (Densidad Neta Relacional) en Verde Neón #00FF87
-        ctx.strokeStyle = '#00FF87';
-        ctx.lineWidth = 2.2;
-        ctx.beginPath();
-        dList.forEach((d, i) => {
-            const x = padX + i * stepX;
-            const y = h - padY - ((d.sdr + 3) / 6) * (h - 2 * padY);
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
+        const padLeft = Math.max(90, Math.min(130, w * 0.11));
+        const padRight = Math.max(40, Math.min(70, w * 0.05));
+        const padTop = 55;
+        const padBottom = 100;
 
-        // Puntos y Etiquetas
-        dList.forEach((d, i) => {
-            const x = padX + i * stepX;
-            const yBdr = h - padY - ((d.bdr - 0) / 12) * (h - 2 * padY);
-            const ySdr = h - padY - ((d.sdr + 3) / 6) * (h - 2 * padY);
+        const staveH = h - padTop - padBottom;
+        const staveW = w - padLeft - padRight;
+        const nLines = 5;
+        const lineSpacing = staveH / (nLines - 1);
 
-            ctx.fillStyle = '#FFE600';
+        let dMin = -3.0;
+        let dMax = 9.0;
+        if (activePentaScale === 'normalized') {
+            dMin = 0.0;
+            dMax = 1.0;
+        }
+
+        function valToY(v) {
+            let norm = (activePentaScale === 'normalized') ? v : ((v - dMin) / (dMax - dMin));
+            norm = Math.max(-0.05, Math.min(1.05, norm));
+            return (padTop + staveH) - norm * staveH;
+        }
+
+        // 1. DIBUJAR LAS 5 LÍNEAS DEL PENTAGRAMA
+        for (let i = 0; i < nLines; i++) {
+            const y = padTop + i * lineSpacing;
+            const lineNum = 5 - i;
+            const isCenterLine = (i === 2);
+
+            ctx.strokeStyle = isCenterLine ? 'rgba(0, 245, 212, 0.45)' : 'rgba(255, 255, 255, 0.18)';
+            ctx.lineWidth = isCenterLine ? 1.6 : 1.0;
+
             ctx.beginPath();
-            ctx.arc(x, yBdr, 4, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(padLeft - 15, y);
+            ctx.lineTo(w - padRight + 15, y);
+            ctx.stroke();
 
-            ctx.fillStyle = '#00FF87';
+            ctx.font = '600 10px "Roboto Mono", monospace';
+            ctx.fillStyle = isCenterLine ? '#00F5D4' : '#64748B';
+            ctx.textAlign = 'right';
+
+            let lineValText = '';
+            if (activePentaScale === 'normalized') {
+                const lv = 1.0 - i * 0.25;
+                lineValText = lv.toFixed(2);
+            } else {
+                const lv = dMax - i * ((dMax - dMin) / 4);
+                lineValText = (lv >= 0 ? '+' : '') + lv.toFixed(2);
+            }
+            ctx.fillText(`L${lineNum} [${lineValText}]`, padLeft - 22, y + 3.5);
+        }
+
+        // Clave Musical / Institucional al margen izquierdo
+        ctx.font = '700 24px "Inter", sans-serif';
+        ctx.fillStyle = '#00F5D4';
+        ctx.textAlign = 'center';
+        ctx.fillText('𝄢', padLeft - 65, padTop + staveH / 2 - 6);
+        ctx.font = '700 9px "Roboto Mono", monospace';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText('VISORD', padLeft - 65, padTop + staveH / 2 + 15);
+        ctx.fillText('STAVE', padLeft - 65, padTop + staveH / 2 + 26);
+
+        // 2. COLUMNAS DE ESTACIONES (EJE X)
+        const nStations = STATIONS.length;
+        const stepX = staveW / (nStations - 1);
+        const stationXCoords = [];
+
+        STATIONS.forEach((st, idx) => {
+            const x = padLeft + idx * stepX;
+            stationXCoords.push(x);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 4]);
             ctx.beginPath();
-            ctx.arc(x, ySdr, 4, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(x, padTop - 10);
+            ctx.lineTo(x, padTop + staveH + 10);
+            ctx.stroke();
+            ctx.setLineDash([]);
 
-            ctx.font = 'bold 9px "Roboto Mono"';
-            ctx.fillStyle = '#CBD5E1';
+            // Etiquetas verticalizadas debajo del pentagrama
+            const yLabelBase = padTop + staveH + 24;
+            ctx.font = '700 12px "Roboto Mono", monospace';
             ctx.textAlign = 'center';
-            ctx.fillText(d.tc, x, h - padY + 16);
+
+            let colColor = '#CBD5E1';
+            if (st.id === 'bdr' || st.id === 'sdr') colColor = '#FFE600';
+            else if (st.id.startsWith('a')) colColor = '#00F5D4';
+            else if (st.id.includes('da')) colColor = '#38BDF8';
+            else if (st.id.includes('rc')) colColor = '#C084FC';
+
+            ctx.fillStyle = colColor;
+            ctx.fillText(st.l1, x, yLabelBase);
+            ctx.fillText(st.l2, x, yLabelBase + 15);
+            if (st.l3.trim() !== '') ctx.fillText(st.l3, x, yLabelBase + 30);
+
+            ctx.font = '600 8.5px "Roboto Mono", monospace';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText(st.code, x, yLabelBase + 48);
         });
 
-        // Leyenda
-        ctx.font = 'bold 10px "Roboto Mono"';
-        ctx.fillStyle = '#FFE600';
-        ctx.fillText('── BDR: Masa Absoluta', padX + 20, padY - 12);
-        ctx.fillStyle = '#00FF87';
-        ctx.fillText('── SDR: Densidad Neta', padX + 210, padY - 12);
+        // 3. TRAZADO DE LÍNEAS QUEBRADAS (PUNTO A PUNTO)
+        activeTCs.forEach(tc => {
+            const seriesColor = tc.color || (tc.c === 2 ? '#FF007F' : '#00FF87');
+            const points = [];
+
+            STATIONS.forEach((st, sIdx) => {
+                let rawVal = 0.0;
+                if (tc[st.id] !== undefined) rawVal = tc[st.id];
+                else if (st.id === 'a1') rawVal = (tc.sda || 0) * 0.7;
+                else if (st.id === 'a2') rawVal = (tc.sda || 0) * 0.9;
+                else if (st.id === 'a3') rawVal = (tc.src || 0) * 0.9;
+                else if (st.id === 'a4') rawVal = (tc.src || 0) * 0.6;
+                else if (st.id === 'bda') rawVal = tc.bdr ? tc.bdr * 0.35 : 3.0;
+                else if (st.id === 'brc') rawVal = tc.bdr ? tc.bdr * 0.25 : 2.2;
+                else if (st.id === 'bdr') rawVal = tc.bdr || 8.89;
+                else if (st.id === 'sdr') rawVal = tc.sdr || 0.0;
+
+                let plotVal = rawVal;
+                if (activePentaScale === 'normalized') {
+                    if (st.id === 'bdr' || st.id === 'bda' || st.id === 'brc') {
+                        plotVal = rawVal / (tc.bdr || 8.89);
+                    } else if (st.id === 'sdr') {
+                        plotVal = (rawVal + 3.0) / 6.0;
+                    } else if (st.id === 'sda' || st.id === 'src') {
+                        plotVal = (rawVal + 1.0) / 2.0;
+                    } else {
+                        plotVal = (rawVal + 1.0) / 2.0;
+                    }
+                }
+
+                const px = stationXCoords[sIdx];
+                const py = valToY(plotVal);
+                points.push({ x: px, y: py, raw: rawVal, plot: plotVal, st: st });
+            });
+
+            // Línea quebrada continua punto a punto
+            ctx.strokeStyle = seriesColor;
+            ctx.lineWidth = (activeTCs.length <= 2) ? 3.2 : 2.0;
+            ctx.beginPath();
+            points.forEach((pt, pIdx) => {
+                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+
+            // Resplandor tenue
+            ctx.save();
+            ctx.strokeStyle = seriesColor;
+            ctx.lineWidth = (activeTCs.length <= 2) ? 6.5 : 4.0;
+            ctx.globalAlpha = 0.25;
+            ctx.beginPath();
+            points.forEach((pt, pIdx) => {
+                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+            ctx.restore();
+
+            // Vértices elípticos
+            points.forEach(pt => {
+                ctx.save();
+                ctx.translate(pt.x, pt.y);
+                ctx.rotate(-15 * Math.PI / 180);
+
+                ctx.fillStyle = '#0B132B';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 6, 4.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = seriesColor;
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 6, 4.5, 0, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = seriesColor;
+                ctx.beginPath();
+                ctx.arc(0, 0, 2.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+
+                if (activeTCs.length <= 2) {
+                    ctx.font = '700 9.5px "Roboto Mono", monospace';
+                    ctx.fillStyle = seriesColor;
+                    ctx.textAlign = 'center';
+                    const offsetVal = (tc.c === 2) ? 15 : -11;
+                    ctx.fillText((pt.raw >= 0 && pt.raw < 10 ? '+' : '') + pt.raw.toFixed(2), pt.x, pt.y + offsetVal);
+                }
+            });
+        });
+
+        // 4. LEYENDA SUPERIOR
+        const legendX = padLeft;
+        const legendY = padTop - 22;
+        ctx.font = '600 11px "Inter", sans-serif';
+        let curLegX = legendX;
+
+        activeTCs.forEach(tc => {
+            const seriesColor = tc.color || (tc.c === 2 ? '#FF007F' : '#00FF87');
+            ctx.fillStyle = seriesColor;
+            ctx.fillRect(curLegX, legendY - 8, 14, 4);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'left';
+            const sLabel = tc.label || tc.tc;
+            ctx.fillText(sLabel, curLegX + 20, legendY - 4);
+
+            curLegX += ctx.measureText(sLabel).width + 35;
+        });
     }
 
     // Render de la Matriz de Inter-Proximidad (Cornejo & Euclídea)
@@ -2354,9 +2518,42 @@
             }
             renderEjesUnitariosHorizontales();
         },
+        setPentaT: function(t) {
+            activePentaT = t;
+            document.querySelectorAll('.btn-penta-t').forEach(b => b.classList.toggle('active', b.dataset.t === String(t)));
+            renderDensitiesChart();
+        },
+        setPentaC: function(c) {
+            activePentaC = c;
+            document.querySelectorAll('.btn-penta-c').forEach(b => b.classList.toggle('active', b.dataset.c === String(c)));
+            renderDensitiesChart();
+        },
+        setPentaScale: function(scale) {
+            activePentaScale = scale;
+            document.querySelectorAll('.btn-penta-scale').forEach(b => b.classList.toggle('active', b.dataset.scale === scale));
+            renderDensitiesChart();
+        },
 
         init: function() {
             // Inicialización de selectores y botones
+            document.querySelectorAll('.btn-penta-t').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const t = e.currentTarget.dataset.t;
+                    window.CulturalSynthesisEngine.setPentaT(t);
+                });
+            });
+            document.querySelectorAll('.btn-penta-c').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const c = e.currentTarget.dataset.c;
+                    window.CulturalSynthesisEngine.setPentaC(c);
+                });
+            });
+            document.querySelectorAll('.btn-penta-scale').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const sc = e.currentTarget.dataset.scale;
+                    window.CulturalSynthesisEngine.setPentaScale(sc);
+                });
+            });
             document.querySelectorAll('.btn-view-mode').forEach(b => {
                 b.addEventListener('click', (e) => {
                     const v = e.currentTarget.dataset.view;
