@@ -1464,6 +1464,78 @@
             min-height: 420px;
         }
 
+        /* Cinta HUD de Extremos Dinámicos del Sistema */
+        .extremes-hud-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(11, 19, 43, 0.95);
+            border: 1px solid rgba(0, 245, 212, 0.28);
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-bottom: 14px;
+            font-size: 0.76rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .extremes-metric {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .extremes-label {
+            color: #94A3B8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+        }
+        .extremes-val-min {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 800;
+            color: #FF007F;
+            background: rgba(255, 0, 127, 0.14);
+            padding: 2px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 0, 127, 0.35);
+        }
+        .extremes-val-max {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 800;
+            color: #00FF87;
+            background: rgba(0, 255, 135, 0.14);
+            padding: 2px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 135, 0.35);
+        }
+        .extremes-val-range {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 800;
+            color: #FFE600;
+            background: rgba(255, 230, 0, 0.14);
+            padding: 2px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 230, 0, 0.35);
+        }
+        .badge-ext-tag {
+            font-size: 0.65rem;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: 6px;
+        }
+        .badge-ext-max {
+            background: rgba(0, 255, 135, 0.2);
+            color: #00FF87;
+            border: 1px solid rgba(0, 255, 135, 0.4);
+        }
+        .badge-ext-min {
+            background: rgba(255, 0, 127, 0.2);
+            color: #FF007F;
+            border: 1px solid rgba(255, 0, 127, 0.4);
+        }
+
     </style>
 </head>
 <body>
@@ -1603,9 +1675,6 @@
                         </div>
                         <div class="synopsis-notice" style="margin-bottom:12px;">
                             ⚠️ <strong>Aviso Deontológico:</strong> Simulación docente de laboratorio. <strong>No pacientes reales</strong>.
-                            <a href="assets/DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" download="01_DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" class="btn-download-corpus" style="margin-top:6px;">
-                                📥 Descargar Diálogos (.txt)
-                            </a>
                         </div>
                     </div>
                     <div class="hub-card-footer">
@@ -1892,61 +1961,110 @@
 
         <!-- SUB-VISTA 3: SÍNTESIS DE LAS 10 DENSIDADES SOCIO-TERMODINÁMICAS -->
         <div class="multidim-subview hidden" data-view="densities">
-            <!-- Toolbar de Controles del Pentagrama -->
-            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:14px; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-                <div style="display:flex; gap:6px; align-items:center;">
-                    <span style="font-size:0.72rem; color:#94A3B8; font-weight:700;">SESIÓN T:</span>
-                    <button class="btn-penta-t btn-act active" data-t="all" style="padding:4px 8px; font-size:0.72rem;">Todas</button>
-                    <button class="btn-penta-t btn-act" data-t="1" style="padding:4px 8px; font-size:0.72rem;">T1</button>
-                    <button class="btn-penta-t btn-act" data-t="2" style="padding:4px 8px; font-size:0.72rem;">T2</button>
-                    <button class="btn-penta-t btn-act" data-t="3" style="padding:4px 8px; font-size:0.72rem;">T3</button>
-                    <button class="btn-penta-t btn-act" data-t="4" style="padding:4px 8px; font-size:0.72rem;">T4</button>
+            <!-- Toolbar de Controles del Pentagrama (A Demanda) -->
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+                <div style="display:flex; gap:5px; align-items:center;">
+                    <span style="font-size:0.7rem; color:#FFE600; font-weight:800;">COMPARAR:</span>
+                    <button class="btn-penta-compare btn-act active" data-mode="criterios" style="padding:4px 8px; font-size:0.72rem;">Criterios (C1 vs C2)</button>
+                    <button class="btn-penta-compare btn-act" data-mode="temporadas" style="padding:4px 8px; font-size:0.72rem;">Temporadas (T_ini vs T_fin)</button>
+                    <button class="btn-penta-compare btn-act" data-mode="intergrupal" style="padding:4px 8px; font-size:0.72rem;">Grupos (G1 vs G2)</button>
+                    <button class="btn-penta-compare btn-act" data-mode="all" style="padding:4px 8px; font-size:0.72rem;">Haz Completo</button>
                 </div>
-                <div style="display:flex; gap:6px; align-items:center; margin-left:10px;">
-                    <span style="font-size:0.72rem; color:#94A3B8; font-weight:700;">CRITERIO C:</span>
-                    <button class="btn-penta-c btn-act active" data-c="both" style="padding:4px 8px; font-size:0.72rem;">Ambos</button>
-                    <button class="btn-penta-c btn-act" data-c="1" style="padding:4px 8px; font-size:0.72rem;">C1 (Apoyo)</button>
-                    <button class="btn-penta-c btn-act" data-c="2" style="padding:4px 8px; font-size:0.72rem;">C2 (Tensión)</button>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:8px;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">ORIENTACIÓN:</span>
+                    <button class="btn-penta-orient btn-act active" data-orient="horizontal" style="padding:4px 8px; font-size:0.72rem;">Horizontal</button>
+                    <button class="btn-penta-orient btn-act" data-orient="vertical" style="padding:4px 8px; font-size:0.72rem;">Vertical</button>
                 </div>
-                <div style="display:flex; gap:6px; align-items:center; margin-left:auto;">
-                    <span style="font-size:0.72rem; color:#94A3B8; font-weight:700;">ESCALA:</span>
-                    <button class="btn-penta-scale btn-act active" data-scale="empirical" style="padding:4px 8px; font-size:0.72rem;">Empírica (Dmin..Dmax)</button>
-                    <button class="btn-penta-scale btn-act" data-scale="normalized" style="padding:4px 8px; font-size:0.72rem;">Normalizada [0..1]</button>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:8px;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">ESCALA:</span>
+                    <button class="btn-penta-scale btn-act active" data-scale="auto" style="padding:4px 8px; font-size:0.72rem;">Auto (Activas)</button>
+                    <button class="btn-penta-scale btn-act" data-scale="global" style="padding:4px 8px; font-size:0.72rem;">Global (Sistema)</button>
+                </div>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:8px;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">TRAZO:</span>
+                    <button class="btn-penta-curve btn-act active" data-curve="curved" style="padding:4px 8px; font-size:0.72rem;">Perfil Curvado</button>
+                    <button class="btn-penta-curve btn-act" data-curve="straight" style="padding:4px 8px; font-size:0.72rem;">Quebrada</button>
+                </div>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:8px;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">ETIQUETAS:</span>
+                    <button class="btn-penta-labels btn-act active" data-labels="simple" style="padding:4px 8px; font-size:0.72rem;">Letra Simple</button>
+                    <button class="btn-penta-labels btn-act" data-labels="full" style="padding:4px 8px; font-size:0.72rem;">Siglas</button>
+                </div>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:8px;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">NÚMEROS:</span>
+                    <button class="btn-penta-numbers btn-act active" data-numbers="clean" style="padding:4px 8px; font-size:0.72rem;">Ocultos</button>
+                    <button class="btn-penta-numbers btn-act" data-numbers="show" style="padding:4px 8px; font-size:0.72rem;">En Vértices</button>
+                </div>
+                <div style="display:flex; gap:5px; align-items:center; margin-left:auto;">
+                    <span style="font-size:0.7rem; color:#94A3B8; font-weight:700;">VOLUMEN 3D:</span>
+                    <button class="btn-penta-volume btn-act active" data-volume="on" style="padding:4px 8px; font-size:0.72rem;">Cinta 3D</button>
+                    <button class="btn-penta-volume btn-act" data-volume="off" style="padding:4px 8px; font-size:0.72rem;">Líneas</button>
                 </div>
             </div>
 
+            <!-- Cinta HUD de Extremos Dinámicos del Sistema -->
+            <div class="extremes-hud-bar" id="extremes-hud-bar"></div>
+
             <div class="multidim-content-grid">
                 <div class="multidim-canvas-card">
-                    <canvas id="canvas-densities-chart" height="480"></canvas>
+                    <canvas id="canvas-densities-chart" height="520" style="width:100%; display:block;"></canvas>
                 </div>
                 <div class="multidim-metric-card">
                     <div class="pca-card-header">
                         <span>🎼 Pentagrama de 10 Estaciones Canónicas</span>
-                        <span style="color:#00F5D4; font-size:0.68rem;">Líneas Quebradas</span>
+                        <span style="color:#00F5D4; font-size:0.68rem;">A Demanda</span>
                     </div>
                     <div style="font-size:0.72rem; color:#CBD5E1; display:flex; flex-direction:column; gap:7px; margin-top:10px;">
-                        <div><strong style="color:#38BDF8;">1. BDA:</strong> Densidad Bruta Dador (Atracción Absoluta).</div>
-                        <div><strong style="color:#38BDF8;">2. SDA:</strong> Densidad Neta Dador (Balance de Emisión).</div>
-                        <div><strong style="color:#00FF87;">3. A1 (p_DA):</strong> Expectativa del Emisor hacia el Partner.</div>
-                        <div><strong style="color:#00FF87;">4. A2 (DA):</strong> Preferencia Efectiva Otorgada al Partner.</div>
-                        <div><strong style="color:#00FF87;">5. A3 (RECIBE):</strong> Preferencia Efectiva Recibida del Partner.</div>
-                        <div><strong style="color:#00FF87;">6. A4 (p_RECIBE):</strong> Expectativa Atribuida al Partner.</div>
-                        <div><strong style="color:#C084FC;">7. SRC:</strong> Densidad Neta Receptor (Balance de Recepción).</div>
-                        <div><strong style="color:#C084FC;">8. BRC:</strong> Densidad Bruta Receptor (Masa de Recepción).</div>
-                        <div><strong style="color:#FFE600;">9. SDR:</strong> Densidad Neta Relacional Global.</div>
-                        <div><strong style="color:#FFE600;">10. BDR:</strong> Densidad Bruta Relacional (Masa Invariante).</div>
+                        <div><strong style="color:#38BDF8;">B / BDA:</strong> Densidad Bruta Dador (Atracción Absoluta).</div>
+                        <div><strong style="color:#38BDF8;">S / SDA:</strong> Densidad Neta Dador (Balance de Emisión).</div>
+                        <div><strong style="color:#00FF87;">1 / A1 (p_DA):</strong> Expectativa del Emisor hacia el Partner.</div>
+                        <div><strong style="color:#00FF87;">2 / A2 (DA):</strong> Preferencia Efectiva Otorgada al Partner.</div>
+                        <div><strong style="color:#00FF87;">3 / A3 (RECIBE):</strong> Preferencia Efectiva Recibida del Partner.</div>
+                        <div><strong style="color:#00FF87;">4 / A4 (p_RECIBE):</strong> Expectativa Atribuida al Partner.</div>
+                        <div><strong style="color:#C084FC;">s / SRC:</strong> Densidad Neta Receptor (Balance de Recepción).</div>
+                        <div><strong style="color:#C084FC;">b / BRC:</strong> Densidad Bruta Receptor (Masa de Recepción).</div>
+                        <div><strong style="color:#FFE600;">Σ / SDR:</strong> Densidad Neta Relacional Global.</div>
+                        <div><strong style="color:#FFE600;">Ω / BDR:</strong> Densidad Bruta Relacional (Masa Invariante).</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Tabla Aparte de Cantidades y Balance Diádico (Datos Desacoplados) -->
+            <div style="margin-top:16px; background:rgba(255,255,255,0.025); border:1px solid rgba(0,245,212,0.2); border-radius:8px; padding:16px 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.86rem; font-weight:700; color:#00F5D4; margin-bottom:12px;">
+                    <span id="penta-table-title">📊 Tabla de Cantidades y Balance Diádico (Datos Factuales Desacoplados del Gráfico)</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-family:'Roboto Mono'; font-size:0.75rem; color:#94A3B8;">Datos Factuales &bull; Desglose Canónico SMIb</span>
+                        <button type="button" style="cursor:pointer; font-size:0.72rem; color:#00FF87; background:rgba(0,255,135,0.1); border:1px solid rgba(0,255,135,0.3); padding:2px 8px; border-radius:4px;" onclick="const tb = document.getElementById('penta-table-scroll-wrapper'); tb.style.display = (tb.style.display === 'none' ? 'block' : 'none');">Plegar/Desplegar ▼</button>
+                    </div>
+                </div>
+                <div id="penta-table-scroll-wrapper" style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+                        <thead>
+                            <tr id="penta-thead-tr" style="background:rgba(0,245,212,0.08); color:#00FF87; text-align:left; font-family:'Roboto Mono'; font-size:0.72rem;">
+                                <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Estación</th>
+                                <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Concepto Socio-Termodinámico SMIb</th>
+                                <th id="penta-th-col-a" style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Serie 1</th>
+                                <th id="penta-th-col-b" style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Serie 2</th>
+                                <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Brecha Δ (|Serie 1 - Serie 2|)</th>
+                                <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Diagnóstico Diferencial</th>
+                            </tr>
+                        </thead>
+                        <tbody id="penta-data-table-body">
+                            <!-- Inyectado dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Regla 10: Inviolable Nota Explicativa 10 Densidades -->
             <div class="pedagogical-note-card" style="margin-top:16px;">
                 <div class="note-card-header">
-                    💡 Nota Explicativa Pedagógica de Interpretación: Pentagrama Graduado y Secuencia de 10 Estaciones
+                    💡 Nota Explicativa Pedagógica de Interpretación: Pentagrama Socio-Termodinámico, Auto-Escalado Homotético y Cero de Flotación
                 </div>
                 <div class="note-card-body">
-                    <p><strong>Circuito Relacional de 10 Estaciones en Pentagrama:</strong> Las 5 líneas horizontales gradúan el espectro continuo de densidad entre la cota mínima (<em>D<sub>min</sub></em>, línea 1) y la cota máxima (<em>D<sub>max</sub></em>, línea 5). El eje horizontal descompone el circuito diádico completo: la emisión (BDA, SDA), el núcleo cognitivo del Tetragrama SMIb (A1: p_DA, A2: DA, A3: RECIBE, A4: p_RECIBE), la recepción (SRC, BRC) y el balance sistémico global (SDR, BDR).</p>
-                    <p style="margin-top:6px;"><strong>Líneas Quebradas Punto a Punto:</strong> Cada serie se traza mediante segmentos rectos puros sin curvas espurias. Un perfil que asciende en SDA, SRC y SDR hacia la franja superior denota madurez y cohesión, mientras que caídas profundas en el Tetragrama con BDR invariable reflejan polarización y fricción.</p>
+                    <p><strong>Cálculo Sistemático de Extremos y Auto-Escalado Homotético:</strong> Las 5 líneas horizontales gradúan dinámicamente el espectro continuo entre la cota mínima del sistema (<em>D<sub>min</sub></em>, línea L1) y la cota máxima (<em>D<sub>max</sub></em>, línea L5), adaptando la resolución óptica a la magnitud empírica de las series sin asfixia de escala. Si el espectro cruza la neutralidad ($D_{\min} < 0 < D_{\max}$), se proyecta automáticamente la <strong>Línea de Flotación Cero ($\pm 0.00$ Neutro)</strong> en estilo cian discontinuo.</p>
+                    <p style="margin-top:6px;"><strong>Detección Luminosa de Extremos y Circuito de 10 Estaciones:</strong> Los vértices álgidos del sistema se coronan con halos dorados (<strong>▲ MÁX</strong>), mientras que los valles de máxima tensión o repliegue se señalan en magenta neón (<strong>▼ MÍN</strong>). El eje horizontal recorre la emisión (BDA, SDA), el compás cognitivo central del Tetragrama SMIb (A1: p_DA, A2: DA, A3: RECIBE, A4: p_RECIBE), la recepción (SRC, BRC) y el balance sistémico global (SDR, BDR invariante universal).</p>
                 </div>
             </div>
         </div>
@@ -2227,8 +2345,19 @@
             <p>&bull; <em>La Casa de Bernarda Alba</em>: El confinamiento del luto genera una presión adiabática donde el vector repulsivo de Bernarda precipita la fractura y suicidio de Adela.</p>
             <p>&bull; <em>El Señor de las Moscas</em>: Transición de fase desde la cohesión democrática inicial hacia la barbarie tribal hiper-polarizada.</p>
             <p>&bull; <em>La Ola</em>: Sincronización coercitiva y anulación de la disidencia individual bajo un campo atractor autocrático unificado.</p>
-            <p>&bull; <em>Grupo Terapéutico de Clara (Simulación Didáctica)</em>: Modelo docente y clínico de laboratorio sobre dinámicas grupales (T-Groups, psicoterapia de grupo y grupos de discusión); <strong>no corresponde a pacientes reales</strong>. Desarticulación de triangulaciones, superación de la disonancia de tele y emergencia de la autonomía en la asamblea colectiva (GRP). Incluye descarga directa del corpus completo de diálogos para investigación pedagógica y metodológica.</p>
+            <p>&bull; <em>Grupo Terapéutico de Clara (Simulación Didáctica)</em>: Modelo docente y clínico de laboratorio sobre dinámicas grupales (T-Groups, psicoterapia de grupo y grupos de discusión); <strong>no corresponde a pacientes reales</strong>. Desarticulación de triangulaciones, superación de la disonancia de tele y emergencia de la autonomía en la asamblea colectiva (GRP). Disponible para lectura y consulta en ventana paralela para investigación pedagógica y metodológica.</p>
             <button class="btn-close-modal" id="btn-close-nota">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Visor Paralelo de Documento Clínico -->
+    <div id="modal-doc-viewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center;">
+        <div style="width:92%; max-width:1150px; height:88%; background:#0B132B; border:1px solid #00FF87; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 0 30px rgba(0,255,135,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; background:#14213D; border-bottom:1px solid rgba(0,255,135,0.3);">
+                <div style="font-weight:700; color:#00FF87; font-size:0.95rem;">📖 Documento de Simulación Clínica &bull; Grupo Terapéutico de Clara (Lectura)</div>
+                <button type="button" onclick="closeClaraDocModal()" style="background:transparent; border:1px solid #94A3B8; color:#F8FAFC; border-radius:6px; padding:4px 12px; cursor:pointer;">✕ Cerrar</button>
+            </div>
+            <iframe id="doc-viewer-frame" src="" style="width:100%; flex:1; border:none; background:#0B132B;"></iframe>
         </div>
     </div>
 
@@ -2389,57 +2518,61 @@
         // INICIALIZACIÓN DE LA ESCENA THREE.JS
         // =========================================================================
         function initScene() {
-            scene = new THREE.Scene();
-            // Atenuación de niebla sutil (no oscurece los nodos distantes)
-            scene.fog = new THREE.FogExp2(0x080D1A, 0.007);
+            try {
+                scene = new THREE.Scene();
+                // Atenuación de niebla sutil (no oscurece los nodos distantes)
+                scene.fog = new THREE.FogExp2(0x080D1A, 0.007);
 
-            const w = container.clientWidth || window.innerWidth;
-            const h = container.clientHeight || window.innerHeight;
-            camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-            camera.position.set(0, 2.2, 18.0);
+                const w = container ? (container.clientWidth || window.innerWidth) : window.innerWidth;
+                const h = container ? (container.clientHeight || window.innerHeight) : window.innerHeight;
+                camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+                camera.position.set(0, 2.2, 18.0);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(w, h);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(w, h);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                if (container) container.appendChild(renderer.domElement);
 
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.maxDistance = 60;
-            controls.minDistance = 3;
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.maxDistance = 60;
+                controls.minDistance = 3;
 
-            // Iluminación Escénica Vibrante (Anti-Oscurecimiento)
-            const ambient = new THREE.AmbientLight(0xffffff, 1.15);
-            scene.add(ambient);
+                // Iluminación Escénica Vibrante (Anti-Oscurecimiento)
+                const ambient = new THREE.AmbientLight(0xffffff, 1.15);
+                scene.add(ambient);
 
-            // Luz Frontal Directa Blanca
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.30);
-            dirLight1.position.set(12, 22, 25);
-            scene.add(dirLight1);
+                // Luz Frontal Directa Blanca
+                const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.30);
+                dirLight1.position.set(12, 22, 25);
+                scene.add(dirLight1);
 
-            // Luz de Relleno Lateral Blanca
-            const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.85);
-            dirLight2.position.set(-16, -10, -15);
-            scene.add(dirLight2);
+                // Luz de Relleno Lateral Blanca
+                const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.85);
+                dirLight2.position.set(-16, -10, -15);
+                scene.add(dirLight2);
 
-            // Luces de Acento Cromático
-            const p1 = new THREE.PointLight(0x00FF87, 1.0, 50);
-            p1.position.set(10, 15, 10);
-            scene.add(p1);
+                // Luces de Acento Cromático
+                const p1 = new THREE.PointLight(0x00FF87, 1.0, 50);
+                p1.position.set(10, 15, 10);
+                scene.add(p1);
 
-            const p2 = new THREE.PointLight(0xFF007F, 1.0, 50);
-            p2.position.set(-10, -10, -10);
-            scene.add(p2);
+                const p2 = new THREE.PointLight(0xFF007F, 1.0, 50);
+                p2.position.set(-10, -10, -10);
+                scene.add(p2);
 
-            const p3 = new THREE.PointLight(0x38BDF8, 0.8, 40);
-            p3.position.set(0, 12, -15);
-            scene.add(p3);
+                const p3 = new THREE.PointLight(0x38BDF8, 0.8, 40);
+                p3.position.set(0, 12, -15);
+                scene.add(p3);
 
-            // Rejilla de referencia cartesiana sutil
-            const grid = new THREE.GridHelper(30, 30, 0x1E293B, 0x0F172A);
-            grid.position.y = -4.5;
-            scene.add(grid);
+                // Rejilla de referencia cartesiana sutil
+                const grid = new THREE.GridHelper(30, 30, 0x1E293B, 0x0F172A);
+                grid.position.y = -4.5;
+                scene.add(grid);
+            } catch (e) {
+                console.warn("WebGL 3D Context not available:", e);
+            }
 
             window.addEventListener('resize', onResize);
             setupRaycaster();
@@ -2488,7 +2621,8 @@
                 hubScreen.classList.add('hidden');
             }
             loadWork(workKey);
-            if (window.history.replaceState) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('view') && window.history.replaceState) {
                 window.history.replaceState(null, '', '?work=' + workKey);
             }
             // Centrar cámara en la nueva escena
@@ -2550,9 +2684,9 @@
                     extraEl.innerHTML = `
                         <div class="synopsis-notice">
                             ⚠️ <strong>Aviso Deontológico &amp; Metodológico:</strong> Este estudio <strong>NO corresponde a pacientes reales ni a personas vivas</strong>. Se trata de una <strong>simulación didáctica y clínica de laboratorio</strong> para modelar sesiones grupales (T-Groups, psicoterapia de grupo o grupos de discusión).
-                            <a href="assets/DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" download="01_DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" class="btn-download-corpus" title="Descargar texto completo de los diálogos de las 4 sesiones">
-                                📥 Descargar Diálogos Completos (.txt)
-                            </a>
+                            <button type="button" onclick="openClaraDocParallel()" class="btn-download-corpus" style="margin-top:8px; cursor:pointer;" title="Abrir y leer documento de simulación clínica en ventana paralela">
+                                📖 Ver / Leer Diálogos Clínicos (.pdf)
+                            </button>
                         </div>
                     `;
                 } else {
@@ -2612,20 +2746,27 @@
             });
 
             // Reconstruir Nodos 3D
-            buildSubjectMeshes(wConf.characters);
+            if (scene) {
+                buildSubjectMeshes(wConf.characters);
+            }
 
             // Aplicar Celda TC Inicial
             applyTC(1, 1, true);
 
             // Reset de cámara
-            controls.target.set(0, 0, 0);
-            camera.position.set(0, 2.2, 18.0);
+            if (controls && controls.target) {
+                controls.target.set(0, 0, 0);
+            }
+            if (camera) {
+                camera.position.set(0, 2.2, 18.0);
+            }
         }
 
         // =========================================================================
         // CREACIÓN DE NODOS 3D (ESFERAS + ETIQUETAS)
         // =========================================================================
         function buildSubjectMeshes(characters) {
+            if (!scene) return;
             subjectMeshes.forEach(s => {
                 scene.remove(s.mesh);
                 scene.remove(s.sprite);
@@ -2745,6 +2886,7 @@
         // RECONSTRUCCIÓN DE VÍNCULOS 3D VOLUMÉTRICOS (TUBOS NEÓN + FLECHAS DE FLUJO)
         // =========================================================================
         function rebuildEdges(edgesDef) {
+            if (!scene) return;
             edgeObjects.forEach(e => scene.remove(e));
             edgeObjects.length = 0;
             activeEdgeDefs = edgesDef || [];
@@ -3749,9 +3891,9 @@
             });
 
             // Botones de cámara
-            document.getElementById('btn-cam-reset').addEventListener('click', () => {
-                controls.target.set(0, 0, 0);
-                camera.position.set(0, 2.2, 18.0);
+            document.getElementById('btn-cam-reset')?.addEventListener('click', () => {
+                if (controls && controls.target) controls.target.set(0, 0, 0);
+                if (camera) camera.position.set(0, 2.2, 18.0);
             });
             document.getElementById('btn-toggle-spin').addEventListener('click', () => {
                 isSpinning = !isSpinning;
@@ -3763,7 +3905,40 @@
             document.getElementById('btn-open-nota').addEventListener('click', () => modal.style.display = 'flex');
             document.getElementById('btn-close-nota').addEventListener('click', () => modal.style.display = 'none');
             modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+            // Modal Visor Paralelo de Documento Clínico (Clara)
+            const modalDoc = document.getElementById('modal-doc-viewer');
+            if (modalDoc) {
+                modalDoc.addEventListener('click', (e) => { if (e.target === modalDoc) closeClaraDocModal(); });
+            }
         }
+
+        // Visor Paralelo de Documentos Clínicos (Clara)
+        function openClaraDocParallel() {
+            const pdfUrl = 'assets/01_DIALOGOS_GRUPO_TERAPEUTICO_CLARA.pdf#toolbar=0&navpanes=0';
+            const w = Math.min(1050, window.screen.width - 80);
+            const h = Math.min(880, window.screen.height - 80);
+            const left = Math.max(0, Math.round((window.screen.width - w) / 2));
+            const top = Math.max(0, Math.round((window.screen.height - h) / 2));
+            const win = window.open(pdfUrl, 'VISORD_Clara_Documento', `width=${w},height=${h},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`);
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                const modalViewer = document.getElementById('modal-doc-viewer');
+                const frame = document.getElementById('doc-viewer-frame');
+                if (modalViewer && frame) {
+                    frame.src = pdfUrl;
+                    modalViewer.style.display = 'flex';
+                }
+            }
+        }
+        window.openClaraDocParallel = openClaraDocParallel;
+
+        function closeClaraDocModal() {
+            const modalViewer = document.getElementById('modal-doc-viewer');
+            const frame = document.getElementById('doc-viewer-frame');
+            if (modalViewer) modalViewer.style.display = 'none';
+            if (frame) frame.src = '';
+        }
+        window.closeClaraDocModal = closeClaraDocModal;
 
         function startMoviola() {
             isMoviolaPlaying = true;
@@ -3887,14 +4062,16 @@
                 }
             }
 
-            updateEdgesLive();
+            if (renderer && scene && camera) {
+                updateEdgesLive();
 
-            if (isSpinning) {
-                scene.rotation.y += 0.003;
+                if (isSpinning) {
+                    scene.rotation.y += 0.003;
+                }
+
+                if (controls) controls.update();
+                renderer.render(scene, camera);
             }
-
-            controls.update();
-            renderer.render(scene, camera);
         }
 
         if (document.readyState === 'loading') {

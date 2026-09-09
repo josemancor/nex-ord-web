@@ -38,7 +38,7 @@ const NEXORD_I18N_DICTS = {
         // Hero Portal Principal
         "hero_subtitle": "Sociometría Ordinal Computacional",
         "hero_tagline": "La Física de lo Grupal.",
-        "hero_desc": "Plataforma científica para el diagnóstico clínico, análisis socio-termodinámico y visualización 3D interactiva de estructuras humanas.",
+        "hero_desc": "Ecosistema científico para el diagnóstico clínico, la investigación socio-termodinámica y la topología relacional de grupos mediante matrices de preferencia ordinal SMIb.",
         "btn_what_is": "¿Qué es NEX_ORD?",
         "intro_badge": "INTRODUCCIÓN A LA PLATAFORMA",
         "intro_title": "¿Qué es <span style=\"color: #38bdf8; font-weight: 800;\">NEX_ORD</span>?",

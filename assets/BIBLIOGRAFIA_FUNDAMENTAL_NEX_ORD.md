@@ -3,9 +3,9 @@
 Esta selección bibliográfica fundamenta las bases históricas, teóricas y técnicas del sistema **NEX_ORD (Sociometría Ordinal)**, uniendo la tradición moreniana con la vanguardia de la Psicología Social contemporánea y la computación avanzada.
 
 ## 0. Obra de Referencia y Autoría del Sistema
-Marco conceptual y técnico desarrollado para la versión Platinum 2026.
+Marco conceptual y técnico desarrollado para la versión Canónica 2026.
 
-*   **Cornejo Álvarez, J. M. (2026).** *Sociometría Ordinal Computacional (NEX_ORD): Teoría de la Densidad Relacional y Proyección Estratégica 6D.* Edición Platinum V2. (Obra maestra que define el motor AMRC y el sistema de interpretación experto).
+*   **Cornejo Álvarez, J. M. (2026).** *Sociometría Ordinal Computacional (NEX_ORD): Teoría de la Densidad Relacional y Proyección Estratégica 6D.* Edición Canónica V2. (Obra maestra que define el motor AMRC y el sistema de interpretación experto).
 *   **Cornejo Álvarez, J. M. (2025).** *Microcirugía Sociométrica: El Candado Ético y la Oxigenación de Grupos en Crisis.* [Protocolos Clínicos].
 
 ## 1. Fuentes Seminales e Históricas

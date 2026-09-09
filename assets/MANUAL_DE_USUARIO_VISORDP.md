@@ -1,7 +1,7 @@
 # 📘 MANUAL DE USUARIO | VISORD 3D INTERACTIVO (HUB SMIb)
 
 **VISORD: Visualizador Sociométrico Ordinal**
-**Versión de Norma:** Platinum v6.0 | **Despliegue:** Sistema Interactivo Front-End HTML5/WebGL / Servidor Local Python
+**Norma Institucional:** VISORD / NEX_ORD | **Despliegue:** Sistema Interactivo Front-End HTML5/WebGL / Servidor Local Python
 
 > El entorno **HUB VISORD1 3D** es un simulador y visualizador sociométrico. Opera de forma autónoma renderizando grafos de fuerza tridimensionales que reflejan las tensiones, lealtades, percepciones y entropía de los grupos humanos mediante las leyes de la termodinámica social.
 
@@ -21,7 +21,7 @@ El panel izquierdo "FORMACIÓN GUIADA" permite controlar la creación y evoluci�
 *   **INICIAR DESDE CERO:** Reinicia por completo la simulación y genera el grupo inicial en el espacio 3D. El sistema se **auto-pausará** en este momento para permitirte ajustar el Ritmo de Mutación o añadir Nodos Aislados. Una vez configurado, debes pulsar **▶️ PLAY** en el panel inferior para arrancar la evolución.
 *   **EVOLUCIONAR A HORIZONTE:** Fuerza a la red actual a mutar sus vínculos aceleradamente hacia un Horizonte objetivo (SÓLIDO, LÍQUIDO, PLASMA, GAS, CAOS). Una vez que la densidad global (`SDR`) alcanza el clímax térmico del horizonte, la evolución se congela para su análisis.
 
-## 🎛️ 2. EL PANEL INFERIOR Y CONTROLES VCR (v6.0 Platinum)
+## 🎛️ 2. EL PANEL INFERIOR Y CONTROLES VCR
 
 Situado en la base de la pantalla, aglutina los controles de navegación temporal, visibilidad de capas y utilidades de exportación:
 
@@ -103,5 +103,5 @@ El **Dominio 6 (Sociometría Cultural y Narrativa)** traslada la instrumentació
 - **Identificación de Catalizadores y Arquetipos**: Las métricas de autocorrelación $COR_{PCA}$, la centralidad en las variedades de Grassmann y los vectores de atracción $E$ descubren quiénes son los verdaderos motores del cambio narrativo (nodos catalizadores) frente a los personajes secundarios de baja tracción sociométrica.
 
 ---
-*© 2026 NEX_ORD Project - Arquitectura Consolidada Platinum*
+*© 2026 NEX_ORD Project - Ecosistema Científico VISORD*
 *DOI Registro de Referencia: 10.5281/zenodo.18941691*

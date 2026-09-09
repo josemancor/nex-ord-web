@@ -430,9 +430,15 @@
         kde: true
     };
     let pcaHoverItem = null;
-    let activePentaT = 'all';
+    let activePentaT = '1';
     let activePentaC = 'both';
-    let activePentaScale = 'empirical';
+    let activePentaScale = 'auto'; // 'auto' | 'global'
+    let activePentaVolume = 'on';
+    let activePentaOrient = 'horizontal';
+    let activePentaCurve = 'curved';
+    let activePentaLabels = 'simple';
+    let activePentaNumbers = 'clean';
+    let activePentaCompareMode = 'criterios'; // 'criterios' | 'temporadas' | 'intergrupal' | 'all'
 
     function initPCASynthesisCanvas(canvasElement, workKey) {
         activePCACanvas = canvasElement;
@@ -1299,14 +1305,123 @@
         }
     }
 
-    // Render del Pentagrama Socio-Termodinámico Graduado (10 Estaciones canónicas con Líneas Quebradas)
+    // =========================================================================
+    // UTILIDADES DEL PENTAGRAMA SOCIO-TERMODINÁMICO: SPLINES, EXTREMOS Y HUD
+    // =========================================================================
+    function drawPentaSpline(ctx, points) {
+        if (points.length < 2) return;
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 0; i < points.length - 1; i++) {
+            const p0 = (i > 0) ? points[i - 1] : points[i];
+            const p1 = points[i];
+            const p2 = points[i + 1];
+            const p3 = (i < points.length - 2) ? points[i + 2] : p2;
+
+            const cp1x = p1.x + (p2.x - p0.x) / 6;
+            const cp1y = p1.y + (p2.y - p0.y) / 6;
+            const cp2x = p2.x - (p3.x - p1.x) / 6;
+            const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+        }
+    }
+
+    // CÁLCULO SISTÉMICO CANÓNICO DE MÁXIMOS Y MÍNIMOS DEL SISTEMA
+    function computeSystemExtremes(activeSeries, catalog, STATIONS) {
+        // Extremos de las series activas proyectadas
+        let activePoints = [];
+        (activeSeries || []).forEach(s => {
+            STATIONS.forEach(st => {
+                if (s[st.id] !== undefined && typeof s[st.id] === 'number') {
+                    activePoints.push({ val: s[st.id], station: st, series: s });
+                }
+            });
+        });
+        if (activePoints.length === 0) {
+            activePoints = [{ val: 0.0, station: STATIONS[0], series: (activeSeries && activeSeries[0]) || { label: 'Serie' } }];
+        }
+
+        activePoints.sort((a, b) => a.val - b.val);
+        const minActive = activePoints[0];
+        const maxActive = activePoints[activePoints.length - 1];
+
+        // Extremos globales de todo el catálogo del sistema
+        let catalogPoints = [];
+        (catalog && catalog.length > 0 ? catalog : activeSeries).forEach(s => {
+            STATIONS.forEach(st => {
+                if (s[st.id] !== undefined && typeof s[st.id] === 'number') {
+                    catalogPoints.push({ val: s[st.id], station: st, series: s });
+                }
+            });
+        });
+        if (catalogPoints.length === 0) catalogPoints = activePoints;
+        catalogPoints.sort((a, b) => a.val - b.val);
+        const minGlobal = catalogPoints[0];
+        const maxGlobal = catalogPoints[catalogPoints.length - 1];
+
+        const targetMin = (activePentaScale === 'global') ? minGlobal : minActive;
+        const targetMax = (activePentaScale === 'global') ? maxGlobal : maxActive;
+
+        const rawRange = Math.max(0.1, targetMax.val - targetMin.val);
+        const pad = Math.max(0.35, rawRange * 0.10);
+
+        // Redondeo armónico a pasos limpios de 0.5
+        let dMin = Math.floor((targetMin.val - pad) * 2) / 2;
+        let dMax = Math.ceil((targetMax.val + pad) * 2) / 2;
+        if (dMax - dMin < 1.5) { dMin -= 0.5; dMax += 0.5; }
+
+        return {
+            dMin,
+            dMax,
+            range: dMax - dMin,
+            activeMin: minActive,
+            activeMax: maxActive,
+            globalMin: minGlobal,
+            globalMax: maxGlobal,
+            targetMin,
+            targetMax
+        };
+    }
+
+    function renderExtremesHUD(ext) {
+        const hud = document.getElementById("extremes-hud-bar");
+        if (!hud || !ext) return;
+        hud.innerHTML = `
+            <div class="extremes-metric">
+                <span style="font-size:0.85rem;">⚖️</span>
+                <span class="extremes-label">Extremos del Sistema (${activePentaScale === 'auto' ? 'Series Activas' : 'Catálogo Global'}):</span>
+            </div>
+            <div class="extremes-metric">
+                <span class="extremes-label">Mínimo:</span>
+                <span class="extremes-val-min">${(ext.targetMin.val >= 0 ? '+' : '')}${ext.targetMin.val.toFixed(2)}</span>
+                <span style="color:#94A3B8; font-size:0.7rem;">en <strong>${ext.targetMin.station.code}</strong> (${ext.targetMin.series.id || ext.targetMin.series.label || ''})</span>
+            </div>
+            <div class="extremes-metric">
+                <span class="extremes-label">Máximo:</span>
+                <span class="extremes-val-max">${(ext.targetMax.val >= 0 ? '+' : '')}${ext.targetMax.val.toFixed(2)}</span>
+                <span style="color:#94A3B8; font-size:0.7rem;">en <strong>${ext.targetMax.station.code}</strong> (${ext.targetMax.series.id || ext.targetMax.series.label || ''})</span>
+            </div>
+            <div class="extremes-metric">
+                <span class="extremes-label">Amplitud Dinámica (Δ Rango):</span>
+                <span class="extremes-val-range">${(ext.targetMax.val - ext.targetMin.val).toFixed(2)}</span>
+            </div>
+            <div class="extremes-metric">
+                <span class="extremes-label">Escala Graduada:</span>
+                <span style="font-family:'Roboto Mono'; font-weight:700; color:#00F5D4; font-size:0.72rem;">[L1: ${(ext.dMin >= 0 ? '+' : '')}${ext.dMin.toFixed(1)} ➔ L5: ${(ext.dMax >= 0 ? '+' : '')}${ext.dMax.toFixed(1)}]</span>
+            </div>
+        `;
+    }
+
+    // Render del Pentagrama Socio-Termodinámico Multidimensional Universal (Criterios, Temporadas, Grupos y Variantes)
     function renderDensitiesChart() {
         const canvas = document.getElementById('canvas-densities-chart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const container = canvas.parentElement;
+
+        const isVert = (activePentaOrient === 'vertical');
         const w = container.clientWidth || 900;
-        const h = 480;
+        const h = isVert ? 750 : 520;
 
         const dpr = window.devicePixelRatio || 1;
         canvas.width = w * dpr;
@@ -1325,238 +1440,1039 @@
         if (allTCs.length === 0) return;
 
         const STATIONS = [
-            { id: "bda", code: "BDA", l1: "B", l2: "D", l3: "A", name: "Densidad Bruta Dador (Atracción)" },
-            { id: "sda", code: "SDA", l1: "S", l2: "D", l3: "A", name: "Densidad Neta Dador (Atracción)" },
-            { id: "a1",  code: "A1",  l1: "A", l2: "1", l3: " ", name: "A1 = p_DA (Expectativa Emisor)" },
-            { id: "a2",  code: "A2",  l1: "A", l2: "2", l3: " ", name: "A2 = DA (Preferencia Emitida)" },
-            { id: "a3",  code: "A3",  l1: "A", l2: "3", l3: " ", name: "A3 = RECIBE (Preferencia Recibida)" },
-            { id: "a4",  code: "A4",  l1: "A", l2: "4", l3: " ", name: "A4 = p_RECIBE (Expectativa Partner)" },
-            { id: "src", code: "SRC", l1: "S", l2: "R", l3: "C", name: "Densidad Neta Receptor" },
-            { id: "brc", code: "BRC", l1: "B", l2: "R", l3: "C", name: "Densidad Bruta Receptor" },
-            { id: "sdr", code: "SDR", l1: "S", l2: "D", l3: "R", name: "Densidad Neta Relacional" },
-            { id: "bdr", code: "BDR", l1: "B", l2: "D", l3: "R", name: "Densidad Bruta Relacional" }
+            { id: "bda", simple: "B", code: "BDA", name: "Densidad Bruta Dador", desc: "Masa total emitida (Atracción absoluta)", isTetra: false },
+            { id: "sda", simple: "S", code: "SDA", name: "Densidad Neta Dador", desc: "Balance neto de emisión (+/-)", isTetra: false },
+            { id: "a1",  simple: "1", code: "A1",  name: "A1 = p_DA", desc: "Expectativa que el emisor tiene del partner", isTetra: true, pulse: "1º Pulso", subdesc: "Expectativa Emisor" },
+            { id: "a2",  simple: "2", code: "A2",  name: "A2 = DA", desc: "Preferencia efectiva otorgada al partner", isTetra: true, pulse: "2º Pulso", subdesc: "Elección Emitida" },
+            { id: "a3",  simple: "3", code: "A3",  name: "A3 = RECIBE", desc: "Preferencia efectiva que el partner otorga", isTetra: true, pulse: "3º Pulso", subdesc: "Elección Recibida" },
+            { id: "a4",  simple: "4", code: "A4",  name: "A4 = p_RECIBE", desc: "Expectativa que el partner tiene del emisor", isTetra: true, pulse: "4º Pulso", subdesc: "Expectativa Partner" },
+            { id: "src", simple: "s", code: "SRC", name: "Densidad Neta Receptor", desc: "Balance neto de recepción (+/-)", isTetra: false },
+            { id: "brc", simple: "b", code: "BRC", name: "Densidad Bruta Receptor", desc: "Masa total recibida (Atracción recibida)", isTetra: false },
+            { id: "sdr", simple: "Σ", code: "SDR", name: "Densidad Neta Relacional", desc: "Balance relacional global del grupo", isTetra: false },
+            { id: "bdr", simple: "Ω", code: "BDR", name: "Densidad Bruta Relacional", desc: "Masa invariable total de vínculos", isTetra: false }
         ];
 
-        // Filtrado por T y C
-        const activeTCs = allTCs.filter(d => {
-            const matchT = (activePentaT === 'all') || (d.t === parseInt(activePentaT));
-            const matchC = (activePentaC === 'both') || (d.c === parseInt(activePentaC));
-            return matchT && matchC;
-        });
-
-        const padLeft = Math.max(90, Math.min(130, w * 0.11));
-        const padRight = Math.max(40, Math.min(70, w * 0.05));
-        const padTop = 55;
-        const padBottom = 100;
-
-        const staveH = h - padTop - padBottom;
-        const staveW = w - padLeft - padRight;
-        const nLines = 5;
-        const lineSpacing = staveH / (nLines - 1);
-
-        let dMin = -3.0;
-        let dMax = 9.0;
-        if (activePentaScale === 'normalized') {
-            dMin = 0.0;
-            dMax = 1.0;
+        // RESOLVER SERIES ACTIVAS SEGÚN EL MODO COMPARATIVO MULTIDIMENSIONAL
+        let activeSeries = [];
+        if (activePentaCompareMode === 'temporadas') {
+            const tVals = Array.from(new Set(allTCs.map(d => d.t))).sort((a,b) => a - b);
+            const firstT = tVals[0];
+            const lastT = tVals[tVals.length - 1];
+            const tcFirst = allTCs.find(d => d.t === firstT && d.c === 1) || allTCs[0];
+            const tcLast = allTCs.find(d => d.t === lastT && d.c === 1) || allTCs[allTCs.length - 1];
+            activeSeries = [
+                { ...tcFirst, label: `Temporada T${firstT}: Inicio (Apoyo)`, color: "#38BDF8" },
+                { ...tcLast, label: `Temporada T${lastT}: Desenlace (Apoyo)`, color: "#FFE600" }
+            ];
+        } else if (activePentaCompareMode === 'intergrupal') {
+            const otherKey = (activePCAWorkKey === 'lorca') ? 'clara' : 'lorca';
+            const otherData = CULTURAL_SYNTHESIS_DATA[otherKey] || CULTURAL_SYNTHESIS_DATA['clara'];
+            const otherTCs = Object.values(otherData.densidades_tc || {});
+            const s1 = allTCs.find(d => d.c === 1) || allTCs[0];
+            const s2 = otherTCs.find(d => d.c === 1) || otherTCs[0];
+            activeSeries = [
+                { ...s1, label: `Grupo 1 (${sData.titulo || activePCAWorkKey})`, color: "#00FF87" },
+                { ...s2, label: `Grupo 2 (${otherData.titulo || otherKey})`, color: "#FF007F" }
+            ];
+        } else if (activePentaCompareMode === 'all') {
+            activeSeries = allTCs;
+        } else {
+            // Modo Criterios (Apoyo C1 vs Tensión C2 en la sesión activa)
+            activeSeries = allTCs.filter(d => {
+                const matchT = (activePentaT === 'all') || (d.t === parseInt(activePentaT));
+                const matchC = (activePentaC === 'both') || (d.c === parseInt(activePentaC));
+                return matchT && matchC;
+            });
+            if (activeSeries.length === 0) activeSeries = allTCs.slice(0, 2);
         }
 
-        function valToY(v) {
-            let norm = (activePentaScale === 'normalized') ? v : ((v - dMin) / (dMax - dMin));
-            norm = Math.max(-0.05, Math.min(1.05, norm));
-            return (padTop + staveH) - norm * staveH;
-        }
+        // CÁLCULO SISTÉMICO Y AUTO-ESCALADO HOMOTÉTICO DE EXTREMOS
+        const ext = computeSystemExtremes(activeSeries, allTCs, STATIONS);
+        const dMin = ext.dMin;
+        const dMax = ext.dMax;
+        renderExtremesHUD(ext);
 
-        // 1. DIBUJAR LAS 5 LÍNEAS DEL PENTAGRAMA
-        for (let i = 0; i < nLines; i++) {
-            const y = padTop + i * lineSpacing;
-            const lineNum = 5 - i;
-            const isCenterLine = (i === 2);
+        if (!isVert) {
+            // MODO HORIZONTAL (PENTAGRAMA CLÁSICO)
+            const padLeft = 85;
+            const padRight = 50;
+            const padTop = 45;
+            const padBottom = 130;
 
-            ctx.strokeStyle = isCenterLine ? 'rgba(0, 245, 212, 0.45)' : 'rgba(255, 255, 255, 0.18)';
-            ctx.lineWidth = isCenterLine ? 1.6 : 1.0;
+            const staveH = h - padTop - padBottom;
+            const staveW = w - padLeft - padRight;
+            const nLines = 5;
+            const lineSpacing = staveH / (nLines - 1);
 
-            ctx.beginPath();
-            ctx.moveTo(padLeft - 15, y);
-            ctx.lineTo(w - padRight + 15, y);
-            ctx.stroke();
-
-            ctx.font = '600 10px "Roboto Mono", monospace';
-            ctx.fillStyle = isCenterLine ? '#00F5D4' : '#64748B';
-            ctx.textAlign = 'right';
-
-            let lineValText = '';
-            if (activePentaScale === 'normalized') {
-                const lv = 1.0 - i * 0.25;
-                lineValText = lv.toFixed(2);
-            } else {
-                const lv = dMax - i * ((dMax - dMin) / 4);
-                lineValText = (lv >= 0 ? '+' : '') + lv.toFixed(2);
+            function valToY(v) {
+                let norm = (v - dMin) / (dMax - dMin);
+                norm = Math.max(-0.05, Math.min(1.05, norm));
+                return (padTop + staveH) - norm * staveH;
             }
-            ctx.fillText(`L${lineNum} [${lineValText}]`, padLeft - 22, y + 3.5);
-        }
 
-        // Clave Musical / Institucional al margen izquierdo
-        ctx.font = '700 24px "Inter", sans-serif';
-        ctx.fillStyle = '#00F5D4';
-        ctx.textAlign = 'center';
-        ctx.fillText('𝄢', padLeft - 65, padTop + staveH / 2 - 6);
-        ctx.font = '700 9px "Roboto Mono", monospace';
-        ctx.fillStyle = '#94A3B8';
-        ctx.fillText('VISORD', padLeft - 65, padTop + staveH / 2 + 15);
-        ctx.fillText('STAVE', padLeft - 65, padTop + staveH / 2 + 26);
+            for (let i = 0; i < nLines; i++) {
+                const y = padTop + i * lineSpacing;
+                const lineNum = 5 - i;
+                const isCenterLine = (i === 2);
 
-        // 2. COLUMNAS DE ESTACIONES (EJE X)
-        const nStations = STATIONS.length;
-        const stepX = staveW / (nStations - 1);
-        const stationXCoords = [];
+                ctx.strokeStyle = isCenterLine ? "rgba(0, 245, 212, 0.22)" : "rgba(255, 255, 255, 0.055)";
+                ctx.lineWidth = isCenterLine ? 1.1 : 0.75;
+                if (isCenterLine) ctx.setLineDash([6, 4]);
+                else ctx.setLineDash([]);
 
-        STATIONS.forEach((st, idx) => {
-            const x = padLeft + idx * stepX;
-            stationXCoords.push(x);
+                ctx.beginPath();
+                ctx.moveTo(padLeft - 15, y);
+                ctx.lineTo(w - padRight + 15, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([3, 4]);
-            ctx.beginPath();
-            ctx.moveTo(x, padTop - 10);
-            ctx.lineTo(x, padTop + staveH + 10);
-            ctx.stroke();
-            ctx.setLineDash([]);
+                ctx.font = '600 9px "Roboto Mono", monospace';
+                ctx.fillStyle = isCenterLine ? "rgba(0, 245, 212, 0.65)" : "rgba(100, 116, 139, 0.55)";
+                ctx.textAlign = 'right';
+                const lv = dMax - i * ((dMax - dMin) / 4);
+                ctx.fillText('L' + lineNum + ' [' + (lv >= 0 ? '+' : '') + lv.toFixed(1) + ']', padLeft - 22, y + 3.5);
+            }
 
-            // Etiquetas verticalizadas debajo del pentagrama
-            const yLabelBase = padTop + staveH + 24;
-            ctx.font = '700 12px "Roboto Mono", monospace';
+            // Línea de Flotación Cero (Neutro ±0.00)
+            if (dMin < 0 && dMax > 0) {
+                const yZero = valToY(0.0);
+                if (yZero >= padTop && yZero <= padTop + staveH) {
+                    ctx.save();
+                    ctx.strokeStyle = "rgba(0, 245, 212, 0.45)";
+                    ctx.lineWidth = 1.2;
+                    ctx.setLineDash([5, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(padLeft - 15, yZero);
+                    ctx.lineTo(w - padRight + 15, yZero);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.font = '700 8.5px "Roboto Mono", monospace';
+                    ctx.fillStyle = "rgba(0, 245, 212, 0.85)";
+                    ctx.textAlign = 'right';
+                    ctx.fillText("±0.00 NEUTRO", padLeft - 22, yZero + 3);
+                    ctx.restore();
+                }
+            }
+
+            ctx.font = '700 22px "Inter", sans-serif';
+            ctx.fillStyle = "rgba(0, 245, 212, 0.45)";
             ctx.textAlign = 'center';
+            ctx.fillText('𝄢', padLeft - 60, padTop + staveH / 2 - 4);
 
-            let colColor = '#CBD5E1';
-            if (st.id === 'bdr' || st.id === 'sdr') colColor = '#FFE600';
-            else if (st.id.startsWith('a')) colColor = '#00F5D4';
-            else if (st.id.includes('da')) colColor = '#38BDF8';
-            else if (st.id.includes('rc')) colColor = '#C084FC';
+            const nStations = STATIONS.length;
+            const stepX = staveW / (nStations - 1);
+            const stationCoords = [];
+            STATIONS.forEach((st, idx) => {
+                stationCoords.push({ x: padLeft + idx * stepX, st: st });
+            });
 
-            ctx.fillStyle = colColor;
-            ctx.fillText(st.l1, x, yLabelBase);
-            ctx.fillText(st.l2, x, yLabelBase + 15);
-            if (st.l3.trim() !== '') ctx.fillText(st.l3, x, yLabelBase + 30);
+            const tetraStartX = stationCoords[2].x - stepX * 0.48;
+            const tetraEndX = stationCoords[5].x + stepX * 0.48;
+            const tetraW = tetraEndX - tetraStartX;
 
-            ctx.font = '600 8.5px "Roboto Mono", monospace';
-            ctx.fillStyle = '#64748B';
-            ctx.fillText(st.code, x, yLabelBase + 48);
-        });
+            ctx.fillStyle = "rgba(0, 245, 212, 0.02)";
+            ctx.fillRect(tetraStartX, padTop, tetraW, staveH);
 
-        // 3. TRAZADO DE LÍNEAS QUEBRADAS (PUNTO A PUNTO)
-        activeTCs.forEach(tc => {
-            const seriesColor = tc.color || (tc.c === 2 ? '#FF007F' : '#00FF87');
-            const points = [];
+            ctx.strokeStyle = "rgba(0, 245, 212, 0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(tetraStartX, padTop - 4); ctx.lineTo(tetraStartX, padTop + staveH + 4);
+            ctx.moveTo(tetraEndX, padTop - 4); ctx.lineTo(tetraEndX, padTop + staveH + 4);
+            ctx.stroke();
 
-            STATIONS.forEach((st, sIdx) => {
-                let rawVal = 0.0;
-                if (tc[st.id] !== undefined) rawVal = tc[st.id];
-                else if (st.id === 'a1') rawVal = (tc.sda || 0) * 0.7;
-                else if (st.id === 'a2') rawVal = (tc.sda || 0) * 0.9;
-                else if (st.id === 'a3') rawVal = (tc.src || 0) * 0.9;
-                else if (st.id === 'a4') rawVal = (tc.src || 0) * 0.6;
-                else if (st.id === 'bda') rawVal = tc.bdr ? tc.bdr * 0.35 : 3.0;
-                else if (st.id === 'brc') rawVal = tc.bdr ? tc.bdr * 0.25 : 2.2;
-                else if (st.id === 'bdr') rawVal = tc.bdr || 8.89;
-                else if (st.id === 'sdr') rawVal = tc.sdr || 0.0;
+            stationCoords.forEach(sc => {
+                ctx.strokeStyle = sc.st.isTetra ? "rgba(0, 245, 212, 0.1)" : "rgba(255, 255, 255, 0.035)";
+                ctx.lineWidth = 0.8;
+                ctx.setLineDash([3, 4]);
+                ctx.beginPath();
+                ctx.moveTo(sc.x, padTop - 6);
+                ctx.lineTo(sc.x, padTop + staveH + 6);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
 
-                let plotVal = rawVal;
-                if (activePentaScale === 'normalized') {
-                    if (st.id === 'bdr' || st.id === 'bda' || st.id === 'brc') {
-                        plotVal = rawVal / (tc.bdr || 8.89);
-                    } else if (st.id === 'sdr') {
-                        plotVal = (rawVal + 3.0) / 6.0;
-                    } else if (st.id === 'sda' || st.id === 'src') {
-                        plotVal = (rawVal + 1.0) / 2.0;
-                    } else {
-                        plotVal = (rawVal + 1.0) / 2.0;
+            const seriesData = activeSeries.map(tc => {
+                const points = stationCoords.map(sc => {
+                    const val = tc[sc.st.id] !== undefined ? tc[sc.st.id] : 0.0;
+                    const isExtMax = (Math.abs(val - ext.targetMax.val) < 0.001);
+                    const isExtMin = (Math.abs(val - ext.targetMin.val) < 0.001);
+                    return { x: sc.x, y: valToY(val), raw: val, st: sc.st, isExtMax, isExtMin };
+                });
+                return { tc: tc, points: points };
+            });
+
+            if (activePentaVolume === 'on' && seriesData.length === 2) {
+                const pts1 = seriesData[0].points;
+                const pts2 = seriesData[1].points;
+
+                ctx.beginPath();
+                if (activePentaCurve === 'curved') {
+                    drawPentaSpline(ctx, pts1);
+                    const pts2Rev = [...pts2].reverse();
+                    ctx.lineTo(pts2Rev[0].x, pts2Rev[0].y);
+                    drawPentaSpline(ctx, pts2Rev);
+                } else {
+                    pts1.forEach((pt, idx) => {
+                        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                    for (let i = pts2.length - 1; i >= 0; i--) {
+                        ctx.lineTo(pts2[i].x, pts2[i].y);
                     }
                 }
+                ctx.closePath();
 
-                const px = stationXCoords[sIdx];
-                const py = valToY(plotVal);
-                points.push({ x: px, y: py, raw: rawVal, plot: plotVal, st: st });
-            });
+                const colA = seriesData[0].tc.color || '#00FF87';
+                const colB = seriesData[1].tc.color || '#FF007F';
+                const ribbonGrad = ctx.createLinearGradient(0, padTop, 0, padTop + staveH);
+                ribbonGrad.addColorStop(0.0, colA + "33");
+                ribbonGrad.addColorStop(0.5, "rgba(0, 245, 212, 0.12)");
+                ribbonGrad.addColorStop(1.0, colB + "33");
+                ctx.fillStyle = ribbonGrad;
+                ctx.fill();
 
-            // Línea quebrada continua punto a punto
-            ctx.strokeStyle = seriesColor;
-            ctx.lineWidth = (activeTCs.length <= 2) ? 3.2 : 2.0;
-            ctx.beginPath();
-            points.forEach((pt, pIdx) => {
-                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
-                else ctx.lineTo(pt.x, pt.y);
-            });
-            ctx.stroke();
+                // Cuerdas armónicas y vientres impresionistas
+                pts1.forEach((p1, idx) => {
+                    const p2 = pts2[idx];
+                    const delta = Math.abs(p1.raw - p2.raw);
+                    const midY = (p1.y + p2.y) / 2;
+                    const distY = Math.abs(p1.y - p2.y);
 
-            // Resplandor tenue
-            ctx.save();
-            ctx.strokeStyle = seriesColor;
-            ctx.lineWidth = (activeTCs.length <= 2) ? 6.5 : 4.0;
-            ctx.globalAlpha = 0.25;
-            ctx.beginPath();
-            points.forEach((pt, pIdx) => {
-                if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
-                else ctx.lineTo(pt.x, pt.y);
-            });
-            ctx.stroke();
-            ctx.restore();
+                    if (delta >= 0.85) {
+                        ctx.save();
+                        const auraRad = Math.max(18, distY * 0.55);
+                        const auraGrad = ctx.createRadialGradient(p1.x, midY, 2, p1.x, midY, auraRad);
+                        auraGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.18)");
+                        auraGrad.addColorStop(0.4, (idx % 2 === 0 ? colA : colB) + "22");
+                        auraGrad.addColorStop(1.0, "rgba(11, 19, 43, 0.0)");
+                        ctx.fillStyle = auraGrad;
+                        ctx.beginPath();
+                        ctx.arc(p1.x, midY, auraRad, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
 
-            // Vértices elípticos
-            points.forEach(pt => {
+                    if (delta > 0.25) {
+                        const alphaThread = Math.min(0.32, 0.08 + (delta / 4.0) * 0.22);
+                        ctx.strokeStyle = "rgba(255, 255, 255, " + alphaThread.toFixed(3) + ")";
+                        ctx.lineWidth = 0.9;
+                        ctx.setLineDash([2, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                });
+
+                // Nodos impresionistas de invarianza / consenso (delta <= 0.25)
+                pts1.forEach((p1, idx) => {
+                    const p2 = pts2[idx];
+                    const delta = Math.abs(p1.raw - p2.raw);
+                    if (delta <= 0.25) {
+                        const midY = (p1.y + p2.y) / 2;
+                        ctx.save();
+                        const nodeGrad = ctx.createRadialGradient(p1.x, midY, 1, p1.x, midY, 11);
+                        nodeGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.95)");
+                        nodeGrad.addColorStop(0.35, "rgba(0, 245, 212, 0.65)");
+                        nodeGrad.addColorStop(0.7, "rgba(0, 255, 135, 0.25)");
+                        nodeGrad.addColorStop(1.0, "rgba(0, 245, 212, 0.0)");
+                        ctx.fillStyle = nodeGrad;
+                        ctx.beginPath();
+                        ctx.arc(p1.x, midY, 11, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.beginPath();
+                        ctx.arc(p1.x, midY, 2.8, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.strokeStyle = "#00F5D4";
+                        ctx.lineWidth = 1.1;
+                        ctx.beginPath();
+                        ctx.arc(p1.x, midY, 4.8, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                });
+            }
+
+            // Envoltura volumétrica si hay > 2 series
+            if (activePentaVolume === 'on' && seriesData.length > 2) {
+                const envMax = stationCoords.map((sc, idx) => {
+                    let maxPt = seriesData[0].points[idx];
+                    seriesData.forEach(s => {
+                        if (s.points[idx].y < maxPt.y) maxPt = s.points[idx];
+                    });
+                    return maxPt;
+                });
+                const envMin = stationCoords.map((sc, idx) => {
+                    let minPt = seriesData[0].points[idx];
+                    seriesData.forEach(s => {
+                        if (s.points[idx].y > minPt.y) minPt = s.points[idx];
+                    });
+                    return minPt;
+                });
+
                 ctx.save();
-                ctx.translate(pt.x, pt.y);
-                ctx.rotate(-15 * Math.PI / 180);
-
-                ctx.fillStyle = '#0B132B';
                 ctx.beginPath();
-                ctx.ellipse(0, 0, 6, 4.5, 0, 0, Math.PI * 2);
+                if (activePentaCurve === 'curved') {
+                    drawPentaSpline(ctx, envMax);
+                    const envMinRev = [...envMin].reverse();
+                    ctx.lineTo(envMinRev[0].x, envMinRev[0].y);
+                    drawPentaSpline(ctx, envMinRev);
+                } else {
+                    envMax.forEach((pt, idx) => {
+                        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                    for (let i = envMin.length - 1; i >= 0; i--) {
+                        ctx.lineTo(envMin[i].x, envMin[i].y);
+                    }
+                }
+                ctx.closePath();
+                const envGrad = ctx.createLinearGradient(0, padTop, 0, padTop + staveH);
+                envGrad.addColorStop(0.0, "rgba(0, 245, 212, 0.06)");
+                envGrad.addColorStop(1.0, "rgba(255, 0, 127, 0.06)");
+                ctx.fillStyle = envGrad;
                 ctx.fill();
 
-                ctx.strokeStyle = seriesColor;
-                ctx.lineWidth = 2.2;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, 6, 4.5, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = "rgba(0, 245, 212, 0.18)";
+                ctx.lineWidth = 0.8;
+                ctx.setLineDash([3, 4]);
                 ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.restore();
+            }
 
-                ctx.fillStyle = seriesColor;
+            // Trazado de perfiles
+            seriesData.forEach(s => {
+                const tc = s.tc;
+                const points = s.points;
+                const col = tc.color || (tc.c === 1 ? '#00FF87' : '#FF007F');
+
+                ctx.save();
+                ctx.shadowColor = col;
+                ctx.shadowBlur = 12;
+                ctx.strokeStyle = col;
+                ctx.lineWidth = (activePentaCurve === 'curved' ? 3.0 : 2.4);
                 ctx.beginPath();
-                ctx.arc(0, 0, 2.2, 0, Math.PI * 2);
-                ctx.fill();
-
+                if (activePentaCurve === 'curved') drawPentaSpline(ctx, points);
+                else {
+                    points.forEach((pt, pIdx) => {
+                        if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                }
+                ctx.stroke();
                 ctx.restore();
 
-                if (activeTCs.length <= 2) {
-                    ctx.font = '700 9.5px "Roboto Mono", monospace';
-                    ctx.fillStyle = seriesColor;
-                    ctx.textAlign = 'center';
-                    const offsetVal = (tc.c === 2) ? 15 : -11;
-                    ctx.fillText((pt.raw >= 0 && pt.raw < 10 ? '+' : '') + pt.raw.toFixed(2), pt.x, pt.y + offsetVal);
-                }
+                points.forEach(pt => {
+                    ctx.save();
+                    ctx.translate(pt.x, pt.y);
+                    ctx.fillStyle = '#0B132B';
+                    ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.strokeStyle = col;
+                    ctx.lineWidth = 2.2;
+                    ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.stroke();
+
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath(); ctx.arc(0, 0, 2.0, 0, Math.PI * 2); ctx.fill();
+
+                    // Destaque visual si es Máximo o Mínimo del Sistema
+                    if (pt.isExtMax) {
+                        ctx.strokeStyle = "#FFE600";
+                        ctx.lineWidth = 1.6;
+                        ctx.setLineDash([2, 2]);
+                        ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                        ctx.setLineDash([]);
+                    } else if (pt.isExtMin) {
+                        ctx.strokeStyle = "#FF007F";
+                        ctx.lineWidth = 1.6;
+                        ctx.setLineDash([2, 2]);
+                        ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                    ctx.restore();
+
+                    // Badges de Máximo y Mínimo
+                    if (pt.isExtMax) {
+                        ctx.save();
+                        ctx.font = '800 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#FFE600";
+                        ctx.textAlign = 'center';
+                        ctx.fillText("▲ MÁX " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y - (activePentaNumbers === 'show' ? 18 : 11));
+                        ctx.restore();
+                    } else if (pt.isExtMin) {
+                        ctx.save();
+                        ctx.font = '800 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#FF007F";
+                        ctx.textAlign = 'center';
+                        ctx.fillText("▼ MÍN " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y + (activePentaNumbers === 'show' ? 22 : 16));
+                        ctx.restore();
+                    }
+
+                    if (activePentaNumbers === 'show' && seriesData.length <= 2 && !pt.isExtMax && !pt.isExtMin) {
+                        ctx.save();
+                        ctx.font = '700 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = col;
+                        ctx.textAlign = 'center';
+                        ctx.fillText((pt.raw >= 0 ? '+' : '') + pt.raw.toFixed(2), pt.x, pt.y - 10);
+                        ctx.restore();
+                    }
+                });
             });
-        });
 
-        // 4. LEYENDA SUPERIOR
-        const legendX = padLeft;
-        const legendY = padTop - 22;
-        ctx.font = '600 11px "Inter", sans-serif';
-        let curLegX = legendX;
+            const yLabel = padTop + staveH + 26;
+            if (activePentaLabels === 'simple') {
+                stationCoords.forEach(sc => {
+                    const st = sc.st;
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    const isTetra = st.isTetra;
+                    ctx.fillStyle = isTetra ? "rgba(0, 255, 135, 0.12)" : "rgba(255, 255, 255, 0.05)";
+                    ctx.strokeStyle = isTetra ? "rgba(0, 255, 135, 0.35)" : "rgba(255, 255, 255, 0.15)";
+                    ctx.lineWidth = 1;
+                    const bSize = 24;
+                    ctx.beginPath();
+                    ctx.roundRect(sc.x - bSize / 2, yLabel - 15, bSize, bSize, 5);
+                    ctx.fill();
+                    ctx.stroke();
 
-        activeTCs.forEach(tc => {
-            const seriesColor = tc.color || (tc.c === 2 ? '#FF007F' : '#00FF87');
-            ctx.fillStyle = seriesColor;
-            ctx.fillRect(curLegX, legendY - 8, 14, 4);
+                    ctx.font = '800 13px "Roboto Mono", monospace';
+                    let col = "#E2E8F0";
+                    if (isTetra) col = "#00FF87";
+                    else if (st.id === "bdr" || st.id === "sdr") col = "#FFE600";
+                    else if (st.id.includes("da")) col = "#38BDF8";
+                    else if (st.id.includes("rc")) col = "#C084FC";
+                    ctx.fillStyle = col;
+                    ctx.fillText(st.simple, sc.x, yLabel + 2);
 
-            ctx.fillStyle = '#FFFFFF';
-            ctx.textAlign = 'left';
-            const sLabel = tc.label || tc.tc;
-            ctx.fillText(sLabel, curLegX + 20, legendY - 4);
+                    ctx.font = '600 8px "Roboto Mono", monospace';
+                    ctx.fillStyle = "#64748B";
+                    ctx.fillText(st.code, sc.x, yLabel + 22);
+                    ctx.restore();
+                });
 
-            curLegX += ctx.measureText(sLabel).width + 35;
-        });
+                ctx.strokeStyle = "rgba(0, 255, 135, 0.3)";
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 3]);
+                ctx.strokeRect(tetraStartX, yLabel - 20, tetraW, 50);
+                ctx.setLineDash([]);
+
+                ctx.font = '700 8px "Roboto Mono", monospace';
+                ctx.fillStyle = "#00FF87";
+                ctx.textAlign = 'center';
+                ctx.fillText("▲ COMPÁS TETRAGRAMA (1 ➔ 4)", (stationCoords[2].x + stationCoords[5].x) / 2, yLabel + 42);
+            } else {
+                stationCoords.forEach(sc => {
+                    const st = sc.st;
+                    ctx.font = '700 11px "Roboto Mono", monospace';
+                    ctx.fillStyle = st.isTetra ? "#00FF87" : "#CBD5E1";
+                    ctx.textAlign = 'center';
+                    ctx.fillText(st.code, sc.x, yLabel + 5);
+                });
+            }
+
+            const curLegX = padLeft;
+            const legY = padTop - 18;
+            ctx.font = '600 11px "Inter", sans-serif';
+            let accX = curLegX;
+            activeSeries.forEach(tc => {
+                const col = tc.color || (tc.c === 1 ? '#00FF87' : '#FF007F');
+                ctx.fillStyle = col;
+                ctx.fillRect(accX, legY - 7, 14, 4);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.textAlign = 'left';
+                const lbl = tc.label || `T${tc.t}C${tc.c}`;
+                ctx.fillText(lbl, accX + 20, legY - 3);
+                accX += ctx.measureText(lbl).width + 35;
+            });
+
+        } else {
+            // MODO VERTICAL
+            const padLeft = 140;
+            const padRight = 80;
+            const padTop = 60;
+            const padBottom = 50;
+
+            const staveW = w - padLeft - padRight;
+            const staveH = h - padTop - padBottom;
+            const nLines = 5;
+            const colSpacing = staveW / (nLines - 1);
+
+            function valToX(v) {
+                let norm = (v - dMin) / (dMax - dMin);
+                norm = Math.max(-0.05, Math.min(1.05, norm));
+                return padLeft + norm * staveW;
+            }
+
+            for (let i = 0; i < nLines; i++) {
+                const x = padLeft + i * colSpacing;
+                const lineNum = i + 1;
+                const isCenterLine = (i === 2);
+
+                ctx.strokeStyle = isCenterLine ? "rgba(0, 245, 212, 0.25)" : "rgba(255, 255, 255, 0.055)";
+                ctx.lineWidth = isCenterLine ? 1.1 : 0.75;
+                if (isCenterLine) ctx.setLineDash([6, 4]);
+                else ctx.setLineDash([]);
+
+                ctx.beginPath();
+                ctx.moveTo(x, padTop - 15);
+                ctx.lineTo(x, padTop + staveH + 15);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.font = '600 9px "Roboto Mono", monospace';
+                ctx.fillStyle = isCenterLine ? "rgba(0, 245, 212, 0.65)" : "rgba(100, 116, 139, 0.55)";
+                ctx.textAlign = 'center';
+                const lv = dMin + i * ((dMax - dMin) / 4);
+                ctx.fillText('L' + lineNum + ' [' + (lv >= 0 ? '+' : '') + lv.toFixed(1) + ']', x, padTop - 22);
+            }
+
+            // Línea de Flotación Cero Vertical (Neutro ±0.00)
+            if (dMin < 0 && dMax > 0) {
+                const xZero = valToX(0.0);
+                if (xZero >= padLeft && xZero <= padLeft + staveW) {
+                    ctx.save();
+                    ctx.strokeStyle = "rgba(0, 245, 212, 0.45)";
+                    ctx.lineWidth = 1.2;
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(xZero, padTop - 15);
+                    ctx.lineTo(xZero, padTop + staveH + 15);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.font = '700 8.5px "Roboto Mono", monospace';
+                    ctx.fillStyle = "rgba(0, 245, 212, 0.85)";
+                    ctx.textAlign = 'center';
+                    ctx.fillText("±0.00 NEUTRO", xZero, padTop - 34);
+                    ctx.restore();
+                }
+            }
+
+            ctx.font = '700 22px "Inter", sans-serif';
+            ctx.fillStyle = "rgba(0, 245, 212, 0.45)";
+            ctx.textAlign = 'center';
+            ctx.fillText('𝄢', padLeft + staveW / 2, padTop - 40);
+
+            const nStations = STATIONS.length;
+            const stepY = staveH / (nStations - 1);
+            const stationCoords = [];
+            STATIONS.forEach((st, idx) => {
+                stationCoords.push({ y: padTop + idx * stepY, st: st });
+            });
+
+            const tetraStartY = stationCoords[2].y - stepY * 0.48;
+            const tetraEndY = stationCoords[5].y + stepY * 0.48;
+            const tetraH = tetraEndY - tetraStartY;
+
+            ctx.fillStyle = "rgba(0, 245, 212, 0.02)";
+            ctx.fillRect(padLeft, tetraStartY, staveW, tetraH);
+
+            ctx.strokeStyle = "rgba(0, 245, 212, 0.25)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padLeft - 4, tetraStartY); ctx.lineTo(padLeft + staveW + 4, tetraStartY);
+            ctx.moveTo(padLeft - 4, tetraEndY); ctx.lineTo(padLeft + staveW + 4, tetraEndY);
+            ctx.stroke();
+
+            stationCoords.forEach(sc => {
+                ctx.strokeStyle = sc.st.isTetra ? "rgba(0, 245, 212, 0.1)" : "rgba(255, 255, 255, 0.035)";
+                ctx.lineWidth = 0.8;
+                ctx.setLineDash([3, 4]);
+                ctx.beginPath();
+                ctx.moveTo(sc.x, padTop - 6);
+                ctx.lineTo(sc.x, padTop + staveH + 6);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            const seriesData = activeSeries.map(tc => {
+                const points = stationCoords.map(sc => {
+                    const val = tc[sc.st.id] !== undefined ? tc[sc.st.id] : 0.0;
+                    const isExtMax = (Math.abs(val - ext.targetMax.val) < 0.001);
+                    const isExtMin = (Math.abs(val - ext.targetMin.val) < 0.001);
+                    return { x: valToX(val), y: sc.y, raw: val, st: sc.st, isExtMax, isExtMin };
+                });
+                return { tc: tc, points: points };
+            });
+
+            if (activePentaVolume === 'on' && seriesData.length === 2) {
+                const pts1 = seriesData[0].points;
+                const pts2 = seriesData[1].points;
+
+                ctx.beginPath();
+                if (activePentaCurve === 'curved') {
+                    drawPentaSpline(ctx, pts1);
+                    const pts2Rev = [...pts2].reverse();
+                    ctx.lineTo(pts2Rev[0].x, pts2Rev[0].y);
+                    drawPentaSpline(ctx, pts2Rev);
+                } else {
+                    pts1.forEach((pt, idx) => {
+                        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                    for (let i = pts2.length - 1; i >= 0; i--) {
+                        ctx.lineTo(pts2[i].x, pts2[i].y);
+                    }
+                }
+                ctx.closePath();
+
+                const colA = seriesData[0].tc.color || '#00FF87';
+                const colB = seriesData[1].tc.color || '#FF007F';
+                const ribbonGrad = ctx.createLinearGradient(padLeft, 0, padLeft + staveW, 0);
+                ribbonGrad.addColorStop(0.0, colA + "33");
+                ribbonGrad.addColorStop(0.5, "rgba(0, 245, 212, 0.12)");
+                ribbonGrad.addColorStop(1.0, colB + "33");
+                ctx.fillStyle = ribbonGrad;
+                ctx.fill();
+
+                // Cuerdas armónicas y vientres impresionistas verticales
+                pts1.forEach((p1, idx) => {
+                    const p2 = pts2[idx];
+                    const delta = Math.abs(p1.raw - p2.raw);
+                    const midX = (p1.x + p2.x) / 2;
+                    const distX = Math.abs(p1.x - p2.x);
+
+                    if (delta >= 0.85) {
+                        ctx.save();
+                        const auraRad = Math.max(18, distX * 0.55);
+                        const auraGrad = ctx.createRadialGradient(midX, p1.y, 2, midX, p1.y, auraRad);
+                        auraGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.18)");
+                        auraGrad.addColorStop(0.4, (idx % 2 === 0 ? colA : colB) + "22");
+                        auraGrad.addColorStop(1.0, "rgba(11, 19, 43, 0.0)");
+                        ctx.fillStyle = auraGrad;
+                        ctx.beginPath();
+                        ctx.arc(midX, p1.y, auraRad, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+
+                    if (delta > 0.25) {
+                        const alphaThread = Math.min(0.32, 0.08 + (delta / 4.0) * 0.22);
+                        ctx.strokeStyle = "rgba(255, 255, 255, " + alphaThread.toFixed(3) + ")";
+                        ctx.lineWidth = 0.9;
+                        ctx.setLineDash([2, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                });
+
+                // Nodos impresionistas de invarianza / consenso (delta <= 0.25)
+                pts1.forEach((p1, idx) => {
+                    const p2 = pts2[idx];
+                    const delta = Math.abs(p1.raw - p2.raw);
+                    if (delta <= 0.25) {
+                        const midX = (p1.x + p2.x) / 2;
+                        ctx.save();
+                        const nodeGrad = ctx.createRadialGradient(midX, p1.y, 1, midX, p1.y, 11);
+                        nodeGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.95)");
+                        nodeGrad.addColorStop(0.35, "rgba(0, 245, 212, 0.65)");
+                        nodeGrad.addColorStop(0.7, "rgba(0, 255, 135, 0.25)");
+                        nodeGrad.addColorStop(1.0, "rgba(0, 245, 212, 0.0)");
+                        ctx.fillStyle = nodeGrad;
+                        ctx.beginPath();
+                        ctx.arc(midX, p1.y, 11, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.beginPath();
+                        ctx.arc(midX, p1.y, 2.8, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.strokeStyle = "#00F5D4";
+                        ctx.lineWidth = 1.1;
+                        ctx.beginPath();
+                        ctx.arc(midX, p1.y, 4.8, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                });
+            }
+
+            // Envoltura volumétrica vertical si hay > 2 series
+            if (activePentaVolume === 'on' && seriesData.length > 2) {
+                const envMax = stationCoords.map((sc, idx) => {
+                    let maxPt = seriesData[0].points[idx];
+                    seriesData.forEach(s => {
+                        if (s.points[idx].x > maxPt.x) maxPt = s.points[idx];
+                    });
+                    return maxPt;
+                });
+                const envMin = stationCoords.map((sc, idx) => {
+                    let minPt = seriesData[0].points[idx];
+                    seriesData.forEach(s => {
+                        if (s.points[idx].x < minPt.x) minPt = s.points[idx];
+                    });
+                    return minPt;
+                });
+
+                ctx.save();
+                ctx.beginPath();
+                if (activePentaCurve === 'curved') {
+                    drawPentaSpline(ctx, envMax);
+                    const envMinRev = [...envMin].reverse();
+                    ctx.lineTo(envMinRev[0].x, envMinRev[0].y);
+                    drawPentaSpline(ctx, envMinRev);
+                } else {
+                    envMax.forEach((pt, idx) => {
+                        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                    for (let i = envMin.length - 1; i >= 0; i--) {
+                        ctx.lineTo(envMin[i].x, envMin[i].y);
+                    }
+                }
+                ctx.closePath();
+                const envGrad = ctx.createLinearGradient(padLeft, 0, padLeft + staveW, 0);
+                envGrad.addColorStop(0.0, "rgba(0, 245, 212, 0.06)");
+                envGrad.addColorStop(1.0, "rgba(255, 0, 127, 0.06)");
+                ctx.fillStyle = envGrad;
+                ctx.fill();
+
+                ctx.strokeStyle = "rgba(0, 245, 212, 0.18)";
+                ctx.lineWidth = 0.8;
+                ctx.setLineDash([3, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.restore();
+            }
+
+            seriesData.forEach(s => {
+                const tc = s.tc;
+                const points = s.points;
+                const col = tc.color || (tc.c === 1 ? '#00FF87' : '#FF007F');
+
+                ctx.save();
+                ctx.shadowColor = col;
+                ctx.shadowBlur = 12;
+                ctx.strokeStyle = col;
+                ctx.lineWidth = (activePentaCurve === 'curved' ? 3.0 : 2.4);
+                ctx.beginPath();
+                if (activePentaCurve === 'curved') drawPentaSpline(ctx, points);
+                else {
+                    points.forEach((pt, pIdx) => {
+                        if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                        else ctx.lineTo(pt.x, pt.y);
+                    });
+                }
+                ctx.stroke();
+                ctx.restore();
+
+                points.forEach(pt => {
+                    ctx.save();
+                    ctx.translate(pt.x, pt.y);
+                    ctx.fillStyle = '#0B132B';
+                    ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.strokeStyle = col;
+                    ctx.lineWidth = 2.2;
+                    ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.stroke();
+
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath(); ctx.arc(0, 0, 2.0, 0, Math.PI * 2); ctx.fill();
+
+                    // Destaque visual si es Máximo o Mínimo del Sistema
+                    if (pt.isExtMax) {
+                        ctx.strokeStyle = "#FFE600";
+                        ctx.lineWidth = 1.6;
+                        ctx.setLineDash([2, 2]);
+                        ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                        ctx.setLineDash([]);
+                    } else if (pt.isExtMin) {
+                        ctx.strokeStyle = "#FF007F";
+                        ctx.lineWidth = 1.6;
+                        ctx.setLineDash([2, 2]);
+                        ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                    ctx.restore();
+
+                    // Badges de Máximo y Mínimo
+                    if (pt.isExtMax) {
+                        ctx.save();
+                        ctx.font = '800 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#FFE600";
+                        ctx.textAlign = 'center';
+                        ctx.fillText("▲ MÁX " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y - (activePentaNumbers === 'show' ? 18 : 11));
+                        ctx.restore();
+                    } else if (pt.isExtMin) {
+                        ctx.save();
+                        ctx.font = '800 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#FF007F";
+                        ctx.textAlign = 'center';
+                        ctx.fillText("▼ MÍN " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y + (activePentaNumbers === 'show' ? 22 : 16));
+                        ctx.restore();
+                    }
+
+                    if (activePentaNumbers === 'show' && seriesData.length <= 2 && !pt.isExtMax && !pt.isExtMin) {
+                        ctx.save();
+                        ctx.font = '700 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = col;
+                        ctx.textAlign = 'center';
+                        ctx.fillText((pt.raw >= 0 ? '+' : '') + pt.raw.toFixed(2), pt.x, pt.y - 10);
+                        ctx.restore();
+                    }
+                });
+            });
+
+            stationCoords.forEach(sc => {
+                const st = sc.st;
+                const xLabel = padLeft - 30;
+                ctx.save();
+                ctx.textAlign = 'right';
+
+                if (activePentaLabels === 'simple') {
+                    const isTetra = st.isTetra;
+                    ctx.fillStyle = isTetra ? "rgba(0, 255, 135, 0.12)" : "rgba(255, 255, 255, 0.05)";
+                    ctx.strokeStyle = isTetra ? "rgba(0, 255, 135, 0.35)" : "rgba(255, 255, 255, 0.15)";
+                    ctx.lineWidth = 1;
+                    const bSize = 22;
+                    ctx.beginPath();
+                    ctx.roundRect(xLabel - bSize, sc.y - bSize / 2, bSize, bSize, 4);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.font = '800 12px "Roboto Mono", monospace';
+                    let col = "#E2E8F0";
+                    if (isTetra) col = "#00FF87";
+                    else if (st.id === "bdr" || st.id === "sdr") col = "#FFE600";
+                    else if (st.id.includes("da")) col = "#38BDF8";
+                    else if (st.id.includes("rc")) col = "#C084FC";
+                    ctx.fillStyle = col;
+                    ctx.fillText(st.simple, xLabel - 6, sc.y + 4);
+
+                    ctx.font = '600 8.5px "Roboto Mono", monospace';
+                    ctx.fillStyle = "#64748B";
+                    ctx.fillText(st.code, xLabel - 28, sc.y + 3);
+                } else {
+                    ctx.font = '700 11px "Roboto Mono", monospace';
+                    ctx.fillStyle = st.isTetra ? "#00FF87" : "#CBD5E1";
+                    ctx.fillText(st.code, xLabel, sc.y + 4);
+                }
+                ctx.restore();
+            });
+
+            ctx.strokeStyle = "rgba(0, 255, 135, 0.35)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(padLeft - 85, tetraStartY);
+            ctx.lineTo(padLeft - 95, tetraStartY);
+            ctx.lineTo(padLeft - 95, tetraEndY);
+            ctx.lineTo(padLeft - 85, tetraEndY);
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(padLeft - 105, (tetraStartY + tetraEndY) / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.font = '700 8.5px "Roboto Mono", monospace';
+            ctx.fillStyle = "#00FF87";
+            ctx.textAlign = 'center';
+            ctx.fillText("COMPÁS TETRAGRAMA (1 ➔ 4)", 0, 0);
+            ctx.restore();
+        }
+
+        // ACTUALIZAR TABLA APARTE DE CANTIDADES CON EXTREMOS
+        updatePentaDataTable(STATIONS, activeSeries, ext);
     }
 
+    function updatePentaDataTable(STATIONS, activeSeries, ext) {
+        const tbody = document.getElementById('penta-data-table-body');
+        const theadTr = document.getElementById('penta-thead-tr') || (tbody ? tbody.parentElement.querySelector('thead tr') : null);
+        const title = document.getElementById('penta-table-title');
+        const thA = document.getElementById('penta-th-col-a');
+        const thB = document.getElementById('penta-th-col-b');
+        if (!tbody || !ext) return;
+
+        const summaryRow = `
+            <tr style="background:rgba(0,245,212,0.06); font-weight:700; border-top:2px solid rgba(0,245,212,0.3);">
+                <td colspan="2"><span style="color:#00F5D4; font-size:0.75rem;">⚖️ RESUMEN DE EXTREMOS DEL SISTEMA (${activePentaScale === 'auto' ? 'Activas' : 'Global'})</span></td>
+                <td colspan="4" style="color:#CBD5E1; font-size:0.75rem;">
+                    Mínimo: <strong style="color:#FF007F; font-family:'Roboto Mono';">${(ext.targetMin.val >= 0 ? '+' : '')}${ext.targetMin.val.toFixed(2)}</strong> (en <em>${ext.targetMin.station.code}</em>) &bull; 
+                    Máximo: <strong style="color:#00FF87; font-family:'Roboto Mono';">${(ext.targetMax.val >= 0 ? '+' : '')}${ext.targetMax.val.toFixed(2)}</strong> (en <em>${ext.targetMax.station.code}</em>) &bull; 
+                    Rango: <strong style="color:#FFE600; font-family:'Roboto Mono';">${(ext.targetMax.val - ext.targetMin.val).toFixed(2)}</strong> &bull; 
+                    Escala: <strong style="color:#00F5D4; font-family:'Roboto Mono';">[${(ext.dMin >= 0 ? '+' : '')}${ext.dMin.toFixed(1)} ➔ ${(ext.dMax >= 0 ? '+' : '')}${ext.dMax.toFixed(1)}]</strong>
+                </td>
+            </tr>
+        `;
+
+        if (activeSeries.length === 2) {
+            const s1 = activeSeries[0];
+            const s2 = activeSeries[1];
+
+            if (title) {
+                if (activePentaCompareMode === 'temporadas') {
+                    title.textContent = `📊 Tabla de Cantidades: Evolución Temporal (${s1.label} vs ${s2.label})`;
+                } else if (activePentaCompareMode === 'intergrupal') {
+                    title.textContent = `📊 Tabla de Cantidades: Comparativa Intergrupal (${s1.label} vs ${s2.label})`;
+                } else {
+                    title.textContent = `📊 Tabla de Cantidades y Balance Diádico (${s1.label} vs ${s2.label})`;
+                }
+            }
+
+            if (theadTr) {
+                theadTr.innerHTML = `
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Estación</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Concepto Socio-Termodinámico SMIb</th>
+                    <th id="penta-th-col-a" style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2); color:${s1.color};">${s1.label}</th>
+                    <th id="penta-th-col-b" style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2); color:${s2.color};">${s2.label}</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Brecha Δ (|A - B|)</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Diagnóstico Diferencial</th>
+                `;
+            }
+
+            tbody.innerHTML = STATIONS.map(st => {
+                const v1 = s1[st.id] !== undefined ? s1[st.id] : 0.0;
+                const v2 = s2[st.id] !== undefined ? s2[st.id] : 0.0;
+                const delta = Math.abs(v1 - v2);
+                const netDelta = v1 - v2;
+
+                const isV1Max = (Math.abs(v1 - ext.targetMax.val) < 0.001);
+                const isV1Min = (Math.abs(v1 - ext.targetMin.val) < 0.001);
+                const isV2Max = (Math.abs(v2 - ext.targetMax.val) < 0.001);
+                const isV2Min = (Math.abs(v2 - ext.targetMin.val) < 0.001);
+
+                let tag1 = isV1Max ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isV1Min ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+                let tag2 = isV2Max ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isV2Min ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+
+                let diag = "";
+                if (activePentaCompareMode === 'temporadas') {
+                    if (st.id === "bda") diag = (netDelta < 0.1 ? "Masa de emisión estabilizada en el tiempo." : "Aumento en masa de emisión.");
+                    else if (st.id === "sda") diag = (v2 > v1 ? "Maduración: mayor balance emisor constructivo." : "Desgaste de emisión.");
+                    else if (st.id === "a1") diag = (v2 > v1 ? "Evolución empática: expectativa más abierta." : "Fijación de expectativas.");
+                    else if (st.id === "a2") diag = (v2 > v1 ? "Preferencia diádica consolidada en T4." : "Reserva en emisión directa.");
+                    else if (st.id === "a3") diag = (v2 > v1 ? "Mayor soporte y aceptación grupal recibida." : "Aceptación recibida madura.");
+                    else if (st.id === "a4") diag = (v2 > v1 ? "Sintonía metaperceptiva lograda en T4." : "Expectativa atribuida calibrada.");
+                    else if (st.id === "src") diag = (v2 > v1 ? "Crecimiento del soporte mutuo recibido." : "Balance de recepción estable.");
+                    else if (st.id === "brc") diag = "Masa de recepción integrada.";
+                    else if (st.id === "sdr") diag = (v2 > v1 ? "Cierre de brecha relacional sistémica." : "Deriva de cohesión.");
+                    else if (st.id === "bdr") diag = "Masa invariable total blindada (Canón BDR).";
+                } else if (activePentaCompareMode === 'intergrupal') {
+                    if (st.id === "sda") diag = (v1 > v2 ? "G1 manifiesta apertura; G2 presenta resistencia sistemática." : "G2 con mayor balance.");
+                    else if (st.id.includes("a")) diag = (v1 > v2 ? "G1 con alta conexión diádica; G2 polarizado o reprimido." : "Diferencia diádica.");
+                    else if (st.id === "sdr") diag = (v1 > v2 ? "G1 significativamente más cohesivo que G2." : "G2 con mayor cohesión.");
+                    else diag = "Contraste estructural de densidad de red.";
+                } else {
+                    if (st.id === "sda") diag = (v1 > 0 ? "Emisión neta positiva." : "Resistencia/rechazo.");
+                    else if (st.id.includes("a")) diag = (netDelta > 0 ? "Prevalencia de soporte afectivo." : "Tensión latente.");
+                    else if (st.id === "bdr") diag = "Masa invariable total blindada (Canón BDR).";
+                    else diag = "Balance vincular interno.";
+                }
+
+                const barW = Math.min(38, delta * 14);
+                const colA = s1.color || '#00FF87';
+                const colB = s2.color || '#FF007F';
+                const barCol = (netDelta >= 0) ? colA : colB;
+
+                return `
+                    <tr>
+                        <td>
+                            <span style="font-family:'Roboto Mono'; font-weight:700; background:rgba(0,245,212,0.15); color:#00FF87; padding:2px 6px; border-radius:4px; margin-right:6px;">${st.simple}</span>
+                            <strong>${st.code}</strong>
+                        </td>
+                        <td style="color:#94A3B8;">${st.name} &bull; <span style="font-size:0.7rem;">${st.desc}</span></td>
+                        <td style="font-family:'Roboto Mono'; font-weight:700; color:${colA};">${(v1 >= 0 ? '+' : '') + v1.toFixed(2)} ${tag1}</td>
+                        <td style="font-family:'Roboto Mono'; font-weight:700; color:${colB};">${(v2 >= 0 ? '+' : '') + v2.toFixed(2)} ${tag2}</td>
+                        <td>
+                            <span style="display:inline-block; height:6px; border-radius:3px; vertical-align:middle; width:${barW}px; background:${barCol}; margin-right:6px;"></span>
+                            <strong style="font-family:'Roboto Mono'; color:${barCol};">${(netDelta >= 0 ? '+' : '')}${netDelta.toFixed(2)}</strong>
+                        </td>
+                        <td style="font-size:0.72rem; color:#CBD5E1;">${diag}</td>
+                    </tr>
+                `;
+            }).join('') + summaryRow;
+
+        } else if (activeSeries.length === 1) {
+            const s1 = activeSeries[0];
+            if (title) title.textContent = `📊 Tabla de Cantidades: Perfil Individual (${s1.label})`;
+
+            if (theadTr) {
+                theadTr.innerHTML = `
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Estación</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Concepto Socio-Termodinámico SMIb</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2); color:${s1.color};">${s1.label}</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Rango Normativo</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Significado Socio-Termodinámico</th>
+                `;
+            }
+
+            tbody.innerHTML = STATIONS.map(st => {
+                const v1 = s1[st.id] !== undefined ? s1[st.id] : 0.0;
+                let status = (v1 > 0 ? "Favorable (+)" : (v1 < 0 ? "Tensión (-)" : "Neutro (0)"));
+                if (st.id === "bdr") status = "Invariante Universal (Blindado)";
+
+                const isV1Max = (Math.abs(v1 - ext.targetMax.val) < 0.001);
+                const isV1Min = (Math.abs(v1 - ext.targetMin.val) < 0.001);
+                let tag1 = isV1Max ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isV1Min ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+
+                return `
+                    <tr>
+                        <td>
+                            <span style="font-family:'Roboto Mono'; font-weight:700; background:rgba(0,245,212,0.15); color:#00FF87; padding:2px 6px; border-radius:4px; margin-right:6px;">${st.simple}</span>
+                            <strong>${st.code}</strong>
+                        </td>
+                        <td style="color:#94A3B8;">${st.name} &bull; <span style="font-size:0.7rem;">${st.desc}</span></td>
+                        <td style="font-family:'Roboto Mono'; font-weight:700; color:${s1.color}; font-size:0.88rem;">${(v1 >= 0 ? '+' : '') + v1.toFixed(2)} ${tag1}</td>
+                        <td style="font-family:'Roboto Mono'; font-size:0.72rem; color:#94A3B8;">[${(ext.dMin >= 0 ? '+' : '')}${ext.dMin.toFixed(1)}, ${(ext.dMax >= 0 ? '+' : '')}${ext.dMax.toFixed(1)}]</td>
+                        <td style="font-size:0.75rem; color:#00FF87;">${status}</td>
+                    </tr>
+                `;
+            }).join('') + summaryRow;
+
+        } else {
+            // >= 3 SERIES: MATRIZ MULTI-PERFIL POLIFÓNICA
+            if (title) title.textContent = `📊 Matriz Multi-Perfil Polifónica (${activeSeries.length} Perfiles Superpuestos)`;
+
+            let thCols = activeSeries.map(s => `<th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2); color:${s.color}; font-size:0.7rem;">${s.id || s.label}</th>`).join("");
+            if (theadTr) {
+                theadTr.innerHTML = `
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Estación</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Concepto SMIb</th>
+                    ${thCols}
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2); color:#FFE600;">Rango Δ (Máx - Mín)</th>
+                    <th style="padding:8px 10px; border-bottom:1px solid rgba(0,245,212,0.2);">Dispersión</th>
+                `;
+            }
+
+            tbody.innerHTML = STATIONS.map(st => {
+                const vals = activeSeries.map(s => (s[st.id] !== undefined ? s[st.id] : 0.0));
+                const minVal = Math.min(...vals);
+                const maxVal = Math.max(...vals);
+                const rangeDelta = maxVal - minVal;
+
+                const valCells = activeSeries.map((s, idx) => {
+                    const v = vals[idx];
+                    const isMax = (v === maxVal && rangeDelta > 0.3);
+                    const isGlobalMax = (Math.abs(v - ext.targetMax.val) < 0.001);
+                    const isGlobalMin = (Math.abs(v - ext.targetMin.val) < 0.001);
+                    let tag = isGlobalMax ? '<span class="badge-ext-tag badge-ext-max">▲</span>' : (isGlobalMin ? '<span class="badge-ext-tag badge-ext-min">▼</span>' : '');
+                    return `<td style="font-family:'Roboto Mono'; font-weight:700; color:${s.color}; ${isMax ? 'text-decoration:underline;' : ''}">${(v >= 0 ? '+' : '') + v.toFixed(2)} ${tag}</td>`;
+                }).join("");
+
+                const barW = Math.min(45, rangeDelta * 12);
+                return `
+                    <tr>
+                        <td>
+                            <span style="font-family:'Roboto Mono'; font-weight:700; background:rgba(0,245,212,0.15); color:#00FF87; padding:2px 6px; border-radius:4px; margin-right:6px;">${st.simple}</span>
+                            <strong>${st.code}</strong>
+                        </td>
+                        <td style="color:#94A3B8;">${st.name} &bull; <span style="font-size:0.7rem;">${st.desc}</span></td>
+                        ${valCells}
+                        <td>
+                            <span style="display:inline-block; height:6px; border-radius:3px; vertical-align:middle; width:${barW}px; background:#FFE600; margin-right:6px;"></span>
+                            <strong style="font-family:'Roboto Mono'; color:#FFE600;">${rangeDelta.toFixed(2)}</strong>
+                        </td>
+                        <td style="font-size:0.72rem; color:#94A3B8;">${st.id === 'bdr' ? 'Invariante' : (rangeDelta > 1.2 ? 'Alta Dispersión' : 'Acuerdo Moderado')}</td>
+                    </tr>
+                `;
+            }).join("") + summaryRow;
+        }
+    }
     // Render de la Matriz de Inter-Proximidad (Cornejo & Euclídea)
     function renderProximityMatrix() {
         const container = document.getElementById('proximity-matrix-container');
@@ -1624,6 +2540,8 @@
             if (vPca) vPca.classList.add('hidden');
             if (vMulti) vMulti.classList.add('hidden');
         } else if (viewMode === 'pca') {
+            const hub = document.getElementById('cultural-hub-screen');
+            if (hub) hub.classList.add('hidden');
             if (c3d) c3d.style.display = 'none';
             if (pLeft) pLeft.style.display = 'none';
             if (pRight) pRight.style.display = 'none';
@@ -1638,6 +2556,8 @@
                 initPCASynthesisCanvas(canvas, activePCAWorkKey);
             }
         } else if (viewMode === 'multidim') {
+            const hub = document.getElementById('cultural-hub-screen');
+            if (hub) hub.classList.add('hidden');
             if (c3d) c3d.style.display = 'none';
             if (pLeft) pLeft.style.display = 'none';
             if (pRight) pRight.style.display = 'none';
@@ -2533,6 +3453,36 @@
             document.querySelectorAll('.btn-penta-scale').forEach(b => b.classList.toggle('active', b.dataset.scale === scale));
             renderDensitiesChart();
         },
+        setPentaCompareMode: function(m) {
+            activePentaCompareMode = m;
+            document.querySelectorAll('.btn-penta-compare').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+            renderDensitiesChart();
+        },
+        setPentaVolume: function(v) {
+            activePentaVolume = v;
+            document.querySelectorAll('.btn-penta-volume').forEach(b => b.classList.toggle('active', b.dataset.volume === v));
+            renderDensitiesChart();
+        },
+        setPentaOrient: function(o) {
+            activePentaOrient = o;
+            document.querySelectorAll('.btn-penta-orient').forEach(b => b.classList.toggle('active', b.dataset.orient === o));
+            renderDensitiesChart();
+        },
+        setPentaCurve: function(c) {
+            activePentaCurve = c;
+            document.querySelectorAll('.btn-penta-curve').forEach(b => b.classList.toggle('active', b.dataset.curve === c));
+            renderDensitiesChart();
+        },
+        setPentaLabels: function(l) {
+            activePentaLabels = l;
+            document.querySelectorAll('.btn-penta-labels').forEach(b => b.classList.toggle('active', b.dataset.labels === l));
+            renderDensitiesChart();
+        },
+        setPentaNumbers: function(n) {
+            activePentaNumbers = n;
+            document.querySelectorAll('.btn-penta-numbers').forEach(b => b.classList.toggle('active', b.dataset.numbers === n));
+            renderDensitiesChart();
+        },
 
         init: function() {
             // Inicialización de selectores y botones
@@ -2552,6 +3502,42 @@
                 b.addEventListener('click', (e) => {
                     const sc = e.currentTarget.dataset.scale;
                     window.CulturalSynthesisEngine.setPentaScale(sc);
+                });
+            });
+            document.querySelectorAll('.btn-penta-compare').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const m = e.currentTarget.dataset.mode;
+                    window.CulturalSynthesisEngine.setPentaCompareMode(m);
+                });
+            });
+            document.querySelectorAll('.btn-penta-orient').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const o = e.currentTarget.dataset.orient;
+                    window.CulturalSynthesisEngine.setPentaOrient(o);
+                });
+            });
+            document.querySelectorAll('.btn-penta-curve').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const c = e.currentTarget.dataset.curve;
+                    window.CulturalSynthesisEngine.setPentaCurve(c);
+                });
+            });
+            document.querySelectorAll('.btn-penta-labels').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const l = e.currentTarget.dataset.labels;
+                    window.CulturalSynthesisEngine.setPentaLabels(l);
+                });
+            });
+            document.querySelectorAll('.btn-penta-numbers').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const n = e.currentTarget.dataset.numbers;
+                    window.CulturalSynthesisEngine.setPentaNumbers(n);
+                });
+            });
+            document.querySelectorAll('.btn-penta-volume').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    const v = e.currentTarget.dataset.volume;
+                    window.CulturalSynthesisEngine.setPentaVolume(v);
                 });
             });
             document.querySelectorAll('.btn-view-mode').forEach(b => {
