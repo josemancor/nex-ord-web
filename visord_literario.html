@@ -244,8 +244,46 @@
             color: #FFE600;
         }
         .synopsis-box-card.collapsed .synopsis-body,
-        .synopsis-box-card.collapsed .synopsis-key {
+        .synopsis-box-card.collapsed .synopsis-key,
+        .synopsis-box-card.collapsed #display-synopsis-extra {
             display: none;
+        }
+        .synopsis-notice {
+            font-size: 0.71rem;
+            line-height: 1.45;
+            background: rgba(255, 159, 28, 0.12);
+            border: 1px solid rgba(255, 159, 28, 0.4);
+            border-left: 3px solid #FF9F1C;
+            border-radius: 6px;
+            padding: 7px 9px;
+            color: #FBD38D;
+        }
+        .synopsis-notice strong {
+            color: #FFA94D;
+        }
+        .btn-download-corpus {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 6px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 135, 0.2), rgba(56, 189, 248, 0.25));
+            border: 1px solid #00FF87;
+            color: #00FF87;
+            font-weight: 700;
+            font-size: 0.72rem;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .btn-download-corpus:hover {
+            background: #00FF87;
+            color: #080D1A;
+            box-shadow: 0 0 12px rgba(0, 255, 135, 0.4);
         }
         .panel-heading {
             font-size: 0.80rem;
@@ -880,7 +918,7 @@
             <button class="btn-work" data-work="lorca">🎭 Bernarda Alba (Lorca)</button>
             <button class="btn-work" data-work="moscas">🪰 El Señor de las Moscas (Golding)</button>
             <button class="btn-work" data-work="la_ola">🌊 La Ola (Gansel)</button>
-            <button class="btn-work" data-work="clara">🌿 Grupo de Clara (N=9)</button>
+            <button class="btn-work" data-work="clara" title="Simulación Didáctica y Clínica de T-Group / Grupo Terapéutico (N=9)">🌿 Grupo de Clara (Simulación T-Group N=9)</button>
         </div>
 
         <!-- Enlaces Rápidos -->
@@ -914,6 +952,7 @@
             <div class="synopsis-key" id="display-synopsis-key">
                 ⚡ <strong>Clave Socio-Termodinámica:</strong> Cargando clave relacional...
             </div>
+            <div id="display-synopsis-extra"></div>
         </div>
 
         <div class="panel-heading">
@@ -1076,7 +1115,7 @@
             <p>&bull; <em>La Casa de Bernarda Alba</em>: El confinamiento del luto genera una presión adiabática donde el vector repulsivo de Bernarda precipita la fractura y suicidio de Adela.</p>
             <p>&bull; <em>El Señor de las Moscas</em>: Transición de fase desde la cohesión democrática inicial hacia la barbarie tribal hiper-polarizada.</p>
             <p>&bull; <em>La Ola</em>: Sincronización coercitiva y anulación de la disidencia individual bajo un campo atractor autocrático unificado.</p>
-            <p>&bull; <em>Grupo Terapéutico de Clara</em>: Evolución socio-termodinámica en comunidad terapéutica; desarticulación de triangulaciones, superación de la disonancia de tele y emergencia de la autonomía en la asamblea colectiva (GRP).</p>
+            <p>&bull; <em>Grupo Terapéutico de Clara (Simulación Didáctica)</em>: Modelo docente y clínico de laboratorio sobre dinámicas grupales (T-Groups, psicoterapia de grupo y grupos de discusión); <strong>no corresponde a pacientes reales</strong>. Desarticulación de triangulaciones, superación de la disonancia de tele y emergencia de la autonomía en la asamblea colectiva (GRP). Incluye descarga directa del corpus completo de diálogos para investigación pedagógica y metodológica.</p>
             <button class="btn-close-modal" id="btn-close-nota">Cerrar</button>
         </div>
     </div>
@@ -1180,9 +1219,10 @@
             }
 ,
             "clara": {
-                title: "Grupo Terapéutico de Clara",
-                author: "Dramaturgia Psicoterapéutica • Gr(4, 9)",
-                synopsis: "Comunidad terapéutica cerrada de 9 miembros (8 pacientes en tratamiento de adicciones y el Organismo Colectivo GRP). A través de 4 sesiones longitudinales (Apertura, Confrontación, Desarme y Cierre), las máscaras defensivas y triangulaciones conyugales dan paso a la vulnerabilidad auténtica y la autonomía relacional.",
+                title: "Grupo Terapéutico de Clara (Simulación)",
+                author: "Simulación Didáctica Clínica • Gr(4, 9) • (No Pacientes Reales)",
+                synopsis: "Simulación pedagógica y clínica de un T-Group / comunidad terapéutica de 9 miembros (8 perfiles clínicos arquetípicos y el Organismo Colectivo GRP). A través de 4 sesiones longitudinales (Apertura, Confrontación, Desarme y Cierre), modela matemáticamente el desmantelamiento de triangulaciones defensivas y la conquista de la autonomía grupal. Se aporta como benchmark demostrador para el análisis socio-termodinámico de sesiones grupales y grupos de discusión.",
+                deontologicalNotice: true,
                 criteriaLabels: { 1: "C1: Apoyo Emocional (E)", 2: "C2: Tensión / Fricción (R)" },
                 times: [
                     { id: 1, label: "Sesión 1: Apertura", tag: "Defensas y Contención Inicial" },
@@ -1314,6 +1354,22 @@
             document.getElementById('display-title').textContent = wConf.title;
             document.getElementById('display-author').textContent = wConf.author;
             document.getElementById('display-synopsis').textContent = wConf.synopsis;
+
+            const extraEl = document.getElementById('display-synopsis-extra');
+            if (extraEl) {
+                if (workKey === 'clara' || wConf.deontologicalNotice) {
+                    extraEl.innerHTML = `
+                        <div class="synopsis-notice">
+                            ⚠️ <strong>Aviso Deontológico &amp; Metodológico:</strong> Este estudio <strong>NO corresponde a pacientes reales ni a personas vivas</strong>. Se trata de una <strong>simulación didáctica y clínica de laboratorio</strong> para modelar sesiones grupales (T-Groups, psicoterapia de grupo o grupos de discusión).
+                            <a href="assets/DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" download="01_DIALOGOS_GRUPO_TERAPEUTICO_CLARA_SIMULACION.txt" class="btn-download-corpus" title="Descargar texto completo de los diálogos de las 4 sesiones">
+                                📥 Descargar Diálogos Completos (.txt)
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    extraEl.innerHTML = '';
+                }
+            }
 
             // Actualizar Botones de Criterio dinámicos
             if (wConf.criteriaLabels) {
