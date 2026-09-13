@@ -1660,6 +1660,13 @@
         <span style="color:var(--neon-purple);">🔭 TELESCOPIO DE LA RED</span>
       </div>
 
+      <div style="margin: 8px 0 16px 0;">
+        <button class="flow-nav-btn flow-nav-btn-next" onclick="scrollToScreen('pantalla-5a')" style="padding:12px 32px; font-size:1.05rem; font-weight:900; border-radius:30px; background:linear-gradient(135deg, #00FF87, #38BDF8); color:#030308; border:none; box-shadow:0 0 30px rgba(0,255,135,0.55); cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:transform 0.2s ease;">
+          <span>⚡ ENTRAR AL NIVEL 5 (Paso 5a: Datos Previos)</span>
+          <span style="font-size:1.2rem;">↓</span>
+        </button>
+      </div>
+
       <h3 class="hero-tagline">Ver y oír lo imperceptible: fundamentos algebraicos de diagnósticos comprobables.</h3>
 
       <p class="hero-desc" style="margin-bottom:12px;">
@@ -2738,32 +2745,65 @@
 
   <!-- JAVASCRIPT DINÁMICO DEL NIVEL 5 -->
   <script>
-    /* 1. NAVEGACIÓN ENTRE PANTALLAS */
+    /* 1. NAVEGACIÓN ROBUSTA ENTRE PANTALLAS (CANÓNICA) */
     function scrollToScreen(id) {
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) {
+        const headerOffset = 64;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
 
     const screens = ['pantalla-5-caratula', 'pantalla-5a', 'pantalla-5b', 'pantalla-5c', 'pantalla-5d', 'pantalla-5e'];
-    const stepPillMap = {
-      'pantalla-5-caratula': 'pill-step-caratula',
-      'pantalla-5a': 'pill-step-5a',
-      'pantalla-5b': 'pill-step-5b',
-      'pantalla-5c': 'pill-step-5c',
-      'pantalla-5d': 'pill-step-5d',
-      'pantalla-5e': 'pill-step-5e'
-    };
-    const dockBtnMap = {
-      'pantalla-5-caratula': 'dock-caratula',
-      'pantalla-5a': 'dock-5a',
-      'pantalla-5b': 'dock-5b',
-      'pantalla-5c': 'dock-5c',
-      'pantalla-5d': 'dock-5d',
-      'pantalla-5e': 'dock-5e'
+    const hudBtnMap = {
+      'pantalla-5a': 'hud-btn-5a',
+      'pantalla-5b': 'hud-btn-5b',
+      'pantalla-5c': 'hud-btn-5c',
+      'pantalla-5d': 'hud-btn-5d',
+      'pantalla-5e': 'hud-btn-5e'
     };
 
+    function navigateStep(direction) {
+      const currentScroll = window.scrollY;
+      let currentIndex = 0;
+      let minDiff = Infinity;
+      screens.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) {
+          const diff = Math.abs(el.offsetTop - 64 - currentScroll);
+          if (diff < minDiff) {
+            minDiff = diff;
+            currentIndex = idx;
+          }
+        }
+      });
+      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIndex + direction));
+      scrollToScreen(screens[targetIndex]);
+    }
+
+    function handleSalirPlatform() {
+      if (confirm('¿Desea salir de la Plataforma NEXORD y regresar a la Portada Principal?')) {
+        window.location.href = 'index.html';
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        navigateStep(1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        navigateStep(-1);
+      }
+    });
+
     window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY + 200;
+      const scrollPos = window.scrollY + 220;
       let currentScreen = screens[0];
 
       screens.forEach((id) => {
@@ -2773,15 +2813,10 @@
         }
       });
 
-      // Actualizar dock flotante
-      document.querySelectorAll('.nav-dock-btn').forEach(b => b.classList.remove('active'));
-      const activeDockBtn = document.getElementById(dockBtnMap[currentScreen]);
-      if (activeDockBtn) activeDockBtn.classList.add('active');
-
-      // Actualizar píldoras superiores: 5, 5a, 5b, 5c, 5d, 5e, 5f
-      document.querySelectorAll('.top-level-num').forEach(p => p.classList.remove('active'));
-      const activePill = document.getElementById(stepPillMap[currentScreen]);
-      if (activePill) activePill.classList.add('active');
+      // Actualizar botones activos del HUD superior
+      document.querySelectorAll('.hud-part-btn').forEach(b => b.classList.remove('active'));
+      const activeHudBtn = document.getElementById(hudBtnMap[currentScreen]);
+      if (activeHudBtn) activeHudBtn.classList.add('active');
     });
 
     /* 2. CONMUTADOR DE MATRICES BREVE / MORENO (PANTALLA 4a) */
