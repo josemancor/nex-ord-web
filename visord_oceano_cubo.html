@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VISORD • Cubo Socio-Oceánico 3D (Densidad Relacional)</title>
+    <title>VISORD • Cubo Socio-Oceánico 3D (Densidad Relacional & Olas Temporales)</title>
     <!-- Three.js & OrbitControls -->
     <script src="lib/three.min.js"></script>
     <script src="lib/OrbitControls.js"></script>
@@ -166,7 +166,7 @@
             top: 80px;
             left: 20px;
             width: 350px;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 150px);
             background: rgba(11, 19, 43, 0.88);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 229, 255, 0.25);
@@ -220,6 +220,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 6px;
+        }
+        .btn-grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 4px;
         }
         .btn-toggle {
             background: rgba(255, 255, 255, 0.04);
@@ -404,7 +409,110 @@
             box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
         }
 
-        /* 📋 5. INSPECTOR HUD FLOTANTE DE CELDA (INTERACTIVO AL PASAR EL RATÓN) */
+        /* 🎬 5. BARRA FLOTANTE DE MOVIOLA: OLAS TEMPORALES (T1 - T4) */
+        .timeline-floating-bar {
+            position: absolute;
+            bottom: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(11, 19, 43, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            border-radius: 35px;
+            padding: 8px 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 80;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 229, 255, 0.18);
+        }
+        .btn-play-waves {
+            background: linear-gradient(135deg, #00E5FF, #0284C7);
+            border: none;
+            color: #030712;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        .btn-play-waves:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
+        }
+        .btn-play-waves.playing {
+            background: linear-gradient(135deg, #EC4899, #F43F5E);
+            color: #FFFFFF;
+            box-shadow: 0 0 16px rgba(236, 72, 153, 0.6);
+        }
+
+        .timeline-steps {
+            display: flex;
+            gap: 6px;
+        }
+        .btn-t-step {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94A3B8;
+            width: 34px;
+            height: 32px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-t-step:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+        }
+        .btn-t-step.active {
+            background: rgba(0, 229, 255, 0.2);
+            border-color: #00E5FF;
+            color: #00E5FF;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+        }
+
+        .timeline-slider-box {
+            display: flex;
+            flex-direction: column;
+            width: 220px;
+        }
+        .timeline-slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: #94A3B8;
+            margin-bottom: 2px;
+        }
+        .timeline-slider-label span.t-val {
+            color: #00E5FF;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+        }
+
+        .timeline-phase-desc {
+            font-size: 0.74rem;
+            color: #E2E8F0;
+            font-weight: 700;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 12px;
+            min-width: 210px;
+            text-align: center;
+        }
+
+        /* 📋 6. INSPECTOR HUD FLOTANTE DE CELDA (INTERACTIVO AL PASAR EL RATÓN) */
         .hud-inspector {
             position: absolute;
             bottom: 60px;
@@ -488,7 +596,7 @@
             font-weight: 800;
         }
 
-        /* 💡 6. NOTA EXPLICATIVA PEDAGÓGICA (REGLA 10 OBLIGATORIA) */
+        /* 💡 7. NOTA EXPLICATIVA PEDAGÓGICA (REGLA 10 OBLIGATORIA) */
         .pedagogic-bar {
             position: absolute;
             bottom: 0;
@@ -507,7 +615,7 @@
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .pedagogic-bar.expanded {
-            height: 195px;
+            height: 210px;
             align-items: flex-start;
             padding-top: 14px;
         }
@@ -584,8 +692,8 @@
                 <line x1="10" y1="50" x2="90" y2="50" stroke="#00F5D4" stroke-width="1.5"/>
             </svg>
             <div class="brand-titles">
-                <div class="brand-main">VISORD <span>CUBO OCEÁNICO 3D</span> <span class="brand-badge">Pintura Zen 3D</span></div>
-                <div class="brand-sub">EXPLORADOR SOCIO-TERMODINÁMICO DE DENSIDADES RELACIONALES</div>
+                <div class="brand-main">VISORD <span>CUBO OCEÁNICO 3D</span> <span class="brand-badge">Olas Temporales 4D</span></div>
+                <div class="brand-sub">EXPLORADOR SOCIO-TERMODINÁMICO DE DENSIDADES & MOVIOLA TEMPORAL</div>
             </div>
         </div>
 
@@ -628,9 +736,32 @@
         <button class="btn-cam" id="cam-rotate" title="Rotación continua 360º">🔄 Auto-Giro 360º</button>
     </div>
 
-    <!-- 4. Panel Lateral de Controles -->
+    <!-- 4. Barra Flotante de Olas Temporales (Moviola 4D) -->
+    <div class="timeline-floating-bar" id="timeline-bar">
+        <button class="btn-play-waves" id="btn-play-waves" title="Iniciar/Pausar Olas Temporales">
+            <span id="play-icon">▶</span> <span id="play-text">Olas Vivas</span>
+        </button>
+        <div class="timeline-steps">
+            <button class="btn-t-step active" data-t="1">T1</button>
+            <button class="btn-t-step" data-t="2">T2</button>
+            <button class="btn-t-step" data-t="3">T3</button>
+            <button class="btn-t-step" data-t="4">T4</button>
+        </div>
+        <div class="timeline-slider-box">
+            <div class="timeline-slider-label">
+                <span>Tiempo de Ola:</span>
+                <span class="t-val" id="val-t-time">T1.00</span>
+            </div>
+            <input type="range" id="slider-t-time" min="1.00" max="4.00" step="0.01" value="1.00">
+        </div>
+        <div class="timeline-phase-desc" id="timeline-phase-desc">
+            🌊 T1: Génesis Diádica & Encuentro
+        </div>
+    </div>
+
+    <!-- 5. Panel Lateral de Controles -->
     <aside class="controls-panel">
-        <!-- 4.1 Escenario Base -->
+        <!-- 5.1 Escenario Base -->
         <div class="panel-section">
             <div class="section-title">
                 <span>1. Escenario Base</span>
@@ -648,7 +779,7 @@
             </div>
         </div>
 
-        <!-- 4.2 Geometría Cilíndrica & Esbeltez (Estética Japonesa) -->
+        <!-- 5.2 Geometría Cilíndrica & Esbeltez (Estética Japonesa) -->
         <div class="panel-section">
             <div class="section-title">
                 <span>2. Geometría & Esbeltez</span>
@@ -732,10 +863,36 @@
             </div>
         </div>
 
-        <!-- 4.3 Combinaciones Radiactivas de Densidad -->
+        <!-- 5.3 Moviola & Oleaje Tumultuoso -->
         <div class="panel-section">
             <div class="section-title">
-                <span>3. Combinaciones Radiactivas</span>
+                <span>3. Oleaje & Dinámica Temporal</span>
+                <span class="badge-count" id="badge-wave">T1 Vivo</span>
+            </div>
+
+            <!-- Turbulencia del Oleaje -->
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>🌪️ Oleaje Tumultuoso (Agitación):</span>
+                    <span class="val" id="val-wave-turb">0.45x</span>
+                </div>
+                <input type="range" id="slider-wave-turb" min="0.05" max="1.50" step="0.05" value="0.45">
+            </div>
+
+            <!-- Velocidad de Ola -->
+            <div class="slider-group" style="margin-top: 10px;">
+                <div class="slider-label">
+                    <span>⏱️ Velocidad de Transición:</span>
+                    <span class="val" id="val-wave-speed">1.0x</span>
+                </div>
+                <input type="range" id="slider-wave-speed" min="0.2" max="3.0" step="0.1" value="1.0">
+            </div>
+        </div>
+
+        <!-- 5.4 Combinaciones Radiactivas de Densidad -->
+        <div class="panel-section">
+            <div class="section-title">
+                <span>4. Combinaciones Radiactivas</span>
                 <span class="badge-count">Termodinámica</span>
             </div>
             <div class="mode-row">
@@ -796,10 +953,10 @@
             </div>
         </div>
 
-        <!-- 4.4 Situaciones Especiales & Moduladores Socio-Físicos -->
+        <!-- 5.5 Situaciones Especiales & Moduladores Socio-Físicos -->
         <div class="panel-section">
             <div class="section-title">
-                <span>4. Moduladores Socio-Físicos</span>
+                <span>5. Moduladores Socio-Físicos</span>
                 <span class="badge-count">Especiales</span>
             </div>
 
@@ -838,10 +995,10 @@
             </div>
         </div>
 
-        <!-- 4.5 Configuración de Sujetos N -->
+        <!-- 5.6 Configuración de Sujetos N -->
         <div class="panel-section">
             <div class="section-title">
-                <span>5. Dimensión Grupal N</span>
+                <span>6. Dimensión Grupal N</span>
                 <span class="badge-count" id="badge-n">N = 5</span>
             </div>
             <div class="btn-grid-3">
@@ -852,7 +1009,7 @@
         </div>
     </aside>
 
-    <!-- 5. Inspector HUD Lateral (Flotante Abajo Derecha) -->
+    <!-- 6. Inspector HUD Lateral (Flotante Abajo Derecha) -->
     <div class="hud-inspector" id="hud-card">
         <div class="hud-header">
             <div class="hud-title" id="hud-pair">CELDA (1A1a → 2A1a)</div>
@@ -899,25 +1056,25 @@
         </div>
     </div>
 
-    <!-- 6. Tooltip Flotante 3D -->
+    <!-- 7. Tooltip Flotante 3D -->
     <div id="tooltip3d">Celda</div>
 
-    <!-- 7. Lienzo 3D Three.js -->
+    <!-- 8. Lienzo 3D Three.js -->
     <div id="canvas-container"></div>
 
-    <!-- 8. Nota Explicativa Pedagógica Canónica (Regla 10) -->
+    <!-- 9. Nota Explicativa Pedagógica Canónica (Regla 10) -->
     <footer class="pedagogic-bar" id="pedagogic-footer">
         <div class="pedagogic-left">
             <span class="pedagogic-icon">💡</span>
             <div>
-                <div class="pedagogic-title">Nota Explicativa Pedagógica • Estratificación Socio-Termodinámica del Cubo Relacional</div>
-                <div class="pedagogic-summary">Haga clic para desplegar la guía de interpretación del Cielo Abierto, Línea de Flotación y Mar Profundo...</div>
+                <div class="pedagogic-title">Nota Explicativa Pedagógica • Olas Temporales (T1..T4) y Dinámica Socio-Oceánica</div>
+                <div class="pedagogic-summary">Haga clic para desplegar la guía de interpretación del oleaje temporal y los tres estratos...</div>
                 <div class="pedagogic-content">
-                    En el <strong>Cubo Socio-Oceánico 3D</strong>, la 3ª dimensión vertical representa la <strong>Densidad Relacional</strong> sin barreras artificiales de contención, diseñada bajo la estética nítida y pura del arte contemplativo (vacío fértil <em>Ma</em>, esbeltez cilíndrica, canales de agua libre entre sujetos y pedestales zen).
-                    <br>• <strong>Cielo Abierto (Z &gt; 0, Y &gt; 0)</strong>: Atmósfera luminosa superior donde se elevan los cilindros esbeltos de <em>atracción positiva, reciprocidad afectiva y sinergia constructiva</em>. Poseen ligereza ascensional y culminan en oro solar &lt;Ee&gt;.
-                    <br>• <strong>Línea de Superficie (Z = 0, Y = 0) y Espacio entre Sujetos</strong>: Lámina de agua translúcida donde cada díada se asienta en un pedestal zen circular rodeado de amplios canales de agua abierta. La separación entre sujetos permite que el espacio respire sin aglomeraciones.
-                    <br>• <strong>Mar Profundo (Z &lt; 0, Y &lt; 0) y Masa del Rechazo</strong>: El abismo submarino de azul cobalto y fosas abisales donde descienden los cilindros de <em>rechazo, frustración de expectativas [Rr] y oposición afectiva</em>. Los rechazos poseen un calibre mayor y mayor masa gravitatoria que las elecciones, simbolizando la pesadez y el impacto psicológico del conflicto en la dinámica grupal.
-                    <br>• <strong>Combinaciones Radiactivas</strong>: Permiten contrastar visualmente el impacto de las densidades Relativas (SDA/SRC/SDR) frente a las Absolutas (BDA/BRC/BDR), desvelando si la cohesión observada es fruto de un vínculo genuino de alta intensidad o de una mera acumulación cuantitativa.
+                    En el <strong>Cubo Socio-Oceánico 3D</strong>, la 3ª dimensión vertical representa la <strong>Densidad Relacional viva</strong> a través de las <strong>Olas Temporales ($T_1 \rightarrow T_2 \rightarrow T_3 \rightarrow T_4$)</strong> que agitan el océano relacional.
+                    <br>• <strong>Olas Temporales y Moviola ($T_1 \dots T_4$)</strong>: Los cilindros emergen o se sumergen fluidamente al ritmo de las fases grupales. Un vínculo hostil que nace en el abismo ($T_1$) puede emerger a la superficie ($T_2$) y elevarse al cielo en una alianza luminosa ($T_4$), o precipitarse al fondo durante la tormenta.
+                    <br>• <strong>Oleaje Tumultuoso Dinámico</strong>: Cuando la moviola temporal avanza o en momentos de fricción socio-termodinámica, la superficie marina se agita con crestas y marejadas vivas, simbolizando la turbulencia emocional que acompaña a los cambios de roles y expectativas.
+                    <br>• <strong>Masa Diferencial del Rechazo</strong>: Los cilindros de rechazo submarino ($Z &lt; 0$) poseen mayor calibre y densidad que las elecciones aéreas, comunicando físicamente la pesadez y el impacto gravitatorio del conflicto.
+                    <br>• <strong>Canales Zen entre Sujetos</strong>: Amplios pasillos de agua limpia separan a cada sujeto sobre su pedestal de flotación, garantizando una contemplación nítida y pura sin amontonamientos.
                 </div>
             </div>
         </div>
@@ -928,7 +1085,7 @@
     /* ==========================================================================
        VISORD • CUBO SOCIO-OCEÁNICO 3D (MOTOR THREE.JS)
        Autor: NEXORD Platform • 13 de Septiembre de 2026
-       Estética: Pintura Zen, Canales de Agua entre Sujetos, Esbeltez y Masa del Rechazo
+       Innovación: Olas Temporales 4D (T1-T4), Oleaje Tumultuoso y Moviola Viva
        ========================================================================== */
 
     // 1. ESTADO GLOBAL DE LA APLICACIÓN
@@ -936,16 +1093,21 @@
         baseScenario: 'NN', // 'NN' o '99'
         cylinderMode: 'QUAD', // 'QUAD', 'SINGLE'
         singleMetric: 'A2',   // 'A1', 'A2', 'A3', 'A4'
-        radioactiveMode: 'ALL_4', // 'ALL_4', 'SDA_SRC_SDR', 'BDA_BRC_BDR', 'SDR_BDR', 'SDA_BDA', 'SRC_BRC'
+        radioactiveMode: 'ALL_4',
         N: 5,
         cellSize: 6.8,        // Espacio generoso entre sujetos (canales de agua libre)
         cylCaliber: 0.42,     // Calibre esbelto base para elecciones
-        rejectionWeight: 1.75,// Masa/Grosor diferencial para los rechazos submarinos (1.75x)
+        rejectionWeight: 1.75,// Masa/Grosor diferencial para rechazos (1.75x)
         tideLevel: 0.0,
         waterOpacity: 0.35,
         bioluminescence: 1.2,
-        strataFilter: 'ALL', // 'ALL', 'SKY', 'SEA'
-        autoRotate: false
+        strataFilter: 'ALL',
+        autoRotate: false,
+        // OLAS TEMPORALES (MOVIOLA 4D)
+        temporalTime: 1.00,   // Rango continuo [1.00, 4.00]
+        isPlayingWaves: false,
+        waveTurbulence: 0.45, // Agitación del oleaje (0.05 calma zen a 1.50 tormenta)
+        waveSpeed: 1.0        // Velocidad de reproducción de olas
     };
 
     // 2. CODIFICACIÓN CANÓNICA DE SUJETOS (REGLA 7)
@@ -955,7 +1117,15 @@
         10: ['1A1a', '2A1a', '3A1a', '4A1a', '5A1a', '1B1a', '2B1a', '3B1a', '4B1a', '5B1a']
     };
 
-    // 3. CATEGORÍAS CANÓNICAS BASE (9, 9)
+    // 3. DESCRIPCIONES DE LAS FASES TEMPORALES
+    const TEMPORAL_PHASE_DESCRIPTIONS = [
+        { t: 1.0, title: '🌊 T1: Génesis Diádica & Primer Encuentro', badge: 'T1 Génesis', code: 'T1' },
+        { t: 2.0, title: '🌪️ T2: Oleaje de Fricción & Polarización', badge: 'T2 Fricción', code: 'T2' },
+        { t: 3.0, title: '⚡ T3: Tormenta de Crisis & Máximo Tumulto', badge: 'T3 Tormenta', code: 'T3' },
+        { t: 4.0, title: '🌤️ T4: Remanso de Cohesión & Reconciliación', badge: 'T4 Cohesión', code: 'T4' }
+    ];
+
+    // 4. CATEGORÍAS CANÓNICAS BASE (9, 9)
     const CATEGORIES_99 = [
         { code: 'EE', name: 'Elección Mutua Plena', baseVal: 1.0 },
         { code: 'Ee', name: 'Elección Intensa Asimétrica', baseVal: 0.75 },
@@ -968,7 +1138,7 @@
         { code: 'RR', name: 'Rechazo Mutuo Pleno', baseVal: -1.0 }
     ];
 
-    // 4. PALETAS DE COLOR NATURAL (CIELO, AGUA, ABISMO)
+    // 5. PALETAS DE COLOR NATURAL
     const COLORS = {
         skyCrest: 0xFFE600,   // Dorado solar en las cimas más altas
         skyCyan: 0x00E5FF,    // Cian celeste luminoso
@@ -993,22 +1163,62 @@
         bdr: 0x10B981
     };
 
-    // 5. GENERADOR DE DATOS INTERPERSONALES COHERENTES
+    // 6. GENERADOR DE DATOS TEMPORALES MULTIDIMENSIONALES (T1, T2, T3, T4)
     function generateDataset(n) {
         const subjects = SUBJECT_CODES_MAP[n];
         const matrix = [];
-        const seedBase = [
-            [0,  1,  1, -1,  0,  1, -1,  0,  1, -1],
-            [1,  0,  1,  0, -1,  1,  0, -1,  1,  0],
-            [1,  1,  0, -1, -1,  0,  1,  0, -1,  1],
-            [-1, 0, -1,  0,  1, -1,  1,  1,  0, -1],
-            [0, -1, -1,  1,  0,  0, -1,  1, -1,  0],
-            [1,  1,  0, -1,  0,  0,  1, -1,  1, -1],
-            [-1, 0,  1,  1, -1,  1,  0,  1, -1,  0],
-            [0, -1,  0,  1,  1, -1,  1,  0,  0,  1],
-            [1,  1, -1,  0, -1,  1, -1,  0,  0, -1],
-            [-1, 0,  1, -1,  0, -1,  0,  1, -1,  0]
-        ];
+
+        // Semillas para cada ola temporal T1, T2, T3, T4
+        const seeds = {
+            1: [ // T1: Exploratorio, neutro, afinidades tempranas
+                [0,  1,  0, -1,  0,  1,  0,  0,  1,  0],
+                [1,  0,  1,  0,  0,  0,  0, -1,  1,  0],
+                [0,  1,  0,  0, -1,  0,  1,  0,  0,  1],
+                [-1, 0,  0,  0,  1, -1,  0,  1,  0, -1],
+                [0,  0, -1,  1,  0,  0, -1,  0, -1,  0],
+                [1,  0,  0, -1,  0,  0,  1, -1,  0, -1],
+                [0,  0,  1,  0, -1,  1,  0,  1, -1,  0],
+                [0, -1,  0,  1,  0, -1,  1,  0,  0,  1],
+                [1,  1,  0,  0, -1,  0, -1,  0,  0, -1],
+                [0,  0,  1, -1,  0, -1,  0,  1, -1,  0]
+            ],
+            2: [ // T2: Polarización y fricción (surgen choques y camarillas)
+                [0,  1,  1, -1,  0,  1, -1,  0,  1, -1],
+                [1,  0,  1,  0, -1,  1,  0, -1,  1,  0],
+                [1,  1,  0, -1, -1,  0,  1,  0, -1,  1],
+                [-1, 0, -1,  0,  1, -1,  1,  1,  0, -1],
+                [0, -1, -1,  1,  0,  0, -1,  1, -1,  0],
+                [1,  1,  0, -1,  0,  0,  1, -1,  1, -1],
+                [-1, 0,  1,  1, -1,  1,  0,  1, -1,  0],
+                [0, -1,  0,  1,  1, -1,  1,  0,  0,  1],
+                [1,  1, -1,  0, -1,  1, -1,  0,  0, -1],
+                [-1, 0,  1, -1,  0, -1,  0,  1, -1,  0]
+            ],
+            3: [ // T3: Tormenta de Crisis (máxima intensidad de rechazos y alianzas cerradas)
+                [0,  1,  1, -1, -1,  1, -1, -1,  1, -1],
+                [1,  0,  1, -1, -1,  1, -1, -1,  1, -1],
+                [1,  1,  0, -1, -1, -1,  1,  0, -1,  1],
+                [-1,-1, -1,  0,  1, -1,  1,  1,  0, -1],
+                [-1,-1, -1,  1,  0, -1, -1,  1, -1,  0],
+                [1,  1, -1, -1, -1,  0,  1, -1,  1, -1],
+                [-1,-1,  1,  1, -1,  1,  0,  1, -1, -1],
+                [-1,-1,  0,  1,  1, -1,  1,  0, -1,  1],
+                [1,  1, -1,  0, -1,  1, -1, -1,  0, -1],
+                [-1,-1,  1, -1,  0, -1, -1,  1, -1,  0]
+            ],
+            4: [ // T4: Reorganización, apaciguamiento y alta sinergia
+                [0,  1,  1,  1,  0,  1,  1,  0,  1,  0],
+                [1,  0,  1,  0,  0,  1,  0,  0,  1,  1],
+                [1,  1,  0,  0,  0,  1,  1,  1,  0,  1],
+                [1,  0,  0,  0,  1,  0,  1,  1,  0,  0],
+                [0,  0,  0,  1,  0,  1,  0,  1,  0,  0],
+                [1,  1,  1,  0,  1,  0,  1,  0,  1,  0],
+                [1,  0,  1,  1,  0,  1,  0,  1,  0,  1],
+                [0,  0,  1,  1,  1,  0,  1,  0,  1,  1],
+                [1,  1,  0,  0,  0,  1,  0,  1,  0,  0],
+                [0,  1,  1,  0,  0,  0,  1,  1,  0,  0]
+            ]
+        };
 
         for (let i = 0; i < n; i++) {
             matrix[i] = [];
@@ -1018,45 +1228,32 @@
                         isDiagonal: true,
                         source: subjects[i],
                         target: subjects[j],
-                        A1: 0, A2: 0, A3: 0, A4: 0,
-                        SDA: 0, SRC: 0, SDR: 0,
-                        BDA: 0, BRC: 0, BDR: 0,
                         smibTag: '-- AUTO',
                         coupling: 'Auto-referencia'
                     };
                     continue;
                 }
 
-                const rawVal = seedBase[i % 10][j % 10];
-                const rawRecip = seedBase[j % 10][i % 10];
+                // Generar los 4 vectores temporales para este par
+                const timeFrames = {};
+                for (let t = 1; t <= 4; t++) {
+                    const rawVal = seeds[t][i % 10][j % 10];
+                    const rawRecip = seeds[t][j % 10][i % 10];
 
-                const a2 = rawVal;
-                const a3 = rawRecip;
-                const a1 = (a2 !== 0) ? a2 : (Math.sin(i * 3 + j * 5) > 0 ? 1 : -1);
-                const a4 = (a3 !== 0) ? a3 : (Math.sin(j * 3 + i * 5) > 0 ? 1 : -1);
+                    const a2 = rawVal;
+                    const a3 = rawRecip;
+                    const a1 = (a2 !== 0) ? a2 : (Math.sin(i * 3 + j * 5 + t) > 0 ? 1 : -1);
+                    const a4 = (a3 !== 0) ? a3 : (Math.sin(j * 3 + i * 5 + t) > 0 ? 1 : -1);
 
-                const sdr = (a2 + a3) / 2.0;
-                const sda = a2 * 0.85;
-                const src = a3 * 0.85;
+                    const sdr = (a2 + a3) / 2.0;
+                    const sda = a2 * 0.85;
+                    const src = a3 * 0.85;
 
-                const bda = Math.abs(a2) * 0.9;
-                const brc = Math.abs(a3) * 0.9;
-                const bdr = (bda + brc) / 2.0;
+                    const bda = Math.abs(a2) * 0.9;
+                    const brc = Math.abs(a3) * 0.9;
+                    const bdr = (bda + brc) / 2.0;
 
-                let smibTag = '¡¿?! Indiferencia';
-                let coupling = 'Neutro';
-                if (a2 > 0 && a3 > 0) {
-                    smibTag = '<Ee> Elección Mutua';
-                    coupling = 'Atracción Sinergia';
-                } else if (a2 < 0 && a3 < 0) {
-                    smibTag = '[Rr] Rechazo Mutuo';
-                    coupling = 'Tensión Oposición';
-                } else if (a2 > 0 && a3 < 0) {
-                    smibTag = '<Er] Asimetría Emisor';
-                    coupling = 'Atracción no correspondida';
-                } else if (a2 < 0 && a3 > 0) {
-                    smibTag = '[Re> Asimetría Partner';
-                    coupling = 'Rechazo no correspondido';
+                    timeFrames[t] = { A1: a1, A2: a2, A3: a3, A4: a4, SDA: sda, SRC: src, SDR: sdr, BDA: bda, BRC: brc, BDR: bdr };
                 }
 
                 matrix[i][j] = {
@@ -1064,25 +1261,14 @@
                     i, j,
                     source: subjects[i],
                     target: subjects[j],
-                    A1: a1,
-                    A2: a2,
-                    A3: a3,
-                    A4: a4,
-                    SDA: sda,
-                    SRC: src,
-                    SDR: sdr,
-                    BDA: bda,
-                    BRC: brc,
-                    BDR: bdr,
-                    smibTag,
-                    coupling
+                    timeFrames
                 };
             }
         }
         return { subjects, matrix, n };
     }
 
-    // 6. GENERADOR DE DATOS PARA BASE (9, 9)
+    // 7. GENERADOR BASE (9, 9) CON OLAS TEMPORALES
     function generateDataset99() {
         const matrix = [];
         const n = 9;
@@ -1094,43 +1280,102 @@
                 const catA = CATEGORIES_99[i];
                 const catB = CATEGORIES_99[j];
 
-                const rawCoupling = (catA.baseVal * catB.baseVal);
-                const sdr = rawCoupling >= 0 ? Math.sqrt(Math.abs(rawCoupling)) * Math.sign(catA.baseVal + catB.baseVal || 1) : -Math.sqrt(Math.abs(rawCoupling));
-                const sda = catA.baseVal;
-                const src = catB.baseVal;
-                const bdr = (Math.abs(catA.baseVal) + Math.abs(catB.baseVal)) / 2.0;
+                const timeFrames = {};
+                for (let t = 1; t <= 4; t++) {
+                    const waveMod = Math.sin(t * 1.5 + i + j) * 0.25;
+                    const rawCoupling = (catA.baseVal * catB.baseVal) + waveMod;
+                    const sdr = rawCoupling >= 0 ? Math.sqrt(Math.abs(rawCoupling)) * Math.sign(catA.baseVal + catB.baseVal || 1) : -Math.sqrt(Math.abs(rawCoupling));
+                    const sda = catA.baseVal;
+                    const src = catB.baseVal;
+                    const bdr = (Math.abs(catA.baseVal) + Math.abs(catB.baseVal)) / 2.0;
 
-                let smibTag = catA.name;
-                let coupling = 'Afinidad Transversal';
-                if (sdr > 0.3) smibTag = 'Atracción Cohesiva';
-                else if (sdr < -0.3) smibTag = 'Polarización Abisal';
+                    timeFrames[t] = {
+                        A1: catA.baseVal,
+                        A2: sdr,
+                        A3: catB.baseVal,
+                        A4: sdr * 0.8,
+                        SDA: sda,
+                        SRC: src,
+                        SDR: sdr,
+                        BDA: Math.abs(sda),
+                        BRC: Math.abs(src),
+                        BDR: bdr
+                    };
+                }
 
                 matrix[i][j] = {
                     isDiagonal: i === j,
                     i, j,
-                    source: `${catA.code} (${catA.name.split(' ')[0]})`,
-                    target: `${catB.code} (${catB.name.split(' ')[0]})`,
-                    A1: catA.baseVal,
-                    A2: sdr,
-                    A3: catB.baseVal,
-                    A4: sdr * 0.8,
-                    SDA: sda,
-                    SRC: src,
-                    SDR: sdr,
-                    BDA: Math.abs(sda),
-                    BRC: Math.abs(src),
-                    BDR: bdr,
-                    smibTag,
-                    coupling
+                    source: `${catA.code}`,
+                    target: `${catB.code}`,
+                    timeFrames
                 };
             }
         }
         return { subjects: labels, matrix, n };
     }
 
-    // 7. INICIALIZACIÓN THREE.JS
+    // 8. INTERPOLADOR LERP CONTINUO PARA TIEMPO T EN [1.00, 4.00]
+    function getInterpolatedCellData(cell, tFloat) {
+        if (cell.isDiagonal) return cell;
+
+        const tBase = Math.floor(tFloat);
+        const tNext = Math.min(4, tBase + 1);
+        const alphaRaw = tFloat - tBase;
+        // Curva suave ease-in-out para transición orgánica tipo oleaje
+        const alpha = alphaRaw * alphaRaw * (3 - 2 * alphaRaw);
+
+        const f1 = cell.timeFrames[tBase] || cell.timeFrames[1];
+        const f2 = cell.timeFrames[tNext] || cell.timeFrames[4];
+
+        function lerp(v1, v2) { return v1 + (v2 - v1) * alpha; }
+
+        const A1 = lerp(f1.A1, f2.A1);
+        const A2 = lerp(f1.A2, f2.A2);
+        const A3 = lerp(f1.A3, f2.A3);
+        const A4 = lerp(f1.A4, f2.A4);
+        const SDA = lerp(f1.SDA, f2.SDA);
+        const SRC = lerp(f1.SRC, f2.SRC);
+        const SDR = lerp(f1.SDR, f2.SDR);
+        const BDA = lerp(f1.BDA, f2.BDA);
+        const BRC = lerp(f1.BRC, f2.BRC);
+        const BDR = lerp(f1.BDR, f2.BDR);
+
+        let smibTag = '¡¿?! Indiferencia';
+        let coupling = 'Neutro';
+        if (A2 > 0.15 && A3 > 0.15) {
+            smibTag = '<Ee> Elección Mutua';
+            coupling = 'Atracción Sinergia';
+        } else if (A2 < -0.15 && A3 < -0.15) {
+            smibTag = '[Rr] Rechazo Mutuo';
+            coupling = 'Tensión Oposición';
+        } else if (A2 > 0.15 && A3 < -0.15) {
+            smibTag = '<Er] Asimetría Emisor';
+            coupling = 'Atracción no correspondida';
+        } else if (A2 < -0.15 && A3 > 0.15) {
+            smibTag = '[Re> Asimetría Partner';
+            coupling = 'Rechazo no correspondido';
+        }
+
+        return {
+            isDiagonal: false,
+            i: cell.i,
+            j: cell.j,
+            source: cell.source,
+            target: cell.target,
+            A1, A2, A3, A4,
+            SDA, SRC, SDR,
+            BDA, BRC, BDR,
+            smibTag,
+            coupling
+        };
+    }
+
+    // 9. INICIALIZACIÓN THREE.JS
     let scene, camera, renderer, controls;
     let mainGroup = null;
+    let staticGroup = null;
+    let cylindersGroup = null;
     let waterMesh = null;
     let waterGrid = null;
     let boundingCube = null;
@@ -1140,19 +1385,17 @@
     const mouse = new THREE.Vector2();
     let hoveredCylinder = null;
     let interactiveMeshes = [];
+    let currentRawData = null;
 
     const container = document.getElementById('canvas-container');
 
     function initThree() {
-        // Escena
         scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x061426, 0.009);
 
-        // Cámara
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         setCameraView('ISO');
 
-        // Renderizador
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1160,7 +1403,6 @@
         renderer.toneMappingExposure = 1.15;
         container.appendChild(renderer.domElement);
 
-        // Controles de Órbita
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.06;
@@ -1168,25 +1410,17 @@
         controls.minDistance = 5;
         controls.target.set(0, 0, 0);
 
-        // Iluminación
         setupLights();
-
-        // Entorno Atmosférico y Abisal
         setupAtmosphere();
-
-        // Construir el Cubo y Geometría
         rebuildScene();
 
-        // Eventos
         window.addEventListener('resize', onWindowResize);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('click', onMouseClick);
 
-        // Bucle de Animación
         animate();
     }
 
-    // 8. CONFIGURACIÓN DE ILUMINACIÓN
     function setupLights() {
         const sunLight = new THREE.DirectionalLight(0xFFF7E6, 1.25);
         sunLight.position.set(40, 75, 45);
@@ -1204,7 +1438,6 @@
         scene.add(ambientLight);
     }
 
-    // 9. ENTORNO ATMOSFÉRICO (PARTÍCULAS CIELO Y ABISMO)
     function setupAtmosphere() {
         const skyCount = 400;
         const skyGeo = new THREE.BufferGeometry();
@@ -1245,7 +1478,7 @@
         scene.add(particlesSea);
     }
 
-    // 10. RECONSTRUCCIÓN DINÁMICA DE LA ESCENA 3D (CANALES ZEN ENTRE SUJETOS)
+    // 10. RECONSTRUCCIÓN DE ESCENA Y ESTRUCTURA
     function rebuildScene() {
         if (mainGroup) {
             scene.remove(mainGroup);
@@ -1258,27 +1491,25 @@
             });
         }
 
-        interactiveMeshes = [];
         mainGroup = new THREE.Group();
+        staticGroup = new THREE.Group();
+        cylindersGroup = new THREE.Group();
+        mainGroup.add(staticGroup);
+        mainGroup.add(cylindersGroup);
         scene.add(mainGroup);
 
-        const data = (STATE.baseScenario === 'NN') ? generateDataset(STATE.N) : generateDataset99();
-        const n = data.n;
-        const matrix = data.matrix;
-        const subjects = data.subjects;
+        if (!currentRawData || currentRawData.n !== (STATE.baseScenario === 'NN' ? STATE.N : 9) || currentRawData.type !== STATE.baseScenario) {
+            currentRawData = (STATE.baseScenario === 'NN') ? generateDataset(STATE.N) : generateDataset99();
+            currentRawData.type = STATE.baseScenario;
+        }
 
-        // Actualizar cabecera
-        document.getElementById('study-key').innerText = (STATE.baseScenario === 'NN')
-            ? `SIMUL-AA-G2-T1-C1-V10-A16-ES-${n}`
-            : `SIMUL-CANON-9x9-SMIb-TERM`;
-        document.getElementById('matrix-tag').innerText = (STATE.baseScenario === 'NN') ? `1g1t1c (N=${n})` : `9g_sdr_smi`;
-
-        // DIMENSIONES ESPACIOSAS: cellSize amplio para que haya generosos canales de agua entre sujetos
+        const n = currentRawData.n;
+        const subjects = currentRawData.subjects;
         const cellSize = STATE.cellSize;
         const halfSpan = (n * cellSize) / 2.0;
         const cubeHeight = 34.0;
 
-        // 10.1 Caja Delimitadora del CUBO (Sutil alambre zen)
+        // 10.1 Caja Delimitadora del CUBO
         const boxGeo = new THREE.BoxGeometry(n * cellSize, cubeHeight * 2, n * cellSize);
         const boxMat = new THREE.MeshBasicMaterial({
             color: 0x00E5FF,
@@ -1288,10 +1519,10 @@
         });
         boundingCube = new THREE.Mesh(boxGeo, boxMat);
         boundingCube.position.set(0, 0, 0);
-        mainGroup.add(boundingCube);
+        staticGroup.add(boundingCube);
 
-        // 10.2 Plano de Superficie de Agua (Lámina Zen de Flotación con espacio abierto)
-        const waterGeo = new THREE.PlaneGeometry(n * cellSize * 1.06, n * cellSize * 1.06, 40, 40);
+        // 10.2 Plano de Superficie de Agua (Malla con alta densidad de vértices para olas vivas)
+        const waterGeo = new THREE.PlaneGeometry(n * cellSize * 1.08, n * cellSize * 1.08, 48, 48);
         const waterMat = new THREE.MeshPhysicalMaterial({
             color: 0x0EA5E9,
             transparent: true,
@@ -1305,32 +1536,67 @@
         waterMesh = new THREE.Mesh(waterGeo, waterMat);
         waterMesh.rotation.x = -Math.PI / 2;
         waterMesh.position.y = STATE.tideLevel;
-        mainGroup.add(waterMesh);
+        staticGroup.add(waterMesh);
 
-        // Rejilla sutil sobre el agua (canales amplios)
         waterGrid = new THREE.GridHelper(n * cellSize, n, 0x00F5D4, 0x1E293B);
         waterGrid.position.y = STATE.tideLevel + 0.02;
-        mainGroup.add(waterGrid);
+        staticGroup.add(waterGrid);
 
-        // 10.3 Etiquetas 3D de Sujetos en los Bordes con Líneas Guía Zen
+        // 10.3 Ejes de Sujetos con guías
         createAxisLabels(subjects, n, cellSize, halfSpan);
 
-        // 10.4 Generación de Pedestales Zen y Cilindros por Celda
+        // 10.4 Pedestales zen flotantes para cada celda
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                const centerX = (j * cellSize) - halfSpan + (cellSize / 2.0);
+                const centerZ = (i * cellSize) - halfSpan + (cellSize / 2.0);
+                createCellPedestal(centerX, centerZ, cellSize * 0.22);
+            }
+        }
+
+        renderCylinders();
+    }
+
+    // 10.5 RENDERIZADO FLUIDO DE CILINDROS CON TIEMPO DINÁMICO T
+    function renderCylinders() {
+        if (!cylindersGroup || !currentRawData) return;
+
+        cylindersGroup.traverse(child => {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) {
+                if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+                else child.material.dispose();
+            }
+        });
+        cylindersGroup.clear();
+        interactiveMeshes = [];
+
+        const n = currentRawData.n;
+        const rawMatrix = currentRawData.matrix;
+        const cellSize = STATE.cellSize;
+        const halfSpan = (n * cellSize) / 2.0;
         const maxHeight = 16.0;
+
+        // Actualizar cabecera según T actual
+        const currentTInt = Math.min(4, Math.max(1, Math.round(STATE.temporalTime)));
+        document.getElementById('study-key').innerText = (STATE.baseScenario === 'NN')
+            ? `SIMUL-AA-G2-T${currentTInt}-C1-V10-A16-ES-${n}`
+            : `SIMUL-CANON-9x9-T${currentTInt}-SMIb`;
+        document.getElementById('matrix-tag').innerText = (STATE.baseScenario === 'NN') ? `1g${currentTInt}t1c (N=${n})` : `9g_t${currentTInt}_sdr`;
 
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                const cellData = matrix[i][j];
+                const cellRaw = rawMatrix[i][j];
                 const centerX = (j * cellSize) - halfSpan + (cellSize / 2.0);
                 const centerZ = (i * cellSize) - halfSpan + (cellSize / 2.0);
 
-                if (cellData.isDiagonal) {
-                    createDiagonalMarker(centerX, centerZ, cellSize, cellData);
+                if (cellRaw.isDiagonal) {
+                    createDiagonalMarker(centerX, centerZ, cellSize, cellRaw);
                     continue;
                 }
 
-                // Pedestal zen flotante individual para cada celda diádica
-                createCellPedestal(centerX, centerZ, cellSize * 0.22);
+                // Obtener datos interpolados para el tiempo T
+                const cellData = getInterpolatedCellData(cellRaw, STATE.temporalTime);
 
                 if (STATE.cylinderMode === 'QUAD' && STATE.radioactiveMode === 'ALL_4') {
                     createQuadCylinderCluster(centerX, centerZ, cellSize, cellData, maxHeight);
@@ -1345,9 +1611,7 @@
         }
     }
 
-    // 10.5 PEDESTAL ZEN FLOTANTE DE CELDA (ISLA DE AGUA)
     function createCellPedestal(centerX, centerZ, radius) {
-        // Base circular translúcida en la superficie del agua
         const discGeo = new THREE.CircleGeometry(radius, 24);
         const discMat = new THREE.MeshBasicMaterial({
             color: 0x0284C7,
@@ -1358,9 +1622,8 @@
         const disc = new THREE.Mesh(discGeo, discMat);
         disc.rotation.x = -Math.PI / 2;
         disc.position.set(centerX, STATE.tideLevel + 0.02, centerZ);
-        mainGroup.add(disc);
+        staticGroup.add(disc);
 
-        // Borde circular sutil de laca cian
         const ringGeo = new THREE.RingGeometry(radius * 0.94, radius, 24);
         const ringMat = new THREE.MeshBasicMaterial({
             color: 0x00F5D4,
@@ -1371,32 +1634,28 @@
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = -Math.PI / 2;
         ring.position.set(centerX, STATE.tideLevel + 0.025, centerZ);
-        mainGroup.add(ring);
+        staticGroup.add(ring);
     }
 
-    // 11. CREADOR DE ETIQUETAS DE EJES CON LÍNEAS GUÍA ZEN
     function createAxisLabels(subjects, n, cellSize, halfSpan) {
         for (let k = 0; k < n; k++) {
             const pos = (k * cellSize) - halfSpan + (cellSize / 2.0);
 
-            // Emisor (Lado izquierdo) con distancia generosa
             const spriteEmisor = createTextSprite(` ${subjects[k]} `, '#00E5FF');
             spriteEmisor.position.set(-halfSpan - 3.8, STATE.tideLevel + 0.35, pos);
-            mainGroup.add(spriteEmisor);
+            staticGroup.add(spriteEmisor);
 
-            // Línea zen fina conectando la etiqueta al carril del sujeto
             const lineMatE = new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.22 });
             const pointsE = [
                 new THREE.Vector3(-halfSpan - 2.4, STATE.tideLevel + 0.05, pos),
                 new THREE.Vector3(-halfSpan + 0.2, STATE.tideLevel + 0.05, pos)
             ];
             const geoE = new THREE.BufferGeometry().setFromPoints(pointsE);
-            mainGroup.add(new THREE.Line(geoE, lineMatE));
+            staticGroup.add(new THREE.Line(geoE, lineMatE));
 
-            // Receptor (Borde superior) con distancia generosa
             const spriteReceptor = createTextSprite(` ${subjects[k]} `, '#00FF87');
             spriteReceptor.position.set(pos, STATE.tideLevel + 0.35, -halfSpan - 3.8);
-            mainGroup.add(spriteReceptor);
+            staticGroup.add(spriteReceptor);
 
             const lineMatR = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.22 });
             const pointsR = [
@@ -1404,7 +1663,7 @@
                 new THREE.Vector3(pos, STATE.tideLevel + 0.05, -halfSpan + 0.2)
             ];
             const geoR = new THREE.BufferGeometry().setFromPoints(pointsR);
-            mainGroup.add(new THREE.Line(geoR, lineMatR));
+            staticGroup.add(new THREE.Line(geoR, lineMatR));
         }
     }
 
@@ -1434,7 +1693,6 @@
         return sprite;
     }
 
-    // 12. CREADOR DE MARCADOR DIAGONAL
     function createDiagonalMarker(x, z, cellSize, cellData) {
         const ringGeo = new THREE.RingGeometry(0.25, cellSize * 0.16, 24);
         const ringMat = new THREE.MeshBasicMaterial({
@@ -1447,24 +1705,18 @@
         ring.rotation.x = -Math.PI / 2;
         ring.position.set(x, STATE.tideLevel + 0.06, z);
         ring.userData = { cellData, metricName: 'Diagonal' };
-        mainGroup.add(ring);
+        cylindersGroup.add(ring);
     }
 
-    // 13. GENERADOR DE CILINDRO ESBELTO (CON DIFERENCIAL DE MASA/GROSOR PARA RECHAZO)
     function buildCylinderMesh(x, z, radius, val, colorHex, cellData, metricName, maxHeight) {
         if (STATE.strataFilter === 'SKY' && val <= 0) return null;
         if (STATE.strataFilter === 'SEA' && val >= 0) return null;
 
-        const absVal = Math.max(0.08, Math.abs(val));
+        const absVal = Math.max(0.06, Math.abs(val));
         const height = absVal * maxHeight;
         const isPositive = val >= 0;
 
-        // FÍSICA Y PSICOLOGÍA DEL RECHAZO:
-        // Si es positivo (Cielo/Elección): ligereza fina y etérea.
-        // Si es negativo (Mar/Rechazo): mayor calibre y peso gravitatorio (STATE.rejectionWeight).
         const finalRadius = isPositive ? radius : (radius * STATE.rejectionWeight);
-
-        // Geometría del Cilindro
         const cylGeo = new THREE.CylinderGeometry(finalRadius, finalRadius, height, 28);
 
         let finalColor = new THREE.Color(colorHex);
@@ -1473,7 +1725,6 @@
         if (isPositive) {
             if (val > 0.8) finalColor.lerp(new THREE.Color(COLORS.skyCrest), 0.35);
         } else {
-            // Rechazo en el mar profundo: mayor densidad cromática magenta/azul oscuro
             finalColor.lerp(new THREE.Color(COLORS.seaRejection), 0.45);
         }
 
@@ -1488,12 +1739,9 @@
         });
 
         const cylinder = new THREE.Mesh(cylGeo, cylMat);
-
-        // Anclaje en línea de flotación
         const centerY = isPositive ? (STATE.tideLevel + height / 2.0) : (STATE.tideLevel - height / 2.0);
         cylinder.position.set(x, centerY, z);
 
-        // Corona / cúpula esbelta en la punta (calibrada con finalRadius)
         const capGeo = new THREE.SphereGeometry(finalRadius * 0.99, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2);
         const capMat = cylMat.clone();
         capMat.emissiveIntensity = 0.45 * STATE.bioluminescence;
@@ -1516,30 +1764,21 @@
             emissiveBase: emissiveColor.getHex()
         };
 
-        mainGroup.add(cylinder);
+        cylindersGroup.add(cylinder);
         interactiveMeshes.push(cylinder);
         return cylinder;
     }
 
-    // 14. GENERADOR DE CLUSTER CUÁDRUPLE (ESBELTO Y CON AIRE ENTRE CILINDROS)
     function createQuadCylinderCluster(centerX, centerZ, cellSize, cellData, maxHeight) {
         const offset = cellSize * 0.10;
         const radius = cellSize * 0.026 * STATE.cylCaliber;
 
-        // Noroeste: A1 (p_DA) en Cian
         buildCylinderMesh(centerX - offset, centerZ - offset, radius, cellData.A1, COLORS.a1_pDA, cellData, 'A1 (p_DA: Expectativa Emisor)', maxHeight);
-
-        // Noreste: A2 (DA) en Verde Neón
         buildCylinderMesh(centerX + offset, centerZ - offset, radius, cellData.A2, COLORS.a2_DA, cellData, 'A2 (DA: Preferencia Emisor)', maxHeight);
-
-        // Suroeste: A3 (RECIBE) en Púrpura Neón
         buildCylinderMesh(centerX - offset, centerZ + offset, radius, cellData.A3, COLORS.a3_REC, cellData, 'A3 (REC: Preferencia Partner)', maxHeight);
-
-        // Sureste: A4 (p_RECIBE) en Naranja Ámbar
         buildCylinderMesh(centerX + offset, centerZ + offset, radius, cellData.A4, COLORS.a4_pREC, cellData, 'A4 (p_REC: Expectativa Partner)', maxHeight);
     }
 
-    // 15. GENERADOR DE TRÍADA RADIACTIVA (ESBELTA Y ESPACIOSA)
     function createTriadCluster(centerX, centerZ, cellSize, cellData, maxHeight, radMode) {
         const offset = cellSize * 0.11;
         const radius = cellSize * 0.028 * STATE.cylCaliber;
@@ -1555,7 +1794,6 @@
         }
     }
 
-    // 16. GENERADOR DE CONTRASTE DUAL GEMELO (ESBELTO)
     function createDualContrastCluster(centerX, centerZ, cellSize, cellData, maxHeight, radMode) {
         const offset = cellSize * 0.09;
         const radius = cellSize * 0.030 * STATE.cylCaliber;
@@ -1572,7 +1810,6 @@
         }
     }
 
-    // 17. GENERADOR MONOCILÍNDRICO INDIVIDUAL (ESBELTO, NO GRUESO)
     function createSingleCylinder(centerX, centerZ, cellSize, cellData, maxHeight) {
         const radius = cellSize * 0.052 * STATE.cylCaliber;
         let val = cellData.A2;
@@ -1586,7 +1823,6 @@
         buildCylinderMesh(centerX, centerZ, radius, val, colorHex, cellData, name, maxHeight);
     }
 
-    // 18. PRESETS DE CÁMARA INMERSIVA
     function setCameraView(preset) {
         document.querySelectorAll('.btn-cam').forEach(b => b.classList.remove('active'));
 
@@ -1616,7 +1852,6 @@
         if (controls) controls.target.set(0, 0, 0);
     }
 
-    // 19. INTERACCIÓN RAYCASTER (HOVER & CLICK)
     function onMouseMove(event) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -1667,7 +1902,6 @@
         }
     }
 
-    // 20. ACTUALIZACIÓN DEL INSPECTOR HUD
     function updateHUD(cellData, metricName, value) {
         document.getElementById('hud-pair').innerText = `CELDA (${cellData.source} → ${cellData.target})`;
         const badge = document.getElementById('hud-badge');
@@ -1709,7 +1943,7 @@
         document.getElementById('hud-a4').innerText = `${cellData.A4 >= 0 ? '+' : ''}${cellData.A4.toFixed(1)}`;
     }
 
-    // 21. BUCLE DE ANIMACIÓN
+    // 11. BUCLE DE ANIMACIÓN & OLEAJES TUMULTUOSOS VIVOS
     let clock = new THREE.Clock();
 
     function animate() {
@@ -1718,6 +1952,16 @@
         const delta = clock.getDelta();
         const time = clock.getElapsedTime();
 
+        // Si la Moviola de Olas Temporales está activa, avanzar el tiempo continuo
+        if (STATE.isPlayingWaves) {
+            STATE.temporalTime += delta * 0.45 * STATE.waveSpeed;
+            if (STATE.temporalTime > 4.00) {
+                STATE.temporalTime = 1.00; // Ciclo continuo hipnotizador
+            }
+            updateTemporalUI();
+            renderCylinders();
+        }
+
         if (STATE.autoRotate && controls) {
             controls.autoRotate = true;
             controls.autoRotateSpeed = 1.2;
@@ -1725,13 +1969,26 @@
             controls.autoRotate = false;
         }
 
-        // Ondulación suave en la superficie de agua
+        // OLEAJES TUMULTUOSOS SUCESIVOS (Vértices de la superficie del agua)
         if (waterMesh && waterMesh.geometry) {
+            const turb = STATE.waveTurbulence;
+            const isMoving = STATE.isPlayingWaves;
+            const activeTurb = isMoving ? (turb * 1.4) : turb;
+
             const pos = waterMesh.geometry.attributes.position;
             for (let i = 0; i < pos.count; i++) {
                 const u = pos.getX(i);
                 const v = pos.getY(i);
-                const z = Math.sin(u * 0.30 + time * 1.3) * Math.cos(v * 0.30 + time * 1.0) * 0.09;
+
+                // Composición de oleaje tumultuoso sucesivo:
+                // 1. Ola primaria de choque
+                const wave1 = Math.sin(u * 0.28 + time * (1.3 + activeTurb * 1.8)) * Math.cos(v * 0.28 + time * (1.1 + activeTurb * 1.5));
+                // 2. Ola secundaria de marea
+                const wave2 = Math.sin((u + v) * 0.20 + time * (1.7 + activeTurb * 2.2)) * 0.45;
+                // 3. Choque armónico cruzado
+                const wave3 = Math.cos((u - v) * 0.24 + time * 2.0) * 0.30;
+
+                const z = (wave1 + wave2 + wave3) * (0.07 + activeTurb * 0.32);
                 pos.setZ(i, z);
             }
             pos.needsUpdate = true;
@@ -1741,7 +1998,7 @@
             particlesSky.rotation.y = time * 0.016;
         }
         if (particlesSea) {
-            particlesSea.rotation.y = -time * 0.012;
+            particlesSea.rotation.y = -time * (0.012 + STATE.waveTurbulence * 0.02);
         }
 
         controls.update();
@@ -1754,8 +2011,71 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    // 22. GESTORES DE EVENTOS DE UI (LISTENERS)
+    // 12. ACTUALIZADOR DE LA MOVIOLA TEMPORAL
+    function updateTemporalUI() {
+        const sliderT = document.getElementById('slider-t-time');
+        sliderT.value = STATE.temporalTime.toFixed(2);
+        document.getElementById('val-t-time').innerText = `T${STATE.temporalTime.toFixed(2)}`;
+
+        const currentStep = Math.min(4, Math.max(1, Math.round(STATE.temporalTime)));
+        document.querySelectorAll('.btn-t-step').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.t) === currentStep);
+        });
+
+        // Narrativa de la ola
+        let phase = TEMPORAL_PHASE_DESCRIPTIONS[0];
+        if (STATE.temporalTime >= 3.5) phase = TEMPORAL_PHASE_DESCRIPTIONS[3];
+        else if (STATE.temporalTime >= 2.5) phase = TEMPORAL_PHASE_DESCRIPTIONS[2];
+        else if (STATE.temporalTime >= 1.5) phase = TEMPORAL_PHASE_DESCRIPTIONS[1];
+
+        document.getElementById('timeline-phase-desc').innerText = phase.title;
+        document.getElementById('badge-wave').innerText = `${phase.badge} (${STATE.temporalTime.toFixed(2)})`;
+    }
+
+    function setTemporalTime(tVal) {
+        STATE.temporalTime = tVal;
+        updateTemporalUI();
+        renderCylinders();
+    }
+
+    // 13. GESTORES DE EVENTOS DE UI (LISTENERS)
     function setupUIListeners() {
+        // Moviola: Play / Pausa Olas Vivas
+        const btnPlay = document.getElementById('btn-play-waves');
+        btnPlay.addEventListener('click', () => {
+            STATE.isPlayingWaves = !STATE.isPlayingWaves;
+            btnPlay.classList.toggle('playing', STATE.isPlayingWaves);
+            document.getElementById('play-icon').innerText = STATE.isPlayingWaves ? '⏸' : '▶';
+            document.getElementById('play-text').innerText = STATE.isPlayingWaves ? 'Pausar Olas' : 'Olas Vivas';
+        });
+
+        // Botones de paso discreto T1, T2, T3, T4
+        document.querySelectorAll('.btn-t-step').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetT = parseFloat(btn.dataset.t);
+                setTemporalTime(targetT);
+            });
+        });
+
+        // Slider continuo de tiempo T [1.00, 4.00]
+        const sliderT = document.getElementById('slider-t-time');
+        sliderT.addEventListener('input', (e) => {
+            setTemporalTime(parseFloat(e.target.value));
+        });
+
+        // Sliders de Oleaje y Velocidad
+        const sliderTurb = document.getElementById('slider-wave-turb');
+        sliderTurb.addEventListener('input', (e) => {
+            STATE.waveTurbulence = parseFloat(e.target.value);
+            document.getElementById('val-wave-turb').innerText = `${STATE.waveTurbulence.toFixed(2)}x`;
+        });
+
+        const sliderSpeed = document.getElementById('slider-wave-speed');
+        sliderSpeed.addEventListener('input', (e) => {
+            STATE.waveSpeed = parseFloat(e.target.value);
+            document.getElementById('val-wave-speed').innerText = `${STATE.waveSpeed.toFixed(1)}x`;
+        });
+
         // Escenarios Base
         document.getElementById('btn-base-nn').addEventListener('click', () => {
             STATE.baseScenario = 'NN';
@@ -1780,7 +2100,7 @@
             document.getElementById('btn-mode-single').classList.remove('active');
             document.getElementById('single-metric-selector').style.display = 'none';
             document.getElementById('cilindro-mode-badge').innerText = 'Cluster 4A';
-            rebuildScene();
+            renderCylinders();
         });
 
         document.getElementById('btn-mode-single').addEventListener('click', () => {
@@ -1789,7 +2109,7 @@
             document.getElementById('btn-mode-quad').classList.remove('active');
             document.getElementById('single-metric-selector').style.display = 'flex';
             document.getElementById('cilindro-mode-badge').innerText = 'Monocilindro';
-            rebuildScene();
+            renderCylinders();
         });
 
         // Sliders de Esbeltez, Masa de Rechazo y Separación entre Sujetos
@@ -1797,14 +2117,14 @@
         sliderCaliber.addEventListener('input', (e) => {
             STATE.cylCaliber = parseFloat(e.target.value);
             document.getElementById('val-cyl-radius').innerText = `${STATE.cylCaliber.toFixed(2)}x`;
-            rebuildScene();
+            renderCylinders();
         });
 
         const sliderRejection = document.getElementById('slider-rejection-weight');
         sliderRejection.addEventListener('input', (e) => {
             STATE.rejectionWeight = parseFloat(e.target.value);
             document.getElementById('val-rejection-weight').innerText = `${STATE.rejectionWeight.toFixed(2)}x`;
-            rebuildScene();
+            renderCylinders();
         });
 
         const sliderSpacing = document.getElementById('slider-cell-spacing');
@@ -1820,7 +2140,7 @@
                 document.querySelectorAll('#single-metric-selector .mode-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
                 STATE.singleMetric = card.dataset.metric;
-                rebuildScene();
+                renderCylinders();
             });
         });
 
@@ -1830,7 +2150,7 @@
                 document.querySelectorAll('[data-rad]').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
                 STATE.radioactiveMode = card.dataset.rad;
-                rebuildScene();
+                renderCylinders();
             });
         });
 
@@ -1853,6 +2173,7 @@
             document.getElementById('val-tide').innerText = (STATE.tideLevel >= 0 ? '+' : '') + STATE.tideLevel.toFixed(2);
             if (waterMesh) waterMesh.position.y = STATE.tideLevel;
             if (waterGrid) waterGrid.position.y = STATE.tideLevel + 0.02;
+            renderCylinders();
         });
 
         const sliderWater = document.getElementById('slider-water-op');
@@ -1866,7 +2187,7 @@
         sliderGlow.addEventListener('input', (e) => {
             STATE.bioluminescence = parseFloat(e.target.value);
             document.getElementById('val-glow').innerText = `${STATE.bioluminescence.toFixed(1)}x`;
-            rebuildScene();
+            renderCylinders();
         });
 
         // Filtros de Estrato
@@ -1879,7 +2200,7 @@
             filterAll.classList.add('active');
             filterSky.classList.remove('active');
             filterSea.classList.remove('active');
-            rebuildScene();
+            renderCylinders();
         });
 
         filterSky.addEventListener('click', () => {
@@ -1887,7 +2208,7 @@
             filterSky.classList.add('active');
             filterAll.classList.remove('active');
             filterSea.classList.remove('active');
-            rebuildScene();
+            renderCylinders();
         });
 
         filterSea.addEventListener('click', () => {
@@ -1895,7 +2216,7 @@
             filterSea.classList.add('active');
             filterAll.classList.remove('active');
             filterSky.classList.remove('active');
-            rebuildScene();
+            renderCylinders();
         });
 
         // Dimensión Grupal N
@@ -1914,13 +2235,14 @@
 
     function setDimensionN(n) {
         STATE.N = n;
+        currentRawData = null; // Forzar regeneración limpia para el nuevo N
         document.querySelectorAll('#btn-n-5, #btn-n-8, #btn-n-10').forEach(b => b.classList.remove('active'));
         document.getElementById(`btn-n-${n}`).classList.add('active');
         document.getElementById('badge-n').innerText = `N = ${n}`;
         rebuildScene();
     }
 
-    // 23. INICIALIZACIÓN PRINCIPAL
+    // 14. INICIALIZACIÓN PRINCIPAL
     window.addEventListener('DOMContentLoaded', () => {
         initThree();
         setupUIListeners();
