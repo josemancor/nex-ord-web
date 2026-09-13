@@ -717,6 +717,7 @@ def generate_file():
         <div class="study-box">
             <span class="study-badge" id="study-key">SIMUL-AA-G2-T1-C1-V10-A16-ES-5</span>
             <span class="matrix-badge" id="matrix-tag">1g1t1c (N=5)</span>
+            <span class="fps-badge" id="fps-telemetry" style="font-family:'Roboto Mono',monospace; font-size:0.70rem; color:#00FF87; background:rgba(0,255,135,0.12); border:1px solid rgba(0,255,135,0.3); padding:2px 7px; border-radius:6px; font-weight:700;" title="Telemetría de rendimiento GPU/CPU en tiempo real">⚡ 60 FPS • 0.3ms</span>
             <span class="date-badge">13 de Septiembre de 2026</span>
         </div>
 
@@ -2189,9 +2190,28 @@ def generate_file():
 
     // LOOP DE ANIMACIÓN PRINCIPAL CON CRONOGÉNESIS 4D Y VAIVÉN DE CRITERIOS
     let clock = new THREE.Clock();
+    let frameCount = 0;
+    let lastFpsTime = performance.now();
+    let lastFrameTime = performance.now();
 
     function animate() {
         requestAnimationFrame(animate);
+
+        const now = performance.now();
+        const frameDuration = now - lastFrameTime;
+        lastFrameTime = now;
+        frameCount++;
+
+        if (now - lastFpsTime >= 400) {
+            const currentFps = Math.min(60, Math.round((frameCount * 1000) / (now - lastFpsTime)));
+            const telemetryBadge = document.getElementById('fps-telemetry');
+            if (telemetryBadge) {
+                telemetryBadge.innerText = `⚡ ${currentFps} FPS • ${frameDuration.toFixed(1)}ms`;
+                telemetryBadge.style.color = currentFps >= 50 ? '#00FF87' : (currentFps >= 30 ? '#FFE082' : '#F43F5E');
+            }
+            frameCount = 0;
+            lastFpsTime = now;
+        }
 
         const delta = clock.getDelta();
         const time = clock.getElapsedTime();
