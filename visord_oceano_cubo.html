@@ -507,7 +507,7 @@
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .pedagogic-bar.expanded {
-            height: 180px;
+            height: 195px;
             align-items: flex-start;
             padding-top: 14px;
         }
@@ -665,13 +665,22 @@
                 </button>
             </div>
 
-            <!-- Calibre de Cilindros (Grosor / Esbeltez) -->
+            <!-- Calibre de Cilindros (Grosor / Esbeltez de Elecciones) -->
             <div class="slider-group">
                 <div class="slider-label">
-                    <span>🎋 Calibre de Cilindros (Esbeltez):</span>
+                    <span>🎋 Calibre Base (Elecciones / Cielo):</span>
                     <span class="val" id="val-cyl-radius">0.45x</span>
                 </div>
                 <input type="range" id="slider-cyl-radius" min="0.20" max="1.30" step="0.05" value="0.45">
+            </div>
+
+            <!-- Grosor diferencial de los Rechazos Submarinos -->
+            <div class="slider-group" style="margin-top: 10px;">
+                <div class="slider-label">
+                    <span>⚓ Densidad / Grosor del Rechazo:</span>
+                    <span class="val" id="val-rejection-weight">1.65x</span>
+                </div>
+                <input type="range" id="slider-rejection-weight" min="1.0" max="3.0" step="0.05" value="1.65">
             </div>
 
             <!-- Separación entre Celdas (Espacio / Ma) -->
@@ -904,10 +913,10 @@
                 <div class="pedagogic-title">Nota Explicativa Pedagógica • Estratificación Socio-Termodinámica del Cubo Relacional</div>
                 <div class="pedagogic-summary">Haga clic para desplegar la guía de interpretación del Cielo Abierto, Línea de Flotación y Mar Profundo...</div>
                 <div class="pedagogic-content">
-                    En el <strong>Cubo Socio-Oceánico 3D</strong>, la 3ª dimensión vertical representa la <strong>Densidad Relacional</strong> sin barreras artificiales de contención, diseñada bajo la estética nítida y pura del arte contemplativo (vacío fecundo <em>Ma</em>, esbeltez cilíndrica y respiración espacial).
-                    <br>• <strong>Cielo Abierto (Z &gt; 0, Y &gt; 0)</strong>: La atmósfera luminosa superior donde se elevan los cilindros esbeltos de <em>atracción positiva, reciprocidad afectiva y sinergia constructiva</em>. Alcanzan su cúspide dorada en la elección mutua &lt;Ee&gt;.
+                    En el <strong>Cubo Socio-Oceánico 3D</strong>, la 3ª dimensión vertical representa la <strong>Densidad Relacional</strong> sin barreras artificiales de contención, diseñada bajo la estética nítida y pura del arte contemplativo (vacío fértil <em>Ma</em>, esbeltez cilíndrica y respiración espacial).
+                    <br>• <strong>Cielo Abierto (Z &gt; 0, Y &gt; 0)</strong>: Atmósfera luminosa superior donde se elevan los cilindros esbeltos de <em>atracción positiva, reciprocidad afectiva y sinergia constructiva</em>. Poseen ligereza ascensional y culminan en oro solar &lt;Ee&gt;.
                     <br>• <strong>Línea de Superficie (Z = 0, Y = 0)</strong>: Lámina de agua translúcida que define el plano de flotación grupal. Los cilindros nacen de esta superficie de referencia; valores neutros o indiferentes se mantienen equilibrados sobre la lámina sin hundirse ni elevarse.
-                    <br>• <strong>Mar Profundo (Z &lt; 0, Y &lt; 0)</strong>: El abismo submarino de azul cobalto y fosas abisales donde descienden los cilindros de <em>rechazo, frustración de expectativas [Rr] y oposición afectiva</em>. Cuanto mayor es el conflicto relacional, más hondo penetra el cilindro en las corrientes oscuras del abismo.
+                    <br>• <strong>Mar Profundo (Z &lt; 0, Y &lt; 0) y Masa del Rechazo</strong>: El abismo submarino de azul cobalto y fosas abisales donde descienden los cilindros de <em>rechazo, frustración de expectativas [Rr] y oposición afectiva</em>. Los rechazos poseen un calibre mayor y mayor masa gravitatoria que las elecciones, simbolizando la pesadez y el impacto psicológico del conflicto en la dinámica grupal.
                     <br>• <strong>Combinaciones Radiactivas</strong>: Permiten contrastar visualmente el impacto de las densidades Relativas (SDA/SRC/SDR) frente a las Absolutas (BDA/BRC/BDR), desvelando si la cohesión observada es fruto de un vínculo genuino de alta intensidad o de una mera acumulación cuantitativa.
                 </div>
             </div>
@@ -919,7 +928,7 @@
     /* ==========================================================================
        VISORD • CUBO SOCIO-OCEÁNICO 3D (MOTOR THREE.JS)
        Autor: NEXORD Platform • 13 de Septiembre de 2026
-       Estética: Pintura Zen, Esbeltez y Espacio Negativo (Ma)
+       Estética: Pintura Zen, Esbeltez Aérea y Masa Submarina del Rechazo
        ========================================================================== */
 
     // 1. ESTADO GLOBAL DE LA APLICACIÓN
@@ -930,7 +939,8 @@
         radioactiveMode: 'ALL_4', // 'ALL_4', 'SDA_SRC_SDR', 'BDA_BRC_BDR', 'SDR_BDR', 'SDA_BDA', 'SRC_BRC'
         N: 5,
         cellSize: 5.6,        // Espaciado amplio y aireado entre celdas (antes 4.2)
-        cylCaliber: 0.45,     // Calibre esbelto y estilizado (no gruesos)
+        cylCaliber: 0.45,     // Calibre esbelto base para elecciones
+        rejectionWeight: 1.65,// Masa/Grosor diferencial para los rechazos submarinos (1.65x)
         tideLevel: 0.0,
         waterOpacity: 0.35,
         bioluminescence: 1.2,
@@ -1394,7 +1404,7 @@
         mainGroup.add(ring);
     }
 
-    // 13. GENERADOR DE CILINDRO ESBELTO (CON ESPACIO Y FÍSICA OCEÁNICA)
+    // 13. GENERADOR DE CILINDRO ESBELTO (CON DIFERENCIAL DE MASA/GROSOR PARA RECHAZO)
     function buildCylinderMesh(x, z, radius, val, colorHex, cellData, metricName, maxHeight) {
         if (STATE.strataFilter === 'SKY' && val <= 0) return null;
         if (STATE.strataFilter === 'SEA' && val >= 0) return null;
@@ -1403,8 +1413,13 @@
         const height = absVal * maxHeight;
         const isPositive = val >= 0;
 
-        // Geometría del Cilindro esbelto
-        const cylGeo = new THREE.CylinderGeometry(radius, radius, height, 28);
+        // FÍSICA Y PSICOLOGÍA DEL RECHAZO:
+        // Si es positivo (Cielo/Elección): ligereza fina y etérea.
+        // Si es negativo (Mar/Rechazo): mayor calibre y peso gravitatorio (STATE.rejectionWeight).
+        const finalRadius = isPositive ? radius : (radius * STATE.rejectionWeight);
+
+        // Geometría del Cilindro
+        const cylGeo = new THREE.CylinderGeometry(finalRadius, finalRadius, height, 28);
 
         let finalColor = new THREE.Color(colorHex);
         let emissiveColor = new THREE.Color(colorHex);
@@ -1412,15 +1427,16 @@
         if (isPositive) {
             if (val > 0.8) finalColor.lerp(new THREE.Color(COLORS.skyCrest), 0.35);
         } else {
+            // Rechazo en el mar profundo: mayor densidad cromática magenta/azul oscuro
             finalColor.lerp(new THREE.Color(COLORS.seaRejection), 0.45);
         }
 
         const cylMat = new THREE.MeshStandardMaterial({
             color: finalColor,
             emissive: emissiveColor,
-            emissiveIntensity: 0.20 * STATE.bioluminescence,
-            metalness: 0.20,
-            roughness: 0.25,
+            emissiveIntensity: (isPositive ? 0.20 : 0.28) * STATE.bioluminescence,
+            metalness: isPositive ? 0.20 : 0.35,
+            roughness: isPositive ? 0.25 : 0.20,
             transparent: true,
             opacity: 0.94
         });
@@ -1431,8 +1447,8 @@
         const centerY = isPositive ? (STATE.tideLevel + height / 2.0) : (STATE.tideLevel - height / 2.0);
         cylinder.position.set(x, centerY, z);
 
-        // Corona / cúpula esbelta en la punta
-        const capGeo = new THREE.SphereGeometry(radius * 0.99, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2);
+        // Corona / cúpula esbelta en la punta (calibrada con finalRadius)
+        const capGeo = new THREE.SphereGeometry(finalRadius * 0.99, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2);
         const capMat = cylMat.clone();
         capMat.emissiveIntensity = 0.45 * STATE.bioluminescence;
         const cap = new THREE.Mesh(capGeo, capMat);
@@ -1462,7 +1478,6 @@
     // 14. GENERADOR DE CLUSTER CUÁDRUPLE (ESBELTO Y CON AIRE ENTRE CILINDROS)
     function createQuadCylinderCluster(centerX, centerZ, cellSize, cellData, maxHeight) {
         const offset = cellSize * 0.22;
-        // Calibre fino y esbelto modulado por STATE.cylCaliber
         const radius = cellSize * 0.042 * STATE.cylCaliber;
 
         // Noroeste: A1 (p_DA) en Cian
@@ -1513,7 +1528,6 @@
 
     // 17. GENERADOR MONOCILÍNDRICO INDIVIDUAL (ESBELTO, NO GRUESO)
     function createSingleCylinder(centerX, centerZ, cellSize, cellData, maxHeight) {
-        // En monocilindro, un radio delicado de ~7.5% de la celda modulado por calibre
         const radius = cellSize * 0.075 * STATE.cylCaliber;
         let val = cellData.A2;
         let colorHex = COLORS.a2_DA;
@@ -1737,6 +1751,13 @@
         sliderCaliber.addEventListener('input', (e) => {
             STATE.cylCaliber = parseFloat(e.target.value);
             document.getElementById('val-cyl-radius').innerText = `${STATE.cylCaliber.toFixed(2)}x`;
+            rebuildScene();
+        });
+
+        const sliderRejection = document.getElementById('slider-rejection-weight');
+        sliderRejection.addEventListener('input', (e) => {
+            STATE.rejectionWeight = parseFloat(e.target.value);
+            document.getElementById('val-rejection-weight').innerText = `${STATE.rejectionWeight.toFixed(2)}x`;
             rebuildScene();
         });
 
