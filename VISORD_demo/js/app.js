@@ -324,7 +324,7 @@ class VisordApp {
                     <div style="display:flex; flex-direction:column; gap:10px;">
                         <label style="font-size:0.82rem; color:#94a3b8; font-weight:600;">🏛️ Seleccionar Informe Institucional:</label>
                         <select id="select-historical-study" style="background:#0f172a; border:1px solid rgba(56,189,248,0.5); color:#38bdf8; padding:8px 12px; border-radius:10px; font-size:0.85rem; font-weight:600; outline:none; cursor:pointer;">
-                            <option value="CURRENT">🟢 ⚡ Informe Actual de Cohorte Institucional</option>
+                            <option value="CURRENT">🟢 ⚡ Informe Actual de Grupo Institucional</option>
                             <option value="data/VISORD_HUB_Payload.json">🏢 🏢 Análisis Multigrupo G1..G3 (SDR/BDR)</option>
                         </select>
                     </div>
