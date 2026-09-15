@@ -44,12 +44,22 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      height: 100%;
+    }
+
     body {
       background-color: var(--bg-abyss);
       color: var(--text-main);
       font-family: var(--font-main);
       line-height: 1.6;
+      width: 100vw;
+      height: 100vh;
       overflow-x: hidden;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
       scroll-behavior: smooth;
     }
 
@@ -538,64 +548,80 @@
 
     /* PANTALLAS */
     .screen-section {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
       min-height: 100vh;
-      padding: 90px 24px 80px;
+      max-height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 55px 16px 10px 16px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      position: relative;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .screen-container {
       width: 100%;
-      max-width: 1220px;
+      max-width: 1200px;
+      max-height: calc(100vh - 65px);
       margin: 0 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 10px;
+      box-sizing: border-box;
     }
 
+    .screen-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    .screen-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 230, 0, 0.3);
+      border-radius: 4px;
+    }
+
+    .screen-step-tag {
+      display: none;
+    }
     .section-header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+      display: none;
     }
 
     .section-title {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.3px;
       color: var(--text-white);
-      margin-bottom: 8px;
+      margin-bottom: 1px;
       line-height: 1.2;
+      text-transform: uppercase;
     }
 
     .section-subtitle {
-      font-size: 15px;
+      font-size: 0.70rem;
       color: var(--text-muted);
       max-width: 860px;
-      margin-bottom: 26px;
+      line-height: 1.35;
+      margin-bottom: 4px;
     }
 
     /* PEDAGOGIC NOTE STRIP */
     .pedagogic-note-strip {
       width: 100%;
-      max-width: 1220px;
-      margin-top: 24px;
-      padding: 12px 18px;
+      max-width: 1200px;
+      margin-top: 4px;
+      padding: 4px 10px;
       background: rgba(11, 19, 43, 0.7);
       border-left: 3px solid var(--neon-gold);
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 0.62rem;
+      line-height: 1.25;
       color: #E2E8F0;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
 
     .pedagogic-note-strip strong {
@@ -606,15 +632,15 @@
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 22px;
+      gap: 8px;
     }
 
     .card-panel {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       position: relative;
     }
 
@@ -1563,7 +1589,514 @@
       border-color: rgba(0, 255, 135, 0.3);
     }
 
-  </style>
+  
+    /* ==========================================================
+       MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA)
+       ========================================================== */
+    .universal-nav-pod {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 8px 6px;
+      border-radius: 26px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.15);
+    }
+    .nav-pod-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(16, 25, 53, 0.90);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      user-select: none;
+    }
+    .nav-pod-btn:hover {
+      background: var(--neon-cyan, #38BDF8);
+      color: #030308;
+      border-color: var(--neon-cyan, #38BDF8);
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+    }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030308 !important;
+      box-shadow: 0 0 14px rgba(255, 230, 0, 0.7) !important;
+    }
+    .nav-pod-exit:hover {
+      background: #FF007F !important;
+      border-color: #FF007F !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.7) !important;
+    }
+    .nav-pod-disabled {
+      opacity: 0.22;
+      pointer-events: none;
+      cursor: default;
+    }
+
+  
+    /* =========================================================================
+       CARÁTULA DE PASO Y ESPERA CANÓNICA NEXORD (SOBRIEDAD MÁXIMA)
+       ========================================================================= */
+    /* ESTÁNDAR CANÓNICO DE CARÁTULA NEXORD (PANORÁMICA 900px CON ÍNDICE a..e) */
+    .transit-caratula-section {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+      padding: 40px 20px !important;
+      background: radial-gradient(circle at center, #0F1D40 0%, #060914 100%) !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+    }
+    .transit-caratula-card {
+      width: 92%;
+      max-width: 900px;
+      background: rgba(11, 19, 43, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.40);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 30px 36px 26px 36px;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(0, 162, 255, 0.20);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .transit-header-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .transit-logo-wrap {
+      width: 76px;
+      height: 76px;
+      margin-bottom: 12px;
+      background: rgba(11, 15, 25, 0.7);
+      border: 2px solid #00A2FF;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0, 162, 255, 0.5), inset 0 0 12px rgba(0, 162, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .transit-logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.6));
+    }
+    .transit-level-tag {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      padding: 3px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .transit-level-title {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: clamp(1.35rem, 2.7vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #FFFFFF;
+      margin: 0 0 6px 0;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .transit-title-num {
+      color: #00FF87;
+      font-family: 'Roboto Mono', monospace;
+      margin-right: 6px;
+    }
+    .transit-level-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13.5px;
+      color: #94A3B8;
+      max-width: 740px;
+      margin: 0 auto;
+      line-height: 1.45;
+    }
+    .transit-parts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      margin: 16px 0 20px 0;
+      text-align: left;
+    }
+    .transit-part-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .transit-part-row:hover {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: rgba(0, 240, 255, 0.5);
+      transform: translateX(4px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 240, 255, 0.15);
+    }
+    .transit-part-pill {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      font-weight: 900;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.16);
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      border-radius: 6px;
+      width: 32px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .transit-part-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      overflow: hidden;
+    }
+    .transit-part-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .transit-part-heading .word-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #00FF87;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0, 255, 135, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 135, 0.3);
+    }
+    .transit-part-desc {
+      font-size: 11.5px;
+      color: #94A3B8;
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .transit-part-arrow {
+      color: rgba(0, 240, 255, 0.6);
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .transit-part-row:hover .transit-part-arrow {
+      color: #00FF87;
+      transform: translateX(3px);
+    }
+    .transit-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .btn-transit-continue {
+      padding: 13px 32px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.96rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #00FF87 0%, #38BDF8 100%);
+      color: #030308;
+      border: none;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.35);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .btn-transit-continue:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 32px rgba(0, 255, 135, 0.65), 0 8px 24px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, #38BDF8 0%, #00FF87 100%);
+    }
+    .btn-transit-audio {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      color: #38BDF8;
+      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .btn-transit-audio:hover {
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      background: rgba(56, 189, 248, 0.25);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.55);
+    }
+    .btn-transit-audio.playing {
+      border-color: #00FF87;
+      color: #00FF87;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.6);
+      animation: audioPulse 1.8s infinite;
+    }
+    @keyframes audioPulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 24px rgba(0, 255, 135, 0.75); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+    }/* =========================================================================
+       CABECERA COMPACTA Y UNIFICADA DE LETRAS CON PALABRA INFERIOR (a b c d e)
+       CANON INSTITUCIONAL NEXORD: SOCIOMETRÍA ORDINAL {lvl}.
+       ========================================================================= */
+    .top-floating-hud {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(11, 19, 43, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 5px 16px;
+      border-radius: 40px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+    }
+    .top-floating-hud.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .hud-brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      line-height: 1;
+      padding-right: 12px;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: default;
+    }
+    .hud-brand-logo {
+      color: #38BDF8;
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 1.2px;
+    }
+    .hud-brand-sub {
+      color: #F8FAFC;
+      font-weight: 700;
+      font-size: 0.74rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .hud-level-num {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #00FF87;
+      text-shadow: 0 0 10px rgba(0, 255, 135, 0.7);
+      margin-left: 6px;
+      padding: 1px 7px;
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.45);
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .hud-nav-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+      font-size: 0.95rem;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .hud-arrow-btn:hover:not(.disabled) {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+    .hud-arrow-btn.disabled {
+      opacity: 0.32;
+      pointer-events: none;
+      cursor: default;
+      color: #64748B;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .hud-letters-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .hud-letter-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 12px;
+      min-width: 58px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .hud-letter-btn .hud-letter-char {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #38BDF8;
+      line-height: 1.05;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn .hud-letter-word {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 2px;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #38BDF8;
+      transform: translateY(-2px);
+    }
+    .hud-letter-btn:hover .hud-letter-char {
+      color: #00F0FF;
+    }
+    .hud-letter-btn:hover .hud-letter-word {
+      color: #FFFFFF;
+    }
+    .hud-letter-btn.active {
+      background: rgba(0, 255, 135, 0.16);
+      border: 1.8px solid #00FF87;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.5), inset 0 0 8px rgba(0, 255, 135, 0.15);
+      transform: translateY(-1px);
+    }
+    .hud-letter-btn.active .hud-letter-char {
+      color: #00FF87;
+    }
+    .hud-letter-btn.active .hud-letter-word {
+      color: #FFFFFF;
+      font-weight: 900;
+    }
+    .hud-home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 38px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      line-height: 1;
+      padding-left: 2px;
+    }
+    .hud-home-btn:hover {
+      transform: scale(1.22);
+      filter: drop-shadow(0 0 8px rgba(255, 230, 0, 0.8));
+    }
+
+</style>
 </head>
 <body>
 
@@ -1575,177 +2108,145 @@
   </a>
 
   <!-- TOP RIGHT GENERAL PLATFORM NAV -->
-  <div class="top-right-nav">
-    <a href="nivel1_intuitivo.html" class="top-nav-btn top-nav-btn-home" title="Volver al Inicio General de la Plataforma NEXORD">
-      <span>⌂</span>
-      <span>Inicio</span>
-    </a>
-    <a href="javascript:void(0)" onclick="handleSalirPlatform()" class="top-nav-btn top-nav-btn-exit" title="Salir de la Plataforma NEXORD">
-      <span>⏻</span>
-      <span>Salir</span>
-    </a>
-  </div>
+  
 
   <!-- TOP FLOATING CANONICAL HUD (NIVEL 6: INFORMES & VISORD) -->
-  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación Nivel 6">
-    <div class="hud-main-pill">
-      <span class="hud-brand-tag">🌐 NEXORD · NIVEL 6: INFORMES</span>
-      <div class="hud-parts-group">
-        <button class="hud-part-btn" id="hud-btn-6a" onclick="scrollToScreen('pantalla-6a')" title="Paso 6a: Informes HTML Autónomos (N1-N6)">
-          <span class="hud-part-code">(6a)</span>
-          <span class="hud-part-label">Informes</span>
+        <!-- =========================================================================
+       CABECERA COMPACTA Y UNIFICADA (a b c d e) · NEXORD: SOCIOMETRÍA ORDINAL 6.
+       ========================================================================= -->
+  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación de Nivel">
+    <div class="hud-brand-pill">
+      <span class="hud-brand-logo">NEXORD:</span>
+      <span class="hud-brand-sub">SOCIOMETRÍA ORDINAL</span>
+    </div>
+    
+    <div class="hud-nav-cluster">
+      <button class="hud-arrow-btn" id="hud-arrow-prev" onclick="hudNavigatePrev()" title="Nivel anterior">◀</button>
+      <div class="hud-letters-row">
+        <button class="hud-letter-btn hud-part-btn active" onclick="scrollToScreen('pantalla-6a')" data-screen="pantalla-6a" title="6a · Informes HTML Autónomos">
+          <span class="hud-letter-char">a</span>
+          <span class="hud-letter-word">INFORMES</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-6b" onclick="scrollToScreen('pantalla-6b')" title="Paso 6b: Sistema Experto e Inteligencia Interpretativa">
-          <span class="hud-part-code">(6b)</span>
-          <span class="hud-part-label">Experto</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-6b')" data-screen="pantalla-6b" title="6b · Sistema Experto">
+          <span class="hud-letter-char">b</span>
+          <span class="hud-letter-word">EXPERTO</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-6c" onclick="scrollToScreen('pantalla-6c')" title="Paso 6c: VISORD Engine 3D/4D Interactivo">
-          <span class="hud-part-code">(6c)</span>
-          <span class="hud-part-label">VISORD 3D</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-6c')" data-screen="pantalla-6c" title="6c · Visualización VISORD">
+          <span class="hud-letter-char">c</span>
+          <span class="hud-letter-word">VISORD</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-6d" onclick="scrollToScreen('pantalla-6d')" title="Paso 6d: Diapositivas de Presentación Sociométrica">
-          <span class="hud-part-code">(6d)</span>
-          <span class="hud-part-label">Diapositivas</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-6d')" data-screen="pantalla-6d" title="6d · Diapositivas Presentación">
+          <span class="hud-letter-char">d</span>
+          <span class="hud-letter-word">DIAPOSITIVAS</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-6e" onclick="scrollToScreen('pantalla-6e')" title="Paso 6e: Muestras de Informes y Bóveda Documental">
-          <span class="hud-part-code">(6e)</span>
-          <span class="hud-part-label">Muestras</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-6e')" data-screen="pantalla-6e" title="6e · Bóveda Documental">
+          <span class="hud-letter-char">e</span>
+          <span class="hud-letter-word">BÓVEDA</span>
         </button>
       </div>
+      <button class="hud-arrow-btn" id="hud-arrow-next" onclick="hudNavigateNext()" title="Pantalla siguiente">▶</button>
     </div>
+
+    <a href="index.html" class="hud-home-btn" title="Inicio (Portada Principal)">🏠</a>
   </nav>
 
   <!-- LATERAL NAVIGATION ARROWS WITH NEXT LEVEL LINK -->
-  <div class="vertical-nav-arrows">
-    <button class="nav-arrow-btn nav-arrow-btn-home" onclick="scrollToScreen('pantalla-6-caratula')" title="Ir a la Portada del Nivel 6">⌂</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(-1)" title="Pantalla anterior">▲</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(1)" title="Pantalla siguiente">▼</button>
-    <a href="nivel7_documentacion.html" class="nav-arrow-btn nav-arrow-btn-next-lvl" title="Avanzar al Nivel 7: Documentación & Ética">→</a>
-  </div>
+  
 
-  <section class="screen-section" id="pantalla-6-caratula" style="padding-top:72px;">
-    <div class="hero-box">
-      <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" class="doi-badge">DOI: 10.5281/zenodo.18941691</a>
+    <!-- MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA) -->
+  <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)">
+      <span>🏠</span>
+    </a>
+    <a href="nivel5_matematico.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 5: Aparato Matemático)"><span>◀</span></a>
+    <button class="nav-pod-btn nav-pod-prev-screen" onclick="navigateStep(-1)" title="Atrás (Pantalla Anterior)">
+      <span>▲</span>
+    </button>
+    <button class="nav-pod-btn nav-pod-next-screen" onclick="navigateStep(1)" title="Siguiente (Pantalla Siguiente)">
+      <span>▼</span>
+    </button>
+    <a href="nivel7_documentacion.html" class="nav-pod-btn nav-pod-next-lvl" title="Nivel Siguiente (Nivel 7: Documentación & Ética)"><span>▶</span></a>
+  </nav>
 
-      <div class="hero-logo-box">
-        <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="hero-logo-img">
+        <section id="pantalla-6-caratula" class="screen-section transit-caratula-section">
+    <div class="transit-caratula-card">
+      <div class="transit-header-wrap">
+        <div class="transit-logo-wrap">
+          <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="transit-logo-img">
+        </div>
+        <span class="transit-level-tag">SOCIOMETRÍA ORDINAL &bull; NIVEL 6</span>
+        <h1 class="transit-level-title">6 · INFORMES & MOTOR VISORD</h1>
+        <p class="transit-level-sub">Generación autónoma de informes diagnósticos, sistema experto narrativo, visualización 3D en tiempo real y bóveda de resultados.</p>
       </div>
 
-      <h1 class="hero-title glitch" data-text="6 INFORMES DE RESULTADOS">6 INFORMES DE RESULTADOS</h1>
-      <h2 class="hero-sub">Informes Autónomos HTML Zero-Server, Motor VISORD 3D/4D & Pipeline Institucional</h2>
-      <h3 class="hero-tagline">De la Abstracción Tensorial a la Decisión Estratégica.</h3>
+      <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
+      <div class="transit-parts-grid">
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-6a')" title="Ir a 6a · Informes HTML Autónomos">
+          <div class="transit-part-pill">6a</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Informes HTML Autónomos</span>
+              <span class="word-badge">INFORMES</span>
+            </div>
+            <div class="transit-part-desc">Dossiers diagnósticos autocontenidos N1 a N6 con gráficos SVG interactivos y tablas canónicas.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
 
-      <p class="hero-desc">
-        El ciclo de explotación diagnóstica de NEXORD: generación autónoma de informes interactivos HTML autocontenidos (<b>Macro-Dirección</b>, <b>Meso-Estructural</b> y <b>Micro-Participante Clélie</b>), visualizador tridimensional interactivo <b>VISORD con Moviola 4D</b>, y exportación ejecutiva para el Investigador Principal.
-      </p>
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-6b')" title="Ir a 6b · Sistema Experto Narrativo">
+          <div class="transit-part-pill">6b</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Sistema Experto Narrativo</span>
+              <span class="word-badge">EXPERTO</span>
+            </div>
+            <div class="transit-part-desc">Interpretación textual automatizada de la cohesión, liderazgos, periferias y tensiones grupales.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
 
-            <!-- REPRODUCTOR DE BREVE AUDIO (CARÁTULA PREVIA A 6a) -->
-            <!-- REPRODUCTOR DE AUDIO DE LA CARÁTULA -->
-      <div class="hero-audio-bar">
-        <button id="btn-audio-caratula" class="audio-play-btn" onclick="toggleCaratulaAudio()" title="Escuchar locución oficial de la carátula">
-          <span id="audio-play-icon">▶</span>
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-6c')" title="Ir a 6c · Visualizador VISORD 3D">
+          <div class="transit-part-pill">6c</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Visualizador VISORD 3D</span>
+              <span class="word-badge">VISORD</span>
+            </div>
+            <div class="transit-part-desc">Motor tridimensional WebGL: esferas relacionales, cinta interfacial y dinámica grupal en vivo.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-6d')" title="Ir a 6d · Diapositivas de Presentación">
+          <div class="transit-part-pill">6d</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Diapositivas de Presentación</span>
+              <span class="word-badge">DIAPOSITIVAS</span>
+            </div>
+            <div class="transit-part-desc">Resúmenes ejecutivos listos para proyección institucional, juntas directivas y docencia.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-6e')" title="Ir a 6e · Bóveda Documental">
+          <div class="transit-part-pill">6e</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Bóveda Documental</span>
+              <span class="word-badge">BÓVEDA</span>
+            </div>
+            <div class="transit-part-desc">Repositorio unificado de archivos .xlsx de cálculo, pay-loads JSON, memorias técnicas y actas.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+      </div>
+
+      <div class="transit-actions-row">
+        <button id="btn-audio-caratula" class="btn-transit-audio" onclick="toggleCaratulaAudio()" title="Escuchar locución pausada del nivel" aria-label="Audio del nivel">
+          <span id="audio-play-icon">🔊</span>
         </button>
-        <div class="audio-text-col">
-          <div class="audio-title-row">
-            <span>LOCUCIÓN: INFORMES Y MOTOR VISORD</span>
-            <span class="audio-tag-time">AUDIO · 15s</span>
-          </div>
-          <div class="audio-status-info" id="audio-status-msg">
-            Clic para escuchar la locución oficial
-          </div>
-        </div>
-        <div class="audio-wave-wrap" id="audio-wave-bars">
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-        </div>
       </div>
-
-      <div class="levels-strip-hero">
-        <div class="levels-strip-title">NIVELES DE INFORMACIÓN</div>
-        <div class="levels-pills-row">
-          <a href="nivel1_intuitivo.html" class="level-num-pill pill-lvl-1" title="Nivel 1: Intuitivo y Visual 3D">
-            <span class="pill-number">1</span>
-            <span class="pill-label">3D Acción</span>
-          </a>
-          <a href="nivel2_basico.html" class="level-num-pill pill-lvl-2" title="Nivel 2: Conceptos Básicos">
-            <span class="pill-number">2</span>
-            <span class="pill-label">Básico</span>
-          </a>
-          <a href="nivel3_esquema.html" class="level-num-pill pill-lvl-3" title="Nivel 3: Esquema Operativo">
-            <span class="pill-number">3</span>
-            <span class="pill-label">Esquema</span>
-          </a>
-          <a href="nivel4_aplicaciones.html" class="level-num-pill pill-lvl-4" title="Nivel 4: Aplicaciones & Dominios">
-            <span class="pill-number">4</span>
-            <span class="pill-label">Aplicaciones</span>
-          </a>
-          <a href="nivel5_matematico.html" class="level-num-pill pill-lvl-5" title="Nivel 5: Aparato Matemático">
-            <span class="pill-number">5</span>
-            <span class="pill-label">Matemático</span>
-          </a>
-          <a href="nivel6_informes.html" class="level-num-pill pill-lvl-6 active" title="Nivel 6: Informes & VISORD (Activo)">
-            <span class="pill-number">6</span>
-            <span class="pill-label">Informes</span>
-          </a>
-          <a href="nivel7_documentacion.html" class="level-num-pill pill-lvl-7" title="Nivel 7: Documentación & Ética">
-            <span class="pill-number">7</span>
-            <span class="pill-label">Doc & Ética</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- PANTALLAS CONTENIDAS EN EL NIVEL 6 -->
-            <!-- TRINIDAD DE ENLACES INTERACTIVOS VISORD -->
-      <div class="visord-portals-strip">
-        <a href="visord_demo.html" class="vportal-pill" title="VISORD_demo: Simulador Grupal Interactivo (N < 51)">
-          <span class="vportal-icon">🌐</span>
-          <span class="vportal-title">VISORD_demo</span>
-          <span class="vportal-badge">Simulador N&lt;51</span>
-        </a>
-        <a href="visord_cultural.html" class="vportal-pill vportal-cultural" title="VISORD_cultural: Sociometría de Obras Maestras (Literatura y Cine)">
-          <span class="vportal-icon">🎭</span>
-          <span class="vportal-title">VISORD_cultural</span>
-          <span class="vportal-badge">Cultura &amp; Cine</span>
-        </a>
-        <a href="radiografias_relacionales.html" class="vportal-pill vportal-radiologico" title="VISORD_radiológico: Radiografías Relacionales Socio-Termodinámicas (15-27-54)">
-          <span class="vportal-icon">🩻</span>
-          <span class="vportal-title">VISORD_radiológico</span>
-          <span class="vportal-badge">Radiografías 15-27-54</span>
-        </a>
-      </div>
-
-      <div class="level-screens-contained-box">
-        <div class="contained-screens-title">PANTALLAS CONTENIDAS EN ESTE NIVEL (6a &mdash; 6e)</div>
-        <div class="contained-screens-row">
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-6a')">
-            <span class="contained-step">6a</span>
-            <span class="contained-name">Informes HTML</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-6b')">
-            <span class="contained-step">6b</span>
-            <span class="contained-name">Sistema Experto</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-6c')">
-            <span class="contained-step">6c</span>
-            <span class="contained-name">VISORD 3D/4D</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-6d')">
-            <span class="contained-step">6d</span>
-            <span class="contained-name">Diapositivas</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-6e')">
-            <span class="contained-step">6e</span>
-            <span class="contained-name">Muestras & Bóveda</span>
-          </div>
-        </div>
-      </div>
-
-      <button class="flow-nav-btn flow-nav-btn-next" onclick="scrollToScreen('pantalla-6a')" style="margin-top:20px; padding:10px 24px; font-size:0.92rem; font-weight:800; border-radius:30px; background:linear-gradient(135deg, #00FF87, #38BDF8); color:#030308; border:none; box-shadow:0 0 20px rgba(0,255,135,0.4); cursor:pointer;">
-        <span>INICIAR NIVEL 6 (6a) ↓</span>
-      </button>
     </div>
   </section>
 
@@ -1754,25 +2255,15 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-6a">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 6g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">6a</div>
-      <div class="section-header-badge" style="background:rgba(56, 189, 248, 0.15); color:var(--neon-cyan); border:1px solid var(--neon-cyan);">
-        <span>ENTREGA AUTÓNOMA & GOBERNANZA ÉTICA · PASO 6a</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">6A · INFORMES AUTÓNOMOS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-cyan); font-weight: 800; letter-spacing: 0.5px;">
+          ENTREGA AUTÓNOMA & GOBERNANZA ÉTICA POR DESTINATARIO
+        </div>
       </div>
-      <h2 class="section-title">6a &middot; Informes de Resultados .HTML Autónomos (N1 a N6)</h2>
       <p class="section-subtitle">
-        Documentos interactivos autocontenidos (Zero-Server) a disposición del <b>Investigador Principal (IP)</b> como único depositario de la información sociométrica de NEXORD, garante deontológico de su utilización profesional y responsable exclusivo de su custodia y difusión diversificada.
+        Dossiers interactivos autocontenidos (Zero-Server) con entrega segmentada en 6 niveles de granularidad (N1 a N6) bajo custodia fiduciaria del IP.
       </p>
 
       <!-- TRÍPTICO SUPERIOR: GOBERNANZA DEL IP, DERECHO AL FEEDBACK Y ACCESO TELEMÁTICO -->
@@ -2018,23 +2509,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-6b">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 6g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">6b</div>
-      <div class="section-header-badge" style="background:rgba(0, 255, 135, 0.15); color:var(--neon-green); border:1px solid var(--neon-green);">
-        <span>INTELIGENCIA DIAGNÓSTICA & COMPROMISO ÉTICO · PASO 6b</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">6B · SISTEMA EXPERTO DE DIAGNÓSTICO:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-green); font-weight: 800; letter-spacing: 0.5px;">
+          INTELIGENCIA DIAGNÓSTICA & COMPROMISO ÉTICO VINCULAR
+        </div>
       </div>
-      <h2 class="section-title">6b &middot; Sistema Experto de Interpretación Sociométrica</h2>
       <p class="section-subtitle">
         NEXORD ofrece un sistema experto de interpretación sociométrica fundamentado en <b>resultados relevantes y verificados, individuales y colectivos</b>. Siempre a tenor de su <b>compromiso ético</b>, transforma autovalores espectrales y tensores matriciales en diagnósticos comprensibles, constructivos y orientados a la acción.
       </p>
@@ -2185,25 +2666,15 @@
   </section>
   <section class="screen-section" id="pantalla-6c">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 6g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">6c</div>
-      <div class="section-header-badge" style="background:rgba(168, 85, 247, 0.15); color:var(--neon-purple); border:1px solid var(--neon-purple);">
-        <span>VISUALIZACIÓN INTERACTIVA · PASO 6c</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">6C · VISUALIZADOR VISORD:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-purple); font-weight: 800; letter-spacing: 0.5px;">
+          VISUALIZACIÓN INTERACTIVA 3D / 4D Y ESPACIO TENSORIAL
+        </div>
       </div>
-      <h2 class="section-title">6c &middot; VISORD: Visualización Interactiva</h2>
       <p class="section-subtitle">
-        La complejidad de la realidad sociométrica de un grupo numeroso requiere un esfuerzo considerable de atención a los detalles. NEXORD ofrece a los Investigadores Principales (IP) y a sus equipos de investigación el <strong>VISORD Engine</strong> como sistema de Visualización Interactiva de los resultados sociométricos producidos: un entorno multidimensional que supera las limitaciones del plano estático para examinar densidades, orbitar perspectivas espaciales y reproducir la deriva temporal longitudinal.
+        Visualizador Tensorial 3D/4D: renderizado espacial de cuencas gravitatorias, trayectorias dinámicas y enlaces diádicos en tiempo real para el equipo investigador.
       </p>
 
       <div class="grid-2col">
@@ -2306,25 +2777,15 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-6d">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 6g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">6d</div>
-      <div class="section-header-badge" style="background:rgba(255, 230, 0, 0.15); color:var(--neon-gold); border:1px solid var(--neon-gold);">
-        <span>DEVOLUCIÓN COLECTIVA &amp; COMUNICACIÓN PÚBLICA · PASO 6d</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">6D · DIAPOSITIVAS EJECUTIVAS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-gold); font-weight: 800; letter-spacing: 0.5px;">
+          DEVOLUCIÓN COLECTIVA & COMUNICACIÓN INSTITUCIONAL GRADUADA
+        </div>
       </div>
-      <h2 class="section-title">6d &middot; Diapositivas de Presentación Sociométrica</h2>
       <p class="section-subtitle">
-        Para devoluciones colectivas de los resultados de un estudio sociométrico institucional, NEXORD ofrece un archivo básico de <strong>Diapositivas de Presentación</strong> para facilitar al Investigador Principal (IP), como último responsable, su exposición pública de aquellos aspectos numéricos y gráficos que ayuden a la mejor comprensión de los procesos grupales, sin comprometer el anonimato y la confidencialidad exigida por este tipo de informaciones tan sensibles: estructura relacional general, evaluación termodinámica de la situación grupal, vectores de cohesión y líneas estratégicas de mejora colectiva.
+        Plantilla ejecutiva para devolución institucional: exposición pública de estructura, termodinámica y líneas de mejora preservando el anonimato fiduciario.
       </p>
 
       <!-- BARRA DE SELECCIÓN DIRECTA DE DIAPOSITIVAS Y CONMUTADOR DE MODO -->
@@ -2395,23 +2856,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-6e">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 6g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">6e</div>
-      <div class="section-header-badge" style="background:rgba(0, 255, 135, 0.15); color:var(--neon-green); border:1px solid var(--neon-green);">
-        <span>SÍNTESIS DIAGNÓSTICA & BÓVEDA DE MUESTRAS · PASO 6e</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">6E · BÓVEDA DOCUMENTAL:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-green); font-weight: 800; letter-spacing: 0.5px;">
+          SÍNTESIS DIAGNÓSTICA & BÓVEDA DE MUESTRAS CERTIFICADAS
+        </div>
       </div>
-      <h2 class="section-title">6e &middot; Muestras de Informes, Bóveda Documental y Tránsito al Nivel 7</h2>
       <p class="section-subtitle">
         Acceso unificado a las muestras de informes y plantillas ejecutivas de la plataforma. La información sociométrica se transfiere estructurada en tres niveles ontológicos (Macro, Meso y Micro) que salvaguardan el anonimato de los sujetos y potencian la toma de decisiones informadas del Investigador Principal.
       </p>
@@ -2452,7 +2903,7 @@
         <div class="discovery-tag">DESCUBRIMIENTO PROGRESIVO &middot; SIGUIENTE NIVEL (7 DE 7)</div>
         <h3 class="discovery-title">¿Desea consultar el corpus documental, la ética fiduciaria y la bóveda científica?</h3>
         <p class="discovery-desc">
-          Ha explorado los informes de resultados, la interpretación experta, el visualizador 3D/4D y la presentación pública para el IP. En el Nivel 7: DOCUMENTACIÓN, ÉTICA & BÓVEDA CIENTÍFICA accederá al glosario enciclopédico de términos, la fundamentación bibliográfica canónica (Moreno, Cornejo, Benzécri, Pearson, Fiedler, Heider, Grassmann), los registros internacionales en CERN Zenodo y el Manifiesto ético Clélie.
+          Documentación canónica, glosario interactivo, bibliografía científica y protocolo deontológico Clélie.
         </p>
         <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
           <button class="flow-nav-btn" onclick="scrollToScreen('pantalla-6d')">
@@ -2481,8 +2932,9 @@
 
     /* 1. NAVEGACIÓN ENTRE PANTALLAS */
     function scrollToScreen(id) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     const screens = ['pantalla-6-caratula', 'pantalla-6a', 'pantalla-6b', 'pantalla-6c', 'pantalla-6d', 'pantalla-6e'];
@@ -2494,23 +2946,83 @@
       'pantalla-6e': 'hud-btn-6e'
     };
 
-    function navigateStep(direction) {
-      const currentScroll = window.scrollY;
-      let currentIndex = 0;
+    function getCurrentScreenIndex() {
+      let bestIdx = 0;
       let minDiff = Infinity;
       screens.forEach((id, idx) => {
         const el = document.getElementById(id);
         if (el) {
-          const diff = Math.abs(el.offsetTop - currentScroll);
+          const rect = el.getBoundingClientRect();
+          const diff = Math.abs(rect.top);
           if (diff < minDiff) {
             minDiff = diff;
-            currentIndex = idx;
+            bestIdx = idx;
           }
         }
       });
-      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIndex + direction));
-      scrollToScreen(screens[targetIndex]);
+      return bestIdx;
     }
+
+    function navigateStep(direction) {
+      const currentIdx = getCurrentScreenIndex();
+      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIdx + direction));
+      if (targetIndex !== currentIdx) {
+        scrollToScreen(screens[targetIndex]);
+      }
+    }
+
+    // CONTROLADOR DE NAVEGACIÓN DISCRETA PANTALLA A PANTALLA
+    let isDiscreteNavigating = false;
+    let wheelAccumulator = 0;
+    let wheelResetTimer = null;
+
+    window.addEventListener('wheel', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && (modal.classList.contains('active') || modal.style.display === 'flex')) return;
+
+      const scrollable = e.target.closest('.screen-container, .modal-content-box, .scrollable-area');
+      if (scrollable) {
+        const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 5;
+        const isAtTop = scrollable.scrollTop <= 5;
+        if (e.deltaY > 0 && !isAtBottom) return;
+        if (e.deltaY < 0 && !isAtTop) return;
+      }
+
+      e.preventDefault();
+      if (isDiscreteNavigating) return;
+
+      wheelAccumulator += e.deltaY;
+      clearTimeout(wheelResetTimer);
+      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 180);
+
+      if (Math.abs(wheelAccumulator) >= 28) {
+        isDiscreteNavigating = true;
+        const dir = wheelAccumulator > 0 ? 1 : -1;
+        wheelAccumulator = 0;
+        navigateStep(dir);
+        setTimeout(() => {
+          isDiscreteNavigating = false;
+        }, 750);
+      }
+    }, { passive: false });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && modal.classList.contains('active')) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY - touchEndY;
+      if (Math.abs(diffY) > 50) {
+        if (isDiscreteNavigating) return;
+        isDiscreteNavigating = true;
+        navigateStep(diffY > 0 ? 1 : -1);
+        setTimeout(() => { isDiscreteNavigating = false; }, 600);
+      }
+    }, { passive: true });
 
     function handleSalirPlatform() {
       if (confirm('¿Desea salir de la Plataforma NEXORD y regresar a la Web Principal?')) {
@@ -3272,55 +3784,252 @@
       }
     }
 
-    function triggerPptDownload() {
-      alert("📥 PAQUETE DE DEVOLUCIÓN INSTITUCIONAL COMPILADO:
-
-" +
-            "• Archivo: INFORME_EJECUTIVO_DEVOLUCION_COLECTIVA_G2T3C1.pptx
-" +
-            "  (Presentación ejecutiva 16:9 con paleta VISORD Navy/Neón y gráficos vectoriales)
-
-" +
-            "• Archivo Complementario: GUIA_DEONTOLOGICA_PRESENTACION_PUBLICA_IP.pdf
-" +
-            "  (Guion oratorio confidencial y pautas para el IP)
-
-" +
-            "Certificación de Anonimato: Todos los datos han sido anonimizados canónicamente (tokens 1A1a..6B1a) conforme al Protocolo Clélie.");
-    }
-
+            
     /* INICIALIZACIÓN */
     window.addEventListener('DOMContentLoaded', () => {
       initVisordNodes();
       animateVisord();
     });
-      /* REPRODUCTOR DE AUDIO DE LA CARÁTULA (NIVEL 6) */
-    let isCaratulaAudioPlaying = false;
-    let caratulaSpeechUtter = null;
+      // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
+    window.addEventListener('beforeunload', () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    });
 
-    function toggleCaratulaAudio() {
-      const btnIcon = document.getElementById('audio-play-icon');
-      const statusMsg = document.getElementById('audio-status-msg');
-      const waveBars = document.getElementById('audio-wave-bars');
+  </script>
+<script>
+  /* =========================================================================
+     LOCUCIÓN PAUSADA Y SERENA DE CARÁTULA DE PASO (NEXORD)
+     ========================================================================= */
+  if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+  if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
 
-      if (!('speechSynthesis' in window)) {
-        if (statusMsg) statusMsg.textContent = 'Audio no soportado en este navegador';
+  function playCaratulaAudio() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const locucionTexto = "Nivel Seis. Informes de resultados. Diagnóstico socio-termodinámico, balance de cargas y reportes ejecutivos automatizados.";
+    caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+    caratulaSpeechUtter.lang = 'es-ES';
+
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
+                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
+                 || voices[0];
+    if (esVoice) caratulaSpeechUtter.voice = esVoice;
+
+    caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+    caratulaSpeechUtter.pitch = 0.95;
+    caratulaSpeechUtter.volume = 1.0;
+
+    const btnAudio = document.getElementById('btn-audio-caratula');
+    const playIcon = document.getElementById('audio-play-icon');
+
+    caratulaSpeechUtter.onstart = () => {
+      isCaratulaAudioPlaying = true;
+      if (btnAudio) btnAudio.classList.add('playing');
+      if (playIcon) playIcon.textContent = '❚❚';
+    };
+
+    caratulaSpeechUtter.onend = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    caratulaSpeechUtter.onerror = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    window.speechSynthesis.speak(caratulaSpeechUtter);
+  }
+
+  function toggleCaratulaAudio() {
+    if (isCaratulaAudioPlaying) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    } else {
+      playCaratulaAudio();
+    }
+  }
+
+  function continueToLevel(targetId) {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    isCaratulaAudioPlaying = false;
+    scrollToScreen(targetId);
+  }
+
+  // Inicio automático pausado suave tras ~1.2s al abrir la carátula
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (!isCaratulaAudioPlaying && window.scrollY < 180) {
+        playCaratulaAudio();
+      }
+    }, 1200);
+  });
+
+  // Cancelar audio inmediatamente al navegar o salir
+  window.addEventListener('beforeunload', () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+    // =========================================================================
+    // CONTROLADOR CANÓNICO HUD NEXORD (Nivel 6.)
+    // =========================================================================
+    const HUD_CONFIG = {
+      levelNum: 6,
+      screens: [
+        { id: 'pantalla-6a', letter: 'a', word: 'INFORMES' },
+        { id: 'pantalla-6b', letter: 'b', word: 'EXPERTO' },
+        { id: 'pantalla-6c', letter: 'c', word: 'VISORD' },
+        { id: 'pantalla-6d', letter: 'd', word: 'DIAPOSITIVAS' },
+        { id: 'pantalla-6e', letter: 'e', word: 'BÓVEDA' }
+      ],
+      caratulaId: 'pantalla-6-caratula',
+      prevLevelUrl: 'nivel5_matematico.html',
+      nextLevelUrl: 'nivel7_documentacion.html'
+    };
+
+    if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+    if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+    function updateUnifiedHud() {
+      const hud = document.getElementById('top-floating-hud');
+      if (!hud) return;
+
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5) {
+            currentIdx = idx;
+          }
+        }
+      });
+
+      // Si está en la carátula o arriba del todo, ocultar el HUD flotante
+      if (currentIdx === -1) {
+        hud.classList.remove('visible');
         return;
+      } else {
+        hud.classList.add('visible');
       }
 
-      if (isCaratulaAudioPlaying) {
-        window.speechSynthesis.cancel();
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Locución pausada · Clic para reanudar';
-        if (waveBars) waveBars.classList.remove('playing');
-        return;
+      // Actualizar botón de letra activo
+      const letterBtns = hud.querySelectorAll('.hud-letter-btn');
+      letterBtns.forEach((btn, idx) => {
+        if (idx === currentIdx) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Protocolo Estricto de Flechas Canónicas:
+      const prevBtn = document.getElementById('hud-arrow-prev');
+      const nextBtn = document.getElementById('hud-arrow-next');
+
+      // Flecha izquierda: '--' desactivada exclusivamente en 1a
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        if (prevBtn) {
+          prevBtn.textContent = '--';
+          prevBtn.classList.add('disabled');
+          prevBtn.title = 'Inicio de la plataforma';
+        }
+      } else {
+        if (prevBtn) {
+          prevBtn.textContent = '◀';
+          prevBtn.classList.remove('disabled');
+          prevBtn.title = (currentIdx === 0) ? 'Nivel anterior' : ('Pantalla anterior (' + HUD_CONFIG.screens[currentIdx - 1].letter + ')');
+        }
       }
 
+      // Flecha derecha: '--' desactivada exclusivamente en 7e
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        if (nextBtn) {
+          nextBtn.textContent = '--';
+          nextBtn.classList.add('disabled');
+          nextBtn.title = 'Fin de la plataforma';
+        }
+      } else {
+        if (nextBtn) {
+          nextBtn.textContent = '▶';
+          nextBtn.classList.remove('disabled');
+          nextBtn.title = (currentIdx === (HUD_CONFIG.screens.length - 1)) ? 'Nivel siguiente' : ('Pantalla siguiente (' + HUD_CONFIG.screens[currentIdx + 1].letter + ')');
+        }
+      }
+    }
+
+    function scrollToScreen(screenId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const el = document.getElementById(screenId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(updateUnifiedHud, 350);
+      }
+    }
+
+    function continueToLevel(targetId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      scrollToScreen(targetId);
+      
+    }
+
+    function hudNavigatePrev() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        return; // 1a disabled '--'
+      }
+
+      if (currentIdx > 0) {
+        scrollToScreen(HUD_CONFIG.screens[currentIdx - 1].id);
+      } else if (HUD_CONFIG.prevLevelUrl) {
+        window.location.href = HUD_CONFIG.prevLevelUrl;
+      }
+    }
+
+    function hudNavigateNext() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        return; // 7e disabled '--'
+      }
+
+      if (currentIdx < HUD_CONFIG.screens.length - 1) {
+        const nextIdx = (currentIdx < 0) ? 0 : (currentIdx + 1);
+        scrollToScreen(HUD_CONFIG.screens[nextIdx].id);
+      } else if (HUD_CONFIG.nextLevelUrl) {
+        window.location.href = HUD_CONFIG.nextLevelUrl;
+      }
+    }
+
+    function playCaratulaAudio() {
+      if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
-      const locucionTexto = "En este SEXTO NIVEL se transita desde la abstracción matemática a la decisión estratégica. NEXORD genera informes interactivos multicapa, numéricos y gráficos, diagnósticos asistidos y el entorno visual interactivo VISORD, facilitando al Investigador Principal una devolución clara, constructiva y transformadora.";
-
+      const locucionTexto = "Nivel Seis. Informes de resultados. Diagnóstico socio-termodinámico, balance de cargas y reportes ejecutivos automatizados.";
       caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
       caratulaSpeechUtter.lang = 'es-ES';
 
@@ -3331,39 +4040,56 @@
                    || voices[0];
       if (esVoice) caratulaSpeechUtter.voice = esVoice;
 
-      caratulaSpeechUtter.rate = 0.85;
-      caratulaSpeechUtter.pitch = 0.92;
+      caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+      caratulaSpeechUtter.pitch = 0.95;
       caratulaSpeechUtter.volume = 1.0;
+
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
 
       caratulaSpeechUtter.onstart = () => {
         isCaratulaAudioPlaying = true;
-        if (btnIcon) btnIcon.textContent = '❚❚';
-        if (statusMsg) statusMsg.textContent = 'Reproduciendo locución oficial...';
-        if (waveBars) waveBars.classList.add('playing');
+        if (btnAudio) btnAudio.classList.add('playing');
+        if (playIcon) playIcon.textContent = '⏹';
       };
 
       caratulaSpeechUtter.onend = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Reproducción finalizada';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       caratulaSpeechUtter.onerror = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Error en la reproducción';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       window.speechSynthesis.speak(caratulaSpeechUtter);
     }
-  
-    // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
-    window.addEventListener('beforeunload', () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    function toggleCaratulaAudio() {
+      if (isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        isCaratulaAudioPlaying = false;
+        const btnAudio = document.getElementById('btn-audio-caratula');
+        const playIcon = document.getElementById('audio-play-icon');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      } else {
+        playCaratulaAudio();
+      }
+    }
+
+    // Listeners de actualización universal
+    window.addEventListener('scroll', updateUnifiedHud);
+    window.addEventListener('resize', updateUnifiedHud);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUnifiedHud();
+      const snapCont = document.getElementById('main-snap-container');
+      if (snapCont) snapCont.addEventListener('scroll', updateUnifiedHud);
     });
 
-  </script>
+</script>
 </body>
 </html>

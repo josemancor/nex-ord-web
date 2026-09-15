@@ -47,12 +47,22 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      height: 100%;
+    }
+
     body {
       background-color: var(--bg-abyss);
       color: var(--text-main);
       font-family: var(--font-main);
       line-height: 1.6;
+      width: 100vw;
+      height: 100vh;
       overflow-x: hidden;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
       scroll-behavior: smooth;
     }
 
@@ -511,57 +521,76 @@
 
     /* CONTENEDOR DE PANTALLAS */
     .screen-section {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
       min-height: 100vh;
-      padding: 130px 24px 80px 24px;
+      max-height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 55px 16px 10px 16px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      position: relative;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .screen-container {
       width: 100%;
       max-width: 1200px;
+      max-height: calc(100vh - 65px);
+      margin: 0 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 10px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 6px;
     }
 
+    .screen-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    .screen-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 159, 28, 0.3);
+      border-radius: 4px;
+    }
+
+    .screen-step-tag {
+      display: none;
+    }
     .section-header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.5px;
-      width: fit-content;
+      display: none;
     }
 
     .section-title {
-      font-size: 32px;
-      font-weight: 800;
+      font-size: 1.15rem;
+      font-weight: 900;
       color: var(--text-white);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
       line-height: 1.2;
+      text-transform: uppercase;
+      margin-bottom: 1px;
     }
 
     .section-subtitle {
-      font-size: 15px;
+      font-size: 0.70rem;
       color: var(--text-muted);
       max-width: 860px;
-      line-height: 1.6;
+      line-height: 1.35;
+      margin-bottom: 4px;
     }
 
     /* CARDS Y PANELES */
     .card-panel {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 22px;
+      border-radius: 8px;
+      padding: 8px 12px;
       transition: all 0.25s ease;
     }
 
@@ -1529,7 +1558,514 @@
       border-color: rgba(0, 255, 135, 0.3);
     }
 
-  </style>
+  
+    /* ==========================================================
+       MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA)
+       ========================================================== */
+    .universal-nav-pod {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 8px 6px;
+      border-radius: 26px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.15);
+    }
+    .nav-pod-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(16, 25, 53, 0.90);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      user-select: none;
+    }
+    .nav-pod-btn:hover {
+      background: var(--neon-cyan, #38BDF8);
+      color: #030308;
+      border-color: var(--neon-cyan, #38BDF8);
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+    }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030308 !important;
+      box-shadow: 0 0 14px rgba(255, 230, 0, 0.7) !important;
+    }
+    .nav-pod-exit:hover {
+      background: #FF007F !important;
+      border-color: #FF007F !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.7) !important;
+    }
+    .nav-pod-disabled {
+      opacity: 0.22;
+      pointer-events: none;
+      cursor: default;
+    }
+
+  
+    /* =========================================================================
+       CARÁTULA DE PASO Y ESPERA CANÓNICA NEXORD (SOBRIEDAD MÁXIMA)
+       ========================================================================= */
+    /* ESTÁNDAR CANÓNICO DE CARÁTULA NEXORD (PANORÁMICA 900px CON ÍNDICE a..e) */
+    .transit-caratula-section {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+      padding: 40px 20px !important;
+      background: radial-gradient(circle at center, #0F1D40 0%, #060914 100%) !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+    }
+    .transit-caratula-card {
+      width: 92%;
+      max-width: 900px;
+      background: rgba(11, 19, 43, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.40);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 30px 36px 26px 36px;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(0, 162, 255, 0.20);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .transit-header-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .transit-logo-wrap {
+      width: 76px;
+      height: 76px;
+      margin-bottom: 12px;
+      background: rgba(11, 15, 25, 0.7);
+      border: 2px solid #00A2FF;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0, 162, 255, 0.5), inset 0 0 12px rgba(0, 162, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .transit-logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.6));
+    }
+    .transit-level-tag {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      padding: 3px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .transit-level-title {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: clamp(1.35rem, 2.7vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #FFFFFF;
+      margin: 0 0 6px 0;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .transit-title-num {
+      color: #00FF87;
+      font-family: 'Roboto Mono', monospace;
+      margin-right: 6px;
+    }
+    .transit-level-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13.5px;
+      color: #94A3B8;
+      max-width: 740px;
+      margin: 0 auto;
+      line-height: 1.45;
+    }
+    .transit-parts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      margin: 16px 0 20px 0;
+      text-align: left;
+    }
+    .transit-part-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .transit-part-row:hover {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: rgba(0, 240, 255, 0.5);
+      transform: translateX(4px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 240, 255, 0.15);
+    }
+    .transit-part-pill {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      font-weight: 900;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.16);
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      border-radius: 6px;
+      width: 32px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .transit-part-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      overflow: hidden;
+    }
+    .transit-part-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .transit-part-heading .word-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #00FF87;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0, 255, 135, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 135, 0.3);
+    }
+    .transit-part-desc {
+      font-size: 11.5px;
+      color: #94A3B8;
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .transit-part-arrow {
+      color: rgba(0, 240, 255, 0.6);
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .transit-part-row:hover .transit-part-arrow {
+      color: #00FF87;
+      transform: translateX(3px);
+    }
+    .transit-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .btn-transit-continue {
+      padding: 13px 32px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.96rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #00FF87 0%, #38BDF8 100%);
+      color: #030308;
+      border: none;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.35);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .btn-transit-continue:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 32px rgba(0, 255, 135, 0.65), 0 8px 24px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, #38BDF8 0%, #00FF87 100%);
+    }
+    .btn-transit-audio {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      color: #38BDF8;
+      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .btn-transit-audio:hover {
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      background: rgba(56, 189, 248, 0.25);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.55);
+    }
+    .btn-transit-audio.playing {
+      border-color: #00FF87;
+      color: #00FF87;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.6);
+      animation: audioPulse 1.8s infinite;
+    }
+    @keyframes audioPulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 24px rgba(0, 255, 135, 0.75); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+    }/* =========================================================================
+       CABECERA COMPACTA Y UNIFICADA DE LETRAS CON PALABRA INFERIOR (a b c d e)
+       CANON INSTITUCIONAL NEXORD: SOCIOMETRÍA ORDINAL {lvl}.
+       ========================================================================= */
+    .top-floating-hud {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(11, 19, 43, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 5px 16px;
+      border-radius: 40px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+    }
+    .top-floating-hud.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .hud-brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      line-height: 1;
+      padding-right: 12px;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: default;
+    }
+    .hud-brand-logo {
+      color: #38BDF8;
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 1.2px;
+    }
+    .hud-brand-sub {
+      color: #F8FAFC;
+      font-weight: 700;
+      font-size: 0.74rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .hud-level-num {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #00FF87;
+      text-shadow: 0 0 10px rgba(0, 255, 135, 0.7);
+      margin-left: 6px;
+      padding: 1px 7px;
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.45);
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .hud-nav-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+      font-size: 0.95rem;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .hud-arrow-btn:hover:not(.disabled) {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+    .hud-arrow-btn.disabled {
+      opacity: 0.32;
+      pointer-events: none;
+      cursor: default;
+      color: #64748B;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .hud-letters-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .hud-letter-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 12px;
+      min-width: 58px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .hud-letter-btn .hud-letter-char {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #38BDF8;
+      line-height: 1.05;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn .hud-letter-word {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 2px;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #38BDF8;
+      transform: translateY(-2px);
+    }
+    .hud-letter-btn:hover .hud-letter-char {
+      color: #00F0FF;
+    }
+    .hud-letter-btn:hover .hud-letter-word {
+      color: #FFFFFF;
+    }
+    .hud-letter-btn.active {
+      background: rgba(0, 255, 135, 0.16);
+      border: 1.8px solid #00FF87;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.5), inset 0 0 8px rgba(0, 255, 135, 0.15);
+      transform: translateY(-1px);
+    }
+    .hud-letter-btn.active .hud-letter-char {
+      color: #00FF87;
+    }
+    .hud-letter-btn.active .hud-letter-word {
+      color: #FFFFFF;
+      font-weight: 900;
+    }
+    .hud-home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 38px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      line-height: 1;
+      padding-left: 2px;
+    }
+    .hud-home-btn:hover {
+      transform: scale(1.22);
+      filter: drop-shadow(0 0 8px rgba(255, 230, 0, 0.8));
+    }
+
+</style>
 </head>
 <body>
 
@@ -1541,179 +2077,145 @@
   </a>
 
   <!-- TOP RIGHT GENERAL PLATFORM NAV -->
-  <div class="top-right-nav">
-    <a href="nivel1_intuitivo.html" class="top-nav-btn top-nav-btn-home" title="Volver al Inicio General de la Plataforma NEXORD">
-      <span>⌂</span>
-      <span>Inicio</span>
-    </a>
-    <a href="javascript:void(0)" onclick="handleSalirPlatform()" class="top-nav-btn top-nav-btn-exit" title="Salir de la Plataforma NEXORD">
-      <span>⏻</span>
-      <span>Salir</span>
-    </a>
-  </div>
+  
 
   <!-- TOP FLOATING CANONICAL HUD (NIVEL 4: APLICACIONES & DOMINIOS) -->
-  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación Nivel 4">
-    <div class="hud-main-pill">
-      <span class="hud-brand-tag">🌐 NEXORD · NIVEL 4: APLICACIONES</span>
-      <div class="hud-parts-group">
-        <button class="hud-part-btn" id="hud-btn-4a" onclick="scrollToScreen('pantalla-4a')" title="Paso 4a: Los 10 Dominios de Aplicación">
-          <span class="hud-part-code">(4a)</span>
-          <span class="hud-part-label">Dominios</span>
+        <!-- =========================================================================
+       CABECERA COMPACTA Y UNIFICADA (a b c d e) · NEXORD: SOCIOMETRÍA ORDINAL 4.
+       ========================================================================= -->
+  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación de Nivel">
+    <div class="hud-brand-pill">
+      <span class="hud-brand-logo">NEXORD:</span>
+      <span class="hud-brand-sub">SOCIOMETRÍA ORDINAL</span>
+    </div>
+    
+    <div class="hud-nav-cluster">
+      <button class="hud-arrow-btn" id="hud-arrow-prev" onclick="hudNavigatePrev()" title="Nivel anterior">◀</button>
+      <div class="hud-letters-row">
+        <button class="hud-letter-btn hud-part-btn active" onclick="scrollToScreen('pantalla-4a')" data-screen="pantalla-4a" title="4a · Los 10 Dominios">
+          <span class="hud-letter-char">a</span>
+          <span class="hud-letter-word">DOMINIOS</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-4b" onclick="scrollToScreen('pantalla-4b')" title="Paso 4b: Laboratorio What-If Preventivo">
-          <span class="hud-part-code">(4b)</span>
-          <span class="hud-part-label">What-If</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-4b')" data-screen="pantalla-4b" title="4b · Sociometría Preventiva">
+          <span class="hud-letter-char">b</span>
+          <span class="hud-letter-word">PREVENTIVA</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-4c" onclick="scrollToScreen('pantalla-4c')" title="Paso 4c: Sociometría Cultural">
-          <span class="hud-part-code">(4c)</span>
-          <span class="hud-part-label">Cultura</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-4c')" data-screen="pantalla-4c" title="4c · Sociometría Cultural">
+          <span class="hud-letter-char">c</span>
+          <span class="hud-letter-word">CULTURAL</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-4d" onclick="scrollToScreen('pantalla-4d')" title="Paso 4d: Diagnóstico Grupal y Fases de Intervención">
-          <span class="hud-part-code">(4d)</span>
-          <span class="hud-part-label">Diagnóstico</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-4d')" data-screen="pantalla-4d" title="4d · Fases de Intervención">
+          <span class="hud-letter-char">d</span>
+          <span class="hud-letter-word">DIAGNÓSTICO</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-4e" onclick="scrollToScreen('pantalla-4e')" title="Paso 4e: Actitudes Reparadoras, Ética Fiduciaria y Tránsito al Nivel 5">
-          <span class="hud-part-code">(4e)</span>
-          <span class="hud-part-label">Reparación</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-4e')" data-screen="pantalla-4e" title="4e · Actitudes Reparadoras">
+          <span class="hud-letter-char">e</span>
+          <span class="hud-letter-word">REPARACIÓN</span>
         </button>
       </div>
+      <button class="hud-arrow-btn" id="hud-arrow-next" onclick="hudNavigateNext()" title="Pantalla siguiente">▶</button>
     </div>
+
+    <a href="index.html" class="hud-home-btn" title="Inicio (Portada Principal)">🏠</a>
   </nav>
 
   <!-- LATERAL NAVIGATION ARROWS WITH NEXT LEVEL LINK -->
-  <div class="vertical-nav-arrows">
-    <button class="nav-arrow-btn nav-arrow-btn-home" onclick="scrollToScreen('pantalla-4-caratula')" title="Ir a la Portada del Nivel 4">⌂</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(-1)" title="Pantalla anterior">▲</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(1)" title="Pantalla siguiente">▼</button>
-    <a href="nivel5_matematico.html" class="nav-arrow-btn nav-arrow-btn-next-lvl" title="Avanzar al Nivel 5: Aparato Matemático">→</a>
-  </div>
+  
 
-  <section class="screen-section" id="pantalla-4-caratula" style="padding-top:72px;">
-    <div class="hero-box">
-      <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" class="doi-badge">DOI: 10.5281/zenodo.18941691</a>
+    <!-- MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA) -->
+  <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)">
+      <span>🏠</span>
+    </a>
+    <a href="nivel3_esquema.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 3: Esquema Operativo)"><span>◀</span></a>
+    <button class="nav-pod-btn nav-pod-prev-screen" onclick="navigateStep(-1)" title="Atrás (Pantalla Anterior)">
+      <span>▲</span>
+    </button>
+    <button class="nav-pod-btn nav-pod-next-screen" onclick="navigateStep(1)" title="Siguiente (Pantalla Siguiente)">
+      <span>▼</span>
+    </button>
+    <a href="nivel5_matematico.html" class="nav-pod-btn nav-pod-next-lvl" title="Nivel Siguiente (Nivel 5: Aparato Matemático)"><span>▶</span></a>
+  </nav>
 
-      <div class="hero-logo-box">
-        <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="hero-logo-img">
+        <section id="pantalla-4-caratula" class="screen-section transit-caratula-section">
+    <div class="transit-caratula-card">
+      <div class="transit-header-wrap">
+        <div class="transit-logo-wrap">
+          <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="transit-logo-img">
+        </div>
+        <span class="transit-level-tag">SOCIOMETRÍA ORDINAL &bull; NIVEL 4</span>
+        <h1 class="transit-level-title">4 · APLICACIONES & DOMINIOS</h1>
+        <p class="transit-level-sub">Despliegue transversal en 10 dominios institucionales, sociometría cultural, modelos prospectivos y protocolos de intervención.</p>
       </div>
 
-      <h1 class="hero-title glitch" data-text="4 APLICACIONES & DOMINIOS">4 APLICACIONES & DOMINIOS</h1>
-      <h2 class="hero-sub">10 Dominios, Prospectiva What-If & Sociometría Cultural</h2>
-      <h3 class="hero-tagline">La Universalidad del Modelo Relacional.</h3>
+      <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
+      <div class="transit-parts-grid">
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-4a')" title="Ir a 4a · Los 10 Dominios Aplicados">
+          <div class="transit-part-pill">4a</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Los 10 Dominios Aplicados</span>
+              <span class="word-badge">DOMINIOS</span>
+            </div>
+            <div class="transit-part-desc">Mapeo empírico en educación, sanidad, empresa, deporte, defensa y organizaciones cívicas.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
 
-      <p class="hero-desc">
-        Desde las aulas escolares hasta el alto rendimiento deportivo, consejos de administración corporativos y dramaturgia universal: explore los <b>10 Dominios</b>, la experimentación prospectiva en el <b>Laboratorio What-If</b> y la radiografía de obras maestras en la <b>Sociometría Cultural</b>.
-      </p>
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-4b')" title="Ir a 4b · Sociometría Preventiva">
+          <div class="transit-part-pill">4b</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Sociometría Preventiva</span>
+              <span class="word-badge">PREVENTIVA</span>
+            </div>
+            <div class="transit-part-desc">Detección precoz de fracturas, aislamiento, acoso escolar y burnout relacional.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
 
-      <!-- TIRA CANÓNICA DE NIVELES DE INFORMACIÓN (1 A 7) CON NIVEL 4 ACTIVO -->
-            <!-- REPRODUCTOR DE AUDIO DE LA CARÁTULA -->
-            <!-- REPRODUCTOR DE AUDIO DE LA CARÁTULA -->
-      <div class="hero-audio-bar">
-        <button id="btn-audio-caratula" class="audio-play-btn" onclick="toggleCaratulaAudio()" title="Escuchar locución oficial de la carátula">
-          <span id="audio-play-icon">▶</span>
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-4c')" title="Ir a 4c · Sociometría Cultural">
+          <div class="transit-part-pill">4c</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Sociometría Cultural</span>
+              <span class="word-badge">CULTURAL</span>
+            </div>
+            <div class="transit-part-desc">Análisis de redes dramáticas en obras maestras literarias, teatrales y cinematográficas.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-4d')" title="Ir a 4d · Fases de Diagnóstico & Intervención">
+          <div class="transit-part-pill">4d</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Fases de Diagnóstico & Intervención</span>
+              <span class="word-badge">DIAGNÓSTICO</span>
+            </div>
+            <div class="transit-part-desc">Ciclo factual de 5 pasos: exploración, prescripción, reconfiguración y seguimiento.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-4e')" title="Ir a 4e · Actitudes Reparadoras & Ética">
+          <div class="transit-part-pill">4e</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Actitudes Reparadoras & Ética</span>
+              <span class="word-badge">REPARACIÓN</span>
+            </div>
+            <div class="transit-part-desc">Estrategias sistémicas de mediación vincular, cohesión de grupo y recomposición afectiva.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+      </div>
+
+      <div class="transit-actions-row">
+        <button id="btn-audio-caratula" class="btn-transit-audio" onclick="toggleCaratulaAudio()" title="Escuchar locución pausada del nivel" aria-label="Audio del nivel">
+          <span id="audio-play-icon">🔊</span>
         </button>
-        <div class="audio-text-col">
-          <div class="audio-title-row">
-            <span>LOCUCIÓN: APLICACIONES, WHAT-IF Y CULTURA</span>
-            <span class="audio-tag-time">AUDIO · 16s</span>
-          </div>
-          <div class="audio-status-info" id="audio-status-msg">
-            Clic para escuchar la locución oficial
-          </div>
-        </div>
-        <div class="audio-wave-wrap" id="audio-wave-bars">
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-        </div>
       </div>
-
-      <div class="levels-strip-hero">
-        <div class="levels-strip-title">NIVELES DE INFORMACIÓN</div>
-        <div class="levels-pills-row">
-          <a href="nivel1_intuitivo.html" class="level-num-pill pill-lvl-1" title="Nivel 1: Intuitivo y Visual 3D">
-            <span class="pill-number">1</span>
-            <span class="pill-label">3D Acción</span>
-          </a>
-          <a href="nivel2_basico.html" class="level-num-pill pill-lvl-2" title="Nivel 2: Conceptos Básicos">
-            <span class="pill-number">2</span>
-            <span class="pill-label">Básico</span>
-          </a>
-          <a href="nivel3_esquema.html" class="level-num-pill pill-lvl-3" title="Nivel 3: Esquema Operativo">
-            <span class="pill-number">3</span>
-            <span class="pill-label">Esquema</span>
-          </a>
-          <a href="nivel4_aplicaciones.html" class="level-num-pill pill-lvl-4 active" title="Nivel 4: Aplicaciones & Dominios (Activo)">
-            <span class="pill-number">4</span>
-            <span class="pill-label">Aplicaciones</span>
-          </a>
-          <a href="nivel5_matematico.html" class="level-num-pill pill-lvl-5" title="Nivel 5: Aparato Matemático">
-            <span class="pill-number">5</span>
-            <span class="pill-label">Matemático</span>
-          </a>
-          <a href="nivel6_informes.html" class="level-num-pill pill-lvl-6" title="Nivel 6: Informes & VISORD">
-            <span class="pill-number">6</span>
-            <span class="pill-label">Informes</span>
-          </a>
-          <a href="nivel7_documentacion.html" class="level-num-pill pill-lvl-7" title="Nivel 7: Documentación & Ética">
-            <span class="pill-number">7</span>
-            <span class="pill-label">Doc & Ética</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- PANTALLAS CONTENIDAS EN EL NIVEL 4 -->
-            <!-- TRINIDAD DE ENLACES INTERACTIVOS VISORD -->
-            <!-- TRINIDAD DE ENLACES INTERACTIVOS VISORD -->
-      <div class="visord-portals-strip">
-        <a href="visord_demo.html" class="vportal-pill" title="VISORD_demo: Simulador Grupal Interactivo (N < 51)">
-          <span class="vportal-icon">🌐</span>
-          <span class="vportal-title">VISORD_demo</span>
-          <span class="vportal-badge">Simulador N&lt;51</span>
-        </a>
-        <a href="visord_cultural.html" class="vportal-pill vportal-cultural" title="VISORD_cultural: Sociometría de Obras Maestras (Literatura y Cine)">
-          <span class="vportal-icon">🎭</span>
-          <span class="vportal-title">VISORD_cultural</span>
-          <span class="vportal-badge">Cultura &amp; Cine</span>
-        </a>
-        <a href="radiografias_relacionales.html" class="vportal-pill vportal-radiologico" title="VISORD_radiológico: Radiografías Relacionales Socio-Termodinámicas (15-27-54)">
-          <span class="vportal-icon">🩻</span>
-          <span class="vportal-title">VISORD_radiológico</span>
-          <span class="vportal-badge">Radiografías 15-27-54</span>
-        </a>
-      </div>
-
-      <div class="level-screens-contained-box">
-        <div class="contained-screens-title">PANTALLAS CONTENIDAS EN ESTE NIVEL (4a &mdash; 4e)</div>
-        <div class="contained-screens-row">
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-4a')">
-            <span class="contained-step">4a</span>
-            <span class="contained-name">10 Dominios</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-4b')">
-            <span class="contained-step">4b</span>
-            <span class="contained-name">What-If Preventivo</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-4c')">
-            <span class="contained-step">4c</span>
-            <span class="contained-name">Sociometría Cultural</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-4d')">
-            <span class="contained-step">4d</span>
-            <span class="contained-name">Fases de Intervención</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-4e')">
-            <span class="contained-step">4e</span>
-            <span class="contained-name">Actitudes Reparadoras</span>
-          </div>
-        </div>
-      </div>
-
-      <button class="flow-nav-btn flow-nav-btn-next" onclick="scrollToScreen('pantalla-4a')" style="margin-top:20px; padding:10px 24px; font-size:0.92rem; font-weight:800; border-radius:30px; background:linear-gradient(135deg, #00FF87, #38BDF8); color:#030308; border:none; box-shadow:0 0 20px rgba(0,255,135,0.4); cursor:pointer;">
-        <span>INICIAR NIVEL 4 (4a) ↓</span>
-      </button>
     </div>
   </section>
 
@@ -1722,23 +2224,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-4a">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: REAL-AA-G1-T1-C1-V10-A16-ES-12</span>
-          <span class="cr-badge-sub">SUJETO: 1g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">4a</div>
-      <div class="section-header-badge" style="background:rgba(255, 159, 28, 0.15); color:var(--neon-orange); border:1px solid var(--neon-orange);">
-        <span>VERSATILIDAD ECOSISTÉMICA · PASO 4a</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">4A · LOS 10 DOMINIOS APLICADOS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-orange); font-weight: 800; letter-spacing: 0.5px;">
+          VERSATILIDAD ECOSISTÉMICA Y CAMPOS DE ACCIÓN INTERDISCIPLINAR
+        </div>
       </div>
-      <h2 class="section-title">4a &middot; Los 10 Dominios de la Aplicación Sociométrica</h2>
       <p class="section-subtitle">
         El motor matemático de NEXORD es universal e invariante, pero su física relacional se calibra con extrema sensibilidad para 10 ecosistemas de la convivencia humana, ajustando los coeficientes de <b>inercia relacional (&alpha;)</b> y <b>olvido/decaimiento (&gamma;)</b>.
       </p>
@@ -1898,24 +2390,15 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-4b">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16-ES-10</span>
-          <span class="cr-badge-sub">SUJETO CANÓNICO: 1g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="section-header-badge" style="background:rgba(0, 255, 135, 0.15); color:var(--neon-green); border:1px solid var(--neon-green);">
-        <span>SOCIOMETRÍA PREVENTIVA &amp; PROSPECTIVA &middot; PASO 4b</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">4B · SOCIOMETRÍA PREVENTIVA:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-green); font-weight: 800; letter-spacing: 0.5px;">
+          PROSPECTIVA Y DETECCIÓN TEMPRANA DE SILOS Y DESGASTE VINCULAR
+        </div>
       </div>
-      <h2 class="section-title">4b &middot; Sociometría Preventiva: El Laboratorio In-Silico (What-If)</h2>
       <p class="section-subtitle">
-        De la «autopsia relacional tardía» a la anticipación proactiva: ensaye hipótesis de intervención en memoria antes de mover una sola persona en la realidad, calculando con exactitud matemática la reconfiguración del campo socio-termodinámico.
+        Simulación en memoria de hipótesis de intervención y pruebas de estrés antes de implementar cambios organizativos.
       </p>
 
       <!-- PREMISA CENTRAL DE LA SOCIOMETRÍA PREVENTIVA -->
@@ -2084,22 +2567,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-4c">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9 & 11) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: CULTURAL-AA-G1-T1-C1-V10-A16-ES-8</span>
-          <span class="cr-badge-sub">SUJETO: 1g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="section-header-badge" style="background:rgba(168, 85, 247, 0.15); color:var(--neon-purple); border:1px solid var(--neon-purple);">
-        <span>SOCIOMETRÍA CULTURAL &middot; CORPUS TEXTUALES &middot; PASO 4c</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">4C · SOCIOMETRÍA CULTURAL:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-purple); font-weight: 800; letter-spacing: 0.5px;">
+          ANÁLISIS VINCULAR EN CORPUS NARRATIVOS, CINE Y DRAMATURGIA
+        </div>
       </div>
-      <h2 class="section-title">4c &middot; La Sociometría Cultural: Un Valioso Recurso de Investigación Psicosocial</h2>
       <p class="section-subtitle">
         Las Obras Maestras Universales de la Literatura y del Cine, directa o indirectamente, siempre tratan la historia de un grupo. Con los medios actuales, es factible una metodología rigurosa de codificación sociométrica (SMIb) de corpus textuales. Novelas, guiones cinematográficos y obras dramáticas —extensibles a sesiones de T-groups, grupos terapéuticos y reuniones varias y repetidas (metodología Robert Bales)— pueden analizarse en la profundidad de su estructura relacional termodinámica con resultados inéditos y de difícil observación directa.
       </p>
@@ -2203,25 +2677,15 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-4d">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: REAL-AA-G1-T1-C1-V10-A16-ES-12</span>
-          <span class="cr-badge-sub">SUJETO: 1g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">4d</div>
-      <div class="section-header-badge" style="background:rgba(56, 189, 248, 0.15); color:var(--neon-cyan); border:1px solid var(--neon-cyan);">
-        <span>DIAGNÓSTICO GRUPAL &middot; FASES DE INTERVENCIÓN &middot; PASO 4d</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">4D · DIAGNÓSTICO E INTERVENCIÓN:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-cyan); font-weight: 800; letter-spacing: 0.5px;">
+          FASES METODOLÓGICAS DE EVALUACIÓN Y RETORNO DINÁMICO
+        </div>
       </div>
-      <h2 class="section-title">4d &middot; Diagnóstico Grupal y Fases de Intervención</h2>
       <p class="section-subtitle">
-        El fin último de la sociometría computacional no es la mera contemplación del grafo ni la clasificación de individuos, sino la comprensión profunda del estado relacional del colectivo y la activación de fases sistémicas de intervención que restablezcan la salud vincular, la confianza mutua y la cooperación con estricto respeto a la autonomía y dignidad de las personas.
+        Fases sistémicas de intervención orientadas a restablecer la salud vincular, la cohesión y la cooperación bajo rigor deontológico.
       </p>
 
       <!-- 4 FASES DE INTERVENCIÓN REPARADORA -->
@@ -2289,23 +2753,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-4e">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: REAL-AA-G1-T1-C1-V10-A16-ES-12</span>
-          <span class="cr-badge-sub">SUJETO: 1g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">4e</div>
-      <div class="section-header-badge" style="background:rgba(255, 230, 0, 0.15); color:var(--neon-gold); border:1px solid var(--neon-gold);">
-        <span>ÉTICA FIDUCIARIA &middot; ACTITUDES REPARADORAS &middot; PASO 4e</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">4E · ACTITUDES REPARADORAS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-gold); font-weight: 800; letter-spacing: 0.5px;">
+          ÉTICA FIDUCIARIA, MEDIACIÓN Y RESTAURACIÓN DEL TEJIDO VINCULAR
+        </div>
       </div>
-      <h2 class="section-title">4e &middot; Actitudes Reparadoras, Ética Fiduciaria y Tránsito al Nivel 5</h2>
       <p class="section-subtitle">
         La sociometría ordinal fiduciaria garantiza que los hallazgos nunca sean instrumentalizados contra las personas. Las actitudes reparadoras transforman el diagnóstico sociométrico en una oportunidad colectiva de crecimiento, reconciliación vincular y preservación irrevocable de la dignidad humana.
       </p>
@@ -2354,7 +2808,7 @@
         <div class="discovery-tag">DESCUBRIMIENTO PROGRESIVO &middot; SIGUIENTE NIVEL (5 DE 7)</div>
         <h3 class="discovery-title">¿Desea comprender el aparato matemático y computacional riguroso?</h3>
         <p class="discovery-desc">
-          Ha explorado los 10 dominios de aplicación, el laboratorio What-If prospectivo, la sociometría cultural en corpus textuales y las actitudes reparadoras. En el siguiente nivel desmontamos la «caja negra»: matrices ordinales SMIb, geometría de Grassmann Gr(k, N), termodinámica BDR/SDR, autovalores de Fiedler y Heider, y las proyecciones duales AFC &parallel; PCA.
+          Acceso al núcleo analítico: matrices ordinales SMIb, geometría de Grassmann Gr(k, N), termodinámica BDR/SDR y operadores espectrales.
         </p>
         <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
           <button class="flow-nav-btn" onclick="scrollToScreen('pantalla-4d')">
@@ -2428,23 +2882,83 @@
       'pantalla-4e': 'hud-btn-4e'
     };
 
-    function navigateStep(direction) {
-      const currentScroll = window.scrollY;
-      let currentIndex = 0;
+    function getCurrentScreenIndex() {
+      let bestIdx = 0;
       let minDiff = Infinity;
       screens.forEach((id, idx) => {
         const el = document.getElementById(id);
         if (el) {
-          const diff = Math.abs(el.offsetTop - currentScroll);
+          const rect = el.getBoundingClientRect();
+          const diff = Math.abs(rect.top);
           if (diff < minDiff) {
             minDiff = diff;
-            currentIndex = idx;
+            bestIdx = idx;
           }
         }
       });
-      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIndex + direction));
-      scrollToScreen(screens[targetIndex]);
+      return bestIdx;
     }
+
+    function navigateStep(direction) {
+      const currentIdx = getCurrentScreenIndex();
+      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIdx + direction));
+      if (targetIndex !== currentIdx) {
+        scrollToScreen(screens[targetIndex]);
+      }
+    }
+
+    // CONTROLADOR DE NAVEGACIÓN DISCRETA PANTALLA A PANTALLA
+    let isDiscreteNavigating = false;
+    let wheelAccumulator = 0;
+    let wheelResetTimer = null;
+
+    window.addEventListener('wheel', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && (modal.classList.contains('active') || modal.style.display === 'flex')) return;
+
+      const scrollable = e.target.closest('.screen-container, .modal-content-box, .scrollable-area');
+      if (scrollable) {
+        const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 5;
+        const isAtTop = scrollable.scrollTop <= 5;
+        if (e.deltaY > 0 && !isAtBottom) return;
+        if (e.deltaY < 0 && !isAtTop) return;
+      }
+
+      e.preventDefault();
+      if (isDiscreteNavigating) return;
+
+      wheelAccumulator += e.deltaY;
+      clearTimeout(wheelResetTimer);
+      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 180);
+
+      if (Math.abs(wheelAccumulator) >= 28) {
+        isDiscreteNavigating = true;
+        const dir = wheelAccumulator > 0 ? 1 : -1;
+        wheelAccumulator = 0;
+        navigateStep(dir);
+        setTimeout(() => {
+          isDiscreteNavigating = false;
+        }, 750);
+      }
+    }, { passive: false });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && modal.classList.contains('active')) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY - touchEndY;
+      if (Math.abs(diffY) > 50) {
+        if (isDiscreteNavigating) return;
+        isDiscreteNavigating = true;
+        navigateStep(diffY > 0 ? 1 : -1);
+        setTimeout(() => { isDiscreteNavigating = false; }, 600);
+      }
+    }, { passive: true });
 
     function handleSalirPlatform() {
       if (confirm('¿Desea salir de la Plataforma NEXORD y regresar a la Web Principal?')) {
@@ -3105,33 +3619,246 @@
       selectCulturalWork(0);
     });
       
-      /* REPRODUCTOR DE AUDIO DE LA CARÁTULA (NIVEL 4) */
-    let isCaratulaAudioPlaying = false;
-    let caratulaSpeechUtter = null;
+      // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
+    window.addEventListener('beforeunload', () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    });
 
-    function toggleCaratulaAudio() {
-      const btnIcon = document.getElementById('audio-play-icon');
-      const statusMsg = document.getElementById('audio-status-msg');
-      const waveBars = document.getElementById('audio-wave-bars');
+  </script>
+<script>
+  /* =========================================================================
+     LOCUCIÓN PAUSADA Y SERENA DE CARÁTULA DE PASO (NEXORD)
+     ========================================================================= */
+  if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+  if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
 
-      if (!('speechSynthesis' in window)) {
-        if (statusMsg) statusMsg.textContent = 'Audio no soportado en este navegador';
+  function playCaratulaAudio() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const locucionTexto = "Nivel Cuatro. Aplicaciones y dominios. Diagnóstico de casos reales, prospectiva relacional y sociometría cultural.";
+    caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+    caratulaSpeechUtter.lang = 'es-ES';
+
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
+                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
+                 || voices[0];
+    if (esVoice) caratulaSpeechUtter.voice = esVoice;
+
+    caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+    caratulaSpeechUtter.pitch = 0.95;
+    caratulaSpeechUtter.volume = 1.0;
+
+    const btnAudio = document.getElementById('btn-audio-caratula');
+    const playIcon = document.getElementById('audio-play-icon');
+
+    caratulaSpeechUtter.onstart = () => {
+      isCaratulaAudioPlaying = true;
+      if (btnAudio) btnAudio.classList.add('playing');
+      if (playIcon) playIcon.textContent = '❚❚';
+    };
+
+    caratulaSpeechUtter.onend = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    caratulaSpeechUtter.onerror = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    window.speechSynthesis.speak(caratulaSpeechUtter);
+  }
+
+  function toggleCaratulaAudio() {
+    if (isCaratulaAudioPlaying) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    } else {
+      playCaratulaAudio();
+    }
+  }
+
+  function continueToLevel(targetId) {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    isCaratulaAudioPlaying = false;
+    scrollToScreen(targetId);
+  }
+
+  // Inicio automático pausado suave tras ~1.2s al abrir la carátula
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (!isCaratulaAudioPlaying && window.scrollY < 180) {
+        playCaratulaAudio();
+      }
+    }, 1200);
+  });
+
+  // Cancelar audio inmediatamente al navegar o salir
+  window.addEventListener('beforeunload', () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+    // =========================================================================
+    // CONTROLADOR CANÓNICO HUD NEXORD (Nivel 4.)
+    // =========================================================================
+    const HUD_CONFIG = {
+      levelNum: 4,
+      screens: [
+        { id: 'pantalla-4a', letter: 'a', word: 'DOMINIOS' },
+        { id: 'pantalla-4b', letter: 'b', word: 'PREVENTIVA' },
+        { id: 'pantalla-4c', letter: 'c', word: 'CULTURAL' },
+        { id: 'pantalla-4d', letter: 'd', word: 'DIAGNÓSTICO' },
+        { id: 'pantalla-4e', letter: 'e', word: 'REPARACIÓN' }
+      ],
+      caratulaId: 'pantalla-4-caratula',
+      prevLevelUrl: 'nivel3_esquema.html',
+      nextLevelUrl: 'nivel5_matematico.html'
+    };
+
+    if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+    if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+    function updateUnifiedHud() {
+      const hud = document.getElementById('top-floating-hud');
+      if (!hud) return;
+
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5) {
+            currentIdx = idx;
+          }
+        }
+      });
+
+      // Si está en la carátula o arriba del todo, ocultar el HUD flotante
+      if (currentIdx === -1) {
+        hud.classList.remove('visible');
         return;
+      } else {
+        hud.classList.add('visible');
       }
 
-      if (isCaratulaAudioPlaying) {
-        window.speechSynthesis.cancel();
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Locución pausada · Clic para reanudar';
-        if (waveBars) waveBars.classList.remove('playing');
-        return;
+      // Actualizar botón de letra activo
+      const letterBtns = hud.querySelectorAll('.hud-letter-btn');
+      letterBtns.forEach((btn, idx) => {
+        if (idx === currentIdx) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Protocolo Estricto de Flechas Canónicas:
+      const prevBtn = document.getElementById('hud-arrow-prev');
+      const nextBtn = document.getElementById('hud-arrow-next');
+
+      // Flecha izquierda: '--' desactivada exclusivamente en 1a
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        if (prevBtn) {
+          prevBtn.textContent = '--';
+          prevBtn.classList.add('disabled');
+          prevBtn.title = 'Inicio de la plataforma';
+        }
+      } else {
+        if (prevBtn) {
+          prevBtn.textContent = '◀';
+          prevBtn.classList.remove('disabled');
+          prevBtn.title = (currentIdx === 0) ? 'Nivel anterior' : ('Pantalla anterior (' + HUD_CONFIG.screens[currentIdx - 1].letter + ')');
+        }
       }
 
+      // Flecha derecha: '--' desactivada exclusivamente en 7e
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        if (nextBtn) {
+          nextBtn.textContent = '--';
+          nextBtn.classList.add('disabled');
+          nextBtn.title = 'Fin de la plataforma';
+        }
+      } else {
+        if (nextBtn) {
+          nextBtn.textContent = '▶';
+          nextBtn.classList.remove('disabled');
+          nextBtn.title = (currentIdx === (HUD_CONFIG.screens.length - 1)) ? 'Nivel siguiente' : ('Pantalla siguiente (' + HUD_CONFIG.screens[currentIdx + 1].letter + ')');
+        }
+      }
+    }
+
+    function scrollToScreen(screenId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const el = document.getElementById(screenId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(updateUnifiedHud, 350);
+      }
+    }
+
+    function continueToLevel(targetId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      scrollToScreen(targetId);
+      
+    }
+
+    function hudNavigatePrev() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        return; // 1a disabled '--'
+      }
+
+      if (currentIdx > 0) {
+        scrollToScreen(HUD_CONFIG.screens[currentIdx - 1].id);
+      } else if (HUD_CONFIG.prevLevelUrl) {
+        window.location.href = HUD_CONFIG.prevLevelUrl;
+      }
+    }
+
+    function hudNavigateNext() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        return; // 7e disabled '--'
+      }
+
+      if (currentIdx < HUD_CONFIG.screens.length - 1) {
+        const nextIdx = (currentIdx < 0) ? 0 : (currentIdx + 1);
+        scrollToScreen(HUD_CONFIG.screens[nextIdx].id);
+      } else if (HUD_CONFIG.nextLevelUrl) {
+        window.location.href = HUD_CONFIG.nextLevelUrl;
+      }
+    }
+
+    function playCaratulaAudio() {
+      if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
-      const locucionTexto = "El CUARTO NIVEL de Información explora los diez dominios principales de las APLICACIONES de la Sociometría. Abarca desde intervenciones preventivas en el laboratorio What-If hasta una sociometría cultural, desvelando la trama invisible de grandes obras maestras de la literatura y del cine.";
-
+      const locucionTexto = "Nivel Cuatro. Aplicaciones y dominios. Diagnóstico de casos reales, prospectiva relacional y sociometría cultural.";
       caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
       caratulaSpeechUtter.lang = 'es-ES';
 
@@ -3142,39 +3869,56 @@
                    || voices[0];
       if (esVoice) caratulaSpeechUtter.voice = esVoice;
 
-      caratulaSpeechUtter.rate = 0.85;
-      caratulaSpeechUtter.pitch = 0.92;
+      caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+      caratulaSpeechUtter.pitch = 0.95;
       caratulaSpeechUtter.volume = 1.0;
+
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
 
       caratulaSpeechUtter.onstart = () => {
         isCaratulaAudioPlaying = true;
-        if (btnIcon) btnIcon.textContent = '❚❚';
-        if (statusMsg) statusMsg.textContent = 'Reproduciendo locución oficial...';
-        if (waveBars) waveBars.classList.add('playing');
+        if (btnAudio) btnAudio.classList.add('playing');
+        if (playIcon) playIcon.textContent = '⏹';
       };
 
       caratulaSpeechUtter.onend = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Reproducción finalizada';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       caratulaSpeechUtter.onerror = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Error en la reproducción';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       window.speechSynthesis.speak(caratulaSpeechUtter);
     }
-  
-    // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
-    window.addEventListener('beforeunload', () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    function toggleCaratulaAudio() {
+      if (isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        isCaratulaAudioPlaying = false;
+        const btnAudio = document.getElementById('btn-audio-caratula');
+        const playIcon = document.getElementById('audio-play-icon');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      } else {
+        playCaratulaAudio();
+      }
+    }
+
+    // Listeners de actualización universal
+    window.addEventListener('scroll', updateUnifiedHud);
+    window.addEventListener('resize', updateUnifiedHud);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUnifiedHud();
+      const snapCont = document.getElementById('main-snap-container');
+      if (snapCont) snapCont.addEventListener('scroll', updateUnifiedHud);
     });
 
-  </script>
+</script>
 </body>
 </html>

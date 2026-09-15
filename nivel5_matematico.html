@@ -44,12 +44,22 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      height: 100%;
+    }
+
     body {
       background-color: var(--bg-abyss);
       color: var(--text-main);
       font-family: var(--font-main);
       line-height: 1.6;
+      width: 100vw;
+      height: 100vh;
       overflow-x: hidden;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
       scroll-behavior: smooth;
     }
 
@@ -538,64 +548,80 @@
 
     /* PANTALLAS */
     .screen-section {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
       min-height: 100vh;
-      padding: 90px 24px 80px;
+      max-height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 55px 16px 10px 16px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      position: relative;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .screen-container {
       width: 100%;
-      max-width: 1220px;
+      max-width: 1200px;
+      max-height: calc(100vh - 65px);
       margin: 0 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 10px;
+      box-sizing: border-box;
     }
 
+    .screen-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    .screen-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 255, 135, 0.3);
+      border-radius: 4px;
+    }
+
+    .screen-step-tag {
+      display: none;
+    }
     .section-header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+      display: none;
     }
 
     .section-title {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.3px;
       color: var(--text-white);
-      margin-bottom: 8px;
+      margin-bottom: 1px;
       line-height: 1.2;
+      text-transform: uppercase;
     }
 
     .section-subtitle {
-      font-size: 15px;
+      font-size: 0.70rem;
       color: var(--text-muted);
       max-width: 860px;
-      margin-bottom: 26px;
+      line-height: 1.35;
+      margin-bottom: 4px;
     }
 
     /* PEDAGOGIC NOTE STRIP */
     .pedagogic-note-strip {
       width: 100%;
-      max-width: 1220px;
-      margin-top: 24px;
-      padding: 12px 18px;
+      max-width: 1200px;
+      margin-top: 4px;
+      padding: 4px 10px;
       background: rgba(11, 19, 43, 0.7);
       border-left: 3px solid var(--neon-gold);
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 0.62rem;
+      line-height: 1.25;
       color: #E2E8F0;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
 
     .pedagogic-note-strip strong {
@@ -606,21 +632,21 @@
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 22px;
+      gap: 8px;
     }
 
     .grid-3col {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 6px;
     }
 
     .card-panel {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       position: relative;
     }
 
@@ -1583,7 +1609,514 @@
       border-color: rgba(0, 255, 135, 0.3);
     }
 
-  </style>
+  
+    /* ==========================================================
+       MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA)
+       ========================================================== */
+    .universal-nav-pod {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 8px 6px;
+      border-radius: 26px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.15);
+    }
+    .nav-pod-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(16, 25, 53, 0.90);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      user-select: none;
+    }
+    .nav-pod-btn:hover {
+      background: var(--neon-cyan, #38BDF8);
+      color: #030308;
+      border-color: var(--neon-cyan, #38BDF8);
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+    }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030308 !important;
+      box-shadow: 0 0 14px rgba(255, 230, 0, 0.7) !important;
+    }
+    .nav-pod-exit:hover {
+      background: #FF007F !important;
+      border-color: #FF007F !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.7) !important;
+    }
+    .nav-pod-disabled {
+      opacity: 0.22;
+      pointer-events: none;
+      cursor: default;
+    }
+
+  
+    /* =========================================================================
+       CARÁTULA DE PASO Y ESPERA CANÓNICA NEXORD (SOBRIEDAD MÁXIMA)
+       ========================================================================= */
+    /* ESTÁNDAR CANÓNICO DE CARÁTULA NEXORD (PANORÁMICA 900px CON ÍNDICE a..e) */
+    .transit-caratula-section {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+      padding: 40px 20px !important;
+      background: radial-gradient(circle at center, #0F1D40 0%, #060914 100%) !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+    }
+    .transit-caratula-card {
+      width: 92%;
+      max-width: 900px;
+      background: rgba(11, 19, 43, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.40);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 30px 36px 26px 36px;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(0, 162, 255, 0.20);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .transit-header-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .transit-logo-wrap {
+      width: 76px;
+      height: 76px;
+      margin-bottom: 12px;
+      background: rgba(11, 15, 25, 0.7);
+      border: 2px solid #00A2FF;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0, 162, 255, 0.5), inset 0 0 12px rgba(0, 162, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .transit-logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.6));
+    }
+    .transit-level-tag {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      padding: 3px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .transit-level-title {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: clamp(1.35rem, 2.7vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #FFFFFF;
+      margin: 0 0 6px 0;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .transit-title-num {
+      color: #00FF87;
+      font-family: 'Roboto Mono', monospace;
+      margin-right: 6px;
+    }
+    .transit-level-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13.5px;
+      color: #94A3B8;
+      max-width: 740px;
+      margin: 0 auto;
+      line-height: 1.45;
+    }
+    .transit-parts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      margin: 16px 0 20px 0;
+      text-align: left;
+    }
+    .transit-part-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .transit-part-row:hover {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: rgba(0, 240, 255, 0.5);
+      transform: translateX(4px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 240, 255, 0.15);
+    }
+    .transit-part-pill {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      font-weight: 900;
+      color: #00F0FF;
+      background: rgba(0, 240, 255, 0.16);
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      border-radius: 6px;
+      width: 32px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .transit-part-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      overflow: hidden;
+    }
+    .transit-part-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .transit-part-heading .word-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #00FF87;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0, 255, 135, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 135, 0.3);
+    }
+    .transit-part-desc {
+      font-size: 11.5px;
+      color: #94A3B8;
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .transit-part-arrow {
+      color: rgba(0, 240, 255, 0.6);
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .transit-part-row:hover .transit-part-arrow {
+      color: #00FF87;
+      transform: translateX(3px);
+    }
+    .transit-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .btn-transit-continue {
+      padding: 13px 32px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.96rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #00FF87 0%, #38BDF8 100%);
+      color: #030308;
+      border: none;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.35);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .btn-transit-continue:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 32px rgba(0, 255, 135, 0.65), 0 8px 24px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, #38BDF8 0%, #00FF87 100%);
+    }
+    .btn-transit-audio {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      color: #38BDF8;
+      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .btn-transit-audio:hover {
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      background: rgba(56, 189, 248, 0.25);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.55);
+    }
+    .btn-transit-audio.playing {
+      border-color: #00FF87;
+      color: #00FF87;
+      box-shadow: 0 0 22px rgba(0, 255, 135, 0.6);
+      animation: audioPulse 1.8s infinite;
+    }
+    @keyframes audioPulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 24px rgba(0, 255, 135, 0.75); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+    }/* =========================================================================
+       CABECERA COMPACTA Y UNIFICADA DE LETRAS CON PALABRA INFERIOR (a b c d e)
+       CANON INSTITUCIONAL NEXORD: SOCIOMETRÍA ORDINAL {lvl}.
+       ========================================================================= */
+    .top-floating-hud {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(11, 19, 43, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 5px 16px;
+      border-radius: 40px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+    }
+    .top-floating-hud.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .hud-brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      line-height: 1;
+      padding-right: 12px;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: default;
+    }
+    .hud-brand-logo {
+      color: #38BDF8;
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 1.2px;
+    }
+    .hud-brand-sub {
+      color: #F8FAFC;
+      font-weight: 700;
+      font-size: 0.74rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .hud-level-num {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #00FF87;
+      text-shadow: 0 0 10px rgba(0, 255, 135, 0.7);
+      margin-left: 6px;
+      padding: 1px 7px;
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.45);
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .hud-nav-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+      font-size: 0.95rem;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .hud-arrow-btn:hover:not(.disabled) {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #00F0FF;
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+    .hud-arrow-btn.disabled {
+      opacity: 0.32;
+      pointer-events: none;
+      cursor: default;
+      color: #64748B;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .hud-letters-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .hud-letter-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 12px;
+      min-width: 58px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .hud-letter-btn .hud-letter-char {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #38BDF8;
+      line-height: 1.05;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn .hud-letter-word {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 2px;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+    .hud-letter-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #38BDF8;
+      transform: translateY(-2px);
+    }
+    .hud-letter-btn:hover .hud-letter-char {
+      color: #00F0FF;
+    }
+    .hud-letter-btn:hover .hud-letter-word {
+      color: #FFFFFF;
+    }
+    .hud-letter-btn.active {
+      background: rgba(0, 255, 135, 0.16);
+      border: 1.8px solid #00FF87;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.5), inset 0 0 8px rgba(0, 255, 135, 0.15);
+      transform: translateY(-1px);
+    }
+    .hud-letter-btn.active .hud-letter-char {
+      color: #00FF87;
+    }
+    .hud-letter-btn.active .hud-letter-word {
+      color: #FFFFFF;
+      font-weight: 900;
+    }
+    .hud-home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 38px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      line-height: 1;
+      padding-left: 2px;
+    }
+    .hud-home-btn:hover {
+      transform: scale(1.22);
+      filter: drop-shadow(0 0 8px rgba(255, 230, 0, 0.8));
+    }
+
+</style>
 </head>
 <body>
 
@@ -1595,194 +2128,145 @@
   </a>
 
   <!-- TOP RIGHT GENERAL PLATFORM NAV -->
-  <div class="top-right-nav">
-    <a href="nivel1_intuitivo.html" class="top-nav-btn top-nav-btn-home" title="Volver al Inicio General de la Plataforma NEXORD">
-      <span>⌂</span>
-      <span>Inicio</span>
-    </a>
-    <a href="javascript:void(0)" onclick="handleSalirPlatform()" class="top-nav-btn top-nav-btn-exit" title="Salir de la Plataforma NEXORD">
-      <span>⏻</span>
-      <span>Salir</span>
-    </a>
-  </div>
+  
 
   <!-- TOP FLOATING CANONICAL HUD (NIVEL 5: APARATO MATEMÁTICO) -->
-  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación Nivel 5">
-    <div class="hud-main-pill">
-      <span class="hud-brand-tag">🌐 NEXORD · NIVEL 5: MATEMÁTICO</span>
-      <div class="hud-parts-group">
-        <button class="hud-part-btn" id="hud-btn-5a" onclick="scrollToScreen('pantalla-5a')" title="Paso 5a: Datos Previos y Matriz Ordinal">
-          <span class="hud-part-code">(5a)</span>
-          <span class="hud-part-label">Datos</span>
+        <!-- =========================================================================
+       CABECERA COMPACTA Y UNIFICADA (a b c d e) · NEXORD: SOCIOMETRÍA ORDINAL 5.
+       ========================================================================= -->
+  <nav class="top-floating-hud" id="top-floating-hud" aria-label="Navegación de Nivel">
+    <div class="hud-brand-pill">
+      <span class="hud-brand-logo">NEXORD:</span>
+      <span class="hud-brand-sub">SOCIOMETRÍA ORDINAL</span>
+    </div>
+    
+    <div class="hud-nav-cluster">
+      <button class="hud-arrow-btn" id="hud-arrow-prev" onclick="hudNavigatePrev()" title="Nivel anterior">◀</button>
+      <div class="hud-letters-row">
+        <button class="hud-letter-btn hud-part-btn active" onclick="scrollToScreen('pantalla-5a')" data-screen="pantalla-5a" title="5a · Datos Sociométricos">
+          <span class="hud-letter-char">a</span>
+          <span class="hud-letter-word">DATOS</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-5b" onclick="scrollToScreen('pantalla-5b')" title="Paso 5b: Función Inversa del Orden">
-          <span class="hud-part-code">(5b)</span>
-          <span class="hud-part-label">Inversa</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-5b')" data-screen="pantalla-5b" title="5b · Función Inversa Orden">
+          <span class="hud-letter-char">b</span>
+          <span class="hud-letter-word">INVERSA</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-5c" onclick="scrollToScreen('pantalla-5c')" title="Paso 5c: Métricas Espectrales y Resiliencia">
-          <span class="hud-part-code">(5c)</span>
-          <span class="hud-part-label">Métricas</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-5c')" data-screen="pantalla-5c" title="5c · Indicadores Colectivos">
+          <span class="hud-letter-char">c</span>
+          <span class="hud-letter-word">ÍNDICES</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-5d" onclick="scrollToScreen('pantalla-5d')" title="Paso 5d: Mapas Duales y Grassmann">
-          <span class="hud-part-code">(5d)</span>
-          <span class="hud-part-label">Duales</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-5d')" data-screen="pantalla-5d" title="5d · Mapas Factoriales Duales">
+          <span class="hud-letter-char">d</span>
+          <span class="hud-letter-word">DUALES</span>
         </button>
-        <button class="hud-part-btn" id="hud-btn-5e" onclick="scrollToScreen('pantalla-5e')" title="Paso 5e: Interpretación Topológica">
-          <span class="hud-part-code">(5e)</span>
-          <span class="hud-part-label">Topología</span>
+        <button class="hud-letter-btn hud-part-btn" onclick="scrollToScreen('pantalla-5e')" data-screen="pantalla-5e" title="5e · Interpretación Gráficos">
+          <span class="hud-letter-char">e</span>
+          <span class="hud-letter-word">GRÁFICOS</span>
         </button>
       </div>
+      <button class="hud-arrow-btn" id="hud-arrow-next" onclick="hudNavigateNext()" title="Pantalla siguiente">▶</button>
     </div>
+
+    <a href="index.html" class="hud-home-btn" title="Inicio (Portada Principal)">🏠</a>
   </nav>
 
   <!-- LATERAL NAVIGATION ARROWS WITH NEXT LEVEL LINK -->
-  <div class="vertical-nav-arrows">
-    <button class="nav-arrow-btn nav-arrow-btn-home" onclick="scrollToScreen('pantalla-5-caratula')" title="Ir a la Portada del Nivel 5">⌂</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(-1)" title="Pantalla anterior">▲</button>
-    <button class="nav-arrow-btn" onclick="navigateStep(1)" title="Pantalla siguiente">▼</button>
-    <a href="nivel6_informes.html" class="nav-arrow-btn nav-arrow-btn-next-lvl" title="Avanzar al Nivel 6: Informes & VISORD">→</a>
-  </div>
+  
 
-  <section class="screen-section" id="pantalla-5-caratula" style="padding-top:72px;">
-    <div class="hero-box">
-      <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" class="doi-badge">DOI: 10.5281/zenodo.18941691</a>
+    <!-- MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA) -->
+  <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)">
+      <span>🏠</span>
+    </a>
+    <a href="nivel4_aplicaciones.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 4: Aplicaciones)"><span>◀</span></a>
+    <button class="nav-pod-btn nav-pod-prev-screen" onclick="navigateStep(-1)" title="Atrás (Pantalla Anterior)">
+      <span>▲</span>
+    </button>
+    <button class="nav-pod-btn nav-pod-next-screen" onclick="navigateStep(1)" title="Siguiente (Pantalla Siguiente)">
+      <span>▼</span>
+    </button>
+    <a href="nivel6_informes.html" class="nav-pod-btn nav-pod-next-lvl" title="Nivel Siguiente (Nivel 6: Informes & VISORD)"><span>▶</span></a>
+  </nav>
 
-      <div class="hero-logo-box">
-        <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="hero-logo-img">
+        <section id="pantalla-5-caratula" class="screen-section transit-caratula-section">
+    <div class="transit-caratula-card">
+      <div class="transit-header-wrap">
+        <div class="transit-logo-wrap">
+          <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='LOGO_NEXORD_OFICIAL.png'" class="transit-logo-img">
+        </div>
+        <span class="transit-level-tag">SOCIOMETRÍA ORDINAL &bull; NIVEL 5</span>
+        <h1 class="transit-level-title">5 · APARATO MATEMÁTICO</h1>
+        <p class="transit-level-sub">Formalización matemática rigurosa: álgebra ordinal SMIb, métricas de Grassmann, espacios duales y física estadística.</p>
       </div>
 
-      <h1 class="hero-title glitch" data-text="5 LA LUPA MATEMÁTICA">5 LA LUPA MATEMÁTICA</h1>
-      <h2 class="hero-sub">Matrices Tensoriales SMIb, Geometría de Grassmann & Topología Espectral</h2>
-      
-      <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(56, 189, 248, 0.08); border:1px solid rgba(56, 189, 248, 0.3); border-radius:24px; padding:6px 18px; margin:10px 0 14px; font-family:var(--font-mono); font-size:12px; font-weight:700; letter-spacing:1px;">
-        <span style="color:var(--neon-cyan);">🔬 MICROSCOPIO DE LA DIADA</span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span style="color:var(--neon-purple);">🔭 TELESCOPIO DE LA RED</span>
+      <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
+      <div class="transit-parts-grid">
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-5a')" title="Ir a 5a · Datos Sociométricos Previos">
+          <div class="transit-part-pill">5a</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Datos Sociométricos Previos</span>
+              <span class="word-badge">DATOS</span>
+            </div>
+            <div class="transit-part-desc">Fundamentos de medición, invariancia de escala y estructura de tensores relacionales.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-5b')" title="Ir a 5b · Función Inversa del Orden">
+          <div class="transit-part-pill">5b</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Función Inversa del Orden</span>
+              <span class="word-badge">INVERSA</span>
+            </div>
+            <div class="transit-part-desc">Transformación canónica no lineal f(k): ponderación hiperbólica del rango relacional.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-5c')" title="Ir a 5c · Indicadores Colectivos & Espectrales">
+          <div class="transit-part-pill">5c</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Indicadores Colectivos & Espectrales</span>
+              <span class="word-badge">ÍNDICES</span>
+            </div>
+            <div class="transit-part-desc">Espectro laplaciano, conectividad algebraica de Fiedler, Tononi Phi y Estrada EE.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-5d')" title="Ir a 5d · Mapas Factoriales Duales">
+          <div class="transit-part-pill">5d</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Mapas Factoriales Duales</span>
+              <span class="word-badge">DUALES</span>
+            </div>
+            <div class="transit-part-desc">Descomposición en valores singulares y correspondencias de votos y densidades.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
+
+        <div class="transit-part-row" onclick="continueToLevel('pantalla-5e')" title="Ir a 5e · Interpretación de Gráficos & Cuencas">
+          <div class="transit-part-pill">5e</div>
+          <div class="transit-part-content">
+            <div class="transit-part-heading">
+              <span>Interpretación de Gráficos & Cuencas</span>
+              <span class="word-badge">GRÁFICOS</span>
+            </div>
+            <div class="transit-part-desc">Lectura topológica avanzada de variedades grassmannianas y campos de atracción.</div>
+          </div>
+          <div class="transit-part-arrow">➔</div>
+        </div>
       </div>
 
-      <div style="margin: 8px 0 16px 0;">
-        <button class="flow-nav-btn flow-nav-btn-next" onclick="scrollToScreen('pantalla-5a')" style="padding:12px 32px; font-size:1.05rem; font-weight:900; border-radius:30px; background:linear-gradient(135deg, #00FF87, #38BDF8); color:#030308; border:none; box-shadow:0 0 30px rgba(0,255,135,0.55); cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:transform 0.2s ease;">
-          <span>⚡ ENTRAR AL NIVEL 5 (Paso 5a: Datos Previos)</span>
-          <span style="font-size:1.2rem;">↓</span>
+      <div class="transit-actions-row">
+        <button id="btn-audio-caratula" class="btn-transit-audio" onclick="toggleCaratulaAudio()" title="Escuchar locución pausada del nivel" aria-label="Audio del nivel">
+          <span id="audio-play-icon">🔊</span>
         </button>
       </div>
-
-      <h3 class="hero-tagline">Ver y oír lo imperceptible: fundamentos algebraicos de diagnósticos comprobables.</h3>
-
-      <p class="hero-desc" style="margin-bottom:12px;">
-        Aquí presentamos las principales formulaciones matemáticas que están en la base de los cálculos sociométricos de NEXORD. No se trata de hacer alarde científico, aunque sí, mostrar con transparencia sus fundamentos algorítmicos. <b>La «lupa matemática» de la Sociometría Ordinal es a la vez microscopio y telescopio</b>: capaz, como ha demostrado ampliamente la investigación molecular y cosmológica, de ver y oír lo que es imperceptible para nuestros sentidos biológicos, posibilitando resultados analíticos de calidad y deducciones diagnósticas empíricamente comprobables.
-      </p>
-      <p class="hero-desc" style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-        En todo caso, el usuario no requiere tener conocimientos tan específicos para utilizar con provecho esta Plataforma de Sociometría Ordinal Computacional: desmontaje riguroso de la «caja negra», desde la ingestión ordinal <b>BREVE</b> a la transcripción canónica <b>MORENO</b>, formalismo de Grassmann <b>Gr(k, N)</b>, autovalores de Fiedler (&lambda;<sub>2</sub>), frustración de Heider (&lambda;<sub>1</sub>), operadores de Estrada (EE), integración &Phi; de Tononi y descomposición factorial dual <b>AFC &parallel; PCA</b>.
-      </p>
-
-      <!-- REPRODUCTOR DE BREVE AUDIO (CARÁTULA PREVIA A 5a) -->
-            <!-- REPRODUCTOR DE AUDIO DE LA CARÁTULA -->
-      <div class="hero-audio-bar">
-        <button id="btn-audio-caratula" class="audio-play-btn" onclick="toggleCaratulaAudio()" title="Escuchar locución oficial de la carátula">
-          <span id="audio-play-icon">▶</span>
-        </button>
-        <div class="audio-text-col">
-          <div class="audio-title-row">
-            <span>LOCUCIÓN: LA LUPA MATEMÁTICA</span>
-            <span class="audio-tag-time">AUDIO · 16s</span>
-          </div>
-          <div class="audio-status-info" id="audio-status-msg">
-            Clic para escuchar la locución oficial
-          </div>
-        </div>
-        <div class="audio-wave-wrap" id="audio-wave-bars">
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-          <span class="audio-wave-bar"></span>
-        </div>
-      </div>
-
-      <div class="levels-strip-hero">
-        <div class="levels-strip-title">NIVELES DE INFORMACIÓN</div>
-        <div class="levels-pills-row">
-          <a href="nivel1_intuitivo.html" class="level-num-pill pill-lvl-1" title="Nivel 1: Intuitivo y Visual 3D">
-            <span class="pill-number">1</span>
-            <span class="pill-label">3D Acción</span>
-          </a>
-          <a href="nivel2_basico.html" class="level-num-pill pill-lvl-2" title="Nivel 2: Conceptos Básicos">
-            <span class="pill-number">2</span>
-            <span class="pill-label">Básico</span>
-          </a>
-          <a href="nivel3_esquema.html" class="level-num-pill pill-lvl-3" title="Nivel 3: Esquema Operativo">
-            <span class="pill-number">3</span>
-            <span class="pill-label">Esquema</span>
-          </a>
-          <a href="nivel4_aplicaciones.html" class="level-num-pill pill-lvl-4" title="Nivel 4: Aplicaciones & Dominios">
-            <span class="pill-number">4</span>
-            <span class="pill-label">Aplicaciones</span>
-          </a>
-          <a href="nivel5_matematico.html" class="level-num-pill pill-lvl-5 active" title="Nivel 5: Aparato Matemático (Activo)">
-            <span class="pill-number">5</span>
-            <span class="pill-label">Matemático</span>
-          </a>
-          <a href="nivel6_informes.html" class="level-num-pill pill-lvl-6" title="Nivel 6: Informes & VISORD">
-            <span class="pill-number">6</span>
-            <span class="pill-label">Informes</span>
-          </a>
-          <a href="nivel7_documentacion.html" class="level-num-pill pill-lvl-7" title="Nivel 7: Documentación & Ética">
-            <span class="pill-number">7</span>
-            <span class="pill-label">Doc & Ética</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- PANTALLAS CONTENIDAS EN EL NIVEL 5 -->
-            <!-- TRINIDAD DE ENLACES INTERACTIVOS VISORD -->
-      <div class="visord-portals-strip">
-        <a href="visord_demo.html" class="vportal-pill" title="VISORD_demo: Simulador Grupal Interactivo (N < 51)">
-          <span class="vportal-icon">🌐</span>
-          <span class="vportal-title">VISORD_demo</span>
-          <span class="vportal-badge">Simulador N&lt;51</span>
-        </a>
-        <a href="visord_cultural.html" class="vportal-pill vportal-cultural" title="VISORD_cultural: Sociometría de Obras Maestras (Literatura y Cine)">
-          <span class="vportal-icon">🎭</span>
-          <span class="vportal-title">VISORD_cultural</span>
-          <span class="vportal-badge">Cultura &amp; Cine</span>
-        </a>
-        <a href="radiografias_relacionales.html" class="vportal-pill vportal-radiologico" title="VISORD_radiológico: Radiografías Relacionales Socio-Termodinámicas (15-27-54)">
-          <span class="vportal-icon">🩻</span>
-          <span class="vportal-title">VISORD_radiológico</span>
-          <span class="vportal-badge">Radiografías 15-27-54</span>
-        </a>
-      </div>
-
-      <div class="level-screens-contained-box">
-        <div class="contained-screens-title">PANTALLAS CONTENIDAS EN ESTE NIVEL (5a &mdash; 5e)</div>
-        <div class="contained-screens-row">
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-5a')">
-            <span class="contained-step">5a</span>
-            <span class="contained-name">Datos Previos</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-5b')">
-            <span class="contained-step">5b</span>
-            <span class="contained-name">Función Inversa</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-5c')">
-            <span class="contained-step">5c</span>
-            <span class="contained-name">Métricas Espectrales</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-5d')">
-            <span class="contained-step">5d</span>
-            <span class="contained-name">Mapas Duales & Grassmann</span>
-          </div>
-          <div class="contained-screen-card" onclick="scrollToScreen('pantalla-5e')">
-            <span class="contained-step">5e</span>
-            <span class="contained-name">Interpretación Topológica</span>
-          </div>
-        </div>
-      </div>
-
-      <button class="flow-nav-btn flow-nav-btn-next" onclick="scrollToScreen('pantalla-5a')" style="margin-top:20px; padding:10px 24px; font-size:0.92rem; font-weight:800; border-radius:30px; background:linear-gradient(135deg, #00FF87, #38BDF8); color:#030308; border:none; box-shadow:0 0 20px rgba(0,255,135,0.4); cursor:pointer;">
-        <span>INICIAR NIVEL 5 (5a) ↓</span>
-      </button>
     </div>
   </section>
 
@@ -1791,26 +2275,15 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-5a">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 5g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">5a</div>
-      <div class="section-header-badge" style="background:rgba(0, 255, 135, 0.15); color:var(--neon-green); border:1px solid var(--neon-green);">
-        <span>FUNDAMENTO FACTUAL · PASO 5a</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">5A · DATOS SOCIOMÉTRICOS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-green); font-weight: 800; letter-spacing: 0.5px;">
+          FUNDAMENTO FACTUAL &middot; CAPTURA RIGUROSA DE RANKINGS Y METAPERCEPCIONES
+        </div>
       </div>
-      <h2 class="section-title">5a &middot; Datos Sociométricos Previos</h2>
       <p class="section-subtitle">
-        <b>Archivo de ENTRADA al Análisis:</b> <code style="color:var(--neon-green); font-weight:700; background:rgba(0,255,135,0.12); padding:2px 8px; border-radius:4px; border:1px solid rgba(0,255,135,0.35); font-family:var(--font-mono);">SIMULACION.xlsx / Data_Analysis</code>.<br>
-        Preservación absoluta de la fidelidad empírica. El motor ingiere rankings ordinales positivos puros (1º a Nº) y metapercepciones cognitivas (aE, oE), transcribiéndolos unívocamente en memoria analítica al espacio clásico MORENO sin jamás ejecutar una degradación inversa.
+        Preservación absoluta de fidelidad factual: ingestión de rankings ordinales y transcripción canónica a MORENO en memoria analítica sin alterar los datos empíricos de origen.
       </p>
 
       <div class="grid-2col">
@@ -1939,23 +2412,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-5b">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 5g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">5b</div>
-      <div class="section-header-badge" style="background:rgba(56, 189, 248, 0.15); color:var(--neon-cyan); border:1px solid var(--neon-cyan);">
-        <span>MOTOR DE TRANSFORMACIÓN · PASO 5b</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">5B · FUNCIÓN INVERSA DEL ORDEN:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-cyan); font-weight: 800; letter-spacing: 0.5px;">
+          MOTOR DE TRANSFORMACIÓN &middot; DECAIMIENTO ARMÓNICO Y PREFERENCIA CONTINUA
+        </div>
       </div>
-      <h2 class="section-title">5b &middot; La Función Inversa del Orden</h2>
       <p class="section-subtitle">
         Cálculo algorítmico y utilidad sociométrica: el mecanismo matemático nuclear que traduce el orden de preferencia subjetivo (1º a Nº) en magnitudes métricas de masa y flujo relacional, resolviendo la paradoja del orden, rompiendo los empates artificiales de la sociometría clásica y fundamentando todo el análisis tensorial de NEXORD.
       </p>
@@ -2149,23 +2612,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-5c">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 5g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">5c</div>
-      <div class="section-header-badge" style="background:rgba(168, 85, 247, 0.15); color:var(--neon-purple); border:1px solid var(--neon-purple);">
-        <span>MÉTRICAS COLECTIVAS E INDIVIDUALES · PASO 5c</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">5C · INDICADORES COLECTIVOS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-purple); font-weight: 800; letter-spacing: 0.5px;">
+          MÉTRICAS COLECTIVAS E INDIVIDUALES &middot; BATERÍA CANÓNICA DE 255 INDICADORES
+        </div>
       </div>
-      <h2 class="section-title">5c &middot; Indicadores Individuales y Colectivos</h2>
       <p class="section-subtitle">
         La sociometría ordinal sintetiza la arquitectura relacional en dos perspectivas inseparables: como <b>telescopio</b> para diagnosticar la salud y curvatura macro de la red global (Fiedler, Heider, Cohesión, SDR) y como <b>microscopio</b> para disecar el átomo relacional, la posición y la vivencia micro de cada sujeto.
       </p>
@@ -2397,23 +2850,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-5d">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 5g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">5d</div>
-      <div class="section-header-badge" style="background:rgba(255, 230, 0, 0.15); color:var(--neon-gold); border:1px solid var(--neon-gold);">
-        <span>ESPACIO FACTORIAL DUAL · PASO 5d</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">5D · MAPAS FACTORIALES DUALES:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-gold); font-weight: 800; letter-spacing: 0.5px;">
+          ESPACIO FACTORIAL DUAL PARALELO (AFC &parallel; PCA) Y VARIEDADES DE GRASSMANN
+        </div>
       </div>
-      <h2 class="section-title">5d &middot; Mapas Duales: Proyecciones Factoriales y Ejes Geométricos</h2>
       <p class="section-subtitle">
         Los datos sociométricos son siempre <b>duales (DAR / RECIBIR)</b>. Las proyecciones geométricas multidimensionales (AFC / PCA) despliegan dos puntos de vista alternativos y complementarios a partir de tablas activas, matrices ilustrativas suplementarias y ecuaciones de transición pseudobaricéntricas.
       </p>
@@ -2492,19 +2935,19 @@
         </div>
       </div>
 
-      <!-- BLOQUE 3: ECUACIONES DE TRANSICIÓN PSEUDOBARICÉNTRICAS -->
-      <div class="card-panel" style="margin-top:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <!-- BLOQUE 3: ECUACIONES DE TRANSICIÓN PSEUDOBARICÉNTRICAS (COLAPSABLE) -->
+      <details class="card-panel" style="margin-top:16px; cursor:pointer;">
+        <summary style="display:flex; justify-content:space-between; align-items:center; outline:none; list-style:none;">
           <div>
-            <h3 style="font-size:17px; font-weight:700; color:var(--text-white);">3. Ecuaciones de Transición Pseudobaricéntricas: El Principio del Baricentro Armónico</h3>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
-              Cómo se comunican matemáticamente las Filas (Emisores) y las Columnas (Receptores) sin deformar el espacio métrico continuo.
-            </div>
+            <h3 style="font-size:16px; font-weight:700; color:var(--text-white); display:inline-block; margin:0;">
+              📐 3. Ecuaciones de Transición Pseudobaricéntricas (Fórmulas de Benzécri)
+            </h3>
+            <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">[Clic para desplegar demostración matemática]</span>
           </div>
-          <span style="font-family:var(--font-mono); font-size:11px; color:var(--neon-green);">FÓRMULA BENZÉCRI / NEXORD</span>
-        </div>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--neon-green); background:rgba(0,255,135,0.1); border:1px solid var(--neon-green); padding:2px 8px; border-radius:4px;">BARICENTRO ARMÓNICO</span>
+        </summary>
 
-        <div class="grid-2col" style="margin-bottom:0;">
+        <div class="grid-2col" style="margin-top:14px; margin-bottom:0; cursor:default;">
           <div style="font-size:13px; color:var(--text-muted); line-height:1.55;">
             <p>
               ¿Cómo coexisten en un mismo mapa el punto de vista de quien elige y el de quien es elegido? La respuesta radica en la <b>regla pseudobaricéntrica</b>:
@@ -2532,7 +2975,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </details>
 
       <!-- BLOQUE 4: SOCIOGRAMA CLÁSICO VS PLANO DE PROYECCIÓN GEOMÉTRICA -->
       <div class="card-panel" style="margin-top:16px;">
@@ -2674,23 +3117,13 @@
        ========================================== -->
   <section class="screen-section" id="pantalla-5e">
     <div class="screen-container">
-      <!-- CABECERA INSTITUCIONAL CANÓNICA (REGLA 9) -->
-      <div class="canonical-report-header" style="max-width:1160px; width:100%; margin-bottom:12px;">
-        <div class="cr-badge-group">
-          <span class="cr-badge-sub cr-badge-red">VISORD &middot; NEXORD</span>
-          <span class="cr-badge-main">CLAVE ESTÁNDAR: SIMUL-AA-G2-T3-C1-V10-A16</span>
-          <span class="cr-badge-sub">MATRIZ: 5g1t1c</span>
-        </div>
-        <div class="cr-date-stamp">
-          HOMOLOGACIÓN OFICIAL &middot; 24 DE AGOSTO DE 2026
-        </div>
-      </div>
 
-      <div class="screen-step-tag">5e</div>
-      <div class="section-header-badge" style="background:rgba(56, 189, 248, 0.15); color:var(--neon-cyan); border:1px solid var(--neon-cyan);">
-        <span>GALERÍA Y GUÍA CLÍNICA · PASO 5e</span>
+      <div class="section-header" style="margin-bottom: 2px; text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 1px;">5E · INTERPRETACIÓN DE GRÁFICOS:</h2>
+        <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--neon-cyan); font-weight: 800; letter-spacing: 0.5px;">
+          GALERÍA DE REPRESENTACIONES SOCIO-TERMODINÁMICAS Y GUÍA DE LECTURA EXPERTA
+        </div>
       </div>
-      <h2 class="section-title">5e &middot; Interpretación de Gráficos Sociométricos</h2>
       <p class="section-subtitle">
         Una galería interactiva de las 10 representaciones sociométricas y socio-termodinámicas más habituales del ecosistema NEXORD (con motor VISORD) y sus claves de lectura diagnóstica para la toma de decisiones clínicas, organizacionales y educativas.
       </p>
@@ -2721,7 +3154,7 @@
         <div class="discovery-tag">DESCUBRIMIENTO PROGRESIVO · SIGUIENTE NIVEL (6 DE 7)</div>
         <h3 class="discovery-title">¿Desea explorar los informes de resultados y el motor interactivo 3D/4D?</h3>
         <p class="discovery-desc">
-          Ha desentrañado la formulación matemática de los tensores SMIb, el cálculo métrico de distancias, los autovalores de Fiedler y Heider, la geometría de Grassmann y las proyecciones duales. En el Nivel 6 accederá a los informes HTML autónomos Zero-Server (Macro, Meso, Micro Clélie), el motor de interpretación estadística y el VISORD 3D/4D con Moviola temporal.
+          Informes autónomos Zero-Server (Macro, Meso, Micro), sistema experto de interpretación y motor VISORD 3D/4D con Moviola temporal.
         </p>
         <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
           <button class="flow-nav-btn" onclick="scrollToScreen('pantalla-5d')">
@@ -2747,15 +3180,10 @@
   <script>
     /* 1. NAVEGACIÓN ROBUSTA ENTRE PANTALLAS (CANÓNICA) */
     function scrollToScreen(id) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       const el = document.getElementById(id);
       if (el) {
-        const headerOffset = 64;
-        const elementPosition = el.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
@@ -2768,23 +3196,83 @@
       'pantalla-5e': 'hud-btn-5e'
     };
 
-    function navigateStep(direction) {
-      const currentScroll = window.scrollY;
-      let currentIndex = 0;
+    function getCurrentScreenIndex() {
+      let bestIdx = 0;
       let minDiff = Infinity;
       screens.forEach((id, idx) => {
         const el = document.getElementById(id);
         if (el) {
-          const diff = Math.abs(el.offsetTop - 64 - currentScroll);
+          const rect = el.getBoundingClientRect();
+          const diff = Math.abs(rect.top);
           if (diff < minDiff) {
             minDiff = diff;
-            currentIndex = idx;
+            bestIdx = idx;
           }
         }
       });
-      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIndex + direction));
-      scrollToScreen(screens[targetIndex]);
+      return bestIdx;
     }
+
+    function navigateStep(direction) {
+      const currentIdx = getCurrentScreenIndex();
+      const targetIndex = Math.max(0, Math.min(screens.length - 1, currentIdx + direction));
+      if (targetIndex !== currentIdx) {
+        scrollToScreen(screens[targetIndex]);
+      }
+    }
+
+    // CONTROLADOR DE NAVEGACIÓN DISCRETA PANTALLA A PANTALLA
+    let isDiscreteNavigating = false;
+    let wheelAccumulator = 0;
+    let wheelResetTimer = null;
+
+    window.addEventListener('wheel', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && (modal.classList.contains('active') || modal.style.display === 'flex')) return;
+
+      const scrollable = e.target.closest('.screen-container, .modal-content-box, .scrollable-area');
+      if (scrollable) {
+        const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 5;
+        const isAtTop = scrollable.scrollTop <= 5;
+        if (e.deltaY > 0 && !isAtBottom) return;
+        if (e.deltaY < 0 && !isAtTop) return;
+      }
+
+      e.preventDefault();
+      if (isDiscreteNavigating) return;
+
+      wheelAccumulator += e.deltaY;
+      clearTimeout(wheelResetTimer);
+      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 180);
+
+      if (Math.abs(wheelAccumulator) >= 28) {
+        isDiscreteNavigating = true;
+        const dir = wheelAccumulator > 0 ? 1 : -1;
+        wheelAccumulator = 0;
+        navigateStep(dir);
+        setTimeout(() => {
+          isDiscreteNavigating = false;
+        }, 750);
+      }
+    }, { passive: false });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      const modal = document.getElementById('fullscreen-modal');
+      if (modal && modal.classList.contains('active')) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY - touchEndY;
+      if (Math.abs(diffY) > 50) {
+        if (isDiscreteNavigating) return;
+        isDiscreteNavigating = true;
+        navigateStep(diffY > 0 ? 1 : -1);
+        setTimeout(() => { isDiscreteNavigating = false; }, 600);
+      }
+    }, { passive: true });
 
     function handleSalirPlatform() {
       if (confirm('¿Desea salir de la Plataforma NEXORD y regresar a la Portada Principal?')) {
@@ -4598,11 +5086,6 @@
     }
 
 /* 4. REPRODUCTOR DE BREVE AUDIO DE LA CARÁTULA (LOCUCIÓN EPISTEMOLÓGICA) */
-    let isCaratulaAudioPlaying = false;
-    let caratulaSpeechUtter = null;
-
-    
-
     /* 6. ORDENACIÓN DINÁMICA DE LA TABLA DE ÍNDICES INDIVIDUALES (PASO 5c) */
     let currentSortCol = -1;
     let currentSortAsc = true;
@@ -4823,71 +5306,7 @@
       drawDispersionCanvas();
       switchGalleryView(currentGalleryView);
     });
-      /* REPRODUCTOR DE AUDIO DE LA CARÁTULA (NIVEL 5) */
-    let isCaratulaAudioPlaying = false;
-    let caratulaSpeechUtter = null;
-
-    function toggleCaratulaAudio() {
-      const btnIcon = document.getElementById('audio-play-icon');
-      const statusMsg = document.getElementById('audio-status-msg');
-      const waveBars = document.getElementById('audio-wave-bars');
-
-      if (!('speechSynthesis' in window)) {
-        if (statusMsg) statusMsg.textContent = 'Audio no soportado en este navegador';
-        return;
-      }
-
-      if (isCaratulaAudioPlaying) {
-        window.speechSynthesis.cancel();
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Locución pausada · Clic para reanudar';
-        if (waveBars) waveBars.classList.remove('playing');
-        return;
-      }
-
-      window.speechSynthesis.cancel();
-
-      const locucionTexto = "En este QUINTO NIVEL, la lupa matemática de NEXORD opera a la vez como microscopio y telescopio para desentrañar las dinámicas relacionales en el seno de los grupos. Revela lo imperceptible de la arquitectura vincular con transparencia, haciéndola intuitiva y accesible para cualquier profesional.";
-
-      caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
-      caratulaSpeechUtter.lang = 'es-ES';
-
-      const voices = window.speechSynthesis.getVoices();
-      const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
-                        (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
-                   || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
-                   || voices[0];
-      if (esVoice) caratulaSpeechUtter.voice = esVoice;
-
-      caratulaSpeechUtter.rate = 0.85;
-      caratulaSpeechUtter.pitch = 0.92;
-      caratulaSpeechUtter.volume = 1.0;
-
-      caratulaSpeechUtter.onstart = () => {
-        isCaratulaAudioPlaying = true;
-        if (btnIcon) btnIcon.textContent = '❚❚';
-        if (statusMsg) statusMsg.textContent = 'Reproduciendo locución oficial...';
-        if (waveBars) waveBars.classList.add('playing');
-      };
-
-      caratulaSpeechUtter.onend = () => {
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Reproducción finalizada';
-        if (waveBars) waveBars.classList.remove('playing');
-      };
-
-      caratulaSpeechUtter.onerror = () => {
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Error en la reproducción';
-        if (waveBars) waveBars.classList.remove('playing');
-      };
-
-      window.speechSynthesis.speak(caratulaSpeechUtter);
-    }
-  </script>
+      </script>
   <!-- LIGHTBOX MODAL PARA GRÁFICOS SOCIOMÉTRICOS G1T1C1 -->
   <div id="gallery-lightbox" style="display:none; position:fixed; z-index:99999; top:0; left:0; width:100vw; height:100vh; background:rgba(6,10,22,0.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); justify-content:center; align-items:center; flex-direction:column; padding:20px; box-sizing:border-box;" onclick="if(event.target === this) closeGalleryLightbox();">
     <div style="display:flex; justify-content:space-between; align-items:center; width:95%; max-width:1400px; margin-bottom:12px; gap:12px; flex-wrap:wrap;">
@@ -4910,33 +5329,247 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeGalleryLightbox();
     });
-      /* REPRODUCTOR DE AUDIO DE LA CARÁTULA (NIVEL 5) */
-    let isCaratulaAudioPlaying = false;
-    let caratulaSpeechUtter = null;
+      // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
+    window.addEventListener('beforeunload', () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    });
 
-    function toggleCaratulaAudio() {
-      const btnIcon = document.getElementById('audio-play-icon');
-      const statusMsg = document.getElementById('audio-status-msg');
-      const waveBars = document.getElementById('audio-wave-bars');
+  </script>
 
-      if (!('speechSynthesis' in window)) {
-        if (statusMsg) statusMsg.textContent = 'Audio no soportado en este navegador';
+<script>
+  /* =========================================================================
+     LOCUCIÓN PAUSADA Y SERENA DE CARÁTULA DE PASO (NEXORD)
+     ========================================================================= */
+  if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+  if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+  function playCaratulaAudio() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const locucionTexto = "Nivel Cinco. Aparato matemático. Matrices de adyacencia, operadores espectrales, variedades de Grassmann y positroides.";
+    caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+    caratulaSpeechUtter.lang = 'es-ES';
+
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
+                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
+                 || voices[0];
+    if (esVoice) caratulaSpeechUtter.voice = esVoice;
+
+    caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+    caratulaSpeechUtter.pitch = 0.95;
+    caratulaSpeechUtter.volume = 1.0;
+
+    const btnAudio = document.getElementById('btn-audio-caratula');
+    const playIcon = document.getElementById('audio-play-icon');
+
+    caratulaSpeechUtter.onstart = () => {
+      isCaratulaAudioPlaying = true;
+      if (btnAudio) btnAudio.classList.add('playing');
+      if (playIcon) playIcon.textContent = '❚❚';
+    };
+
+    caratulaSpeechUtter.onend = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    caratulaSpeechUtter.onerror = () => {
+      isCaratulaAudioPlaying = false;
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    };
+
+    window.speechSynthesis.speak(caratulaSpeechUtter);
+  }
+
+  function toggleCaratulaAudio() {
+    if (isCaratulaAudioPlaying) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
+      if (btnAudio) btnAudio.classList.remove('playing');
+      if (playIcon) playIcon.textContent = '🔊';
+    } else {
+      playCaratulaAudio();
+    }
+  }
+
+  function continueToLevel(targetId) {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    isCaratulaAudioPlaying = false;
+    scrollToScreen(targetId);
+  }
+
+  // Inicio automático pausado suave tras ~1.2s al abrir la carátula
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (!isCaratulaAudioPlaying && window.scrollY < 180) {
+        playCaratulaAudio();
+      }
+    }, 1200);
+  });
+
+  // Cancelar audio inmediatamente al navegar o salir
+  window.addEventListener('beforeunload', () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+    // =========================================================================
+    // CONTROLADOR CANÓNICO HUD NEXORD (Nivel 5.)
+    // =========================================================================
+    const HUD_CONFIG = {
+      levelNum: 5,
+      screens: [
+        { id: 'pantalla-5a', letter: 'a', word: 'DATOS' },
+        { id: 'pantalla-5b', letter: 'b', word: 'INVERSA' },
+        { id: 'pantalla-5c', letter: 'c', word: 'ÍNDICES' },
+        { id: 'pantalla-5d', letter: 'd', word: 'DUALES' },
+        { id: 'pantalla-5e', letter: 'e', word: 'GRÁFICOS' }
+      ],
+      caratulaId: 'pantalla-5-caratula',
+      prevLevelUrl: 'nivel4_aplicaciones.html',
+      nextLevelUrl: 'nivel6_informes.html'
+    };
+
+    if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+    if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+    function updateUnifiedHud() {
+      const hud = document.getElementById('top-floating-hud');
+      if (!hud) return;
+
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5) {
+            currentIdx = idx;
+          }
+        }
+      });
+
+      // Si está en la carátula o arriba del todo, ocultar el HUD flotante
+      if (currentIdx === -1) {
+        hud.classList.remove('visible');
         return;
+      } else {
+        hud.classList.add('visible');
       }
 
-      if (isCaratulaAudioPlaying) {
-        window.speechSynthesis.cancel();
-        isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Locución pausada · Clic para reanudar';
-        if (waveBars) waveBars.classList.remove('playing');
-        return;
+      // Actualizar botón de letra activo
+      const letterBtns = hud.querySelectorAll('.hud-letter-btn');
+      letterBtns.forEach((btn, idx) => {
+        if (idx === currentIdx) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Protocolo Estricto de Flechas Canónicas:
+      const prevBtn = document.getElementById('hud-arrow-prev');
+      const nextBtn = document.getElementById('hud-arrow-next');
+
+      // Flecha izquierda: '--' desactivada exclusivamente en 1a
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        if (prevBtn) {
+          prevBtn.textContent = '--';
+          prevBtn.classList.add('disabled');
+          prevBtn.title = 'Inicio de la plataforma';
+        }
+      } else {
+        if (prevBtn) {
+          prevBtn.textContent = '◀';
+          prevBtn.classList.remove('disabled');
+          prevBtn.title = (currentIdx === 0) ? 'Nivel anterior' : ('Pantalla anterior (' + HUD_CONFIG.screens[currentIdx - 1].letter + ')');
+        }
       }
 
+      // Flecha derecha: '--' desactivada exclusivamente en 7e
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        if (nextBtn) {
+          nextBtn.textContent = '--';
+          nextBtn.classList.add('disabled');
+          nextBtn.title = 'Fin de la plataforma';
+        }
+      } else {
+        if (nextBtn) {
+          nextBtn.textContent = '▶';
+          nextBtn.classList.remove('disabled');
+          nextBtn.title = (currentIdx === (HUD_CONFIG.screens.length - 1)) ? 'Nivel siguiente' : ('Pantalla siguiente (' + HUD_CONFIG.screens[currentIdx + 1].letter + ')');
+        }
+      }
+    }
+
+    function scrollToScreen(screenId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      const el = document.getElementById(screenId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(updateUnifiedHud, 350);
+      }
+    }
+
+    function continueToLevel(targetId) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isCaratulaAudioPlaying = false;
+      scrollToScreen(targetId);
+      
+    }
+
+    function hudNavigatePrev() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
+        return; // 1a disabled '--'
+      }
+
+      if (currentIdx > 0) {
+        scrollToScreen(HUD_CONFIG.screens[currentIdx - 1].id);
+      } else if (HUD_CONFIG.prevLevelUrl) {
+        window.location.href = HUD_CONFIG.prevLevelUrl;
+      }
+    }
+
+    function hudNavigateNext() {
+      let currentIdx = -1;
+      HUD_CONFIG.screens.forEach((sc, idx) => {
+        const el = document.getElementById(sc.id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+          currentIdx = idx;
+        }
+      });
+
+      if (HUD_CONFIG.levelNum === 7 && currentIdx === (HUD_CONFIG.screens.length - 1)) {
+        return; // 7e disabled '--'
+      }
+
+      if (currentIdx < HUD_CONFIG.screens.length - 1) {
+        const nextIdx = (currentIdx < 0) ? 0 : (currentIdx + 1);
+        scrollToScreen(HUD_CONFIG.screens[nextIdx].id);
+      } else if (HUD_CONFIG.nextLevelUrl) {
+        window.location.href = HUD_CONFIG.nextLevelUrl;
+      }
+    }
+
+    function playCaratulaAudio() {
+      if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
-      const locucionTexto = "En este QUINTO NIVEL, la lupa matemática de NEXORD opera a la vez como microscopio y telescopio para desentrañar las dinámicas relacionales en el seno de los grupos. Revela lo imperceptible de la arquitectura vincular con transparencia, haciéndola intuitiva y accesible para cualquier profesional.";
-
+      const locucionTexto = "Nivel Cinco. Aparato matemático. Matrices de adyacencia, operadores espectrales, variedades de Grassmann y positroides.";
       caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
       caratulaSpeechUtter.lang = 'es-ES';
 
@@ -4947,40 +5580,56 @@
                    || voices[0];
       if (esVoice) caratulaSpeechUtter.voice = esVoice;
 
-      caratulaSpeechUtter.rate = 0.85;
-      caratulaSpeechUtter.pitch = 0.92;
+      caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
+      caratulaSpeechUtter.pitch = 0.95;
       caratulaSpeechUtter.volume = 1.0;
+
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
 
       caratulaSpeechUtter.onstart = () => {
         isCaratulaAudioPlaying = true;
-        if (btnIcon) btnIcon.textContent = '❚❚';
-        if (statusMsg) statusMsg.textContent = 'Reproduciendo locución oficial...';
-        if (waveBars) waveBars.classList.add('playing');
+        if (btnAudio) btnAudio.classList.add('playing');
+        if (playIcon) playIcon.textContent = '⏹';
       };
 
       caratulaSpeechUtter.onend = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Reproducción finalizada';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       caratulaSpeechUtter.onerror = () => {
         isCaratulaAudioPlaying = false;
-        if (btnIcon) btnIcon.textContent = '▶';
-        if (statusMsg) statusMsg.textContent = 'Error en la reproducción';
-        if (waveBars) waveBars.classList.remove('playing');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
       };
 
       window.speechSynthesis.speak(caratulaSpeechUtter);
     }
-  
-    // Cancelar audio inmediatamente al navegar o cambiar de nivel/pestaña
-    window.addEventListener('beforeunload', () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    function toggleCaratulaAudio() {
+      if (isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        isCaratulaAudioPlaying = false;
+        const btnAudio = document.getElementById('btn-audio-caratula');
+        const playIcon = document.getElementById('audio-play-icon');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      } else {
+        playCaratulaAudio();
+      }
+    }
+
+    // Listeners de actualización universal
+    window.addEventListener('scroll', updateUnifiedHud);
+    window.addEventListener('resize', updateUnifiedHud);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUnifiedHud();
+      const snapCont = document.getElementById('main-snap-container');
+      if (snapCont) snapCont.addEventListener('scroll', updateUnifiedHud);
     });
 
-  </script>
-
+</script>
 </body>
 </html>

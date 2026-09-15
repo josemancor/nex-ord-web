@@ -212,3 +212,164 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
+// =========================================================================
+// MANDO UNIVERSAL MINIMALISTA (ACCIONES PARA PORTADA PRINCIPAL)
+// =========================================================================
+if (typeof window.navigateStep !== 'function') {
+    window.navigateStep = function(dir) {
+        if (dir > 0) {
+            // En Portada Principal única, avanzar lleva directamente a Nivel 1
+            window.location.href = "nivel1_intuitivo.html";
+        } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    };
+}
+
+window.handleSalirPlatform = function() {
+    if (confirm("¿Desea cerrar la sesión y salir del ecosistema NEXORD?")) {
+        window.location.href = "about:blank";
+    }
+};
+
+// Escucha de teclado para navegación fluida
+window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        navigateStep(1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        navigateStep(-1);
+    }
+});
+
+// =========================================================================
+// REPRODUCTOR DE AUDIO / LOCUCIÓN INSTITUCIONAL DE PORTADA (NEXORD)
+// =========================================================================
+let heroAudioPlaying = false;
+let heroSpeechUtter = null;
+
+function getOptimalSpanishVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
+              (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica') || v.name.includes('Helena') || v.name.includes('Laura') || v.name.includes('Mónica')))
+        || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
+        || (voices.length > 0 ? voices[0] : null);
+}
+
+// Pre-cargar voces y desbloquear síntesis en la primera interacción
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+        try { window.speechSynthesis.getVoices(); } catch(e){}
+    };
+    try { window.speechSynthesis.getVoices(); } catch(e){}
+
+    const unlockSpeechEngine = () => {
+        try {
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+            }
+        } catch(e){}
+    };
+    window.addEventListener('click', unlockSpeechEngine, { once: true });
+    window.addEventListener('touchstart', unlockSpeechEngine, { once: true });
+}
+
+function playHeroChime() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === "suspended") {
+            ctx.resume();
+        }
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.10);
+        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.22);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.50);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.50);
+    } catch(e) {}
+}
+
+window.toggleHeroAudio = function() {
+    playHeroChime(); // Sonido instantáneo garantizado al pulsar
+
+    const btn = document.getElementById("btn-hero-audio");
+    const icon = document.getElementById("hero-audio-icon");
+    const text = document.getElementById("hero-audio-text");
+
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
+
+    if (heroAudioPlaying) {
+        window.speechSynthesis.cancel();
+        heroAudioPlaying = false;
+        if (btn) btn.classList.remove("playing");
+        if (icon) icon.textContent = "🔊";
+        if (text) text.textContent = "Escuchar Presentación";
+        window._heroActiveUtterance = null;
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const locucionTexto = "Bienvenido a NEXORD: Sociometría Ordinal Computacional. Hacia una Física de lo Grupal. Ecosistema científico diseñado para cartografiar y cuantificar la dinámica relacional y socio-termodinámica de los colectivos humanos.";
+    
+    const utter = new SpeechSynthesisUtterance(locucionTexto);
+    window._heroActiveUtterance = utter;
+    utter.lang = "es-ES";
+
+    const esVoice = getOptimalSpanishVoice();
+    if (esVoice) utter.voice = esVoice;
+
+    utter.rate = 0.82;
+    utter.pitch = 0.95;
+    utter.volume = 1.0;
+
+    utter.onstart = () => {
+        heroAudioPlaying = true;
+        if (btn) btn.classList.add("playing");
+        if (icon) icon.textContent = "❚❚";
+        if (text) text.textContent = "Pausar Locución";
+    };
+
+    utter.onend = () => {
+        heroAudioPlaying = false;
+        if (btn) btn.classList.remove("playing");
+        if (icon) icon.textContent = "🔊";
+        if (text) text.textContent = "Escuchar Presentación";
+        window._heroActiveUtterance = null;
+    };
+
+    utter.onerror = () => {
+        heroAudioPlaying = false;
+        if (btn) btn.classList.remove("playing");
+        if (icon) icon.textContent = "🔊";
+        if (text) text.textContent = "Escuchar Presentación";
+        window._heroActiveUtterance = null;
+    };
+
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    }
+
+    setTimeout(() => {
+        window.speechSynthesis.speak(utter);
+    }, 120);
+};
+
+// Cancelar locución de cabecera si el usuario navega
+window.addEventListener('beforeunload', () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+

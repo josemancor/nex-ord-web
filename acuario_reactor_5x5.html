@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD • Acuario Termodinámico 5x5 (Latencia vs Cielo Abierto)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .outfit { font-family: 'Outfit', sans-serif; }
+    
+    input[type=range] {
+      accent-color: #00E5FF;
+    }
+    
+    .glass-card {
+      background: rgba(11, 19, 43, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-transparent p-2 md:p-3 text-slate-100 flex justify-center items-center">
+
+  <div class="glass-card rounded-2xl p-3 md:p-4 w-full max-w-[960px] flex flex-col gap-2 relative overflow-hidden" style="min-height: 480px;">
+    
+    <!-- CABECERA INSTITUCIONAL COMPACTA -->
+    <div class="flex items-center justify-between border-b border-sky-950/80 pb-2 px-1">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          <svg class="w-4 h-4 text-slate-950 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="outfit text-sm md:text-base font-extrabold tracking-wide text-white">NEXORD <span class="text-cyan-400">VISORD</span></span>
+            <span class="mono text-[9px] bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 px-1.5 py-0.5 rounded font-bold">CALANDRIA 5×5</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mono">Superficie Libre • Latencia Submarina vs. Crestas a Cielo Abierto</p>
+        </div>
+      </div>
+
+      <!-- ESTADO DE REACTIVIDAD DEL REACTOR -->
+      <div class="flex items-center gap-2 bg-slate-900/80 border border-sky-900/50 px-2.5 py-1 rounded-xl">
+        <div id="reactor-status-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></div>
+        <div class="flex flex-col text-right">
+          <span class="text-[9px] mono uppercase text-slate-400 font-semibold" id="reactor-status-label">ESTABLE CRÍTICO</span>
+          <span class="text-[11px] mono font-bold text-cyan-300" id="reactor-keff-val">k_eff = 1.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLES & MODULADOR DE LÍNEA DE FLOTACIÓN (Z_mar) -->
+    <div class="flex flex-wrap items-center justify-between gap-1.5 text-xs bg-slate-950/60 p-1.5 rounded-xl border border-sky-900/30">
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] mono text-slate-400 font-semibold pl-1">Régimen:</span>
+        <button onclick="setPreset('subcritical')" id="btn-subcritical" class="preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+          🌊 Todo Sumergido
+        </button>
+        <button onclick="setPreset('critical')" id="btn-critical" class="preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-500/50 shadow-sm shadow-cyan-500/20">
+          ☀️ Resonancia / Cielo
+        </button>
+        <button onclick="setPreset('shear')" id="btn-shear" class="preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+          ⚡ Rompiente / Fricción
+        </button>
+        <button onclick="setPreset('canonical')" id="btn-canonical" class="preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+          🏛️ Grupo A (1g1t1c)
+        </button>
+        <button onclick="setPreset('propuesto')" id="btn-propuesto" class="preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-amber-950/80 text-amber-300 border border-amber-500/60 shadow-sm shadow-amber-500/20">
+          🔬 Caso Propuesto (12453...)
+        </button>
+      </div>
+
+      <!-- SLIDER UMBRAL DE FLOTACIÓN (Z_mar) -->
+      <div class="flex items-center gap-2 bg-slate-900/90 px-2 py-0.5 rounded-lg border border-sky-800/40">
+        <span class="text-[10px] mono text-cyan-300 font-semibold">Línea de Agua (Z_mar):</span>
+        <input type="range" id="water-level-slider" min="0.10" max="0.90" step="0.05" value="0.50" class="w-16 h-1 cursor-pointer" oninput="updateWaterLevel(this.value)">
+        <span class="text-[10px] mono font-bold text-white w-7" id="water-level-val">0.50</span>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <span class="text-[10px] mono text-slate-400 font-semibold">Cámara:</span>
+        <button onclick="setViewMode('optimal')" id="cam-optimal" class="px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-amber-950/90 text-amber-300 border border-amber-500/60 shadow-sm shadow-amber-500/20" title="Perspectiva Óptima sin Oclusión (Elev 28°, Azim -58°)">✨ Vista Óptima</button>
+        <button onclick="setViewMode('iso')" id="cam-iso" class="px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800">ISO 3D</button>
+        <button onclick="setViewMode('profile90')" id="cam-profile" class="px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800" title="Volteo 90°: Altura a Base">📐 Perfil 90°</button>
+        <button onclick="setViewMode('invert180')" id="cam-invert" class="px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800" title="Inversión 180°: Boca Abajo">🔄 Invertir 180°</button>
+        <button onclick="setViewMode('top')" id="cam-top" class="px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800">🎯 Cenital</button>
+        <label class="flex items-center gap-1 cursor-pointer text-[9px] mono text-emerald-300 ml-1 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/40">
+          <input type="checkbox" id="membrane-chk" checked class="rounded border-emerald-600">
+          <span>🕸️ Piel / Malla</span>
+        </label>
+        <label class="flex items-center gap-1 cursor-pointer text-[9px] mono text-cyan-300 ml-1 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/40" title="Ocultar cilindros y dejar solo los ápices y la membrana">
+          <input type="checkbox" id="pure-apex-chk" class="rounded border-cyan-600">
+          <span>✨ Solo Ápices</span>
+        </label>
+        <label class="flex items-center gap-1 cursor-pointer text-[9px] mono text-slate-300 ml-1">
+          <input type="checkbox" id="auto-rotate-chk" checked class="rounded border-slate-700">
+          <span>360°</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ÁREA CENTRAL: CANVAS 3D DEL ACUARIO -->
+    <div class="relative w-full rounded-xl overflow-hidden bg-gradient-to-b from-[#0B1528] to-[#040914] border border-sky-900/40 shadow-inner" style="height: 310px;" id="canvas-wrapper">
+      <canvas id="aquarium-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+      <!-- LEYENDA HIDROSTÁTICA DE SUPERFICIE -->
+      <div class="absolute top-2 left-2 pointer-events-none flex flex-col gap-0.5 text-[9px] mono text-slate-400 bg-slate-950/75 p-1.5 rounded-lg border border-slate-800/80">
+        <div><span class="text-amber-300 font-bold">☀️ CIELO ABIERTO (Z &gt; Z_mar)</span>: Manifiesto / Público</div>
+        <div><span class="text-cyan-400 font-bold">🌊 LÁMINA DE AGUA (Z_mar)</span>: Umbral de Visibilidad</div>
+        <div><span class="text-blue-400 font-bold">⚓ SUMERGIDO (Z &lt; Z_mar)</span>: Latente / Fondo</div>
+      </div>
+
+      <div class="absolute bottom-2 right-2 pointer-events-none text-[9px] mono text-slate-400 bg-slate-950/75 px-2 py-1 rounded-md border border-slate-800/80">
+        🖱️ Arrastra para orbitar 3D • Rueda para zoom
+      </div>
+    </div>
+
+    <!-- PANEL DE TELEMETRÍA DIÁDICA & ATRACTOR BARIMÉTRICO -->
+    <div class="flex flex-wrap items-center justify-between gap-1 px-2 py-1 bg-slate-950/90 rounded-lg border border-sky-900/40 text-[10px] mono">
+      <div class="flex items-center gap-1.5">
+        <span class="text-amber-400 font-bold flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_#FFE600] inline-block"></span>
+          CENTROIDE:
+        </span>
+        <span class="text-white font-bold" id="baricenter-val">Z̄ = +0.52</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-slate-400">INCLINACIÓN CUERDA:</span>
+        <span class="text-rose-400 font-bold" id="chord-angle">θ = 0.0°</span>
+      </div>
+      <div class="flex items-center gap-1.5 bg-slate-900 px-1.5 py-0.5 rounded border border-sky-900/60">
+        <span class="text-slate-400">CURVATURA GAUSS (K):</span>
+        <span class="font-bold" id="gauss-k-val">K = +0.12</span>
+        <span id="gauss-badge" class="text-[8px] px-1 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ELÍPTICO</span>
+      </div>
+      <div class="flex items-center gap-1.5 bg-slate-900 px-1.5 py-0.5 rounded border border-sky-900/60">
+        <span class="text-slate-400">CURVATURA MEDIA (H):</span>
+        <span class="text-cyan-300 font-bold" id="mean-h-val">H = -0.04</span>
+        <span class="text-slate-400 text-[9px]">(ΔP = 2γH)</span>
+      </div>
+    </div>
+
+    <!-- PANEL DE TELEMETRÍA DIÁDICA (LATENCIA VS MANIFESTACIÓN) -->
+    <div id="telemetry-bar" class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-950/80 p-2 rounded-xl border border-sky-900/30 text-xs">
+      <div class="flex flex-col justify-center border-r border-slate-800/80 pr-2">
+        <span class="text-[9px] mono text-slate-400 uppercase font-semibold">Díada Seleccionada</span>
+        <span class="mono font-bold text-white text-sm" id="tel-pair">1A1a → 2A1a</span>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800/80 pr-2">
+        <span class="text-[9px] mono text-slate-400 uppercase font-semibold">Emisión Zij (i→j)</span>
+        <div class="flex items-center gap-1.5">
+          <span class="mono font-extrabold text-emerald-400 text-sm" id="tel-zij">+0.85</span>
+          <span id="badge-phase-zij" class="text-[8px] mono px-1 py-0.2 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">CIELO</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800/80 pr-2">
+        <span class="text-[9px] mono text-slate-400 uppercase font-semibold">Retorno Zji (j→i)</span>
+        <div class="flex items-center gap-1.5">
+          <span class="mono font-extrabold text-cyan-400 text-sm" id="tel-zji">+0.85</span>
+          <span id="badge-phase-zji" class="text-[8px] mono px-1 py-0.2 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">CIELO</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800/80 pr-2">
+        <span class="text-[9px] mono text-slate-400 uppercase font-semibold">Desnivel |Zij - Zji|</span>
+        <span class="mono font-bold text-slate-200 text-sm" id="tel-delta">0.00 (Laminar)</span>
+      </div>
+
+      <div class="flex flex-col justify-center col-span-2 md:col-span-1">
+        <span class="text-[9px] mono text-slate-400 uppercase font-semibold">Fase Fenomenológica</span>
+        <span class="mono font-bold text-emerald-300 text-xs flex items-center gap-1" id="tel-shear">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> Doble Cresta Manifiesta
+        </span>
+      </div>
+    </div>
+
+    <!-- BALANCES HIDROSTÁTICOS NETOS DE LOS 5 SUJETOS (SUMIDERO VS MANANTIAL) -->
+    <div class="flex flex-wrap items-center justify-between gap-1 px-2 py-1 bg-slate-950/90 rounded-xl border border-sky-900/40 text-[10px] mono">
+      <span class="text-slate-400 font-bold">BALANCES NETOS ΔDi (D_rec - D_dar):</span>
+      <div class="flex items-center gap-1.5" id="subject-balances-pills">
+        <button onclick="highlightSubject(0)" class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900 transition">
+          1A1a: <span class="font-bold">+1.25</span> (Sumidero)
+        </button>
+        <button onclick="highlightSubject(1)" class="px-2 py-0.5 rounded bg-sky-950/80 text-sky-300 border border-sky-500/50 hover:bg-sky-900 transition">
+          2A1a: <span class="font-bold">±0.00</span> (Homeostático)
+        </button>
+        <button onclick="highlightSubject(2)" class="px-2 py-0.5 rounded bg-rose-950/90 text-rose-300 border border-rose-500/60 hover:bg-rose-900 transition shadow-sm shadow-rose-500/30">
+          3A1a: <span class="font-bold">-2.00</span> (Manantial Máx)
+        </button>
+        <button onclick="highlightSubject(3)" class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900 transition">
+          4A1a: <span class="font-bold">+1.00</span> (Sumidero)
+        </button>
+        <button onclick="highlightSubject(4)" class="px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/50 hover:bg-amber-900 transition">
+          5A1a: <span class="font-bold">-0.25</span> (Ligero Manantial)
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MOTOR 3D VECTORIAL CON SUPERFICIE LIBRE Y RUPTURA DE FASE -->
+  <script>
+    const canvas = document.getElementById('aquarium-canvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('canvas-wrapper');
+
+    const SUBJECTS = ['1A1a', '2A1a', '3A1a', '4A1a', '5A1a'];
+    const N = 5;
+
+    let matrixZ = [
+      [0.20, 0.85, 0.70, 0.30, 0.15],
+      [0.85, 0.20, 0.90, 0.60, 0.40],
+      [0.70, 0.90, 0.20, 0.80, 0.25],
+      [0.30, 0.60, 0.80, 0.20, 0.50],
+      [0.15, 0.40, 0.25, 0.50, 0.20]
+    ];
+
+    let targetZ = JSON.parse(JSON.stringify(matrixZ));
+
+    // Nivel de agua Z_mar [0.0 .. 1.0]
+    let waterLevel = 0.50;
+
+    // Estado de cámara 3D
+    let rotX = 0.55;
+    let rotY = -0.78;
+    let zoom = 1.05;
+    let autoRotate = true;
+    let hoveredCell = { i: 0, j: 1 };
+    let selectedCell = { i: 0, j: 1 };
+
+    // Partículas subacuáticas
+    const particles = [];
+    for (let p = 0; p < 40; p++) {
+      particles.push({
+        x: (Math.random() - 0.5) * 220,
+        y: (Math.random() - 0.5) * 220,
+        z: Math.random() * 60,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        vz: 0.15 + Math.random() * 0.35,
+        alpha: 0.15 + Math.random() * 0.4,
+        size: 1.2 + Math.random() * 1.8
+      });
+    }
+
+    const cellSize = 38;
+    const halfSpan = (N * cellSize) / 2;
+    const maxBarHeight = 110;
+
+    function resizeCanvas() {
+      const rect = container.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function updateWaterLevel(val) {
+      waterLevel = parseFloat(val);
+      document.getElementById('water-level-val').textContent = waterLevel.toFixed(2);
+      updateTelemetry();
+    }
+
+    function project3D(x, y, z, originX, originY) {
+      const cosY = Math.cos(rotY);
+      const sinY = Math.sin(rotY);
+      const x1 = x * cosY - y * sinY;
+      const y1 = x * sinY + y * cosY;
+
+      const cosX = Math.cos(rotX);
+      const sinX = Math.sin(rotX);
+      const z2 = z * cosX - y1 * sinX;
+      const y2 = z * sinX + y1 * cosX;
+
+      const dist = 480;
+      const perspective = dist / (dist + y2);
+      const scale = zoom * perspective;
+
+      return {
+        px: originX + x1 * scale,
+        py: originY - z2 * scale,
+        depth: y2
+      };
+    }
+
+    function render() {
+      const w = canvas.width / (Math.min(window.devicePixelRatio || 1, 2));
+      const h = canvas.height / (Math.min(window.devicePixelRatio || 1, 2));
+      const originX = w / 2;
+      const originY = h / 2 + 35;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Lerp hacia las alturas objetivo
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          matrixZ[i][j] += (targetZ[i][j] - matrixZ[i][j]) * 0.12;
+        }
+      }
+
+      if (autoRotate && document.getElementById('auto-rotate-chk').checked) {
+        rotY += 0.005;
+      }
+
+      const hWater = waterLevel * maxBarHeight;
+
+      // 1. DIBUJAR CAJA DEL ACUARIO
+      drawAquariumGlass(originX, originY, hWater);
+
+      // 2. RECOPILAR ELEMENTOS 3D PARA DEPTH SORTING
+      const renderList = [];
+
+      // A) Celdas del lecho basal (Suelo)
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          const cx = (j - 2) * cellSize;
+          const cy = (i - 2) * cellSize;
+          const p = project3D(cx, cy, 0, originX, originY);
+          renderList.push({
+            type: 'gridCell',
+            i: i,
+            j: j,
+            cx: cx,
+            cy: cy,
+            depth: p.depth - 100
+          });
+        }
+      }
+
+      // B) Las 25 Barras de Control Diádicas
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          const cx = (j - 2) * cellSize;
+          const cy = (i - 2) * cellSize;
+          const val = matrixZ[i][j];
+          const p = project3D(cx, cy, val * maxBarHeight * 0.5, originX, originY);
+          renderList.push({
+            type: 'bar',
+            i: i,
+            j: j,
+            cx: cx,
+            cy: cy,
+            val: val,
+            depth: p.depth
+          });
+        }
+      }
+
+      // C) Superficie Libre del Agua (Plano semi-transparente que corta las barras)
+      const centerWater = project3D(0, 0, hWater, originX, originY);
+      renderList.push({
+        type: 'waterPlane',
+        hWater: hWater,
+        depth: centerWater.depth
+      });
+
+      // D) Partículas subacuáticas
+      particles.forEach(pt => {
+        pt.z += pt.vz;
+        if (pt.z > hWater) pt.z = 0;
+        const p = project3D(pt.x, pt.y, pt.z, originX, originY);
+        renderList.push({
+          type: 'particle',
+          px: p.px,
+          py: p.py,
+          depth: p.depth,
+          alpha: pt.alpha,
+          size: pt.size
+        });
+      });
+
+      // E) Arco de tensión entre la díada seleccionada y su transpuesta
+      if (selectedCell) {
+        const { i, j } = selectedCell;
+        if (i !== j) {
+          const p1 = project3D((j - 2) * cellSize, (i - 2) * cellSize, matrixZ[i][j] * maxBarHeight, originX, originY);
+          const p2 = project3D((i - 2) * cellSize, (j - 2) * cellSize, matrixZ[j][i] * maxBarHeight, originX, originY);
+          renderList.push({
+            type: 'tensionArc',
+            p1: p1,
+            p2: p2,
+            i: i,
+            j: j,
+            depth: Math.max(p1.depth, p2.depth) + 15
+          });
+        }
+      }
+
+      // ORDENAR POR PROFUNDIDAD
+      renderList.sort((a, b) => b.depth - a.depth);
+
+      // DIBUJAR MEMBRANA CONTINUA DE ÁPICES (SI ESTÁ ACTIVA)
+      if (document.getElementById('membrane-chk').checked) {
+        drawApexMembrane(originX, originY);
+      }
+
+      // EJECUTAR DIBUJO
+      renderList.forEach(item => {
+        if (item.type === 'gridCell') {
+          drawGridCell(item.i, item.j, item.cx, item.cy, originX, originY);
+        } else if (item.type === 'bar') {
+          drawControlRodTwoPhases(item.i, item.j, item.cx, item.cy, item.val, hWater, originX, originY);
+        } else if (item.type === 'waterPlane') {
+          drawWaterSurface(item.hWater, originX, originY);
+        } else if (item.type === 'particle') {
+          ctx.beginPath();
+          ctx.arc(item.px, item.py, item.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56, 189, 248, ${item.alpha})`;
+          ctx.fill();
+        } else if (item.type === 'tensionArc') {
+          drawTensionArc(item.p1, item.p2, item.i, item.j);
+        }
+      });
+
+      // DIBUJAR CENTROIDE BARIMÉTRICO Y CUERDA DE CIZALLADURA
+      if (document.getElementById('membrane-chk').checked) {
+        drawBaricenterAndChords(originX, originY);
+      }
+
+      drawMatrixLabels(originX, originY);
+
+      requestAnimationFrame(render);
+    }
+
+    // DIBUJO DE LA VITRINA Y LÍNEA DE FLOTACIÓN
+    function drawAquariumGlass(originX, originY, hWater) {
+      const b = halfSpan + 10;
+      const hMax = maxBarHeight + 20;
+
+      const c1 = project3D(-b, -b, 0, originX, originY);
+      const c2 = project3D(b, -b, 0, originX, originY);
+      const c3 = project3D(b, b, 0, originX, originY);
+      const c4 = project3D(-b, b, 0, originX, originY);
+
+      const t1 = project3D(-b, -b, hMax, originX, originY);
+      const t2 = project3D(b, -b, hMax, originX, originY);
+      const t3 = project3D(b, b, hMax, originX, originY);
+      const t4 = project3D(-b, b, hMax, originX, originY);
+
+      // Marco superior e inferior
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+      ctx.lineWidth = 1;
+      [ [c1, c2, c3, c4], [t1, t2, t3, t4] ].forEach(pts => {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].px, pts[0].py);
+        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].px, pts[i].py);
+        ctx.closePath();
+        ctx.stroke();
+      });
+
+      [ [c1, t1], [c2, t2], [c3, t3], [c4, t4] ].forEach(pair => {
+        ctx.beginPath();
+        ctx.moveTo(pair[0].px, pair[0].py);
+        ctx.lineTo(pair[1].px, pair[1].py);
+        ctx.stroke();
+      });
+
+      // LÍNEA DE CONTORNO DE LA LÁMINA DE AGUA EN EL CRISTAL
+      const w1 = project3D(-b, -b, hWater, originX, originY);
+      const w2 = project3D(b, -b, hWater, originX, originY);
+      const w3 = project3D(b, b, hWater, originX, originY);
+      const w4 = project3D(-b, b, hWater, originX, originY);
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(w1.px, w1.py);
+      ctx.lineTo(w2.px, w2.py);
+      ctx.lineTo(w3.px, w3.py);
+      ctx.lineTo(w4.px, w4.py);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // DIBUJO DE LA SUPERFICIE DEL AGUA (LÁMINA TRANSLÚCIDA ONDULANTE)
+    function drawWaterSurface(hWater, originX, originY) {
+      const b = halfSpan + 8;
+      const w1 = project3D(-b, -b, hWater, originX, originY);
+      const w2 = project3D(b, -b, hWater, originX, originY);
+      const w3 = project3D(b, b, hWater, originX, originY);
+      const w4 = project3D(-b, b, hWater, originX, originY);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(w1.px, w1.py);
+      ctx.lineTo(w2.px, w2.py);
+      ctx.lineTo(w3.px, w3.py);
+      ctx.lineTo(w4.px, w4.py);
+      ctx.closePath();
+
+      // Gradiente del espejo de agua
+      const grad = ctx.createLinearGradient(w1.px, w1.py, w3.px, w3.py);
+      grad.addColorStop(0, 'rgba(14, 165, 233, 0.18)');
+      grad.addColorStop(0.5, 'rgba(0, 229, 255, 0.22)');
+      grad.addColorStop(1, 'rgba(3, 105, 161, 0.15)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Trazado de ondas en la superficie
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // DIBUJO DE CELDAS DEL SUELO
+    function drawGridCell(i, j, cx, cy, originX, originY) {
+      const halfW = (cellSize / 2) * 0.92;
+      const p1 = project3D(cx - halfW, cy - halfW, 0, originX, originY);
+      const p2 = project3D(cx + halfW, cy - halfW, 0, originX, originY);
+      const p3 = project3D(cx + halfW, cy + halfW, 0, originX, originY);
+      const p4 = project3D(cx - halfW, cy + halfW, 0, originX, originY);
+
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.lineTo(p3.px, p3.py);
+      ctx.lineTo(p4.px, p4.py);
+      ctx.closePath();
+
+      const isDiag = (i === j);
+      const isSelected = (selectedCell && selectedCell.i === i && selectedCell.j === j);
+      const isTrans = (selectedCell && selectedCell.i === j && selectedCell.j === i);
+
+      if (isSelected) {
+        ctx.fillStyle = 'rgba(0, 255, 135, 0.28)';
+        ctx.strokeStyle = '#00FF87';
+        ctx.lineWidth = 2;
+      } else if (isTrans) {
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.22)';
+        ctx.strokeStyle = '#00E5FF';
+        ctx.lineWidth = 1.8;
+      } else if (isDiag) {
+        ctx.fillStyle = 'rgba(255, 230, 0, 0.08)';
+        ctx.strokeStyle = 'rgba(255, 230, 0, 0.35)';
+        ctx.lineWidth = 1;
+      } else {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
+        ctx.lineWidth = 0.8;
+      }
+
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // DIBUJO DE BARRA EN DOS FASES (SUMERGIDA VS CIELO ABIERTO)
+    function drawControlRodTwoPhases(i, j, cx, cy, val, hWater, originX, originY) {
+      const halfW = (cellSize / 2) * 0.44;
+      const totalH = Math.max(val * maxBarHeight, 5);
+      const isAboveWater = (totalH > hWater);
+
+      const isDiag = (i === j);
+      const isSelected = (selectedCell && selectedCell.i === i && selectedCell.j === j);
+      const isTrans = (selectedCell && selectedCell.i === j && selectedCell.j === i);
+
+      const isPureApex = document.getElementById('pure-apex-chk') && document.getElementById('pure-apex-chk').checked;
+      if (isPureApex) {
+        // Dibujar únicamente el ápice suspendido en el espacio y una línea fina de plomada
+        const pApex = project3D(cx, cy, totalH, originX, originY);
+        const pFloor = project3D(cx, cy, 0, originX, originY);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(pApex.px, pApex.py);
+        ctx.lineTo(pFloor.px, pFloor.py);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+        ctx.lineWidth = 0.8;
+        ctx.setLineDash([2, 2]);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(pApex.px, pApex.py, (isSelected || isTrans) ? 6 : 4, 0, Math.PI * 2);
+        ctx.fillStyle = (totalH > hWater) ? ((isSelected || isTrans) ? '#00FF87' : '#38BDF8') : ((totalH === 0) ? '#FF007F' : '#0284C7');
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+        return;
+      }
+
+      // 1. TRAMO SUBMARINO (de 0 a min(totalH, hWater))
+      const hSub = Math.min(totalH, hWater);
+      drawRodSegment(cx, cy, halfW, 0, hSub, originX, originY, true, isDiag, isSelected, isTrans, val, j, i);
+
+      // 2. MENISCO DE RUPTURA DE SUPERFICIE (si rompe el agua)
+      if (isAboveWater) {
+        const ringCenter = project3D(cx, cy, hWater, originX, originY);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(ringCenter.px, ringCenter.py, halfW * 1.5, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Onda concéntrica expandiéndose
+        ctx.beginPath();
+        ctx.arc(ringCenter.px, ringCenter.py, halfW * 2.2, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+
+        // 3. TRAMO A CIELO ABIERTO (de hWater a totalH)
+        drawRodSegment(cx, cy, halfW, hWater, totalH, originX, originY, false, isDiag, isSelected, isTrans, val, j, i);
+      }
+    }
+
+    function drawRodSegment(cx, cy, halfW, zBottom, zTop, originX, originY, isUnderwater, isDiag, isSelected, isTrans, val, colIdx, rowIdx) {
+      const b1 = project3D(cx - halfW, cy - halfW, zBottom, originX, originY);
+      const b2 = project3D(cx + halfW, cy - halfW, zBottom, originX, originY);
+      const b3 = project3D(cx + halfW, cy + halfW, zBottom, originX, originY);
+      const b4 = project3D(cx - halfW, cy + halfW, zBottom, originX, originY);
+
+      const t1 = project3D(cx - halfW, cy - halfW, zTop, originX, originY);
+      const t2 = project3D(cx + halfW, cy - halfW, zTop, originX, originY);
+      const t3 = project3D(cx + halfW, cy + halfW, zTop, originX, originY);
+      const t4 = project3D(cx - halfW, cy + halfW, zTop, originX, originY);
+
+      let colMain, colGlow;
+
+      if (isDiag) {
+        colMain = '#FFE600';
+        colGlow = isUnderwater ? 'rgba(255, 230, 0, 0.18)' : 'rgba(255, 230, 0, 0.45)';
+      } else {
+        const transVal = matrixZ[colIdx][rowIdx];
+        const diff = Math.abs(val - transVal);
+
+        if (diff > 0.45) {
+          colMain = '#FF007F';
+          colGlow = isUnderwater ? 'rgba(255, 0, 127, 0.25)' : 'rgba(255, 0, 127, 0.55)';
+        } else if (val > 0.75 && diff <= 0.2) {
+          colMain = '#00FF87';
+          colGlow = isUnderwater ? 'rgba(0, 255, 135, 0.25)' : 'rgba(0, 255, 135, 0.6)';
+        } else if (val < 0.25) {
+          colMain = '#64748B';
+          colGlow = 'rgba(100, 116, 139, 0.15)';
+        } else {
+          colMain = '#00E5FF';
+          colGlow = isUnderwater ? 'rgba(0, 229, 255, 0.2)' : 'rgba(0, 229, 255, 0.5)';
+        }
+      }
+
+      ctx.save();
+
+      // Cara Frontal
+      ctx.beginPath();
+      ctx.moveTo(b3.px, b3.py);
+      ctx.lineTo(b4.px, b4.py);
+      ctx.lineTo(t4.px, t4.py);
+      ctx.lineTo(t3.px, t3.py);
+      ctx.closePath();
+      ctx.fillStyle = colGlow;
+      ctx.fill();
+      ctx.strokeStyle = colMain;
+      ctx.lineWidth = (isSelected || isTrans) ? 2 : (isUnderwater ? 0.8 : 1.4);
+      ctx.stroke();
+
+      // Cara Lateral
+      ctx.beginPath();
+      ctx.moveTo(b2.px, b2.py);
+      ctx.lineTo(b3.px, b3.py);
+      ctx.lineTo(t3.px, t3.py);
+      ctx.lineTo(t2.px, t2.py);
+      ctx.closePath();
+      ctx.fillStyle = colGlow;
+      ctx.fill();
+      ctx.stroke();
+
+      // Tapa Superior (solo si estamos en la cima final del pistón)
+      if (zTop >= val * maxBarHeight - 1) {
+        ctx.beginPath();
+        ctx.moveTo(t1.px, t1.py);
+        ctx.lineTo(t2.px, t2.py);
+        ctx.lineTo(t3.px, t3.py);
+        ctx.lineTo(t4.px, t4.py);
+        ctx.closePath();
+        ctx.fillStyle = colMain;
+        ctx.fill();
+        ctx.stroke();
+
+        if (!isUnderwater) {
+          // Destello a cielo abierto
+          ctx.beginPath();
+          ctx.arc(t3.px, t3.py, 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fill();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // ARCO DE TENSIÓN
+    function drawTensionArc(p1, p2, i, j) {
+      const midX = (p1.px + p2.px) / 2;
+      const midY = (p1.py + p2.py) / 2 - 40;
+
+      const val1 = matrixZ[i][j];
+      const val2 = matrixZ[j][i];
+      const diff = Math.abs(val1 - val2);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.quadraticCurveTo(midX, midY, p2.px, p2.py);
+
+      if (diff > 0.4) {
+        ctx.strokeStyle = '#FF007F';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([4, 3]);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 159, 28, 0.6)';
+        ctx.lineWidth = 6;
+        ctx.setLineDash([]);
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = '#00FF87';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(0, 255, 135, 0.35)';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawMatrixLabels(originX, originY) {
+      ctx.save();
+      ctx.font = 'bold 9px "Roboto Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let idx = 0; idx < N; idx++) {
+        const colPos = project3D((idx - 2) * cellSize, -halfSpan - 12, 0, originX, originY);
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillText(SUBJECTS[idx], colPos.px, colPos.py);
+
+        const rowPos = project3D(-halfSpan - 14, (idx - 2) * cellSize, 0, originX, originY);
+        ctx.fillStyle = '#4ADE80';
+        ctx.fillText(SUBJECTS[idx], rowPos.px, rowPos.py);
+      }
+      ctx.restore();
+    }
+
+    function updateTelemetry() {
+      const { i, j } = selectedCell;
+      const zij = matrixZ[i][j];
+      const zji = matrixZ[j][i];
+      const delta = Math.abs(zij - zji);
+
+      document.getElementById('tel-pair').textContent = `${SUBJECTS[i]} → ${SUBJECTS[j]}`;
+      document.getElementById('tel-zij').textContent = (zij >= 0 ? '+' : '') + zij.toFixed(2);
+      document.getElementById('tel-zji').textContent = (zji >= 0 ? '+' : '') + zji.toFixed(2);
+
+      const bZij = document.getElementById('badge-phase-zij');
+      if (zij > waterLevel) {
+        bZij.textContent = 'CIELO';
+        bZij.className = 'text-[8px] mono px-1 py-0.2 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      } else {
+        bZij.textContent = 'AGUA';
+        bZij.className = 'text-[8px] mono px-1 py-0.2 rounded font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
+      }
+
+      const bZji = document.getElementById('badge-phase-zji');
+      if (zji > waterLevel) {
+        bZji.textContent = 'CIELO';
+        bZji.className = 'text-[8px] mono px-1 py-0.2 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      } else {
+        bZji.textContent = 'AGUA';
+        bZji.className = 'text-[8px] mono px-1 py-0.2 rounded font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
+      }
+
+      const deltaEl = document.getElementById('tel-delta');
+      const shearEl = document.getElementById('tel-shear');
+
+      if (i === j) {
+        deltaEl.textContent = '0.00 (Diagonal Testigo)';
+        deltaEl.className = 'mono font-bold text-amber-300 text-sm';
+        shearEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span> Auto-contención';
+        shearEl.className = 'mono font-bold text-amber-300 text-xs flex items-center gap-1';
+      } else if (zij > waterLevel && zji > waterLevel) {
+        deltaEl.textContent = `${delta.toFixed(2)} (Ambas a Cielo Abierto)`;
+        deltaEl.className = 'mono font-bold text-emerald-400 text-sm';
+        shearEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> Resonancia Manifiesta (Pública)';
+        shearEl.className = 'mono font-bold text-emerald-300 text-xs flex items-center gap-1';
+      } else if (zij <= waterLevel && zji <= waterLevel) {
+        deltaEl.textContent = `${delta.toFixed(2)} (Ambas Sumergidas)`;
+        deltaEl.className = 'mono font-bold text-sky-400 text-sm';
+        shearEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-sky-400 inline-block"></span> Latencia / Corriente de Fondo';
+        shearEl.className = 'mono font-bold text-sky-300 text-xs flex items-center gap-1';
+      } else {
+        deltaEl.textContent = `${delta.toFixed(2)} (Ruptura Asimétrica)`;
+        deltaEl.className = 'mono font-bold text-rose-400 text-sm';
+        shearEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> Cizalladura / Rompiente de Fase';
+        shearEl.className = 'mono font-bold text-rose-400 text-xs flex items-center gap-1';
+      }
+    }
+
+    function setPreset(name) {
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.className = 'preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
+      });
+
+      const activeBtn = document.getElementById('btn-' + name);
+      if (activeBtn) {
+        activeBtn.className = 'preset-btn px-2 py-1 rounded-lg text-[10px] mono font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-500/50 shadow-sm shadow-cyan-500/20';
+      }
+
+      const statusInd = document.getElementById('reactor-status-indicator');
+      const statusLbl = document.getElementById('reactor-status-label');
+      const statusKeff = document.getElementById('reactor-keff-val');
+
+      if (name === 'subcritical') {
+        targetZ = [
+          [0.10, 0.25, 0.18, 0.22, 0.14],
+          [0.22, 0.10, 0.24, 0.19, 0.21],
+          [0.25, 0.22, 0.10, 0.20, 0.23],
+          [0.18, 0.21, 0.19, 0.10, 0.17],
+          [0.21, 0.19, 0.22, 0.18, 0.10]
+        ];
+        statusInd.className = 'w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38BDF8]';
+        statusLbl.textContent = 'SUBCRÍTICO (MAR EN CALMA)';
+        statusLbl.className = 'text-[9px] mono uppercase text-sky-400 font-semibold';
+        statusKeff.textContent = 'k_eff = 0.38';
+      } else if (name === 'critical') {
+        targetZ = [
+          [0.20, 0.88, 0.75, 0.80, 0.70],
+          [0.88, 0.20, 0.92, 0.84, 0.76],
+          [0.75, 0.92, 0.20, 0.86, 0.72],
+          [0.80, 0.84, 0.86, 0.20, 0.78],
+          [0.70, 0.76, 0.72, 0.78, 0.20]
+        ];
+        statusInd.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]';
+        statusLbl.textContent = 'ESTABLE CRÍTICO (CIELO ABIERTO)';
+        statusLbl.className = 'text-[9px] mono uppercase text-emerald-400 font-semibold';
+        statusKeff.textContent = 'k_eff = 1.00';
+      } else if (name === 'shear') {
+        targetZ = [
+          [0.20, 0.95, 0.90, 0.85, 0.92],
+          [0.08, 0.20, 0.88, 0.94, 0.82],
+          [0.12, 0.10, 0.20, 0.89, 0.86],
+          [0.09, 0.15, 0.08, 0.20, 0.91],
+          [0.07, 0.11, 0.14, 0.10, 0.20]
+        ];
+        statusInd.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#FF007F]';
+        statusLbl.textContent = 'SUPERCRÍTICO (ROMPIMIENTO)';
+        statusLbl.className = 'text-[9px] mono uppercase text-rose-400 font-semibold';
+        statusKeff.textContent = 'k_eff = 1.64';
+      } else if (name === 'canonical') {
+        targetZ = [
+          [0.20, 0.85, 0.70, 0.30, 0.15],
+          [0.85, 0.20, 0.90, 0.60, 0.40],
+          [0.70, 0.90, 0.20, 0.80, 0.25],
+          [0.30, 0.60, 0.80, 0.20, 0.50],
+          [0.15, 0.40, 0.25, 0.50, 0.20]
+        ];
+        statusInd.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]';
+        statusLbl.textContent = 'GRUPO A (HOMOLOGADO)';
+        statusLbl.className = 'text-[9px] mono uppercase text-cyan-300 font-semibold';
+        statusKeff.textContent = 'k_eff = 0.96';
+      } else if (name === 'propuesto') {
+        // Matriz exacta propuesta por el usuario:
+        // 1: 1 2 4 5 3 -> [1.00, 0.75, 0.00, 0.50, 0.25]
+        // 2: 1 2 5 4 3 -> [1.00, 0.75, 0.00, 0.25, 0.50]
+        // 3: 1 4 3 2 5 -> [1.00, 0.25, 0.50, 0.75, 0.00]
+        // 4: 4 5 1 2 3 -> [0.50, 0.25, 0.00, 1.00, 0.75]
+        // 5: 4 5 2 1 3 -> [0.25, 0.50, 0.00, 1.00, 0.75]
+        targetZ = [
+          [1.00, 0.75, 0.00, 0.50, 0.25],
+          [1.00, 0.75, 0.00, 0.25, 0.50],
+          [1.00, 0.25, 0.50, 0.75, 0.00],
+          [0.50, 0.25, 0.00, 1.00, 0.75],
+          [0.25, 0.50, 0.00, 1.00, 0.75]
+        ];
+        selectedCell = { i: 2, j: 0 }; // Seleccionar de entrada la máxima cizalladura 3A1a -> 1A1a
+        statusInd.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#FFE600]';
+        statusLbl.textContent = 'BIPOLAR CON PARIA (3A1a)';
+        statusLbl.className = 'text-[9px] mono uppercase text-amber-300 font-semibold';
+        statusKeff.textContent = 'k_eff = 1.00';
+      }
+
+      // CÁLCULO DE CURVATURAS DIFERENCIALES K Y H EN LA CELDA (i, j)
+      const h_step = 1.0;
+      // Derivadas primeras centradas o progresivas en la retícula
+      const Sx = (j < N - 1 ? (matrixZ[i][j+1] - (j > 0 ? matrixZ[i][j-1] : matrixZ[i][j])) / (j > 0 ? 2 : 1) : (matrixZ[i][j] - matrixZ[i][j-1]));
+      const Sy = (i < N - 1 ? (matrixZ[i+1][j] - (i > 0 ? matrixZ[i-1][j] : matrixZ[i][j])) / (i > 0 ? 2 : 1) : (matrixZ[i][j] - matrixZ[i-1][j]));
+
+      // Derivadas segundas
+      const z_c = matrixZ[i][j];
+      const z_left = j > 0 ? matrixZ[i][j-1] : z_c;
+      const z_right = j < N - 1 ? matrixZ[i][j+1] : z_c;
+      const z_up = i > 0 ? matrixZ[i-1][j] : z_c;
+      const z_down = i < N - 1 ? matrixZ[i+1][j] : z_c;
+
+      const Sxx = (z_right - 2 * z_c + z_left);
+      const Syy = (z_down - 2 * z_c + z_up);
+
+      // Derivada mixta cruzada
+      const z_dr = (i < N - 1 && j < N - 1) ? matrixZ[i+1][j+1] : z_c;
+      const z_dl = (i < N - 1 && j > 0) ? matrixZ[i+1][j-1] : z_c;
+      const z_ur = (i > 0 && j < N - 1) ? matrixZ[i-1][j+1] : z_c;
+      const z_ul = (i > 0 && j > 0) ? matrixZ[i-1][j-1] : z_c;
+      const Sxy = (z_dr - z_dl - z_ur + z_ul) / 4.0;
+
+      // Tensor métrico
+      const E = 1 + Sx * Sx;
+      const F = Sx * Sy;
+      const G = 1 + Sy * Sy;
+      const denom = (E * G - F * F);
+      const gradSq = 1 + Sx * Sx + Sy * Sy;
+
+      // Curvatura de Gauss K = (Sxx * Syy - Sxy^2) / (1 + gradSq)^2
+      const K = (Sxx * Syy - Sxy * Sxy) / (gradSq * gradSq);
+
+      // Curvatura Media H = ((1 + Sy^2)*Sxx - 2*Sx*Sy*Sxy + (1 + Sx^2)*Syy) / (2 * gradSq^1.5)
+      const H = ((1 + Sy * Sy) * Sxx - 2 * Sx * Sy * Sxy + (1 + Sx * Sx) * Syy) / (2 * Math.pow(gradSq, 1.5));
+
+      document.getElementById('gauss-k-val').textContent = `K = ${K >= 0 ? '+' : ''}${K.toFixed(3)}`;
+      document.getElementById('mean-h-val').textContent = `H = ${H >= 0 ? '+' : ''}${H.toFixed(3)}`;
+
+      const gBadge = document.getElementById('gauss-badge');
+      if (K > 0.015) {
+        gBadge.textContent = 'ELÍPTICO (CÚPULA)';
+        gBadge.className = 'text-[8px] px-1 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      } else if (K < -0.015) {
+        gBadge.textContent = 'HIPERBÓLICO (SILLA)';
+        gBadge.className = 'text-[8px] px-1 rounded font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+      } else {
+        gBadge.textContent = 'PARABÓLICO (PLANO)';
+        gBadge.className = 'text-[8px] px-1 rounded font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30';
+      }
+
+      setTimeout(updateTelemetry, 100);
+    }
+
+    function setViewMode(mode) {
+      autoRotate = false;
+      document.getElementById('auto-rotate-chk').checked = false;
+      
+      ['optimal', 'iso', 'profile', 'invert', 'top'].forEach(m => {
+        const b = document.getElementById('cam-' + m);
+        if (b) b.className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800';
+      });
+
+      if (mode === 'optimal') {
+        // Perspectiva óptima sin oclusión: Elev 28°, Azim -58°
+        rotX = 0.49; rotY = -1.01; zoom = 1.12;
+        const bOpt = document.getElementById('cam-optimal');
+        if (bOpt) bOpt.className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-amber-950 text-amber-300 border border-amber-500/60 shadow-sm shadow-amber-500/20';
+      } else if (mode === 'iso') {
+        rotX = 0.55; rotY = -0.78; zoom = 1.05;
+        document.getElementById('cam-iso').className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40';
+      } else if (mode === 'profile90') {
+        // Perfil 90°: Altura convertida en base, corte transversal de la ola
+        rotX = 0.08; rotY = 0.0; zoom = 1.15;
+        document.getElementById('cam-profile').className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40';
+      } else if (mode === 'invert180') {
+        // Inversión 180°: Cielo en el lecho basal, abisal a cielo abierto
+        rotX = 2.65; rotY = -0.78; zoom = 1.05;
+        document.getElementById('cam-invert').className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40';
+      } else if (mode === 'top') {
+        rotX = 1.48; rotY = 0.0; zoom = 1.05;
+        document.getElementById('cam-top').className = 'px-1.5 py-0.5 rounded text-[9px] mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40';
+      }
+    }
+
+    function highlightSubject(idx) {
+      // Selecciona la celda de cruce con el líder o la diagonal
+      selectedCell = { i: idx, j: (idx === 2 ? 0 : (idx === 0 ? 1 : 3)) };
+      updateTelemetry();
+    }
+
+    function resetCamera() {
+      setViewMode('iso');
+    }
+
+    let isDragging = false;
+    let prevMouse = { x: 0, y: 0 };
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      prevMouse = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const dx = e.clientX - prevMouse.x;
+        const dy = e.clientY - prevMouse.y;
+        rotY += dx * 0.01;
+        rotX = Math.max(0.15, Math.min(1.4, rotX + dy * 0.01));
+        prevMouse = { x: e.clientX, y: e.clientY };
+        autoRotate = false;
+        document.getElementById('auto-rotate-chk').checked = false;
+      } else {
+        detectCellHover(e);
+      }
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      zoom = Math.max(0.65, Math.min(1.8, zoom - e.deltaY * 0.0015));
+    }, { passive: false });
+
+    canvas.addEventListener('click', (e) => {
+      const cell = getCellAtMouse(e);
+      if (cell) {
+        selectedCell = cell;
+        updateTelemetry();
+      }
+    });
+
+    function detectCellHover(e) {
+      const cell = getCellAtMouse(e);
+      if (cell) {
+        hoveredCell = cell;
+        canvas.style.cursor = 'pointer';
+      } else {
+        canvas.style.cursor = isDragging ? 'grabbing' : 'grab';
+      }
+    }
+
+    function getCellAtMouse(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      const w = canvas.width / (Math.min(window.devicePixelRatio || 1, 2));
+      const h = canvas.height / (Math.min(window.devicePixelRatio || 1, 2));
+      const originX = w / 2;
+      const originY = h / 2 + 35;
+
+      let closest = null;
+      let minDistance = 24;
+
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          const cx = (j - 2) * cellSize;
+          const cy = (i - 2) * cellSize;
+          const p = project3D(cx, cy, matrixZ[i][j] * maxBarHeight * 0.5, originX, originY);
+          const d = Math.hypot(mouseX - p.px, mouseY - p.py);
+          if (d < minDistance) {
+            minDistance = d;
+            closest = { i, j };
+          }
+        }
+      }
+      return closest;
+    }
+
+    // DIBUJO DE LA MEMBRANA CONTINUA (LA "PIEL" DEL SISTEMA)
+    function drawApexMembrane(originX, originY) {
+      ctx.save();
+      // Dibujar cuadriláteros/triángulos entre los 25 ápices
+      for (let i = 0; i < N - 1; i++) {
+        for (let j = 0; j < N - 1; j++) {
+          const cx1 = (j - 2) * cellSize;
+          const cy1 = (i - 2) * cellSize;
+          const h1 = matrixZ[i][j] * maxBarHeight;
+
+          const cx2 = (j + 1 - 2) * cellSize;
+          const cy2 = (i - 2) * cellSize;
+          const h2 = matrixZ[i][j + 1] * maxBarHeight;
+
+          const cx3 = (j + 1 - 2) * cellSize;
+          const cy3 = (i + 1 - 2) * cellSize;
+          const h3 = matrixZ[i + 1][j + 1] * maxBarHeight;
+
+          const cx4 = (j - 2) * cellSize;
+          const cy4 = (i + 1 - 2) * cellSize;
+          const h4 = matrixZ[i + 1][j] * maxBarHeight;
+
+          const p1 = project3D(cx1, cy1, h1, originX, originY);
+          const p2 = project3D(cx2, cy2, h2, originX, originY);
+          const p3 = project3D(cx3, cy3, h3, originX, originY);
+          const p4 = project3D(cx4, cy4, h4, originX, originY);
+
+          // Relleno de faceta translúcida
+          ctx.beginPath();
+          ctx.moveTo(p1.px, p1.py);
+          ctx.lineTo(p2.px, p2.py);
+          ctx.lineTo(p3.px, p3.py);
+          ctx.lineTo(p4.px, p4.py);
+          ctx.closePath();
+
+          const avgH = (matrixZ[i][j] + matrixZ[i][j+1] + matrixZ[i+1][j+1] + matrixZ[i+1][j]) / 4;
+          if (avgH > waterLevel) {
+            ctx.fillStyle = 'rgba(0, 255, 135, 0.12)';
+            ctx.strokeStyle = 'rgba(0, 255, 135, 0.35)';
+          } else {
+            ctx.fillStyle = 'rgba(0, 229, 255, 0.08)';
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+          }
+          ctx.lineWidth = 1;
+          ctx.fill();
+          ctx.stroke();
+
+          // Puntos en los vértices (los ápices puros)
+          [p1, p2, p3, p4].forEach(pt => {
+            ctx.beginPath();
+            ctx.arc(pt.px, pt.py, 2, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+          });
+        }
+      }
+      ctx.restore();
+    }
+
+    // DIBUJO DEL CENTROIDE BARIMÉTRICO Y CUERDAS DE CIZALLADURA
+    function drawBaricenterAndChords(originX, originY) {
+      let sumX = 0, sumY = 0, sumZ = 0;
+      let count = N * N;
+
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          sumX += (j - 2) * cellSize;
+          sumY += (i - 2) * cellSize;
+          sumZ += matrixZ[i][j] * maxBarHeight;
+        }
+      }
+
+      const meanX = sumX / count;
+      const meanY = sumY / count;
+      const meanZ = sumZ / count;
+      const meanZNorm = meanZ / maxBarHeight;
+
+      // 1. Centroide proyectado
+      const bCenter = project3D(meanX, meanY, meanZ, originX, originY);
+      const bFloor = project3D(meanX, meanY, 0, originX, originY);
+
+      ctx.save();
+      // Línea de plomada hacia la base
+      ctx.beginPath();
+      ctx.moveTo(bCenter.px, bCenter.py);
+      ctx.lineTo(bFloor.px, bFloor.py);
+      ctx.strokeStyle = 'rgba(255, 230, 0, 0.6)';
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([3, 2]);
+      ctx.stroke();
+
+      // Esfera dorada del centroide
+      ctx.beginPath();
+      ctx.arc(bCenter.px, bCenter.py, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFE600';
+      ctx.shadowColor = '#FFE600';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+
+      // Anillo orbital del atractor
+      ctx.beginPath();
+      ctx.arc(bCenter.px, bCenter.py, 10, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 230, 0, 0.5)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([]);
+      ctx.stroke();
+
+      // 2. Cuerda de cizalladura diádica de la celda seleccionada
+      if (selectedCell && selectedCell.i !== selectedCell.j) {
+        const { i, j } = selectedCell;
+        const pA = project3D((j - 2) * cellSize, (i - 2) * cellSize, matrixZ[i][j] * maxBarHeight, originX, originY);
+        const pB = project3D((i - 2) * cellSize, (j - 2) * cellSize, matrixZ[j][i] * maxBarHeight, originX, originY);
+
+        ctx.beginPath();
+        ctx.moveTo(pA.px, pA.py);
+        ctx.lineTo(pB.px, pB.py);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = '#FF007F';
+        ctx.shadowBlur = 8;
+        ctx.stroke();
+
+        // Calcular ángulo de inclinación de la cuerda
+        const dH = Math.abs(matrixZ[i][j] - matrixZ[j][i]) * maxBarHeight;
+        const dD = Math.hypot((i - j) * cellSize, (j - i) * cellSize);
+        const angleDeg = (Math.atan2(dH, dD) * 180 / Math.PI).toFixed(1);
+        document.getElementById('chord-angle').textContent = `θ = ${angleDeg}° (${angleDeg > 30 ? 'Cizalladura Crítica' : 'Acople Suave'})`;
+      } else {
+        document.getElementById('chord-angle').textContent = 'θ = 0.0° (Diagonal / Neutra)';
+      }
+
+      ctx.restore();
+
+      // Actualizar lectura del centroide
+      const phaseStr = meanZNorm > waterLevel ? 'A Cielo Abierto' : 'Sumergido en Latencia';
+      document.getElementById('baricenter-val').textContent = `Z̄ = ${meanZNorm >= 0 ? '+' : ''}${meanZNorm.toFixed(2)} (${phaseStr})`;
+    }
+
+    setPreset('propuesto');
+    updateTelemetry();
+    render();
+  </script>
+</body>
+</html>

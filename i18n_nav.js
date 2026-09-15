@@ -37,7 +37,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Portal Principal
         "hero_subtitle": "Sociometría Ordinal Computacional",
-        "hero_tagline": "La Física de lo Grupal.",
+        "hero_tagline": "Hacia una Física de lo Grupal",
         "hero_desc": "Ecosistema científico para el diagnóstico clínico, la investigación socio-termodinámica y la topología relacional de grupos mediante matrices de preferencia ordinal SMIb.",
         "btn_what_is": "¿Qué es NEX_ORD?",
         "intro_badge": "INTRODUCCIÓN A LA PLATAFORMA",
@@ -95,7 +95,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Main Portal
         "hero_subtitle": "Computational Ordinal Sociometry",
-        "hero_tagline": "The Physics of the Group.",
+        "hero_tagline": "Towards a Physics of the Group",
         "hero_desc": "Scientific platform for clinical diagnosis, socio-thermodynamic analysis and interactive 3D visualization of human social structures.",
         "btn_what_is": "What is NEX_ORD?",
         "intro_badge": "INTRODUCTION TO THE PLATFORM",
@@ -153,7 +153,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Portail Principal
         "hero_subtitle": "Sociométrie Ordinale Computationnelle",
-        "hero_tagline": "La Physique du Groupe.",
+        "hero_tagline": "Vers une Physique du Groupe",
         "hero_desc": "Plateforme scientifique pour le diagnostic clinique, l'analyse socio-thermodynamique et la visualisation 3D interactive des structures humaines.",
         "btn_what_is": "Qu'est-ce que NEX_ORD ?",
         "intro_badge": "INTRODUCTION À LA PLATEFORME",
@@ -211,7 +211,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Portale Principale
         "hero_subtitle": "Sociometria Ordinale Computazionale",
-        "hero_tagline": "La Fisica del Gruppo.",
+        "hero_tagline": "Verso una Fisica del Gruppo",
         "hero_desc": "Piattaforma scientifica per la diagnosi clinica, l'analisi socio-termodinamica e la visualizzazione 3D interattiva delle strutture umane.",
         "btn_what_is": "Cos'è NEX_ORD?",
         "intro_badge": "INTRODUZIONE ALLA PIATTAFORMA",
@@ -269,7 +269,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Hauptportal
         "hero_subtitle": "Komputationelle Ordinale Soziometrie",
-        "hero_tagline": "Die Physik der Gruppe.",
+        "hero_tagline": "Zu einer Physik der Gruppe",
         "hero_desc": "Wissenschaftliche Plattform für klinische Diagnostik, soziothermodynamische Analyse und interaktive 3D-Visualisierung menschlicher Strukturen.",
         "btn_what_is": "Was ist NEX_ORD?",
         "intro_badge": "EINFÜHRUNG IN DIE PLATTFORM",
@@ -327,7 +327,7 @@ const NEXORD_I18N_DICTS = {
 
         // Hero Portal Principal
         "hero_subtitle": "Sociometria Ordinal Computacional",
-        "hero_tagline": "A Física do Grupo.",
+        "hero_tagline": "Rumo a uma Física do Grupo",
         "hero_desc": "Plataforma científica para diagnóstico clínico, análise socio-termodinâmica e visualização 3D interativa de estruturas humanas.",
         "btn_what_is": "O que é NEX_ORD?",
         "intro_badge": "INTRODUÇÃO À PLATAFORMA",
@@ -385,7 +385,7 @@ const NEXORD_I18N_DICTS = {
 
         // Главный баннер
         "hero_subtitle": "Вычислительная порядковая социометрия",
-        "hero_tagline": "Физика групповых систем.",
+        "hero_tagline": "К физике групповых систем",
         "hero_desc": "Научная платформа для клинической диагностики, социотермодинамического анализа и интерактивной 3D-визуализации человеческих структур.",
         "btn_what_is": "Что такое NEX_ORD?",
         "intro_badge": "ВВЕДЕНИЕ В ПЛАТФОРМУ",
@@ -443,7 +443,7 @@ const NEXORD_I18N_DICTS = {
 
         // 首页横幅
         "hero_subtitle": "计算序数社会计量学",
-        "hero_tagline": "群体关系的物理学。",
+        "hero_tagline": "迈向群体物理学",
         "hero_desc": "用于人类社会结构的临床诊断、社会热力学分析与交互式3D空间可视化的科学计算平台。",
         "btn_what_is": "什么是 NEX_ORD？",
         "intro_badge": "平台核心导览",
