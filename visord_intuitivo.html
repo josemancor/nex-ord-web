@@ -4084,9 +4084,10 @@
 
     <!-- LEYENDA VINCULAR LIMPIA CON MARCAS + Y - -->
     <div class="link-legend-badge">
-      <div class="legend-row"><span class="legend-dot" style="background:#00FF87; box-shadow:0 0 6px #00FF87;"></span> (+) Elección Mutua &lt;Ee&gt;</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#00FF87; box-shadow:0 0 6px #00FF87;"></span> (+) Elección &lt;Ee&gt; / +E</div>
       <div class="legend-row"><span class="legend-dot" style="background:#FF007F; box-shadow:0 0 6px #FF007F;"></span> (-) Rechazo / Tensión [Rr]</div>
-      <div class="legend-row"><span class="legend-dot" style="background:#38BDF8; box-shadow:0 0 6px #38BDF8;"></span> Metapercepción (Expectativa)</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#00F0FF; box-shadow:0 0 6px #00F0FF;"></span> (pE) Expectativa de Elección</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#D946EF; box-shadow:0 0 6px #D946EF;"></span> (pR) Expectativa de Rechazo</div>
     </div>
   </section>
 
@@ -5580,7 +5581,7 @@
         name: "FASE 1 · AFINIDAD",
         sdr: "+0.25 ↗",
         entropy: "32.10 ↓",
-        links: "+2 · ~0 · -0",
+        links: "+3 · ~1 · -2",
         cohesion: "LÍQUIDO (λ2: 0.28)",
         color: "#00FF87"
       },
@@ -5588,7 +5589,7 @@
         name: "FASE 2 · PUENTES",
         sdr: "+0.55 ↗",
         entropy: "22.40 ↓",
-        links: "+5 · ~0 · -0",
+        links: "+7 · ~2 · -3",
         cohesion: "COHESIVO (λ2: 0.72)",
         color: "#00FF87"
       },
@@ -5596,7 +5597,7 @@
         name: "FASE 3 · TENSIÓN",
         sdr: "+0.65 ↗",
         entropy: "18.20 ↓",
-        links: "+5 · ~0 · -2",
+        links: "+11 · ~3 · -5",
         cohesion: "POLARIZADO (λ2: 0.95)",
         color: "#FF1744"
       },
@@ -5604,7 +5605,7 @@
         name: "FASE 4 · EXPECTATIVAS",
         sdr: "+0.78 ↗",
         entropy: "12.60 ↓",
-        links: "+5 · ~2 · -2",
+        links: "+13 · ~4 · -7",
         cohesion: "ESTRUCTURADO (λ2: 1.24)",
         color: "#00FF87"
       },
@@ -5612,7 +5613,7 @@
         name: "FASE 5 · EQUILIBRIO",
         sdr: "+0.88 ↗",
         entropy: "6.80 ↓",
-        links: "+5 · ~2 · -2",
+        links: "+18 · ~4 · -7",
         cohesion: "CRISTAL (λ2: 1.52)",
         color: "#00FF87"
       }
@@ -5646,26 +5647,34 @@
       links: []
     };
 
-    // DEFINICIÓN FACTUAL DE LOS VÍNCULOS CANÓNICOS N=8 Y SU EMERGENCIA TEMPORAL
+    // DEFINICIÓN FACTUAL DE LOS VÍNCULOS CANÓNICOS N=8 Y SU EMERGENCIA TEMPORAL INTERCALADA
+    // Se mezclan orgánicamente Elecciones (E, <Ee>), Rechazos (R, [Rr]), Percepciones de Elección (pE)
+    // y Percepciones de Rechazo (pR) a lo largo de toda la línea temporal sin soltarlas en bloques secuenciales rígidos.
     const CANONICAL_LINKS = [
-      // FASE 1: Afinidades y cristalización mutua (<Ee>)
-      { id: "L1",  source: "1A", target: "2A", type: 2, phaseMin: 0.6, label: "+ <Ee>" },
-      { id: "L2",  source: "1A", target: "3A", type: 2, phaseMin: 0.8, label: "+ <Ee>" },
-      // FASE 2: Puentes transversales y conexiones (<Ee> / +E)
-      { id: "L3",  source: "2A", target: "4A", type: 2, phaseMin: 1.4, label: "+ <Ee>" },
-      { id: "L4",  source: "3A", target: "5A", type: 2, phaseMin: 1.6, label: "+ <Ee>" },
-      { id: "L5",  source: "3A", target: "7A", type: 2, phaseMin: 1.8, label: "+ <Ee>" },
-      { id: "L6",  source: "1A", target: "8A", type: 2, phaseMin: 2.0, label: "+ <Ee>" },
-      { id: "L7",  source: "2A", target: "3A", type: 0, phaseMin: 2.1, label: "+ E" },
-      { id: "L8",  source: "5A", target: "7A", type: 0, phaseMin: 2.3, label: "+ E" },
-      // FASE 3: Tensiones y fricciones ([Rr]) - Emerge clivaje y repulsión del nodo 6A
-      { id: "L9",  source: "6A", target: "1A", type: 1, phaseMin: 2.7, label: "- [Rr] Tensión" },
-      { id: "L10", source: "6A", target: "2A", type: 1, phaseMin: 3.0, label: "- [Rr]" },
-      // FASE 4: Metapercepciones cruzadas (p_DA / p_REC)
-      { id: "L11", source: "4A", target: "1A", type: 3, phaseMin: 3.6, label: "p_DA" },
-      { id: "L12", source: "5A", target: "3A", type: 3, phaseMin: 3.9, label: "p_REC" },
-      { id: "L13", source: "8A", target: "4A", type: 3, phaseMin: 4.1, label: "p_DA" },
-      { id: "L14", source: "7A", target: "2A", type: 3, phaseMin: 4.3, label: "p_REC" }
+      // FASE 1: Afinidades iniciales, expectativas tempranas y primeras tensiones (t: 0.6 - 1.5)
+      { id: "L1",  source: "1A", target: "2A", type: 2, phaseMin: 0.60, label: "+ <Ee> Núcleo" },
+      { id: "L2",  source: "4A", target: "1A", type: 3, phaseMin: 0.80, label: "pE: Expectativa" },
+      { id: "L3",  source: "6A", target: "1A", type: 1, phaseMin: 0.95, label: "- [Rr] Tensión" },
+      { id: "L4",  source: "1A", target: "3A", type: 2, phaseMin: 1.35, label: "+ <Ee> Tríada" },
+
+      // FASE 2: Puentes transversales, desconfianzas y elecciones asimétricas (t: 1.5 - 2.5)
+      { id: "L5",  source: "6A", target: "2A", type: 4, phaseMin: 1.65, label: "pR: Desconfianza" },
+      { id: "L6",  source: "2A", target: "4A", type: 2, phaseMin: 1.90, label: "+ <Ee> Puente" },
+      { id: "L7",  source: "2A", target: "3A", type: 0, phaseMin: 2.15, label: "+ E Unilateral" },
+      { id: "L8",  source: "6A", target: "2A", type: 1, phaseMin: 2.40, label: "- [Rr] Clivaje" },
+
+      // FASE 3: Clivaje tensional, reciprocidades cognitivas y apertura periférica (t: 2.5 - 3.5)
+      { id: "L9",  source: "5A", target: "3A", type: 3, phaseMin: 2.70, label: "pE: Reciprocidad" },
+      { id: "L10", source: "3A", target: "5A", type: 2, phaseMin: 2.95, label: "+ <Ee> Periferia" },
+      { id: "L11", source: "6A", target: "3A", type: 1, phaseMin: 3.20, label: "- R Distancia" },
+      { id: "L12", source: "1A", target: "6A", type: 4, phaseMin: 3.45, label: "pR: Clivaje" },
+
+      // FASE 4: Metapercepciones cruzadas, articulación satélite y cohesión (t: 3.5 - 4.5)
+      { id: "L13", source: "5A", target: "7A", type: 0, phaseMin: 3.70, label: "+ E Conexión" },
+      { id: "L14", source: "8A", target: "4A", type: 3, phaseMin: 3.90, label: "pE: Mediación" },
+      { id: "L15", source: "3A", target: "7A", type: 2, phaseMin: 4.10, label: "+ <Ee> Transversal" },
+      { id: "L16", source: "7A", target: "2A", type: 3, phaseMin: 4.30, label: "pE: Retorno" },
+      { id: "L17", source: "1A", target: "8A", type: 2, phaseMin: 4.50, label: "+ <Ee> Satélite" }
     ];
 
     // SISTEMA THREE.JS DE VÍNCULOS FILAMENTARES FINOS Y ELECTRONES CRISTALINOS CON TRAZA COMETA
@@ -5743,13 +5752,21 @@
           baseOpacity = 0.94;
           numGrains = 124;
         } else if (linkDef.type === 3) {
-          // Metapercepciones (Cognitivas): 1 expectativa mental anticipatoria
+          // Metapercepciones de Elección (pE): 1 expectativa mental anticipatoria positiva
           colorHex = 0x00F0FF;
           glowHex = 0x38BDF8;
           posoHex = 0x2563EB;
-          radiusVal = 0.18; // Canal fino etéreo repasado (1 proyección mental)
-          baseOpacity = 0.70;
-          numGrains = 80;
+          radiusVal = 0.20; // Canal fino etéreo repasado (1 proyección mental positiva)
+          baseOpacity = 0.72;
+          numGrains = 84;
+        } else if (linkDef.type === 4) {
+          // Metapercepciones de Rechazo (pR): 1 expectativa mental anticipatoria de fricción/tensión
+          colorHex = 0xD946EF; // Violeta / Púrpura neón cognitivo tensional
+          glowHex = 0xE879F9;
+          posoHex = 0xA21CAF;
+          radiusVal = 0.20; // Canal fino etéreo repasado (1 proyección mental tensional)
+          baseOpacity = 0.76;
+          numGrains = 88;
         } else {
           // Asimétricos (+E): 1 elección simple unidireccional
           colorHex = 0xFFE600;
@@ -6529,13 +6546,13 @@
               // Posición A1: p_DA (Expectativa que el emisor tiene del partner: pE / pR)
               symbol = isTension ? "pR" : "pE";
               posName = isTension ? "pR: p_DA" : "pE: p_DA";
-              posTag = `pE: ${nameI}→?${nameJ}`;
+              posTag = isTension ? `pR: ${nameI}→?${nameJ}` : `pE: ${nameI}→?${nameJ}`;
               isMicroTick = true;
             } else {
               // Posición A4: p_REC (Expectativa que el partner tiene del emisor: pR / pE)
               symbol = isTension ? "pR" : "pE";
               posName = isTension ? "pR: p_REC" : "pE: p_REC";
-              posTag = `pR: ?${nameJ}→${nameI}`;
+              posTag = isTension ? `pR: ?${nameJ}→${nameI}` : `pE: ?${nameJ}→${nameI}`;
               isMicroTick = true;
             }
 
@@ -6704,17 +6721,20 @@
             // Elección simple +E: 1 elección efectiva
             countE += 1;
           } else if (l.type === 1) {
-            // Rechazo mutuo [Rr]: 2 rechazos efectivos
-            countR += 2;
+            // Rechazo [Rr] / -R: 2 rechazos si es diádico/mutuo, 1 si es unilateral
+            countR += (l.id === 'L11' ? 1 : 2);
           } else if (l.type === 3) {
-            // Metapercepción p_DA / p_REC: percepción de elección sumada directamente al paquete E
+            // Metapercepción de Elección (pE): percepción de elección sumada al paquete E
             countE += 1;
+          } else if (l.type === 4) {
+            // Metapercepción de Rechazo (pR): percepción de rechazo sumada al paquete R
+            countR += 1;
           }
         }
       });
 
       // Expectativas / Indiferencias en el paquete ¿
-      const countNeu = (clampedT >= 3.6) ? 4 : ((clampedT >= 2.7) ? 3 : ((clampedT >= 1.4) ? 2 : ((clampedT >= 0.6) ? 1 : 0)));
+      const countNeu = (clampedT >= 3.8) ? 4 : ((clampedT >= 2.6) ? 3 : ((clampedT >= 1.5) ? 2 : ((clampedT >= 0.8) ? 1 : 0)));
 
       // EL LATIR DEL CORAZÓN DEL GRUPO EN CADA MILISEGUNDO
       const cardiac = getGroupCardiacState(clampedT);
