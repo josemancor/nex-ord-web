@@ -23,7 +23,7 @@
 
         /* Cabecera HUD Superior */
         header.hud-header {
-            position: absolute; top: 12px; left: 14px; right: 14px; z-index: 100;
+            position: absolute; top: 12px; left: 14px; right: 14px; z-index: 250;
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(11, 19, 43, 0.90); backdrop-filter: blur(14px);
             border: 1px solid rgba(0, 255, 135, 0.25); border-radius: 12px;
@@ -487,16 +487,93 @@
         }
         .nav-view-btn.btn-home-link:hover { background: rgba(56, 189, 248, 0.25); color: #FFFFFF; }
 
-        /* WORKSPACE ANALÍTICO INTEGRADO */
+        /* WORKSPACE ANALÍTICO INTEGRADO - LATERAL GLASSMORPHISM DOCK */
         .analytical-workspace {
-            position: fixed; top: 68px; left: 14px; right: 14px; bottom: 14px;
-            background: rgba(11, 19, 43, 0.97); backdrop-filter: blur(20px);
-            border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px;
-            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85); z-index: 200;
-            overflow-y: auto; padding: 24px;
+            position: fixed; top: 68px; right: 0; bottom: 0;
+            width: 54%; max-width: 980px; min-width: 440px;
+            background: rgba(11, 19, 43, 0.94); backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-left: 1.5px solid rgba(56, 189, 248, 0.35);
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: -15px 0 50px rgba(0, 0, 0, 0.85); z-index: 200;
+            overflow-y: auto; padding: 20px 24px;
+            transform: translateX(105%);
+            visibility: hidden;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s ease, visibility 0.35s;
+        }
+        .analytical-workspace.open {
+            transform: translateX(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .analytical-workspace.maximized {
+            width: calc(100% - 28px); max-width: none; left: 14px; right: 14px; top: 68px; bottom: 14px;
+            border-radius: 14px; border: 1.5px solid rgba(56, 189, 248, 0.4);
         }
         .analytical-subview { display: none; width: 100%; }
         .analytical-subview.active { display: block; }
+
+        .dock-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dock-title-wrap {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .dock-title {
+            font-size: 0.95rem; font-weight: 800; color: #38BDF8; letter-spacing: 0.5px;
+        }
+        .dock-actions {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-close-dock {
+            background: rgba(255, 0, 127, 0.15) !important; border-color: #FF007F !important; color: #FF007F !important;
+        }
+        .btn-close-dock:hover {
+            background: rgba(255, 0, 127, 0.35) !important; color: #FFFFFF !important;
+        }
+
+        /* Hitos Moviola */
+        .btn-milestone {
+            padding: 3px 8px; font-size: 0.68rem; font-weight: 700; border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94A3B8; cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+        }
+        .btn-milestone:hover {
+            background: rgba(0, 255, 135, 0.15); color: #00FF87; border-color: #00FF87;
+        }
+        .btn-milestone.active {
+            background: rgba(0, 255, 135, 0.25); color: #00FF87; border-color: #00FF87; font-weight: 800;
+        }
+
+        /* Floating 10 Densities HUD Overlay in 3D */
+        #floating-density-hud {
+            position: absolute; bottom: 85px; right: 14px; z-index: 120;
+            width: 580px; max-width: 92vw;
+            background: rgba(8, 13, 26, 0.94); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px;
+            padding: 12px 16px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75);
+            display: none; flex-direction: column; gap: 8px;
+            transition: all 0.3s ease;
+        }
+        #floating-density-hud.open { display: flex; }
+
+        /* Floating Ego-Network Card */
+        #floating-ego-card {
+            position: absolute; top: 120px; right: 14px; z-index: 130;
+            width: 330px; max-width: 90vw;
+            background: rgba(11, 19, 43, 0.94); backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1.5px solid #00FF87; border-radius: 12px;
+            padding: 14px 16px; box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+            display: none; flex-direction: column; gap: 8px;
+            font-size: 0.80rem;
+        }
+        #floating-ego-card.g2 { border-color: #FF007F; }
+        #floating-ego-card.ostracismo { border-color: #FF007F; box-shadow: 0 0 25px rgba(255, 0, 127, 0.45); }
+
 
     
     /* =========================================================================
@@ -581,6 +658,7 @@
         <!-- MENÚ SUPERIOR INTEGRADO DE VISTAS (EN LA MISMA VENTANA) -->
         <nav class="hud-nav-views" id="hud-nav-views">
             <button class="nav-view-btn active" data-view="view-3d">🌐 Proyección 3D</button>
+            <button class="nav-view-btn" data-view="view-densidades" style="border: 1px solid rgba(0, 255, 135, 0.4); color: #00FF87;">⚡ 10 Densidades</button>
             <button class="nav-view-btn" data-view="view-tablas">📊 Tablas Canónicas</button>
             <button class="nav-view-btn" data-view="view-graficos">🎨 Galería Gráfica</button>
             <button class="nav-view-btn" data-view="view-individuales">👤 Informes Individuales</button>
@@ -604,13 +682,23 @@
         <div class="legend-item"><span class="line-sample-r"></span> Rechazos (R)</div>
     </div>
 
-    <!-- 🕹️ Panel de Controles Izquierdo -->
+    <!-- 🕹️ Panel de Controles Izquierdo: Director de Cámara, Filtros & HUD -->
     <aside class="controls-panel">
-        <button class="btn-ctrl" id="btn-reset-cam">🎯 Centrar Cámara</button>
+        <div style="font-size:0.67rem; font-weight:800; color:#38BDF8; letter-spacing:0.5px; margin-bottom:2px;">🎥 DIRECTOR DE CÁMARA</div>
+        <button class="btn-ctrl active" id="btn-cam-panoramic">🌐 Vista Panorámica</button>
+        <button class="btn-ctrl" id="btn-cam-g1">🟢 Foco G1 (Líder 2A)</button>
+        <button class="btn-ctrl" id="btn-cam-g2">🚨 Foco G2 (Ostracismo 5B)</button>
+        <button class="btn-ctrl" id="btn-cam-grassmann">📐 Foco Grassmann</button>
+        <button class="btn-ctrl" id="btn-cam-orbit">🔄 Órbita Cinemática</button>
+        
+        <div style="font-size:0.67rem; font-weight:800; color:#94A3B8; letter-spacing:0.5px; margin:4px 0 2px 0;">🔍 FILTROS TOPOLÓGICOS</div>
         <button class="btn-ctrl active" id="btn-toggle-e">🟢 Conexiones Elección (E)</button>
         <button class="btn-ctrl active" id="btn-toggle-r">🔴 Conexiones Rechazo (R)</button>
-        <button class="btn-ctrl" id="btn-toggle-vectors">📐 Vectores a Centroide</button>
-        <button class="btn-ctrl" id="btn-toggle-grassmann">🌐 Subespacio Grassmann</button>
+        <button class="btn-ctrl active" id="btn-toggle-vectors">📐 Vectores a Centroide</button>
+        <button class="btn-ctrl active" id="btn-toggle-grassmann">🌐 Subespacio Grassmann</button>
+
+        <div style="font-size:0.67rem; font-weight:800; color:#FFE600; letter-spacing:0.5px; margin:4px 0 2px 0;">⚡ SOCIO-TERMODINÁMICA</div>
+        <button class="btn-ctrl" id="btn-toggle-density-hud" style="border-color:rgba(255, 230, 0, 0.4); color:#FFE600; background:rgba(255, 230, 0, 0.08);">⚡ Gauge 10 Densidades</button>
     </aside>
 
     <!-- 📊 Panel de Métricas Socio-Termodinámicas Dinámicas -->
@@ -662,10 +750,100 @@
                 <input type="range" id="timeline-slider" min="0" max="1" step="0.005" value="1.00">
                 <span class="time-badge" id="time-display">t=1.00</span>
             </div>
+            <!-- Botones de Hito Rápido -->
+            <div class="milestones-wrap" style="display:flex; gap:4px; margin-left:4px;">
+                <button class="btn-milestone" onclick="jumpMilestone(0.00)" title="Línea Base Desacoplada">t=0 Basal</button>
+                <button class="btn-milestone" onclick="jumpMilestone(0.25)" title="Emergencia de Elecciones">t=.25 Elecc</button>
+                <button class="btn-milestone" onclick="jumpMilestone(0.55)" title="Clivaje de Rechazos y Ostracismo">t=.55 Rech</button>
+                <button class="btn-milestone active" onclick="jumpMilestone(1.00)" title="Topología Cristalizada y Grassmann">t=1.00 Topol</button>
+            </div>
         </div>
         <div class="moviola-narrative">
             <span class="phase-pill phase-top" id="phase-badge">🌐 Fase 3: Topología Factorial &amp; Grassmann</span>
             <span id="narrative-text" style="font-size:0.75rem; color:#E2E8F0; text-align:right;">Estructura cristalizada. Coordenadas factoriales de Benzécri y geodésica Gr(2,5).</span>
+        </div>
+    </div>
+
+    <!-- ⚡ GAUGE FLOTANTE DE LAS 10 DENSIDADES EN EL 3D -->
+    <div id="floating-density-hud">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.85rem; font-weight:800; color:#FFE600;">⚡ GAUGE 10 DENSIDADES</span>
+                <span id="dfloat-active-pill" style="font-size:0.65rem; font-weight:800; padding:1px 6px; border-radius:8px; background:rgba(0,255,135,0.15); color:#00FF87;">Media G1</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <button onclick="switchMainView('view-densidades')" class="btn-ctrl" style="padding:2px 8px; font-size:0.68rem; border-color:#38BDF8; color:#38BDF8;">⛶ Expandir</button>
+                <button onclick="toggleFloatingDensityHUD()" class="btn-ctrl" style="padding:2px 6px; font-size:0.68rem;">✕</button>
+            </div>
+        </div>
+        <div style="width:100%; height:190px; position:relative;">
+            <svg id="density-float-svg" viewBox="0 0 540 250" style="width:100%; height:100%; display:block; overflow:visible;">
+                <defs>
+                    <filter id="neon-glow-float" x="-40%" y="-40%" width="180%" height="180%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                    </filter>
+                </defs>
+                <rect x="20" y="8" width="168" height="236" rx="6" fill="rgba(56, 189, 248, 0.04)" stroke="rgba(56, 189, 248, 0.2)" stroke-dasharray="3,3" />
+                <rect x="198" y="8" width="162" height="236" rx="6" fill="rgba(0, 255, 135, 0.04)" stroke="rgba(0, 255, 135, 0.2)" stroke-dasharray="3,3" />
+                <rect x="370" y="8" width="158" height="236" rx="6" fill="rgba(255, 230, 0, 0.04)" stroke="rgba(255, 230, 0, 0.2)" stroke-dasharray="3,3" />
+                <line x1="20" y1="135" x2="528" y2="135" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="4,4" />
+                <!-- Conectores Dif -->
+                <g id="dfloat-grp-dif-r">
+                    <line id="dfloat-line-dif-r" x1="218" y1="86" x2="272" y2="86" stroke="#FF9F1C" stroke-width="2.2" stroke-dasharray="3,2" />
+                    <rect id="dfloat-bg-dif-r" x="225" y="70" width="42" height="13" rx="3" fill="#080D1A" stroke="#FF9F1C" stroke-width="1" />
+                    <text id="dfloat-lbl-dif-r" x="246" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF9F1C">Dif_r: -0.10</text>
+                </g>
+                <g id="dfloat-grp-dif-a">
+                    <line id="dfloat-line-dif-a" x1="390" y1="86" x2="444" y2="86" stroke="#38BDF8" stroke-width="2.2" stroke-dasharray="3,2" />
+                    <rect id="dfloat-bg-dif-a" x="396" y="70" width="44" height="13" rx="3" fill="#080D1A" stroke="#38BDF8" stroke-width="1" />
+                    <text id="dfloat-lbl-dif-a" x="418" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#38BDF8">Dif_a: +0.10</text>
+                </g>
+                <g id="dfloat-grp-dif-i">
+                    <path id="dfloat-arc-dif-i" d="M 326 38 Q 412 18 498 38" fill="none" stroke="#FF007F" stroke-width="2.2" stroke-dasharray="4,2" />
+                    <rect id="dfloat-bg-dif-i" x="388" y="10" width="48" height="13" rx="3" fill="#080D1A" stroke="#FF007F" stroke-width="1" />
+                    <text id="dfloat-lbl-dif-i" x="412" y="20" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF007F">Dif-DR: 55.76</text>
+                </g>
+                <!-- 10 Nodos Float -->
+                <g id="dfloat-grp-d1"><line id="dfloat-stem-d1" x1="41" y1="135" x2="41" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dfloat-dot-d1" cx="41" cy="108" r="5" fill="#FFE600" /><text id="dfloat-txt-d1" x="41" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FFE600">-1.40</text><text x="41" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">D1</text></g>
+                <g id="dfloat-grp-d2"><line id="dfloat-stem-d2" x1="83" y1="135" x2="83" y2="113" stroke="#00FF87" stroke-width="1.8" /><circle id="dfloat-dot-d2" cx="83" cy="113" r="5" fill="#00FF87" /><text id="dfloat-txt-d2" x="83" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#00FF87">-6.42</text><text x="83" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">D2</text></g>
+                <g id="dfloat-grp-d3"><line id="dfloat-stem-d3" x1="125" y1="135" x2="125" y2="113" stroke="#00F0FF" stroke-width="1.8" /><circle id="dfloat-dot-d3" cx="125" cy="113" r="5" fill="#00F0FF" /><text id="dfloat-txt-d3" x="125" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#00F0FF">-6.49</text><text x="125" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">D3</text></g>
+                <g id="dfloat-grp-d4"><line id="dfloat-stem-d4" x1="167" y1="135" x2="167" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dfloat-dot-d4" cx="167" cy="108" r="5" fill="#FFE600" /><text id="dfloat-txt-d4" x="167" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FFE600">-1.43</text><text x="167" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">D4</text></g>
+                <g id="dfloat-grp-sda"><line id="dfloat-stem-sda" x1="218" y1="135" x2="218" y2="86" stroke="#38BDF8" stroke-width="2" /><circle id="dfloat-dot-sda" cx="218" cy="86" r="5.5" fill="#38BDF8" /><text id="dfloat-txt-sda" x="218" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#38BDF8">-7.82</text><text x="218" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#38BDF8">SDA</text></g>
+                <g id="dfloat-grp-src"><line id="dfloat-stem-src" x1="272" y1="135" x2="272" y2="86" stroke="#A855F7" stroke-width="2" /><circle id="dfloat-dot-src" cx="272" cy="86" r="5.5" fill="#A855F7" /><text id="dfloat-txt-src" x="272" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#A855F7">-7.92</text><text x="272" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#A855F7">SRC</text></g>
+                <g id="dfloat-grp-sdr"><line id="dfloat-stem-sdr" x1="326" y1="135" x2="326" y2="38" stroke="#00FF87" stroke-width="2.2" /><circle id="dfloat-dot-sdr" cx="326" cy="38" r="6.5" fill="#00FF87" filter="url(#neon-glow-float)" /><text id="dfloat-txt-sdr" x="326" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#00FF87">-15.74</text><text x="326" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#00FF87">SDR</text></g>
+                <g id="dfloat-grp-bda"><line id="dfloat-stem-bda" x1="390" y1="135" x2="390" y2="86" stroke="#CBD5E1" stroke-width="2" /><circle id="dfloat-dot-bda" cx="390" cy="86" r="5.5" fill="#CBD5E1" /><text id="dfloat-txt-bda" x="390" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#CBD5E1">19.96</text><text x="390" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">BDA</text></g>
+                <g id="dfloat-grp-brc"><line id="dfloat-stem-brc" x1="444" y1="135" x2="444" y2="86" stroke="#CBD5E1" stroke-width="2" /><circle id="dfloat-dot-brc" cx="444" cy="86" r="5.5" fill="#CBD5E1" /><text id="dfloat-txt-brc" x="444" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#CBD5E1">20.06</text><text x="444" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="900" fill="#FFF">BRC</text></g>
+                <g id="dfloat-grp-bdr"><line id="dfloat-stem-bdr" x1="498" y1="135" x2="498" y2="38" stroke="#FFE600" stroke-width="2.2" /><circle id="dfloat-dot-bdr" cx="498" cy="38" r="6.5" fill="#FFE600" filter="url(#neon-glow-float)" /><text id="dfloat-txt-bdr" x="498" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFE600">40.02</text><text x="498" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFE600">BDR</text></g>
+            </svg>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#94A3B8; font-family:'Roboto Mono';">
+            <span>BDR: <strong id="dfloat-val-bdr" style="color:#FFE600;">8.00</strong></span>
+            <span>SDR: <strong id="dfloat-val-sdr" style="color:#00FF87;">-0.91</strong></span>
+            <span>Dif-DR: <strong id="dfloat-val-difdr" style="color:#FF007F;">55.76</strong></span>
+            <span>d_Gr: <strong style="color:#38BDF8;">1.455 rad</strong></span>
+        </div>
+    </div>
+
+    <!-- 🔍 TARJETA FLOTANTE FORENSE DE RED EGOCÉNTRICA -->
+    <div id="floating-ego-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+                <span id="ego-card-badge" class="badge-sub badge-g1">Nodo 1A1a</span>
+                <div id="ego-card-title" style="font-weight:800; font-size:0.95rem; color:#00FF87; margin-top:2px;">1A1a (Cohesión G1)</div>
+            </div>
+            <button onclick="resetEgoIsolation()" style="background:none; border:none; color:#94A3B8; font-size:1.1rem; cursor:pointer;" title="Restaurar toda la red">✕</button>
+        </div>
+        <div id="ego-card-status" style="color:#CBD5E1; font-size:0.75rem; font-style:italic;">Periferia Cohesiva del Núcleo</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; font-family:'Roboto Mono'; font-size:0.72rem;">
+            <div>SDR Neta: <strong id="ego-val-sdr" style="color:#00FF87;">-0.91</strong></div>
+            <div>BDR Masa: <strong id="ego-val-bdr" style="color:#FFE600;">8.00</strong></div>
+            <div>Dif-DR: <strong id="ego-val-difdr" style="color:#FF007F;">45.34</strong></div>
+            <div>Citas E/R: <strong id="ego-val-citas" style="color:#38BDF8;">2 / 1</strong></div>
+        </div>
+        <div style="display:flex; gap:6px; margin-top:4px;">
+            <button id="btn-ego-show-densities" class="btn-ctrl" style="flex:1; padding:4px 6px; font-size:0.70rem; text-align:center; border-color:#FFE600; color:#FFE600;">⚡ 10 Densidades</button>
+            <button id="btn-ego-show-dossier" class="btn-ctrl" style="flex:1; padding:4px 6px; font-size:0.70rem; text-align:center; border-color:#38BDF8; color:#38BDF8;">👤 Informe</button>
         </div>
     </div>
 
@@ -685,15 +863,216 @@
         </div>
     </div>
 
-    <!-- 📋 MODAL/DRAWER: DOSSIER GENERAL DEL CASO EMPÍRICO G2T1C1 (5 PESTAÑAS) -->
-        <main id="analytical-workspace" class="analytical-workspace" style="display: none;">
-                
-                <!-- =========================================================
-                     VISTA 1: TABLAS CANÓNICAS (ORGANIZADAS EN 4 BLOQUES)
-                     ========================================================= -->
-                <div id="view-tablas" class="analytical-subview active">
+    <!-- 📋 MODAL/DRAWER: DOSSIER GENERAL DEL CASO EMPÍRICO G2T1C1 (VENTANA / DOCK) -->
+    <main id="analytical-workspace" class="analytical-workspace">
+
+        <!-- CABECERA DEL DOCK LATERAL / WORKSPACE -->
+        <div class="dock-top-bar">
+            <div class="dock-title-wrap">
+                <span id="dock-view-icon" style="font-size:1.25rem;">📊</span>
+                <span id="dock-view-title" class="dock-title">TABLAS CANÓNICAS</span>
+                <span class="badge-sub badge-g1" style="font-size:0.72rem;">G2T1C1 Psicothema</span>
+            </div>
+            <div class="dock-actions">
+                <button id="btn-dock-toggle-split" class="btn-action" onclick="toggleDockMaximize()" title="Alternar Dividido / Pantalla Completa">⛶ Maximizar</button>
+                <button id="btn-dock-close" class="btn-action btn-close-dock" onclick="switchMainView('view-3d')" title="Cerrar y volver al 3D">✕ Volver al 3D</button>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             VISTA 0: MOTOR INTERACTIVO DE LAS 10 DENSIDADES (PSICOTHEMA)
+             ========================================================= -->
+        <div id="view-densidades" class="analytical-subview">
+            <div class="tbl-item-header" style="margin-bottom:12px;">
+                <div class="tbl-item-title" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#00FF87;">⚡ MOTOR DE LAS 10 DENSIDADES SOCIO-TERMODINÁMICAS</span>
+                    <span class="badge-sub badge-g1">Datos Revista Psicothema (N=10)</span>
+                </div>
+                <div class="tbl-item-subtitle">
+                    Descomposición analítica completa del caso empírico canónico G2T1C1: Densidades del Tetragrama (D1..D4), Relativas Netas (SDA, SRC, SDR), Absolutas Brutas (BDA, BRC, BDR) e Inercias Diferenciales (Dif_r, Dif_a, Dif-DR).
+                </div>
+            </div>
+
+            <!-- BARRA DE PRESETS Y SELECTORES DEL MOTOR DE DENSIDADES -->
+            <div style="background:rgba(15, 23, 42, 0.85); border:1px solid rgba(56, 189, 248, 0.25); border-radius:10px; padding:10px 14px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <!-- Presets Principales -->
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                        <span style="font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono'; font-weight:700;">PRESETS:</span>
+                        <button class="btn-ctrl active density-preset-btn" id="dbtn-g1" onclick="setDensityEntity('g1_mean')">🟢 Media G1 (Cohesión)</button>
+                        <button class="btn-ctrl density-preset-btn" id="dbtn-g2" onclick="setDensityEntity('g2_mean')">🔴 Media G2 (Fricción)</button>
+                        <button class="btn-ctrl density-preset-btn" id="dbtn-5b" onclick="setDensityEntity('5B1a')" style="border-color:#FF007F; color:#FF007F;">🚨 5B1a (Ostracismo Crítico)</button>
+                        <button class="btn-ctrl density-preset-btn" id="dbtn-2a" onclick="setDensityEntity('2A1a')">⭐ 2A1a (Atractor Líder)</button>
+                        <button class="btn-ctrl density-preset-btn" id="dbtn-moviola" onclick="toggleDensityMoviolaMode()">⏱️ Moviola Dinámica (t=0..1)</button>
+                    </div>
+
+                    <!-- Escala de Visualización -->
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:0.70rem; color:#CBD5E1; font-weight:700;">Escala:</span>
+                        <button class="btn-ctrl active" id="btn-density-scale-unit" onclick="setDensityScale(false)">Unitario Diádico</button>
+                        <button class="btn-ctrl" id="btn-density-scale-acc" onclick="setDensityScale(true)">Acumulado Nodal</button>
+                    </div>
+                </div>
+
+                <!-- Selector por Nodos Individuales -->
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+                    <span style="font-size:0.68rem; color:#00FF87; font-weight:700;">NODOS G1:</span>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('1A1a')">1A1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('2A1a')">2A1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('3A1a')">3A1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('4A1a')">4A1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('5A1a')">5A1a</button>
                     
-                    <!-- SELECTOR DE LOS 4 BLOQUES TEMÁTICOS -->
+                    <span style="font-size:0.68rem; color:#FF007F; font-weight:700; margin-left:8px;">NODOS G2:</span>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('1B1a')">1B1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('2B1a')">2B1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('3B1a')">3B1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('4B1a')">4B1a</button>
+                    <button class="btn-tbl-pill" onclick="setDensityEntity('5B1a')" style="border-color:#FF007F; color:#FF007F; font-weight:800;">5B1a (Ost)</button>
+                </div>
+            </div>
+
+            <!-- LIENZO SVG ANIMADO DE LAS 10 DENSIDADES -->
+            <div style="background:rgba(8, 13, 26, 0.95); border:1.5px solid rgba(56, 189, 248, 0.35); border-radius:12px; padding:12px 16px; margin-bottom:16px; box-shadow:0 8px 30px rgba(0,0,0,0.5);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-family:'Roboto Mono'; font-size:0.80rem; font-weight:800; color:#FFFFFF;">GRAFOS RELACIONALES · 10 DENSIDADES &amp; INERCIAS</span>
+                        <span id="dmain-active-pill" style="font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:10px; background:rgba(0,255,135,0.15); color:#00FF87; border:1px solid rgba(0,255,135,0.4);">
+                            Media G1 (Cohesión)
+                        </span>
+                    </div>
+                    <span style="font-family:'Roboto Mono'; font-size:0.72rem; color:#94A3B8;">
+                        BDR = BDA + BRC | SDR = SDA + SRC | Dif-DR = BDR - SDR
+                    </span>
+                </div>
+
+                <!-- Lienzo SVG -->
+                <div style="width:100%; height:260px; position:relative;">
+                    <svg id="density-main-svg" viewBox="0 0 540 250" style="width:100%; height:100%; display:block; overflow:visible;">
+                        <defs>
+                            <filter id="neon-glow-main" x="-40%" y="-40%" width="180%" height="180%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- 3 Zonas de Fondo -->
+                        <rect x="20" y="8" width="168" height="236" rx="6" fill="rgba(56, 189, 248, 0.04)" stroke="rgba(56, 189, 248, 0.2)" stroke-dasharray="3,3" />
+                        <text x="104" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#38BDF8">TETRAGRAMA (D1..D4)</text>
+
+                        <rect x="198" y="8" width="162" height="236" rx="6" fill="rgba(0, 255, 135, 0.04)" stroke="rgba(0, 255, 135, 0.2)" stroke-dasharray="3,3" />
+                        <text x="279" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#00FF87">RELATIVAS NETAS</text>
+
+                        <rect x="370" y="8" width="158" height="236" rx="6" fill="rgba(255, 230, 0, 0.04)" stroke="rgba(255, 230, 0, 0.2)" stroke-dasharray="3,3" />
+                        <text x="449" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFE600">ABSOLUTAS BRUTAS</text>
+
+                        <!-- Líneas Guía de Escala -->
+                        <line x1="20" y1="38" x2="528" y2="38" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+                        <text id="lbl-main-scale-pos" x="17" y="41" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" fill="#64748B">+4.0</text>
+
+                        <line x1="20" y1="135" x2="528" y2="135" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="4,4" />
+                        <text x="17" y="138" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" font-weight="700" fill="#94A3B8">0.0</text>
+
+                        <line x1="20" y1="232" x2="528" y2="232" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+                        <text id="lbl-main-scale-neg" x="17" y="235" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" fill="#64748B">-4.0</text>
+
+                        <!-- LÍNEAS DIFERENCIALES (INERCIAS) -->
+                        <g id="dmain-grp-dif-r">
+                            <line id="dmain-line-dif-r" x1="218" y1="86" x2="272" y2="86" stroke="#FF9F1C" stroke-width="2.2" stroke-dasharray="3,2" />
+                            <rect id="dmain-bg-dif-r" x="225" y="70" width="42" height="13" rx="3" fill="#080D1A" stroke="#FF9F1C" stroke-width="1" />
+                            <text id="dmain-lbl-dif-r" x="246" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF9F1C">Dif_r: -0.10</text>
+                        </g>
+
+                        <g id="dmain-grp-dif-a">
+                            <line id="dmain-line-dif-a" x1="390" y1="86" x2="444" y2="86" stroke="#38BDF8" stroke-width="2.2" stroke-dasharray="3,2" />
+                            <rect id="dmain-bg-dif-a" x="396" y="70" width="44" height="13" rx="3" fill="#080D1A" stroke="#38BDF8" stroke-width="1" />
+                            <text id="dmain-lbl-dif-a" x="418" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#38BDF8">Dif_a: +0.10</text>
+                        </g>
+
+                        <g id="dmain-grp-dif-i">
+                            <path id="dmain-arc-dif-i" d="M 326 38 Q 412 18 498 38" fill="none" stroke="#FF007F" stroke-width="2.2" stroke-dasharray="4,2" />
+                            <rect id="dmain-bg-dif-i" x="388" y="10" width="48" height="13" rx="3" fill="#080D1A" stroke="#FF007F" stroke-width="1" />
+                            <text id="dmain-lbl-dif-i" x="412" y="20" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF007F">Dif-DR: 55.76</text>
+                        </g>
+
+                        <!-- 10 NODOS CON VÁSTAGOS -->
+                        <g id="dmain-grp-d1"><line id="dmain-stem-d1" x1="41" y1="135" x2="41" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dmain-dot-d1" cx="41" cy="108" r="5.5" fill="#FFE600" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d1" x="41" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#FFE600">-1.40</text><text x="41" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D1</text><text x="41" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">pDA</text></g>
+                        <g id="dmain-grp-d2"><line id="dmain-stem-d2" x1="83" y1="135" x2="83" y2="113" stroke="#00FF87" stroke-width="1.8" /><circle id="dmain-dot-d2" cx="83" cy="113" r="5.5" fill="#00FF87" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d2" x="83" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#00FF87">-6.42</text><text x="83" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D2</text><text x="83" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">DA</text></g>
+                        <g id="dmain-grp-d3"><line id="dmain-stem-d3" x1="125" y1="135" x2="125" y2="113" stroke="#00F0FF" stroke-width="1.8" /><circle id="dmain-dot-d3" cx="125" cy="113" r="5.5" fill="#00F0FF" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d3" x="125" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#00F0FF">-6.49</text><text x="125" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D3</text><text x="125" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">REC</text></g>
+                        <g id="dmain-grp-d4"><line id="dmain-stem-d4" x1="167" y1="135" x2="167" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dmain-dot-d4" cx="167" cy="108" r="5.5" fill="#FFE600" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d4" x="167" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#FFE600">-1.43</text><text x="167" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D4</text><text x="167" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">pREC</text></g>
+                        <g id="dmain-grp-sda"><line id="dmain-stem-sda" x1="218" y1="135" x2="218" y2="86" stroke="#38BDF8" stroke-width="2.2" /><circle id="dmain-dot-sda" cx="218" cy="86" r="6" fill="#38BDF8" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-sda" x="218" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#38BDF8">-7.82</text><text x="218" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#38BDF8">SDA</text><text x="218" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Dada</text></g>
+                        <g id="dmain-grp-src"><line id="dmain-stem-src" x1="272" y1="135" x2="272" y2="86" stroke="#A855F7" stroke-width="2.2" /><circle id="dmain-dot-src" cx="272" cy="86" r="6" fill="#A855F7" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-src" x="272" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#A855F7">-7.92</text><text x="272" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#A855F7">SRC</text><text x="272" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Recib</text></g>
+                        <g id="dmain-grp-sdr"><line id="dmain-stem-sdr" x1="326" y1="135" x2="326" y2="38" stroke="#00FF87" stroke-width="2.5" /><circle id="dmain-dot-sdr" cx="326" cy="38" r="7" fill="#00FF87" stroke="#FFF" stroke-width="2" filter="url(#neon-glow-main)" /><text id="dmain-txt-sdr" x="326" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#00FF87">-15.74</text><text x="326" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#00FF87">SDR</text><text x="326" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Total</text></g>
+                        <g id="dmain-grp-bda"><line id="dmain-stem-bda" x1="390" y1="135" x2="390" y2="86" stroke="#CBD5E1" stroke-width="2.2" /><circle id="dmain-dot-bda" cx="390" cy="86" r="6" fill="#CBD5E1" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-bda" x="390" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#CBD5E1">19.96</text><text x="390" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">BDA</text><text x="390" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Masa</text></g>
+                        <g id="dmain-grp-brc"><line id="dmain-stem-brc" x1="444" y1="135" x2="444" y2="86" stroke="#CBD5E1" stroke-width="2.2" /><circle id="dmain-dot-brc" cx="444" cy="86" r="6" fill="#CBD5E1" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-brc" x="444" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#CBD5E1">20.06</text><text x="444" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">BRC</text><text x="444" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Masa</text></g>
+                        <g id="dmain-grp-bdr"><line id="dmain-stem-bdr" x1="498" y1="135" x2="498" y2="38" stroke="#FFE600" stroke-width="2.5" /><circle id="dmain-dot-bdr" cx="498" cy="38" r="7" fill="#FFE600" stroke="#FFF" stroke-width="2" filter="url(#neon-glow-main)" /><text id="dmain-txt-bdr" x="498" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#FFE600">40.02</text><text x="498" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#FFE600">BDR</text><text x="498" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">M.Total</text></g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- TABLA CANÓNICA DE PSICOTHEMA: LAS 10 DENSIDADES D(n,10) -->
+            <div style="background:rgba(11, 19, 43, 0.85); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:16px; margin-bottom:16px;">
+                <div style="font-size:0.90rem; font-weight:800; color:#38BDF8; margin-bottom:10px;">
+                    📋 TABLA GENERAL DE LAS 10 DENSIDADES RELACIONALES D(n, 10) (PSICOTHEMA)
+                </div>
+                <div class="table-responsive">
+                    <table class="html-dossier-table" style="font-size:0.76rem;">
+                        <thead>
+                            <tr>
+                                <th>Nodo</th><th>Grupo</th>
+                                <th>D1 (p_DA)</th><th>D2 (DA)</th><th>D3 (REC)</th><th>D4 (p_REC)</th>
+                                <th style="color:#38BDF8;">SDA (Dada)</th>
+                                <th>Dif_Rel</th>
+                                <th style="color:#A855F7;">SRC (Recib)</th>
+                                <th style="color:#00FF87;">SDR (Neta)</th>
+                                <th>BDA</th><th>BRC</th>
+                                <th style="color:#FFE600;">BDR (Masa)</th>
+                                <th style="color:#FF007F;">Dif-DR (Tensión)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="setDensityEntity('1A1a')" style="cursor:pointer;"><td class="td-node" style="color:#00FF87;">1A1a</td><td>G1</td><td>-3,28</td><td>-6,40</td><td>-6,53</td><td>-3,28</td><td>-9,68</td><td>-0,13</td><td>-9,81</td><td style="color:#00FF87;">-19,49</td><td>12,86</td><td>12,99</td><td style="color:#FFE600;">25,85</td><td>45,34</td></tr>
+                            <tr onclick="setDensityEntity('2A1a')" style="cursor:pointer;"><td class="td-node" style="color:#00FF87;">2A1a</td><td>G1</td><td>+5,38</td><td>-2,19</td><td>-2,16</td><td>+5,32</td><td>+3,19</td><td>-0,02</td><td>+3,17</td><td style="color:#00FF87; font-weight:800;">+6,36</td><td>23,97</td><td>24,00</td><td style="color:#FFE600;">47,97</td><td>41,61</td></tr>
+                            <tr onclick="setDensityEntity('3A1a')" style="cursor:pointer;"><td class="td-node" style="color:#00FF87;">3A1a</td><td>G1</td><td>+2,40</td><td>-3,48</td><td>-3,56</td><td>+2,39</td><td>-1,08</td><td>-0,09</td><td>-1,17</td><td style="color:#00FF87;">-2,25</td><td>25,06</td><td>25,15</td><td style="color:#FFE600;">50,21</td><td>52,45</td></tr>
+                            <tr onclick="setDensityEntity('4A1a')" style="cursor:pointer;"><td class="td-node" style="color:#00FF87;">4A1a</td><td>G1</td><td>-6,65</td><td>-10,21</td><td>-10,28</td><td>-6,72</td><td>-16,86</td><td>-0,14</td><td>-17,00</td><td style="color:#00FF87;">-33,86</td><td>20,04</td><td>20,18</td><td style="color:#FFE600;">40,22</td><td>74,07</td></tr>
+                            <tr onclick="setDensityEntity('5A1a')" style="cursor:pointer;"><td class="td-node" style="color:#00FF87;">5A1a</td><td>G1</td><td>-4,87</td><td>-9,82</td><td>-9,93</td><td>-4,87</td><td>-14,69</td><td>-0,11</td><td>-14,80</td><td style="color:#00FF87;">-29,49</td><td>17,87</td><td>17,98</td><td style="color:#FFE600;">35,85</td><td>65,33</td></tr>
+                            <tr onclick="setDensityEntity('g1_mean')" style="cursor:pointer; background:rgba(0, 255, 135, 0.12); font-weight:800;">
+                                <td colspan="2" style="color:#00FF87;">Media G1 (Cohesión)</td>
+                                <td>-1,40</td><td>-6,42</td><td>-6,49</td><td>-1,43</td><td>-7,82</td><td>-0,10</td><td>-7,92</td><td style="color:#00FF87;">-15,74</td><td>19,96</td><td>20,06</td><td style="color:#FFE600;">40,02</td><td style="color:#00FF87;">55,76</td>
+                            </tr>
+                            <tr onclick="setDensityEntity('1B1a')" style="cursor:pointer;"><td class="td-node" style="color:#FF007F;">1B1a</td><td>G2</td><td>-4,82</td><td>-9,37</td><td>-9,17</td><td>-4,82</td><td>-14,19</td><td>+0,21</td><td>-13,99</td><td style="color:#FF007F;">-28,18</td><td>18,01</td><td>17,81</td><td style="color:#FFE600;">35,82</td><td>63,99</td></tr>
+                            <tr onclick="setDensityEntity('2B1a')" style="cursor:pointer;"><td class="td-node" style="color:#FF007F;">2B1a</td><td>G2</td><td>-1,70</td><td>-6,57</td><td>-7,28</td><td>-1,98</td><td>-8,27</td><td>-0,98</td><td>-9,25</td><td style="color:#FF007F;">-17,52</td><td>15,08</td><td>16,17</td><td style="color:#FFE600;">31,25</td><td>48,76</td></tr>
+                            <tr onclick="setDensityEntity('3B1a')" style="cursor:pointer;"><td class="td-node" style="color:#FF007F;">3B1a</td><td>G2</td><td>-3,03</td><td>-7,19</td><td>-7,81</td><td>-3,28</td><td>-10,22</td><td>-0,87</td><td>-11,09</td><td style="color:#FF007F;">-21,30</td><td>13,33</td><td>14,31</td><td style="color:#FFE600;">27,63</td><td>48,93</td></tr>
+                            <tr onclick="setDensityEntity('4B1a')" style="cursor:pointer;"><td class="td-node" style="color:#FF007F;">4B1a</td><td>G2</td><td>-6,00</td><td>-12,84</td><td>-13,22</td><td>-6,54</td><td>-18,83</td><td>-0,93</td><td>-19,76</td><td style="color:#FF007F;">-38,59</td><td>18,95</td><td>19,88</td><td style="color:#FFE600;">38,83</td><td>77,42</td></tr>
+                            <tr onclick="setDensityEntity('5B1a')" style="cursor:pointer; background:rgba(255, 0, 127, 0.22); font-weight:800;">
+                                <td class="td-node" style="color:#FF007F; font-weight:900;">5B1a</td><td style="color:#FF007F;">G2 (Ost)</td>
+                                <td>-15,54</td><td>-16,84</td><td>-17,51</td><td>-16,62</td><td>-32,38</td><td>-1,74</td><td>-34,12</td>
+                                <td style="color:#FF007F; font-weight:900;">-66,50</td>
+                                <td>32,38</td><td>34,12</td><td style="color:#FFE600;">66,50</td>
+                                <td style="color:#FF007F; font-weight:900; font-size:0.95rem;">133,00</td>
+                            </tr>
+                            <tr onclick="setDensityEntity('g2_mean')" style="cursor:pointer; background:rgba(255, 0, 127, 0.12); font-weight:800;">
+                                <td colspan="2" style="color:#FF007F;">Media G2 (Fricción)</td>
+                                <td>-6,22</td><td>-10,56</td><td>-10,99</td><td>-6,65</td><td>-16,78</td><td>-0,86</td><td>-17,64</td><td style="color:#FF007F;">-34,42</td><td>19,55</td><td>20,46</td><td style="color:#FFE600;">40,00</td><td style="color:#FF007F;">74,42</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NOTA PEDAGÓGICA (REGLA 10) -->
+            <div style="background:rgba(8, 13, 26, 0.8); border-left:4px solid #38BDF8; padding:10px 14px; border-radius:0 8px 8px 0; font-size:0.78rem; line-height:1.45; color:#CBD5E1;">
+                <strong style="color:#38BDF8;">💡 Nota Explicativa de Interpretación Socio-Termodinámica (Regla 10):</strong><br>
+                El Principio de Conservación de la Masa Relacional estipula que ambos colectivos despliegan exactamente la misma energía de base: <strong>BDR̄ = 8,00</strong> (40,00 acumulada). La patología relacional no reside en una menor cantidad de interacciones, sino en su asimetría distributiva: mientras en el <strong>Grupo 1</strong> las elecciones y rechazos se auto-equilibran sin fracturas, en el <strong>Grupo 2</strong> el consenso unánime de rechazo hacia <strong>5B1a</strong> concentra toda la energía repulsiva sobre un único nodo, duplicando su masa hacia una tensión termodinámica extrema (<strong>Dif-DR = 133,00</strong>) que culmina en su eyección gravitatoria (ostracismo).
+            </div>
+        </div>
+
+        <!-- =========================================================
+             VISTA 1: TABLAS CANÓNICAS (ORGANIZADAS EN 4 BLOQUES)
+             ========================================================= -->
+        <div id="view-tablas" class="analytical-subview">
+            
+            <!-- SELECTOR DE LOS 4 BLOQUES TEMÁTICOS -->
                     <div class="tbl-block-selector">
                         <button class="btn-block-nav active" data-block="block-entrada">
                             <span>📂</span> Bloque 1: Entrada y Matrices Sociométricas
@@ -1497,17 +1876,46 @@
         };
 
         // =========================================================================
-        // ESTADO GLOBAL THREE.JS
+        // BASE CANÓNICA DE LAS 10 DENSIDADES (REVISTA PSICOTHEMA N=10)
+        // =========================================================================
+        const DENSITIES_CANONICAL = {
+            // GRUPO 1: Cohesión
+            "1A1a": { id: "1A1a", name: "1A1a", group: "G1", a1: -3.28, a2: -6.40, a3: -6.53, a4: -3.28, sda: -9.68, dif_rel: -0.13, src: -9.81, sdr: -19.49, bda: 12.86, brc: 12.99, bdr: 25.85, dif_dr: 45.34, bdr_diad: 8.00, sdr_diad: -0.91 },
+            "2A1a": { id: "2A1a", name: "2A1a [Líder]", group: "G1", a1: 5.38, a2: -2.19, a3: -2.16, a4: 5.32, sda: 3.19, dif_rel: -0.02, src: 3.17, sdr: 6.36, bda: 23.97, brc: 24.00, bdr: 47.97, dif_dr: 41.61, bdr_diad: 8.00, sdr_diad: 1.27 },
+            "3A1a": { id: "3A1a", name: "3A1a [Puente]", group: "G1", a1: 2.40, a2: -3.48, a3: -3.56, a4: 2.39, sda: -1.08, dif_rel: -0.09, src: -1.17, sdr: -2.25, bda: 25.06, brc: 25.15, bdr: 50.21, dif_dr: 52.45, bdr_diad: 8.00, sdr_diad: -0.45 },
+            "4A1a": { id: "4A1a", name: "4A1a", group: "G1", a1: -6.65, a2: -10.21, a3: -10.28, a4: -6.72, sda: -16.86, dif_rel: -0.14, src: -17.00, sdr: -33.86, bda: 20.04, brc: 20.18, bdr: 40.22, dif_dr: 74.07, bdr_diad: 8.00, sdr_diad: -1.69 },
+            "5A1a": { id: "5A1a", name: "5A1a", group: "G1", a1: -4.87, a2: -9.82, a3: -9.93, a4: -4.87, sda: -14.69, dif_rel: -0.11, src: -14.80, sdr: -29.49, bda: 17.87, brc: 17.98, bdr: 35.85, dif_dr: 65.33, bdr_diad: 8.00, sdr_diad: -1.47 },
+            // GRUPO 2: Fricción y Ostracismo
+            "1B1a": { id: "1B1a", name: "1B1a", group: "G2", a1: -4.82, a2: -9.37, a3: -9.17, a4: -4.82, sda: -14.19, dif_rel: 0.21, src: -13.99, sdr: -28.18, bda: 18.01, brc: 17.81, bdr: 35.82, dif_dr: 63.99, bdr_diad: 8.00, sdr_diad: -1.41 },
+            "2B1a": { id: "2B1a", name: "2B1a [Atractor]", group: "G2", a1: -1.70, a2: -6.57, a3: -7.28, a4: -1.98, sda: -8.27, dif_rel: -0.98, src: -9.25, sdr: -17.52, bda: 15.08, brc: 16.17, bdr: 31.25, dif_dr: 48.76, bdr_diad: 8.00, sdr_diad: -0.88 },
+            "3B1a": { id: "3B1a", name: "3B1a", group: "G2", a1: -3.03, a2: -7.19, a3: -7.81, a4: -3.28, sda: -10.22, dif_rel: -0.87, src: -11.09, sdr: -21.30, bda: 13.33, brc: 14.31, bdr: 27.63, dif_dr: 48.93, bdr_diad: 8.00, sdr_diad: -1.06 },
+            "4B1a": { id: "4B1a", name: "4B1a", group: "G2", a1: -6.00, a2: -12.84, a3: -13.22, a4: -6.54, sda: -18.83, dif_rel: -0.93, src: -19.76, sdr: -38.59, bda: 18.95, brc: 19.88, bdr: 38.83, dif_dr: 77.42, bdr_diad: 8.00, sdr_diad: -1.93 },
+            "5B1a": { id: "5B1a", name: "5B1a [Ostracismo]", group: "G2", a1: -15.54, a2: -16.84, a3: -17.51, a4: -16.62, sda: -32.38, dif_rel: -1.74, src: -34.12, sdr: -66.50, bda: 32.38, brc: 34.12, bdr: 66.50, dif_dr: 133.00, bdr_diad: 8.00, sdr_diad: -2.00 },
+            // MEDIAS
+            "g1_mean": { id: "g1_mean", name: "Media G1 (Cohesión)", group: "G1", a1: -1.40, a2: -6.42, a3: -6.49, a4: -1.43, sda: -7.82, dif_rel: -0.10, src: -7.92, sdr: -15.74, bda: 19.96, brc: 20.06, bdr: 40.02, dif_dr: 55.76, bdr_diad: 8.00, sdr_diad: -0.91 },
+            "g2_mean": { id: "g2_mean", name: "Media G2 (Fricción)", group: "G2", a1: -6.22, a2: -10.56, a3: -10.99, a4: -6.65, sda: -16.78, dif_rel: -0.86, src: -17.64, sdr: -34.42, bda: 19.55, brc: 20.46, bdr: 40.00, dif_dr: 74.42, bdr_diad: 8.00, sdr_diad: -1.47 }
+        };
+
+        // =========================================================================
+        // ESTADO GLOBAL THREE.JS Y SOCIO-TERMODINÁMICA
         // =========================================================================
         let scene, camera, renderer, controls;
-        let currentT = 0.00;
-        let isPlaying = true;
+        let currentT = 1.00;
+        let isPlaying = false;
         let animSpeed = 1.0;
         let activeGroupMode = "both";
         let showElecciones = true;
         let showRechazos = true;
         let showCentroidsVectors = true;
         let showGrassmannArc = true;
+        let autoOrbit = false;
+
+        // Estado Motor 10 Densidades
+        let currentDensityEntity = 'g1_mean';
+        let densityMoviolaMode = false;
+        let densityUseAccumulated = false;
+        let floatingDensityHUDOpen = false;
+        let activeEgoNode = null;
 
         const subjectObjects = {};
         const centroidObjects = {};
@@ -1515,8 +1923,10 @@
         const dynamicEdges = [];
         let grassmannGroup = null;
         let interactiveMeshes = [];
+        let starfieldParticles = null;
+        const shockwaves = [];
 
-        const targetCamPos = new THREE.Vector3(0, -4, 25);
+        const targetCamPos = new THREE.Vector3(0, -3, 26);
         const targetLookAt = new THREE.Vector3(0.5, 0, 0);
 
         const container = document.getElementById('canvas-container');
@@ -1537,6 +1947,431 @@
             const sprite = new THREE.Sprite(spriteMaterial);
             sprite.scale.set(3.0, 1.5, 1.0);
             return sprite;
+        }
+
+        // =========================================================================
+        // SISTEMA DE PARTÍCULAS ESTELARES & ONDAS DE CHOQUE (5B1a)
+        // =========================================================================
+        function buildParticleAtmosphere() {
+            const particleCount = 1200;
+            const particleGeo = new THREE.BufferGeometry();
+            const pos = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                pos[i * 3] = (Math.random() - 0.5) * 80;
+                pos[i * 3 + 1] = (Math.random() - 0.5) * 60;
+                pos[i * 3 + 2] = (Math.random() - 0.5) * 50;
+
+                const rnd = Math.random();
+                if (rnd < 0.45) {
+                    colors[i * 3] = 0.22; colors[i * 3 + 1] = 0.74; colors[i * 3 + 2] = 0.97;
+                } else if (rnd < 0.75) {
+                    colors[i * 3] = 0.0; colors[i * 3 + 1] = 0.95; colors[i * 3 + 2] = 0.50;
+                } else {
+                    colors[i * 3] = 0.95; colors[i * 3 + 1] = 0.05; colors[i * 3 + 2] = 0.50;
+                }
+            }
+
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMat = new THREE.PointsMaterial({
+                size: 0.24,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.55,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            starfieldParticles = new THREE.Points(particleGeo, particleMat);
+            scene.add(starfieldParticles);
+        }
+
+        function buildShockwaves() {
+            for (let i = 0; i < 3; i++) {
+                const ringGeo = new THREE.RingGeometry(0.75 + i * 0.4, 0.90 + i * 0.4, 32);
+                const ringMat = new THREE.MeshBasicMaterial({
+                    color: 0xFF007F,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.7 - i * 0.2
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 2;
+                ring.visible = false;
+                scene.add(ring);
+                shockwaves.push(ring);
+            }
+        }
+
+        // =========================================================================
+        // MOTOR MATEMÁTICO DE LAS 10 DENSIDADES (PSICOTHEMA N=10)
+        // =========================================================================
+        function getEntityDensities(entityKey, tProgress) {
+            const raw = DENSITIES_CANONICAL[entityKey] || DENSITIES_CANONICAL['g1_mean'];
+            const t = tProgress !== undefined ? tProgress : (densityMoviolaMode ? currentT : 1.0);
+            const useAcc = densityUseAccumulated;
+            const factor = densityMoviolaMode ? Math.max(0, Math.min(1, t)) : 1.0;
+
+            const scaleDiv = useAcc ? 1.0 : ((raw.group === 'G1' || raw.group === 'G2') && raw.id !== '5B1a' && raw.id !== '2A1a' ? 5.0 : 1.0);
+
+            const D1 = (raw.a1 / scaleDiv) * factor;
+            const D2 = (raw.a2 / scaleDiv) * factor;
+            const D3 = (raw.a3 / scaleDiv) * factor;
+            const D4 = (raw.a4 / scaleDiv) * factor;
+
+            const SDA = D1 + D2;
+            const SRC = D3 + D4;
+            const SDR = SDA + SRC;
+
+            const BDA = Math.abs(D1) + Math.abs(D2);
+            const BRC = Math.abs(D3) + Math.abs(D4);
+            const BDR = BDA + BRC;
+
+            const Dif_r = SRC - SDA;
+            const Dif_a = BRC - BDA;
+            const Dif_i = BDR - SDR;
+
+            return { raw, D1, D2, D3, D4, SDA, SRC, SDR, BDA, BRC, BDR, Dif_r, Dif_a, Dif_i, useAcc };
+        }
+
+        function updateDensityChart(entityKey, tVal) {
+            if (entityKey) currentDensityEntity = entityKey;
+            const d = getEntityDensities(currentDensityEntity, tVal);
+
+            const activeLabel = d.raw.name + (d.raw.group ? ` (${d.raw.group})` : '');
+            const pMain = document.getElementById('dmain-active-pill');
+            const pFloat = document.getElementById('dfloat-active-pill');
+            if (pMain) pMain.textContent = activeLabel;
+            if (pFloat) pFloat.textContent = activeLabel;
+
+            const bdrDisp = d.raw.bdr !== undefined ? (d.useAcc ? d.raw.bdr.toFixed(2) : d.raw.bdr_diad.toFixed(2)) : d.BDR.toFixed(2);
+            const sdrDisp = d.raw.sdr !== undefined ? (d.useAcc ? d.raw.sdr.toFixed(2) : d.raw.sdr_diad.toFixed(2)) : d.SDR.toFixed(2);
+            const difdrDisp = d.raw.dif_dr !== undefined ? d.raw.dif_dr.toFixed(2) : d.Dif_i.toFixed(2);
+
+            const fValBdr = document.getElementById('dfloat-val-bdr');
+            const fValSdr = document.getElementById('dfloat-val-sdr');
+            const fValDif = document.getElementById('dfloat-val-difdr');
+            if (fValBdr) fValBdr.textContent = bdrDisp;
+            if (fValSdr) fValSdr.textContent = sdrDisp;
+            if (fValDif) fValDif.textContent = difdrDisp;
+
+            const yZero = 135;
+            const scaleY = d.useAcc ? 1.42 : 22.0;
+
+            const valToY = (val) => {
+                let y = yZero - val * scaleY;
+                if (y < 36) y = 36;
+                if (y > 234) y = 234;
+                return y;
+            };
+
+            const nodeDefs = [
+                { id: 'd1', x: 41, val: d.D1, isRel: true },
+                { id: 'd2', x: 83, val: d.D2, isRel: true },
+                { id: 'd3', x: 125, val: d.D3, isRel: true },
+                { id: 'd4', x: 167, val: d.D4, isRel: true },
+                { id: 'sda', x: 218, val: d.SDA, isRel: true },
+                { id: 'src', x: 272, val: d.SRC, isRel: true },
+                { id: 'sdr', x: 326, val: d.SDR, isRel: true },
+                { id: 'bda', x: 390, val: d.BDA, isRel: false },
+                { id: 'brc', x: 444, val: d.BRC, isRel: false },
+                { id: 'bdr', x: 498, val: d.BDR, isRel: false },
+            ];
+
+            ['dmain', 'dfloat'].forEach(prefix => {
+                const coords = {};
+                nodeDefs.forEach(n => {
+                    const y = valToY(n.val);
+                    coords[n.id] = { x: n.x, y: y };
+
+                    const stem = document.getElementById(`${prefix}-stem-${n.id}`);
+                    if (stem) {
+                        stem.setAttribute('x1', n.x);
+                        stem.setAttribute('y1', yZero);
+                        stem.setAttribute('x2', n.x);
+                        stem.setAttribute('y2', y);
+                    }
+
+                    const dot = document.getElementById(`${prefix}-dot-${n.id}`);
+                    if (dot) {
+                        dot.setAttribute('cx', n.x);
+                        dot.setAttribute('cy', y);
+                        if (n.id === 'sdr') {
+                            dot.setAttribute('fill', n.val > 0.1 ? '#00FF87' : (n.val < -0.1 ? '#FF007F' : '#FFE600'));
+                        }
+                    }
+
+                    const txt = document.getElementById(`${prefix}-txt-${n.id}`);
+                    if (txt) {
+                        txt.setAttribute('x', n.x);
+                        txt.setAttribute('y', y < yZero ? y - 8 : y + 15);
+                        txt.textContent = (n.isRel && n.val > 0 ? '+' : '') + n.val.toFixed(2);
+                    }
+                });
+
+                const ySda = coords['sda'].y;
+                const ySrc = coords['src'].y;
+                const lineDifR = document.getElementById(`${prefix}-line-dif-r`);
+                if (lineDifR) {
+                    lineDifR.setAttribute('y1', ySda);
+                    lineDifR.setAttribute('y2', ySrc);
+                }
+                const badgeYDifR = Math.min(ySda, ySrc) < yZero ? Math.min(ySda, ySrc) - 16 : Math.max(ySda, ySrc) + 6;
+                const bgBadgeDifR = document.getElementById(`${prefix}-bg-dif-r`);
+                const lblDifR = document.getElementById(`${prefix}-lbl-dif-r`);
+                if (bgBadgeDifR && lblDifR) {
+                    bgBadgeDifR.setAttribute('y', badgeYDifR);
+                    lblDifR.setAttribute('y', badgeYDifR + 9.5);
+                    lblDifR.textContent = `Dif_r: ${d.Dif_r > 0 ? '+' : ''}${d.Dif_r.toFixed(2)}`;
+                }
+
+                const yBda = coords['bda'].y;
+                const yBrc = coords['brc'].y;
+                const lineDifA = document.getElementById(`${prefix}-line-dif-a`);
+                if (lineDifA) {
+                    lineDifA.setAttribute('y1', yBda);
+                    lineDifA.setAttribute('y2', yBrc);
+                }
+                const badgeYDifA = Math.min(yBda, yBrc) < yZero ? Math.min(yBda, yBrc) - 16 : Math.max(yBda, yBrc) + 6;
+                const bgBadgeDifA = document.getElementById(`${prefix}-bg-dif-a`);
+                const lblDifA = document.getElementById(`${prefix}-lbl-dif-a`);
+                if (bgBadgeDifA && lblDifA) {
+                    bgBadgeDifA.setAttribute('y', badgeYDifA);
+                    lblDifA.setAttribute('y', badgeYDifA + 9.5);
+                    lblDifA.textContent = `Dif_a: ${d.Dif_a > 0 ? '+' : ''}${d.Dif_a.toFixed(2)}`;
+                }
+
+                const ySdr = coords['sdr'].y;
+                const yBdr = coords['bdr'].y;
+                const arcDifI = document.getElementById(`${prefix}-arc-dif-i`);
+                if (arcDifI) {
+                    const ctrlY = Math.min(ySdr, yBdr) - 22;
+                    arcDifI.setAttribute('d', `M 326 ${ySdr} Q 412 ${ctrlY} 498 ${yBdr}`);
+                }
+                const bgBadgeDifI = document.getElementById(`${prefix}-bg-dif-i`);
+                const lblDifI = document.getElementById(`${prefix}-lbl-dif-i`);
+                if (bgBadgeDifI && lblDifI) {
+                    const topY = Math.min(ySdr, yBdr) - 30;
+                    bgBadgeDifI.setAttribute('y', Math.max(10, topY));
+                    lblDifI.setAttribute('y', Math.max(10, topY) + 9.5);
+                    lblDifI.textContent = `Dif-DR: ${d.Dif_i.toFixed(2)}`;
+                }
+            });
+
+            const scalePos = document.getElementById('lbl-main-scale-pos');
+            const scaleNeg = document.getElementById('lbl-main-scale-neg');
+            if (scalePos) scalePos.textContent = d.useAcc ? '+60.0' : '+4.0';
+            if (scaleNeg) scaleNeg.textContent = d.useAcc ? '-60.0' : '-4.0';
+        }
+
+        function setDensityEntity(key) {
+            densityMoviolaMode = false;
+            document.querySelectorAll('.density-preset-btn').forEach(b => b.classList.remove('active'));
+            if (key === 'g1_mean') document.getElementById('dbtn-g1')?.classList.add('active');
+            else if (key === 'g2_mean') document.getElementById('dbtn-g2')?.classList.add('active');
+            else if (key === '5B1a') document.getElementById('dbtn-5b')?.classList.add('active');
+            else if (key === '2A1a') document.getElementById('dbtn-2a')?.classList.add('active');
+
+            currentDensityEntity = key;
+            updateDensityChart();
+        }
+
+        function toggleDensityMoviolaMode() {
+            densityMoviolaMode = !densityMoviolaMode;
+            const btn = document.getElementById('dbtn-moviola');
+            if (btn) btn.classList.toggle('active', densityMoviolaMode);
+            updateDensityChart();
+        }
+
+        function setDensityScale(useAcc) {
+            densityUseAccumulated = useAcc;
+            document.getElementById('btn-density-scale-unit')?.classList.toggle('active', !useAcc);
+            document.getElementById('btn-density-scale-acc')?.classList.toggle('active', useAcc);
+            updateDensityChart();
+        }
+
+        function toggleFloatingDensityHUD() {
+            floatingDensityHUDOpen = !floatingDensityHUDOpen;
+            const hud = document.getElementById('floating-density-hud');
+            const btn = document.getElementById('btn-toggle-density-hud');
+            if (hud) hud.classList.toggle('open', floatingDensityHUDOpen);
+            if (btn) btn.classList.toggle('active', floatingDensityHUDOpen);
+            if (floatingDensityHUDOpen) updateDensityChart();
+        }
+
+        // =========================================================================
+        // LUPA FORENSE: AISLAMIENTO DE RED EGOCÉNTRICA
+        // =========================================================================
+        function isolateEgoNetwork(nodeId) {
+            if (activeEgoNode === nodeId) {
+                resetEgoIsolation();
+                return;
+            }
+            activeEgoNode = nodeId;
+
+            const incidentNodes = new Set([nodeId]);
+            dynamicEdges.forEach(e => {
+                if (e.source === nodeId || e.target === nodeId) {
+                    incidentNodes.add(e.source);
+                    incidentNodes.add(e.target);
+                }
+            });
+
+            CANONICAL_DATA.subjects.forEach(sub => {
+                const obj = subjectObjects[sub.id];
+                if (!obj) return;
+                const isIncident = incidentNodes.has(sub.id);
+                obj.mesh.material.transparent = true;
+                obj.mesh.material.opacity = isIncident ? 1.0 : 0.15;
+                obj.label.material.opacity = isIncident ? 1.0 : 0.15;
+            });
+
+            dynamicEdges.forEach(e => {
+                const isIncident = (e.source === nodeId || e.target === nodeId);
+                e.line.material.opacity = isIncident ? (e.type === 'E' ? 0.95 : 1.0) : 0.08;
+                if (e.pulse) e.pulse.visible = isIncident && currentT >= e.tStart;
+            });
+
+            const subObj = subjectObjects[nodeId];
+            if (subObj) {
+                const p = subObj.mesh.position;
+                targetCamPos.set(p.x, p.y + 1.5, p.z + 10);
+                targetLookAt.set(p.x, p.y, p.z);
+            }
+
+            showEgoCard(nodeId);
+            setDensityEntity(nodeId);
+        }
+
+        function resetEgoIsolation() {
+            activeEgoNode = null;
+            CANONICAL_DATA.subjects.forEach(sub => {
+                const obj = subjectObjects[sub.id];
+                if (!obj) return;
+                obj.mesh.material.opacity = 1.0;
+                obj.label.material.opacity = 1.0;
+            });
+            dynamicEdges.forEach(e => {
+                e.line.material.opacity = e.type === 'E' ? 0.75 : (e.heavy ? 0.95 : 0.65);
+            });
+            const egoCard = document.getElementById('floating-ego-card');
+            if (egoCard) egoCard.style.display = 'none';
+        }
+
+        function showEgoCard(nodeId) {
+            const sub = CANONICAL_DATA.subjects.find(s => s.id === nodeId);
+            if (!sub) return;
+
+            const card = document.getElementById('floating-ego-card');
+            if (!card) return;
+
+            const isG1 = sub.group === 'G1';
+            const isOst = sub.id === '5B1a';
+
+            card.className = isG1 ? '' : (isOst ? 'ostracismo' : 'g2');
+            card.style.display = 'flex';
+
+            document.getElementById('ego-card-badge').className = `badge-sub ${isG1 ? 'badge-g1' : (isOst ? 'badge-alert' : 'badge-g2')}`;
+            document.getElementById('ego-card-badge').textContent = `Nodo ${sub.id}`;
+            
+            const titleEl = document.getElementById('ego-card-title');
+            titleEl.textContent = sub.name;
+            titleEl.style.color = isG1 ? '#00FF87' : '#FF007F';
+
+            document.getElementById('ego-card-status').textContent = sub.status;
+            document.getElementById('ego-val-sdr').textContent = sub.sdr.toFixed(2);
+            document.getElementById('ego-val-bdr').textContent = "8.00";
+            document.getElementById('ego-val-difdr').textContent = sub.dif_dr.toFixed(2);
+            
+            let eCount = 0, rCount = 0;
+            dynamicEdges.forEach(e => {
+                if (e.target === sub.id) {
+                    if (e.type === 'E') eCount++;
+                    if (e.type === 'R') rCount++;
+                }
+            });
+            document.getElementById('ego-val-citas').textContent = `${eCount}E / ${rCount}R`;
+
+            document.getElementById('btn-ego-show-densities').onclick = () => {
+                setDensityEntity(sub.id);
+                switchMainView('view-densidades');
+            };
+            document.getElementById('btn-ego-show-dossier').onclick = () => {
+                openSubjectDossier(sub.short);
+            };
+        }
+
+        function onCanvasClick(e) {
+            if (e.target.closest('header, aside, .moviola-bar, .analytical-workspace, #floating-density-hud, #floating-ego-card, #modal-nota, #lightbox-overlay, .universal-nav-pod')) {
+                return;
+            }
+            pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(pointer, camera);
+
+            const visibleMeshes = interactiveMeshes.filter(m => m.visible);
+            const intersects = raycaster.intersectObjects(visibleMeshes);
+            if (intersects.length > 0) {
+                const data = intersects[0].object.userData;
+                if (data.type === 'subject') {
+                    isolateEgoNetwork(data.id);
+                }
+            } else {
+                resetEgoIsolation();
+            }
+        }
+
+        // =========================================================================
+        // DIRECTOR DE CÁMARA & HITOS MOVIOLA
+        // =========================================================================
+        function flyCameraTo(presetName) {
+            autoOrbit = false;
+            document.querySelectorAll('.controls-panel button').forEach(b => {
+                if (b.id && b.id.startsWith('btn-cam-')) b.classList.remove('active');
+            });
+
+            if (presetName === 'panoramic') {
+                targetCamPos.set(0, -3, 26);
+                targetLookAt.set(0.5, 0, 0);
+                document.getElementById('btn-cam-panoramic')?.classList.add('active');
+            } else if (presetName === 'g1') {
+                targetCamPos.set(-4.0, -1.2, 11);
+                targetLookAt.set(-4.0, -1.0, 0);
+                document.getElementById('btn-cam-g1')?.classList.add('active');
+            } else if (presetName === 'g2') {
+                targetCamPos.set(6.5, 3.5, 12);
+                targetLookAt.set(5.5, 2.5, 0);
+                document.getElementById('btn-cam-g2')?.classList.add('active');
+            } else if (presetName === 'grassmann') {
+                targetCamPos.set(0, 7.5, 20);
+                targetLookAt.set(0, 2.0, 0);
+                document.getElementById('btn-cam-grassmann')?.classList.add('active');
+            } else if (presetName === 'orbit') {
+                autoOrbit = !autoOrbit;
+                document.getElementById('btn-cam-orbit')?.classList.toggle('active', autoOrbit);
+            }
+        }
+
+        function jumpMilestone(tVal) {
+            isPlaying = false;
+            const playBtn = document.getElementById('btn-play-pause');
+            if (playBtn) playBtn.textContent = "▶";
+            updateTimelineState(tVal);
+        }
+
+        function toggleDockMaximize() {
+            const workspace = document.getElementById('analytical-workspace');
+            if (!workspace) return;
+            const isMax = workspace.classList.toggle('maximized');
+            const btn = document.getElementById('btn-dock-toggle-split');
+            if (btn) btn.textContent = isMax ? "❐ Dividido" : "⛶ Maximizar";
+            if (!isMax) {
+                targetCamPos.set(-4.5, -2, 24);
+                targetLookAt.set(-3.5, 0, 0);
+            }
         }
 
         function init() {
@@ -1582,14 +2417,18 @@
             scene.add(new THREE.LineSegments(axisGeoY, axisMat));
 
             buildEntities();
+            buildParticleAtmosphere();
+            buildShockwaves();
 
             window.addEventListener('resize', onResize);
             window.addEventListener('mousemove', onPointerMove);
             window.addEventListener('touchmove', onTouchMove, { passive: false });
+            renderer.domElement.addEventListener('click', onCanvasClick);
 
             setupUI();
             updateSubjectDetail("1A");
-            updateTimelineState(0.00);
+            updateTimelineState(1.00);
+            updateDensityChart('g1_mean');
             animate();
         }
 
@@ -1831,6 +2670,16 @@
                 grassmannGroup.visible = showG;
             }
 
+            // Sincronizar botones de hito con la posición actual
+            document.querySelectorAll('.btn-milestone').forEach(b => {
+                const bVal = parseFloat(b.getAttribute('data-t') !== null ? b.getAttribute('data-t') : b.textContent.replace(/[^\d.]/g, ''));
+                b.classList.toggle('active', Math.abs(bVal - currentT) < 0.08);
+            });
+
+            if (densityMoviolaMode) {
+                updateDensityChart(currentDensityEntity, currentT);
+            }
+
             updateNarrativeAndMetrics();
         }
 
@@ -2062,6 +2911,20 @@
                 updateTimelineState(0.00);
             });
 
+            // Director de Cámara Presets
+            document.getElementById('btn-cam-panoramic')?.addEventListener('click', () => flyCameraTo('panoramic'));
+            document.getElementById('btn-cam-g1')?.addEventListener('click', () => flyCameraTo('g1'));
+            document.getElementById('btn-cam-g2')?.addEventListener('click', () => flyCameraTo('g2'));
+            document.getElementById('btn-cam-grassmann')?.addEventListener('click', () => flyCameraTo('grassmann'));
+            document.getElementById('btn-cam-orbit')?.addEventListener('click', () => flyCameraTo('orbit'));
+
+            // Toggle Gauge Flotante 10 Densidades en 3D
+            document.getElementById('btn-toggle-density-hud')?.addEventListener('click', toggleFloatingDensityHUD);
+
+            // Controles del Dock Lateral
+            document.getElementById('btn-dock-toggle-split')?.addEventListener('click', toggleDockMaximize);
+            document.getElementById('btn-dock-close')?.addEventListener('click', () => switchMainView('view-3d'));
+
             // Modal Nota Explicativa
             const modalNota = document.getElementById('modal-nota');
             document.getElementById('btn-open-nota').addEventListener('click', () => modalNota.style.display = 'flex');
@@ -2264,22 +3127,59 @@
                 updateTimelineState(nextT);
             }
 
+            // Auto-órbita cinematográfica
+            if (autoOrbit) {
+                const radius = 26;
+                const angle = clock * 0.15;
+                targetCamPos.x = Math.sin(angle) * radius;
+                targetCamPos.z = Math.cos(angle) * radius;
+                targetCamPos.y = -3 + Math.sin(clock * 0.2) * 2;
+            }
+
             camera.position.lerp(targetCamPos, 0.04);
             if (controls) {
                 controls.target.lerp(targetLookAt, 0.04);
                 controls.update();
             }
 
+            // Rotación suave de la atmósfera estelar
+            if (starfieldParticles) {
+                starfieldParticles.rotation.y = clock * 0.012;
+            }
+
+            // Rotación viva de centroides factoriales
+            Object.values(centroidObjects).forEach(cent => {
+                if (cent.mesh) {
+                    cent.mesh.rotation.y = clock * 0.8;
+                    cent.mesh.rotation.x = clock * 0.4;
+                }
+            });
+
+            // Pulso del halo de 5B1a
             const ostObj = subjectObjects["5B1a"];
             if (ostObj && ostObj.halo && ostObj.halo.visible) {
                 const scale = 1.0 + Math.sin(clock * 4.5) * 0.20;
                 ostObj.halo.scale.set(scale, scale, 1);
             }
 
+            // Ondas de choque de expulsión/ostracismo alrededor de 5B1a
+            const ostMesh = ostObj?.mesh;
+            if (ostMesh && currentT >= 0.40 && (activeGroupMode === 'both' || activeGroupMode === 'g2')) {
+                shockwaves.forEach((ring, idx) => {
+                    ring.visible = true;
+                    ring.position.copy(ostMesh.position);
+                    const phase = (clock * 1.6 + idx * 0.33) % 1.0;
+                    const scale = 1.0 + phase * 2.5;
+                    ring.scale.set(scale, scale, scale);
+                    ring.material.opacity = (1.0 - phase) * 0.75;
+                });
+            } else {
+                shockwaves.forEach(ring => { ring.visible = false; });
+            }
+
             renderer.render(scene, camera);
         }
 
-        
         // =========================================================================
         // CONTROL DE VISTAS EN VENTANA ÚNICA (HUD MENU)
         // =========================================================================
@@ -2299,28 +3199,40 @@
             });
 
             const workspace = document.getElementById('analytical-workspace');
-            const controlsPanel = document.querySelector('.controls-panel');
             const metricsPanel = document.querySelector('.metrics-panel');
-            const moviolaBar = document.querySelector('.moviola-bar');
-            const legendBar = document.querySelector('.legend-bar');
+            const iconEl = document.getElementById('dock-view-icon');
+            const titleEl = document.getElementById('dock-view-title');
 
             if (viewId === 'view-3d') {
-                if (workspace) workspace.style.display = 'none';
-                if (controlsPanel) controlsPanel.style.display = 'flex';
+                if (workspace) workspace.classList.remove('open');
                 if (metricsPanel) metricsPanel.style.display = 'block';
-                if (moviolaBar) moviolaBar.style.display = 'flex';
-                if (legendBar) legendBar.style.display = 'flex';
+
+                // Restaurar cámara a posición central según modo de grupo activo
+                if (activeGroupMode === "g1") {
+                    targetCamPos.set(-4.0, -1.0, 13);
+                    targetLookAt.set(-4.0, -0.8, 0);
+                } else if (activeGroupMode === "g2") {
+                    targetCamPos.set(5.2, 0.8, 15);
+                    targetLookAt.set(4.8, 0.8, 0);
+                } else {
+                    targetCamPos.set(0, -3, 26);
+                    targetLookAt.set(0.5, 0, 0);
+                }
             } else {
-                if (workspace) workspace.style.display = 'block';
-                if (controlsPanel) controlsPanel.style.display = 'none';
+                if (workspace) {
+                    workspace.classList.add('open');
+                    // En modo split, reencuadrar cámara hacia la izquierda para que el 3D permanezca vivo
+                    if (!workspace.classList.contains('maximized')) {
+                        targetCamPos.set(-4.5, -2.0, 24);
+                        targetLookAt.set(-3.5, 0, 0);
+                    }
+                }
                 if (metricsPanel) metricsPanel.style.display = 'none';
-                if (moviolaBar) moviolaBar.style.display = 'none';
-                if (legendBar) legendBar.style.display = 'none';
 
                 // Cerrar visor embebido si estuviera abierto
                 if (typeof closeEmbeddedViewer === 'function') closeEmbeddedViewer();
 
-                // Mostrar la subvistas seleccionada
+                // Mostrar la subvista seleccionada
                 document.querySelectorAll('.analytical-subview').forEach(sv => {
                     if (sv.id === viewId) {
                         sv.classList.add('active');
@@ -2331,10 +3243,27 @@
                     }
                 });
 
-                // Inicializar radar en informes individuales si aún no se ha hecho
-                if (viewId === 'view-individuales' && !radarInitialized) {
-                    updateSubjectDetail("1A");
-                    radarInitialized = true;
+                // Actualizar título e icono del dock
+                if (viewId === 'view-densidades') {
+                    if (iconEl) iconEl.textContent = '⚡';
+                    if (titleEl) titleEl.textContent = 'MOTOR DE LAS 10 DENSIDADES SOCIO-TERMODINÁMICAS';
+                    updateDensityChart();
+                } else if (viewId === 'view-tablas') {
+                    if (iconEl) iconEl.textContent = '📊';
+                    if (titleEl) titleEl.textContent = 'TABLAS SOCIOMÉTRICAS CANÓNICAS';
+                } else if (viewId === 'view-graficos') {
+                    if (iconEl) iconEl.textContent = '🖼️';
+                    if (titleEl) titleEl.textContent = 'GALERÍA FACTORIAL Y MAPAS PUNTILLISTAS';
+                } else if (viewId === 'view-individuales') {
+                    if (iconEl) iconEl.textContent = '👤';
+                    if (titleEl) titleEl.textContent = 'FICHAS E INFORMES INDIVIDUALES (N=10)';
+                    if (!radarInitialized) {
+                        updateSubjectDetail("1A");
+                        radarInitialized = true;
+                    }
+                } else if (viewId === 'view-sintesis') {
+                    if (iconEl) iconEl.textContent = '📑';
+                    if (titleEl) titleEl.textContent = 'DOSSIER Y SÍNTESIS GLOBAL PSICOTHEMA';
                 }
             }
         }
