@@ -4110,28 +4110,41 @@
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             renderer.domElement.addEventListener('click', onCanvasClick);
 
-            setupUI();
-            updateSubjectDetail("1A");
-            updateTimelineState(1.00);
-            updateDensityChart('g1_mean');
-            initPentagramaView();
-            renderCajDendrogram();
-            renderProximityMatrix();
+            try {
+                setupUI();
+            } catch (err) {
+                console.error("setupUI error:", err);
+            }
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const reqView = urlParams.get('view');
-            if (reqView) {
-                if (reqView === '2' || reqView === 'densidades' || reqView === 'view-densidades') {
-                    switchMainView('view-densidades');
-                } else if (reqView === '3' || reqView === 'caj' || reqView === 'view-caj') {
-                    switchMainView('view-caj');
-                } else if (reqView === '4' || reqView === 'proximidades' || reqView === 'view-proximidades') {
-                    switchMainView('view-proximidades');
-                } else if (reqView === '5' || reqView === 'tablas' || reqView === 'view-tablas') {
-                    switchMainView('view-tablas');
-                } else {
-                    switchMainView(reqView);
+            try {
+                updateSubjectDetail("1A");
+                updateTimelineState(1.00);
+                updateDensityChart('g1_mean');
+                initPentagramaView();
+                renderCajDendrogram();
+                renderProximityMatrix();
+            } catch (err) {
+                console.error("init post-setup error:", err);
+            }
+
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const reqView = urlParams.get('view');
+                if (reqView) {
+                    if (reqView === '2' || reqView === 'densidades' || reqView === 'view-densidades') {
+                        switchMainView('view-densidades');
+                    } else if (reqView === '3' || reqView === 'caj' || reqView === 'view-caj') {
+                        switchMainView('view-caj');
+                    } else if (reqView === '4' || reqView === 'proximidades' || reqView === 'view-proximidades') {
+                        switchMainView('view-proximidades');
+                    } else if (reqView === '5' || reqView === 'tablas' || reqView === 'view-tablas') {
+                        switchMainView('view-tablas');
+                    } else {
+                        switchMainView(reqView);
+                    }
                 }
+            } catch (err) {
+                console.error("URL view param switch error:", err);
             }
 
             animate();
@@ -4752,26 +4765,26 @@
                 if (nav) nav.classList.toggle('collapsed');
             });
             const playBtn = document.getElementById('btn-play-pause');
-            playBtn.addEventListener('click', () => {
+            playBtn?.addEventListener('click', () => {
                 isPlaying = !isPlaying;
-                playBtn.textContent = isPlaying ? "⏸" : "▶";
+                if (playBtn) playBtn.textContent = isPlaying ? "⏸" : "▶";
             });
 
-            document.getElementById('btn-reset-t').addEventListener('click', () => {
+            document.getElementById('btn-reset-t')?.addEventListener('click', () => {
                 isPlaying = false;
-                playBtn.textContent = "▶";
+                if (playBtn) playBtn.textContent = "▶";
                 updateTimelineState(0.0);
             });
 
             const slider = document.getElementById('timeline-slider');
-            slider.addEventListener('input', (e) => {
+            slider?.addEventListener('input', (e) => {
                 isPlaying = false;
-                playBtn.textContent = "▶";
+                if (playBtn) playBtn.textContent = "▶";
                 updateTimelineState(parseFloat(e.target.value));
             });
 
             const speedBtn = document.getElementById('btn-toggle-speed');
-            speedBtn.addEventListener('click', () => {
+            speedBtn?.addEventListener('click', () => {
                 animSpeed = animSpeed === 1.0 ? 2.0 : (animSpeed === 2.0 ? 0.5 : 1.0);
                 speedBtn.textContent = `⚡ Vel: ${animSpeed}x`;
             });
@@ -4780,33 +4793,33 @@
                 btn.addEventListener('click', () => setGroupMode(btn.getAttribute('data-mode')));
             });
 
-            document.getElementById('btn-reset-cam').addEventListener('click', () => {
+            document.getElementById('btn-reset-cam')?.addEventListener('click', () => {
                 setGroupMode(activeGroupMode);
             });
 
             const btnE = document.getElementById('btn-toggle-e');
-            btnE.addEventListener('click', () => {
+            btnE?.addEventListener('click', () => {
                 showElecciones = !showElecciones;
                 btnE.classList.toggle('active', showElecciones);
                 updateTimelineState(0.00);
             });
 
             const btnR = document.getElementById('btn-toggle-r');
-            btnR.addEventListener('click', () => {
+            btnR?.addEventListener('click', () => {
                 showRechazos = !showRechazos;
                 btnR.classList.toggle('active', showRechazos);
                 updateTimelineState(0.00);
             });
 
             const btnV = document.getElementById('btn-toggle-vectors');
-            btnV.addEventListener('click', () => {
+            btnV?.addEventListener('click', () => {
                 showCentroidsVectors = !showCentroidsVectors;
                 btnV.classList.toggle('active', showCentroidsVectors);
                 updateTimelineState(0.00);
             });
 
             const btnG = document.getElementById('btn-toggle-grassmann');
-            btnG.addEventListener('click', () => {
+            btnG?.addEventListener('click', () => {
                 showGrassmannArc = !showGrassmannArc;
                 btnG.classList.toggle('active', showGrassmannArc);
                 updateTimelineState(0.00);
@@ -4828,9 +4841,9 @@
 
             // Modal Nota Explicativa
             const modalNota = document.getElementById('modal-nota');
-            document.getElementById('btn-open-nota').addEventListener('click', () => modalNota.style.display = 'flex');
-            document.getElementById('btn-close-nota').addEventListener('click', () => modalNota.style.display = 'none');
-            modalNota.addEventListener('click', (e) => { if (e.target === modalNota) modalNota.style.display = 'none'; });
+            document.getElementById('btn-open-nota')?.addEventListener('click', () => { if (modalNota) modalNota.style.display = 'flex'; });
+            document.getElementById('btn-close-nota')?.addEventListener('click', () => { if (modalNota) modalNota.style.display = 'none'; });
+            modalNota?.addEventListener('click', (e) => { if (e.target === modalNota) modalNota.style.display = 'none'; });
 
             // Vistas gestionadas por el menú del HUD switchMainView()
 
@@ -4886,8 +4899,8 @@
             // Lightbox
             const lightbox = document.getElementById('lightbox-overlay');
             const lbClose = document.getElementById('lightbox-close');
-            lbClose.addEventListener('click', () => lightbox.style.display = 'none');
-            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.style.display = 'none'; });
+            lbClose?.addEventListener('click', () => { if (lightbox) lightbox.style.display = 'none'; });
+            lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.style.display = 'none'; });
         }
 
         // =========================================================================
