@@ -17,8 +17,8 @@
         }
 
         #canvas-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            z-index: 1; overflow: hidden;
         }
 
         /* Cabecera HUD Superior */
@@ -521,9 +521,9 @@
             background: rgba(56, 189, 248, 0.3); transform: translateY(-1px);
         }
 
-        /* MENÚ GENERAL VERTICAL ACCESIBLE (DERECHA Y ARRIBA) */
+        /* MENÚ GENERAL VERTICAL ACCESIBLE (DERECHA Y BAJADO MÁS) */
         .vertical-dock-nav {
-            position: fixed; top: 76px; right: 18px; z-index: 140;
+            position: fixed; top: 140px; right: 18px; z-index: 140;
             width: 220px; background: rgba(11, 19, 43, 0.92);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px;
@@ -718,7 +718,150 @@
       cursor: default;
     }
 
-</style>
+
+        /* =========================================================================
+           ESTILOS DEL PENTAGRAMA SOCIO-TERMODINÁMICO (DENSIDAD MÚLTIPLE 10D)
+           ========================================================================= */
+        .controls-toolbar {
+            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+            background: rgba(255, 255, 255, 0.03); padding: 10px 14px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 12px;
+        }
+        .ctrl-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        .ctrl-label {
+            font-size: 0.68rem; color: #94A3B8; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-right: 2px;
+        }
+        .btn-toggle {
+            background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #CBD5E1; padding: 4px 8px; border-radius: 5px; font-size: 0.72rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-toggle:hover {
+            background: rgba(0, 245, 212, 0.15); color: #FFFFFF; border-color: rgba(0, 245, 212, 0.4);
+        }
+        .btn-toggle.active {
+            background: #00F5D4; color: #0B132B; border-color: #00F5D4; font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 245, 212, 0.4);
+        }
+        .canvas-wrapper {
+            position: relative; width: 100%; background: #0B132B; border-radius: 8px;
+            overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 12px;
+        }
+        #pentagrama-canvas { display: block; width: 100%; }
+
+        .legend-strip {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px; padding: 6px 12px; display: flex; flex-wrap: wrap; gap: 10px;
+            align-items: center; justify-content: center; margin-bottom: 14px; font-size: 0.72rem;
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; color: #94A3B8; }
+        .legend-key {
+            font-family: 'Roboto Mono', monospace; font-weight: 700;
+            background: rgba(0, 245, 212, 0.15); color: #00FF87; padding: 1px 5px;
+            border-radius: 4px; border: 1px solid rgba(0, 255, 135, 0.3); font-size: 0.7rem;
+        }
+
+        .table-card {
+            background: rgba(255, 255, 255, 0.025); border: 1px solid rgba(0, 245, 212, 0.2);
+            border-radius: 8px; padding: 14px 18px; margin-top: 14px;
+        }
+        .table-header-title {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.84rem; font-weight: 700; color: #00F5D4; margin-bottom: 10px;
+        }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+        .data-table th {
+            background: rgba(0, 245, 212, 0.08); color: #00FF87; padding: 7px 9px;
+            text-align: left; font-family: 'Roboto Mono', monospace; font-size: 0.70rem;
+            border-bottom: 1px solid rgba(0, 245, 212, 0.2);
+        }
+        .data-table td { padding: 6px 9px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #E2E8F0; }
+        .data-table tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .delta-bar { display: inline-block; height: 6px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+
+        .extremes-hud-bar {
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+            gap: 8px; background: rgba(11, 19, 43, 0.95); border: 1px solid rgba(0, 245, 212, 0.28);
+            border-radius: 8px; padding: 6px 14px; margin-bottom: 12px; font-size: 0.74rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .extremes-metric { display: flex; align-items: center; gap: 5px; }
+        .extremes-label { color: #94A3B8; font-weight: 600; text-transform: uppercase; font-size: 0.66rem; }
+        .extremes-val-min {
+            font-family: 'Roboto Mono', monospace; font-weight: 800; color: #FF007F;
+            background: rgba(255, 0, 127, 0.14); padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(255, 0, 127, 0.35);
+        }
+        .extremes-val-max {
+            font-family: 'Roboto Mono', monospace; font-weight: 800; color: #00FF87;
+            background: rgba(0, 255, 135, 0.14); padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(0, 255, 135, 0.35);
+        }
+        .extremes-val-range {
+            font-family: 'Roboto Mono', monospace; font-weight: 800; color: #FFE600;
+            background: rgba(255, 230, 0, 0.14); padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(255, 230, 0, 0.35);
+        }
+        .badge-ext-tag { font-size: 0.63rem; font-family: 'Roboto Mono', monospace; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 4px; }
+        .badge-ext-max { background: rgba(0, 255, 135, 0.2); color: #00FF87; border: 1px solid rgba(0, 255, 135, 0.4); }
+        .badge-ext-min { background: rgba(255, 0, 127, 0.2); color: #FF007F; border: 1px solid rgba(255, 0, 127, 0.4); }
+
+        .penta-workspace-layout {
+            display: grid; grid-template-columns: 1fr 310px; gap: 14px; margin-bottom: 14px; align-items: start;
+        }
+        @media (max-width: 1100px) { .penta-workspace-layout { grid-template-columns: 1fr; } }
+        .penta-workspace-layout.sidebar-hidden { grid-template-columns: 1fr; }
+        .penta-workspace-layout.sidebar-hidden .penta-sidebar-panel { display: none; }
+        .penta-canvas-column { display: flex; flex-direction: column; min-width: 0; }
+
+        .penta-sidebar-panel {
+            background: rgba(255, 255, 255, 0.025); border: 1px solid rgba(0, 245, 212, 0.25);
+            border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.4);
+        }
+        .sidebar-header { border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px; }
+        .sidebar-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .sidebar-title { font-size: 0.84rem; font-weight: 700; color: #00F5D4; display: flex; align-items: center; gap: 5px; }
+        .active-count-badge {
+            font-family: 'Roboto Mono', monospace; font-size: 0.70rem; background: rgba(0, 245, 212, 0.15);
+            color: #00FF87; border: 1px solid rgba(0, 255, 135, 0.3); padding: 1px 7px; border-radius: 10px; font-weight: 700;
+        }
+        .sidebar-presets { display: flex; flex-wrap: wrap; gap: 4px; }
+        .btn-preset {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #CBD5E1; padding: 3px 7px; border-radius: 4px; font-size: 0.67rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-preset:hover { background: rgba(0, 245, 212, 0.18); color: #00FF87; border-color: rgba(0, 245, 212, 0.45); }
+        .sidebar-scroll-list { max-height: 440px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 3px; }
+        .sidebar-scroll-list::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll-list::-webkit-scrollbar-thumb { background: rgba(0, 245, 212, 0.25); border-radius: 4px; }
+        .profile-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px; padding: 6px 8px; display: flex; align-items: center; gap: 7px;
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
+        }
+        .profile-card:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.22); transform: translateX(2px); }
+        .profile-card.active { background: rgba(0, 245, 212, 0.09); border-color: rgba(0, 245, 212, 0.4); }
+        .profile-card.highlighted { box-shadow: 0 0 14px rgba(0, 245, 212, 0.5); border-color: #00F5D4; }
+        .profile-checkbox { cursor: pointer; accent-color: #00F5D4; width: 13px; height: 13px; flex-shrink: 0; }
+        .profile-color-bar { width: 4px; height: 26px; border-radius: 2px; flex-shrink: 0; }
+        .profile-info { flex: 1; min-width: 0; }
+        .profile-title-row { display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+        .profile-title { font-size: 0.72rem; font-weight: 700; color: #F1F5F9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-tag { font-family: 'Roboto Mono', monospace; font-size: 0.62rem; font-weight: 700; padding: 1px 4px; border-radius: 3px; flex-shrink: 0; }
+        .profile-sub { font-size: 0.64rem; color: #94A3B8; margin-top: 1px; display: flex; justify-content: space-between; }
+        .profile-metrics { font-family: 'Roboto Mono', monospace; font-size: 0.64rem; color: #64748B; }
+        .sidebar-footer-hint { font-size: 0.66rem; color: #64748B; line-height: 1.4; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 6px; }
+
+        .pedagogical-card {
+            margin-top: 16px; background: rgba(11, 19, 43, 0.85); border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 8px; padding: 14px 18px;
+        }
+        .pedagogical-title { color: #00F5D4; font-size: 0.84rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .pedagogical-body { font-size: 0.78rem; color: #CBD5E1; line-height: 1.5; }
+
+    </style>
 </head>
 <body>
 
@@ -1025,133 +1168,148 @@
         <!-- =========================================================
              VISTA 0: MOTOR INTERACTIVO DE LAS 10 DENSIDADES (PSICOTHEMA)
              ========================================================= -->
-        <div id="view-densidades" class="analytical-subview">
-            <div class="tbl-item-header" style="margin-bottom:12px;">
+                <div id="view-densidades" class="analytical-subview">
+            <div class="tbl-item-header" style="margin-bottom:12px; border-bottom:1px solid rgba(0, 245, 212, 0.2); padding-bottom:10px;">
                 <div class="tbl-item-title" style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:#00FF87;">⚡ MOTOR DE LAS 10 DENSIDADES SOCIO-TERMODINÁMICAS</span>
-                    <span class="badge-sub badge-g1">Datos Revista Psicothema (N=10)</span>
-                </div>
-                <div class="tbl-item-subtitle">
-                    Descomposición analítica completa del caso empírico canónico G2T1C1: Densidades del Tetragrama (D1..D4), Relativas Netas (SDA, SRC, SDR), Absolutas Brutas (BDA, BRC, BDR) e Inercias Diferenciales (Dif_r, Dif_a, Dif-DR).
-                </div>
-            </div>
-
-            <!-- BARRA DE PRESETS Y SELECTORES DEL MOTOR DE DENSIDADES -->
-            <div style="background:rgba(15, 23, 42, 0.85); border:1px solid rgba(56, 189, 248, 0.25); border-radius:10px; padding:10px 14px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <!-- Presets Principales -->
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                        <span style="font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono'; font-weight:700;">PRESETS:</span>
-                        <button class="btn-ctrl active density-preset-btn" id="dbtn-g1" onclick="setDensityEntity('g1_mean')">🟢 Media G1 (Cohesión)</button>
-                        <button class="btn-ctrl density-preset-btn" id="dbtn-g2" onclick="setDensityEntity('g2_mean')">🔴 Media G2 (Fricción)</button>
-                        <button class="btn-ctrl density-preset-btn" id="dbtn-5b" onclick="setDensityEntity('5B')" style="border-color:#FF007F; color:#FF007F;">🚨 5B (Ostracismo Crítico)</button>
-                        <button class="btn-ctrl density-preset-btn" id="dbtn-2a" onclick="setDensityEntity('2A')">⭐ 2A (Atractor Líder)</button>
-                        <button class="btn-ctrl density-preset-btn" id="dbtn-moviola" onclick="toggleDensityMoviolaMode()">⏱️ Moviola Dinámica (t=0..1)</button>
-                    </div>
-
-                    <!-- Escala de Visualización -->
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:0.70rem; color:#CBD5E1; font-weight:700;">Escala:</span>
-                        <button class="btn-ctrl active" id="btn-density-scale-unit" onclick="setDensityScale(false)">Unitario Diádico</button>
-                        <button class="btn-ctrl" id="btn-density-scale-acc" onclick="setDensityScale(true)">Acumulado Nodal</button>
-                    </div>
-                </div>
-
-                <!-- Selector por Nodos Individuales -->
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
-                    <span style="font-size:0.68rem; color:#00FF87; font-weight:700;">NODOS G1:</span>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('1A')">1A</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('2A')">2A</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('3A')">3A</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('4A')">4A</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('5A')">5A</button>
-                    
-                    <span style="font-size:0.68rem; color:#FF007F; font-weight:700; margin-left:8px;">NODOS G2:</span>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('1B')">1B</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('2B')">2B</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('3B')">3B</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('4B')">4B</button>
-                    <button class="btn-tbl-pill" onclick="setDensityEntity('5B')" style="border-color:#FF007F; color:#FF007F; font-weight:800;">5B (Ost)</button>
-                </div>
-            </div>
-
-            <!-- LIENZO SVG ANIMADO DE LAS 10 DENSIDADES -->
-            <div style="background:rgba(8, 13, 26, 0.95); border:1.5px solid rgba(56, 189, 248, 0.35); border-radius:12px; padding:12px 16px; margin-bottom:16px; box-shadow:0 8px 30px rgba(0,0,0,0.5);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-family:'Roboto Mono'; font-size:0.80rem; font-weight:800; color:#FFFFFF;">GRAFOS RELACIONALES · 10 DENSIDADES &amp; INERCIAS</span>
-                        <span id="dmain-active-pill" style="font-size:0.68rem; font-weight:800; padding:2px 8px; border-radius:10px; background:rgba(0,255,135,0.15); color:#00FF87; border:1px solid rgba(0,255,135,0.4);">
-                            Media G1 (Cohesión)
-                        </span>
-                    </div>
-                    <span style="font-family:'Roboto Mono'; font-size:0.72rem; color:#94A3B8;">
-                        BDR = BDA + BRC | SDR = SDA + SRC | Dif-DR = BDR - SDR
+                    <span style="color:#00F5D4; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+                        🎼 Pentagrama Socio-Termodinámico • Densidad Múltiple (10D)
+                    </span>
+                    <span style="font-family:'Roboto Mono', monospace; font-size:0.72rem; background:rgba(0, 245, 212, 0.12); color:#00FF87; border:1px solid rgba(0, 255, 135, 0.3); padding:4px 10px; border-radius:6px;">
+                        CANÓNICO VISORD • Gr(k, N) SMIb
                     </span>
                 </div>
-
-                <!-- Lienzo SVG -->
-                <div style="width:100%; height:260px; position:relative;">
-                    <svg id="density-main-svg" viewBox="0 0 540 250" style="width:100%; height:100%; display:block; overflow:visible;">
-                        <defs>
-                            <filter id="neon-glow-main" x="-40%" y="-40%" width="180%" height="180%">
-                                <feGaussianBlur stdDeviation="3" result="blur" />
-                                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                            </filter>
-                        </defs>
-
-                        <!-- 3 Zonas de Fondo -->
-                        <rect x="20" y="8" width="168" height="236" rx="6" fill="rgba(56, 189, 248, 0.04)" stroke="rgba(56, 189, 248, 0.2)" stroke-dasharray="3,3" />
-                        <text x="104" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#38BDF8">TETRAGRAMA (D1..D4)</text>
-
-                        <rect x="198" y="8" width="162" height="236" rx="6" fill="rgba(0, 255, 135, 0.04)" stroke="rgba(0, 255, 135, 0.2)" stroke-dasharray="3,3" />
-                        <text x="279" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#00FF87">RELATIVAS NETAS</text>
-
-                        <rect x="370" y="8" width="158" height="236" rx="6" fill="rgba(255, 230, 0, 0.04)" stroke="rgba(255, 230, 0, 0.2)" stroke-dasharray="3,3" />
-                        <text x="449" y="22" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFE600">ABSOLUTAS BRUTAS</text>
-
-                        <!-- Líneas Guía de Escala -->
-                        <line x1="20" y1="38" x2="528" y2="38" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                        <text id="lbl-main-scale-pos" x="17" y="41" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" fill="#64748B">+4.0</text>
-
-                        <line x1="20" y1="135" x2="528" y2="135" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="4,4" />
-                        <text x="17" y="138" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" font-weight="700" fill="#94A3B8">0.0</text>
-
-                        <line x1="20" y1="232" x2="528" y2="232" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                        <text id="lbl-main-scale-neg" x="17" y="235" text-anchor="end" font-family="'Roboto Mono'" font-size="7.5" fill="#64748B">-4.0</text>
-
-                        <!-- LÍNEAS DIFERENCIALES (INERCIAS) -->
-                        <g id="dmain-grp-dif-r">
-                            <line id="dmain-line-dif-r" x1="218" y1="86" x2="272" y2="86" stroke="#FF9F1C" stroke-width="2.2" stroke-dasharray="3,2" />
-                            <rect id="dmain-bg-dif-r" x="225" y="70" width="42" height="13" rx="3" fill="#080D1A" stroke="#FF9F1C" stroke-width="1" />
-                            <text id="dmain-lbl-dif-r" x="246" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF9F1C">Dif_r: -0.10</text>
-                        </g>
-
-                        <g id="dmain-grp-dif-a">
-                            <line id="dmain-line-dif-a" x1="390" y1="86" x2="444" y2="86" stroke="#38BDF8" stroke-width="2.2" stroke-dasharray="3,2" />
-                            <rect id="dmain-bg-dif-a" x="396" y="70" width="44" height="13" rx="3" fill="#080D1A" stroke="#38BDF8" stroke-width="1" />
-                            <text id="dmain-lbl-dif-a" x="418" y="80" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#38BDF8">Dif_a: +0.10</text>
-                        </g>
-
-                        <g id="dmain-grp-dif-i">
-                            <path id="dmain-arc-dif-i" d="M 326 38 Q 412 18 498 38" fill="none" stroke="#FF007F" stroke-width="2.2" stroke-dasharray="4,2" />
-                            <rect id="dmain-bg-dif-i" x="388" y="10" width="48" height="13" rx="3" fill="#080D1A" stroke="#FF007F" stroke-width="1" />
-                            <text id="dmain-lbl-dif-i" x="412" y="20" text-anchor="middle" font-family="'Roboto Mono'" font-size="7.5" font-weight="800" fill="#FF007F">Dif-DR: 55.76</text>
-                        </g>
-
-                        <!-- 10 NODOS CON VÁSTAGOS -->
-                        <g id="dmain-grp-d1"><line id="dmain-stem-d1" x1="41" y1="135" x2="41" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dmain-dot-d1" cx="41" cy="108" r="5.5" fill="#FFE600" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d1" x="41" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#FFE600">-1.40</text><text x="41" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D1</text><text x="41" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">pDA</text></g>
-                        <g id="dmain-grp-d2"><line id="dmain-stem-d2" x1="83" y1="135" x2="83" y2="113" stroke="#00FF87" stroke-width="1.8" /><circle id="dmain-dot-d2" cx="83" cy="113" r="5.5" fill="#00FF87" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d2" x="83" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#00FF87">-6.42</text><text x="83" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D2</text><text x="83" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">DA</text></g>
-                        <g id="dmain-grp-d3"><line id="dmain-stem-d3" x1="125" y1="135" x2="125" y2="113" stroke="#00F0FF" stroke-width="1.8" /><circle id="dmain-dot-d3" cx="125" cy="113" r="5.5" fill="#00F0FF" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d3" x="125" y="104" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#00F0FF">-6.49</text><text x="125" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D3</text><text x="125" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">REC</text></g>
-                        <g id="dmain-grp-d4"><line id="dmain-stem-d4" x1="167" y1="135" x2="167" y2="108" stroke="#FFE600" stroke-width="1.8" /><circle id="dmain-dot-d4" cx="167" cy="108" r="5.5" fill="#FFE600" stroke="#FFF" stroke-width="1.5" /><text id="dmain-txt-d4" x="167" y="99" text-anchor="middle" font-family="'Roboto Mono'" font-size="8" font-weight="800" fill="#FFE600">-1.43</text><text x="167" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">D4</text><text x="167" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">pREC</text></g>
-                        <g id="dmain-grp-sda"><line id="dmain-stem-sda" x1="218" y1="135" x2="218" y2="86" stroke="#38BDF8" stroke-width="2.2" /><circle id="dmain-dot-sda" cx="218" cy="86" r="6" fill="#38BDF8" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-sda" x="218" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#38BDF8">-7.82</text><text x="218" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#38BDF8">SDA</text><text x="218" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Dada</text></g>
-                        <g id="dmain-grp-src"><line id="dmain-stem-src" x1="272" y1="135" x2="272" y2="86" stroke="#A855F7" stroke-width="2.2" /><circle id="dmain-dot-src" cx="272" cy="86" r="6" fill="#A855F7" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-src" x="272" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#A855F7">-7.92</text><text x="272" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#A855F7">SRC</text><text x="272" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Recib</text></g>
-                        <g id="dmain-grp-sdr"><line id="dmain-stem-sdr" x1="326" y1="135" x2="326" y2="38" stroke="#00FF87" stroke-width="2.5" /><circle id="dmain-dot-sdr" cx="326" cy="38" r="7" fill="#00FF87" stroke="#FFF" stroke-width="2" filter="url(#neon-glow-main)" /><text id="dmain-txt-sdr" x="326" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#00FF87">-15.74</text><text x="326" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#00FF87">SDR</text><text x="326" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Total</text></g>
-                        <g id="dmain-grp-bda"><line id="dmain-stem-bda" x1="390" y1="135" x2="390" y2="86" stroke="#CBD5E1" stroke-width="2.2" /><circle id="dmain-dot-bda" cx="390" cy="86" r="6" fill="#CBD5E1" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-bda" x="390" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#CBD5E1">19.96</text><text x="390" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">BDA</text><text x="390" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Masa</text></g>
-                        <g id="dmain-grp-brc"><line id="dmain-stem-brc" x1="444" y1="135" x2="444" y2="86" stroke="#CBD5E1" stroke-width="2.2" /><circle id="dmain-dot-brc" cx="444" cy="86" r="6" fill="#CBD5E1" stroke="#FFF" stroke-width="1.8" /><text id="dmain-txt-brc" x="444" y="77" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="800" fill="#CBD5E1">20.06</text><text x="444" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="8.5" font-weight="900" fill="#FFF">BRC</text><text x="444" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">Masa</text></g>
-                        <g id="dmain-grp-bdr"><line id="dmain-stem-bdr" x1="498" y1="135" x2="498" y2="38" stroke="#FFE600" stroke-width="2.5" /><circle id="dmain-dot-bdr" cx="498" cy="38" r="7" fill="#FFE600" stroke="#FFF" stroke-width="2" filter="url(#neon-glow-main)" /><text id="dmain-txt-bdr" x="498" y="28" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#FFE600">40.02</text><text x="498" y="222" text-anchor="middle" font-family="'Roboto Mono'" font-size="9" font-weight="900" fill="#FFE600">BDR</text><text x="498" y="233" text-anchor="middle" font-family="'Roboto Mono'" font-size="7" fill="#94A3B8">M.Total</text></g>
-                    </svg>
+                <div class="tbl-item-subtitle" style="margin-top:4px; font-size:0.78rem; color:#94A3B8;">
+                    10 Estaciones Canónicas (BDA, SDA, A1, A2, A3, A4, SRC, BRC, SDR, BDR) &bull; Cinta 3D Interfacial &bull; Dinámica Grupal en Tiempo Real
                 </div>
             </div>
+
+            <!-- BARRA DE CONTROLES A DEMANDA -->
+            <div class="controls-toolbar" id="penta-controls-toolbar">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">PRESET:</span>
+                    <button class="btn-toggle active" id="pbtn-preset-mu-t0" onclick="setPentaPreset('compare_mu_t0')">μ vs t₀</button>
+                    <button class="btn-toggle" id="pbtn-preset-g1-g2" onclick="setPentaPreset('compare_g1_g2')">🟢 G1 vs 🔴 G2</button>
+                    <button class="btn-toggle" id="pbtn-preset-2a-5b" onclick="setPentaPreset('compare_2a_5b')" style="border-color:rgba(255,0,127,0.4);">⭐ 2A vs 🚨 5B</button>
+                    <button class="btn-toggle" id="pbtn-preset-top" onclick="setPentaPreset('top_emi_rec')">Top Emisor vs Receptor</button>
+                    <button class="btn-toggle" id="pbtn-preset-ao" onclick="setPentaPreset('alpha_omega')">Alpha vs Omega</button>
+                    <button class="btn-toggle" id="pbtn-preset-all" onclick="setPentaPreset('all_nodes')">Todos los Sujetos</button>
+                    <button class="btn-toggle" id="pbtn-preset-mu" onclick="setPentaPreset('only_mu')">Solo Media (μ)</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Orientación:</span>
+                    <button class="btn-toggle active" id="pbtn-orient-h" onclick="setPentaOrient('horizontal')">Horizontal</button>
+                    <button class="btn-toggle" id="pbtn-orient-v" onclick="setPentaOrient('vertical')">Vertical</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Trazo:</span>
+                    <button class="btn-toggle active" id="pbtn-curve-c" onclick="setPentaCurve('curved')">Perfil Curvado</button>
+                    <button class="btn-toggle" id="pbtn-curve-s" onclick="setPentaCurve('straight')">Quebrada Pura</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Etiquetas:</span>
+                    <button class="btn-toggle active" id="pbtn-labels-s" onclick="setPentaLabels('simple')">Letra Simple</button>
+                    <button class="btn-toggle" id="pbtn-labels-f" onclick="setPentaLabels('full')">Siglas</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Números:</span>
+                    <button class="btn-toggle active" id="pbtn-nums-c" onclick="setPentaNumbers('clean')">Ocultos</button>
+                    <button class="btn-toggle" id="pbtn-nums-s" onclick="setPentaNumbers('show')">En Vértices</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Volumen 3D:</span>
+                    <button class="btn-toggle active" id="pbtn-vol-on" onclick="setPentaVolume('on')">Cinta 3D</button>
+                    <button class="btn-toggle" id="pbtn-vol-off" onclick="setPentaVolume('off')">Líneas</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Escala:</span>
+                    <button class="btn-toggle active" id="pbtn-scale-auto" onclick="setPentaScale('auto')">Auto</button>
+                    <button class="btn-toggle" id="pbtn-scale-global" onclick="setPentaScale('global')">Global</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:6px;">
+                    <span class="ctrl-label">Métrica:</span>
+                    <button class="btn-toggle active" id="pbtn-metric-unit" onclick="setPentaScaleMode('unit')">Unitario Diádico</button>
+                    <button class="btn-toggle" id="pbtn-metric-acc" onclick="setPentaScaleMode('acc')">Acumulado Factual</button>
+                </div>
+
+                <div class="ctrl-group" style="margin-left:auto;">
+                    <button class="btn-toggle active" id="btn-toggle-sidebar" onclick="togglePentaSidebar()" style="background:rgba(0,245,212,0.18); border-color:#00F5D4; color:#00FF87;">📑 Listado al Margen</button>
+                </div>
+            </div>
+
+            <!-- HUD DE EXTREMOS DINÁMICOS -->
+            <div class="extremes-hud-bar" id="penta-extremes-hud"></div>
+
+            <!-- ESPACIO DE TRABAJO: CANVAS + SIDEBAR AL MARGEN -->
+            <div class="penta-workspace-layout" id="penta-workspace">
+                <div class="penta-canvas-column">
+                    <div class="canvas-wrapper">
+                        <canvas id="pentagrama-canvas" height="470"></canvas>
+                    </div>
+                    <div class="legend-strip" id="penta-legend-strip">
+                        <div class="legend-item"><span class="legend-key">B</span> Densidad Bruta Dador (BDA)</div>
+                        <div class="legend-item"><span class="legend-key">S</span> Densidad Neta Dador (SDA)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(0,255,135,0.2); color:#00FF87;">1</span> A1: p_DA (Exp. Emisor)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(0,255,135,0.2); color:#00FF87;">2</span> A2: DA (Pref. Emitida)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(0,255,135,0.2); color:#00FF87;">3</span> A3: RECIBE (Pref. Recibida)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(0,255,135,0.2); color:#00FF87;">4</span> A4: p_RECIBE (Exp. Partner)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(192,132,252,0.2); color:#C084FC;">s</span> Densidad Neta Receptor (SRC)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(192,132,252,0.2); color:#C084FC;">b</span> Densidad Bruta Receptor (BRC)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(255,230,0,0.2); color:#FFE600;">Σ</span> Densidad Neta Relacional (SDR)</div>
+                        <div class="legend-item"><span class="legend-key" style="background:rgba(255,230,0,0.2); color:#FFE600;">Ω</span> Densidad Bruta Relacional (BDR)</div>
+                    </div>
+                </div>
+
+                <div class="penta-sidebar-panel" id="penta-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-title-row">
+                            <div class="sidebar-title">
+                                <span>📑 Perfiles al Margen</span>
+                            </div>
+                            <span class="active-count-badge" id="penta-active-badge">2 Superpuestos</span>
+                        </div>
+                        <div class="sidebar-presets">
+                            <button class="btn-preset" onclick="setPentaPreset('compare_mu_t0')">μ vs t₀</button>
+                            <button class="btn-preset" onclick="setPentaPreset('compare_g1_g2')">G1 vs G2</button>
+                            <button class="btn-preset" onclick="setPentaPreset('compare_2a_5b')">2A vs 5B</button>
+                            <button class="btn-preset" onclick="setPentaPreset('top_emi_rec')">Top E/R</button>
+                            <button class="btn-preset" onclick="setPentaPreset('alpha_omega')">Alpha/Omega</button>
+                            <button class="btn-preset" onclick="setPentaPreset('all_nodes')">Todos</button>
+                            <button class="btn-preset" onclick="setPentaPreset('only_mu')">Solo μ</button>
+                        </div>
+                    </div>
+                    <div class="sidebar-scroll-list" id="penta-profile-list"></div>
+                    <div class="sidebar-footer-hint">
+                        💡 <em>Marca/desmarca casillas para superponer cualquier perfil. Pasa el cursor sobre una tarjeta para resaltarla en el pentagrama.</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA DE CANTIDADES COMPARATIVAS PLEGABLE -->
+            <div class="table-card" id="penta-table-card">
+                <div class="table-header-title" onclick="togglePentaTable()" style="cursor:pointer; user-select:none;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span id="penta-table-icon" style="font-size:0.75rem; color:#00F5D4; transition:transform 0.2s; display:inline-block; transform:rotate(90deg);">▶</span>
+                        <span id="penta-table-title">📊 Tabla de Cantidades: Comparativa (Media Grupal (μ) vs Estado Inicial (t₀))</span>
+                    </div>
+                    <span id="penta-table-subtitle" style="font-family:'Roboto Mono'; font-size:0.70rem; color:#94A3B8;">Balance Factual Diferencial &bull; Clic para plegar/expandir</span>
+                </div>
+                <div id="penta-table-content" style="display:block; margin-top:10px; overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr id="penta-table-thead"></tr>
+                        </thead>
+                        <tbody id="penta-table-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
 
             <!-- TABLA CANÓNICA DE PSICOTHEMA: LAS 10 DENSIDADES D(n,10) -->
             <div style="background:rgba(11, 19, 43, 0.85); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:16px; margin-bottom:16px;">
@@ -2016,6 +2174,14 @@
     <script src="lib/OrbitControls.js"></script>
 
     <script>
+        window.onerror = function(msg, url, line, col, error) {
+            console.error("PAGE_ERROR:", msg, "at line", line, "col", col);
+            const errDiv = document.createElement('div');
+            errDiv.id = 'js-runtime-error';
+            errDiv.style = 'position:fixed;top:10px;left:10px;z-index:99999;background:red;color:white;padding:10px;font-size:16px;';
+            errDiv.textContent = `JS ERROR: ${msg} (line ${line})`;
+            document.body.appendChild(errDiv);
+        };
         // =========================================================================
         // BASE DE DATOS CANÓNICA G2T1C1 (Estudio de Caso Empírico)
         // =========================================================================
@@ -2029,15 +2195,15 @@
                 grassmann_dG: 1.455
             },
             centroids: [
-                { id: "1g1t1c", group: "G1", name: "Centroide G1 (1g1t1c)", x: -8.5, y: -1.5, z: 0.0, color: "#FFE600" },
-                { id: "2g1t1c", group: "G2", name: "Centroide G2 (2g1t1c)", x: 8.5, y: 1.5, z: 0.0, color: "#FFE600" }
+                { id: "1g1t1c", group: "G1", name: "Centroide G1 (1g1t1c)", x: -9.5, y: 0.8, z: 0.0, color: "#FFE600" },
+                { id: "2g1t1c", group: "G2", name: "Centroide G2 (2g1t1c)", x: 9.5, y: -0.8, z: 0.0, color: "#FFE600" }
             ],
             subjects: [
-                // GRUPO 1: Cohesión (Verde Neón #00FF87) - Emplazado a la Izquierda (X ≈ -8.5)
+                // GRUPO 1: Cohesión (Verde Neón #00FF87) - Emplazado a la Izquierda (X < 0) con amplio aire
                 {
                     id: "1A", short: "1A", group: "G1", name: "1A (Cohesión G1)",
-                    pos0: new THREE.Vector3(-8.5, -0.5 - 3.2, 0.0),
-                    pos1: new THREE.Vector3(-8.60, -3.80, -0.50),
+                    pos0: new THREE.Vector3(-4.30, 0.00, 0.0),
+                    pos1: new THREE.Vector3(-14.50, -3.50, -0.40),
                     sdr: -0.91, sda: -9.68, srec: -9.81, total: -19.49, ias: 25.85, dif_dr: 45.34,
                     e_emit: "1A (auto), 2A", e_rec: "2A", r_emit: "5A, 4A", r_rec: "5A",
                     status: "Periferia Cohesiva del Núcleo {1,2,3}",
@@ -2045,8 +2211,8 @@
                 },
                 {
                     id: "2A", short: "2A", group: "G1", name: "2A [Líder Atractor G1]",
-                    pos0: new THREE.Vector3(-8.5 + 3.2 * Math.cos(-0.314), -0.5 + 3.2 * Math.sin(-0.314), 0.0),
-                    pos1: new THREE.Vector3(-8.20, -3.20, 0.60),
+                    pos0: new THREE.Vector3(-7.89, 4.95, 0.0),
+                    pos1: new THREE.Vector3(-9.50, -0.60, 0.50),
                     sdr: -0.91, sda: 3.19, srec: 3.17, total: 6.36, ias: 47.97, dif_dr: 41.61,
                     e_emit: "3A (1º), 1A (2º)", e_rec: "1A, 3A (Recíprocas <Ee>)", r_emit: "4A, 5A", r_rec: "4A, 5A",
                     status: "🌟 Atractor Central Socio-Afectivo (Líder)",
@@ -2054,8 +2220,8 @@
                 },
                 {
                     id: "3A", short: "3A", group: "G1", name: "3A (Cohesión G1)",
-                    pos0: new THREE.Vector3(-8.5 + 3.2 * Math.cos(0.942), -0.5 + 3.2 * Math.sin(0.942), 0.0),
-                    pos1: new THREE.Vector3(-9.20, 0.80, -0.30),
+                    pos0: new THREE.Vector3(-13.71, 3.06, 0.0),
+                    pos1: new THREE.Vector3(-5.20, -1.20, 0.20),
                     sdr: -0.91, sda: -1.08, srec: -1.17, total: -2.25, ias: 50.21, dif_dr: 52.45,
                     e_emit: "2A (1º), 3A (auto)", e_rec: "2A", r_emit: "4A, 5A", r_rec: "4A, 5A",
                     status: "Nodo Puente Integrador ({1,2,3} <-> {4,5})",
@@ -2063,8 +2229,8 @@
                 },
                 {
                     id: "4A", short: "4A", group: "G1", name: "4A (Cohesión G1)",
-                    pos0: new THREE.Vector3(-8.5 + 3.2 * Math.cos(2.199), -0.5 + 3.2 * Math.sin(2.199), 0.0),
-                    pos1: new THREE.Vector3(-7.60, 2.10, 0.40),
+                    pos0: new THREE.Vector3(-13.71, -3.06, 0.0),
+                    pos1: new THREE.Vector3(-13.00, 4.00, 0.30),
                     sdr: -0.91, sda: -16.86, srec: -17.00, total: -33.86, ias: 40.22, dif_dr: 74.07,
                     e_emit: "4A (auto), 5A (2º)", e_rec: "5A (Recíproca <Ee>)", r_emit: "3A, 2A", r_rec: "1A, 2A, 3A",
                     status: "Subgrupo Secundario Simétrico {4,5}",
@@ -2072,19 +2238,19 @@
                 },
                 {
                     id: "5A", short: "5A", group: "G1", name: "5A (Cohesión G1)",
-                    pos0: new THREE.Vector3(-8.5 + 3.2 * Math.cos(3.455), -0.5 + 3.2 * Math.sin(3.455), 0.0),
-                    pos1: new THREE.Vector3(-8.40, -0.60, -0.20),
+                    pos0: new THREE.Vector3(-7.89, -4.95, 0.0),
+                    pos1: new THREE.Vector3(-6.50, 4.50, -0.30),
                     sdr: -0.91, sda: -14.69, srec: -14.80, total: -29.49, ias: 35.85, dif_dr: 65.33,
                     e_emit: "5A (auto), 4A (2º)", e_rec: "4A (Recíproca <Ee>)", r_emit: "1A, 3A", r_rec: "1A, 2A, 3A",
                     status: "Subgrupo Secundario Simétrico {4,5}",
                     dossierUrl: "suite_g2t1c1/informes/individuales/Dossier_5A.html"
                 },
 
-                // GRUPO 2: Fricción y Ostracismo (Rosa Neón #FF007F) - Emplazado a la Derecha (X ≈ +8.5)
+                // GRUPO 2: Fricción y Ostracismo (Rosa Neón #FF007F) - Emplazado a la Derecha (X > 0) con amplio aire
                 {
                     id: "1B", short: "1B", group: "G2", name: "1B (Fricción G2)",
-                    pos0: new THREE.Vector3(8.5, -0.5 - 3.2, 0.0),
-                    pos1: new THREE.Vector3(8.20, -4.20, -0.50),
+                    pos0: new THREE.Vector3(4.30, 0.00, 0.0),
+                    pos1: new THREE.Vector3(5.80, -3.00, -0.30),
                     sdr: -1.47, sda: -14.19, srec: -13.99, total: -28.18, ias: 35.82, dif_dr: 63.99,
                     e_emit: "1B (auto), 2B", e_rec: "2B", r_emit: "5B (5º), 4B", r_rec: "4B, 5B",
                     status: "Centroide Intermedio Inestable",
@@ -2092,8 +2258,8 @@
                 },
                 {
                     id: "2B", short: "2B", group: "G2", name: "2B (Fricción G2)",
-                    pos0: new THREE.Vector3(8.5 + 3.2 * Math.cos(-0.314), -0.5 + 3.2 * Math.sin(-0.314), 0.0),
-                    pos1: new THREE.Vector3(7.50, 1.20, 0.60),
+                    pos0: new THREE.Vector3(7.89, 4.95, 0.0),
+                    pos1: new THREE.Vector3(7.20, 2.20, 0.30),
                     sdr: -1.47, sda: -8.27, srec: -9.25, total: -17.52, ias: 31.25, dif_dr: 48.76,
                     e_emit: "2B (auto), 1B", e_rec: "1B, 3B", r_emit: "5B (5º), 4B", r_rec: "ninguno severo",
                     status: "Atractor Unilateral (Sobrecarga de Estatus)",
@@ -2101,8 +2267,8 @@
                 },
                 {
                     id: "3B", short: "3B", group: "G2", name: "3B (Fricción G2)",
-                    pos0: new THREE.Vector3(8.5 + 3.2 * Math.cos(0.942), -0.5 + 3.2 * Math.sin(0.942), 0.0),
-                    pos1: new THREE.Vector3(8.80, -2.40, -0.40),
+                    pos0: new THREE.Vector3(13.71, 3.06, 0.0),
+                    pos1: new THREE.Vector3(12.00, -3.20, -0.20),
                     sdr: -1.47, sda: -10.22, srec: -11.09, total: -21.30, ias: 27.63, dif_dr: 48.93,
                     e_emit: "3B (auto), 2B", e_rec: "auto", r_emit: "5B (5º), 4B", r_rec: "5B",
                     status: "Centroide Desacoplado",
@@ -2110,8 +2276,8 @@
                 },
                 {
                     id: "4B", short: "4B", group: "G2", name: "4B (Fricción G2)",
-                    pos0: new THREE.Vector3(8.5 + 3.2 * Math.cos(2.199), -0.5 + 3.2 * Math.sin(2.199), 0.0),
-                    pos1: new THREE.Vector3(8.20, 1.00, 0.30),
+                    pos0: new THREE.Vector3(13.71, -3.06, 0.0),
+                    pos1: new THREE.Vector3(12.50, 2.50, 0.30),
                     sdr: -1.47, sda: -18.83, srec: -19.76, total: -38.59, ias: 38.83, dif_dr: 77.42,
                     e_emit: "4B (auto), 3B", e_rec: "5B (no correspondida)", r_emit: "5B (5º), 1B", r_rec: "1B, 2B, 3B",
                     status: "Periferia en Tensión / Polarización",
@@ -2119,8 +2285,8 @@
                 },
                 {
                     id: "5B", short: "5B", group: "G2", name: "5B [Ostracismo Periférico]",
-                    pos0: new THREE.Vector3(8.5 + 3.2 * Math.cos(3.455), -0.5 + 3.2 * Math.sin(3.455), 0.0),
-                    pos1: new THREE.Vector3(15.30, 5.20, 1.50),
+                    pos0: new THREE.Vector3(7.89, -4.95, 0.0),
+                    pos1: new THREE.Vector3(20.50, 5.80, 1.20),
                     sdr: -1.47, sda: -32.38, srec: -34.12, total: -66.50, ias: 66.50, dif_dr: 133.00,
                     e_emit: "5B (auto), 4B", e_rec: "0 (Cero elecciones recibidas)",
                     r_emit: "1B (1º), 3B (3º)", r_rec: "1B, 2B, 3B, 4B (¡100% de rechazo por pares!)",
@@ -2218,8 +2384,8 @@
         let starfieldParticles = null;
         const shockwaves = [];
 
-        const targetCamPos = new THREE.Vector3(0, -3, 26);
-        const targetLookAt = new THREE.Vector3(0.5, 0, 0);
+        const targetCamPos = new THREE.Vector3(2.5, 0.0, 31);
+        const targetLookAt = new THREE.Vector3(2.5, 0.0, 0);
 
         const container = document.getElementById('canvas-container');
         const tooltip = document.getElementById('node-tooltip');
@@ -2238,6 +2404,45 @@
             const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
             const sprite = new THREE.Sprite(spriteMaterial);
             sprite.scale.set(3.0, 1.5, 1.0);
+            return sprite;
+        }
+
+        // Insignia tipográfica de alto contraste dentro de las bolas (1A, 2A, 1B, 2B, etc.)
+        function makeInnerBallSprite(text, group, isOst, isLeader, radius) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            const cx = 128, cy = 128;
+
+            // Insignia interior circular con fondo sutil y aro blanco para máxima legibilidad
+            ctx.beginPath();
+            ctx.arc(cx, cy, 96, 0, Math.PI * 2);
+            ctx.fillStyle = isOst ? 'rgba(80, 0, 40, 0.75)' : (group === 'G1' ? 'rgba(0, 38, 18, 0.75)' : 'rgba(65, 12, 35, 0.75)');
+            ctx.fill();
+            ctx.lineWidth = 7;
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.stroke();
+
+            // Texto centrado en la bola
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '900 112px "Roboto Mono", "Segoe UI", monospace, sans-serif';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(text, cx, cy + 6);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                depthTest: false,
+                depthWrite: false
+            });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            const spriteScale = (radius || 1.05) * 1.85;
+            sprite.scale.set(spriteScale, spriteScale, 1.0);
+            sprite.renderOrder = 999;
             return sprite;
         }
 
@@ -2297,6 +2502,1163 @@
                 shockwaves.push(ring);
             }
         }
+
+        
+        // =========================================================================
+        // PENTAGRAMA SOCIO-TERMODINÁMICO DE 10 ESTACIONES (DENSIDAD MÚLTIPLE 10D)
+        // =========================================================================
+        const PENTA_STATIONS = [
+            { id: "bda", simple: "B", code: "BDA", name: "Densidad Bruta Dador", desc: "Masa total emitida (Atracción absoluta)", isTetra: false },
+            { id: "sda", simple: "S", code: "SDA", name: "Densidad Neta Dador", desc: "Balance neto de emisión (+/-)", isTetra: false },
+            { id: "a1",  simple: "1", code: "A1",  name: "A1 = p_DA", desc: "Expectativa que el emisor tiene del partner", isTetra: true, pulse: "1º Pulso", subdesc: "Expectativa Emisor" },
+            { id: "a2",  simple: "2", code: "A2",  name: "A2 = DA", desc: "Preferencia efectiva otorgada al partner", isTetra: true, pulse: "2º Pulso", subdesc: "Elección Emitida" },
+            { id: "a3",  simple: "3", code: "A3",  name: "A3 = RECIBE", desc: "Preferencia efectiva que el partner otorga", isTetra: true, pulse: "3º Pulso", subdesc: "Elección Recibida" },
+            { id: "a4",  simple: "4", code: "A4",  name: "A4 = p_RECIBE", desc: "Expectativa que el partner tiene del emisor", isTetra: true, pulse: "4º Pulso", subdesc: "Expectativa Partner" },
+            { id: "src", simple: "s", code: "SRC", name: "Densidad Neta Receptor", desc: "Balance neto de recepción (+/-)", isTetra: false },
+            { id: "brc", simple: "b", code: "BRC", name: "Densidad Bruta Receptor", desc: "Masa total recibida (Atracción recibida)", isTetra: false },
+            { id: "sdr", simple: "Σ", code: "SDR", name: "Densidad Neta Relacional", desc: "Balance relacional global", isTetra: false },
+            { id: "bdr", simple: "Ω", code: "BDR", name: "Densidad Bruta Relacional", desc: "Masa invariable total de vínculos", isTetra: false }
+        ];
+
+        const PENTA_BASE_CATALOG = [
+            {
+                key: "group_mu", id: "μ", label: "Media Grupal (μ)", sub: "Red Total Psicothema (N=10)",
+                color: "#00FF87", isGroup: true,
+                unit: { bda: 3.95, sda: -2.46, a1: -0.76, a2: -1.70, a3: -1.75, a4: -0.81, src: -2.56, brc: 4.05, sdr: -0.91, bdr: 8.00 },
+                acc:  { bda: 19.75, sda: -12.30, a1: -3.81, a2: -8.49, a3: -8.74, a4: -4.04, src: -12.78, brc: 20.26, sdr: -25.08, bdr: 40.01 }
+            },
+            {
+                key: "group_t0", id: "t₀", label: "Estado Inicial (t₀)", sub: "Configuración de Referencia (t=0)",
+                color: "#38BDF8", isGroup: true,
+                unit: { bda: 2.80, sda: -0.20, a1: -0.10, a2: -0.10, a3: -0.10, a4: -0.10, src: -0.20, brc: 2.80, sdr: -0.40, bdr: 5.60 },
+                acc:  { bda: 14.00, sda: -1.00, a1: -0.50, a2: -0.50, a3: -0.50, a4: -0.50, src: -1.00, brc: 14.00, sdr: -2.00, bdr: 28.00 }
+            },
+            {
+                key: "group_g1", id: "G1", label: "Media G1 (Cohesión)", sub: "Grupo A · Alta Cohesión",
+                color: "#00FF87", isGroup: true,
+                unit: { bda: 3.99, sda: -1.56, a1: -0.28, a2: -1.28, a3: -1.30, a4: -0.29, src: -1.58, brc: 4.01, sdr: -0.91, bdr: 8.00 },
+                acc:  { bda: 19.96, sda: -7.82, a1: -1.40, a2: -6.42, a3: -6.49, a4: -1.43, src: -7.92, brc: 20.06, sdr: -15.74, bdr: 40.02 }
+            },
+            {
+                key: "group_g2", id: "G2", label: "Media G2 (Fricción)", sub: "Grupo B · Fricción y Ostracismo",
+                color: "#FF007F", isGroup: true,
+                unit: { bda: 3.91, sda: -3.36, a1: -1.24, a2: -2.11, a3: -2.20, a4: -1.33, src: -3.53, brc: 4.09, sdr: -1.47, bdr: 8.00 },
+                acc:  { bda: 19.55, sda: -16.78, a1: -6.22, a2: -10.56, a3: -10.99, a4: -6.65, src: -17.64, brc: 20.46, sdr: -34.42, bdr: 40.00 }
+            },
+            // G1 NODES
+            {
+                key: "node_1a", id: "1A", label: "Sujeto 1A", sub: "G1 · Cohesivo Base",
+                color: "#34D399", role: "NORMAL",
+                unit: { bda: 2.57, sda: -1.94, a1: -0.66, a2: -1.28, a3: -1.31, a4: -0.66, src: -1.96, brc: 2.60, sdr: -0.91, bdr: 8.00 },
+                acc:  { bda: 12.86, sda: -9.68, a1: -3.28, a2: -6.40, a3: -6.53, a4: -3.28, src: -9.81, brc: 12.99, sdr: -19.49, bdr: 25.85 }
+            },
+            {
+                key: "node_2a", id: "2A", label: "Sujeto 2A [Líder]", sub: "G1 · Líder Atractor (+6.36)",
+                color: "#00F5D4", role: "ALPHA",
+                unit: { bda: 4.79, sda: 0.64, a1: 1.08, a2: -0.44, a3: -0.43, a4: 1.06, src: 0.63, brc: 4.80, sdr: 1.27, bdr: 9.59 },
+                acc:  { bda: 23.97, sda: 3.19, a1: 5.38, a2: -2.19, a3: -2.16, a4: 5.32, src: 3.17, brc: 24.00, sdr: 6.36, bdr: 47.97 }
+            },
+            {
+                key: "node_3a", id: "3A", label: "Sujeto 3A [Puente]", sub: "G1 · Puente Afectivo (-2.25)",
+                color: "#38BDF8", role: "NORMAL",
+                unit: { bda: 5.01, sda: -0.22, a1: 0.48, a2: -0.70, a3: -0.71, a4: 0.48, src: -0.23, brc: 5.03, sdr: -0.45, bdr: 10.04 },
+                acc:  { bda: 25.06, sda: -1.08, a1: 2.40, a2: -3.48, a3: -3.56, a4: 2.39, src: -1.17, brc: 25.15, sdr: -2.25, bdr: 50.21 }
+            },
+            {
+                key: "node_4a", id: "4A", label: "Sujeto 4A", sub: "G1 · Cohesivo Base",
+                color: "#10B981", role: "NORMAL",
+                unit: { bda: 4.01, sda: -3.37, a1: -1.33, a2: -2.04, a3: -2.06, a4: -1.34, src: -3.40, brc: 4.04, sdr: -1.69, bdr: 8.04 },
+                acc:  { bda: 20.04, sda: -16.86, a1: -6.65, a2: -10.21, a3: -10.28, a4: -6.72, src: -17.00, brc: 20.18, sdr: -33.86, bdr: 40.22 }
+            },
+            {
+                key: "node_5a", id: "5A", label: "Sujeto 5A", sub: "G1 · Cohesivo Base",
+                color: "#059669", role: "NORMAL",
+                unit: { bda: 3.57, sda: -2.94, a1: -0.97, a2: -1.96, a3: -1.99, a4: -0.97, src: -2.96, brc: 3.60, sdr: -1.47, bdr: 7.17 },
+                acc:  { bda: 17.87, sda: -14.69, a1: -4.87, a2: -9.82, a3: -9.93, a4: -4.87, src: -14.80, brc: 17.98, sdr: -29.49, bdr: 35.85 }
+            },
+            // G2 NODES
+            {
+                key: "node_1b", id: "1B", label: "Sujeto 1B", sub: "G2 · Fricción",
+                color: "#F43F5E", role: "NORMAL",
+                unit: { bda: 3.60, sda: -2.84, a1: -0.96, a2: -1.87, a3: -1.83, a4: -0.96, src: -2.80, brc: 3.56, sdr: -1.41, bdr: 7.16 },
+                acc:  { bda: 18.01, sda: -14.19, a1: -4.82, a2: -9.37, a3: -9.17, a4: -4.82, src: -13.99, brc: 17.81, sdr: -28.18, bdr: 35.82 }
+            },
+            {
+                key: "node_2b", id: "2B", label: "Sujeto 2B [Atractor]", sub: "G2 · Atractor Local",
+                color: "#FB7185", role: "NORMAL",
+                unit: { bda: 3.02, sda: -1.65, a1: -0.34, a2: -1.31, a3: -1.46, a4: -0.40, src: -1.85, brc: 3.23, sdr: -0.88, bdr: 6.25 },
+                acc:  { bda: 15.08, sda: -8.27, a1: -1.70, a2: -6.57, a3: -7.28, a4: -1.98, src: -9.25, brc: 16.17, sdr: -17.52, bdr: 31.25 }
+            },
+            {
+                key: "node_3b", id: "3B", label: "Sujeto 3B", sub: "G2 · Fricción",
+                color: "#FDA4AF", role: "NORMAL",
+                unit: { bda: 2.67, sda: -2.04, a1: -0.61, a2: -1.44, a3: -1.56, a4: -0.66, src: -2.22, brc: 2.86, sdr: -1.06, bdr: 5.53 },
+                acc:  { bda: 13.33, sda: -10.22, a1: -3.03, a2: -7.19, a3: -7.81, a4: -3.28, src: -11.09, brc: 14.31, sdr: -21.30, bdr: 27.63 }
+            },
+            {
+                key: "node_4b", id: "4B", label: "Sujeto 4B", sub: "G2 · Fricción Tensa",
+                color: "#E11D48", role: "NORMAL",
+                unit: { bda: 3.79, sda: -3.77, a1: -1.20, a2: -2.57, a3: -2.64, a4: -1.31, src: -3.95, brc: 3.98, sdr: -1.93, bdr: 7.77 },
+                acc:  { bda: 18.95, sda: -18.83, a1: -6.00, a2: -12.84, a3: -13.22, a4: -6.54, src: -19.76, brc: 19.88, sdr: -38.59, bdr: 38.83 }
+            },
+            {
+                key: "node_5b", id: "5B", label: "Sujeto 5B [Ostracismo]", sub: "G2 · Ostracismo Crítico (-66.50)",
+                color: "#FF007F", role: "OMEGA",
+                unit: { bda: 6.48, sda: -6.48, a1: -3.11, a2: -3.37, a3: -3.50, a4: -3.32, src: -6.82, brc: 6.82, sdr: -2.00, bdr: 13.30 },
+                acc:  { bda: 32.38, sda: -32.38, a1: -15.54, a2: -16.84, a3: -17.51, a4: -16.62, src: -34.12, brc: 34.12, sdr: -66.50, bdr: 66.50 }
+            },
+            // BENCHMARK
+            {
+                key: "bench_ideal", id: "BM", label: "Benchmark Teórico Ideal", sub: "Equilibrio Homeostático μ",
+                color: "#A855F7", isGroup: true,
+                unit: { bda: 3.00, sda: 0.50, a1: 0.50, a2: 0.50, a3: 0.50, a4: 0.50, src: 0.50, brc: 2.00, sdr: 0.00, bdr: 8.00 },
+                acc:  { bda: 15.00, sda: 2.50, a1: 2.50, a2: 2.50, a3: 2.50, a4: 2.50, src: 2.50, brc: 10.00, sdr: 0.00, bdr: 40.00 }
+            }
+        ];
+
+        let pentaState = {
+            mode: "compare_mu_t0",
+            orient: "horizontal",
+            curve: "curved",
+            labels: "simple",
+            numbers: "clean",
+            volume: "on",
+            scale: "auto",
+            scaleMode: "unit", // 'unit' | 'acc'
+            selectedKeys: new Set(["group_mu", "group_t0"]),
+            hoveredKey: null,
+            catalog: []
+        };
+
+        function buildPentaCatalog() {
+            const isUnit = (pentaState.scaleMode === 'unit');
+            pentaState.catalog = PENTA_BASE_CATALOG.map(item => {
+                const data = isUnit ? item.unit : item.acc;
+                return {
+                    key: item.key,
+                    id: item.id,
+                    label: item.label,
+                    sub: item.sub,
+                    color: item.color,
+                    isGroup: !!item.isGroup,
+                    role: item.role || 'NORMAL',
+                    bda: data.bda,
+                    sda: data.sda,
+                    a1: data.a1,
+                    a2: data.a2,
+                    a3: data.a3,
+                    a4: data.a4,
+                    src: data.src,
+                    brc: data.brc,
+                    sdr: data.sdr,
+                    bdr: data.bdr
+                };
+            });
+        }
+
+        function computePentaExtremes(activeSeries, catalog) {
+            let activePoints = [];
+            activeSeries.forEach(s => {
+                PENTA_STATIONS.forEach(st => {
+                    if (s[st.id] !== undefined && typeof s[st.id] === 'number') {
+                        activePoints.push({ val: s[st.id], station: st, series: s });
+                    }
+                });
+            });
+            if (activePoints.length === 0) {
+                activePoints = [{ val: 0, station: PENTA_STATIONS[0], series: activeSeries[0] || { label: 'μ', id: 'μ' } }];
+            }
+
+            activePoints.sort((a, b) => a.val - b.val);
+            const minActive = activePoints[0];
+            const maxActive = activePoints[activePoints.length - 1];
+
+            let catalogPoints = [];
+            catalog.forEach(s => {
+                PENTA_STATIONS.forEach(st => {
+                    if (s[st.id] !== undefined && typeof s[st.id] === 'number') {
+                        catalogPoints.push({ val: s[st.id], station: st, series: s });
+                    }
+                });
+            });
+            catalogPoints.sort((a, b) => a.val - b.val);
+            const minGlobal = catalogPoints[0] || minActive;
+            const maxGlobal = catalogPoints[catalogPoints.length - 1] || maxActive;
+
+            const targetMin = (pentaState.scale === 'global') ? minGlobal : minActive;
+            const targetMax = (pentaState.scale === 'global') ? maxGlobal : maxActive;
+
+            const rawRange = Math.max(0.1, targetMax.val - targetMin.val);
+            const pad = Math.max(0.35, rawRange * 0.10);
+
+            let dMin = Math.floor((targetMin.val - pad) * 2) / 2;
+            let dMax = Math.ceil((targetMax.val + pad) * 2) / 2;
+            if (dMax - dMin < 1.5) { dMin -= 0.5; dMax += 0.5; }
+
+            return {
+                dMin, dMax,
+                range: dMax - dMin,
+                activeMin: minActive, activeMax: maxActive,
+                globalMin: minGlobal, globalMax: maxGlobal,
+                targetMin, targetMax
+            };
+        }
+
+        function renderPentaExtremesHUD(ext) {
+            const hud = document.getElementById("penta-extremes-hud");
+            if (!hud || !ext) return;
+            hud.innerHTML = `
+                <div class="extremes-metric">
+                    <span style="font-size:0.82rem;">⚖️</span>
+                    <span class="extremes-label">Extremos (${pentaState.scale === 'auto' ? 'Series Activas' : 'Catálogo Total'}):</span>
+                </div>
+                <div class="extremes-metric">
+                    <span class="extremes-label">Mínimo:</span>
+                    <span class="extremes-val-min">${(ext.targetMin.val >= 0 ? '+' : '')}${ext.targetMin.val.toFixed(2)}</span>
+                    <span style="color:#94A3B8; font-size:0.68rem;">en <strong>${ext.targetMin.station.code}</strong> (${ext.targetMin.series.id || ext.targetMin.series.label})</span>
+                </div>
+                <div class="extremes-metric">
+                    <span class="extremes-label">Máximo:</span>
+                    <span class="extremes-val-max">${(ext.targetMax.val >= 0 ? '+' : '')}${ext.targetMax.val.toFixed(2)}</span>
+                    <span style="color:#94A3B8; font-size:0.68rem;">en <strong>${ext.targetMax.station.code}</strong> (${ext.targetMax.series.id || ext.targetMax.series.label})</span>
+                </div>
+                <div class="extremes-metric">
+                    <span class="extremes-label">Amplitud (Δ Rango):</span>
+                    <span class="extremes-val-range">${(ext.targetMax.val - ext.targetMin.val).toFixed(2)}</span>
+                </div>
+                <div class="extremes-metric">
+                    <span class="extremes-label">Escala Graduada:</span>
+                    <span style="font-family:'Roboto Mono', monospace; font-weight:700; color:#00F5D4; font-size:0.70rem;">[L1: ${(ext.dMin >= 0 ? '+' : '')}${ext.dMin.toFixed(1)} ➔ L5: ${(ext.dMax >= 0 ? '+' : '')}${ext.dMax.toFixed(1)}]</span>
+                </div>
+            `;
+        }
+
+        function drawPentaSpline(ctx, points) {
+            if (points.length < 2) return;
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let i = 0; i < points.length - 1; i++) {
+                const p0 = (i > 0) ? points[i - 1] : points[i];
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                const p3 = (i < points.length - 2) ? points[i + 2] : p2;
+
+                const cp1x = p1.x + (p2.x - p0.x) / 6;
+                const cp1y = p1.y + (p2.y - p0.y) / 6;
+                const cp2x = p2.x - (p3.x - p1.x) / 6;
+                const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+            }
+        }
+
+        function drawPentagrama() {
+            const canvas = document.getElementById("pentagrama-canvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const container = canvas.parentElement;
+            if (!container) return;
+
+            if (!ctx.roundRect) {
+                ctx.roundRect = function(x, y, w, h, r) { this.rect(x, y, w, h); };
+            }
+
+            const isVert = (pentaState.orient === "vertical");
+            const w = container.clientWidth || 920;
+            const h = isVert ? 680 : 470;
+
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + "px";
+            canvas.style.height = h + "px";
+
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            ctx.fillStyle = "#0B132B";
+            ctx.fillRect(0, 0, w, h);
+
+            if (!pentaState.catalog || pentaState.catalog.length === 0) {
+                buildPentaCatalog();
+            }
+
+            let activeSeries = pentaState.catalog.filter(p => pentaState.selectedKeys.has(p.key));
+            if (activeSeries.length === 0 && pentaState.catalog.length > 0) {
+                activeSeries = [pentaState.catalog[0]];
+            }
+
+            const ext = computePentaExtremes(activeSeries, pentaState.catalog);
+            const dMin = ext.dMin;
+            const dMax = ext.dMax;
+            renderPentaExtremesHUD(ext);
+
+            if (!isVert) {
+                // ==========================================
+                // RENDER HORIZONTAL
+                // ==========================================
+                const padLeft = 85;
+                const padRight = 45;
+                const padTop = 45;
+                const padBottom = 110;
+
+                const staveH = h - padTop - padBottom;
+                const staveW = w - padLeft - padRight;
+                const nLines = 5;
+                const lineSpacing = staveH / (nLines - 1);
+
+                function valToY(v) {
+                    let norm = (v - dMin) / Math.max(0.001, (dMax - dMin));
+                    norm = Math.max(-0.06, Math.min(1.06, norm));
+                    return (padTop + staveH) - norm * staveH;
+                }
+
+                // 5 Líneas del Pentagrama
+                for (let i = 0; i < nLines; i++) {
+                    const y = padTop + i * lineSpacing;
+                    const lineNum = 5 - i;
+                    const isCenterLine = (i === 2);
+
+                    ctx.strokeStyle = isCenterLine ? "rgba(0, 245, 212, 0.22)" : "rgba(255, 255, 255, 0.055)";
+                    ctx.lineWidth = isCenterLine ? 1.1 : 0.75;
+                    if (isCenterLine) ctx.setLineDash([6, 4]);
+                    else ctx.setLineDash([]);
+
+                    ctx.beginPath();
+                    ctx.moveTo(padLeft - 15, y);
+                    ctx.lineTo(w - padRight + 15, y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    ctx.font = '600 9px "Roboto Mono", monospace';
+                    ctx.fillStyle = isCenterLine ? "rgba(0, 245, 212, 0.65)" : "rgba(100, 116, 139, 0.55)";
+                    ctx.textAlign = "right";
+                    const lv = dMax - i * ((dMax - dMin) / 4);
+                    ctx.fillText("L" + lineNum + " [" + (lv >= 0 ? "+" : "") + lv.toFixed(1) + "]", padLeft - 22, y + 3.5);
+                }
+
+                // Línea de Flotación Cero (Neutro ±0.00)
+                if (dMin < 0 && dMax > 0) {
+                    const yZero = valToY(0.0);
+                    if (yZero >= padTop && yZero <= padTop + staveH) {
+                        ctx.save();
+                        ctx.strokeStyle = "rgba(0, 245, 212, 0.45)";
+                        ctx.lineWidth = 1.2;
+                        ctx.setLineDash([5, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(padLeft - 15, yZero);
+                        ctx.lineTo(w - padRight + 15, yZero);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.font = '700 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "rgba(0, 245, 212, 0.85)";
+                        ctx.textAlign = "right";
+                        ctx.fillText("±0.00 NEUTRO", padLeft - 22, yZero + 3);
+                        ctx.restore();
+                    }
+                }
+
+                // Clave 𝄢
+                ctx.font = '700 22px "Inter", sans-serif';
+                ctx.fillStyle = "rgba(0, 245, 212, 0.45)";
+                ctx.textAlign = "center";
+                ctx.fillText("𝄢", padLeft - 58, padTop + staveH / 2 - 4);
+
+                const nStations = PENTA_STATIONS.length;
+                const stepX = staveW / (nStations - 1);
+                const stationCoords = [];
+                PENTA_STATIONS.forEach((st, idx) => {
+                    stationCoords.push({ x: padLeft + idx * stepX, st: st });
+                });
+
+                const tetraStartX = stationCoords[2].x - stepX * 0.48;
+                const tetraEndX = stationCoords[5].x + stepX * 0.48;
+                const tetraW = tetraEndX - tetraStartX;
+
+                ctx.fillStyle = "rgba(0, 245, 212, 0.025)";
+                ctx.fillRect(tetraStartX, padTop, tetraW, staveH);
+
+                ctx.strokeStyle = "rgba(0, 245, 212, 0.22)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(tetraStartX, padTop - 4); ctx.lineTo(tetraStartX, padTop + staveH + 4);
+                ctx.moveTo(tetraEndX, padTop - 4); ctx.lineTo(tetraEndX, padTop + staveH + 4);
+                ctx.stroke();
+
+                stationCoords.forEach(sc => {
+                    ctx.strokeStyle = sc.st.isTetra ? "rgba(0, 245, 212, 0.12)" : "rgba(255, 255, 255, 0.04)";
+                    ctx.lineWidth = 0.8;
+                    ctx.setLineDash([3, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(sc.x, padTop - 6);
+                    ctx.lineTo(sc.x, padTop + staveH + 6);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                });
+
+                const seriesData = activeSeries.map(tc => {
+                    const points = stationCoords.map(sc => {
+                        const val = tc[sc.st.id] !== undefined ? tc[sc.st.id] : 0.0;
+                        const isExtMax = (Math.abs(val - ext.targetMax.val) < 0.001);
+                        const isExtMin = (Math.abs(val - ext.targetMin.val) < 0.001);
+                        return { x: sc.x, y: valToY(val), raw: val, st: sc.st, isExtMax, isExtMin };
+                    });
+                    return { tc: tc, points: points };
+                });
+
+                // Cinta de Volumen 3D entre 2 series
+                if (pentaState.volume === "on" && seriesData.length === 2) {
+                    const pts1 = seriesData[0].points;
+                    const pts2 = seriesData[1].points;
+
+                    ctx.beginPath();
+                    if (pentaState.curve === "curved") {
+                        drawPentaSpline(ctx, pts1);
+                        const pts2Rev = [...pts2].reverse();
+                        ctx.lineTo(pts2Rev[0].x, pts2Rev[0].y);
+                        drawPentaSpline(ctx, pts2Rev);
+                    } else {
+                        pts1.forEach((pt, idx) => {
+                            if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                            else ctx.lineTo(pt.x, pt.y);
+                        });
+                        for (let i = pts2.length - 1; i >= 0; i--) {
+                            ctx.lineTo(pts2[i].x, pts2[i].y);
+                        }
+                    }
+                    ctx.closePath();
+
+                    const colA = seriesData[0].tc.color;
+                    const colB = seriesData[1].tc.color;
+                    const ribbonGrad = ctx.createLinearGradient(0, padTop, 0, padTop + staveH);
+                    ribbonGrad.addColorStop(0.0, colA + "33");
+                    ribbonGrad.addColorStop(0.5, "rgba(0, 245, 212, 0.12)");
+                    ribbonGrad.addColorStop(1.0, colB + "33");
+                    ctx.fillStyle = ribbonGrad;
+                    ctx.fill();
+
+                    // Cuerdas de tensión y vientres de dilatación
+                    pts1.forEach((p1, idx) => {
+                        const p2 = pts2[idx];
+                        const delta = Math.abs(p1.raw - p2.raw);
+                        const midY = (p1.y + p2.y) / 2;
+                        const distY = Math.abs(p1.y - p2.y);
+
+                        if (delta >= (ext.range * 0.20)) {
+                            ctx.save();
+                            const auraRad = Math.max(16, distY * 0.55);
+                            const auraGrad = ctx.createRadialGradient(p1.x, midY, 2, p1.x, midY, auraRad);
+                            auraGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.18)");
+                            auraGrad.addColorStop(0.4, (idx % 2 === 0 ? colA : colB) + "22");
+                            auraGrad.addColorStop(1.0, "rgba(11, 19, 43, 0.0)");
+                            ctx.fillStyle = auraGrad;
+                            ctx.beginPath();
+                            ctx.arc(p1.x, midY, auraRad, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.restore();
+                        }
+
+                        if (delta > (ext.range * 0.06)) {
+                            const alphaThread = Math.min(0.35, 0.10 + (delta / ext.range) * 0.25);
+                            ctx.strokeStyle = "rgba(255, 255, 255, " + alphaThread.toFixed(3) + ")";
+                            ctx.lineWidth = 0.9;
+                            ctx.setLineDash([2, 3]);
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                            ctx.setLineDash([]);
+                        }
+                    });
+
+                    // Nodos de contracción / consenso invariable
+                    pts1.forEach((p1, idx) => {
+                        const p2 = pts2[idx];
+                        const delta = Math.abs(p1.raw - p2.raw);
+                        if (delta <= (ext.range * 0.06)) {
+                            const midY = (p1.y + p2.y) / 2;
+                            ctx.save();
+                            const nodeGrad = ctx.createRadialGradient(p1.x, midY, 1, p1.x, midY, 11);
+                            nodeGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.95)");
+                            nodeGrad.addColorStop(0.35, "rgba(0, 245, 212, 0.65)");
+                            nodeGrad.addColorStop(0.7, "rgba(0, 255, 135, 0.25)");
+                            nodeGrad.addColorStop(1.0, "rgba(0, 245, 212, 0.0)");
+                            ctx.fillStyle = nodeGrad;
+                            ctx.beginPath();
+                            ctx.arc(p1.x, midY, 11, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            ctx.fillStyle = "#FFFFFF";
+                            ctx.beginPath(); ctx.arc(p1.x, midY, 2.8, 0, Math.PI * 2); ctx.fill();
+
+                            ctx.strokeStyle = "#00F5D4";
+                            ctx.lineWidth = 1.1;
+                            ctx.beginPath(); ctx.arc(p1.x, midY, 4.8, 0, Math.PI * 2); ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                }
+
+                // Envoltura de dispersión si >2 series
+                if (pentaState.volume === "on" && seriesData.length > 2) {
+                    const envMax = stationCoords.map((sc, idx) => {
+                        let maxPt = seriesData[0].points[idx];
+                        seriesData.forEach(s => {
+                            if (s.points[idx].y < maxPt.y) maxPt = s.points[idx];
+                        });
+                        return maxPt;
+                    });
+                    const envMin = stationCoords.map((sc, idx) => {
+                        let minPt = seriesData[0].points[idx];
+                        seriesData.forEach(s => {
+                            if (s.points[idx].y > minPt.y) minPt = s.points[idx];
+                        });
+                        return minPt;
+                    });
+
+                    ctx.save();
+                    ctx.beginPath();
+                    if (pentaState.curve === "curved") {
+                        drawPentaSpline(ctx, envMax);
+                        const envMinRev = [...envMin].reverse();
+                        ctx.lineTo(envMinRev[0].x, envMinRev[0].y);
+                        drawPentaSpline(ctx, envMinRev);
+                    } else {
+                        envMax.forEach((pt, idx) => {
+                            if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                            else ctx.lineTo(pt.x, pt.y);
+                        });
+                        for (let i = envMin.length - 1; i >= 0; i--) {
+                            ctx.lineTo(envMin[i].x, envMin[i].y);
+                        }
+                    }
+                    ctx.closePath();
+                    const envGrad = ctx.createLinearGradient(0, padTop, 0, padTop + staveH);
+                    envGrad.addColorStop(0.0, "rgba(0, 245, 212, 0.06)");
+                    envGrad.addColorStop(1.0, "rgba(255, 0, 127, 0.06)");
+                    ctx.fillStyle = envGrad;
+                    ctx.fill();
+
+                    ctx.strokeStyle = "rgba(0, 245, 212, 0.18)";
+                    ctx.lineWidth = 0.8;
+                    ctx.setLineDash([3, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.restore();
+                }
+
+                // Trazado de perfiles
+                seriesData.forEach(s => {
+                    const tc = s.tc;
+                    const points = s.points;
+                    const col = tc.color;
+
+                    const isHovered = (pentaState.hoveredKey === tc.key);
+                    const hasHover = (pentaState.hoveredKey !== null);
+                    let lineAlpha = hasHover ? (isHovered ? 1.0 : 0.2) : 1.0;
+                    let lineW = hasHover ? (isHovered ? 4.4 : 1.4) : (pentaState.curve === "curved" ? 3.0 : 2.4);
+                    let blurVal = hasHover ? (isHovered ? 24 : 0) : 12;
+
+                    ctx.save();
+                    ctx.globalAlpha = lineAlpha;
+                    ctx.shadowColor = col;
+                    ctx.shadowBlur = blurVal;
+                    ctx.strokeStyle = col;
+                    ctx.lineWidth = lineW;
+                    ctx.beginPath();
+                    if (pentaState.curve === "curved") drawPentaSpline(ctx, points);
+                    else {
+                        points.forEach((pt, pIdx) => {
+                            if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                            else ctx.lineTo(pt.x, pt.y);
+                        });
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+
+                    points.forEach(pt => {
+                        ctx.save();
+                        ctx.globalAlpha = lineAlpha;
+                        ctx.translate(pt.x, pt.y);
+                        ctx.fillStyle = "#0B132B";
+                        ctx.beginPath(); ctx.arc(0, 0, isHovered ? 6.5 : 5.0, 0, Math.PI * 2); ctx.fill();
+
+                        ctx.strokeStyle = col;
+                        ctx.lineWidth = isHovered ? 2.8 : 2.2;
+                        ctx.beginPath(); ctx.arc(0, 0, isHovered ? 6.5 : 5.0, 0, Math.PI * 2); ctx.stroke();
+
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.beginPath(); ctx.arc(0, 0, 2.0, 0, Math.PI * 2); ctx.fill();
+
+                        if (pt.isExtMax) {
+                            ctx.strokeStyle = "#FFE600";
+                            ctx.lineWidth = 1.6;
+                            ctx.setLineDash([2, 2]);
+                            ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                            ctx.setLineDash([]);
+                        } else if (pt.isExtMin) {
+                            ctx.strokeStyle = "#FF007F";
+                            ctx.lineWidth = 1.6;
+                            ctx.setLineDash([2, 2]);
+                            ctx.beginPath(); ctx.arc(0, 0, 9.2, 0, Math.PI * 2); ctx.stroke();
+                            ctx.setLineDash([]);
+                        }
+                        ctx.restore();
+
+                        // Badges de Máximo y Mínimo
+                        if (pt.isExtMax) {
+                            ctx.save();
+                            ctx.globalAlpha = lineAlpha;
+                            ctx.font = '800 8.5px "Roboto Mono", monospace';
+                            ctx.fillStyle = "#FFE600";
+                            ctx.textAlign = "center";
+                            ctx.fillText("▲ MÁX " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y - (pentaState.numbers === "show" ? 18 : 11));
+                            ctx.restore();
+                        } else if (pt.isExtMin) {
+                            ctx.save();
+                            ctx.globalAlpha = lineAlpha;
+                            ctx.font = '800 8.5px "Roboto Mono", monospace';
+                            ctx.fillStyle = "#FF007F";
+                            ctx.textAlign = "center";
+                            ctx.fillText("▼ MÍN " + (pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y + (pentaState.numbers === "show" ? 22 : 16));
+                            ctx.restore();
+                        }
+
+                        if (pentaState.numbers === "show" && (seriesData.length <= 2 || isHovered) && !pt.isExtMax && !pt.isExtMin) {
+                            ctx.save();
+                            ctx.globalAlpha = lineAlpha;
+                            ctx.font = '700 8.5px "Roboto Mono", monospace';
+                            ctx.fillStyle = col;
+                            ctx.textAlign = "center";
+                            ctx.fillText((pt.raw >= 0 ? "+" : "") + pt.raw.toFixed(2), pt.x, pt.y - 10);
+                            ctx.restore();
+                        }
+                    });
+                });
+
+                // Etiquetas en eje X
+                const yLabel = padTop + staveH + 24;
+                if (pentaState.labels === "simple") {
+                    stationCoords.forEach(sc => {
+                        const st = sc.st;
+                        ctx.save();
+                        ctx.textAlign = "center";
+                        const isTetra = st.isTetra;
+                        ctx.fillStyle = isTetra ? "rgba(0, 255, 135, 0.12)" : "rgba(255, 255, 255, 0.05)";
+                        ctx.strokeStyle = isTetra ? "rgba(0, 255, 135, 0.35)" : "rgba(255, 255, 255, 0.15)";
+                        ctx.lineWidth = 1;
+                        const bSize = 22;
+                        ctx.beginPath();
+                        ctx.roundRect(sc.x - bSize / 2, yLabel - 14, bSize, bSize, 4);
+                        ctx.fill();
+                        ctx.stroke();
+
+                        ctx.font = '800 12px "Roboto Mono", monospace';
+                        let col = "#E2E8F0";
+                        if (isTetra) col = "#00FF87";
+                        else if (st.id === "bdr" || st.id === "sdr") col = "#FFE600";
+                        else if (st.id.includes("da")) col = "#38BDF8";
+                        else if (st.id.includes("rc")) col = "#C084FC";
+                        ctx.fillStyle = col;
+                        ctx.fillText(st.simple, sc.x, yLabel + 2);
+
+                        ctx.font = '600 8px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#64748B";
+                        ctx.fillText(st.code, sc.x, yLabel + 20);
+                        ctx.restore();
+                    });
+
+                    ctx.strokeStyle = "rgba(0, 255, 135, 0.3)";
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([2, 3]);
+                    ctx.strokeRect(tetraStartX, yLabel - 18, tetraW, 46);
+                    ctx.setLineDash([]);
+
+                    ctx.font = '700 8px "Roboto Mono", monospace';
+                    ctx.fillStyle = "#00FF87";
+                    ctx.textAlign = "center";
+                    ctx.fillText("▲ COMPÁS TETRAGRAMA (1 ➔ 4)", (stationCoords[2].x + stationCoords[5].x) / 2, yLabel + 38);
+                } else {
+                    stationCoords.forEach(sc => {
+                        const st = sc.st;
+                        ctx.font = '700 11px "Roboto Mono", monospace';
+                        ctx.fillStyle = st.isTetra ? "#00FF87" : "#CBD5E1";
+                        ctx.textAlign = "center";
+                        ctx.fillText(st.code, sc.x, yLabel + 4);
+                    });
+                }
+
+                // Leyenda superior de series
+                const curLegX = padLeft;
+                const legY = padTop - 16;
+                ctx.font = '600 10.5px "Inter", sans-serif';
+                let accX = curLegX;
+                activeSeries.forEach(tc => {
+                    ctx.fillStyle = tc.color;
+                    ctx.fillRect(accX, legY - 7, 12, 4);
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.textAlign = "left";
+                    ctx.fillText(tc.label, accX + 16, legY - 3);
+                    accX += ctx.measureText(tc.label).width + 28;
+                });
+
+            } else {
+                // ==========================================
+                // RENDER VERTICAL
+                // ==========================================
+                const padLeft = 130;
+                const padRight = 50;
+                const padTop = 50;
+                const padBottom = 40;
+
+                const staveW = w - padLeft - padRight;
+                const staveH = h - padTop - padBottom;
+                const nLines = 5;
+                const colSpacing = staveW / (nLines - 1);
+
+                function valToX(v) {
+                    let norm = (v - dMin) / Math.max(0.001, (dMax - dMin));
+                    norm = Math.max(-0.06, Math.min(1.06, norm));
+                    return padLeft + norm * staveW;
+                }
+
+                for (let i = 0; i < nLines; i++) {
+                    const x = padLeft + i * colSpacing;
+                    const lineNum = i + 1;
+                    const isCenterLine = (i === 2);
+
+                    ctx.strokeStyle = isCenterLine ? "rgba(0, 245, 212, 0.25)" : "rgba(255, 255, 255, 0.055)";
+                    ctx.lineWidth = isCenterLine ? 1.1 : 0.75;
+                    if (isCenterLine) ctx.setLineDash([6, 4]);
+                    else ctx.setLineDash([]);
+
+                    ctx.beginPath();
+                    ctx.moveTo(x, padTop - 12);
+                    ctx.lineTo(x, padTop + staveH + 12);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    ctx.font = '600 8.5px "Roboto Mono", monospace';
+                    ctx.fillStyle = isCenterLine ? "rgba(0, 245, 212, 0.65)" : "rgba(100, 116, 139, 0.55)";
+                    ctx.textAlign = "center";
+                    const lv = dMin + i * ((dMax - dMin) / 4);
+                    ctx.fillText("L" + lineNum + " [" + (lv >= 0 ? "+" : "") + lv.toFixed(1) + "]", x, padTop - 18);
+                }
+
+                if (dMin < 0 && dMax > 0) {
+                    const xZero = valToX(0.0);
+                    if (xZero >= padLeft && xZero <= padLeft + staveW) {
+                        ctx.save();
+                        ctx.strokeStyle = "rgba(0, 245, 212, 0.45)";
+                        ctx.lineWidth = 1.2;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(xZero, padTop - 12);
+                        ctx.lineTo(xZero, padTop + staveH + 12);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.font = '700 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "rgba(0, 245, 212, 0.85)";
+                        ctx.textAlign = "center";
+                        ctx.fillText("±0.00 NEUTRO", xZero, padTop - 28);
+                        ctx.restore();
+                    }
+                }
+
+                ctx.font = '700 20px "Inter", sans-serif';
+                ctx.fillStyle = "rgba(0, 245, 212, 0.45)";
+                ctx.textAlign = "center";
+                ctx.fillText("𝄢", padLeft + staveW / 2, padTop - 34);
+
+                const nStations = PENTA_STATIONS.length;
+                const stepY = staveH / (nStations - 1);
+                const stationCoords = [];
+                PENTA_STATIONS.forEach((st, idx) => {
+                    stationCoords.push({ y: padTop + idx * stepY, st: st });
+                });
+
+                const tetraStartY = stationCoords[2].y - stepY * 0.48;
+                const tetraEndY = stationCoords[5].y + stepY * 0.48;
+                const tetraH = tetraEndY - tetraStartY;
+
+                ctx.fillStyle = "rgba(0, 245, 212, 0.025)";
+                ctx.fillRect(padLeft, tetraStartY, staveW, tetraH);
+
+                stationCoords.forEach(sc => {
+                    ctx.strokeStyle = sc.st.isTetra ? "rgba(0, 245, 212, 0.12)" : "rgba(255, 255, 255, 0.04)";
+                    ctx.lineWidth = 0.8;
+                    ctx.setLineDash([3, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(padLeft - 6, sc.y);
+                    ctx.lineTo(padLeft + staveW + 6, sc.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                });
+
+                const seriesData = activeSeries.map(tc => {
+                    const points = stationCoords.map(sc => {
+                        const val = tc[sc.st.id] !== undefined ? tc[sc.st.id] : 0.0;
+                        const isExtMax = (Math.abs(val - ext.targetMax.val) < 0.001);
+                        const isExtMin = (Math.abs(val - ext.targetMin.val) < 0.001);
+                        return { x: valToX(val), y: sc.y, raw: val, st: sc.st, isExtMax, isExtMin };
+                    });
+                    return { tc: tc, points: points };
+                });
+
+                seriesData.forEach(s => {
+                    const tc = s.tc;
+                    const points = s.points;
+                    const col = tc.color;
+
+                    const isHovered = (pentaState.hoveredKey === tc.key);
+                    let lineAlpha = (pentaState.hoveredKey !== null) ? (isHovered ? 1.0 : 0.2) : 1.0;
+                    let lineW = isHovered ? 4.0 : 2.6;
+
+                    ctx.save();
+                    ctx.globalAlpha = lineAlpha;
+                    ctx.shadowColor = col;
+                    ctx.shadowBlur = isHovered ? 20 : 10;
+                    ctx.strokeStyle = col;
+                    ctx.lineWidth = lineW;
+                    ctx.beginPath();
+                    if (pentaState.curve === "curved") drawPentaSpline(ctx, points);
+                    else {
+                        points.forEach((pt, pIdx) => {
+                            if (pIdx === 0) ctx.moveTo(pt.x, pt.y);
+                            else ctx.lineTo(pt.x, pt.y);
+                        });
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+
+                    points.forEach(pt => {
+                        ctx.save();
+                        ctx.globalAlpha = lineAlpha;
+                        ctx.translate(pt.x, pt.y);
+                        ctx.fillStyle = "#0B132B";
+                        ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.fill();
+                        ctx.strokeStyle = col;
+                        ctx.lineWidth = 2.2;
+                        ctx.beginPath(); ctx.arc(0, 0, 5.0, 0, Math.PI * 2); ctx.stroke();
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.beginPath(); ctx.arc(0, 0, 2.0, 0, Math.PI * 2); ctx.fill();
+                        ctx.restore();
+                    });
+                });
+
+                stationCoords.forEach(sc => {
+                    const st = sc.st;
+                    const xLabel = padLeft - 24;
+                    ctx.save();
+                    ctx.textAlign = "right";
+
+                    if (pentaState.labels === "simple") {
+                        const isTetra = st.isTetra;
+                        ctx.font = '800 12px "Roboto Mono", monospace';
+                        let col = isTetra ? "#00FF87" : "#CBD5E1";
+                        ctx.fillStyle = col;
+                        ctx.fillText(st.simple, xLabel - 4, sc.y + 4);
+                        ctx.font = '600 8.5px "Roboto Mono", monospace';
+                        ctx.fillStyle = "#64748B";
+                        ctx.fillText(st.code, xLabel - 24, sc.y + 3);
+                    } else {
+                        ctx.font = '700 11px "Roboto Mono", monospace';
+                        ctx.fillStyle = st.isTetra ? "#00FF87" : "#CBD5E1";
+                        ctx.fillText(st.code, xLabel, sc.y + 4);
+                    }
+                    ctx.restore();
+                });
+            }
+
+            updatePentaDataTable(activeSeries, ext);
+        }
+
+        function updatePentaDataTable(activeSeries, ext) {
+            const tbody = document.getElementById("penta-table-tbody");
+            const theadTr = document.getElementById("penta-table-thead");
+            const title = document.getElementById("penta-table-title");
+            const subtitle = document.getElementById("penta-table-subtitle");
+            if (!tbody || !theadTr || !ext) return;
+
+            const summaryRow = `
+                <tr style="background:rgba(0,245,212,0.06); font-weight:700; border-top:2px solid rgba(0,245,212,0.3);">
+                    <td colspan="2"><span style="color:#00F5D4; font-size:0.75rem;">⚖️ RESUMEN DE EXTREMOS (${pentaState.scale === 'auto' ? 'Activas' : 'Global'})</span></td>
+                    <td colspan="${Math.max(3, activeSeries.length + 2)}" style="color:#CBD5E1; font-size:0.75rem;">
+                        Mínimo: <strong style="color:#FF007F; font-family:'Roboto Mono';">${(ext.targetMin.val >= 0 ? '+' : '')}${ext.targetMin.val.toFixed(2)}</strong> (en <em>${ext.targetMin.station.code}</em>) &bull; 
+                        Máximo: <strong style="color:#00FF87; font-family:'Roboto Mono';">${(ext.targetMax.val >= 0 ? '+' : '')}${ext.targetMax.val.toFixed(2)}</strong> (en <em>${ext.targetMax.station.code}</em>) &bull; 
+                        Rango: <strong style="color:#FFE600; font-family:'Roboto Mono';">${(ext.targetMax.val - ext.targetMin.val).toFixed(2)}</strong> &bull; 
+                        Escala: <strong style="color:#00F5D4; font-family:'Roboto Mono';">[${(ext.dMin >= 0 ? '+' : '')}${ext.dMin.toFixed(1)} ➔ +${ext.dMax.toFixed(1)}]</strong>
+                    </td>
+                </tr>
+            `;
+
+            if (activeSeries.length === 2) {
+                const s1 = activeSeries[0];
+                const s2 = activeSeries[1];
+                if (title) title.textContent = `📊 Tabla de Cantidades: Comparativa (${s1.label} vs ${s2.label})`;
+                if (subtitle) subtitle.textContent = "Balance Factual Diferencial y Diagnóstico Socio-Termodinámico";
+
+                theadTr.innerHTML = `
+                    <th>Estación</th>
+                    <th>Concepto SMIb</th>
+                    <th style="color:${s1.color};">${s1.label}</th>
+                    <th style="color:${s2.color};">${s2.label}</th>
+                    <th>Brecha Δ (|A - B|)</th>
+                    <th>Diagnóstico Diferencial</th>
+                `;
+
+                tbody.innerHTML = PENTA_STATIONS.map(st => {
+                    const v1 = s1[st.id] !== undefined ? s1[st.id] : 0.0;
+                    const v2 = s2[st.id] !== undefined ? s2[st.id] : 0.0;
+                    const delta = Math.abs(v1 - v2);
+                    const netDelta = v1 - v2;
+
+                    const isV1Max = (Math.abs(v1 - ext.targetMax.val) < 0.001);
+                    const isV1Min = (Math.abs(v1 - ext.targetMin.val) < 0.001);
+                    const isV2Max = (Math.abs(v2 - ext.targetMax.val) < 0.001);
+                    const isV2Min = (Math.abs(v2 - ext.targetMin.val) < 0.001);
+
+                    let tag1 = isV1Max ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isV1Min ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+                    let tag2 = isV2Max ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isV2Min ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+
+                    let diag = "";
+                    if (st.id === "bda") diag = (netDelta < 0.1 ? "Masa de emisión equiparable." : (netDelta > 0 ? `${s1.label} emite mayor energía bruta.` : `${s2.label} emite mayor energía bruta.`));
+                    else if (st.id === "sda") diag = (v1 > v2 ? `${s1.label} aporta mayor balance neto positivo.` : `${s2.label} con mayor aporte neto.`);
+                    else if (st.id === "a1") diag = (v1 > v2 ? `Expectativa de aceptación más favorable en ${s1.label}.` : `Expectativa más favorable en ${s2.label}.`);
+                    else if (st.id === "a2") diag = (v1 > v2 ? `Mayor preferencia directa otorgada por ${s1.label}.` : `Mayor preferencia directa por ${s2.label}.`);
+                    else if (st.id === "a3") diag = (v1 > v2 ? `Mayor recepción efectiva recibida por ${s1.label}.` : `Mayor recepción recibida por ${s2.label}.`);
+                    else if (st.id === "a4") diag = (v1 > v2 ? `Expectativa atribuida más alta en ${s1.label}.` : `Expectativa atribuida más alta en ${s2.label}.`);
+                    else if (st.id === "src") diag = (v1 > v2 ? `${s1.label} recibe mejor balance grupal.` : `${s2.label} recibe mejor balance grupal.`);
+                    else if (st.id === "brc") diag = "Masa receptiva total integrada.";
+                    else if (st.id === "sdr") diag = (delta > 0.5 ? "Divergencia relacional significativa." : "Sintonía relacional global.");
+                    else if (st.id === "bdr") diag = "Masa vincular invariable blindada (BDR = 8.00).";
+
+                    const barW = Math.min(38, delta * 12);
+                    const colA = s1.color;
+                    const colB = s2.color;
+                    const barCol = (netDelta >= 0) ? colA : colB;
+
+                    return `
+                        <tr>
+                            <td>
+                                <span class="legend-key" style="margin-right:5px;">${st.simple}</span>
+                                <strong>${st.code}</strong>
+                            </td>
+                            <td style="color:#94A3B8;">${st.name} &bull; <span style="font-size:0.68rem;">${st.desc}</span></td>
+                            <td style="font-family:'Roboto Mono'; font-weight:700; color:${colA};">${(v1 >= 0 ? "+" : "") + v1.toFixed(2)} ${tag1}</td>
+                            <td style="font-family:'Roboto Mono'; font-weight:700; color:${colB};">${(v2 >= 0 ? "+" : "") + v2.toFixed(2)} ${tag2}</td>
+                            <td>
+                                <span class="delta-bar" style="width:${barW}px; background:${barCol};"></span>
+                                <strong style="font-family:'Roboto Mono'; color:${barCol};">${(netDelta >= 0 ? "+" : "")}${netDelta.toFixed(2)}</strong>
+                            </td>
+                            <td style="font-size:0.72rem; color:#CBD5E1;">${diag}</td>
+                        </tr>
+                    `;
+                }).join("") + summaryRow;
+            } else {
+                if (title) title.textContent = `📊 Tabla de Cantidades: ${activeSeries.length} Series Superpuestas`;
+                if (subtitle) subtitle.textContent = "Desglose por Estación Socio-Termodinámica";
+
+                theadTr.innerHTML = `
+                    <th>Estación</th>
+                    <th>Concepto SMIb</th>
+                    ${activeSeries.map(s => `<th style="color:${s.color};">${s.label}</th>`).join('')}
+                `;
+
+                tbody.innerHTML = PENTA_STATIONS.map(st => {
+                    return `
+                        <tr>
+                            <td>
+                                <span class="legend-key" style="margin-right:5px;">${st.simple}</span>
+                                <strong>${st.code}</strong>
+                            </td>
+                            <td style="color:#94A3B8;">${st.name} &bull; <span style="font-size:0.68rem;">${st.desc}</span></td>
+                            ${activeSeries.map(s => {
+                                const val = s[st.id] !== undefined ? s[st.id] : 0.0;
+                                const isMax = (Math.abs(val - ext.targetMax.val) < 0.001);
+                                const isMin = (Math.abs(val - ext.targetMin.val) < 0.001);
+                                const tag = isMax ? '<span class="badge-ext-tag badge-ext-max">▲ MÁX</span>' : (isMin ? '<span class="badge-ext-tag badge-ext-min">▼ MÍN</span>' : '');
+                                return `<td style="font-family:'Roboto Mono'; font-weight:700; color:${s.color};">${(val >= 0 ? "+" : "") + val.toFixed(2)} ${tag}</td>`;
+                            }).join('')}
+                        </tr>
+                    `;
+                }).join("") + summaryRow;
+            }
+        }
+
+        function renderPentaSidebar() {
+            const listEl = document.getElementById("penta-profile-list");
+            const badgeEl = document.getElementById("penta-active-badge");
+            if (!listEl) return;
+
+            if (badgeEl) {
+                badgeEl.textContent = `${pentaState.selectedKeys.size} Superpuesto${pentaState.selectedKeys.size === 1 ? '' : 's'}`;
+            }
+
+            listEl.innerHTML = pentaState.catalog.map(p => {
+                const isChecked = pentaState.selectedKeys.has(p.key);
+                const isHover = (pentaState.hoveredKey === p.key);
+                return `
+                    <div class="profile-card ${isChecked ? 'active' : ''} ${isHover ? 'highlighted' : ''}" data-key="${p.key}">
+                        <input type="checkbox" class="profile-checkbox" data-chk-key="${p.key}" ${isChecked ? 'checked' : ''} />
+                        <div class="profile-color-bar" style="background:${p.color};"></div>
+                        <div class="profile-info">
+                            <div class="profile-title-row">
+                                <span class="profile-title" title="${p.label}">${p.label}</span>
+                                <span class="profile-tag" style="background:${p.color}22; color:${p.color}; border:1px solid ${p.color}55;">${p.id}</span>
+                            </div>
+                            <div class="profile-sub">
+                                <span>${p.sub}</span>
+                                <span class="profile-metrics">Σ: ${(p.sdr >= 0 ? '+' : '')}${p.sdr.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            listEl.querySelectorAll(".profile-card").forEach(card => {
+                const key = card.dataset.key;
+                card.addEventListener("mouseenter", () => {
+                    pentaState.hoveredKey = key;
+                    drawPentagrama();
+                });
+                card.addEventListener("mouseleave", () => {
+                    pentaState.hoveredKey = null;
+                    drawPentagrama();
+                });
+                card.addEventListener("click", (e) => {
+                    if (e.target.tagName === "INPUT") return;
+                    if (pentaState.selectedKeys.has(key)) {
+                        if (pentaState.selectedKeys.size > 1) pentaState.selectedKeys.delete(key);
+                    } else {
+                        pentaState.selectedKeys.add(key);
+                    }
+                    renderPentaSidebar();
+                    drawPentagrama();
+                });
+            });
+
+            listEl.querySelectorAll(".profile-checkbox").forEach(chk => {
+                chk.addEventListener("change", (e) => {
+                    const key = e.target.dataset.chkKey;
+                    if (e.target.checked) {
+                        pentaState.selectedKeys.add(key);
+                    } else {
+                        if (pentaState.selectedKeys.size > 1) {
+                            pentaState.selectedKeys.delete(key);
+                        } else {
+                            e.target.checked = true;
+                        }
+                    }
+                    renderPentaSidebar();
+                    drawPentagrama();
+                });
+            });
+        }
+
+        function setPentaPreset(preset) {
+            pentaState.mode = preset;
+            document.querySelectorAll('[id^="pbtn-preset-"]').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`pbtn-preset-${preset.replace('_', '-')}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (preset === "compare_mu_t0") {
+                pentaState.selectedKeys = new Set(["group_mu", "group_t0"]);
+            } else if (preset === "compare_g1_g2") {
+                pentaState.selectedKeys = new Set(["group_g1", "group_g2"]);
+            } else if (preset === "compare_2a_5b") {
+                pentaState.selectedKeys = new Set(["node_2a", "node_5b"]);
+            } else if (preset === "top_emi_rec") {
+                pentaState.selectedKeys = new Set(["node_2a", "node_3a"]);
+            } else if (preset === "alpha_omega") {
+                pentaState.selectedKeys = new Set(["node_2a", "node_5b"]);
+            } else if (preset === "all_nodes") {
+                pentaState.selectedKeys = new Set(["node_1a", "node_2a", "node_3a", "node_4a", "node_5a", "node_1b", "node_2b", "node_3b", "node_4b", "node_5b"]);
+            } else if (preset === "only_mu") {
+                pentaState.selectedKeys = new Set(["group_mu"]);
+            }
+            renderPentaSidebar();
+            drawPentagrama();
+        }
+
+        function setPentaOrient(orient) {
+            pentaState.orient = orient;
+            document.getElementById('pbtn-orient-h')?.classList.toggle('active', orient === 'horizontal');
+            document.getElementById('pbtn-orient-v')?.classList.toggle('active', orient === 'vertical');
+            drawPentagrama();
+        }
+
+        function setPentaCurve(curve) {
+            pentaState.curve = curve;
+            document.getElementById('pbtn-curve-c')?.classList.toggle('active', curve === 'curved');
+            document.getElementById('pbtn-curve-s')?.classList.toggle('active', curve === 'straight');
+            drawPentagrama();
+        }
+
+        function setPentaLabels(labels) {
+            pentaState.labels = labels;
+            document.getElementById('pbtn-labels-s')?.classList.toggle('active', labels === 'simple');
+            document.getElementById('pbtn-labels-f')?.classList.toggle('active', labels === 'full');
+            drawPentagrama();
+        }
+
+        function setPentaNumbers(numbers) {
+            pentaState.numbers = numbers;
+            document.getElementById('pbtn-nums-c')?.classList.toggle('active', numbers === 'clean');
+            document.getElementById('pbtn-nums-s')?.classList.toggle('active', numbers === 'show');
+            drawPentagrama();
+        }
+
+        function setPentaVolume(volume) {
+            pentaState.volume = volume;
+            document.getElementById('pbtn-vol-on')?.classList.toggle('active', volume === 'on');
+            document.getElementById('pbtn-vol-off')?.classList.toggle('active', volume === 'off');
+            drawPentagrama();
+        }
+
+        function setPentaScale(scale) {
+            pentaState.scale = scale;
+            document.getElementById('pbtn-scale-auto')?.classList.toggle('active', scale === 'auto');
+            document.getElementById('pbtn-scale-global')?.classList.toggle('active', scale === 'global');
+            drawPentagrama();
+        }
+
+        function setPentaScaleMode(mode) {
+            pentaState.scaleMode = mode;
+            document.getElementById('pbtn-metric-unit')?.classList.toggle('active', mode === 'unit');
+            document.getElementById('pbtn-metric-acc')?.classList.toggle('active', mode === 'acc');
+            buildPentaCatalog();
+            renderPentaSidebar();
+            drawPentagrama();
+        }
+
+        function togglePentaSidebar() {
+            const ws = document.getElementById("penta-workspace");
+            if (!ws) return;
+            ws.classList.toggle("sidebar-hidden");
+            const btn = document.getElementById("btn-toggle-sidebar");
+            if (btn) btn.classList.toggle("active", !ws.classList.contains("sidebar-hidden"));
+            drawPentagrama();
+        }
+
+        function togglePentaTable() {
+            const content = document.getElementById("penta-table-content");
+            const icon = document.getElementById("penta-table-icon");
+            if (!content) return;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+                if (icon) icon.style.transform = "rotate(90deg)";
+            } else {
+                content.style.display = "none";
+                if (icon) icon.style.transform = "rotate(0deg)";
+            }
+        }
+
+        function initPentagramaView() {
+            buildPentaCatalog();
+            renderPentaSidebar();
+            drawPentagrama();
+        }
+
 
         // =========================================================================
         // MOTOR MATEMÁTICO DE LAS 10 DENSIDADES (PSICOTHEMA N=10)
@@ -2626,20 +3988,20 @@
             });
 
             if (presetName === 'panoramic') {
-                targetCamPos.set(0, -3, 26);
-                targetLookAt.set(0.5, 0, 0);
+                targetCamPos.set(2.5, 0.0, 31);
+                targetLookAt.set(2.5, 0.0, 0);
                 document.getElementById('btn-cam-panoramic')?.classList.add('active');
             } else if (presetName === 'g1') {
-                targetCamPos.set(-4.0, -1.2, 11);
-                targetLookAt.set(-4.0, -1.0, 0);
+                targetCamPos.set(-9.5, 0.0, 16);
+                targetLookAt.set(-9.5, 0.0, 0);
                 document.getElementById('btn-cam-g1')?.classList.add('active');
             } else if (presetName === 'g2') {
-                targetCamPos.set(6.5, 3.5, 12);
-                targetLookAt.set(5.5, 2.5, 0);
+                targetCamPos.set(13.0, 2.0, 18);
+                targetLookAt.set(13.0, 2.0, 0);
                 document.getElementById('btn-cam-g2')?.classList.add('active');
             } else if (presetName === 'grassmann') {
-                targetCamPos.set(0, 7.5, 20);
-                targetLookAt.set(0, 2.0, 0);
+                targetCamPos.set(2.5, 8.0, 26);
+                targetLookAt.set(2.5, 0.0, 0);
                 document.getElementById('btn-cam-grassmann')?.classList.add('active');
             } else if (presetName === 'orbit') {
                 autoOrbit = !autoOrbit;
@@ -2661,8 +4023,11 @@
             const btn = document.getElementById('btn-dock-toggle-split');
             if (btn) btn.textContent = isMax ? "❐ Dividido" : "⛶ Maximizar";
             if (!isMax) {
-                targetCamPos.set(-4.5, -2, 24);
-                targetLookAt.set(-3.5, 0, 0);
+                targetCamPos.set(-7.5, 0.0, 28);
+                targetLookAt.set(-7.5, 0.0, 0);
+            }
+            if (activeMainView === 'view-densidades') {
+                setTimeout(drawPentagrama, 60);
             }
         }
 
@@ -2721,8 +4086,26 @@
             updateSubjectDetail("1A");
             updateTimelineState(1.00);
             updateDensityChart('g1_mean');
+            initPentagramaView();
             renderCajDendrogram();
             renderProximityMatrix();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqView = urlParams.get('view');
+            if (reqView) {
+                if (reqView === '2' || reqView === 'densidades' || reqView === 'view-densidades') {
+                    switchMainView('view-densidades');
+                } else if (reqView === '3' || reqView === 'caj' || reqView === 'view-caj') {
+                    switchMainView('view-caj');
+                } else if (reqView === '4' || reqView === 'proximidades' || reqView === 'view-proximidades') {
+                    switchMainView('view-proximidades');
+                } else if (reqView === '5' || reqView === 'tablas' || reqView === 'view-tablas') {
+                    switchMainView('view-tablas');
+                } else {
+                    switchMainView(reqView);
+                }
+            }
+
             animate();
         }
 
@@ -2747,34 +4130,41 @@
         }
 
         function buildEntities() {
-            const sphereGeo = new THREE.SphereGeometry(0.50, 32, 32);
-            const ostracismoGeo = new THREE.SphereGeometry(0.68, 32, 32);
+            // Aumento de tamaños de bolas canónicas (Radio estándar 1.05, Líder 1.25, Ostracismo 1.35)
+            const sphereGeo = new THREE.SphereGeometry(1.05, 32, 32);
+            const leaderGeo = new THREE.SphereGeometry(1.25, 32, 32);
+            const ostracismoGeo = new THREE.SphereGeometry(1.35, 32, 32);
 
             CANONICAL_DATA.subjects.forEach(sub => {
                 const isG1 = sub.group === "G1";
                 const isOst = sub.id === "5B";
+                const isLeader = sub.id === "2A";
+                const rad = isOst ? 1.35 : (isLeader ? 1.25 : 1.05);
+                const geo = isOst ? ostracismoGeo : (isLeader ? leaderGeo : sphereGeo);
+
                 const baseColor = isG1 ? 0x00FF87 : (isOst ? 0xFF007F : 0xFF2D87);
 
                 const mat = new THREE.MeshStandardMaterial({
                     color: baseColor, emissive: baseColor,
-                    emissiveIntensity: isOst ? 0.70 : 0.40,
-                    roughness: 0.2, metalness: 0.3
+                    emissiveIntensity: isOst ? 0.75 : 0.45,
+                    roughness: 0.25, metalness: 0.25,
+                    transparent: true, opacity: 0.88
                 });
 
-                const mesh = new THREE.Mesh(isOst ? ostracismoGeo : sphereGeo, mat);
+                const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.copy(sub.pos1);
                 mesh.userData = { ...sub, type: 'subject' };
                 scene.add(mesh);
                 interactiveMeshes.push(mesh);
 
-                const labelColor = isG1 ? '#00FF87' : (isOst ? '#FF007F' : '#FF99C8');
-                const label = makeTextSprite(sub.id, labelColor, isOst ? 44 : 36);
-                label.position.copy(sub.pos1).add(new THREE.Vector3(0, isOst ? 0.95 : 0.75, 0));
+                // ETIQUETAS DENTRO DE LAS BOLAS (1A, 2A, 1B, 2B, etc.)
+                const label = makeInnerBallSprite(sub.id, sub.group, isOst, isLeader, rad);
+                label.position.copy(sub.pos1);
                 scene.add(label);
 
                 let halo = null;
                 if (isOst) {
-                    const haloGeo = new THREE.RingGeometry(0.85, 1.15, 32);
+                    const haloGeo = new THREE.RingGeometry(1.65, 2.10, 32);
                     const haloMat = new THREE.MeshBasicMaterial({ color: 0xFF007F, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
                     halo = new THREE.Mesh(haloGeo, haloMat);
                     halo.position.copy(sub.pos1);
@@ -2784,10 +4174,11 @@
                 subjectObjects[sub.id] = { mesh, label, halo, data: sub };
             });
 
-            const octGeo = new THREE.OctahedronGeometry(0.72, 0);
+            // Centroides aumentados (Radio 1.15)
+            const octGeo = new THREE.OctahedronGeometry(1.15, 0);
             CANONICAL_DATA.centroids.forEach(cent => {
                 const mat = new THREE.MeshStandardMaterial({
-                    color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.55,
+                    color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.60,
                     roughness: 0.1, metalness: 0.5, transparent: true, opacity: 1.0
                 });
                 const mesh = new THREE.Mesh(octGeo, mat);
@@ -2796,12 +4187,48 @@
                 scene.add(mesh);
                 interactiveMeshes.push(mesh);
 
-                const label = makeTextSprite(cent.id, '#FFE600', 40);
-                label.position.set(cent.x, cent.y - 0.95, cent.z);
+                const label = makeTextSprite(cent.id, '#FFE600', 44);
+                label.position.set(cent.x, cent.y - 1.60, cent.z);
                 scene.add(label);
 
                 centroidObjects[cent.id] = { mesh, label, data: cent };
             });
+
+            // =========================================================================
+            // LÍNEA DIVISORIA DE EVOLUCIÓN SOCIO-TERMODINÁMICA G1 vs G2 (X = 0)
+            // =========================================================================
+            const sepGroup = new THREE.Group();
+            scene.add(sepGroup);
+
+            // 1. Línea vertical discontinua luminosa
+            const sepPts = [new THREE.Vector3(0, -16.0, 0), new THREE.Vector3(0, 16.0, 0)];
+            const sepGeo = new THREE.BufferGeometry().setFromPoints(sepPts);
+            const sepMat = new THREE.LineDashedMaterial({
+                color: 0x38BDF8, dashSize: 0.8, gapSize: 0.45,
+                transparent: true, opacity: 0.75, linewidth: 2
+            });
+            const sepLine = new THREE.Line(sepGeo, sepMat);
+            sepLine.computeLineDistances();
+            sepGroup.add(sepLine);
+
+            // 2. Membrana vertical sutil de partición
+            const planeGeo = new THREE.PlaneGeometry(0.15, 32);
+            const planeMat = new THREE.MeshBasicMaterial({
+                color: 0x38BDF8, transparent: true, opacity: 0.15, side: THREE.DoubleSide
+            });
+            const sepPlane = new THREE.Mesh(planeGeo, planeMat);
+            sepGroup.add(sepPlane);
+
+            // 3. Rótulos explicativos en la cúspide y en la base
+            const topSepLabel = makeTextSprite("◀ GRUPO 1 (COHESIÓN)   |   GRUPO 2 (FRICCIÓN / OSTRACISMO) ▶", "#38BDF8", 28);
+            topSepLabel.scale.set(18, 2.2, 1.0);
+            topSepLabel.position.set(0, 16.8, 0);
+            sepGroup.add(topSepLabel);
+
+            const btmSepLabel = makeTextSprite("FRONTERA ESTRUCTURAL DE PARTICIÓN · ESPACIO BENZÉCRI (X = 0)", "#94A3B8", 24);
+            btmSepLabel.scale.set(16, 2.0, 1.0);
+            btmSepLabel.position.set(0, -16.8, 0);
+            sepGroup.add(btmSepLabel);
 
             CANONICAL_DATA.subjects.forEach(sub => {
                 const cent = sub.group === "G1" ? CANONICAL_DATA.centroids[0] : CANONICAL_DATA.centroids[1];
@@ -2994,7 +4421,7 @@
 
                 const currPos = new THREE.Vector3().lerpVectors(sub.pos0, sub.pos1, progress);
                 obj.mesh.position.copy(currPos);
-                obj.label.position.copy(currPos).add(new THREE.Vector3(0, sub.id === "5B" ? 0.95 : 0.75, 0));
+                obj.label.position.copy(currPos); // ¡Etiqueta en el centro exacto dentro de la bola!
                 if (obj.halo) obj.halo.position.copy(currPos);
 
                 let isVisible = true;
@@ -3171,14 +4598,14 @@
             });
 
             if (mode === "g1") {
-                targetCamPos.set(-4.0, -1.0, 13);
-                targetLookAt.set(-4.0, -0.8, 0);
+                targetCamPos.set(-9.5, 0.0, 16);
+                targetLookAt.set(-9.5, 0.0, 0);
             } else if (mode === "g2") {
-                targetCamPos.set(5.2, 0.8, 15);
-                targetLookAt.set(4.8, 0.8, 0);
+                targetCamPos.set(13.0, 2.0, 18);
+                targetLookAt.set(13.0, 2.0, 0);
             } else {
-                targetCamPos.set(0, -4, 25);
-                targetLookAt.set(0.5, 0, 0);
+                targetCamPos.set(2.5, 0.0, 31);
+                targetLookAt.set(2.5, 0.0, 0);
             }
 
             updateTimelineState(0.00);
@@ -4101,22 +5528,22 @@
 
                 // Restaurar cámara con grupos bien separados (X ≈ -8.5 y X ≈ +8.5)
                 if (activeGroupMode === "g1") {
-                    targetCamPos.set(-8.5, -1.0, 14);
-                    targetLookAt.set(-8.5, -0.8, 0);
+                    targetCamPos.set(-9.5, 0.0, 16);
+                    targetLookAt.set(-9.5, 0.0, 0);
                 } else if (activeGroupMode === "g2") {
-                    targetCamPos.set(8.5, 1.0, 16);
-                    targetLookAt.set(8.5, 0.8, 0);
+                    targetCamPos.set(13.0, 2.0, 18);
+                    targetLookAt.set(13.0, 2.0, 0);
                 } else {
-                    targetCamPos.set(0, -2.5, 34);
-                    targetLookAt.set(0.0, 0, 0);
+                    targetCamPos.set(2.5, 0.0, 31);
+                    targetLookAt.set(2.5, 0.0, 0);
                 }
             } else {
                 if (workspace) {
                     workspace.classList.add('open');
                     // En modo split, reencuadrar cámara panorámica viva hacia la izquierda
                     if (!workspace.classList.contains('maximized')) {
-                        targetCamPos.set(-4.5, -2.0, 30);
-                        targetLookAt.set(-3.5, 0, 0);
+                        targetCamPos.set(-7.5, 0.0, 28);
+                        targetLookAt.set(-7.5, 0.0, 0);
                     }
                 }
                 if (metricsPanel) metricsPanel.style.display = 'none';
@@ -4137,9 +5564,9 @@
 
                 // Actualizar título e icono del dock
                 if (viewId === 'view-densidades') {
-                    if (iconEl) iconEl.textContent = '⚡';
-                    if (titleEl) titleEl.textContent = 'MOTOR DE LAS 10 DENSIDADES SOCIO-TERMODINÁMICAS';
-                    updateDensityChart();
+                    if (iconEl) iconEl.textContent = '🎼';
+                    if (titleEl) titleEl.textContent = 'PENTAGRAMA SOCIO-TERMODINÁMICO · 10 DENSIDADES';
+                    initPentagramaView();
                 } else if (viewId === 'view-caj') {
                     if (iconEl) iconEl.textContent = '🌳';
                     if (titleEl) titleEl.textContent = 'ÁRBOL CAJ · CLASIFICACIÓN JERÁRQUICA (WARD)';
@@ -4170,7 +5597,11 @@
 
 // Listeners asignados dentro de setupUI()
 
-        window.addEventListener('load', init);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
     <script src="i18n_nav.js"></script>
 
