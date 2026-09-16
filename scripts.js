@@ -213,6 +213,51 @@ window.addEventListener('scroll', () => {
     });
 });
 
+window.activatePresentation = function(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Cerrar menú móvil si estuviera desplegado
+    const menu = document.getElementById('reading-nav');
+    if (menu && menu.classList.contains('menu-open')) {
+        menu.classList.remove('menu-open');
+    }
+
+    // Efecto visual: pulso neón sobre la tarjeta de presentación
+    const heroCard = document.querySelector('.hero-content');
+    if (heroCard) {
+        heroCard.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease';
+        heroCard.style.borderColor = '#00FF87';
+        heroCard.style.boxShadow = '0 0 50px rgba(0, 255, 135, 0.45), 0 24px 60px rgba(0, 0, 0, 0.85)';
+        heroCard.style.transform = 'scale(1.008)';
+        setTimeout(() => {
+            heroCard.style.borderColor = 'rgba(56, 189, 248, 0.35)';
+            heroCard.style.boxShadow = '0 24px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(0, 162, 255, 0.15)';
+            heroCard.style.transform = 'scale(1)';
+        }, 800);
+    }
+    
+    // Activar audio/locución institucional de presentación
+    if (typeof toggleHeroAudio === 'function') {
+        if (!heroAudioPlaying) {
+            toggleHeroAudio();
+        }
+    }
+};
+
+// Auto-activación si se accede mediante hash #hero o parámetro ?presentacion=1
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash === '#hero' || window.location.search.includes('presentacion=1')) {
+        setTimeout(() => {
+            if (typeof window.activatePresentation === 'function') {
+                window.activatePresentation();
+            }
+        }, 500);
+    }
+});
+
 // =========================================================================
 // MANDO UNIVERSAL MINIMALISTA (ACCIONES PARA PORTADA PRINCIPAL)
 // =========================================================================
