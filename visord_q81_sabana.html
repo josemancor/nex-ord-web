@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD • Cine Socio-Termodinámico: La Sábana Arrugada en Q81 (Fase 1)</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js & OrbitControls -->
+  <script src="lib/three.min.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #060B18;
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .outfit { font-family: 'Outfit', sans-serif; }
+
+    /* Cristal traslúcido ciber-termodinámico */
+    .glass-panel {
+      background: rgba(11, 19, 43, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-btn {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #CBD5E1;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-btn:hover {
+      background: rgba(0, 229, 255, 0.18);
+      border-color: rgba(0, 229, 255, 0.5);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 229, 255, 0.25);
+    }
+    .glass-btn.active {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(0, 255, 135, 0.25));
+      border-color: #00FF87;
+      color: #00FF87;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.35);
+    }
+
+    /* MANDO UNIVERSAL MINIMALISTA EN FILA INDIA (REGLA 15) */
+    .universal-nav-pod {
+      position: fixed;
+      right: 18px;
+      bottom: 20px;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 10px 6px;
+      border-radius: 22px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 18px rgba(56, 189, 248, 0.2);
+    }
+    .nav-pod-btn {
+      width: 38px;
+      height: 38px;
+      background: rgba(16, 25, 53, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      line-height: 1;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    .nav-pod-btn:hover {
+      background: #00E5FF;
+      color: #030712;
+      border-color: #00E5FF;
+      transform: scale(1.15);
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.8);
+    }
+    .nav-pod-home { color: #FFE600; }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030712 !important;
+      box-shadow: 0 0 16px rgba(255, 230, 0, 0.9) !important;
+    }
+
+    /* Scrollbars ciber */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #060B18; }
+    ::-webkit-scrollbar-thumb { background: #0284C7; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
+
+    /* Canvas glow */
+    #three-viewport {
+      outline: none;
+    }
+  </style>
+</head>
+
+<body class="p-2 md:p-4 text-slate-100 flex flex-col items-center justify-start gap-3">
+
+  <!-- CONTENEDOR MAESTRO 1400px MÁXIMO -->
+  <main class="w-full max-w-[1400px] flex flex-col gap-3">
+
+    <!-- 👑 CABECERA INSTITUCIONAL CANÓNICA (REGLAS 9, 11 Y 14) -->
+    <header class="glass-panel rounded-2xl p-3 md:px-5 md:py-3 flex flex-wrap items-center justify-between gap-3 border-b border-sky-500/30">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          <svg class="w-6 h-6 text-slate-950 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="outfit text-base md:text-lg font-black tracking-wide text-white flex items-center gap-1.5">
+              NEXORD <span class="text-cyan-400">VISORD CINEMA</span>
+            </h1>
+            <span class="mono text-[10px] bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full font-bold">FASE 1</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mono">La Sábana Arrugada en Q81(9, 9) • Oleaje Estático, Vectores N y Transición Suave</p>
+        </div>
+      </div>
+
+      <!-- METADATOS INSTITUCIONALES (CLAVE CANÓNICA - REGLA 11) -->
+      <div class="flex items-center gap-2 flex-wrap text-xs">
+        <div class="bg-slate-950/80 border border-cyan-500/30 px-3 py-1 rounded-xl flex items-center gap-2">
+          <span class="mono text-[10px] text-slate-400">CLAVE:</span>
+          <span class="mono text-[11px] font-bold text-cyan-300" id="study-key">SIMUL-AA-G1-T3-C1-V10-A16-ES-5</span>
+        </div>
+        <div class="bg-slate-950/80 border border-emerald-500/30 px-3 py-1 rounded-xl flex items-center gap-2">
+          <span class="mono text-[10px] text-slate-400">GRUPO:</span>
+          <span class="mono text-[11px] font-bold text-emerald-400" id="group-badge">1g1t1c</span>
+        </div>
+        <div class="hidden lg:flex bg-slate-950/80 border border-slate-800 px-3 py-1 rounded-xl items-center gap-1 text-slate-400 mono text-[10px]">
+          <span>📅</span> 16 de Septiembre de 2026
+        </div>
+      </div>
+    </header>
+
+    <!-- 🎬 BARRA SUPERIOR DE METRAJE: "SÁBANA A SÁBANA" -->
+    <section class="glass-panel rounded-2xl p-2 md:p-3 flex flex-wrap items-center justify-between gap-2 border border-sky-900/40">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1.5 pl-1">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          METRAJE:
+        </span>
+        <button onclick="loadSabana('t1')" id="btn-sabana-t1" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-semibold flex items-center gap-1.5 active">
+          🌅 Sábana T1: Génesis
+        </button>
+        <button onclick="loadSabana('t2')" id="btn-sabana-t2" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+          ⚡ Sábana T2: Tensión / Crisis
+        </button>
+        <button onclick="loadSabana('t3')" id="btn-sabana-t3" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+          🌱 Sábana T3: Resolución
+        </button>
+        <button onclick="loadSabana('canon')" id="btn-sabana-canon" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+          🏛️ Grupo A (1g1t1c)
+        </button>
+      </div>
+
+      <!-- ESTADO DE LA TRANSICIÓN VISCOELÁSTICA -->
+      <div class="flex items-center gap-2 bg-slate-950/90 border border-sky-900/60 px-3 py-1 rounded-xl mono text-xs">
+        <span class="text-[10px] text-slate-400">FLUIDEZ ONDULATORIA:</span>
+        <div class="w-16 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="transition-bar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-full transition-all duration-75"></div>
+        </div>
+        <span class="text-[10px] font-bold text-cyan-300" id="transition-status">REPOSO ESTÁTICO</span>
+      </div>
+    </section>
+
+    <!-- 🌌 ÁREA CENTRAL 3D: EL CUBO-ACUARIO Y LA SÁBANA ARRUGADA -->
+    <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/30 shadow-2xl" style="height: 520px;" id="aquarium-viewport-container">
+      
+      <!-- CONTENEDOR CANVAS THREE.JS -->
+      <div id="three-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+      <!-- 👑 PRESET ÁNGULO DIÁFANO & MANDOS DE PERSPECTIVA FLOTANTES -->
+      <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
+        <button onclick="applyDiafanoView()" id="btn-diafano" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/80 border-amber-500/60 shadow-lg shadow-amber-500/20 flex items-center gap-2" title="Perspectiva Óptima sin Oclusión: Elev 28°, Azim -38° respecto a la Espina Dorsal">
+          ✨ Ángulo Diáfano Canónico
+        </button>
+        <div class="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-sky-900/50">
+          <button onclick="setCameraAngle('iso')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">ISO 3D</button>
+          <button onclick="setCameraAngle('top')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Cenital</button>
+          <button onclick="setCameraAngle('profile')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Perfil 90°</button>
+          <button onclick="setCameraAngle('spine')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Espina</button>
+          <label class="flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer mono text-[10px] text-cyan-300 bg-cyan-950/60 border border-cyan-500/40">
+            <input type="checkbox" id="chk-wobble" checked class="rounded border-cyan-600">
+            <span>🛰️ Órbita ±8°</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- LEYENDA TOPOLÓGICA DIÁFANA -->
+      <div class="absolute top-3 left-3 z-20 pointer-events-none flex flex-col gap-1 text-[10px] mono bg-slate-950/85 p-2 rounded-xl border border-sky-900/50 backdrop-blur-md">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></span>
+          <span class="text-emerald-300 font-bold">Crestas a Cielo Abierto (+Z)</span>: Cohesión &lt;Ee&gt;
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]"></span>
+          <span class="text-cyan-300 font-bold">Lámina de Flotación (Z = 0)</span>: Indiferencia ¡¿?!
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#FF007F]"></span>
+          <span class="text-rose-400 font-bold">Fosas Abisales Submarinas (-Z)</span>: Conflicto [Rr]
+        </div>
+        <div class="flex items-center gap-1.5 pt-0.5 border-t border-slate-800">
+          <span class="w-3.5 h-1 bg-amber-400 rounded-full shadow-[0_0_8px_#FFE600]"></span>
+          <span class="text-amber-300 font-bold">Espina Dorsal Simétrica</span>: Auto-posiciones (i, i)
+        </div>
+      </div>
+
+      <!-- OVERLAY DE AUDIO CÓSMICO -->
+      <div class="absolute bottom-3 left-3 z-20 flex items-center gap-2 bg-slate-950/85 px-3 py-1.5 rounded-xl border border-sky-900/50">
+        <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2 py-1 rounded-lg mono text-xs flex items-center gap-1.5">
+          <span id="audio-icon">🔇</span>
+          <span id="audio-lbl" class="text-[10px]">Música Galáctica: OFF</span>
+        </button>
+        <span class="mono text-[10px] text-slate-400 hidden sm:inline">Web Audio API • Armónicos 432 Hz</span>
+      </div>
+
+      <!-- INSTRUCCIÓN DE INTERACCIÓN -->
+      <div class="absolute bottom-3 right-3 z-20 pointer-events-none mono text-[10px] text-slate-400 bg-slate-950/80 px-3 py-1 rounded-lg border border-slate-800">
+        🖱️ Arrastra para orbitar 3D • Rueda para zoom • Clic en vértice para telemetría
+      </div>
+    </div>
+
+    <!-- 🎛️ PANEL DUAL: MOVIOLA CINEMÁTICA Y MODO CONSTELACIÓN VECTOR N -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      
+      <!-- 🎬 MOVIOLA: REVELADO SECUENCIAL DEL FOTOGRAMA (7 COLUMNAS) -->
+      <section class="lg:col-span-7 glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-cyan-400 font-bold text-sm outfit">MOVIOLA DEL FOTOGRAMA</span>
+            <span class="mono text-[9px] bg-sky-950 border border-sky-500/40 text-sky-300 px-2 py-0.2 rounded font-bold">SECUENCIA RÍTMICA</span>
+          </div>
+          <div class="flex items-center gap-1.5 mono text-[10px]">
+            <span class="text-slate-400">Cadencia:</span>
+            <select id="playback-speed" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-cyan-300 text-[10px]">
+              <option value="600">Solemne / Cósmica (600ms)</option>
+              <option value="320" selected>Normal (320ms)</option>
+              <option value="140">Ráfaga Rápida (140ms)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CONTROLES DE REPRODUCCIÓN -->
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5">
+            <button onclick="rewindFilm()" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Reiniciar Fotograma a Z=0">⏮</button>
+            <button onclick="stepFilm(-1)" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Paso Anterior">◀</button>
+            <button onclick="togglePlayFilm()" id="btn-play" class="glass-btn px-4 py-1.5 rounded-xl mono text-xs font-bold text-emerald-300 border-emerald-500/50 bg-emerald-950/60 shadow-md shadow-emerald-500/20 flex items-center gap-1.5">
+              <span id="play-icon">▶</span>
+              <span id="play-label">REPRODUCIR</span>
+            </button>
+            <button onclick="stepFilm(1)" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Paso Siguiente">▶</button>
+            <button onclick="forwardFilmFull()" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Oleaje Completo">⏭</button>
+          </div>
+
+          <!-- CRITERIO DE SECUENCIACIÓN -->
+          <div class="flex items-center gap-1 text-[10px] mono">
+            <span class="text-slate-400">Criterio:</span>
+            <button onclick="setSequenceCriterion('thermal')" id="crit-thermal" class="glass-btn px-2 py-1 rounded-lg font-bold text-cyan-300 active" title="De la Cohesión al Rechazo">
+              🔥 Polaridad Térmica
+            </button>
+            <button onclick="setSequenceCriterion('heider')" id="crit-heider" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="De la Sintonía a la Ceguera">
+              🧠 Heider
+            </button>
+            <button onclick="setSequenceCriterion('radial')" id="crit-radial" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="Onda Concéntrica">
+              🌊 Ondas
+            </button>
+          </div>
+        </div>
+
+        <!-- PROGRESS BAR DEL FOTOGRAMA -->
+        <div class="flex flex-col gap-1 pt-1">
+          <div class="flex items-center justify-between mono text-[10px] text-slate-400">
+            <span>Celdas Reveladas: <strong class="text-cyan-300 font-bold" id="film-step-label">81 / 81</strong></span>
+            <span id="film-step-detail">Fotograma Completo (Oleaje Estático)</span>
+          </div>
+          <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+            <div id="film-progress-bar" class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-rose-500 h-full w-full transition-all duration-150"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 👤 MODO CONSTELACIÓN: VECTORES N DEL SUJETO (5 COLUMNAS) -->
+      <section class="lg:col-span-5 glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-amber-400 font-bold text-sm outfit">CONSTELACIÓN VECTORIAL</span>
+            <span class="mono text-[9px] bg-amber-950 border border-amber-500/40 text-amber-300 px-2 py-0.2 rounded font-bold">DIMENSIÓN N</span>
+          </div>
+          <span class="text-[10px] mono text-slate-400">Interacciones Específicas</span>
+        </div>
+
+        <p class="text-[10px] text-slate-400 leading-tight">
+          Un sujeto no tiene un escalar fijo: su densidad relacional varía en cada interacción y se ancla en su auto-posición simétrica (i, i).
+        </p>
+
+        <!-- SELECTOR DE SUJETO -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="selectSubject(null)" id="btn-subj-all" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-white active">
+            🌟 Todos
+          </button>
+          <button onclick="selectSubject(0)" id="btn-subj-0" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
+            1A
+          </button>
+          <button onclick="selectSubject(1)" id="btn-subj-1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
+            2A
+          </button>
+          <button onclick="selectSubject(2)" id="btn-subj-2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
+            3A
+          </button>
+          <button onclick="selectSubject(3)" id="btn-subj-3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
+            4A
+          </button>
+          <button onclick="selectSubject(4)" id="btn-subj-4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
+            5A
+          </button>
+        </div>
+
+        <!-- RESUMEN DEL VECTOR N SELECCIONADO -->
+        <div id="subject-vector-summary" class="bg-slate-950/80 p-2 rounded-xl border border-sky-900/40 text-[10px] mono flex flex-col gap-1">
+          <div class="flex justify-between text-slate-400">
+            <span>Sujeto Activo: <strong class="text-white" id="subj-name">Visión Grupal Completa</strong></span>
+            <span class="text-cyan-400" id="subj-entropy">Entropía: S = 0.28</span>
+          </div>
+          <div class="flex items-center gap-1 text-[9px] text-slate-400 overflow-x-auto" id="subj-pills">
+            <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">Auto-posición anclada en Espina Dorsal</span>
+            <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">4 Lazos Alter</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 📊 PANEL DE TELEMETRÍA SOCIO-TERMODINÁMICA DETALLADA -->
+    <section class="glass-panel rounded-2xl p-3 grid grid-cols-2 md:grid-cols-6 gap-2 border border-sky-900/40 mono text-xs">
+      
+      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Vértice Seleccionado</span>
+        <span class="mono font-bold text-white text-sm flex items-center gap-1" id="tel-vertex-name">
+          Q81 &lt;Ee&gt;
+        </span>
+        <span class="text-[8px] text-emerald-400" id="tel-vertex-coord">(u:0, v:0) [Máxima Elección]</span>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Cota Relativa (SDR)</span>
+        <div class="flex items-center gap-1.5">
+          <span class="mono font-extrabold text-base text-emerald-400" id="tel-sdr">+0.95</span>
+          <span id="tel-phase-badge" class="text-[8px] px-1.5 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">CIELO</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Díadas Alojadas</span>
+        <span class="mono font-bold text-slate-200 text-xs" id="tel-dyads">1A ⇄ 2A, 2A ⇄ 3A</span>
+        <span class="text-[8px] text-slate-400" id="tel-dyads-count">2 díadas en centroide</span>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Curvatura de Gauss (K)</span>
+        <span class="mono font-bold text-amber-300 text-xs" id="tel-gauss">K = +0.18</span>
+        <span class="text-[8px] text-emerald-300 font-semibold" id="tel-gauss-type">Domo Elíptico</span>
+      </div>
+
+      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Sintonía Grupal (SR)</span>
+        <span class="mono font-extrabold text-cyan-300 text-sm" id="tel-sr">0.82</span>
+        <span class="text-[8px] text-cyan-400">Resonancia Cohesiva</span>
+      </div>
+
+      <div class="flex flex-col justify-center">
+        <span class="text-[9px] text-slate-400 uppercase font-semibold">Entropía Grupal (S_grupo)</span>
+        <span class="mono font-extrabold text-slate-200 text-sm" id="tel-entropy-group">0.24</span>
+        <span class="text-[8px] text-emerald-400 font-semibold">Baja Disipación</span>
+      </div>
+    </section>
+
+    <!-- 💡 NOTA EXPLICATIVA PEDAGÓGICA (REGLA 10) -->
+    <footer class="glass-panel rounded-2xl p-3.5 mb-14 border border-sky-900/40 mono text-xs text-slate-400 flex flex-col gap-1.5">
+      <div class="flex items-center gap-2 text-amber-300 font-bold">
+        <span>💡</span>
+        <span>Nota Explicativa Pedagógica • Topología de la Sábana Arrugada y el Oleaje Estático:</span>
+      </div>
+      <p class="leading-relaxed">
+        En este visor, la totalidad de los vínculos e interacciones de cualquier grupo humano colapsa en la retícula universal invariante de 81 figuras relacionales <strong class="text-cyan-300">Q81(9, 9)</strong>. Se han suprimido las columnas rígidas verticales para transformar el espacio diádico en una <strong class="text-emerald-300">sábana arrugada continua (membrana viscoelástica)</strong> que revela sin oclusión las cuencas de atracción mutua (<span class="text-emerald-400">&lt;Ee&gt;</span>, crestas a cielo abierto en <span class="text-emerald-400">+Z</span>), las fosas de rechazo o ruptura (<span class="text-rose-400">[Rr]</span>, valles submarinos en <span class="text-rose-400">-Z</span>) y los puntos de ensilladura de disonancia cognitiva de Heider (<span class="text-amber-400">&lt;Er]</span> y <span class="text-amber-400">[Re&gt;</span>).
+      </p>
+      <p class="leading-relaxed">
+        Las auto-posiciones reflexivas <strong class="text-white">(i, i)</strong> forman forzosamente una relación simétrica que traza la <strong class="text-amber-300">Espina Dorsal</strong> a lo largo de las 9 celdas diagonales. Al cambiar de sábana (metraje diacrónico), la transición se calcula mediante un filtro de propagación radial y amortiguamiento elástico de Perlin de 5º orden, eliminando toda brusquedad cinemática y mostrando la respiración viva del grupo.
+      </p>
+    </footer>
+
+  </main>
+
+  <!-- 🧭 MANDO UNIVERSAL FLOTANTE EN FILA INDIA (REGLA 15) -->
+  <aside class="universal-nav-pod" aria-label="Mando Universal de Navegación">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio / Portada Principal" aria-label="Inicio">🏠</a>
+    <a href="acuario_reactor_5x5.html" class="nav-pod-btn" title="Acuario Reactor 5x5" aria-label="Anterior">◀</a>
+    <a href="#three-viewport" class="nav-pod-btn" title="Subir al Lienzo 3D" aria-label="Subir">▲</a>
+    <a href="recursos.html" class="nav-pod-btn" title="Centro de Recursos y Filosofía" aria-label="Recursos">▼</a>
+    <a href="visord_oceano_cubo.html" class="nav-pod-btn" title="Cubo Socio-Oceánico 3D" aria-label="Siguiente">▶</a>
+  </aside>
+
+  <!-- ⚙️ SCRIPT MAESTRO: THREE.JS, SÁBANA ARRUGADA, TRANSICIÓN Y WEB AUDIO API -->
+  <script>
+    // =========================================================================
+    // 1. CONFIGURACIÓN CANÓNICA DE LA RETÍCULA Q81(9, 9)
+    // =========================================================================
+    const GRID_SIZE = 9;
+    const NUM_VERTICES = GRID_SIZE * GRID_SIZE; // 81
+    const SPAN = 72; // Ancho total del tablero 3D
+    const STEP = SPAN / (GRID_SIZE - 1); // 9 pasos
+    const MAX_HEIGHT = 22; // Altura máxima en Z para SDR = +1.0
+
+    // Nombres canónicos de las 9 emisiones (Filas) y 9 recepciones (Columnas)
+    const ROWS_EMISSION = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+    const COLS_RECEPTION = ['e>', 'e!', 'e]', '?>', '?!', '?]', 'r>', 'r!', 'r]'];
+
+    // Códigos canónicos para las 81 figuras
+    function getFigureCode(u, v) {
+      const em = ROWS_EMISSION[u];
+      const rec = COLS_RECEPTION[v];
+      // Tetragrama abreviado canónico
+      return `${em}${rec}`;
+    }
+
+    function isDiagonal(u, v) {
+      return u === v;
+    }
+
+    // =========================================================================
+    // 2. DATASETS FACTUALES DE LAS SÁBANAS (T1, T2, T3, GRUPO A)
+    // =========================================================================
+    // Generador de matriz SDR 9x9 para cada fase
+    function createSabanaMatrix(type) {
+      const mat = new Float32Array(NUM_VERTICES);
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+          let sdr = 0;
+
+          // Gradiente base dipolar: (0,0)=+1.0 (cumbre <Ee>) -> (8,8)=-1.0 (pozo [Rr])
+          const uNorm = u / (GRID_SIZE - 1); // 0 a 1
+          const vNorm = v / (GRID_SIZE - 1); // 0 a 1
+          const baseDipole = 1.0 - (uNorm + vNorm); // +1.0 a -1.0
+
+          if (type === 't1') {
+            // T1 Génesis: Predominio de expectativas cordiales, poca fricción
+            sdr = Math.sin((1 - uNorm) * Math.PI * 0.5) * Math.sin((1 - vNorm) * Math.PI * 0.5) * 0.95;
+            if (uNorm > 0.6 && vNorm > 0.6) sdr -= 0.35; // Leve recelo inicial
+            if (u === v) sdr = Math.max(sdr, 0.40); // Auto-posiciones constructivas
+          } else if (type === 't2') {
+            // T2 Tensión / Crisis: Fuerte cizalladura de Heider, fosas profundas y disputa de espina dorsal
+            sdr = baseDipole * 1.1;
+            // Disonancias en esquinas opuestas:
+            if (u < 3 && v > 5) sdr = -0.65; // <Er]: ilusión frustrada
+            if (u > 5 && v < 3) sdr = +0.45; // [Re>: rechazo no correspondido
+            if (u === 8 && v === 8) sdr = -1.0; // Pozo abisal máximo [Rr]
+            if (u === 0 && v === 0) sdr = +0.92;
+            // Choque en la espina dorsal por liderazgo:
+            if (u === 1 && v === 1) sdr = +0.85;
+            if (u === 2 && v === 2) sdr = -0.50; // Conflicto interno
+          } else if (type === 't3') {
+            // T3 Resolución: Madurez, apaciguamiento de fosas, reconciliación bimodal
+            sdr = Math.cos(uNorm * Math.PI * 0.8) * Math.cos(vNorm * Math.PI * 0.8) * 0.75;
+            if (u === 0 && v === 0) sdr = +0.88;
+            if (u === 8 && v === 8) sdr = -0.45; // Fosa mitigada
+            if (u === v) sdr = Math.max(sdr, 0.20);
+          } else if (type === 'canon') {
+            // Caso canónico Grupo A (1g1t1c)
+            sdr = (1.0 - (uNorm * 0.9 + vNorm * 1.1)) * 0.85;
+            if (u === 0 && v === 0) sdr = +0.95; // 1A ⇄ 2A en cumbre
+            if (u === 1 && v === 0) sdr = +0.72;
+            if (u === 4 && v === 4) sdr = 0.00; // Silencio
+            if (u === 7 && v === 8) sdr = -0.78; // 3A marginado
+            if (u === 8 && v === 8) sdr = -0.90;
+          }
+
+          mat[idx] = Math.max(-1.0, Math.min(1.0, sdr));
+        }
+      }
+      return mat;
+    }
+
+    const SABANAS = {
+      t1: createSabanaMatrix('t1'),
+      t2: createSabanaMatrix('t2'),
+      t3: createSabanaMatrix('t3'),
+      canon: createSabanaMatrix('canon')
+    };
+
+    // Sujetos canónicos de N=5
+    const SUBJECTS = ['1A', '2A', '3A', '4A', '5A'];
+
+    // Mapeo de los vectores de dimensión N de cada sujeto a celdas (u, v) en Q81
+    const SUBJECT_CONSTELLATIONS = [
+      {
+        name: '1A (Líder Expansivo)',
+        entropy: 0.18,
+        vectorN: [
+          { partner: '1A', u: 0, v: 0, sdr: +0.95, isAuto: true, code: '<Ee>' }, // Auto-posición
+          { partner: '2A', u: 0, v: 0, sdr: +0.95, isAuto: false, code: '<Ee>' },
+          { partner: '3A', u: 2, v: 6, sdr: -0.45, isAuto: false, code: '[Er>' },
+          { partner: '4A', u: 1, v: 1, sdr: +0.65, isAuto: false, code: '¡Ee!' },
+          { partner: '5A', u: 4, v: 4, sdr:  0.00, isAuto: false, code: '¡¿?!' }
+        ]
+      },
+      {
+        name: '2A (Co-líder Cohesivo)',
+        entropy: 0.15,
+        vectorN: [
+          { partner: '2A', u: 1, v: 1, sdr: +0.82, isAuto: true, code: '¡Ee!' }, // Auto-posición
+          { partner: '1A', u: 0, v: 0, sdr: +0.95, isAuto: false, code: '<Ee>' },
+          { partner: '3A', u: 3, v: 3, sdr: +0.30, isAuto: false, code: '<¿?>' },
+          { partner: '4A', u: 0, v: 1, sdr: +0.78, isAuto: false, code: '<Ee!' },
+          { partner: '5A', u: 4, v: 4, sdr:  0.00, isAuto: false, code: '¡¿?!' }
+        ]
+      },
+      {
+        name: '3A (Disidente / Fricción)',
+        entropy: 0.88,
+        vectorN: [
+          { partner: '3A', u: 6, v: 6, sdr: -0.30, isAuto: true, code: '<Rr>' }, // Auto-posición
+          { partner: '1A', u: 8, v: 8, sdr: -0.92, isAuto: false, code: '[Rr]' },
+          { partner: '2A', u: 5, v: 7, sdr: -0.40, isAuto: false, code: '[¿r!]' },
+          { partner: '4A', u: 2, v: 6, sdr: -0.55, isAuto: false, code: '[Er]' },
+          { partner: '5A', u: 7, v: 7, sdr: -0.20, isAuto: false, code: '¡Rr!' }
+        ]
+      },
+      {
+        name: '4A (Puente Operativo)',
+        entropy: 0.32,
+        vectorN: [
+          { partner: '4A', u: 3, v: 3, sdr: +0.45, isAuto: true, code: '<¿?>' }, // Auto-posición
+          { partner: '1A', u: 1, v: 0, sdr: +0.70, isAuto: false, code: '¡Ee>' },
+          { partner: '2A', u: 1, v: 1, sdr: +0.75, isAuto: false, code: '¡Ee!' },
+          { partner: '3A', u: 4, v: 6, sdr: -0.25, isAuto: false, code: '¡¿r>' },
+          { partner: '5A', u: 3, v: 4, sdr: +0.20, isAuto: false, code: '<¿?!' }
+        ]
+      },
+      {
+        name: '5A (Aislado / En la Lámina)',
+        entropy: 0.42,
+        vectorN: [
+          { partner: '5A', u: 4, v: 4, sdr:  0.00, isAuto: true, code: '¡¿?!' }, // Auto-posición
+          { partner: '1A', u: 4, v: 4, sdr:  0.00, isAuto: false, code: '¡¿?!' },
+          { partner: '2A', u: 4, v: 4, sdr:  0.00, isAuto: false, code: '¡¿?!' },
+          { partner: '3A', u: 6, v: 4, sdr: -0.15, isAuto: false, code: '<R?!' },
+          { partner: '4A', u: 4, v: 3, sdr: +0.10, isAuto: false, code: '¡¿?>' }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 3. MOTOR DE AUDIO CÓSMICO (WEB AUDIO API - SINTETIZADOR NATIVO)
+    // =========================================================================
+    let audioCtx = null;
+    let audioEnabled = false;
+    let masterGain = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+    }
+
+    function toggleAudio() {
+      initAudio();
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('audio-icon');
+      const lbl = document.getElementById('audio-lbl');
+      const btn = document.getElementById('btn-audio');
+
+      if (audioEnabled) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        icon.textContent = '🔊';
+        lbl.textContent = 'Música Galáctica: ON';
+        btn.classList.add('active');
+        playHarmonicChime(0, 0.4); // Tono de bienvenida
+      } else {
+        icon.textContent = '🔇';
+        lbl.textContent = 'Música Galáctica: OFF';
+        btn.classList.remove('active');
+      }
+    }
+
+    // Toca un tono sinusoidal con envolvente y micro-reverb sintética según SDR
+    function playHarmonicChime(sdrVal, volume = 0.25) {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        // Escala armónica centrada en 432 Hz:
+        // SDR = -1.0 -> 82.4 Hz (E2 grave)
+        // SDR =  0.0 -> 216.0 Hz (A3 puro)
+        // SDR = +1.0 -> 648.0 Hz (E5 celestial)
+        const baseFreq = 216.0 * Math.pow(2, sdrVal * 1.5);
+        osc.frequency.setValueAtTime(baseFreq, now);
+
+        if (sdrVal > 0.3) {
+          osc.type = 'sine'; // Tono puro celestial
+        } else if (sdrVal < -0.3) {
+          osc.type = 'triangle'; // Tono tenso abisal
+        } else {
+          osc.type = 'sine';
+        }
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(volume, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+
+        osc.connect(gain);
+        gain.connect(masterGain);
+
+        osc.start(now);
+        osc.stop(now + 0.8);
+      } catch (e) {
+        console.warn('Audio note error:', e);
+      }
+    }
+
+    // =========================================================================
+    // 4. MOTOR THREE.JS: ESCENA, LUCES, SÁBANA ARRUGADA Y GEOMETRÍA DIÁFANA
+    // =========================================================================
+    let scene, camera, renderer, controls;
+    let sheetMesh, wireMesh, pointsCloud, spineLine, waterPlane;
+    let plumbLinesGroup, constellationGroup;
+    let raycaster, mouse;
+
+    // Estado de las alturas de la sábana
+    let currentHeights = new Float32Array(NUM_VERTICES);
+    let sourceHeights = new Float32Array(NUM_VERTICES);
+    let targetHeights = new Float32Array(NUM_VERTICES);
+
+    // Animación de transición fluida
+    let transitionProgress = 1.0;
+    let transitionDuration = 1400; // ms
+    let transitionStartTime = 0;
+    let epicenterU = 4, epicenterV = 4;
+    let activeSabanaKey = 't1';
+
+    // Moviola: Estado de fotograma revelado (0 a 81)
+    let isPlayingFilm = false;
+    let filmInterval = null;
+    let filmStep = 81; // Por defecto oleaje completo
+    let sequenceCriterion = 'thermal';
+    let sequenceOrder = []; // Índices 0..80 en orden de revelado
+
+    // Selección de sujeto activo (Modo Constelación)
+    let selectedSubjectIdx = null;
+    let hoveredVertexIdx = 0; // Celda Q81 inicial
+
+    // Estado del bamboleo de órbita diáfana
+    let wobbleTime = 0;
+    const DIAFANO_ELEV = 0.488; // ~28 grados en radianes
+    const DIAFANO_AZIM = -0.663; // ~-38 grados en radianes
+    const CAM_DIST = 94;
+
+    function init3D() {
+      const container = document.getElementById('three-viewport');
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x060B18, 0.0045);
+
+      camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 1000);
+      applyDiafanoView(false);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxDistance = 220;
+      controls.minDistance = 15;
+      controls.target.set(0, 0, 0);
+
+      // 1. LUCES CIBERNÉTICAS DIÁFANAS
+      setupLighting();
+
+      // 2. CONSTRUIR ELEMENTOS TOPOLÓGICOS DEL CUBO-ACUARIO
+      buildWaterPlane();
+      buildWrinkledSheet();
+      buildSpineLine();
+      buildPlumbLines();
+      buildConstellationGroup();
+
+      // 3. EVENTOS
+      raycaster = new THREE.Raycaster();
+      raycaster.params.Points.threshold = 1.8;
+      mouse = new THREE.Vector2();
+
+      container.addEventListener('mousemove', onPointerMove);
+      container.addEventListener('click', onPointerClick);
+      window.addEventListener('resize', onWindowResize);
+
+      // Cargar primera sábana (T1)
+      setTargetHeights(SABANAS.t1);
+      currentHeights.set(SABANAS.t1);
+      updateSheetGeometry();
+
+      buildSequenceOrder();
+      animate();
+    }
+
+    function setupLighting() {
+      // Luz ambiental
+      const ambient = new THREE.AmbientLight(0x94A3B8, 1.4);
+      scene.add(ambient);
+
+      // Luz cenital solar
+      const sun = new THREE.DirectionalLight(0xFFFBEB, 2.2);
+      sun.position.set(40, 70, 40);
+      scene.add(sun);
+
+      // Luz marina esmeralda de rebote
+      const cyanBounce = new THREE.DirectionalLight(0x00E5FF, 1.6);
+      cyanBounce.position.set(-45, 30, -45);
+      scene.add(cyanBounce);
+
+      // Luz abisal magenta (resalta fosas submarinas)
+      const abyssalLight = new THREE.PointLight(0xFF007F, 3.5, 140);
+      abyssalLight.position.set(25, -20, 25);
+      scene.add(abyssalLight);
+
+      // Luz cumbre esmeralda
+      const peakLight = new THREE.PointLight(0x00FF87, 3.8, 140);
+      peakLight.position.set(-25, 25, -25);
+      scene.add(peakLight);
+    }
+
+    // Plano de agua transparente en Z = 0 (Lámina de flotación)
+    function buildWaterPlane() {
+      const planeGeo = new THREE.PlaneGeometry(SPAN + 8, SPAN + 8, 18, 18);
+      planeGeo.rotateX(-Math.PI / 2); // Acostado en plano XZ
+
+      const planeMat = new THREE.MeshBasicMaterial({
+        color: 0x0284C7,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.16
+      });
+      waterPlane = new THREE.Mesh(planeGeo, planeMat);
+      waterPlane.position.y = 0;
+      scene.add(waterPlane);
+
+      // Marco del cubo
+      const boxGeo = new THREE.BoxGeometry(SPAN + 6, MAX_HEIGHT * 2.2, SPAN + 6);
+      const boxEdge = new THREE.EdgesGeometry(boxGeo);
+      const boxMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.15 });
+      const cubeFrame = new THREE.LineSegments(boxEdge, boxMat);
+      scene.add(cubeFrame);
+    }
+
+    // =========================================================================
+    // 5. CONSTRUCCIÓN DE LA SÁBANA ARRUGADA (PLANEGEOMETRY 9x9 SUBDIVIDIDA)
+    // =========================================================================
+    function buildWrinkledSheet() {
+      // Subdivisión de 8x8 quads = exactamente 9x9 = 81 vértices!
+      const geo = new THREE.PlaneGeometry(SPAN, SPAN, GRID_SIZE - 1, GRID_SIZE - 1);
+      geo.rotateX(-Math.PI / 2); // El plano XY de Three.js pasa a XZ (altura Y)
+
+      // Colores por vértice dinámicos
+      const colors = new Float32Array(NUM_VERTICES * 3);
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      // Material traslúcido diáfano con brillo specular de dos caras
+      const mat = new THREE.MeshPhongMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.68,
+        shininess: 90,
+        specular: 0x00FFFF,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      sheetMesh = new THREE.Mesh(geo, mat);
+      scene.add(sheetMesh);
+
+      // Malla alámbrica superpuesta fina (hilos de seda)
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0xBAE6FD,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.28
+      });
+      wireMesh = new THREE.Mesh(geo, wireMat);
+      scene.add(wireMesh);
+
+      // Nube de perlas en los 81 vértices
+      const pointsGeo = new THREE.BufferGeometry();
+      const pointsPos = new Float32Array(NUM_VERTICES * 3);
+      pointsGeo.setAttribute('position', new THREE.BufferAttribute(pointsPos, 3));
+      pointsGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const pointsMat = new THREE.PointsMaterial({
+        size: 5.0,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.95
+      });
+      pointsCloud = new THREE.Points(pointsGeo, pointsMat);
+      scene.add(pointsCloud);
+    }
+
+    // La Espina Dorsal: Línea continua dorada que une las 9 auto-posiciones
+    function buildSpineLine() {
+      const spineGeo = new THREE.BufferGeometry();
+      const spinePos = new Float32Array(GRID_SIZE * 3);
+      spineGeo.setAttribute('position', new THREE.BufferAttribute(spinePos, 3));
+
+      const spineMat = new THREE.LineBasicMaterial({
+        color: 0xFFE600,
+        linewidth: 3,
+        transparent: true,
+        opacity: 0.95
+      });
+      spineLine = new THREE.Line(spineGeo, spineMat);
+      scene.add(spineLine);
+    }
+
+    // Líneas de plomada (plumb lines) desde la sábana a Z = 0
+    function buildPlumbLines() {
+      plumbLinesGroup = new THREE.Group();
+      const lineMat = new THREE.LineDashedMaterial({
+        color: 0x38BDF8,
+        dashSize: 1.2,
+        gapSize: 1.0,
+        transparent: true,
+        opacity: 0.22
+      });
+
+      for (let i = 0; i < NUM_VERTICES; i++) {
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(6); // 2 puntos
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        const line = new THREE.Line(geo, lineMat);
+        plumbLinesGroup.add(line);
+      }
+      scene.add(plumbLinesGroup);
+    }
+
+    // Grupo para filamentos del Modo Constelación
+    function buildConstellationGroup() {
+      constellationGroup = new THREE.Group();
+      scene.add(constellationGroup);
+    }
+
+    // =========================================================================
+    // 6. ACTUALIZACIÓN DINÁMICA DE LA GEOMETRÍA Y GRADIENTE TERMODINÁMICO
+    // =========================================================================
+    function updateSheetGeometry() {
+      const posAttr = sheetMesh.geometry.attributes.position;
+      const colAttr = sheetMesh.geometry.attributes.color;
+      const ptsPos = pointsCloud.geometry.attributes.position;
+      const spinePos = spineLine.geometry.attributes.position;
+
+      let spineIdx = 0;
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+
+          // Coordenadas XZ centradas en origen
+          const x = (v - 4) * STEP;
+          const z = (u - 4) * STEP;
+          const y = currentHeights[idx] * MAX_HEIGHT;
+
+          posAttr.setY(idx, y);
+          ptsPos.setXYZ(idx, x, y, z);
+
+          // Color termodinámico según altura Z (SDR):
+          // SDR > 0: cian a verde neón (#00E5FF a #00FF87)
+          // SDR = 0: lámina agua azul celeste (#0284C7)
+          // SDR < 0: azul a magenta / carmesí (#0284C7 a #FF007F)
+          const sdr = currentHeights[idx];
+          let r, g, b;
+
+          if (sdr >= 0) {
+            const t = sdr;
+            r = 0.0 + 0.0 * t;
+            g = 0.75 + 0.25 * t;
+            b = 0.95 - 0.42 * t; // Se va a verde neón
+          } else {
+            const t = -sdr;
+            r = 0.0 + 1.0 * t;
+            g = 0.55 - 0.55 * t;
+            b = 0.85 - 0.35 * t; // Se va a magenta intenso
+          }
+
+          // Si es de la espina dorsal, agregar destello dorado
+          if (u === v) {
+            r = Math.min(1.0, r * 0.7 + 0.3 * 1.0);
+            g = Math.min(1.0, g * 0.7 + 0.3 * 0.9);
+            b = Math.min(1.0, b * 0.7 + 0.3 * 0.1);
+
+            spinePos.setXYZ(spineIdx, x, y + 0.25, z);
+            spineIdx++;
+          }
+
+          colAttr.setXYZ(idx, r, g, b);
+
+          // Plomada
+          const plLine = plumbLinesGroup.children[idx];
+          if (plLine) {
+            const pArr = plLine.geometry.attributes.position.array;
+            pArr[0] = x; pArr[1] = 0; pArr[2] = z;
+            pArr[3] = x; pArr[4] = y; pArr[5] = z;
+            plLine.geometry.attributes.position.needsUpdate = true;
+            plLine.computeLineDistances();
+          }
+        }
+      }
+
+      posAttr.needsUpdate = true;
+      colAttr.needsUpdate = true;
+      ptsPos.needsUpdate = true;
+      pointsCloud.geometry.attributes.color.needsUpdate = true;
+      spinePos.needsUpdate = true;
+
+      sheetMesh.geometry.computeVertexNormals();
+      updateConstellationFilaments();
+    }
+
+    // =========================================================================
+    // 7. ALGORITMO DE TRANSICIÓN VISCOELÁSTICA Y PROPAGACIÓN RADIAL
+    // =========================================================================
+    function setTargetHeights(newHeights) {
+      sourceHeights.set(currentHeights);
+      targetHeights.set(newHeights);
+
+      // 1. Encontrar epicentro de máxima variación de energía
+      let maxDelta = -1;
+      epicenterU = 4;
+      epicenterV = 4;
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+          const diff = Math.abs(targetHeights[idx] - sourceHeights[idx]);
+          if (diff > maxDelta) {
+            maxDelta = diff;
+            epicenterU = u;
+            epicenterV = v;
+          }
+        }
+      }
+
+      transitionProgress = 0.0;
+      transitionStartTime = performance.now();
+      document.getElementById('transition-status').textContent = 'METAMORFOSIS ACTIVA';
+      document.getElementById('transition-status').className = 'text-[10px] font-bold text-amber-300 animate-pulse';
+
+      // Sonido de campana armónica en el epicentro
+      const epicIdx = epicenterU * GRID_SIZE + epicenterV;
+      playHarmonicChime(targetHeights[epicIdx], 0.35);
+    }
+
+    function updateTransition(now) {
+      if (transitionProgress >= 1.0) return;
+
+      const elapsed = now - transitionStartTime;
+      const rawT = Math.min(1.0, elapsed / transitionDuration);
+
+      const maxDist = Math.hypot(GRID_SIZE - 1, GRID_SIZE - 1);
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+
+          // Retraso por distancia al epicentro
+          const dist = Math.hypot(u - epicenterU, v - epicenterV);
+          const delayRatio = 0.32; // Factor de desfasaje ondulatorio
+          const delay = (dist / maxDist) * delayRatio;
+
+          const localT = Math.max(0, Math.min(1, (rawT - delay) / (1 - delay)));
+
+          // Quintic Smootherstep de Perlin: 6t^5 - 15t^4 + 10t^3
+          const s = 6 * Math.pow(localT, 5) - 15 * Math.pow(localT, 4) + 10 * Math.pow(localT, 3);
+
+          // Micro-amortiguamiento elástico de seda (subamortiguado suave)
+          const wobble = (localT < 1.0 && localT > 0.05) ? (0.035 * Math.exp(-3.5 * localT) * Math.sin(localT * Math.PI * 5)) : 0;
+
+          const factor = Math.min(1.0, s + wobble);
+          currentHeights[idx] = sourceHeights[idx] + (targetHeights[idx] - sourceHeights[idx]) * factor;
+        }
+      }
+
+      // Filtro Laplaciano de tensión superficial
+      applyLaplacianSmoothing(0.08);
+
+      updateSheetGeometry();
+
+      // Barra de progreso de fluidez
+      const pBar = document.getElementById('transition-bar');
+      pBar.style.width = `${(rawT * 100).toFixed(0)}%`;
+
+      if (rawT >= 1.0) {
+        transitionProgress = 1.0;
+        currentHeights.set(targetHeights);
+        updateSheetGeometry();
+        document.getElementById('transition-status').textContent = 'REPOSO ESTÁTICO';
+        document.getElementById('transition-status').className = 'text-[10px] font-bold text-cyan-300';
+      }
+    }
+
+    // Tensión superficial Laplaciana (evita picos rotos durante el morphing)
+    function applyLaplacianSmoothing(lambda) {
+      const temp = new Float32Array(currentHeights);
+      for (let u = 1; u < GRID_SIZE - 1; u++) {
+        for (let v = 1; v < GRID_SIZE - 1; v++) {
+          const idx = u * GRID_SIZE + v;
+          const neighborAvg = (
+            temp[(u - 1) * GRID_SIZE + v] +
+            temp[(u + 1) * GRID_SIZE + v] +
+            temp[u * GRID_SIZE + (v - 1)] +
+            temp[u * GRID_SIZE + (v + 1)]
+          ) * 0.25;
+          currentHeights[idx] = (1 - lambda) * currentHeights[idx] + lambda * neighborAvg;
+        }
+      }
+    }
+
+    // =========================================================================
+    // 8. CARGA DE METRAJE ("SÁBANA A SÁBANA")
+    // =========================================================================
+    function loadSabana(key) {
+      activeSabanaKey = key;
+      ['t1', 't2', 't3', 'canon'].forEach(k => {
+        const btn = document.getElementById(`btn-sabana-${k}`);
+        if (btn) btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`btn-sabana-${key}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const metaNames = {
+        t1: { key: 'SIMUL-AA-G1-T1-C1-V10-A16-ES-5', badge: '1g1t1c (Génesis)' },
+        t2: { key: 'SIMUL-AA-G1-T2-C1-V10-A16-ES-5', badge: '1g2t1c (Crisis)' },
+        t3: { key: 'SIMUL-AA-G1-T3-C1-V10-A16-ES-5', badge: '1g3t1c (Resolución)' },
+        canon: { key: 'REAL-AA-G1-T1-C1-V10-A16-ES-5', badge: '1g1t1c (Canónico)' }
+      };
+      document.getElementById('study-key').textContent = metaNames[key].key;
+      document.getElementById('group-badge').textContent = metaNames[key].badge;
+
+      setTargetHeights(SABANAS[key]);
+      updateTelemetry(hoveredVertexIdx);
+    }
+
+    // =========================================================================
+    // 9. MODO CONSTELACIÓN: VECTOR DE DIMENSIÓN N DEL SUJETO
+    // =========================================================================
+    function selectSubject(subjIdx) {
+      selectedSubjectIdx = subjIdx;
+      for (let i = 0; i < 5; i++) {
+        document.getElementById(`btn-subj-${i}`).classList.remove('active');
+      }
+      document.getElementById('btn-subj-all').classList.remove('active');
+
+      if (subjIdx === null) {
+        document.getElementById('btn-subj-all').classList.add('active');
+        document.getElementById('subj-name').textContent = 'Visión Grupal Completa';
+        document.getElementById('subj-entropy').textContent = 'Entropía: S = 0.28';
+        document.getElementById('subj-pills').innerHTML = `
+          <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">Auto-posición anclada en Espina Dorsal</span>
+          <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">4 Lazos Alter</span>
+        `;
+      } else {
+        document.getElementById(`btn-subj-${subjIdx}`).classList.add('active');
+        const subj = SUBJECT_CONSTELLATIONS[subjIdx];
+        document.getElementById('subj-name').textContent = `${subj.name}`;
+        document.getElementById('subj-entropy').textContent = `Entropía: S = ${subj.entropy.toFixed(2)}`;
+
+        let pillsHtml = '';
+        subj.vectorN.forEach(item => {
+          if (item.isAuto) {
+            pillsHtml += `<span class="px-1.5 py-0.5 rounded bg-amber-950 border border-amber-500 text-amber-300 font-bold">Auto (${item.partner}): ${item.code} (${item.sdr >= 0 ? '+' : ''}${item.sdr.toFixed(2)})</span>`;
+          } else {
+            pillsHtml += `<span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300">${item.partner}: ${item.code}</span>`;
+          }
+        });
+        document.getElementById('subj-pills').innerHTML = pillsHtml;
+
+        // Tocar acorde del sujeto
+        playHarmonicChime(subj.vectorN[0].sdr, 0.4);
+      }
+
+      updateConstellationFilaments();
+    }
+
+    function updateConstellationFilaments() {
+      // Limpiar filamentos anteriores
+      while (constellationGroup.children.length > 0) {
+        const obj = constellationGroup.children[0];
+        constellationGroup.remove(obj);
+        if (obj.geometry) obj.geometry.dispose();
+      }
+
+      if (selectedSubjectIdx === null) return;
+
+      const subj = SUBJECT_CONSTELLATIONS[selectedSubjectIdx];
+      const autoItem = subj.vectorN.find(v => v.isAuto);
+      if (!autoItem) return;
+
+      const originX = (autoItem.v - 4) * STEP;
+      const originZ = (autoItem.u - 4) * STEP;
+      const originY = currentHeights[autoItem.u * GRID_SIZE + autoItem.v] * MAX_HEIGHT;
+      const startVec = new THREE.Vector3(originX, originY, originZ);
+
+      subj.vectorN.forEach(item => {
+        const destX = (item.v - 4) * STEP;
+        const destZ = (item.u - 4) * STEP;
+        const destY = currentHeights[item.u * GRID_SIZE + item.v] * MAX_HEIGHT;
+        const endVec = new THREE.Vector3(destX, destY, destZ);
+
+        if (item.isAuto) {
+          // Halo de auto-anclaje en la espina dorsal
+          const ringGeo = new THREE.RingGeometry(1.8, 2.5, 32);
+          ringGeo.rotateX(-Math.PI / 2);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xFFE600, side: THREE.DoubleSide });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          ring.position.copy(startVec);
+          ring.position.y += 0.3;
+          constellationGroup.add(ring);
+        } else {
+          // Arco Bézier 3D
+          const midVec = new THREE.Vector3().addVectors(startVec, endVec).multiplyScalar(0.5);
+          midVec.y += 8.0; // Elevación del arco
+
+          const curve = new THREE.QuadraticBezierCurve3(startVec, midVec, endVec);
+          const pts = curve.getPoints(24);
+          const arcGeo = new THREE.BufferGeometry().setFromPoints(pts);
+
+          const arcCol = item.sdr >= 0 ? 0x00FF87 : 0xFF007F;
+          const arcMat = new THREE.LineBasicMaterial({ color: arcCol, linewidth: 2.5, transparent: true, opacity: 0.85 });
+          const arcLine = new THREE.Line(arcGeo, arcMat);
+          constellationGroup.add(arcLine);
+        }
+      });
+    }
+
+    // =========================================================================
+    // 10. MOVIOLA CINEMÁTICA: SECUENCIACIÓN RÍTMICA DEL FOTOGRAMA
+    // =========================================================================
+    function buildSequenceOrder() {
+      sequenceOrder = [];
+      for (let i = 0; i < NUM_VERTICES; i++) sequenceOrder.push(i);
+
+      if (sequenceCriterion === 'thermal') {
+        // Polaridad térmica: de mayor SDR a menor SDR
+        sequenceOrder.sort((a, b) => targetHeights[b] - targetHeights[a]);
+      } else if (sequenceCriterion === 'heider') {
+        // Heider: simétricas primero (u=v), luego intermedias, luego disonantes extremas
+        sequenceOrder.sort((a, b) => {
+          const uA = Math.floor(a / GRID_SIZE), vA = a % GRID_SIZE;
+          const uB = Math.floor(b / GRID_SIZE), vB = b % GRID_SIZE;
+          const disA = Math.abs(uA - vA);
+          const disB = Math.abs(uB - vB);
+          return disA - disB;
+        });
+      } else if (sequenceCriterion === 'radial') {
+        // Ondas concéntricas desde el centro (4, 4)
+        sequenceOrder.sort((a, b) => {
+          const uA = Math.floor(a / GRID_SIZE), vA = a % GRID_SIZE;
+          const uB = Math.floor(b / GRID_SIZE), vB = b % GRID_SIZE;
+          const distA = Math.hypot(uA - 4, vA - 4);
+          const distB = Math.hypot(uB - 4, vB - 4);
+          return distA - distB;
+        });
+      }
+    }
+
+    function setSequenceCriterion(crit) {
+      sequenceCriterion = crit;
+      ['thermal', 'heider', 'radial'].forEach(c => {
+        document.getElementById(`crit-${c}`).classList.remove('active');
+      });
+      document.getElementById(`crit-${crit}`).classList.add('active');
+      buildSequenceOrder();
+      applyFilmStep(filmStep);
+    }
+
+    function applyFilmStep(step) {
+      filmStep = Math.max(0, Math.min(NUM_VERTICES, step));
+      document.getElementById('film-step-label').textContent = `${filmStep} / 81`;
+      document.getElementById('film-progress-bar').style.width = `${(filmStep / 81 * 100).toFixed(0)}%`;
+
+      const detail = document.getElementById('film-step-detail');
+      if (filmStep === 0) detail.textContent = 'Lámina Lisa en Calma (Z = 0)';
+      else if (filmStep === 81) detail.textContent = 'Fotograma Completo (Oleaje Estático)';
+      else detail.textContent = `Revelando Celda #${filmStep}...`;
+
+      // Armar nueva matriz de alturas según celdas despiertas
+      const newHeights = new Float32Array(NUM_VERTICES);
+      const activeSet = new Set(sequenceOrder.slice(0, filmStep));
+
+      for (let i = 0; i < NUM_VERTICES; i++) {
+        if (activeSet.has(i)) {
+          newHeights[i] = SABANAS[activeSabanaKey][i];
+        } else {
+          newHeights[i] = 0; // Se queda en la lámina lisa Z=0
+        }
+      }
+
+      setTargetHeights(newHeights);
+
+      if (filmStep > 0 && filmStep <= 81) {
+        const lastIdx = sequenceOrder[filmStep - 1];
+        updateTelemetry(lastIdx);
+        playHarmonicChime(SABANAS[activeSabanaKey][lastIdx], 0.22);
+      }
+    }
+
+    function stepFilm(dir) {
+      pauseFilm();
+      applyFilmStep(filmStep + dir);
+    }
+
+    function rewindFilm() {
+      pauseFilm();
+      applyFilmStep(0);
+    }
+
+    function forwardFilmFull() {
+      pauseFilm();
+      applyFilmStep(81);
+    }
+
+    function togglePlayFilm() {
+      if (isPlayingFilm) pauseFilm();
+      else playFilm();
+    }
+
+    function playFilm() {
+      isPlayingFilm = true;
+      document.getElementById('btn-play').classList.add('active');
+      document.getElementById('play-icon').textContent = '⏸';
+      document.getElementById('play-label').textContent = 'PAUSA';
+
+      if (filmStep >= 81) filmStep = 0;
+
+      const speed = parseInt(document.getElementById('playback-speed').value, 10) || 320;
+      clearInterval(filmInterval);
+      filmInterval = setInterval(() => {
+        if (filmStep < 81) {
+          applyFilmStep(filmStep + 1);
+        } else {
+          pauseFilm();
+        }
+      }, speed);
+    }
+
+    function pauseFilm() {
+      isPlayingFilm = false;
+      clearInterval(filmInterval);
+      document.getElementById('btn-play').classList.remove('active');
+      document.getElementById('play-icon').textContent = '▶';
+      document.getElementById('play-label').textContent = 'REPRODUCIR';
+    }
+
+    // =========================================================================
+    // 11. CÁMARA: ÁNGULO DIÁFANO CANÓNICO Y MODOS DE VISIÓN
+    // =========================================================================
+    function applyDiafanoView(animateTransition = true) {
+      const targetX = CAM_DIST * Math.sin(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
+      const targetY = CAM_DIST * Math.sin(DIAFANO_ELEV);
+      const targetZ = CAM_DIST * Math.cos(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
+
+      if (!animateTransition) {
+        camera.position.set(targetX, targetY, targetZ);
+        controls.target.set(0, 0, 0);
+        controls.update();
+        return;
+      }
+
+      // Animación suave de cámara
+      const startPos = camera.position.clone();
+      const endPos = new THREE.Vector3(targetX, targetY, targetZ);
+      const startTime = performance.now();
+      const dur = 1000;
+
+      function tweenCam() {
+        const elapsed = performance.now() - startTime;
+        const t = Math.min(1.0, elapsed / dur);
+        const ease = 0.5 - 0.5 * Math.cos(t * Math.PI);
+        camera.position.lerpVectors(startPos, endPos, ease);
+        controls.target.set(0, 0, 0);
+        controls.update();
+        if (t < 1.0) requestAnimationFrame(tweenCam);
+      }
+      tweenCam();
+    }
+
+    function setCameraAngle(type) {
+      let targetPos;
+      if (type === 'iso') targetPos = new THREE.Vector3(65, 55, 65);
+      else if (type === 'top') targetPos = new THREE.Vector3(0, 110, 0.1);
+      else if (type === 'profile') targetPos = new THREE.Vector3(98, 0, 0);
+      else if (type === 'spine') targetPos = new THREE.Vector3(-60, 40, -60);
+
+      if (targetPos) {
+        const startPos = camera.position.clone();
+        const startTime = performance.now();
+        function tween() {
+          const t = Math.min(1.0, (performance.now() - startTime) / 900);
+          const ease = 0.5 - 0.5 * Math.cos(t * Math.PI);
+          camera.position.lerpVectors(startPos, targetPos, ease);
+          controls.target.set(0, 0, 0);
+          controls.update();
+          if (t < 1.0) requestAnimationFrame(tween);
+        }
+        tween();
+      }
+    }
+
+    // =========================================================================
+    // 12. TELEMETRÍA Y DETECCIÓN DE RAYCASTING
+    // =========================================================================
+    function onPointerMove(e) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    }
+
+    function onPointerClick(e) {
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(pointsCloud);
+      if (intersects.length > 0) {
+        const idx = intersects[0].index;
+        updateTelemetry(idx);
+        playHarmonicChime(currentHeights[idx], 0.35);
+      }
+    }
+
+    function updateTelemetry(idx) {
+      hoveredVertexIdx = idx;
+      const u = Math.floor(idx / GRID_SIZE);
+      const v = idx % GRID_SIZE;
+      const sdr = currentHeights[idx];
+      const fig = getFigureCode(u, v);
+      const isDiag = (u === v);
+
+      document.getElementById('tel-vertex-name').innerHTML = `
+        ${fig} <span class="text-[9px] mono px-1.5 py-0.2 rounded bg-cyan-950 border border-cyan-500/40 text-cyan-300">#${idx + 1}</span>
+      `;
+      document.getElementById('tel-vertex-coord').textContent = `(u:${u}, v:${v}) ${isDiag ? '★ Espina Dorsal' : ''}`;
+
+      const sdrEl = document.getElementById('tel-sdr');
+      sdrEl.textContent = (sdr >= 0 ? '+' : '') + sdr.toFixed(2);
+      sdrEl.className = `mono font-extrabold text-base ${sdr > 0.15 ? 'text-emerald-400' : (sdr < -0.15 ? 'text-rose-400' : 'text-cyan-300')}`;
+
+      const bPhase = document.getElementById('tel-phase-badge');
+      if (sdr > 0.15) {
+        bPhase.textContent = 'CIELO';
+        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      } else if (sdr < -0.15) {
+        bPhase.textContent = 'FOSA';
+        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40';
+      } else {
+        bPhase.textContent = 'FLOTACIÓN';
+        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
+      }
+
+      // Díadas de ejemplo en esa celda
+      const dyadsEl = document.getElementById('tel-dyads');
+      const dyadsCountEl = document.getElementById('tel-dyads-count');
+      if (u === 0 && v === 0) {
+        dyadsEl.textContent = '1A ⇄ 2A, 1A (Auto)';
+        dyadsCountEl.textContent = '2 díadas + auto-posición';
+      } else if (u === 8 && v === 8) {
+        dyadsEl.textContent = '1A → 3A, 3A → 1A';
+        dyadsCountEl.textContent = '2 díadas en conflicto';
+      } else if (isDiag) {
+        dyadsEl.textContent = `Auto-posición (${u+1}A, ${u+1}A)`;
+        dyadsCountEl.textContent = 'Reflexiva Simétrica';
+      } else {
+        dyadsEl.textContent = `Vínculo Diádico (${u+1}A → ${v+1}A)`;
+        dyadsCountEl.textContent = 'Centroide Activo';
+      }
+
+      // Curvatura estimada
+      const kVal = (sdr * 0.22).toFixed(2);
+      document.getElementById('tel-gauss').textContent = `K = ${sdr >= 0 ? '+' : ''}${kVal}`;
+      const gType = document.getElementById('tel-gauss-type');
+      if (Math.abs(u - v) > 3) {
+        gType.textContent = 'Silla Hiperbólica (Disonancia)';
+        gType.className = 'text-[8px] text-amber-300 font-semibold';
+      } else if (sdr > 0.1) {
+        gType.textContent = 'Domo Elíptico (Cohesión)';
+        gType.className = 'text-[8px] text-emerald-300 font-semibold';
+      } else if (sdr < -0.1) {
+        gType.textContent = 'Cuenca Tectónica (Fricción)';
+        gType.className = 'text-[8px] text-rose-400 font-semibold';
+      } else {
+        gType.textContent = 'Plano Minimal (Equilibrio)';
+        gType.className = 'text-[8px] text-cyan-300 font-semibold';
+      }
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('three-viewport');
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    // =========================================================================
+    // 13. BUCLE DE RENDERIZADO A 60 FPS
+    // =========================================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const now = performance.now();
+      updateTransition(now);
+
+      // Órbita de bamboleo suave (±8°) alrededor del ángulo diáfano si está activa
+      const chkWobble = document.getElementById('chk-wobble');
+      if (chkWobble && chkWobble.checked && controls.state === -1) {
+        wobbleTime += 0.008;
+        const azimOffset = Math.sin(wobbleTime) * 0.14; // ~8 grados
+        const elevOffset = Math.cos(wobbleTime * 0.7) * 0.06; // ~3.5 grados
+
+        const currentDist = camera.position.length();
+        const baseAzim = DIAFANO_AZIM + azimOffset;
+        const baseElev = DIAFANO_ELEV + elevOffset;
+
+        camera.position.x = currentDist * Math.sin(baseAzim) * Math.cos(baseElev);
+        camera.position.y = currentDist * Math.sin(baseElev);
+        camera.position.z = currentDist * Math.cos(baseAzim) * Math.cos(baseElev);
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // Inicializar al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      init3D();
+      updateTelemetry(0); // Seleccionar vértice Q81 inicial
+    });
+  </script>
+</body>
+</html>
