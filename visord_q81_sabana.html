@@ -258,12 +258,18 @@
           </button>
         </div>
 
-        <!-- Bloque C: Interruptor de Despeje de Etiquetas y Apertura de Mesa de Mezclas -->
+        <!-- Bloque C: Interruptores de Despeje, Datos Numéricos a Demanda y Mesa de Mezclas -->
         <div class="flex items-center gap-2 flex-wrap">
           <!-- Conmutador Rápido de Etiquetas 3D -->
           <button onclick="toggleBoardLabels()" id="btn-toggle-labels" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 border border-cyan-400/50 bg-cyan-950/40 hover:bg-cyan-900/60 active flex items-center gap-1.5" title="Ocultar/Mostrar coordenadas A..I, 1..9 y pedestales para despejar completamente el tablero 3D">
             <span>🏷️</span>
             <span id="lbl-toggle-labels">ETIQUETAS: ON</span>
+          </button>
+
+          <!-- Conmutador A Demanda de Datos Numéricos -->
+          <button onclick="toggleNumericDataPanel()" id="btn-toggle-numbers-top" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-sky-300 border border-sky-500/40 bg-slate-950/60 hover:bg-sky-950/60 flex items-center gap-1.5 shadow-md" title="Mostrar/Ocultar Panel de Seguimiento Numérico, Partitura 5x5 y Diagnóstico Factual a Demanda">
+            <span>📊</span>
+            <span id="lbl-toggle-numbers-top">Datos Numéricos: A Demanda ▼</span>
           </button>
 
           <!-- Botón Desplegable de la Mesa de Mezclas -->
@@ -553,14 +559,17 @@
     </section>
 
     <!-- 🌌 ÁREA CENTRAL 3D: EL LIENZO PANORÁMICO CINEMASCOPE -->
-    <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/35 shadow-2xl" style="height: 560px; min-height: 560px;" id="aquarium-viewport-container">
+    <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/35 shadow-2xl transition-all duration-300" style="height: 72vh; min-height: 620px;" id="aquarium-viewport-container">
       
       <!-- CONTENEDOR CANVAS THREE.JS CON DIMENSIONES EXPLÍCITAS -->
-      <div id="three-viewport" style="position: absolute; inset: 0; width: 100%; height: 100%; min-height: 560px;" class="cursor-grab active:cursor-grabbing"></div>
+      <div id="three-viewport" style="position: absolute; inset: 0; width: 100%; height: 100%; min-height: 620px;" class="cursor-grab active:cursor-grabbing"></div>
 
       <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES (3 ESTRATOS) -->
       <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
         <div class="flex items-center gap-1.5">
+          <button onclick="toggleCinemaMode()" id="btn-toggle-cinema" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-slate-950/85 border-amber-500/40 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Modo Cine / Expansión Panorámica Inmersiva">
+            <span>⛶</span> Cine
+          </button>
           <button onclick="toggleBoardLabels()" id="btn-vp-labels" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 bg-slate-950/85 border-cyan-500/40 shadow-lg flex items-center gap-1.5 active" title="Mostrar/Ocultar Rótulos y Coordenadas 3D del Tablero">
             <span>🏷️</span> Etiquetas
           </button>
@@ -613,6 +622,19 @@
         </div>
       </div>
 
+      <!-- 📊 SEGUIMIENTO NUMÉRICO FLOTANTE A DEMANDA (MINIMALISTA) -->
+      <div id="floating-live-telemetry" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-sky-500/40 text-[11px] mono shadow-2xl">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-400 font-bold" id="ticker-step-lbl">Compás 0/25</span>
+        <span class="text-slate-600">|</span>
+        <span class="text-amber-300 font-black" id="ticker-dyad-lbl">1A → 1A</span>
+        <span class="text-cyan-300 font-bold" id="ticker-density-lbl">+0.00</span>
+        <span class="text-slate-600">|</span>
+        <button onclick="toggleNumericDataPanel()" id="btn-toggle-numbers-ticker" class="glass-btn px-2 py-0.5 rounded text-[10px] text-sky-300 hover:text-white border border-sky-500/40 font-bold hover:bg-sky-950/60">
+          📊 Datos Numéricos ▼
+        </button>
+      </div>
+
       <!-- OVERLAY DE AUDIO CÓSMICO -->
       <div class="absolute bottom-3 left-3 z-20 flex items-center gap-2 bg-slate-950/85 px-3 py-1.5 rounded-xl border border-sky-900/50">
         <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs flex items-center gap-1.5">
@@ -636,8 +658,8 @@
       </div>
     </div>
 
-    <!-- 🎛️ PANEL INFERIOR MODO 1: PARTITURA SOCIOMÉTRICA (AJEDREZ VIVO) -->
-    <div id="panel-solfeo-mode" class="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
+    <!-- 🎛️ PANEL INFERIOR MODO 1: PARTITURA SOCIOMÉTRICA (AJEDREZ VIVO - A DEMANDA) -->
+    <div id="panel-solfeo-mode" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-2.5 transition-all duration-300">
       
       <!-- 🎼 PARTITURA SOCIOMÉTRICA EMPÍRICA (5 x 5) (8 COLUMNAS) -->
       <section class="lg:col-span-8 glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40">
@@ -2366,6 +2388,66 @@
         box.classList.add('hidden');
         if (btn) btn.classList.remove('active', 'border-sky-400');
       }
+    }
+
+    let isNumericPanelOpen = false;
+
+    function toggleNumericDataPanel(forceState = null) {
+      const panel = document.getElementById('panel-solfeo-mode');
+      const btnTop = document.getElementById('btn-toggle-numbers-top');
+      const btnTicker = document.getElementById('btn-toggle-numbers-ticker');
+      const lblTop = document.getElementById('lbl-toggle-numbers-top');
+      if (!panel) return;
+
+      if (forceState !== null) {
+        isNumericPanelOpen = forceState;
+      } else {
+        isNumericPanelOpen = !isNumericPanelOpen;
+      }
+
+      if (isNumericPanelOpen) {
+        panel.classList.remove('hidden');
+        if (btnTop) {
+          btnTop.classList.add('active', 'border-amber-400', 'bg-amber-950/70', 'text-amber-300');
+          if (lblTop) lblTop.textContent = 'Datos Numéricos: ON ▲';
+        }
+        if (btnTicker) btnTicker.textContent = '📊 Ocultar Datos ▲';
+        if (forceState === null) {
+          setTimeout(() => {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 60);
+        }
+      } else {
+        panel.classList.add('hidden');
+        if (btnTop) {
+          btnTop.classList.remove('active', 'border-amber-400', 'bg-amber-950/70', 'text-amber-300');
+          if (lblTop) lblTop.textContent = 'Datos Numéricos: A Demanda ▼';
+        }
+        if (btnTicker) btnTicker.textContent = '📊 Datos Numéricos ▼';
+      }
+    }
+
+    function toggleCinemaMode() {
+      const container = document.getElementById('aquarium-viewport-container');
+      const btn = document.getElementById('btn-toggle-cinema');
+      if (!container) return;
+      const isCinema = container.classList.toggle('cinema-mode-active');
+      if (isCinema) {
+        container.style.height = '88vh';
+        container.style.minHeight = '750px';
+        if (btn) {
+          btn.classList.add('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+          btn.innerHTML = '<span>⛶</span> Reducir';
+        }
+      } else {
+        container.style.height = '72vh';
+        container.style.minHeight = '620px';
+        if (btn) {
+          btn.classList.remove('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+          btn.innerHTML = '<span>⛶</span> Cine';
+        }
+      }
+      setTimeout(onWindowResize, 60);
     }
 
     // ⚡⚡ Objetos del Laboratorio Bifocal 3D: Dos Tableros Gemelos DA y RC con Rayos
@@ -4151,13 +4233,27 @@
 
     function updateSolfeoStepUI(step, dyad = '', q81 = '', den = 0) {
       const total = solfeoSequence.length || 25;
-      document.getElementById('solfeo-step-lbl').textContent = `${step} / ${total} Notas`;
+      const stepLbl = document.getElementById('solfeo-step-lbl');
+      if (stepLbl) stepLbl.textContent = `${step} / ${total} Notas`;
       const detail = document.getElementById('solfeo-step-detail');
-      if (step === 0) {
-        detail.textContent = 'Haz clic en cualquier celda o pulsa Reproducir Solfeo';
-      } else {
+      if (detail) {
+        if (step === 0) {
+          detail.textContent = 'Haz clic en cualquier celda o pulsa Reproducir Solfeo';
+        } else {
+          const sign = den >= 0 ? '+' : '';
+          detail.textContent = `Compás ${step}: ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+        }
+      }
+
+      // Ticker Flotante Minimalista A Demanda en el Centro del Espectáculo
+      const tStep = document.getElementById('ticker-step-lbl');
+      const tDyad = document.getElementById('ticker-dyad-lbl');
+      const tDen = document.getElementById('ticker-density-lbl');
+      if (tStep) tStep.textContent = `Compás ${step}/${total}`;
+      if (tDyad && dyad) tDyad.textContent = dyad;
+      if (tDen && den !== undefined) {
         const sign = den >= 0 ? '+' : '';
-        detail.textContent = `Compás ${step}: ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+        tDen.textContent = `${sign}${den.toFixed(2)}`;
       }
     }
 
@@ -4508,7 +4604,10 @@
         if (barSolfeo) barSolfeo.classList.remove('hidden');
         if (barDual) barDual.classList.add('hidden');
         if (barImax) barImax.classList.add('hidden');
-        if (panelSolfeo) panelSolfeo.classList.remove('hidden');
+        if (panelSolfeo) {
+          if (isNumericPanelOpen) panelSolfeo.classList.remove('hidden');
+          else panelSolfeo.classList.add('hidden');
+        }
         if (panelImax) panelImax.classList.add('hidden');
 
         studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
@@ -4527,7 +4626,10 @@
         if (barDual) barDual.classList.remove('hidden');
         if (barSolfeo) barSolfeo.classList.add('hidden');
         if (barImax) barImax.classList.add('hidden');
-        if (panelSolfeo) panelSolfeo.classList.remove('hidden');
+        if (panelSolfeo) {
+          if (isNumericPanelOpen) panelSolfeo.classList.remove('hidden');
+          else panelSolfeo.classList.add('hidden');
+        }
         if (panelImax) panelImax.classList.add('hidden');
 
         studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
