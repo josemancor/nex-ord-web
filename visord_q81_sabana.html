@@ -1704,33 +1704,44 @@
 
           let sdr = 0;
           if (type === 't1') {
-            sdr = Math.sin((1 - uNorm) * Math.PI * 0.5) * Math.sin((1 - vNorm) * Math.PI * 0.5) * 0.95;
-            if (uNorm > 0.6 && vNorm > 0.6) sdr -= 0.35;
-            if (u === v) sdr = Math.max(sdr, 0.40);
+            // T1 · GÉNESIS: Cohesión inicial predominante, expectativa positiva generalizada
+            sdr = baseDipole * 0.90 + 0.10;
+            if (u === 0 && v === 0) sdr = +0.96;
+            if (u === 1 && v === 1) sdr = +0.86;
+            if (u === 2 && v === 2) sdr = +0.72;
+            if (u === 3 && v === 3) sdr = +0.55;
+            if (u === 4 && v === 4) sdr = +0.10;
+            if (u === 8 && v === 8) sdr = -0.42;
           } else if (type === 't2') {
-            sdr = baseDipole * 1.1;
-            if (u < 3 && v > 5) sdr = -0.74;
-            if (u > 5 && v < 3) sdr = +0.48;
-            if (u === 8 && v === 8) sdr = -1.0;
+            // T2 · CRISIS: Fractura diádica, irrupción del disidente 3A, polarización y abismo
+            sdr = baseDipole * 1.05;
             if (u === 0 && v === 0) sdr = +0.92;
             if (u === 1 && v === 1) sdr = +0.85;
-            if (u === 2 && v === 2) sdr = -0.58;
+            if (u === 2 && v === 2) sdr = -0.58; // Disidente 3A en fricción severa
+            if (u === 3 && v === 3) sdr = +0.30;
+            if (u === 4 && v === 4) sdr = -0.05;
+            if (u >= 6 && v >= 6) sdr = Math.min(sdr, -0.65);
+            if (u === 8 && v === 8) sdr = -1.00; // Abismo máximo
           } else if (type === 't3') {
-            sdr = Math.cos(uNorm * Math.PI * 0.75) * Math.cos(vNorm * Math.PI * 0.75) * 0.78;
-            if (u === 0 && v === 0) sdr = +0.88;
-            if (u === 8 && v === 8) sdr = -0.45;
-            if (u === v) sdr = Math.max(sdr, 0.25);
+            // T3 · REORGANIZACIÓN: Mediación del puente 4A, reabsorción de tensiones y elevación térmica
+            sdr = baseDipole * 0.88 + 0.06;
+            if (u === 0 && v === 0) sdr = +0.90;
+            if (u === 1 && v === 1) sdr = +0.80;
+            if (u === 2 && v === 2) sdr = +0.28; // Disidente se reinserta
+            if (u === 3 && v === 3) sdr = +0.62; // Sujeto puente activo
+            if (u === 4 && v === 4) sdr = +0.15;
+            if (u === 8 && v === 8) sdr = -0.50; // Abismo amortiguado
           } else if (type === 't4') {
-            sdr = (1.0 - (uNorm * 0.85 + vNorm * 0.85)) * 0.90;
+            // T4 · RESOLUCIÓN: Atractor armónico consolidado, equilibrio y baja entropía
+            sdr = baseDipole * 0.92 + 0.08;
             if (u === 0 && v === 0) sdr = +0.98;
             if (u === 1 && v === 1) sdr = +0.88;
             if (u === 2 && v === 2) sdr = +0.75;
             if (u === 3 && v === 3) sdr = +0.65;
             if (u === 4 && v === 4) sdr = +0.35;
-            if (u > 6 && v > 6) sdr = -0.25;
             if (u === 8 && v === 8) sdr = -0.32;
           } else if (type === 'canon') {
-            sdr = (1.0 - (uNorm * 0.9 + vNorm * 1.1)) * 0.85;
+            sdr = baseDipole * 0.88;
             if (u === 0 && v === 0) sdr = +0.95;
             if (u === 1 && v === 0) sdr = +0.72;
             if (u === 4 && v === 4) sdr = 0.00;
@@ -3425,29 +3436,27 @@
     let selectedSubjectIdx = null, hoveredVertexIdx = 0;
     let wobbleTime = 0;
 
-    // Helper para insignias 3D flotantes
-    function createTitleBadge(text, colorHex, width = 420, height = 110) {
+    // Helper para insignias 3D flotantes (tipografía pura translúcida y resplandeciente sin recuadros opacos)
+    function createTitleBadge(text, colorHex, width = 340, height = 70) {
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'rgba(6, 11, 24, 0.88)';
-      ctx.roundRect(8, 8, width - 16, height - 16, 16);
-      ctx.fill();
-      ctx.strokeStyle = colorHex;
-      ctx.lineWidth = 3.5;
-      ctx.stroke();
+      ctx.clearRect(0, 0, width, height);
 
+      // Resplandor y tipografía limpia sin recuadros ni bordes
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 9;
       ctx.fillStyle = colorHex;
-      ctx.font = 'bold 36px "Outfit", sans-serif';
+      ctx.font = '900 24px "Outfit", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(text, width / 2, height / 2);
 
       const texture = new THREE.CanvasTexture(canvas);
-      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
       const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(width * 0.065, height * 0.065, 1);
+      sprite.scale.set(width * 0.040, height * 0.040, 1);
       return sprite;
     }
 
@@ -7365,6 +7374,7 @@
         if (worldlinesGroup) worldlinesGroup.visible = worldlinesVisible;
 
         setViewLayout(viewLayout);
+        applyImaxCinemascopeView();
 
       } else if (mode === 'pca') {
         if (btnPca) btnPca.classList.add('active', 'border-rose-500/50', 'bg-rose-950/60');
@@ -7435,6 +7445,23 @@
     }
 
     function setCameraAngle(type) {
+      if (mainMode === 'imax') {
+        if (type === 'iso') {
+          applyImaxCinemascopeView();
+        } else if (type === 'top') {
+          camera.position.set(0, 310, 0.001);
+          controls.target.set(0, 0, 0);
+        } else if (type === 'rasante') {
+          camera.position.set(0, 18, 225);
+          controls.target.set(0, 8, 0);
+        } else if (type === 'abisal') {
+          camera.position.set(0, -95, 220);
+          controls.target.set(0, -5, 0);
+        }
+        controls.update();
+        return;
+      }
+
       const dist = (mainMode === 'solfeo') ? CAM_3ESTRATOS_DIST : ((viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
 
       if (type === 'iso') {
@@ -7462,8 +7489,8 @@
       scene.add(grp);
 
       const titleColor = (aq.key === 't1') ? '#00FF87' : ((aq.key === 't2') ? '#FF007F' : ((aq.key === 't3') ? '#00E5FF' : '#FFE600'));
-      const badge = createTitleBadge(aq.title, titleColor, 400, 110);
-      badge.position.set(0, MAX_HEIGHT + 13, 0);
+      const badge = createTitleBadge(aq.title, titleColor, 320, 64);
+      badge.position.set(0, MAX_HEIGHT + 9, 0);
       grp.add(badge);
 
       const planeGeo = new THREE.PlaneGeometry(SPAN + 4, SPAN + 4, 12, 12);
@@ -7711,6 +7738,12 @@
       });
     }
 
+    function applyImaxCinemascopeView() {
+      camera.position.set(0, 105, 270);
+      controls.target.set(0, 8, 0);
+      controls.update();
+    }
+
     function setViewLayout(layout) {
       viewLayout = layout;
       if (mainMode !== 'imax') return;
@@ -7741,8 +7774,217 @@
       });
     }
 
+    function selectSabana(key) {
+      loadSabana(key);
+      const aq = aquariums[key];
+      if (!aq) return;
+      initAudio();
+
+      const badgesInfo = {
+        t1: { title: 'T1 · GÉNESIS', freq: 432, desc: 'T1 · GÉNESIS: Cohesión inicial y expectativa mutua positiva' },
+        t2: { title: 'T2 · CRISIS', freq: 485, desc: 'T2 · CRISIS: Fractura diádica polarizada y emergencia del disidente 3A' },
+        t3: { title: 'T3 · REORGANIZACIÓN', freq: 456, desc: 'T3 · REORGANIZACIÓN: Mediación diádica del puente 4A y amortiguación térmica' },
+        t4: { title: 'T4 · RESOLUCIÓN', freq: 432, desc: 'T4 · RESOLUCIÓN: Consolidación armónica y atractor maduro en equilibrio' }
+      };
+      const info = badgesInfo[key] || badgesInfo.t1;
+      const subtitleEl = document.getElementById('footer-subtitle-text');
+      if (subtitleEl) {
+        subtitleEl.innerHTML = `🌊 <strong class="text-amber-300">${info.title}</strong> • ${info.desc}`;
+      }
+
+      if (audioCtx && audioEnabled) {
+        try {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(info.freq, audioCtx.currentTime);
+          g.gain.setValueAtTime(0.001, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime + 0.04);
+          g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.70);
+          osc.connect(g);
+          g.connect(masterGain || audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.72);
+        } catch (e) {}
+      }
+    }
+
+    // =========================================================================
+    // MOVIOLA 4D: REVELADO SECUENCIAL DEL FOTOGRAMA DIÁDICO
+    // =========================================================================
+    function initFilmSequence() {
+      sequenceOrder = [];
+      for (let i = 0; i < NUM_VERTICES; i++) {
+        sequenceOrder.push(i);
+      }
+
+      if (sequenceCriterion === 'thermal') {
+        sequenceOrder.sort((a, b) => SABANAS.t1[b] - SABANAS.t1[a]);
+      } else if (sequenceCriterion === 'heider') {
+        sequenceOrder.sort((a, b) => {
+          const ua = Math.floor(a / GRID_SIZE), va = a % GRID_SIZE;
+          const ub = Math.floor(b / GRID_SIZE), vb = b % GRID_SIZE;
+          const distA = Math.abs(ua - va);
+          const distB = Math.abs(ub - vb);
+          if (distA !== distB) return distA - distB;
+          return SABANAS.t1[b] - SABANAS.t1[a];
+        });
+      } else if (sequenceCriterion === 'radial') {
+        sequenceOrder.sort((a, b) => {
+          const ua = Math.floor(a / GRID_SIZE), va = a % GRID_SIZE;
+          const ub = Math.floor(b / GRID_SIZE), vb = b % GRID_SIZE;
+          const distSqA = (ua - 4) * (ua - 4) + (va - 4) * (va - 4);
+          const distSqB = (ub - 4) * (ub - 4) + (vb - 4) * (vb - 4);
+          return distSqA - distSqB;
+        });
+      }
+    }
+
+    function setSequenceCriterion(crit) {
+      sequenceCriterion = crit;
+      ['thermal', 'heider', 'radial'].forEach(c => {
+        const btn = document.getElementById(`crit-${c}`);
+        if (btn) {
+          if (c === crit) {
+            btn.classList.add('active', 'text-cyan-300');
+            btn.classList.remove('text-slate-300');
+          } else {
+            btn.classList.remove('active', 'text-cyan-300');
+            btn.classList.add('text-slate-300');
+          }
+        }
+      });
+      initFilmSequence();
+      applyFilmStepGeometry();
+    }
+
+    function applyFilmStepGeometry() {
+      if (sequenceOrder.length === 0) initFilmSequence();
+      const activeIndices = new Set(sequenceOrder.slice(0, filmStep));
+
+      ['t1', 't2', 't3', 't4'].forEach(k => {
+        const aq = aquariums[k];
+        if (!aq) return;
+        for (let idx = 0; idx < NUM_VERTICES; idx++) {
+          if (activeIndices.has(idx)) {
+            aq.currentZ[idx] = SABANAS[k][idx];
+          } else {
+            aq.currentZ[idx] = 0.0;
+          }
+        }
+        updateAquariumGeometry(aq);
+      });
+
+      updateWorldlinesPositions();
+
+      const stepLbl = document.getElementById('film-step-lbl');
+      const stepDetail = document.getElementById('film-step-detail');
+      const progressBar = document.getElementById('film-progress');
+
+      if (progressBar) {
+        progressBar.style.width = `${Math.round((filmStep / NUM_VERTICES) * 100)}%`;
+      }
+
+      if (filmStep === 0) {
+        if (stepLbl) stepLbl.textContent = '0 / 81 Vértices Revelados';
+        if (stepDetail) stepDetail.textContent = 'Superficie Calma en Reposo (Nivel Z = 0)';
+      } else if (filmStep === NUM_VERTICES) {
+        if (stepLbl) stepLbl.textContent = '81 / 81 Vértices Revelados';
+        if (stepDetail) stepDetail.textContent = 'Oleaje Estático Completo en 4 Acuarios';
+      } else {
+        const curIdx = sequenceOrder[filmStep - 1];
+        const u = Math.floor(curIdx / GRID_SIZE);
+        const v = curIdx % GRID_SIZE;
+        const code = getFigureCode(u, v);
+        const d1 = SABANAS.t1[curIdx].toFixed(2);
+        const d2 = SABANAS.t2[curIdx].toFixed(2);
+        const d3 = SABANAS.t3[curIdx].toFixed(2);
+        const d4 = SABANAS.t4[curIdx].toFixed(2);
+
+        if (stepLbl) stepLbl.textContent = `${filmStep} / 81 Vértices Revelados`;
+        if (stepDetail) {
+          stepDetail.innerHTML = `Vértice (${u},${v}) <strong class="text-cyan-300">${code}</strong> • T1:${d1} ➔ T2:${d2} ➔ T3:${d3} ➔ T4:${d4}`;
+        }
+      }
+    }
+
+    function togglePlayFilm() {
+      isPlayingFilm = !isPlayingFilm;
+      const playIcon = document.getElementById('play-icon');
+      const playLabel = document.getElementById('play-label');
+      const playBtn = document.getElementById('btn-play');
+
+      if (isPlayingFilm) {
+        initAudio();
+        if (playIcon) playIcon.textContent = '⏸';
+        if (playLabel) playLabel.textContent = 'PAUSAR';
+        if (playBtn) {
+          playBtn.classList.remove('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
+          playBtn.classList.add('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
+        }
+
+        if (filmStep >= NUM_VERTICES) {
+          filmStep = 0;
+          applyFilmStepGeometry();
+        }
+
+        const speedSelect = document.getElementById('playback-speed');
+        const cadence = speedSelect ? parseInt(speedSelect.value, 10) || 300 : 300;
+
+        if (filmInterval) clearInterval(filmInterval);
+        filmInterval = setInterval(() => {
+          if (filmStep < NUM_VERTICES) {
+            stepFilm(1);
+          } else {
+            togglePlayFilm();
+          }
+        }, cadence);
+
+      } else {
+        if (filmInterval) {
+          clearInterval(filmInterval);
+          filmInterval = null;
+        }
+        if (playIcon) playIcon.textContent = '▶';
+        if (playLabel) playLabel.textContent = 'REPRODUCIR';
+        if (playBtn) {
+          playBtn.classList.add('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
+          playBtn.classList.remove('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
+        }
+      }
+    }
+
+    function stepFilm(dir) {
+      if (sequenceOrder.length === 0) initFilmSequence();
+      filmStep = Math.max(0, Math.min(NUM_VERTICES, filmStep + dir));
+      applyFilmStepGeometry();
+
+      if (dir > 0 && filmStep > 0 && audioCtx && audioEnabled) {
+        const curIdx = sequenceOrder[filmStep - 1];
+        const avgSdr = (SABANAS.t1[curIdx] + SABANAS.t2[curIdx] + SABANAS.t3[curIdx] + SABANAS.t4[curIdx]) / 4;
+        playHarmonicChime(avgSdr * 4.0, 0.25, { u: Math.floor(curIdx / GRID_SIZE), v: curIdx % GRID_SIZE });
+      }
+    }
+
+    function rewindFilm() {
+      if (isPlayingFilm) togglePlayFilm();
+      filmStep = 0;
+      applyFilmStepGeometry();
+    }
+
+    function forwardFilmFull() {
+      if (isPlayingFilm) togglePlayFilm();
+      filmStep = NUM_VERTICES;
+      applyFilmStepGeometry();
+    }
+
+    // =========================================================================
+    // VECTORES N DEL SUJETO: ILUMINACIÓN DE FILAMENTOS 4D
+    // =========================================================================
     function selectSubject(idx) {
       selectedSubjectIdx = idx;
+      initAudio();
+
       for (let i = 0; i < 5; i++) {
         const b = document.getElementById(`btn-subj-${i}`);
         if (b) {
@@ -7751,8 +7993,82 @@
         }
       }
       const btnAll = document.getElementById('btn-subj-all');
-      if (idx === null) btnAll.classList.add('active');
-      else btnAll.classList.remove('active');
+      if (idx === null) {
+        if (btnAll) btnAll.classList.add('active');
+      } else {
+        if (btnAll) btnAll.classList.remove('active');
+      }
+
+      const detailsEl = document.getElementById('subject-details');
+
+      if (idx === null) {
+        if (worldlinesGroup) {
+          worldlinesGroup.children.forEach(line => {
+            line.visible = true;
+            line.material.color.setHex(line.userData.baseColor);
+            line.material.opacity = line.userData.baseOpacity;
+          });
+        }
+        if (detailsEl) {
+          detailsEl.innerHTML = `<span>🌐 <strong>Grupo Íntegro (N=5)</strong>: Proyectando los 81 filamentos trans-temporales en armonía global.</span><span class="text-cyan-400 font-bold">81 Filamentos</span>`;
+        }
+        return;
+      }
+
+      const constell = SUBJECT_CONSTELLATIONS[idx];
+      if (!constell) return;
+
+      const subjectColors = [0x00FF87, 0x00E5FF, 0xFF007F, 0xFF9F1C, 0xFFE600];
+      const subjectHexes = ['#00FF87', '#00E5FF', '#FF007F', '#FF9F1C', '#FFE600'];
+      const activeColor = subjectColors[idx] || 0x00FF87;
+      const activeHex = subjectHexes[idx] || '#00FF87';
+
+      const subjectDyads = constell.vectorN.map(d => ({ u: d.u, v: d.v }));
+
+      if (worldlinesGroup) {
+        worldlinesGroup.children.forEach(line => {
+          const u = line.userData.u;
+          const v = line.userData.v;
+          const isMember = subjectDyads.some(d => d.u === u && d.v === v);
+
+          if (isMember) {
+            line.visible = true;
+            line.material.color.setHex(activeColor);
+            line.material.opacity = 1.0;
+          } else {
+            line.material.color.setHex(line.userData.baseColor);
+            line.material.opacity = 0.05;
+          }
+        });
+      }
+
+      const dyadTags = constell.vectorN.map(d => `<span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300">${d.partner}: ${d.code}</span>`).join(' ');
+      if (detailsEl) {
+        detailsEl.innerHTML = `
+          <div class="flex flex-col gap-1 w-full">
+            <div class="flex items-center justify-between">
+              <strong style="color: ${activeHex}">${constell.name}</strong>
+              <span class="text-amber-400 font-bold">Entropía H = ${constell.entropy.toFixed(2)}</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1 mt-0.5">
+              ${dyadTags}
+            </div>
+          </div>
+        `;
+      }
+
+      if (audioCtx && audioEnabled) {
+        constell.vectorN.forEach((d, k) => {
+          setTimeout(() => {
+            playHarmonicChime(d.sdr * 4.0, 0.20, { u: d.u, v: d.v });
+          }, k * 100);
+        });
+      }
+    }
+
+    // Alias retrocompatible para el diálogo dual
+    function togglePlayDualDialogue() {
+      togglePlayDual();
     }
 
     // =========================================================================
@@ -7846,7 +8162,44 @@
       if (isNaN(idx) || idx < 0 || idx >= NUM_VERTICES) idx = 0;
       const u = Math.floor(idx / GRID_SIZE);
       const v = idx % GRID_SIZE;
-      document.getElementById('telemetry-cell').textContent = getFigureCode(u, v);
+      const code = getFigureCode(u, v);
+      const aq = aquariums[aqKey];
+      const sdr = aq ? aq.currentZ[idx] : 0;
+
+      initAudio();
+      playHarmonicChime(sdr * 4.0, 0.35, { u, v });
+
+      const cellEl = document.getElementById('telemetry-cell');
+      const codeEl = document.getElementById('telemetry-code');
+      const meanEl = document.getElementById('telemetry-meaning');
+      const z1El = document.getElementById('telemetry-z1');
+      const z2El = document.getElementById('telemetry-z2');
+      const z3El = document.getElementById('telemetry-z3');
+      const z4El = document.getElementById('telemetry-z4');
+      const deltaEl = document.getElementById('telemetry-delta');
+
+      if (cellEl) cellEl.textContent = `(${u},${v})`;
+      if (codeEl) codeEl.textContent = code;
+      if (meanEl) {
+        const figure = FIGURES_Q81[code];
+        meanEl.textContent = figure ? figure.name : (sdr >= 0 ? 'Afinidad Cohesiva' : 'Fricción / Oposición');
+      }
+
+      const z1 = SABANAS.t1[idx], z2 = SABANAS.t2[idx], z3 = SABANAS.t3[idx], z4 = SABANAS.t4[idx];
+      if (z1El) z1El.textContent = `T1: ${z1 >= 0 ? '+' : ''}${z1.toFixed(2)}`;
+      if (z2El) z2El.textContent = `T2: ${z2 >= 0 ? '+' : ''}${z2.toFixed(2)}`;
+      if (z3El) z3El.textContent = `T3: ${z3 >= 0 ? '+' : ''}${z3.toFixed(2)}`;
+      if (z4El) z4El.textContent = `T4: ${z4 >= 0 ? '+' : ''}${z4.toFixed(2)}`;
+
+      const delta = z4 - z1;
+      if (deltaEl) {
+        deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(2)} (${delta >= 0 ? 'Progresión Armónica' : 'Tensión Residual'})`;
+      }
+
+      const subtitleEl = document.getElementById('footer-subtitle-text');
+      if (subtitleEl) {
+        subtitleEl.innerHTML = `🌊 Acuario <strong class="text-cyan-300">${aqKey.toUpperCase()}</strong> • Vértice (${u},${v}) • <strong class="text-amber-300">${code}</strong> • Densidad: ${sdr >= 0 ? '+' : ''}${sdr.toFixed(2)}`;
+      }
     }
 
     function onWindowResize() {
