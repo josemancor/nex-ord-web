@@ -200,7 +200,7 @@
   <main class="w-full max-w-[1720px] mx-auto flex flex-col gap-2.5 px-2 md:px-4 py-2 min-h-screen">
 
     <!-- 🏛️ 1. FRONTISPICIO CLARO DE IDENTIDAD (REGLAS 9, 11 Y 14) -->
-    <header class="glass-panel rounded-2xl p-3 md:px-5 md:py-2.5 flex flex-wrap items-center justify-between gap-3 border-b border-sky-500/35 shadow-xl">
+    <header id="main-opera-header" class="glass-panel rounded-2xl p-3 md:px-5 md:py-2.5 flex flex-wrap items-center justify-between gap-3 border-b border-sky-500/35 shadow-xl">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-emerald-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/35">
           <svg class="w-6 h-6 text-slate-950 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,6 +239,9 @@
           <button onclick="toggleTvWallModal()" id="btn-toggle-tvwall-hud" class="glass-btn px-2 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/40 hover:border-amber-400" title="Muro de Control de 13 TVs Acuáricas en 4 Filas (T, C, G, Sujetos)">
             📺 Muro 13 TVs
           </button>
+          <button onclick="toggleSalaOscuraFullscreen()" id="btn-mode-sala-oscura" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-rose-300 border-rose-500/40 hover:border-rose-400 flex items-center gap-1" title="Pantalla Completa y Sala Oscura (Cine Total)">
+            <span>🎭</span> Sala Oscura
+          </button>
         </div>
 
         <div class="bg-slate-950/80 border border-cyan-500/30 px-3 py-1 rounded-xl flex items-center gap-2">
@@ -253,7 +256,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch w-full">
 
       <!-- 📊 BANDA LATERAL IZQUIERDA: PALCO DE INFORMACIÓN FACTUAL, TRAZA SMIb/SMIa & TV 10 DENSIDADES [3 COLUMNAS] -->
-      <aside class="lg:col-span-3 flex flex-col gap-2.5">
+      <aside id="left-wing-sidebar" class="lg:col-span-3 flex flex-col gap-2.5">
         <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40 shadow-2xl overflow-y-auto max-h-[78vh]">
           
           <div class="flex items-center justify-between border-b border-sky-900/40 pb-1.5">
@@ -502,7 +505,7 @@
       </aside>
 
       <!-- 🌌 CENTRO AMPLIO Y DESPEJADO: EL ESCENARIO 3D DEL TEATRO [6 COLUMNAS] -->
-      <section class="lg:col-span-6 flex flex-col relative">
+      <section id="center-stage-section" class="lg:col-span-6 flex flex-col relative">
         <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/35 shadow-2xl transition-all duration-300 h-[76vh] min-height-[640px]" id="aquarium-viewport-container">
           
           <!-- Canvas WebGL Three.js -->
@@ -523,6 +526,9 @@
                 </div>
               </div>
               <div class="flex items-center gap-2">
+                <button onclick="toggleSalaOscuraFullscreen()" id="btn-tvwall-sala-oscura" class="glass-btn px-2.5 py-1 rounded-lg text-cyan-300 hover:text-white border border-cyan-500/50 hover:bg-cyan-950/80 font-black text-xs flex items-center gap-1" title="Entrar en Sala Oscura Pantalla Completa con los 13 Monitores de TV">
+                  <span>🎭</span><span>SALA OSCURA</span>
+                </button>
                 <button onclick="toggleTvWallModal()" class="glass-btn px-2.5 py-1 rounded-lg text-rose-400 hover:text-white border border-rose-500/50 hover:bg-rose-950/80 font-black text-xs">
                   ✕ CERRAR MURO
                 </button>
@@ -757,12 +763,12 @@
           </div>
 
           <!-- ◀ FLECHA LATERAL IZQUIERDA DEL ESCENARIO (COMPÁS ANTERIOR) -->
-          <button onclick="stepSolfeoManual(-1)" class="glass-btn absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-cyan-300 hover:text-white bg-slate-950/80 border border-cyan-500/50 hover:border-cyan-400 hover:scale-110 shadow-2xl backdrop-blur-md transition-all font-black text-base active:scale-95" title="Compás Anterior (Retroceder en la Ópera)">
+          <button id="btn-step-left" onclick="stepSolfeoManual(-1)" class="glass-btn absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-cyan-300 hover:text-white bg-slate-950/80 border border-cyan-500/50 hover:border-cyan-400 hover:scale-110 shadow-2xl backdrop-blur-md transition-all font-black text-base active:scale-95" title="Compás Anterior (Retroceder en la Ópera)">
             ◀
           </button>
 
           <!-- ▶ FLECHA LATERAL DERECHA DEL ESCENARIO (COMPÁS SIGUIENTE) -->
-          <button onclick="stepSolfeoManual(1)" class="glass-btn absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-cyan-300 hover:text-white bg-slate-950/80 border border-cyan-500/50 hover:border-cyan-400 hover:scale-110 shadow-2xl backdrop-blur-md transition-all font-black text-base active:scale-95" title="Compás Siguiente (Avanzar en la Ópera)">
+          <button id="btn-step-right" onclick="stepSolfeoManual(1)" class="glass-btn absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-cyan-300 hover:text-white bg-slate-950/80 border border-cyan-500/50 hover:border-cyan-400 hover:scale-110 shadow-2xl backdrop-blur-md transition-all font-black text-base active:scale-95" title="Compás Siguiente (Avanzar en la Ópera)">
             ▶
           </button>
 
@@ -783,14 +789,14 @@
           </div>
 
           <!-- MANDOS DE PERSPECTIVA FLOTANTES (ESQUINA SUPERIOR DERECHA) -->
-          <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
+          <div id="viewport-top-right-controls" class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
             <div class="flex items-center gap-1.5">
               <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Activar/Desactivar Audio Sinestésico 432 Hz">
                 <span id="audio-icon">🔇</span>
                 <span id="audio-lbl" class="text-[10px]">Audio: OFF</span>
               </button>
-              <button onclick="toggleCinemaMode()" id="btn-toggle-cinema" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-slate-950/85 border-amber-500/40 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Modo Cine / Expansión Panorámica Inmersiva">
-                <span>⛶</span> Cine
+              <button onclick="toggleSalaOscuraFullscreen()" id="btn-toggle-cinema" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-slate-950/85 border-amber-500/40 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Sala Oscura / Pantalla Completa Cinematográfica">
+                <span>🎭</span> Sala Oscura
               </button>
               <button onclick="toggleBoardLabels()" id="btn-vp-labels" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5" title="Mostrar/Ocultar Rótulos 3D del Tablero">
                 <span>🏷️</span> Etiquetas
@@ -847,11 +853,43 @@
             </div>
           </div>
 
+          <!-- 🎭 DOCK FLOTANTE MINIMALISTA DE SALA OSCURA (PANTALLA COMPLETA) -->
+          <div id="cinema-sala-oscura-dock" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-950/90 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-sky-500/50 shadow-[0_0_40px_rgba(0,0,0,0.9)] max-w-[95vw] transition-all duration-300">
+            <!-- PLAY / PAUSA -->
+            <button onclick="togglePlaySolfeo()" id="dock-btn-play" class="glass-btn px-4 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-2 bg-emerald-950/80 border border-emerald-400/60 text-emerald-300 hover:scale-105 transition-all shadow-lg" title="Reproducir o Pausar el Concierto">
+              <span id="dock-play-icon" class="text-base">▶</span>
+              <span id="dock-play-lbl">PLAY</span>
+            </button>
+
+            <!-- STOP -->
+            <button onclick="stopAndResetConcert()" id="dock-btn-stop" class="glass-btn px-3.5 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-1.5 bg-rose-950/70 border border-rose-500/50 text-rose-300 hover:text-white hover:scale-105 transition-all shadow-lg" title="Detener Concierto y Rebobinar al Compás 1">
+              <span>⏹</span>
+              <span>STOP</span>
+            </button>
+
+            <!-- LUZ DE SALA -->
+            <button onclick="toggleLuzDeSala()" id="dock-btn-luz" class="glass-btn px-3.5 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-1.5 border border-slate-700 text-slate-300 bg-slate-900/80 hover:scale-105 transition-all shadow-lg" title="Encender / Apagar Luz de Sala (Atenuador Teatral)">
+              <span id="dock-luz-icon" class="text-base">💡</span>
+              <span id="dock-luz-lbl">LUZ: ON</span>
+            </button>
+
+            <!-- TELEPROMPTER EN VIVO -->
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-sky-900/60 mono text-xs text-cyan-300 max-w-md truncate">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
+              <span id="dock-teleprompter-text" class="truncate font-semibold">Sinfonía Lista • Pulsa PLAY</span>
+            </div>
+
+            <!-- BOTÓN SALIR -->
+            <button onclick="toggleSalaOscuraFullscreen(false)" id="dock-btn-exit" class="glass-btn px-3 py-2 rounded-xl mono font-bold text-xs text-slate-400 hover:text-white border border-slate-700/80 bg-slate-900/60 hover:bg-slate-800 transition-all ml-1" title="Salir de Sala Oscura (Escape)">
+              <span>✕</span> Salir
+            </button>
+          </div>
+
         </div>
       </section>
 
       <!-- 🎛️ BANDA LATERAL DERECHA: CONTROLES DE PRODUCCIÓN, SUITES Y MEZCLADOR [3 COLUMNAS] -->
-      <aside class="lg:col-span-3 flex flex-col gap-2.5">
+      <aside id="right-wing-sidebar" class="lg:col-span-3 flex flex-col gap-2.5">
         <section id="bar-solfeo-controls" class="glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-purple-900/50 shadow-2xl overflow-y-auto max-h-[78vh]">
           
           <!-- Encabezado de Producción -->
@@ -1066,7 +1104,7 @@
     </div>
 
     <!-- 📜 3. FOSO DE LA ÓPERA: SUBTÍTULOS DINÁMICOS, MOVIOLA SINFÓNICA Y NOTA PEDAGÓGICA (REGLA 10) -->
-    <footer class="glass-panel rounded-2xl px-4 py-2.5 flex flex-col gap-2 border border-slate-800 text-[11px] mono shadow-lg">
+    <footer id="main-opera-footer" class="glass-panel rounded-2xl px-4 py-2.5 flex flex-col gap-2 border border-slate-800 text-[11px] mono shadow-lg">
       
       <!-- LÍNEA 1: SUBTÍTULO DE ÓPERA Y METADATOS -->
       <div class="flex items-center justify-between flex-wrap gap-2 text-slate-300">
@@ -2952,28 +2990,226 @@
       }
     }
 
-    function toggleCinemaMode() {
+    // =========================================================================
+    // 🎭 SISTEMA MAESTRO DE PANTALLA COMPLETA & SALA OSCURA CINEMATOGRÁFICA
+    // =========================================================================
+    let isSalaOscuraActive = false;
+    let theaterLights = {
+      ambient: null,
+      sun: null,
+      cyanBounce: null,
+      boardCenterLight: null,
+      abyssLight: null
+    };
+    let isLuzDeSalaOn = true;
+
+    function toggleSalaOscuraFullscreen(forceState) {
+      if (typeof forceState === 'boolean') {
+        isSalaOscuraActive = forceState;
+      } else {
+        isSalaOscuraActive = !isSalaOscuraActive;
+      }
+
       const container = document.getElementById('aquarium-viewport-container');
-      const btn = document.getElementById('btn-toggle-cinema');
-      if (!container) return;
-      const isCinema = container.classList.toggle('cinema-mode-active');
-      if (isCinema) {
-        container.style.height = '88vh';
-        container.style.minHeight = '750px';
-        if (btn) {
-          btn.classList.add('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
-          btn.innerHTML = '<span>⛶</span> Reducir';
+      const header = document.getElementById('main-opera-header');
+      const leftSidebar = document.getElementById('left-wing-sidebar');
+      const centerStage = document.getElementById('center-stage-section');
+      const rightSidebar = document.getElementById('right-wing-sidebar');
+      const footer = document.getElementById('main-opera-footer');
+      const dock = document.getElementById('cinema-sala-oscura-dock');
+      const liveTelemetry = document.getElementById('floating-live-telemetry');
+      const vpTopRightControls = document.getElementById('viewport-top-right-controls');
+      const vpLegendBtn = document.getElementById('btn-toggle-legend');
+      const vpLegendBox = document.getElementById('viewport-legend-box');
+      const btnStepLeft = document.getElementById('btn-step-left');
+      const btnStepRight = document.getElementById('btn-step-right');
+      const btnCinema = document.getElementById('btn-toggle-cinema');
+      const btnHeaderSala = document.getElementById('btn-mode-sala-oscura');
+
+      if (isSalaOscuraActive) {
+        // ACTIVAR SALA OSCURA A PANTALLA COMPLETA
+        if (header) header.style.display = 'none';
+        if (leftSidebar) leftSidebar.style.display = 'none';
+        if (rightSidebar) rightSidebar.style.display = 'none';
+        if (footer) footer.style.display = 'none';
+
+        if (liveTelemetry) liveTelemetry.style.display = 'none';
+        if (vpTopRightControls) vpTopRightControls.style.display = 'none';
+        if (vpLegendBtn) vpLegendBtn.style.display = 'none';
+        if (vpLegendBox) vpLegendBox.classList.add('hidden');
+        if (btnStepLeft) btnStepLeft.style.display = 'none';
+        if (btnStepRight) btnStepRight.style.display = 'none';
+
+        if (container) {
+          container.classList.add('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
+          container.style.height = '100vh';
+          container.style.minHeight = '100vh';
+        }
+        if (centerStage) {
+          centerStage.classList.remove('lg:col-span-6');
+          centerStage.classList.add('w-full');
+        }
+
+        if (dock) {
+          dock.classList.remove('hidden');
+          dock.classList.add('flex');
+        }
+
+        if (btnCinema) {
+          btnCinema.innerHTML = '<span>⛶</span> Restaurar';
+          btnCinema.classList.add('active', 'border-amber-400', 'text-amber-300');
+        }
+        if (btnHeaderSala) {
+          btnHeaderSala.classList.add('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+        }
+
+        // Modo Sala Oscura: luces de sala atenuadas al mínimo para el espectáculo luminoso
+        isLuzDeSalaOn = false;
+        applyLuzDeSalaState();
+
+        if (document.fullscreenElement === null && document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
         }
       } else {
-        container.style.height = '72vh';
-        container.style.minHeight = '620px';
-        if (btn) {
-          btn.classList.remove('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
-          btn.innerHTML = '<span>⛶</span> Cine';
+        // DESACTIVAR SALA OSCURA / RESTAURAR TEATRO
+        if (header) header.style.display = '';
+        if (leftSidebar) leftSidebar.style.display = '';
+        if (rightSidebar) rightSidebar.style.display = '';
+        if (footer) footer.style.display = '';
+
+        if (liveTelemetry) liveTelemetry.style.display = '';
+        if (vpTopRightControls) vpTopRightControls.style.display = '';
+        if (vpLegendBtn) vpLegendBtn.style.display = '';
+        if (btnStepLeft) btnStepLeft.style.display = '';
+        if (btnStepRight) btnStepRight.style.display = '';
+
+        if (container) {
+          container.classList.remove('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
+          container.style.height = '76vh';
+          container.style.minHeight = '640px';
+        }
+        if (centerStage) {
+          centerStage.classList.add('lg:col-span-6');
+          centerStage.classList.remove('w-full');
+        }
+
+        if (dock) {
+          dock.classList.add('hidden');
+          dock.classList.remove('flex');
+        }
+
+        if (btnCinema) {
+          btnCinema.innerHTML = '<span>🎭</span> Sala Oscura';
+          btnCinema.classList.remove('active', 'border-amber-400', 'text-amber-300');
+        }
+        if (btnHeaderSala) {
+          btnHeaderSala.classList.remove('active', 'border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+        }
+
+        // Restaurar luz de sala
+        isLuzDeSalaOn = true;
+        applyLuzDeSalaState();
+
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
         }
       }
+
       setTimeout(onWindowResize, 60);
+      setTimeout(onWindowResize, 250);
     }
+
+    function toggleCinemaMode() {
+      toggleSalaOscuraFullscreen();
+    }
+
+    function toggleLuzDeSala() {
+      isLuzDeSalaOn = !isLuzDeSalaOn;
+      applyLuzDeSalaState();
+    }
+
+    function applyLuzDeSalaState() {
+      const btn = document.getElementById('dock-btn-luz');
+      const icon = document.getElementById('dock-luz-icon');
+      const lbl = document.getElementById('dock-luz-lbl');
+      const container = document.getElementById('aquarium-viewport-container');
+
+      if (isLuzDeSalaOn) {
+        if (theaterLights.ambient) theaterLights.ambient.intensity = 1.8;
+        if (theaterLights.sun) theaterLights.sun.intensity = 2.6;
+        if (theaterLights.cyanBounce) theaterLights.cyanBounce.intensity = 1.9;
+        if (theaterLights.boardCenterLight) theaterLights.boardCenterLight.intensity = 2.8;
+        if (theaterLights.abyssLight) theaterLights.abyssLight.intensity = 2.2;
+        if (scene && scene.fog) {
+          scene.fog.color.setHex(0x040814);
+          scene.fog.density = 0.0020;
+        }
+        if (renderer) renderer.setClearColor(0x040814, 1.0);
+        if (container) {
+          container.style.backgroundColor = '#040814';
+        }
+        if (icon) icon.textContent = '💡';
+        if (lbl) lbl.textContent = 'LUZ: ON';
+        if (btn) {
+          btn.classList.remove('border-yellow-500/80', 'text-yellow-300', 'bg-yellow-950/70', 'shadow-[0_0_15px_rgba(255,230,0,0.4)]');
+          btn.classList.add('border-slate-700', 'text-slate-300', 'bg-slate-900/80');
+        }
+      } else {
+        if (theaterLights.ambient) theaterLights.ambient.intensity = 0.15;
+        if (theaterLights.sun) theaterLights.sun.intensity = 0.35;
+        if (theaterLights.cyanBounce) theaterLights.cyanBounce.intensity = 0.40;
+        if (theaterLights.boardCenterLight) theaterLights.boardCenterLight.intensity = 3.8;
+        if (theaterLights.abyssLight) theaterLights.abyssLight.intensity = 2.8;
+        if (scene && scene.fog) {
+          scene.fog.color.setHex(0x000000);
+          scene.fog.density = 0.0012;
+        }
+        if (renderer) renderer.setClearColor(0x000000, 1.0);
+        if (container) {
+          container.style.backgroundColor = '#000000';
+        }
+        if (icon) icon.textContent = '🌑';
+        if (lbl) lbl.textContent = 'LUZ: OFF';
+        if (btn) {
+          btn.classList.add('border-yellow-500/80', 'text-yellow-300', 'bg-yellow-950/70', 'shadow-[0_0_15px_rgba(255,230,0,0.4)]');
+          btn.classList.remove('border-slate-700', 'text-slate-300', 'bg-slate-900/80');
+        }
+      }
+    }
+
+    function stopAndResetConcert() {
+      if (isSolfeoPlaying) {
+        togglePlaySolfeo();
+      }
+      isChainMode = false;
+      if (typeof updateChainUI === 'function') updateChainUI();
+      solfeoCurrentStep = 0;
+      resetSolfeoBoard();
+      updateSolfeoStepUI(0, '1A → 1A', 41, 4.44);
+      if (typeof updateMoviolaUI === 'function') updateMoviolaUI(0);
+      const subEl = document.getElementById('footer-subtitle-text');
+      if (subEl) subEl.textContent = '⏹ Concierto Detenido • Compás 0 • Listo para iniciar';
+      const dockTeleprompter = document.getElementById('dock-teleprompter-text');
+      if (dockTeleprompter) dockTeleprompter.textContent = '⏹ Concierto Detenido • Pulsa PLAY para reiniciar';
+    }
+
+    // Atajos de Teclado (Escape para salir, Espacio para Play/Pausa)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (isSalaOscuraActive) {
+          toggleSalaOscuraFullscreen(false);
+        }
+      } else if (e.key === ' ' && isSalaOscuraActive) {
+        e.preventDefault();
+        togglePlaySolfeo();
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && isSalaOscuraActive) {
+        toggleSalaOscuraFullscreen(false);
+      }
+    });
 
     // ⚡⚡ Objetos del Laboratorio Bifocal 3D: Dos Tableros Gemelos DA y RC con Rayos
     let dualBoardsGroup = null;
@@ -3152,23 +3388,28 @@
     function setupLights() {
       const ambient = new THREE.AmbientLight(0xCBD5E1, 1.8);
       scene.add(ambient);
+      theaterLights.ambient = ambient;
 
       const sun = new THREE.DirectionalLight(0xFFFBEB, 2.6);
       sun.position.set(60, 140, 90);
       scene.add(sun);
+      theaterLights.sun = sun;
 
       const cyanBounce = new THREE.DirectionalLight(0x00E5FF, 1.9);
       cyanBounce.position.set(-100, 60, -80);
       scene.add(cyanBounce);
+      theaterLights.cyanBounce = cyanBounce;
 
       // Foco central en el Tablero de Ajedrez Vivo
       const boardCenterLight = new THREE.PointLight(0x00E5FF, 2.8, 140);
       boardCenterLight.position.set(0, 15, 0);
       scene.add(boardCenterLight);
+      theaterLights.boardCenterLight = boardCenterLight;
 
       const abyssLight = new THREE.PointLight(0xFF007F, 2.2, 100);
       abyssLight.position.set(0, -18, 0);
       scene.add(abyssLight);
+      theaterLights.abyssLight = abyssLight;
     }
 
     // =========================================================================
@@ -6228,6 +6469,18 @@
         const sign = den >= 0 ? '+' : '';
         tDen.textContent = `${sign}${den.toFixed(2)}`;
       }
+
+      // Teleprompter de Sala Oscura en el Dock Flotante
+      const dockTeleprompter = document.getElementById('dock-teleprompter-text');
+      if (dockTeleprompter) {
+        if (step === 0) {
+          dockTeleprompter.textContent = 'Sinfonía Lista • Pulsa PLAY para iniciar';
+        } else {
+          const sign = den >= 0 ? '+' : '';
+          const movName = (typeof isChainMode !== 'undefined' && isChainMode && typeof currentMovementIdx !== 'undefined' && typeof GRAND_SYMPHONY_MOVEMENTS !== 'undefined') ? (GRAND_SYMPHONY_MOVEMENTS[currentMovementIdx]?.name + ' • ') : '';
+          dockTeleprompter.textContent = `${movName}Compás ${step}/${total} • ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+        }
+      }
     }
 
     function togglePlaySolfeo() {
@@ -6238,7 +6491,7 @@
       if (isSolfeoPlaying) {
         initAudio();
         if (solfeoSequence.length === 0) buildSolfeoSequence();
-        const baseSpeed = parseInt(document.getElementById('solfeo-speed').value, 10) || 450;
+        const baseSpeed = parseInt(document.getElementById('solfeo-speed')?.value || '450', 10);
         const speed = isConcertMode ? Math.max(650, Math.round(baseSpeed * 1.3)) : baseSpeed;
 
         solfeoPlayingInterval = setInterval(() => {
@@ -6312,6 +6565,26 @@
           moviolaPlay.classList.add('border-cyan-400', 'text-cyan-300');
         } else {
           moviolaPlay.classList.remove('border-cyan-400', 'text-cyan-300');
+        }
+      }
+      const dockPlay = document.getElementById('dock-btn-play');
+      const dockPlayIcon = document.getElementById('dock-play-icon');
+      const dockPlayLbl = document.getElementById('dock-play-lbl');
+      if (dockPlayIcon && dockPlayLbl) {
+        if (isSolfeoPlaying) {
+          dockPlayIcon.textContent = '⏸';
+          dockPlayLbl.textContent = 'PAUSA';
+          if (dockPlay) {
+            dockPlay.classList.add('border-cyan-400', 'text-cyan-300', 'bg-cyan-950/80', 'shadow-[0_0_15px_rgba(0,229,255,0.5)]');
+            dockPlay.classList.remove('border-emerald-400/60', 'text-emerald-300', 'bg-emerald-950/80');
+          }
+        } else {
+          dockPlayIcon.textContent = '▶';
+          dockPlayLbl.textContent = 'PLAY';
+          if (dockPlay) {
+            dockPlay.classList.remove('border-cyan-400', 'text-cyan-300', 'bg-cyan-950/80', 'shadow-[0_0_15px_rgba(0,229,255,0.5)]');
+            dockPlay.classList.add('border-emerald-400/60', 'text-emerald-300', 'bg-emerald-950/80');
+          }
         }
       }
     }
