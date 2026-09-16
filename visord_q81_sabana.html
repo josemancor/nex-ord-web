@@ -82,7 +82,25 @@
       background: linear-gradient(135deg, rgba(0, 229, 255, 0.35), rgba(0, 255, 135, 0.35));
       border-color: #00FF87;
       color: #00FF87;
-      box-shadow: 0 0 18px rgba(0, 255, 135, 0.45);
+    }
+    .tv-monitor-card {
+      background: rgba(4, 9, 20, 0.92);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+    .tv-monitor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 229, 255, 0.25);
+    }
+    .tv-monitor-card.active-tv {
+      border-color: #00E5FF !important;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    .tv-monitor-card.active-tv .tv-live-dot {
+      background-color: #EF4444 !important;
+      box-shadow: 0 0 8px #EF4444;
+      animation: pulse 1s infinite;
     }
 
     /* Partitura Celdas Interactivas */
@@ -217,6 +235,9 @@
           </button>
           <button onclick="setMainMode('multi')" id="btn-mode-multi" class="glass-btn px-2 py-1 rounded-lg mono text-xs font-bold text-emerald-300 border-emerald-500/40" title="Gran Tablero Acuárico GxTyCz Simultáneo: Constelación de Acuarios Múltiples Sincronizados">
             🌐 Acuarios GxTyCz
+          </button>
+          <button onclick="toggleTvWallModal()" id="btn-toggle-tvwall-hud" class="glass-btn px-2 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/40 hover:border-amber-400" title="Muro de Control de 13 TVs Acuáricas en 4 Filas (T, C, G, Sujetos)">
+            📺 Muro 13 TVs
           </button>
         </div>
 
@@ -487,6 +508,254 @@
           <!-- Canvas WebGL Three.js -->
           <div id="three-viewport" style="position: absolute; inset: 0; width: 100%; height: 100%; min-height: 640px;" class="cursor-grab active:cursor-grabbing"></div>
 
+          <!-- 📺 MURO DE CONTROL DE VIDEO DE MULTI-ACUARIOS • 4 FILAS DE PANELES DE TV -->
+          <div id="tv-wall-overlay" class="hidden absolute inset-0 z-30 bg-slate-950/94 backdrop-blur-xl p-3 flex-col justify-between overflow-y-auto border border-cyan-500/50 rounded-2xl shadow-2xl transition-all duration-300">
+            <!-- Header del Muro -->
+            <div class="flex items-center justify-between border-b border-cyan-900/50 pb-2 mb-1.5 shrink-0">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                <div>
+                  <h2 class="mono font-black text-xs md:text-sm text-cyan-300 flex items-center gap-2">
+                    <span>📺 MURO DE VIDEO DE MULTI-ACUARIOS: 4 FILAS DE PANELES DE TV</span>
+                    <span class="text-[9px] bg-rose-950 text-rose-300 border border-rose-500/50 px-2 py-0.5 rounded font-bold">13 MONITORES EN VIVO</span>
+                  </h2>
+                  <p class="text-[10px] text-slate-400 mono">Fila 1: Tiempos (T) • Fila 2: Criterios (C) • Fila 3: Grupos (G) • Fila 4: Sujetos (1A..5A) | 432 Hz Synch</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleTvWallModal()" class="glass-btn px-2.5 py-1 rounded-lg text-rose-400 hover:text-white border border-rose-500/50 hover:bg-rose-950/80 font-black text-xs">
+                  ✕ CERRAR MURO
+                </button>
+              </div>
+            </div>
+
+            <!-- Contenedor de las 4 Filas de Paneles de TV -->
+            <div class="flex flex-col gap-2 flex-1 justify-around overflow-y-auto">
+
+              <!-- ⏳ 1ª FILA: UN ACUARIO POR CADA T (TIEMPO) -->
+              <div class="bg-slate-900/60 border border-sky-500/30 rounded-xl p-1.5 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1 text-[10px] mono font-bold text-sky-300">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                    <span>1ª FILA: EVOLUCIÓN TEMPORAL DIACRÓNICA (4 ACUARIOS T)</span>
+                  </span>
+                  <span class="text-[9px] text-slate-400">T1 · T2 · T3 · T4</span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <!-- TV T1 -->
+                  <div id="tv-panel-t1" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-sky-400" onclick="selectTvChannel('t1')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-sky-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-T1: GÉNESIS</span>
+                      </span>
+                      <span id="tv-t1-val" class="text-slate-400 font-mono">+0.20</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-t1" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV T2 -->
+                  <div id="tv-panel-t2" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-amber-400" onclick="selectTvChannel('t2')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-amber-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-T2: CRISIS / TENSIÓN</span>
+                      </span>
+                      <span id="tv-t2-val" class="text-slate-400 font-mono">-0.45</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-t2" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV T3 -->
+                  <div id="tv-panel-t3" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-emerald-400" onclick="selectTvChannel('t3')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-emerald-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-T3: REORGANIZACIÓN</span>
+                      </span>
+                      <span id="tv-t3-val" class="text-slate-400 font-mono">+0.12</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-t3" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV T4 -->
+                  <div id="tv-panel-t4" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-yellow-400" onclick="selectTvChannel('t4')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-yellow-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-T4: RESOLUCIÓN</span>
+                      </span>
+                      <span id="tv-t4-val" class="text-slate-400 font-mono">+0.58</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-t4" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 🎯 2ª FILA: UN ACUARIO POR CADA C (CRITERIO) -->
+              <div class="bg-slate-900/60 border border-pink-500/30 rounded-xl p-1.5 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1 text-[10px] mono font-bold text-pink-300">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
+                    <span>2ª FILA: DUALIDAD CRITERIAL (2 ACUARIOS C)</span>
+                  </span>
+                  <span class="text-[9px] text-slate-400">C1 (Afectivo) vs C2 (Tarea)</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <!-- TV C1 -->
+                  <div id="tv-panel-c1" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-pink-400" onclick="selectTvChannel('c1')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-pink-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-C1: CRITERIO 1 · AFECTIVO / SIMPATÍA</span>
+                      </span>
+                      <span id="tv-c1-val" class="text-slate-400 font-mono">D1/D2 Afectivo</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-c1" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV C2 -->
+                  <div id="tv-panel-c2" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-emerald-400" onclick="selectTvChannel('c2')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-emerald-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-C2: CRITERIO 2 · FUNCIONAL / TAREA OPERATIVA</span>
+                      </span>
+                      <span id="tv-c2-val" class="text-slate-400 font-mono">D1/D2 Tarea</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-c2" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 👥 3ª FILA: UN ACUARIO POR CADA G (GRUPO) -->
+              <div class="bg-slate-900/60 border border-emerald-500/30 rounded-xl p-1.5 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1 text-[10px] mono font-bold text-emerald-300">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>3ª FILA: CONTRASTE INTER-GRUPAL (2 ACUARIOS G)</span>
+                  </span>
+                  <span class="text-[9px] text-slate-400">G1 (Grupo A: 1A..5A) vs G2 (Grupo B: 1B..5B)</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <!-- TV G1 -->
+                  <div id="tv-panel-g1" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-cyan-400" onclick="selectTvChannel('g1')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-cyan-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-G1: GRUPO A (SUJETOS 1A..5A)</span>
+                      </span>
+                      <span id="tv-g1-val" class="text-slate-400 font-mono">G1 Coh: +0.65</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-g1" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV G2 -->
+                  <div id="tv-panel-g2" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-amber-400" onclick="selectTvChannel('g2')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-amber-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-G2: GRUPO B (SUJETOS 1B..5B)</span>
+                      </span>
+                      <span id="tv-g2-val" class="text-slate-400 font-mono">G2 Coh: -0.32</span>
+                    </div>
+                    <div class="h-16 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-g2" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 👤 4ª FILA: UN ACUARIO POR CADA SUJETO (1A..5A) -->
+              <div class="bg-slate-900/60 border border-amber-500/30 rounded-xl p-1.5 flex flex-col gap-1">
+                <div class="flex items-center justify-between px-1 text-[10px] mono font-bold text-amber-300">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                    <span>4ª FILA: PERFILES NODALES EGOCÉNTRICOS (5 ACUARIOS DE SUJETO)</span>
+                  </span>
+                  <span class="text-[9px] text-slate-400">1A (Líder) · 2A (Cohesión) · 3A (Disidente) · 4A (Puente) · 5A (Neutro)</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                  <!-- TV Sujeto 1A -->
+                  <div id="tv-panel-s0" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-emerald-400" onclick="selectTvChannel('s0')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-emerald-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-1A (Líder)</span>
+                      </span>
+                      <span id="tv-s0-val" class="text-slate-400 font-mono">+0.88</span>
+                    </div>
+                    <div class="h-14 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-s0" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV Sujeto 2A -->
+                  <div id="tv-panel-s1" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-cyan-400" onclick="selectTvChannel('s1')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-cyan-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-2A (Cohesivo)</span>
+                      </span>
+                      <span id="tv-s1-val" class="text-slate-400 font-mono">+0.62</span>
+                    </div>
+                    <div class="h-14 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-s1" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV Sujeto 3A -->
+                  <div id="tv-panel-s2" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-rose-400" onclick="selectTvChannel('s2')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-rose-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-3A (Disidente)</span>
+                      </span>
+                      <span id="tv-s2-val" class="text-slate-400 font-mono">-0.74</span>
+                    </div>
+                    <div class="h-14 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-s2" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV Sujeto 4A -->
+                  <div id="tv-panel-s3" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-sky-400" onclick="selectTvChannel('s3')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-sky-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-4A (Puente)</span>
+                      </span>
+                      <span id="tv-s3-val" class="text-slate-400 font-mono">+0.15</span>
+                    </div>
+                    <div class="h-14 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-s3" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                  <!-- TV Sujeto 5A -->
+                  <div id="tv-panel-s4" class="tv-monitor-card rounded-lg bg-slate-950 border border-slate-800 p-1.5 flex flex-col gap-1 relative overflow-hidden transition-all hover:border-yellow-400" onclick="selectTvChannel('s4')">
+                    <div class="flex items-center justify-between text-[9px] mono border-b border-slate-800 pb-0.5">
+                      <span class="font-bold text-yellow-400 flex items-center gap-1">
+                        <span class="tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>TV-5A (Neutro)</span>
+                      </span>
+                      <span id="tv-s4-val" class="text-slate-400 font-mono">+0.00</span>
+                    </div>
+                    <div class="h-14 w-full relative bg-slate-900/50 rounded flex items-center justify-center overflow-hidden">
+                      <canvas id="canvas-tv-s4" class="w-full h-full block"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
           <!-- ◀ FLECHA LATERAL IZQUIERDA DEL ESCENARIO (COMPÁS ANTERIOR) -->
           <button onclick="stepSolfeoManual(-1)" class="glass-btn absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-cyan-300 hover:text-white bg-slate-950/80 border border-cyan-500/50 hover:border-cyan-400 hover:scale-110 shadow-2xl backdrop-blur-md transition-all font-black text-base active:scale-95" title="Compás Anterior (Retroceder en la Ópera)">
             ◀
@@ -528,6 +797,9 @@
               </button>
               <button onclick="apply3EstratosView()" id="btn-3estratos" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg flex items-center gap-1.5" title="Perspectiva 3 Estratos">
                 🔭 3 Estratos
+              </button>
+              <button onclick="toggleTvWallModal()" id="btn-toggle-tvwall" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 bg-cyan-950/85 border-cyan-500/60 shadow-lg flex items-center gap-1.5 hover:border-cyan-300 hover:scale-105 transition-all" title="Muro de 13 TVs Acuáricas en 4 Filas (T, C, G, Sujetos)">
+                <span>📺</span> Muro 13 TVs
               </button>
             </div>
             <div class="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-sky-900/50">
@@ -2848,6 +3120,9 @@
       // Construcción del Espectáculo de Luz y Sonido: Sociograma 3D y Plano PCA
       buildPcaSociogramScene();
 
+      // Inicialización de los 13 mini-acuarios del Muro de TV de 4 Filas
+      if (typeof initTvWallCanvases === 'function') initTvWallCanvases();
+
       // Construcción del Gran Tablero Acuárico GxTyCz Simultáneo (Acuarios Múltiples)
       buildMultiAquariumScene();
 
@@ -3534,6 +3809,9 @@
     let multiAquariumGroup = null;
     let multiAquariumBoards = [];
     let multiQuantumLinkMesh = null;
+    let multiTvWall3DGroup = null;
+    let tvScreenTextures = {};
+    let tvWallVisible = false;
 
     function buildMultiAquariumScene() {
       multiAquariumGroup = new THREE.Group();
@@ -3567,6 +3845,70 @@
       const linkMat = new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.35, depthTest: false });
       multiQuantumLinkMesh = new THREE.LineSegments(linkGeo, linkMat);
       multiAquariumGroup.add(multiQuantumLinkMesh);
+
+      // =========================================================================
+      // 5.3.1 ANFITEATRO 3D: 13 PANTALLAS DE TV FLOTANTES EN 4 FILAS (T, C, G, S)
+      // =========================================================================
+      multiTvWall3DGroup = new THREE.Group();
+      multiAquariumGroup.add(multiTvWall3DGroup);
+
+      const tv3DConfigs = [
+        // 1ª Fila: 4 TVs para Tiempo T (Y=48)
+        { id: 't1', label: 'TV-T1: GÉNESIS', x: -45, y: 48, z: -75, colorHex: '#38BDF8', colorNum: 0x38BDF8 },
+        { id: 't2', label: 'TV-T2: CRISIS', x: -15, y: 48, z: -77, colorHex: '#FF9F1C', colorNum: 0xFF9F1C },
+        { id: 't3', label: 'TV-T3: REORG', x: 15, y: 48, z: -77, colorHex: '#00FF87', colorNum: 0x00FF87 },
+        { id: 't4', label: 'TV-T4: RESOL', x: 45, y: 48, z: -75, colorHex: '#FFE600', colorNum: 0xFFE600 },
+
+        // 2ª Fila: 2 TVs para Criterio C (Y=34)
+        { id: 'c1', label: 'TV-C1: AFECTIVO', x: -22, y: 34, z: -72, colorHex: '#EC4899', colorNum: 0xEC4899 },
+        { id: 'c2', label: 'TV-C2: FUNCIONAL', x: 22, y: 34, z: -72, colorHex: '#00FF87', colorNum: 0x00FF87 },
+
+        // 3ª Fila: 2 TVs para Grupo G (Y=20)
+        { id: 'g1', label: 'TV-G1: GRUPO A', x: -22, y: 20, z: -68, colorHex: '#00E5FF', colorNum: 0x00E5FF },
+        { id: 'g2', label: 'TV-G2: GRUPO B', x: 22, y: 20, z: -68, colorHex: '#F59E0B', colorNum: 0xF59E0B },
+
+        // 4ª Fila: 5 TVs para Sujetos 1A..5A (Y=6)
+        { id: 's0', label: 'TV-1A: LÍDER', x: -44, y: 6, z: -64, colorHex: '#00FF87', colorNum: 0x00FF87 },
+        { id: 's1', label: 'TV-2A: COHESIVO', x: -22, y: 6, z: -64, colorHex: '#00E5FF', colorNum: 0x00E5FF },
+        { id: 's2', label: 'TV-3A: DISIDENTE', x: 0, y: 6, z: -65, colorHex: '#FF007F', colorNum: 0xFF007F },
+        { id: 's3', label: 'TV-4A: PUENTE', x: 22, y: 6, z: -64, colorHex: '#38BDF8', colorNum: 0x38BDF8 },
+        { id: 's4', label: 'TV-5A: NEUTRO', x: 44, y: 6, z: -64, colorHex: '#FFE600', colorNum: 0xFFE600 }
+      ];
+
+      tv3DConfigs.forEach(tv => {
+        const frameGeo = new THREE.BoxGeometry(16, 9.5, 0.6);
+        const frameMat = new THREE.MeshPhongMaterial({ color: 0x060B18, shininess: 90 });
+        const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+        frameMesh.position.set(tv.x, tv.y, tv.z);
+
+        const edgeGeo = new THREE.EdgesGeometry(frameGeo);
+        const edgeMat = new THREE.LineBasicMaterial({ color: tv.colorNum, transparent: true, opacity: 0.85 });
+        const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
+        frameMesh.add(edgeMesh);
+
+        // Pantalla de la TV mapeada con su canvas 2D
+        const screenGeo = new THREE.PlaneGeometry(15.2, 8.8);
+        const canvas = document.getElementById(`canvas-tv-${tv.id}`);
+        let screenMat;
+        if (canvas) {
+          const tex = new THREE.CanvasTexture(canvas);
+          tex.minFilter = THREE.LinearFilter;
+          tvScreenTextures[tv.id] = tex;
+          screenMat = new THREE.MeshBasicMaterial({ map: tex });
+        } else {
+          screenMat = new THREE.MeshBasicMaterial({ color: tv.colorNum, wireframe: true });
+        }
+        const screenMesh = new THREE.Mesh(screenGeo, screenMat);
+        screenMesh.position.z = 0.35;
+        frameMesh.add(screenMesh);
+
+        // Etiqueta tipográfica superior
+        const badge = createCleanLabelSprite(tv.label, tv.colorHex, 20, 180, 42);
+        badge.position.set(0, 5.8, 0);
+        frameMesh.add(badge);
+
+        multiTvWall3DGroup.add(frameMesh);
+      });
     }
 
     function applyPcaView() {
@@ -3576,9 +3918,361 @@
     }
 
     function applyMultiAquariumView() {
-      camera.position.set(0, 115, 135);
-      controls.target.set(0, 0, 0);
+      camera.position.set(0, 90, 145);
+      controls.target.set(0, 22, -25);
       controls.update();
+    }
+
+    // =========================================================================
+    // 5.4 MOTOR DEL MURO DE VIDEO DE MULTI-ACUARIOS: 4 FILAS DE PANELES DE TV
+    // =========================================================================
+    function toggleTvWallModal() {
+      tvWallVisible = !tvWallVisible;
+      const overlay = document.getElementById('tv-wall-overlay');
+      const btnVp = document.getElementById('btn-toggle-tvwall');
+      const btnHud = document.getElementById('btn-toggle-tvwall-hud');
+
+      if (overlay) {
+        if (tvWallVisible) {
+          overlay.classList.remove('hidden');
+          overlay.classList.add('flex');
+          if (btnVp) btnVp.classList.add('border-cyan-300', 'bg-cyan-900/90', 'shadow-cyan-500/50');
+          if (btnHud) btnHud.classList.add('border-amber-300', 'bg-amber-900/90', 'shadow-amber-500/50');
+          initTvWallCanvases();
+          if (solfeoSequence && solfeoSequence[solfeoCurrentStep]) {
+            updateTvWallCompas(solfeoSequence[solfeoCurrentStep]);
+          }
+        } else {
+          overlay.classList.add('hidden');
+          overlay.classList.remove('flex');
+          if (btnVp) btnVp.classList.remove('border-cyan-300', 'bg-cyan-900/90', 'shadow-cyan-500/50');
+          if (btnHud) btnHud.classList.remove('border-amber-300', 'bg-amber-900/90', 'shadow-amber-500/50');
+        }
+      }
+    }
+
+    function selectTvChannel(channelKey) {
+      initAudio();
+      const subEl = document.getElementById('footer-subtitle-text');
+      const channelNames = {
+        t1: 'TV-T1: Tiempo 1 · Génesis (D1 Emitido Inicial)',
+        t2: 'TV-T2: Tiempo 2 · Crisis / Tensión (D2 Fricción Máxima)',
+        t3: 'TV-T3: Tiempo 3 · Reorganización (D3 Polarización)',
+        t4: 'TV-T4: Tiempo 4 · Resolución / Clímax (D4 Estabilidad Final)',
+        c1: 'TV-C1: Criterio 1 · Dimensión Afectiva y Simpatía Nodal',
+        c2: 'TV-C2: Criterio 2 · Dimensión Funcional y Tarea Operativa',
+        g1: 'TV-G1: Grupo A (1A..5A) · Matriz Relacional Intragrupal',
+        g2: 'TV-G2: Grupo B (1B..5B) · Matriz Relacional Homóloga',
+        s0: 'TV-1A: Sujeto 1A · Perfil Egocéntrico Líder Expansivo',
+        s1: 'TV-2A: Sujeto 2A · Perfil Egocéntrico Co-líder Cohesivo',
+        s2: 'TV-3A: Sujeto 3A · Perfil Egocéntrico Disidente Crítico',
+        s3: 'TV-4A: Sujeto 4A · Perfil Egocéntrico Puente Operativo',
+        s4: 'TV-5A: Sujeto 5A · Perfil Egocéntrico Observador Neutro'
+      };
+
+      if (subEl && channelNames[channelKey]) {
+        subEl.textContent = `📺 Canal Seleccionado: ${channelNames[channelKey]} • 432 Hz Synch`;
+      }
+      playHarmonicChime(0.5, 0.25, { isSpine: true, pan: 0.0 });
+    }
+
+    function getTMatrix(idx) {
+      if (idx === 0) return (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D1 : DENSITIES.D1);
+      if (idx === 1) return (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D2 : DENSITIES.D2);
+      if (idx === 2) return (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D3 : DENSITIES.D3);
+      return (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D4 : DENSITIES.D4);
+    }
+
+    function getTColor(idx) {
+      const colors = ['#38BDF8', '#FF9F1C', '#00FF87', '#FFE600'];
+      return colors[idx] || '#38BDF8';
+    }
+
+    function getSubjectColor(idx) {
+      const colors = ['#00FF87', '#00E5FF', '#FF007F', '#38BDF8', '#FFE600'];
+      return colors[idx] || '#00FF87';
+    }
+
+    function drawMiniAquarium(canvas, data, activeI, activeJ, themeColor, type) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = 180;
+      const h = canvas.height = 70;
+
+      // Fondo oscuro de cristal
+      ctx.fillStyle = '#060B18';
+      ctx.fillRect(0, 0, w, h);
+
+      // Líneas de escaneo sutiles CRT
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+      for (let y = 0; y < h; y += 4) {
+        ctx.fillRect(0, y, w, 1);
+      }
+
+      if (type === 'matrix') {
+        // Rejilla isométrica 5x5
+        const originX = w / 2;
+        const originY = 22;
+        const stepX = 13;
+        const stepY = 6.5;
+
+        // Base de la cuadrícula
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.lineWidth = 0.8;
+        for (let u = 0; u < 5; u++) {
+          for (let v = 0; v < 5; v++) {
+            const isoX = originX + (v - u) * stepX;
+            const isoY = originY + (u + v) * stepY;
+
+            let val = 0;
+            if (data && data[u] && data[u][v] !== undefined) {
+              val = data[u][v];
+            }
+            const colH = Math.max(2, Math.min(26, (val + 4.5) * 2.8));
+            const isSpine = (u === v);
+            const isActive = (u === activeI && v === activeJ);
+
+            // Color de la columna
+            let colColor = themeColor;
+            if (isSpine) colColor = '#FFE600';
+            else if (val < -0.4) colColor = '#FF007F';
+            else if (val > 0.4) colColor = '#00FF87';
+
+            if (isActive) {
+              colColor = '#FFFFFF';
+            }
+
+            // Trazar columna
+            ctx.fillStyle = colColor;
+            ctx.globalAlpha = isActive ? 0.95 : 0.65;
+            ctx.fillRect(isoX - 2.5, isoY - colH, 5, colH);
+
+            // Capitel superior
+            ctx.fillStyle = isActive ? '#FFE600' : colColor;
+            ctx.globalAlpha = 0.9;
+            ctx.beginPath();
+            ctx.arc(isoX, isoY - colH, isActive ? 3.5 : 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Si está activa, trazar destello vertical y anillo
+            if (isActive) {
+              ctx.strokeStyle = '#FFFFFF';
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              ctx.moveTo(isoX, isoY - colH);
+              ctx.lineTo(isoX, 2);
+              ctx.stroke();
+
+              ctx.strokeStyle = '#FFE600';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.ellipse(isoX, isoY - colH, 6, 3, 0, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+          }
+        }
+        ctx.globalAlpha = 1.0;
+
+      } else if (type === 'profile') {
+        // 5 Barras Verticales para el perfil egocéntrico del sujeto
+        const emissions = (data && data.emissions) || [0, 0, 0, 0, 0];
+        const receptions = (data && data.receptions) || [0, 0, 0, 0, 0];
+        const barWidth = 14;
+        const spacing = 32;
+        const startX = 26;
+        const baseY = h - 14;
+
+        for (let k = 0; k < 5; k++) {
+          const x = startX + k * spacing;
+          const emVal = emissions[k] !== undefined ? emissions[k] : 0;
+          const recVal = receptions[k] !== undefined ? receptions[k] : 0;
+          const emH = Math.max(2, Math.min(38, (emVal + 4.5) * 3.8));
+          const isActive = (k === activeI);
+
+          // Sombra base
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+          ctx.fillRect(x - barWidth / 2, 8, barWidth, baseY - 8);
+
+          // Barra de emisión (dación DA)
+          ctx.fillStyle = isActive ? '#FFFFFF' : themeColor;
+          ctx.globalAlpha = isActive ? 0.95 : 0.7;
+          ctx.fillRect(x - barWidth / 2, baseY - emH, barWidth, emH);
+
+          // Línea de recepción
+          const recY = Math.max(10, baseY - Math.min(38, (recVal + 4.5) * 3.8));
+          ctx.strokeStyle = '#38BDF8';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x - barWidth / 2 - 2, recY);
+          ctx.lineTo(x + barWidth / 2 + 2, recY);
+          ctx.stroke();
+
+          // Rótulo partner abajo
+          ctx.fillStyle = isActive ? '#FFE600' : '#64748B';
+          ctx.font = 'bold 8px "Roboto Mono"';
+          ctx.textAlign = 'center';
+          ctx.fillText(SUBJECT_LABELS[k] || `${k + 1}A`, x, h - 3);
+
+          if (isActive) {
+            ctx.strokeStyle = '#FFE600';
+            ctx.lineWidth = 1.2;
+            ctx.strokeRect(x - barWidth / 2 - 1, baseY - emH - 1, barWidth + 2, emH + 2);
+          }
+        }
+        ctx.globalAlpha = 1.0;
+      }
+    }
+
+    function initTvWallCanvases() {
+      // 1ª Fila: Tiempos
+      ['t1', 't2', 't3', 't4'].forEach((tKey, idx) => {
+        const c = document.getElementById(`canvas-tv-${tKey}`);
+        if (c) drawMiniAquarium(c, getTMatrix(idx), -1, -1, getTColor(idx), 'matrix');
+      });
+
+      // 2ª Fila: Criterios
+      const c1 = document.getElementById('canvas-tv-c1');
+      if (c1) drawMiniAquarium(c1, MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D2 : DENSITIES.D2, -1, -1, '#EC4899', 'matrix');
+      const c2 = document.getElementById('canvas-tv-c2');
+      if (c2) drawMiniAquarium(c2, MULTIDIM_PAYLOAD.C2 ? MULTIDIM_PAYLOAD.C2.matrices.D2 : DENSITIES.D2, -1, -1, '#00FF87', 'matrix');
+
+      // 3ª Fila: Grupos
+      const g1 = document.getElementById('canvas-tv-g1');
+      if (g1) drawMiniAquarium(g1, MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D2 : DENSITIES.D2, -1, -1, '#00E5FF', 'matrix');
+      const g2 = document.getElementById('canvas-tv-g2');
+      if (g2) drawMiniAquarium(g2, MULTIDIM_PAYLOAD.G2 ? MULTIDIM_PAYLOAD.G2.matrices.D2 : DENSITIES.D2, -1, -1, '#F59E0B', 'matrix');
+
+      // 4ª Fila: Sujetos
+      for (let s = 0; s < 5; s++) {
+        const c = document.getElementById(`canvas-tv-s${s}`);
+        if (c) {
+          const profile = {
+            emissions: DENSITIES.D2[s],
+            receptions: [DENSITIES.D3[0][s], DENSITIES.D3[1][s], DENSITIES.D3[2][s], DENSITIES.D3[3][s], DENSITIES.D3[4][s]]
+          };
+          drawMiniAquarium(c, profile, -1, -1, getSubjectColor(s), 'profile');
+        }
+      }
+
+      // Actualizar texturas Three.js si existen
+      if (typeof tvScreenTextures === 'object') {
+        Object.values(tvScreenTextures).forEach(tex => {
+          if (tex) tex.needsUpdate = true;
+        });
+      }
+    }
+
+    function updateTvWallCompas(item) {
+      if (!item) return;
+
+      const safeI = (item.i !== undefined && item.i >= 0 && item.i < 5) ? item.i : 0;
+      const safeJ = (item.j !== undefined && item.j >= 0 && item.j < 5) ? item.j : 0;
+      const step = item.step || 1;
+
+      // 1. FILA 1: TIEMPOS (T1..T4)
+      const activeTIdx = Math.floor(((step - 1) % 16) / 4);
+      ['t1', 't2', 't3', 't4'].forEach((tKey, idx) => {
+        const panel = document.getElementById(`tv-panel-${tKey}`);
+        const dot = panel ? panel.querySelector('.tv-live-dot') : null;
+        const isThisActive = (idx === activeTIdx);
+        if (panel) {
+          if (isThisActive) {
+            panel.classList.add('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse';
+          } else {
+            panel.classList.remove('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600';
+          }
+        }
+        const canvas = document.getElementById(`canvas-tv-${tKey}`);
+        if (canvas) {
+          drawMiniAquarium(canvas, getTMatrix(idx), isThisActive ? safeI : -1, isThisActive ? safeJ : -1, getTColor(idx), 'matrix');
+        }
+      });
+
+      // 2. FILA 2: CRITERIOS (C1: Afectivo vs C2: Tarea)
+      const isC2 = (item.dyadLabel && item.dyadLabel.includes('C2')) || (step % 2 === 0);
+      const c1Active = !isC2;
+      const c2Active = isC2;
+
+      ['c1', 'c2'].forEach(cKey => {
+        const panel = document.getElementById(`tv-panel-${cKey}`);
+        const dot = panel ? panel.querySelector('.tv-live-dot') : null;
+        const isThisActive = (cKey === 'c1' ? c1Active : c2Active);
+        if (panel) {
+          if (isThisActive) {
+            panel.classList.add('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse';
+          } else {
+            panel.classList.remove('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600';
+          }
+        }
+        const canvas = document.getElementById(`canvas-tv-${cKey}`);
+        if (canvas) {
+          const mat = (cKey === 'c1') ? (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D2 : DENSITIES.D2) : (MULTIDIM_PAYLOAD.C2 ? MULTIDIM_PAYLOAD.C2.matrices.D2 : DENSITIES.D2);
+          drawMiniAquarium(canvas, mat, isThisActive ? safeI : -1, isThisActive ? safeJ : -1, cKey === 'c1' ? '#EC4899' : '#00FF87', 'matrix');
+        }
+      });
+
+      // 3. FILA 3: GRUPOS (G1 vs G2)
+      const isG2 = (item.dyadLabel && item.dyadLabel.includes('G2')) || (item.emitter && item.emitter.includes('B'));
+      const g1Active = !isG2;
+      const g2Active = isG2;
+
+      ['g1', 'g2'].forEach(gKey => {
+        const panel = document.getElementById(`tv-panel-${gKey}`);
+        const dot = panel ? panel.querySelector('.tv-live-dot') : null;
+        const isThisActive = (gKey === 'g1' ? g1Active : g2Active);
+        if (panel) {
+          if (isThisActive) {
+            panel.classList.add('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse';
+          } else {
+            panel.classList.remove('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600';
+          }
+        }
+        const canvas = document.getElementById(`canvas-tv-${gKey}`);
+        if (canvas) {
+          const mat = (gKey === 'g1') ? (MULTIDIM_PAYLOAD.C1 ? MULTIDIM_PAYLOAD.C1.matrices.D2 : DENSITIES.D2) : (MULTIDIM_PAYLOAD.G2 ? MULTIDIM_PAYLOAD.G2.matrices.D2 : DENSITIES.D2);
+          drawMiniAquarium(canvas, mat, isThisActive ? safeI : -1, isThisActive ? safeJ : -1, gKey === 'g1' ? '#00E5FF' : '#F59E0B', 'matrix');
+        }
+      });
+
+      // 4. FILA 4: SUJETOS (1A..5A)
+      for (let s = 0; s < 5; s++) {
+        const panel = document.getElementById(`tv-panel-s${s}`);
+        const dot = panel ? panel.querySelector('.tv-live-dot') : null;
+        const isEmitter = (s === safeI);
+        const isReceiver = (s === safeJ && safeI !== safeJ);
+        const isThisActive = isEmitter || isReceiver;
+
+        if (panel) {
+          if (isThisActive) {
+            panel.classList.add('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse';
+          } else {
+            panel.classList.remove('active-tv');
+            if (dot) dot.className = 'tv-live-dot w-1.5 h-1.5 rounded-full bg-slate-600';
+          }
+        }
+        const canvas = document.getElementById(`canvas-tv-s${s}`);
+        if (canvas) {
+          const profile = {
+            emissions: DENSITIES.D2[s],
+            receptions: [DENSITIES.D3[0][s], DENSITIES.D3[1][s], DENSITIES.D3[2][s], DENSITIES.D3[3][s], DENSITIES.D3[4][s]]
+          };
+          drawMiniAquarium(canvas, profile, isEmitter ? safeJ : (isReceiver ? safeI : -1), -1, getSubjectColor(s), 'profile');
+        }
+      }
+
+      // Sincronizar texturas Three.js del Muro 3D
+      if (typeof tvScreenTextures === 'object') {
+        Object.values(tvScreenTextures).forEach(tex => {
+          if (tex) tex.needsUpdate = true;
+        });
+      }
     }
 
     function triggerPcaLightAndSound(i, j, isSpine) {
@@ -5123,6 +5817,7 @@
         const safeJ = (item.j !== undefined && item.j >= 0) ? item.j : (item.subjectIdx !== undefined && item.subjectIdx >= 0 ? item.subjectIdx : 0);
         triggerPcaLightAndSound(safeI, safeJ, item.isSpine);
         pulseMultiAquariumCompas(safeI, safeJ, item.density, item.dyadLabel, item.q81Num || 41);
+        if (typeof updateTvWallCompas === 'function') updateTvWallCompas(item);
         return;
       }
 
@@ -5185,6 +5880,7 @@
       if (typeof updateMoviolaUI === 'function') updateMoviolaUI(item.step);
       triggerPcaLightAndSound(item.i, item.j, item.isSpine);
       pulseMultiAquariumCompas(item.i, item.j, item.density, item.dyadLabel, item.q81Num);
+      if (typeof updateTvWallCompas === 'function') updateTvWallCompas(item);
     }
 
     function updateSolfeoTelemetryCard(item, deltaRecip = 0, panVal = 0) {
