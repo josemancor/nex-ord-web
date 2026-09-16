@@ -125,9 +125,19 @@
       box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
       z-index: 15;
     }
+    .partitura-cell.repeat-note {
+      outline: 2.5px solid #BD00FF;
+      box-shadow: 0 0 22px #BD00FF, inset 0 0 14px rgba(189, 0, 255, 0.5);
+      animation: pulseRepeatNote 0.8s infinite alternate;
+      z-index: 25;
+    }
     @keyframes pulseActiveNote {
       from { transform: scale(1.04); filter: brightness(1.1); }
       to { transform: scale(1.10); filter: brightness(1.35); }
+    }
+    @keyframes pulseRepeatNote {
+      from { transform: scale(1.06); filter: brightness(1.2); }
+      to { transform: scale(1.15); filter: brightness(1.55); }
     }
 
     /* MANDO UNIVERSAL MINIMALISTA EN FILA INDIA (REGLA 15) */
@@ -849,6 +859,10 @@
               <div class="flex items-center gap-1.5" id="legend-dyadic-arc">
                 <span class="w-3 h-0.5 bg-amber-400 rounded-full shadow-[0_0_6px_#FFE600]"></span>
                 <span class="text-amber-300 font-bold">🔀 Arco Diádico</span>: Contrapunto (i,j ⇄ j,i)
+              </div>
+              <div class="flex items-center gap-1.5 pt-0.5 border-t border-slate-800" id="legend-repeat-column">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_#BD00FF]"></span>
+                <span class="text-purple-300 font-bold">🔁 Celda Reincidente</span>: Repetición de Densidad (Púrpura)
               </div>
             </div>
           </div>
@@ -4698,13 +4712,23 @@
 
       if (dict[key]) {
         const colObj = dict[key];
+        colObj.hitCount = (colObj.hitCount || 1) + 1;
         colObj.targetH = targetH;
         colObj.density = densityVal;
         colObj.dyadLabel = dyadLabel;
         colObj.q81Num = q81Num;
-        colObj.colorHex = colColor;
-        colObj.colMat.color.setHex(colColor);
-        colObj.tipMat.color.setHex(colColor);
+
+        let finalColor = colColor;
+        if (colObj.hitCount > 1) {
+          finalColor = colObj.hitCount === 2 ? 0xBD00FF : (colObj.hitCount === 3 ? 0xFF7700 : 0xFFFFFF);
+          colObj.tipMesh.scale.set(1.5, 1.5, 1.5);
+        }
+
+        colObj.colorHex = finalColor;
+        colObj.colMat.color.setHex(finalColor);
+        colObj.tipMat.color.setHex(finalColor);
+        colObj.tipMat.emissive.setHex(finalColor);
+        colObj.tipMat.emissiveIntensity = (colObj.hitCount > 1) ? 0.85 : 0.4;
       } else {
         const colMat = new THREE.MeshPhongMaterial({
           color: colColor,
@@ -4746,7 +4770,8 @@
           currentH: 0.08,
           targetH,
           cylMesh, tipMesh, spineLine, colMat, tipMat,
-          dyadLabel, q81Num
+          dyadLabel, q81Num,
+          hitCount: 1
         };
       }
     }
@@ -4980,8 +5005,8 @@
     /**
      * Erige o transmuta una columna viva en el tablero
      */
-    function erectOrMorphColumn(u, v, densityVal, dyadLabel, q81Num) {
-      if (!chessboardGroup) return;
+    function erectOrMorphColumn(u, v, densityVal, dyadLabel, q81Num, isBatchMorph = false) {
+      if (!chessboardGroup) return null;
       const key = `${u}_${v}`;
       const x = (v - 4) * STEP;
       const z = (u - 4) * STEP;
@@ -5003,9 +5028,44 @@
         colObj.density = densityVal;
         colObj.dyadLabel = dyadLabel;
         colObj.q81Num = q81Num;
-        colObj.colorHex = colColor;
-        colObj.colMat.color.setHex(colColor);
-        colObj.tipMat.color.setHex(colColor);
+
+        if (!isBatchMorph) {
+          colObj.hitCount = (colObj.hitCount || 1) + 1;
+        }
+
+        const isRepeated = (colObj.hitCount > 1);
+        let finalColor = colColor;
+
+        if (isRepeated) {
+          // 🔁 REPETICIÓN EN CELDA: Se mantiene la columna viva pero transmuta de color para que se note la repetición
+          if (colObj.hitCount === 2) {
+            finalColor = 0xBD00FF; // Púrpura Neón Resonante (#BD00FF)
+          } else if (colObj.hitCount === 3) {
+            finalColor = 0xFF7700; // Naranja Neón Solar (#FF7700)
+          } else {
+            finalColor = 0xFFFFFF; // Blanco Plasma Diamante (#FFFFFF)
+          }
+
+          // Cúspide (esfera) pulsa momentáneamente en escala para notar el impacto de repetición
+          colObj.tipMesh.scale.set(1.6, 1.6, 1.6);
+
+          // Anillo coronal expansivo en el color de la repetición
+          if (typeof pulseConcertCoronalRing === 'function') {
+            pulseConcertCoronalRing(u, v, finalColor);
+          }
+        }
+
+        colObj.colorHex = finalColor;
+        colObj.colMat.color.setHex(finalColor);
+        colObj.tipMat.color.setHex(finalColor);
+        colObj.tipMat.emissive.setHex(finalColor);
+        colObj.tipMat.emissiveIntensity = isRepeated ? 0.85 : 0.4;
+        if (colObj.ringMesh && colObj.ringMesh.material) {
+          colObj.ringMesh.material.color.setHex(finalColor);
+        }
+
+        updateStandingCountUI();
+        return { isRepeated, hitCount: colObj.hitCount, colorHex: finalColor };
       } else {
         const colMat = new THREE.MeshPhongMaterial({
           color: colColor,
@@ -5058,8 +5118,12 @@
           dyadLabel: dyadLabel,
           q81Num: q81Num,
           colorHex: colColor,
-          isAlive: true
+          isAlive: true,
+          hitCount: 1
         };
+
+        updateStandingCountUI();
+        return { isRepeated: false, hitCount: 1, colorHex: colColor };
       }
 
       updateStandingCountUI();
@@ -5144,6 +5208,12 @@
 
         col.cylMesh.scale.set(1, absH * dir, 1);
         col.tipMesh.position.y = h;
+
+        if (col.tipMesh.scale.x > 1.0) {
+          col.tipMesh.scale.x = Math.max(1.0, col.tipMesh.scale.x - 0.025);
+          col.tipMesh.scale.y = Math.max(1.0, col.tipMesh.scale.y - 0.025);
+          col.tipMesh.scale.z = Math.max(1.0, col.tipMesh.scale.z - 0.025);
+        }
 
         const posAttr = col.spineLine.geometry.attributes.position;
         posAttr.setY(1, h);
@@ -6070,7 +6140,10 @@
       if (partnerCell && !item.isSpine) partnerCell.classList.add('partner-note');
 
       // 2. Erigir o transmutar columna viva en el tablero
-      erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+      const colStatus = erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+      if (colStatus && colStatus.isRepeated && activeCell) {
+        activeCell.classList.add('repeat-note');
+      }
 
       // 3. Trazar arco diádico si estamos en contrapunto
       const counterpartDensity = DENSITIES[activeDensityKey][item.j][item.i];
@@ -6101,7 +6174,10 @@
           dyadLabel: item.dyadLabel,
           q81Num: item.q81Num
         });
-        const rippleColor = (item.isSpine) ? 0xFFE600 : (item.density > 0.4 ? 0x00FF87 : (item.density < -0.3 ? 0xFF007F : 0x00E5FF));
+        let rippleColor = (item.isSpine) ? 0xFFE600 : (item.density > 0.4 ? 0x00FF87 : (item.density < -0.3 ? 0xFF007F : 0x00E5FF));
+        if (colStatus && colStatus.isRepeated) {
+          rippleColor = colStatus.colorHex;
+        }
         pulseConcertCoronalRing(item.u, item.v, rippleColor);
       } else {
         playHarmonicChime(item.density, 0.35, {
@@ -6114,19 +6190,25 @@
       }
 
       // 6. Actualizar ficha de diagnóstico del compás
-      updateSolfeoTelemetryCard(item, deltaRecip, panVal);
+      updateSolfeoTelemetryCard(item, deltaRecip, panVal, colStatus ? colStatus.isRepeated : false, colStatus ? colStatus.hitCount : 1);
 
       // 7. Actualizar barra de progreso
-      updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num, item.density);
+      updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num, item.density, colStatus ? colStatus.isRepeated : false, colStatus ? colStatus.hitCount : 1);
       if (typeof updateMoviolaUI === 'function') updateMoviolaUI(item.step);
       triggerPcaLightAndSound(item.i, item.j, item.isSpine);
       pulseMultiAquariumCompas(item.i, item.j, item.density, item.dyadLabel, item.q81Num);
       if (typeof updateTvWallCompas === 'function') updateTvWallCompas(item);
     }
 
-    function updateSolfeoTelemetryCard(item, deltaRecip = 0, panVal = 0) {
-      document.getElementById('solfeo-dyad-title').textContent = item.dyadLabel + (item.isSpine ? ' (Auto-posición)' : '');
-      document.getElementById('solfeo-q81-title').textContent = item.isMarginal ? item.sym : `#${item.q81Num} ${item.sym}`;
+    function updateSolfeoTelemetryCard(item, deltaRecip = 0, panVal = 0, isRepeated = false, repeatCount = 1) {
+      const repBadge = isRepeated ? ` • <span class="text-purple-400 font-bold">🔁 REPETICIÓN (x${repeatCount})</span>` : '';
+      const dyadEl = document.getElementById('solfeo-dyad-title');
+      if (dyadEl) dyadEl.innerHTML = item.dyadLabel + (item.isSpine ? ' (Auto-posición)' : '') + repBadge;
+      const q81El = document.getElementById('solfeo-q81-title');
+      if (q81El) {
+        const baseTxt = item.isMarginal ? item.sym : `#${item.q81Num} ${item.sym}`;
+        q81El.textContent = isRepeated ? `${baseTxt} (Reincidente x${repeatCount})` : baseTxt;
+      }
       
       if (item.isMarginal) {
         if (item.type === 'short_row' || item.isVoiceA) {
@@ -6445,7 +6527,7 @@
       if (typeof updateMasterPlayButtonUI === 'function') updateMasterPlayButtonUI();
     }
 
-    function updateSolfeoStepUI(step, dyad = '', q81 = '', den = 0) {
+    function updateSolfeoStepUI(step, dyad = '', q81 = '', den = 0, isRepeated = false, repeatCount = 1) {
       const total = solfeoSequence.length || 25;
       const stepLbl = document.getElementById('solfeo-step-lbl');
       if (stepLbl) stepLbl.textContent = `${step} / ${total} Notas`;
@@ -6455,7 +6537,8 @@
           detail.textContent = 'Haz clic en cualquier celda o pulsa Reproducir Solfeo';
         } else {
           const sign = den >= 0 ? '+' : '';
-          detail.textContent = `Compás ${step}: ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+          const repTxt = isRepeated ? ` • 🔁 REPETICIÓN EN CELDA (x${repeatCount})` : '';
+          detail.textContent = `Compás ${step}: ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}${repTxt}`;
         }
       }
 
@@ -6464,7 +6547,7 @@
       const tDyad = document.getElementById('ticker-dyad-lbl');
       const tDen = document.getElementById('ticker-density-lbl');
       if (tStep) tStep.textContent = `Compás ${step}/${total}`;
-      if (tDyad && dyad) tDyad.textContent = dyad;
+      if (tDyad && dyad) tDyad.textContent = `${dyad}${isRepeated ? ' 🔁' : ''}`;
       if (tDen && den !== undefined) {
         const sign = den >= 0 ? '+' : '';
         tDen.textContent = `${sign}${den.toFixed(2)}`;
@@ -6478,7 +6561,8 @@
         } else {
           const sign = den >= 0 ? '+' : '';
           const movName = (typeof isChainMode !== 'undefined' && isChainMode && typeof currentMovementIdx !== 'undefined' && typeof GRAND_SYMPHONY_MOVEMENTS !== 'undefined') ? (GRAND_SYMPHONY_MOVEMENTS[currentMovementIdx]?.name + ' • ') : '';
-          dockTeleprompter.textContent = `${movName}Compás ${step}/${total} • ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+          const repTxt = isRepeated ? ` • 🔁 REPETICIÓN (x${repeatCount})` : '';
+          dockTeleprompter.textContent = `${movName}Compás ${step}/${total} • ${dyad}${repTxt} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
         }
       }
     }
