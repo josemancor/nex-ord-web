@@ -291,7 +291,11 @@
           <span id="audio-icon">🔇</span>
           <span id="audio-lbl" class="text-[10px]">Música Galáctica: OFF</span>
         </button>
-        <span class="mono text-[10px] text-slate-400 hidden sm:inline">Web Audio API • Armónicos 432 Hz</span>
+        <button onclick="playGroupHolisticSymphony()" id="btn-holistic-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs text-amber-300 flex items-center gap-1.5 hover:border-amber-400" title="Sinfonía Holística: Escucha la evolución armónica del grupo (T1 -> T2 -> T3 -> T4) en 4 acordes">
+          <span>🎼</span>
+          <span class="text-[10px]">Clima Sonoro 4D</span>
+        </button>
+        <span class="mono text-[10px] text-slate-400 hidden md:inline">Sinestesia Socio-Termodinámica 432 Hz</span>
       </div>
 
       <!-- INSTRUCCIÓN DE INTERACCIÓN -->
@@ -634,17 +638,18 @@
       }
     ];
 
-    // 3. Audio Web Audio API (Armónicos 432 Hz)
+    // 3. Audio Web Audio API: Motor Sinestésico Socio-Termodinámico (432 Hz)
     let audioCtx = null, audioEnabled = false, masterGain = null;
     function initAudio() {
       if (!audioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.14, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
       }
     }
+
     function toggleAudio() {
       initAudio();
       audioEnabled = !audioEnabled;
@@ -654,26 +659,175 @@
       if (audioEnabled) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         icon.textContent = '🔊'; lbl.textContent = 'Música Galáctica: ON'; btn.classList.add('active');
-        playHarmonicChime(0, 0.35);
+        playHarmonicChime(0, 0.35, { isSpine: true });
       } else {
         icon.textContent = '🔇'; lbl.textContent = 'Música Galáctica: OFF'; btn.classList.remove('active');
       }
     }
-    function playHarmonicChime(sdrVal, volume = 0.25) {
+
+    /**
+     * Motor Sinestésico Factual: Hace "ver con el oído" la topología Q81
+     * @param {number} sdrVal - Cota de Densidad Relativa [-1.0, +1.0]
+     * @param {number} volume - Ganancia relativa
+     * @param {object} opts - { isSpine, isDisparity, duration, u, v }
+     */
+    function playHarmonicChime(sdrVal, volume = 0.25, opts = {}) {
       if (!audioEnabled || !audioCtx) return;
       try {
         const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        const isSpine = !!opts.isSpine;
+        const isDisparity = !!opts.isDisparity || (sdrVal < -0.3);
+        const dur = opts.duration || (isSpine ? 1.2 : 0.75);
+
+        // Frecuencia fundamental anclada al subarmónico áureo 216 Hz (de 432 Hz)
         const baseFreq = 216.0 * Math.pow(2, (sdrVal || 0) * 1.5);
-        osc.frequency.setValueAtTime(baseFreq, now);
-        osc.type = (sdrVal > 0.3) ? 'sine' : ((sdrVal < -0.3) ? 'triangle' : 'sine');
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(volume, now + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
-        osc.connect(gain); gain.connect(masterGain);
-        osc.start(now); osc.stop(now + 0.8);
-      } catch (e) {}
+
+        if (isSpine) {
+          // 👑 1. CAMPANA ÁUREA DE LA ESPINA DORSAL (Auto-posiciones i, i)
+          // Acorde de Quinta Justa Pitagórica (3:2) + Octava subarmónica solemne
+          const voices = [
+            { f: baseFreq, gainVal: volume * 0.85, type: 'sine', decay: dur },
+            { f: baseFreq * 1.5, gainVal: volume * 0.55, type: 'sine', decay: dur * 0.95 },
+            { f: baseFreq * 0.5, gainVal: volume * 0.35, type: 'triangle', decay: dur * 1.2 }
+          ];
+
+          voices.forEach(voice => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(voice.f, now);
+            osc.type = voice.type;
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(voice.gainVal, now + 0.025);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + voice.decay);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + voice.decay + 0.05);
+          });
+
+        } else if (isDisparity) {
+          // ⚡ 2. BATIMENTO Y FRICCIÓN DE HEIDER (Disonancia estructural y Fosas abisales)
+          // Interferencia física de dos osciladores desafinados a +5.5 Hz (vibrato de tensión)
+          const f1 = baseFreq;
+          const f2 = baseFreq + 5.5;
+
+          [f1, f2].forEach(freq => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, now);
+            osc.type = (sdrVal < -0.5) ? 'sawtooth' : 'triangle';
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(460, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(volume * 0.52, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + dur + 0.05);
+          });
+
+        } else {
+          // 🌅 3. CUMBRES (+Z Cohesión) Y LÁMINA DE AGUA (Z = 0)
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.frequency.setValueAtTime(baseFreq, now);
+          osc.type = 'sine';
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(volume, now + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+          osc.start(now);
+          osc.stop(now + dur + 0.05);
+
+          // Si es cresta de máxima cohesión (sdr > 0.4), añadir armónico cristalino de brillo
+          if (sdrVal > 0.4) {
+            const overtone = audioCtx.createOscillator();
+            const overGain = audioCtx.createGain();
+            overtone.frequency.setValueAtTime(baseFreq * 2.0, now);
+            overtone.type = 'sine';
+            overGain.gain.setValueAtTime(0.0001, now);
+            overGain.gain.linearRampToValueAtTime(volume * 0.28, now + 0.02);
+            overGain.gain.exponentialRampToValueAtTime(0.0001, now + dur * 0.65);
+            overtone.connect(overGain);
+            overGain.connect(masterGain);
+            overtone.start(now);
+            overtone.stop(now + dur + 0.05);
+          }
+        }
+      } catch (e) {
+        console.warn('Audio synthesis warning:', e);
+      }
+    }
+
+    /**
+     * 4. SINFONÍA HOLÍSTICA 4D DEL GRUPO (La biografía en 4 acordes diacrónicos)
+     * Reproduce en secuencia la huella acústica de T1 -> T2 -> T3 -> T4 con feedback visual
+     */
+    function playGroupHolisticSymphony() {
+      initAudio();
+      if (!audioEnabled) toggleAudio();
+      if (!audioCtx) return;
+
+      const btn = document.getElementById('btn-holistic-audio');
+      if (btn) {
+        btn.classList.add('border-amber-400', 'bg-amber-950/80');
+        setTimeout(() => btn.classList.remove('border-amber-400', 'bg-amber-950/80'), 3600);
+      }
+
+      const symphonyMovements = [
+        { tOffset: 0.0, aq: 't1', notes: [216, 270, 324], title: '🌅 T1 · Génesis: Acorde Mayor de Apertura y Esperanza' },
+        { tOffset: 0.85, aq: 't2', notes: [155, 185, 220, 225.5], title: '⚡ T2 · Crisis: Tensión Menor con Batimento Heider' },
+        { tOffset: 1.70, aq: 't3', notes: [216, 288, 324], title: '🌱 T3 · Reorganización: Acorde Sus4 de Amortiguación' },
+        { tOffset: 2.55, aq: 't4', notes: [216, 270, 324, 432], title: '🏆 T4 · Resolución: Plenitud Áurea Mayor a 432 Hz' }
+      ];
+
+      symphonyMovements.forEach(mov => {
+        setTimeout(() => {
+          if (!audioCtx) return;
+          const now = audioCtx.currentTime;
+
+          // Elevar suavemente el acuario que está sonando
+          if (aquariums[mov.aq] && aquariums[mov.aq].group) {
+            const originalY = aquariums[mov.aq].group.position.y;
+            aquariums[mov.aq].group.position.y = originalY + 1.8;
+            setTimeout(() => { aquariums[mov.aq].group.position.y = originalY; }, 700);
+          }
+
+          document.getElementById('film-step-detail').textContent = mov.title;
+
+          mov.notes.forEach(freq => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, now);
+            osc.type = (mov.aq === 't2') ? 'triangle' : 'sine';
+
+            const noteVol = 0.20 / Math.sqrt(mov.notes.length);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(noteVol, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.78);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 0.82);
+          });
+        }, mov.tOffset * 1000);
+      });
+
+      setTimeout(() => {
+        document.getElementById('film-step-detail').textContent = 'Oleaje Estático Completo en 4 Acuarios';
+      }, 3700);
     }
 
     // 4. Variables 3D y Configuración de los 4 Acuarios
@@ -1338,7 +1492,7 @@
       } else {
         const s = SUBJECT_CONSTELLATIONS[idx];
         det.innerHTML = `<div><strong class="text-white">${s.name}</strong> • Entropía: <span class="text-emerald-400 font-bold">${s.entropy}</span></div><div class="text-amber-300 font-bold">Hilo de Ariadna 4D Activo</div>`;
-        playHarmonicChime(0.6 - idx * 0.2, 0.4);
+        playHarmonicChime(s.vectorN[0].sdr, 0.42, { isSpine: true, duration: 1.1 });
       }
     }
 
@@ -1458,8 +1612,10 @@
 
       if (filmStep > 0 && filmStep <= 81) {
         const activeItem = sequenceOrder[filmStep - 1];
+        const isSpine = (activeItem.u === activeItem.v);
+        const isDisparity = (activeItem.sdr < -0.3);
         updateTelemetry(activeItem.idx, 't1');
-        playHarmonicChime(activeItem.sdr, 0.22);
+        playHarmonicChime(activeItem.sdr, 0.24, { isSpine, isDisparity, u: activeItem.u, v: activeItem.v });
       }
     }
 
@@ -1530,7 +1686,12 @@
         updateTelemetry(idx, aqKey);
         epicenterU = Math.floor(idx / GRID_SIZE);
         epicenterV = idx % GRID_SIZE;
-        playHarmonicChime(aquariums[aqKey].currentZ[idx], 0.4);
+        const u = epicenterU;
+        const v = epicenterV;
+        const isSpine = (u === v);
+        const curZ = aquariums[aqKey].currentZ[idx];
+        const isDisparity = (curZ < -0.3) || (u !== v && Math.abs(u - v) > 3 && curZ < 0);
+        playHarmonicChime(curZ, 0.38, { isSpine, isDisparity, u, v });
       }
     }
 
