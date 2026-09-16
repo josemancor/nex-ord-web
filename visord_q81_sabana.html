@@ -871,35 +871,34 @@
             </div>
           </div>
 
-          <!-- 🎭 DOCK FLOTANTE MINIMALISTA DE SALA OSCURA (PANTALLA COMPLETA) -->
-          <div id="cinema-sala-oscura-dock" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-950/90 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-sky-500/50 shadow-[0_0_40px_rgba(0,0,0,0.9)] max-w-[95vw] transition-all duration-300">
+          <!-- 🎭 DOCK FLOTANTE MINIMALISTA DE PANTALLA COMPLETA (CANON VISORD) -->
+          <div id="cinema-sala-oscura-dock" class="hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-slate-950/90 backdrop-blur-xl px-4 py-2 rounded-2xl border border-sky-500/40 shadow-[0_0_35px_rgba(0,0,0,0.85)] max-w-[95vw] transition-all duration-300">
             <!-- PLAY / PAUSA -->
-            <button onclick="togglePlaySolfeo()" id="dock-btn-play" class="glass-btn px-4 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-2 bg-emerald-950/80 border border-emerald-400/60 text-emerald-300 hover:scale-105 transition-all shadow-lg" title="Reproducir o Pausar el Concierto">
-              <span id="dock-play-icon" class="text-base">▶</span>
+            <button onclick="togglePlayComplex()" id="dock-btn-play" class="glass-btn px-3 py-1.5 rounded-xl mono font-black text-xs flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-400/60 text-emerald-300 hover:scale-105 transition-all shadow-lg" title="Reproducir / Pausar">
+              <span id="dock-play-icon">▶</span>
               <span id="dock-play-lbl">PLAY</span>
             </button>
 
-            <!-- STOP -->
-            <button onclick="stopAndResetConcert()" id="dock-btn-stop" class="glass-btn px-3.5 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-1.5 bg-rose-950/70 border border-rose-500/50 text-rose-300 hover:text-white hover:scale-105 transition-all shadow-lg" title="Detener Concierto y Rebobinar al Compás 1">
-              <span>⏹</span>
-              <span>STOP</span>
+            <!-- -> (PASO SIGUIENTE) -->
+            <button onclick="stepForwardComplex()" id="dock-btn-step" class="glass-btn px-2.5 py-1.5 rounded-xl mono font-black text-xs flex items-center gap-1 border border-cyan-500/50 text-cyan-300 hover:text-white bg-slate-900/80 hover:scale-105 transition-all shadow-lg" title="Avanzar 1 Compás (->)">
+              <span>-></span>
             </button>
 
-            <!-- LUZ DE SALA -->
-            <button onclick="toggleLuzDeSala()" id="dock-btn-luz" class="glass-btn px-3.5 py-2 rounded-xl mono font-black text-xs md:text-sm flex items-center gap-1.5 border border-slate-700 text-slate-300 bg-slate-900/80 hover:scale-105 transition-all shadow-lg" title="Encender / Apagar Luz de Sala (Atenuador Teatral)">
-              <span id="dock-luz-icon" class="text-base">💡</span>
-              <span id="dock-luz-lbl">LUZ: ON</span>
+            <!-- 🏠 CASITA (REINICIAR) -->
+            <button onclick="restartComplexProjection()" id="dock-btn-home" class="glass-btn px-3 py-1.5 rounded-xl mono font-bold text-xs flex items-center gap-1.5 bg-amber-950/70 border border-amber-500/50 text-amber-300 hover:scale-105 transition-all shadow-lg" title="Casita: Reiniciar Proyección al Inicio">
+              <span>🏠</span>
+              <span>Reiniciar</span>
             </button>
 
-            <!-- TELEPROMPTER EN VIVO -->
-            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-sky-900/60 mono text-xs text-cyan-300 max-w-md truncate">
-              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
-              <span id="dock-teleprompter-text" class="truncate font-semibold">Sinfonía Lista • Pulsa PLAY</span>
+            <!-- TELEPROMPTER DISCRETO -->
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-sky-900/50 mono text-[11px] text-cyan-300 max-w-xs truncate">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
+              <span id="dock-teleprompter-text" class="truncate font-medium">Sinfonía Lista • Pulsa PLAY</span>
             </div>
 
-            <!-- BOTÓN SALIR -->
-            <button onclick="toggleSalaOscuraFullscreen(false)" id="dock-btn-exit" class="glass-btn px-3 py-2 rounded-xl mono font-bold text-xs text-slate-400 hover:text-white border border-slate-700/80 bg-slate-900/60 hover:bg-slate-800 transition-all ml-1" title="Salir de Sala Oscura (Escape)">
-              <span>✕</span> Salir
+            <!-- SALIR DISCRETO -->
+            <button onclick="toggleSalaOscuraFullscreen(false)" id="dock-btn-exit" class="glass-btn px-2 py-1.5 rounded-xl mono text-xs text-slate-400 hover:text-white border border-slate-700/60 bg-slate-900/60 hover:bg-slate-800 transition-all ml-1" title="Salir de Pantalla Completa (Escape)">
+              <span>✕</span>
             </button>
           </div>
 
@@ -3960,9 +3959,6 @@
     }
 
     function applyLuzDeSalaState() {
-      const btn = document.getElementById('dock-btn-luz');
-      const icon = document.getElementById('dock-luz-icon');
-      const lbl = document.getElementById('dock-luz-lbl');
       const container = document.getElementById('aquarium-viewport-container');
 
       if (isLuzDeSalaOn) {
@@ -3981,12 +3977,6 @@
         if (container) {
           container.style.backgroundColor = skyAtmosphereMode === 'azul_claro' ? '#071e3d' : '#040814';
         }
-        if (icon) icon.textContent = '💡';
-        if (lbl) lbl.textContent = 'LUZ: ON';
-        if (btn) {
-          btn.classList.remove('border-yellow-500/80', 'text-yellow-300', 'bg-yellow-950/70', 'shadow-[0_0_15px_rgba(255,230,0,0.4)]');
-          btn.classList.add('border-slate-700', 'text-slate-300', 'bg-slate-900/80');
-        }
       } else {
         if (theaterLights.ambient) theaterLights.ambient.intensity = 0.15;
         if (theaterLights.sun) theaterLights.sun.intensity = 0.35;
@@ -4003,29 +3993,46 @@
         if (container) {
           container.style.backgroundColor = '#000000';
         }
-        if (icon) icon.textContent = '🌑';
-        if (lbl) lbl.textContent = 'LUZ: OFF';
-        if (btn) {
-          btn.classList.add('border-yellow-500/80', 'text-yellow-300', 'bg-yellow-950/70', 'shadow-[0_0_15px_rgba(255,230,0,0.4)]');
-          btn.classList.remove('border-slate-700', 'text-slate-300', 'bg-slate-900/80');
-        }
       }
     }
 
-    function stopAndResetConcert() {
-      if (isSolfeoPlaying) {
+    function togglePlayComplex() {
+      if (mainMode === 'imax') {
+        togglePlayFilm();
+      } else {
         togglePlaySolfeo();
       }
+    }
+
+    function stepForwardComplex() {
+      if (mainMode === 'imax' || isPlayingFilm) {
+        stepFilm(1);
+      } else {
+        stepSolfeoManual(1);
+      }
+    }
+
+    function restartComplexProjection() {
+      if (isSolfeoPlaying) togglePlaySolfeo();
+      if (typeof isPlayingFilm !== 'undefined' && isPlayingFilm) togglePlayFilm();
       isChainMode = false;
       if (typeof updateChainUI === 'function') updateChainUI();
       solfeoCurrentStep = 0;
       resetSolfeoBoard();
-      updateSolfeoStepUI(0, '1A → 1A', 41, 4.44);
+      updateSolfeoStepUI(0, 'Inicio', 41, 0);
       if (typeof updateMoviolaUI === 'function') updateMoviolaUI(0);
+      if (typeof filmStep !== 'undefined') {
+        filmStep = 0;
+        if (typeof applyFilmStepGeometry === 'function') applyFilmStepGeometry();
+      }
       const subEl = document.getElementById('footer-subtitle-text');
-      if (subEl) subEl.textContent = '⏹ Concierto Detenido • Compás 0 • Listo para iniciar';
+      if (subEl) subEl.textContent = '🏠 Reiniciado al inicio • Compás 0';
       const dockTeleprompter = document.getElementById('dock-teleprompter-text');
-      if (dockTeleprompter) dockTeleprompter.textContent = '⏹ Concierto Detenido • Pulsa PLAY para reiniciar';
+      if (dockTeleprompter) dockTeleprompter.textContent = '🏠 Reiniciado al inicio • Pulsa PLAY para comenzar';
+    }
+
+    function stopAndResetConcert() {
+      restartComplexProjection();
     }
 
     // Atajos de Teclado (Escape para salir, Espacio para Play/Pausa)
@@ -6484,6 +6491,15 @@
       buildSolfeoSequence();
       solfeoCurrentStep = 0;
       updateSolfeoStepUI(0);
+
+      // Por sistema, cuando se proyectan elementos complejos, automáticamente pantalla completa
+      const isComplex = ['q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc', 'q81_arpegio', 'q81_dens_desc', 'q81_dens_asc', 'q81_marg_row', 'q81_marg_col', 'q81_marg_dual', 'q81_marg_grand'].includes(traj);
+      if (isComplex) {
+        if (!isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+          toggleSalaOscuraFullscreen(true);
+        }
+        if (!isSolfeoPlaying) togglePlaySolfeo();
+      }
     }
 
     function createQ81SequenceItem(u, v, stepNum) {
@@ -7175,6 +7191,11 @@
 
       const subEl = document.getElementById('footer-subtitle-text');
       if (subEl) subEl.textContent = `▶ ${mov.name}: ${mov.subtitle} • Compás 1/${solfeoSequence.length} • 432 Hz`;
+
+      // Por sistema, activación automática de pantalla completa ante proyección orquestal
+      if (!isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+        toggleSalaOscuraFullscreen(true);
+      }
 
       togglePlaySolfeo();
     }
@@ -7981,6 +8002,11 @@
 
       if (isSolfeoPlaying) {
         initAudio();
+        // Por sistema, activación automática de pantalla completa ante proyecciones complejas
+        const isComplex = ['q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc', 'q81_arpegio', 'q81_dens_desc', 'q81_dens_asc', 'q81_marg_row', 'q81_marg_col', 'q81_marg_dual', 'q81_marg_grand'].includes(solfeoTrajectory) || isChainMode;
+        if (isComplex && !isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+          toggleSalaOscuraFullscreen(true);
+        }
         if (solfeoSequence.length === 0) buildSolfeoSequence();
         if (solfeoPlayingInterval) {
           clearTimeout(solfeoPlayingInterval);
@@ -9050,6 +9076,18 @@
           playBtn.classList.add('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
         }
 
+        // Por sistema: activación automática de pantalla completa ante reproducción Moviola IMAX
+        if (!isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+          toggleSalaOscuraFullscreen(true);
+        }
+
+        const dockPlayIcon = document.getElementById('dock-play-icon');
+        const dockPlayLbl = document.getElementById('dock-play-lbl');
+        if (dockPlayIcon && dockPlayLbl) {
+          dockPlayIcon.textContent = '⏸';
+          dockPlayLbl.textContent = 'PAUSA';
+        }
+
         const totalSteps = sequenceOrder.length || NUM_VERTICES;
         if (filmStep >= totalSteps) {
           filmStep = 0;
@@ -9072,6 +9110,13 @@
         if (playBtn) {
           playBtn.classList.add('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
           playBtn.classList.remove('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
+        }
+
+        const dockPlayIcon = document.getElementById('dock-play-icon');
+        const dockPlayLbl = document.getElementById('dock-play-lbl');
+        if (dockPlayIcon && dockPlayLbl) {
+          dockPlayIcon.textContent = '▶';
+          dockPlayLbl.textContent = 'PLAY';
         }
       }
     }
