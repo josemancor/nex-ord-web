@@ -1024,11 +1024,16 @@
 
           <!-- RACK DE VOCES E INSTRUMENTOS (432 Hz) -->
           <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-2 flex flex-col gap-1.5">
-            <div class="flex items-center justify-between border-b border-purple-900/30 pb-1">
+            <div class="flex items-center justify-between border-b border-purple-900/30 pb-1 gap-1">
               <span class="mono text-[10px] font-bold text-purple-300">VOCES ORQUESTALES</span>
-              <button onclick="toggleConcertMode()" id="btn-toggle-concert" class="glass-btn px-2 py-0.5 rounded text-[9px] font-bold text-amber-300 border-purple-500/40">
-                <span id="lbl-toggle-concert">CONCIERTO: ON</span>
-              </button>
+              <div class="flex items-center gap-1">
+                <button onclick="toggleMusicalGlyphs()" id="btn-toggle-glyphs-side" class="glass-btn px-1.5 py-0.5 rounded text-[9px] font-bold text-amber-300 border border-amber-500/40 bg-amber-950/40" title="Notas Musicales Revoloteando en 3D (Redonda, Blanca, Negra, Corchea, Fusa, Semifusa)">
+                  <span id="lbl-toggle-glyphs-side">NOTAS 3D: ON</span>
+                </button>
+                <button onclick="toggleConcertMode()" id="btn-toggle-concert" class="glass-btn px-1.5 py-0.5 rounded text-[9px] font-bold text-amber-300 border-purple-500/40">
+                  <span id="lbl-toggle-concert">CONCIERTO: ON</span>
+                </button>
+              </div>
             </div>
             
             <div class="grid grid-cols-2 gap-1 text-[9px]">
@@ -1285,6 +1290,9 @@
             </button>
             <button onclick="setSequenceCriterion('density_asc')" id="crit-density_asc" class="glass-btn px-2 py-1 rounded-lg font-bold text-rose-300" title="7) Escala Ascendente: Menor a Mayor Densidad (Fosa➔Cima)">
               ⬆ Densidad
+            </button>
+            <button onclick="toggleMusicalGlyphs()" id="btn-toggle-glyphs" class="glass-btn px-2 py-1 rounded-lg font-bold text-amber-300 border border-amber-500/40 bg-amber-950/40" title="Activar / Desactivar Notas Musicales Revoloteando en 3D (Redonda, Blanca, Negra, Corchea, Fusa, Semifusa)">
+              ✨ Notas 3D: ON
             </button>
             <!-- Selectores retrocompatibles ocultos -->
             <button onclick="setSequenceCriterion('thermal')" id="crit-thermal" class="hidden">Polaridad</button>
@@ -2532,6 +2540,449 @@
           if (r.mesh.material) r.mesh.material.dispose();
           activeCoronalRipples.splice(i, 1);
         }
+      }
+    }
+
+    // =========================================================================
+    // 5.6 MOTOR DE NOTAS MUSICALES REVOLOTEANDO EN 3D (CANON VISORD)
+    // Redonda <Ee>, Blanca Ee, Negra eE, Corchea ¿?, Semicorchea ¡!, Fusa Rr, Semifusa [Rr] y Calderón Monolito
+    // =========================================================================
+    let isMusicalGlyphsEnabled = true;
+    let activeMusicalGlyphs = [];
+    const MAX_ACTIVE_MUSICAL_GLYPHS = 28;
+
+    function toggleMusicalGlyphs() {
+      isMusicalGlyphsEnabled = !isMusicalGlyphsEnabled;
+      const b1 = document.getElementById('btn-toggle-glyphs');
+      const b2 = document.getElementById('btn-toggle-glyphs-side');
+      const l2 = document.getElementById('lbl-toggle-glyphs-side');
+      const txt = isMusicalGlyphsEnabled ? '✨ Notas 3D: ON' : '✨ Notas 3D: OFF';
+      const txtSide = isMusicalGlyphsEnabled ? 'NOTAS 3D: ON' : 'NOTAS 3D: OFF';
+
+      if (b1) {
+        b1.textContent = txt;
+        if (isMusicalGlyphsEnabled) {
+          b1.classList.add('text-amber-300', 'border-amber-500/40', 'bg-amber-950/40');
+          b1.classList.remove('text-slate-500', 'border-slate-800');
+        } else {
+          b1.classList.remove('text-amber-300', 'border-amber-500/40', 'bg-amber-950/40');
+          b1.classList.add('text-slate-500', 'border-slate-800');
+        }
+      }
+      if (b2) {
+        if (l2) l2.textContent = txtSide;
+        if (isMusicalGlyphsEnabled) {
+          b2.classList.add('text-amber-300', 'border-purple-500/40');
+          b2.classList.remove('text-slate-500');
+        } else {
+          b2.classList.remove('text-amber-300', 'border-purple-500/40');
+          b2.classList.add('text-slate-500');
+        }
+      }
+    }
+
+    function getMusicalNoteArchetype(sym, density, opts = {}) {
+      if (opts.isGlobal || sym === 'GLOBAL' || sym === 'MONOLITO') {
+        return {
+          noteKey: 'calderon',
+          name: '𝄐 CALDERÓN',
+          sub: 'Centroide Global',
+          meaning: 'Monolito F_GLOBAL (Tiempo Suspendido)',
+          colorHex: '#F59E0B',
+          vy: 0.030,
+          flutterFreq: 1.2,
+          flutterAmpX: 0.35,
+          flutterAmpZ: 0.35,
+          durationMs: 4400
+        };
+      }
+
+      const s = String(sym || '').trim();
+      const d = (typeof density === 'number') ? density : 0.0;
+      const qNum = opts.q81Num || 0;
+
+      // 1. REDONDA (4 TIEMPOS): <Ee> o Q81 #81 o máxima cohesión mutual simétrica
+      if (s.includes('<E') || s.includes('<e') || s === '<Ee>' || qNum === 81 || d >= 1.6) {
+        return {
+          noteKey: 'redonda',
+          name: '𝅝 REDONDA (4T)',
+          sub: s || '<Ee> #81',
+          meaning: 'Cohesión Máxima Mutual',
+          colorHex: '#00FF87',
+          vy: 0.034,
+          flutterFreq: 1.6,
+          flutterAmpX: 0.40,
+          flutterAmpZ: 0.35,
+          durationMs: 3800
+        };
+      }
+
+      // 7. SEMIFUSA (1/16 TIEMPO): [Rr] o Q81 #1 o mutuo rechazo abisal
+      if (s.includes('[R') || s.includes('[r') || s === '[Rr]' || qNum === 1 || d <= -1.6) {
+        return {
+          noteKey: 'semifusa',
+          name: '𝅘𝅥𝅲 SEMIFUSA (1/16T)',
+          sub: s || '[Rr] #1',
+          meaning: 'Fosa Abisal: Rechazo Mutuo',
+          colorHex: '#FF1744',
+          vy: 0.085,
+          flutterFreq: 10.5,
+          flutterAmpX: 0.70,
+          flutterAmpZ: 0.60,
+          durationMs: 1400
+        };
+      }
+
+      // 6. FUSA (1/8 TIEMPO): Rr o rechazo unilateral / repulsión
+      if (s.includes('R') || s.includes('r') || d <= -0.45) {
+        return {
+          noteKey: 'fusa',
+          name: '𝅘𝅥𝅱 FUSA (1/8T)',
+          sub: s || 'Rr',
+          meaning: 'Fricción / Rechazo Saliente',
+          colorHex: '#FF007F',
+          vy: 0.070,
+          flutterFreq: 7.8,
+          flutterAmpX: 0.55,
+          flutterAmpZ: 0.48,
+          durationMs: 1800
+        };
+      }
+
+      // 2. BLANCA (2 TIEMPOS): Ee o dación asimétrica fuerte
+      if (s.startsWith('E') || d >= 0.75) {
+        return {
+          noteKey: 'blanca',
+          name: '𝅗𝅥 BLANCA (2T)',
+          sub: s || 'Ee',
+          meaning: 'Preferencia Unilateral Sostenida',
+          colorHex: '#00E5FF',
+          vy: 0.044,
+          flutterFreq: 2.3,
+          flutterAmpX: 0.45,
+          flutterAmpZ: 0.40,
+          durationMs: 3200
+        };
+      }
+
+      // 5. SEMICORCHEA (1/4 TIEMPO): ¡! o sorpresa / disyunción afectiva
+      if (s.includes('!') || s.includes('¡')) {
+        return {
+          noteKey: 'semicorchea',
+          name: '♬ SEMICORCHEA (1/4T)',
+          sub: s || '¡!',
+          meaning: 'Tensión / Disyunción Afectiva',
+          colorHex: '#FF9F1C',
+          vy: 0.060,
+          flutterFreq: 5.8,
+          flutterAmpX: 0.50,
+          flutterAmpZ: 0.45,
+          durationMs: 2200
+        };
+      }
+
+      // 4. CORCHEA (1/2 TIEMPO): ¿? o indeterminación / neutralidad
+      if (s.includes('?') || s.includes('¿') || Math.abs(d) < 0.28 || qNum === 41) {
+        return {
+          noteKey: 'corchea',
+          name: '♪ CORCHEA (1/2T)',
+          sub: s || '¿? #41',
+          meaning: 'Indiferencia / Neutralidad',
+          colorHex: '#FFE600',
+          vy: 0.052,
+          flutterFreq: 4.0,
+          flutterAmpX: 0.45,
+          flutterAmpZ: 0.40,
+          durationMs: 2500
+        };
+      }
+
+      // 3. NEGRA (1 TIEMPO): eE o dación moderada / pulso base estándar
+      return {
+        noteKey: 'negra',
+        name: '♩ NEGRA (1T)',
+        sub: s || 'eE',
+        meaning: 'Dación / Pulso Fundamental',
+        colorHex: '#38BDF8',
+        vy: 0.050,
+        flutterFreq: 3.2,
+        flutterAmpX: 0.40,
+        flutterAmpZ: 0.35,
+        durationMs: 2800
+      };
+    }
+
+    function drawVectorMusicNote(ctx, cx, cy, noteKey, colorHex) {
+      ctx.save();
+      ctx.fillStyle = colorHex;
+      ctx.strokeStyle = colorHex;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      if (noteKey === 'calderon') {
+        // Arco superior del calderón
+        ctx.beginPath();
+        ctx.arc(cx, cy - 8, 14, Math.PI, 0, false);
+        ctx.stroke();
+        // Punto del calderón
+        ctx.beginPath();
+        ctx.arc(cx, cy - 8, 2.8, 0, Math.PI * 2);
+        ctx.fill();
+        // Cabeza de redonda abajo
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 8, 13, 8, -0.35, 0, Math.PI * 2);
+        ctx.lineWidth = 3.5;
+        ctx.stroke();
+      } else if (noteKey === 'redonda') {
+        // Redonda: elipse abierta inclinada
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 14, 8.5, -0.35, 0, Math.PI * 2);
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      } else if (noteKey === 'blanca') {
+        // Blanca: cabeza hueca + plica
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 18);
+        ctx.stroke();
+      } else if (noteKey === 'negra') {
+        // Negra: cabeza llena + plica
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 18);
+        ctx.stroke();
+      } else if (noteKey === 'corchea') {
+        // Corchea: cabeza llena + plica + 1 corchete
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 20);
+        ctx.stroke();
+        // Corchete 1
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy - 20);
+        ctx.bezierCurveTo(cx + 14, cy - 16, cx + 16, cy - 10, cx + 18, cy - 7);
+        ctx.lineWidth = 3.5;
+        ctx.stroke();
+      } else if (noteKey === 'semicorchea') {
+        // Semicorchea: cabeza llena + plica + 2 corchetes
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 22);
+        ctx.stroke();
+        // Corchete 1
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy - 22);
+        ctx.bezierCurveTo(cx + 13, cy - 18, cx + 15, cy - 13, cx + 17, cy - 10);
+        ctx.stroke();
+        // Corchete 2
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy - 15);
+        ctx.bezierCurveTo(cx + 13, cy - 11, cx + 15, cy - 6, cx + 17, cy - 3);
+        ctx.stroke();
+      } else if (noteKey === 'fusa') {
+        // Fusa: cabeza llena + plica + 3 corchetes
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 24);
+        ctx.stroke();
+        // 3 corchetes
+        for (let k = 0; k < 3; k++) {
+          const sy = cy - 24 + (k * 6);
+          ctx.beginPath();
+          ctx.moveTo(cx + 6, sy);
+          ctx.bezierCurveTo(cx + 13, sy + 3, cx + 15, sy + 7, cx + 17, sy + 9);
+          ctx.stroke();
+        }
+      } else if (noteKey === 'semifusa') {
+        // Semifusa: cabeza llena + plica + 4 corchetes rápidos
+        ctx.beginPath();
+        ctx.ellipse(cx - 3, cy + 7, 11, 7, -0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 6, cy + 5);
+        ctx.lineTo(cx + 6, cy - 26);
+        ctx.stroke();
+        // 4 corchetes
+        for (let k = 0; k < 4; k++) {
+          const sy = cy - 26 + (k * 5);
+          ctx.beginPath();
+          ctx.moveTo(cx + 6, sy);
+          ctx.bezierCurveTo(cx + 13, sy + 2.5, cx + 15, sy + 5.5, cx + 17, sy + 7.5);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+
+    function createMusicalGlyphSprite(arch, opts = {}) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 120;
+      const ctx = canvas.getContext('2d');
+
+      const r = 24;
+      const w = 316, h = 116;
+      ctx.translate(2, 2);
+
+      // Sombra resplandeciente neón
+      ctx.shadowColor = arch.colorHex;
+      ctx.shadowBlur = 16;
+
+      ctx.fillStyle = 'rgba(11, 19, 43, 0.92)';
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(0, 0, w, h, r);
+      } else {
+        ctx.rect(0, 0, w, h);
+      }
+      ctx.fill();
+
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = arch.colorHex;
+      ctx.stroke();
+
+      // Reset sombra
+      ctx.shadowBlur = 0;
+
+      // Icono de la Nota Musical en vector
+      drawVectorMusicNote(ctx, 42, 58, arch.noteKey, arch.colorHex);
+
+      // Separador vertical
+      ctx.beginPath();
+      ctx.moveTo(76, 18);
+      ctx.lineTo(76, 98);
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Textos informativos a la derecha
+      ctx.font = '900 15px "Roboto Mono", monospace';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(arch.name, 88, 36);
+
+      ctx.font = '900 24px "Roboto Mono", monospace';
+      ctx.fillStyle = arch.colorHex;
+      ctx.fillText(arch.sub, 88, 68);
+
+      ctx.font = '500 12px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillText(arch.meaning, 88, 96);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+
+      const spriteMat = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false,
+        opacity: 0.98
+      });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(3.4, 1.28, 1);
+      return sprite;
+    }
+
+    function spawnMusicalGlyph(u, v, sym, density, opts = {}) {
+      if (!isMusicalGlyphsEnabled || !chessboardGroup) return;
+
+      // Limitar acumulación máxima activa
+      if (activeMusicalGlyphs.length >= MAX_ACTIVE_MUSICAL_GLYPHS) {
+        const oldest = activeMusicalGlyphs.shift();
+        if (oldest && oldest.sprite) {
+          chessboardGroup.remove(oldest.sprite);
+          if (oldest.sprite.material) {
+            if (oldest.sprite.material.map) oldest.sprite.material.map.dispose();
+            oldest.sprite.material.dispose();
+          }
+        }
+      }
+
+      const arch = getMusicalNoteArchetype(sym, density, opts);
+      const sprite = createMusicalGlyphSprite(arch, opts);
+
+      const x0 = (v - 4) * STEP;
+      const z0 = (u - 4) * STEP;
+      let targetH = 0.5;
+      const colKey = `${u}_${v}`;
+      if (activeBoardColumns[colKey]) {
+        targetH = activeBoardColumns[colKey].targetH || 0.5;
+      } else if (typeof density === 'number') {
+        targetH = density * getDensityScale(activeDensityKey);
+      }
+      const y0 = Math.max(1.2, targetH + 1.2);
+
+      sprite.position.set(x0, y0, z0);
+      chessboardGroup.add(sprite);
+
+      activeMusicalGlyphs.push({
+        sprite,
+        x0, y0, z0,
+        vy: arch.vy,
+        flutterFreq: arch.flutterFreq,
+        flutterAmpX: arch.flutterAmpX,
+        flutterAmpZ: arch.flutterAmpZ,
+        phaseX: Math.random() * Math.PI * 2,
+        phaseZ: Math.random() * Math.PI * 2,
+        birthTime: performance.now(),
+        durationMs: arch.durationMs,
+        baseScaleX: 3.4,
+        baseScaleY: 1.28
+      });
+    }
+
+    function updateMusicalGlyphs(time) {
+      if (!chessboardGroup || activeMusicalGlyphs.length === 0) return;
+      const now = performance.now();
+      for (let i = activeMusicalGlyphs.length - 1; i >= 0; i--) {
+        const g = activeMusicalGlyphs[i];
+        const age = now - g.birthTime;
+        if (age >= g.durationMs) {
+          chessboardGroup.remove(g.sprite);
+          if (g.sprite.material) {
+            if (g.sprite.material.map) g.sprite.material.map.dispose();
+            g.sprite.material.dispose();
+          }
+          activeMusicalGlyphs.splice(i, 1);
+          continue;
+        }
+
+        const tSec = age / 1000.0;
+        const progress = age / g.durationMs;
+
+        // Ascenso en Y con revoloteo armónico en X y Z
+        g.sprite.position.y = g.y0 + (g.vy * age * 0.055);
+        g.sprite.position.x = g.x0 + g.flutterAmpX * Math.sin(tSec * g.flutterFreq + g.phaseX);
+        g.sprite.position.z = g.z0 + g.flutterAmpZ * Math.cos(tSec * g.flutterFreq * 0.82 + g.phaseZ);
+
+        // Desvanecimiento suave (fade out suave tras el 22% inicial de vida)
+        let op = 0.98;
+        if (progress > 0.22) {
+          const fadeNorm = (progress - 0.22) / 0.78;
+          op = Math.max(0, 0.98 * Math.pow(1.0 - fadeNorm, 1.4));
+        }
+        g.sprite.material.opacity = op;
+
+        // Suave respiración de escala
+        const breathe = 1.0 + 0.06 * Math.sin(tSec * 4.0);
+        g.sprite.scale.set(g.baseScaleX * breathe, g.baseScaleY * breathe, 1);
       }
     }
 
@@ -5635,6 +6086,10 @@
           colObj.ringMesh.material.color.setHex(finalColor);
         }
 
+        if (!isBatchMorph && typeof spawnMusicalGlyph === 'function') {
+          spawnMusicalGlyph(u, v, dyadLabel || getFigureCode(u, v), densityVal, { q81Num, label: dyadLabel });
+        }
+
         updateStandingCountUI();
         return { isRepeated, hitCount: colObj.hitCount, colorHex: finalColor };
       } else {
@@ -5692,6 +6147,10 @@
           isAlive: true,
           hitCount: 1
         };
+
+        if (!isBatchMorph && typeof spawnMusicalGlyph === 'function') {
+          spawnMusicalGlyph(u, v, dyadLabel || getFigureCode(u, v), densityVal, { q81Num, label: dyadLabel });
+        }
 
         updateStandingCountUI();
         return { isRepeated: false, hitCount: 1, colorHex: colColor };
@@ -5848,6 +6307,17 @@
           if (r.mesh.material) r.mesh.material.dispose();
         });
         activeCoronalRipples = [];
+      }
+
+      if (activeMusicalGlyphs && activeMusicalGlyphs.length > 0 && chessboardGroup) {
+        activeMusicalGlyphs.forEach(g => {
+          chessboardGroup.remove(g.sprite);
+          if (g.sprite.material) {
+            if (g.sprite.material.map) g.sprite.material.map.dispose();
+            g.sprite.material.dispose();
+          }
+        });
+        activeMusicalGlyphs = [];
       }
 
       Object.values(activeBoardColumns).forEach(col => {
@@ -6951,15 +7421,21 @@
         if (item.type === 'q81_marg_row' || item.isVoiceA) {
           const rowIdx = item.u;
           for (let col = 0; col < 9; col++) {
-            erectOrMorphColumn(rowIdx, col, item.density, item.dyadLabel, item.q81Num);
+            erectOrMorphColumn(rowIdx, col, item.density, item.dyadLabel, item.q81Num, true);
           }
           pulseConcertCoronalRing(rowIdx, 4, 0x00E5FF);
+          if (typeof spawnMusicalGlyph === 'function') {
+            spawnMusicalGlyph(rowIdx, 4, item.sym || 'DAR', item.density, { q81Num: item.q81Num, label: item.dyadLabel });
+          }
         } else if (item.type === 'q81_marg_col' || item.isVoiceB) {
           const colIdx = item.v;
           for (let row = 0; row < 9; row++) {
-            erectOrMorphColumn(row, colIdx, item.density, item.dyadLabel, item.q81Num);
+            erectOrMorphColumn(row, colIdx, item.density, item.dyadLabel, item.q81Num, true);
           }
           pulseConcertCoronalRing(4, colIdx, 0x00FF87);
+          if (typeof spawnMusicalGlyph === 'function') {
+            spawnMusicalGlyph(4, colIdx, item.sym || 'RC', item.density, { q81Num: item.q81Num, label: item.dyadLabel });
+          }
           if (item.isVoiceB && item.subjectIdx !== undefined) {
             const s = item.subjectIdx;
             const delta = Math.abs((item.counterpartDensity || 0) - item.density);
@@ -6969,8 +7445,11 @@
           pulseConcertCoronalRing(4, 4, 0xFFE600);
           for (let r = 0; r < 9; r += 2) {
             for (let c = 0; c < 9; c += 2) {
-              erectOrMorphColumn(r, c, item.density, item.dyadLabel, 'GLOBAL');
+              erectOrMorphColumn(r, c, item.density, item.dyadLabel, 'GLOBAL', true);
             }
+          }
+          if (typeof spawnMusicalGlyph === 'function') {
+            spawnMusicalGlyph(4, 4, 'GLOBAL', item.density, { isGlobal: true, label: '👑 Monolito Global F(9,9)' });
           }
         }
 
@@ -8566,6 +9045,10 @@
         if (footerSub) {
           footerSub.innerHTML = `Compás ${filmStep}/${totalSteps} • Celda [${cellCode}] • Figura Q81 #${qId} <strong class="text-cyan-300">${qInfo.sym}</strong> • <span style="color:${centInfo.colorHex}; font-weight:bold;">${centInfo.name}</span> • Tono: ${qInfo.freq.toFixed(1)} Hz (Centroide: ${centInfo.freq} Hz, Duración: ${durMs}ms) • SDR T1:${d1}, T4:${d4}`;
         }
+
+        if (typeof spawnMusicalGlyph === 'function') {
+          spawnMusicalGlyph(u, v, qInfo.sym, avgDen, { q81Num: qId, label: qInfo.desc });
+        }
       }
     }
 
@@ -8860,6 +9343,10 @@
       initAudio();
       playHarmonicChime(sdr * 4.0, 0.35, { u, v });
 
+      if (typeof spawnMusicalGlyph === 'function') {
+        spawnMusicalGlyph(u, v, code, sdr, { label: code });
+      }
+
       const cellEl = document.getElementById('telemetry-cell');
       const codeEl = document.getElementById('telemetry-code');
       const meanEl = document.getElementById('telemetry-meaning');
@@ -8908,6 +9395,7 @@
 
       updateLivingColumnsAnimation();
       updateCoronalRipples();
+      updateMusicalGlyphs(time);
       updateOceanWaves(time);
       updateOceanAudioIdle(time);
       updateStarrySky(time);
