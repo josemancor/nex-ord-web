@@ -805,6 +805,10 @@
                 <span id="audio-icon">🔇</span>
                 <span id="audio-lbl" class="text-[10px]">Audio: OFF</span>
               </button>
+              <button onclick="toggleSkyAtmosphere()" id="btn-toggle-sky" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-sky-300 bg-slate-950/85 border-sky-500/50 shadow-lg flex items-center gap-1.5 hover:border-sky-300 hover:scale-105 transition-all" title="Alternar Bóveda Celeste: Azul Claro Estrellado / Azul Noche">
+                <span>✨</span>
+                <span id="sky-lbl" class="text-[10px]">Cielo: Azul Claro</span>
+              </button>
               <button onclick="toggleSalaOscuraFullscreen()" id="btn-toggle-cinema" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-slate-950/85 border-amber-500/40 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Sala Oscura / Pantalla Completa Cinematográfica">
                 <span>🎭</span> Sala Oscura
               </button>
@@ -837,16 +841,16 @@
             </button>
             <div class="hidden flex-col gap-1 text-[10px] mono bg-slate-950/95 p-2.5 rounded-xl border border-sky-900/70 shadow-2xl backdrop-blur-md" id="viewport-legend-box">
               <div class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></span>
-                <span class="text-emerald-300 font-bold">🌌 Cielo Abierto (+Y)</span>: Cohesión & Cumbres
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38BDF8]"></span>
+                <span class="text-sky-300 font-bold">🌌 Bóveda Celeste (+Y)</span>: Cielo Azul Claro Estrellado & Cumbres
               </div>
               <div class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]"></span>
-                <span class="text-cyan-300 font-bold">🌊 Superficie (Y = 0)</span>: Tablero 9x9 / Indiferencia
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_8px_#2DD4BF]"></span>
+                <span class="text-teal-300 font-bold">🌊 Superficie Turquesa (Y = 0)</span>: Mar Turquesa & Tablero 9x9
               </div>
               <div class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#FF007F]"></span>
-                <span class="text-rose-400 font-bold">⚓ Fondo Abisal (-Y)</span>: Conflicto & Fosas [Rr]
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-700 shadow-[0_0_8px_#0D9488]"></span>
+                <span class="text-teal-400 font-bold">⚓ Fosas Abisales (-Y)</span>: Lecho Turquesa Abisal [Rr]
               </div>
               <div class="flex items-center gap-1.5 pt-0.5 border-t border-slate-800">
                 <span class="w-3 h-1 bg-amber-400 rounded-full shadow-[0_0_8px_#FFE600]"></span>
@@ -2381,10 +2385,15 @@
     let oceanFoamGain = null;
     let oceanWaveSurge = 0.0;
 
-    // 3D Visual Ocean Group
+    // 3D Visual Ocean & Celestial Sky Dome
     let oceanGroup = null;
     let oceanSurfaceMesh = null;
     let oceanWireMesh = null;
+    let skyDomeMesh = null;
+    let starParticles = null;
+    let skyAtmosphereMode = 'azul_claro'; // 'azul_claro' | 'azul_noche'
+    let skyTextureClaro = null;
+    let skyTextureNoche = null;
 
     function initOceanAudio() {
       if (!audioCtx) return;
@@ -2621,12 +2630,12 @@
       oceanGeo.rotateX(-Math.PI / 2);
 
       const oceanMat = new THREE.MeshPhongMaterial({
-        color: 0x032859,
-        emissive: 0x011326,
-        specular: 0x00E5FF,
-        shininess: 85,
+        color: 0x00A896,        // Mar Turquesa Oceánico Luminoso
+        emissive: 0x002B36,     // Resplandor bioluminiscente sutil
+        specular: 0x5EEAD4,     // Reflejos cristalinos turquesa menta
+        shininess: 95,
         transparent: true,
-        opacity: 0.42,
+        opacity: 0.52,
         side: THREE.DoubleSide
       });
       oceanSurfaceMesh = new THREE.Mesh(oceanGeo, oceanMat);
@@ -2635,14 +2644,158 @@
 
       const oceanWireGeo = oceanGeo.clone();
       const oceanWireMat = new THREE.MeshBasicMaterial({
-        color: 0x00F0FF,
+        color: 0x2DD4BF,        // Ondas turquesa neón
         wireframe: true,
         transparent: true,
-        opacity: 0.16
+        opacity: 0.28
       });
       oceanWireMesh = new THREE.Mesh(oceanWireGeo, oceanWireMat);
       oceanWireMesh.position.y = -0.10;
       oceanGroup.add(oceanWireMesh);
+    }
+
+    // =========================================================================
+    // 3.9 BÓVEDA CELESTE AZUL CLARO ESTRELLADA Y CAMPO SIDERAL
+    // =========================================================================
+    function createStarTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      grad.addColorStop(0.25, 'rgba(224, 242, 254, 0.9)');
+      grad.addColorStop(0.55, 'rgba(125, 211, 252, 0.35)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function createSkyDomeTexture(mode) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 1024);
+      if (mode === 'azul_claro') {
+        // Cénit zafiro luminoso -> azul cielo radiante -> turquesa horizonte
+        grad.addColorStop(0.00, '#0369A1'); // Cénit zafiro profundo
+        grad.addColorStop(0.25, '#0284C7'); // Azul cerúleo puro
+        grad.addColorStop(0.55, '#38BDF8'); // Azul cielo radiante
+        grad.addColorStop(0.78, '#7DD3FC'); // Celeste brillante
+        grad.addColorStop(0.92, '#5EEAD4'); // Turquesa claro costero
+        grad.addColorStop(1.00, '#00A896'); // Fusión con Mar Turquesa
+      } else {
+        // Bóveda nocturna abisal
+        grad.addColorStop(0.00, '#020617'); // Cénit noche abisal
+        grad.addColorStop(0.35, '#04152D'); // Azul medianoche profundo
+        grad.addColorStop(0.70, '#0A2540'); // Azul índigo estelar
+        grad.addColorStop(0.90, '#0E3B5E'); // Bruma marina
+        grad.addColorStop(1.00, '#021B2B'); // Fusión horizonte nocturno
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 512, 1024);
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function buildStarrySky() {
+      skyTextureClaro = createSkyDomeTexture('azul_claro');
+      skyTextureNoche = createSkyDomeTexture('azul_noche');
+
+      // 1. Cúpula Celeste (Bóveda hemisférica envolvente)
+      const skyGeo = new THREE.SphereGeometry(650, 48, 24, 0, Math.PI * 2, 0, Math.PI * 0.52);
+      const skyMat = new THREE.MeshBasicMaterial({
+        map: (skyAtmosphereMode === 'azul_claro' ? skyTextureClaro : skyTextureNoche),
+        side: THREE.BackSide,
+        depthWrite: false,
+        transparent: true,
+        opacity: 0.96,
+        fog: false
+      });
+      skyDomeMesh = new THREE.Mesh(skyGeo, skyMat);
+      skyDomeMesh.position.set(0, -10, 0);
+      scene.add(skyDomeMesh);
+
+      // 2. Campo Estelar (1800 estrellas centelleantes)
+      const starCount = 1800;
+      const starGeo = new THREE.BufferGeometry();
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+
+      const colorWhite = new THREE.Color(0xFFFFFF);
+      const colorCyan = new THREE.Color(0xBAE6FD);
+      const colorAmber = new THREE.Color(0xFEF08A);
+
+      for (let i = 0; i < starCount; i++) {
+        const phi = Math.acos(0.05 + Math.random() * 0.95);
+        const theta = Math.random() * Math.PI * 2;
+        const r = 590 + Math.random() * 45;
+
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.cos(phi);
+        const z = r * Math.sin(phi) * Math.sin(theta);
+
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        const rnd = Math.random();
+        let c = colorWhite;
+        if (rnd < 0.25) c = colorCyan;
+        else if (rnd < 0.38) c = colorAmber;
+
+        colors[i * 3] = c.r;
+        colors[i * 3 + 1] = c.g;
+        colors[i * 3 + 2] = c.b;
+      }
+
+      starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      starGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const starMat = new THREE.PointsMaterial({
+        size: 3.2,
+        map: createStarTexture(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false
+      });
+
+      starParticles = new THREE.Points(starGeo, starMat);
+      scene.add(starParticles);
+    }
+
+    function updateStarrySky(time) {
+      if (!starParticles) return;
+      const t = (time || 0);
+      starParticles.rotation.y = t * 0.000035;
+      if (starParticles.material) {
+        starParticles.material.size = 3.2 + Math.sin(t * 0.0022) * 0.45;
+      }
+    }
+
+    function toggleSkyAtmosphere() {
+      skyAtmosphereMode = (skyAtmosphereMode === 'azul_claro') ? 'azul_noche' : 'azul_claro';
+      applySkyAtmosphere();
+    }
+
+    function applySkyAtmosphere() {
+      if (!skyDomeMesh) return;
+      const isClaro = (skyAtmosphereMode === 'azul_claro');
+      skyDomeMesh.material.map = isClaro ? skyTextureClaro : skyTextureNoche;
+      skyDomeMesh.material.needsUpdate = true;
+
+      const lbl = document.getElementById('sky-lbl');
+      if (lbl) {
+        lbl.textContent = isClaro ? 'Cielo: Azul Claro' : 'Cielo: Azul Noche';
+      }
+
+      if (isLuzDeSalaOn && scene && scene.fog) {
+        scene.fog.color.setHex(isClaro ? 0x071e3d : 0x040814);
+      }
     }
 
     function updateOceanWaves(time) {
@@ -3154,13 +3307,15 @@
         if (theaterLights.cyanBounce) theaterLights.cyanBounce.intensity = 1.9;
         if (theaterLights.boardCenterLight) theaterLights.boardCenterLight.intensity = 2.8;
         if (theaterLights.abyssLight) theaterLights.abyssLight.intensity = 2.2;
+        if (skyDomeMesh) skyDomeMesh.material.opacity = (skyAtmosphereMode === 'azul_claro') ? 0.96 : 0.92;
+        if (starParticles) starParticles.material.opacity = 0.95;
         if (scene && scene.fog) {
-          scene.fog.color.setHex(0x040814);
-          scene.fog.density = 0.0020;
+          scene.fog.color.setHex(skyAtmosphereMode === 'azul_claro' ? 0x071e3d : 0x040814);
+          scene.fog.density = 0.0018;
         }
-        if (renderer) renderer.setClearColor(0x040814, 1.0);
+        if (renderer) renderer.setClearColor(skyAtmosphereMode === 'azul_claro' ? 0x071e3d : 0x040814, 1.0);
         if (container) {
-          container.style.backgroundColor = '#040814';
+          container.style.backgroundColor = skyAtmosphereMode === 'azul_claro' ? '#071e3d' : '#040814';
         }
         if (icon) icon.textContent = '💡';
         if (lbl) lbl.textContent = 'LUZ: ON';
@@ -3174,6 +3329,8 @@
         if (theaterLights.cyanBounce) theaterLights.cyanBounce.intensity = 0.40;
         if (theaterLights.boardCenterLight) theaterLights.boardCenterLight.intensity = 3.8;
         if (theaterLights.abyssLight) theaterLights.abyssLight.intensity = 2.8;
+        if (skyDomeMesh) skyDomeMesh.material.opacity = 0.35;
+        if (starParticles) starParticles.material.opacity = 1.0;
         if (scene && scene.fog) {
           scene.fog.color.setHex(0x000000);
           scene.fog.density = 0.0012;
@@ -3349,6 +3506,9 @@
 
       setupLights();
 
+      // Construcción de la Bóveda Celeste Azul Claro y Campo Estelar
+      buildStarrySky();
+
       // Construcción del Tablero de Ajedrez Vivo 9x9 con los 3 Estratos
       buildChessboardAquarium();
 
@@ -3504,7 +3664,7 @@
       // 2. FONDO ABISAL (-Y): Lecho Oceánico a Y = -24
       const abyssPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
       abyssPlaneGeo.rotateX(-Math.PI / 2);
-      const abyssMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.12 });
+      const abyssMat = new THREE.MeshBasicMaterial({ color: 0x0D9488, wireframe: true, transparent: true, opacity: 0.14 });
       const abyssPlane = new THREE.Mesh(abyssPlaneGeo, abyssMat);
       abyssPlane.position.y = -24;
       chessboardGroup.add(abyssPlane);
@@ -3512,7 +3672,7 @@
       // 3. CIELO ABIERTO (+Y): Techo Celestial a Y = +24
       const skyPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
       skyPlaneGeo.rotateX(-Math.PI / 2);
-      const skyMat = new THREE.MeshBasicMaterial({ color: 0x00FF87, wireframe: true, transparent: true, opacity: 0.10 });
+      const skyMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.12 });
       const skyPlane = new THREE.Mesh(skyPlaneGeo, skyMat);
       skyPlane.position.y = 24;
       chessboardGroup.add(skyPlane);
@@ -3808,14 +3968,14 @@
       // 4. Lecho Abisal y Techo Celestial Extendidos para Ambos Tableros
       const dualAbyssGeo = new THREE.PlaneGeometry(DUAL_BOARD_OFFSET_X * 2 + SPAN + 16, SPAN + 16, 20, 10);
       dualAbyssGeo.rotateX(-Math.PI / 2);
-      const dualAbyssMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.10 });
+      const dualAbyssMat = new THREE.MeshBasicMaterial({ color: 0x0D9488, wireframe: true, transparent: true, opacity: 0.12 });
       const dualAbyssMesh = new THREE.Mesh(dualAbyssGeo, dualAbyssMat);
       dualAbyssMesh.position.y = -24;
       dualBoardsGroup.add(dualAbyssMesh);
 
       const dualSkyGeo = new THREE.PlaneGeometry(DUAL_BOARD_OFFSET_X * 2 + SPAN + 16, SPAN + 16, 20, 10);
       dualSkyGeo.rotateX(-Math.PI / 2);
-      const dualSkyMat = new THREE.MeshBasicMaterial({ color: 0x00FF87, wireframe: true, transparent: true, opacity: 0.08 });
+      const dualSkyMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.10 });
       const dualSkyMesh = new THREE.Mesh(dualSkyGeo, dualSkyMat);
       dualSkyMesh.position.y = 24;
       dualBoardsGroup.add(dualSkyMesh);
@@ -7528,6 +7688,7 @@
       updateCoronalRipples();
       updateOceanWaves(time);
       updateOceanAudioIdle(time);
+      updateStarrySky(time);
       if (mainMode === 'dual') {
         updateDualColumnsAnimation();
         updateLightningAnimation(time);
