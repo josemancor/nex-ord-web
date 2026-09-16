@@ -102,6 +102,11 @@
       animation: pulseActiveNote 1.2s infinite alternate;
       z-index: 20;
     }
+    .partitura-cell.partner-note {
+      outline: 1.5px dashed #00E5FF;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
+      z-index: 15;
+    }
     @keyframes pulseActiveNote {
       from { transform: scale(1.04); filter: brightness(1.1); }
       to { transform: scale(1.10); filter: brightness(1.35); }
@@ -213,49 +218,78 @@
       </div>
     </header>
 
-    <!-- 🎼 BARRA 1: CONTROLES DE SOLFEO Y DENSIDAD (MODO TABLERO AJEDREZ VIVO) -->
-    <section id="bar-solfeo-controls" class="glass-panel rounded-2xl p-2 md:p-2.5 flex flex-wrap items-center justify-between gap-2 border border-sky-900/40">
-      <!-- Selector de Matriz de Densidad -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          DENSIDAD:
-        </span>
-        <button onclick="setSolfeoDensity('D1')" id="btn-density-D1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold active" title="D1: Expectativa Emitida (p_DA) [-3.20 a +4.44]">
-          📤 D1: Expectativa Emitida (p_DA)
-        </button>
-        <button onclick="setSolfeoDensity('D2')" id="btn-density-D2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D2: Preferencia Dada (DA) [-3.21 a +3.16]">
-          👉 D2: Preferencia Dada (DA)
-        </button>
-        <button onclick="setSolfeoDensity('D3')" id="btn-density-D3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D3: Preferencia Recibida (RECIBE) [-3.22 a +3.16]">
-          📥 D3: Preferencia Recibida (RECIBE)
-        </button>
-        <button onclick="setSolfeoDensity('D4')" id="btn-density-D4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D4: Expectativa Percibida (p_RECIBE) [-3.21 a +4.44]">
-          👁️ D4: Expectativa Percibida (p_RECIBE)
-        </button>
-      </div>
-
-      <!-- Mandos de Reproducción del Solfeo -->
-      <div class="flex items-center gap-2 flex-wrap">
-        <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
-          <button onclick="resetSolfeoBoard()" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Limpiar Tablero a Lámina Cero">⏮</button>
-          <button onclick="stepSolfeoManual(-1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Anterior">◀</button>
-          <button onclick="togglePlaySolfeo()" id="btn-play-solfeo" class="glass-btn px-3 py-1 rounded-lg text-xs font-bold text-emerald-300 border-emerald-500/50 bg-emerald-950/60 flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
-            <span id="play-solfeo-icon">▶</span>
-            <span id="play-solfeo-lbl">REPRODUCIR SOLFEO</span>
+    <!-- 🎼 BARRA 1: CONTROLES DE SOLFEO, DENSIDADES Y TRAYECTORIAS (MODO TABLERO AJEDREZ VIVO) -->
+    <section id="bar-solfeo-controls" class="glass-panel rounded-2xl p-2 md:p-2.5 flex flex-col gap-2 border border-sky-900/40">
+      
+      <!-- Fila Superior de Mandos: Selector de Matriz y Trayectoria -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        
+        <!-- Selector de Matriz de Densidad -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            DENSIDAD:
+          </span>
+          <button onclick="setSolfeoDensity('D1')" id="btn-density-D1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold active" title="D1: Expectativa Emitida (p_DA) [-3.20 a +4.44]">
+            📤 D1: Expectativa Emitida (p_DA)
           </button>
-          <button onclick="stepSolfeoManual(1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Siguiente">▶</button>
+          <button onclick="setSolfeoDensity('D2')" id="btn-density-D2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D2: Preferencia Dada (DA) [-3.21 a +3.16]">
+            👉 D2: Preferencia Dada (DA)
+          </button>
+          <button onclick="setSolfeoDensity('D3')" id="btn-density-D3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D3: Preferencia Recibida (RECIBE) [-3.22 a +3.16]">
+            📥 D3: Preferencia Recibida (RECIBE)
+          </button>
+          <button onclick="setSolfeoDensity('D4')" id="btn-density-D4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D4: Expectativa Percibida (p_RECIBE) [-3.21 a +4.44]">
+            👁️ D4: Expectativa Percibida (p_RECIBE)
+          </button>
         </div>
 
-        <div class="flex items-center gap-1.5 bg-slate-950/90 border border-sky-900/60 px-2.5 py-1 rounded-xl mono text-xs">
-          <span class="text-[10px] text-slate-400">Cadencia:</span>
-          <select id="solfeo-speed" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 text-[10px]">
-            <option value="750">Solemne (750ms)</option>
-            <option value="420" selected>Normal (420ms)</option>
-            <option value="180">Rápido (180ms)</option>
-          </select>
+        <!-- Selector de Trayectoria del Solfeo (Fila DA / Columna RECIBE / Contrapunto Diádico) -->
+        <div class="flex items-center gap-1 bg-slate-950/90 border border-sky-500/40 p-1 rounded-xl mono text-xs flex-wrap">
+          <span class="text-[10px] text-slate-400 pl-1 pr-1 font-bold">MELODÍA:</span>
+          <button onclick="setSolfeoTrajectory('row')" id="btn-traj-row" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300 active" title="Solfeo Fila a Fila: La voz de la Dación (DA)">
+            ➡️ Fila a Fila (Dación DA)
+          </button>
+          <button onclick="setSolfeoTrajectory('col')" id="btn-traj-col" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-300" title="Solfeo Columna a Columna: La voz de la Recepción (RECIBE)">
+            ⬇️ Columna a Columna (RECIBE)
+          </button>
+          <button onclick="setSolfeoTrajectory('dialogue')" id="btn-traj-dialogue" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-amber-300" title="Contrapunto Diádico: Diálogo alternado de réplica (i,j ⇄ j,i)">
+            🔀 Contrapunto Diádico (i,j ⇄ j,i)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Fila Inferior de Mandos: Reproducción y Cadencia -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/70">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
+            <button onclick="resetSolfeoBoard()" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Limpiar Tablero a Lámina Cero">⏮</button>
+            <button onclick="stepSolfeoManual(-1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Anterior">◀</button>
+            <button onclick="togglePlaySolfeo()" id="btn-play-solfeo" class="glass-btn px-3 py-1 rounded-lg text-xs font-bold text-emerald-300 border-emerald-500/50 bg-emerald-950/60 flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
+              <span id="play-solfeo-icon">▶</span>
+              <span id="play-solfeo-lbl">REPRODUCIR SOLFEO</span>
+            </button>
+            <button onclick="stepSolfeoManual(1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Siguiente">▶</button>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-slate-950/90 border border-sky-900/60 px-2.5 py-1 rounded-xl mono text-xs">
+            <span class="text-[10px] text-slate-400">Cadencia:</span>
+            <select id="solfeo-speed" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 text-[10px]">
+              <option value="800">Solemne (800ms)</option>
+              <option value="450" selected>Normal (450ms)</option>
+              <option value="200">Rápido (200ms)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Indicador de Trayectoria en Vivo -->
+        <div class="mono text-[11px] bg-slate-950/80 px-3 py-1 rounded-xl border border-sky-950 flex items-center gap-2">
+          <span class="text-slate-400">TRAYECTORIA ACTIVA:</span>
+          <span class="text-cyan-300 font-bold" id="solfeo-traj-indicator">➡️ Fila a Fila (Dación DA)</span>
         </div>
       </div>
+
     </section>
 
     <!-- 🎬 BARRA 2: CONTROLES IMAX 4D (MODO SÁBANA ONDULATORIA) -->
@@ -350,6 +384,10 @@
           <span class="w-2 h-2 rounded-sm bg-cyan-300 shadow-[0_0_6px_#00E5FF]"></span>
           <span class="text-cyan-300 font-bold">♟️ Columnas Vivas</span>: Permanencia y Mutación
         </div>
+        <div class="flex items-center gap-1.5" id="legend-dyadic-arc">
+          <span class="w-3 h-0.5 bg-amber-400 rounded-full shadow-[0_0_6px_#FFE600]"></span>
+          <span class="text-amber-300 font-bold">🔀 Arco Diádico</span>: Contrapunto (i,j ⇄ j,i)
+        </div>
       </div>
 
       <!-- OVERLAY DE AUDIO CÓSMICO -->
@@ -386,14 +424,24 @@
             </span>
           </div>
           
-          <!-- Solfeo Fila a Fila por Sujeto -->
-          <div class="flex items-center gap-1 mono text-[10px] flex-wrap">
-            <span class="text-slate-400">Solfeo Fila:</span>
-            <button onclick="solfeoSubjectRow(0)" id="btn-solfeo-row-0" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Fila 1A">1A</button>
-            <button onclick="solfeoSubjectRow(1)" id="btn-solfeo-row-1" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 2A">2A</button>
-            <button onclick="solfeoSubjectRow(2)" id="btn-solfeo-row-2" class="glass-btn px-2 py-0.5 rounded font-bold text-rose-300" title="Solfeo exclusivo de la Fila 3A">3A</button>
-            <button onclick="solfeoSubjectRow(3)" id="btn-solfeo-row-3" class="glass-btn px-2 py-0.5 rounded font-bold text-amber-300" title="Solfeo exclusivo de la Fila 4A">4A</button>
-            <button onclick="solfeoSubjectRow(4)" id="btn-solfeo-row-4" class="glass-btn px-2 py-0.5 rounded font-bold text-slate-300" title="Solfeo exclusivo de la Fila 5A">5A</button>
+          <!-- Solfeo por Sujeto: Fila (DA) o Columna (RECIBE) -->
+          <div class="flex items-center gap-2 mono text-[10px] flex-wrap">
+            <div class="flex items-center gap-1">
+              <span class="text-slate-400">Fila (DA):</span>
+              <button onclick="solfeoSubjectRow(0)" id="btn-solfeo-row-0" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 1A (Dación)">1A</button>
+              <button onclick="solfeoSubjectRow(1)" id="btn-solfeo-row-1" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 2A (Dación)">2A</button>
+              <button onclick="solfeoSubjectRow(2)" id="btn-solfeo-row-2" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 3A (Dación)">3A</button>
+              <button onclick="solfeoSubjectRow(3)" id="btn-solfeo-row-3" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 4A (Dación)">4A</button>
+              <button onclick="solfeoSubjectRow(4)" id="btn-solfeo-row-4" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 5A (Dación)">5A</button>
+            </div>
+            <div class="flex items-center gap-1 pl-1 border-l border-slate-800">
+              <span class="text-slate-400">Col (REC):</span>
+              <button onclick="solfeoSubjectCol(0)" id="btn-solfeo-col-0" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Columna 1A (Recepción)">1A</button>
+              <button onclick="solfeoSubjectCol(1)" id="btn-solfeo-col-1" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Columna 2A (Recepción)">2A</button>
+              <button onclick="solfeoSubjectCol(2)" id="btn-solfeo-col-2" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Columna 3A (Recepción)">3A</button>
+              <button onclick="solfeoSubjectCol(3)" id="btn-solfeo-col-3" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Columna 4A (Recepción)">4A</button>
+              <button onclick="solfeoSubjectCol(4)" id="btn-solfeo-col-4" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Columna 5A (Recepción)">5A</button>
+            </div>
           </div>
         </div>
 
@@ -449,6 +497,22 @@
             <div>
               <span class="text-slate-400">Afinación 432 Hz:</span>
               <strong class="text-amber-300 block" id="solfeo-freq-val">288.4 Hz</strong>
+            </div>
+          </div>
+
+          <!-- Información de Contrapunto Diádico y Panning -->
+          <div class="pt-1.5 border-t border-slate-800 text-[10px] mono flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Voz Diádica:</span>
+              <span class="text-amber-300 font-bold" id="solfeo-voice-role">Auto-posición (Centro)</span>
+            </div>
+            <div class="flex items-center justify-between" id="solfeo-recip-row">
+              <span class="text-slate-400">Reciprocidad Diádica:</span>
+              <span class="text-emerald-400 font-bold" id="solfeo-recip-delta">Δ = 0.00 (Simetría)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Espacialización:</span>
+              <span class="text-cyan-300 font-bold" id="solfeo-pan-lbl">🎧 Panning Centro</span>
             </div>
           </div>
 
@@ -635,20 +699,24 @@
     <footer class="glass-panel rounded-2xl p-4 text-xs text-slate-400 leading-relaxed border border-sky-900/50 flex flex-col gap-2">
       <div class="flex items-center gap-2 text-amber-300 font-bold outfit text-sm">
         <span>💡 Nota Explicativa Pedagógica:</span>
-        <span class="text-white font-normal">El Tablero de Ajedrez Vivo 9x9, el Solfeo de la Partitura Factual y la Perspectiva de 3 Estratos</span>
+        <span class="text-white font-normal">Las 3 Melodías del Solfeo Relacional (Dación DA, Recepción RECIBE y Contrapunto Diádico)</span>
       </div>
       <p>
-        El <strong class="text-amber-300">Tablero de Ajedrez Vivo 9×9</strong> materializa el puente exacto entre la sociomatriz empírica concreta ($N 	imes N$, donde interactúan los sujetos reales) y el espacio invariable universal $Q_{81}$. 
-        Cada celda $(i, j)$ de la matriz es una <strong class="text-cyan-300">nota de la partitura relacional</strong>: al ejecutarse en solfeo diádico compás por compás, se ilumina su casilla $Q_{81}$ en el tablero y se erige una columna luminosa vertical cuya altura es rigurosamente proporcional a su cota de densidad posicional.
+        El <strong class="text-amber-300">Solfeo de la Partitura Sociométrica</strong> puede interpretarse bajo tres trayectorias canónicas que revelan dimensiones complementarias de la arquitectura vincular:
       </p>
+      <ul class="list-disc list-inside space-y-1 pl-2">
+        <li>
+          <strong class="text-cyan-300">1. Solfeo Fila a Fila (La Melodía de la Dación · DA):</strong> Recorre la matriz horizontalmente ($i$ fijo, $j = 1..N$). Es la voz de lo que cada sujeto entrega, proyecta o espera activamente del grupo («el Yo hacia el Colectivo»).
+        </li>
+        <li>
+          <strong class="text-emerald-400">2. Solfeo Columna a Columna (La Melodía de la Recepción · RECIBE):</strong> Recorre la matriz verticalmente ($j$ fijo, $i = 1..N$). Es la voz de lo que el colectivo vierte, deposita o adjudica a cada sujeto («el Colectivo hacia el Yo»), evidenciando su centralidad o aislamiento afectivo.
+        </li>
+        <li>
+          <strong class="text-amber-400">3. Contrapunto Diádico (El Diálogo Interactivo · i,j ⇄ j,i):</strong> Recorre la matriz agrupando a cada pareja diádica en acción y contrarréplica inmediata. Al sonar primero $(i, j)$ (emisor a la izquierda) y de inmediato $(j, i)$ (receptor a la derecha), se traza un arco luminoso en el espacio 3D y se revela al oído la reciprocidad consonante o la disonancia asimétrica del vínculo.
+        </li>
+      </ul>
       <p>
-        Siguiendo el principio del <strong class="text-emerald-400">Ajedrez Vivo</strong>, la columna proyectada permanece erigida en el tablero, constituyendo una escultura arquitectónica permanente del clima vincular del colectivo. Si una nota posterior reincide sobre una misma figura $Q_{81}$ (como ocurre en las auto-elecciones de la cumbre #81 o en el desconocimiento #77), la columna muta suavemente de altura en directo.
-      </p>
-      <p>
-        La <strong class="text-amber-300">Perspectiva Calibrada de 3 Estratos</strong> orienta la mirada espacial en un ángulo que permite contemplar simultáneamente en un único plano diáfano: 
-        (1) El <strong class="text-emerald-300">Cielo Abierto (+Y)</strong> donde se elevan las columnas de atracción, expectativa y cohesión; 
-        (2) La <strong class="text-cyan-300">Superficie de Flotación (Y = 0)</strong> con su retícula de obsidian, coordenadas periféricas y la Espina Dorsal Dorada diagonal; y 
-        (3) El <strong class="text-rose-400">Fondo Abisal (-Y)</strong> donde se precipitan las fosas de rechazo, conflicto y disonancia de Heider hacia el lecho oceánico.
+        La <strong class="text-amber-300">Perspectiva Calibrada de 3 Estratos</strong> permite mantener en todo momento una visión simultánea del <strong class="text-emerald-300">Cielo Abierto (+Y)</strong>, la <strong class="text-cyan-300">Superficie de Flotación (Y = 0)</strong> y el <strong class="text-rose-400">Fondo Abisal (-Y)</strong>, garantizando que ninguna columna viva oculte a sus vecinas durante la ejecución polifónica.
       </p>
       <div class="flex flex-wrap items-center justify-between pt-2 border-t border-slate-800/80 text-[11px] mono text-slate-500">
         <span>VISORD Cinema Engine • Geometría de Grassmann Gr(k, N) & SMIb • NEXORD Ecosystem</span>
@@ -857,7 +925,7 @@
     ];
 
     // =========================================================================
-    // 3. MOTOR SINESTÉSICO WEB AUDIO API (432 Hz)
+    // 3. MOTOR SINESTÉSICO WEB AUDIO API (432 Hz + PANEO ESTÉREO DIÁDICO)
     // =========================================================================
     let audioCtx = null, audioEnabled = false, masterGain = null;
     function initAudio() {
@@ -886,10 +954,10 @@
     }
 
     /**
-     * Motor Sinestésico Factual a 432 Hz
+     * Motor Sinestésico Factual a 432 Hz con Paneo Estéreo
      * @param {number} densityVal - Cota cuantitativa [-3.22, +4.44]
      * @param {number} volume - Ganancia relativa
-     * @param {object} opts - { isSpine, isDisparity, duration, u, v }
+     * @param {object} opts - { isSpine, isDisparity, duration, u, v, pan }
      */
     function playHarmonicChime(densityVal, volume = 0.28, opts = {}) {
       if (!audioEnabled || !audioCtx) return;
@@ -898,6 +966,16 @@
         const isSpine = !!opts.isSpine;
         const isDisparity = !!opts.isDisparity || (densityVal < -0.3);
         const dur = opts.duration || (isSpine ? 1.2 : 0.75);
+
+        // Paneo estéreo para diálogo diádico (Emisor izquierda, Receptor derecha)
+        let pannerNode = null;
+        if (audioCtx.createStereoPanner && opts.pan !== undefined) {
+          pannerNode = audioCtx.createStereoPanner();
+          pannerNode.pan.setValueAtTime(Math.max(-1, Math.min(1, opts.pan)), now);
+          pannerNode.connect(masterGain);
+        }
+
+        const targetDestination = pannerNode || masterGain;
 
         // Frecuencia anclada al subarmónico áureo de 432 Hz (216 Hz)
         const normVal = (densityVal || 0) / 4.44;
@@ -922,7 +1000,7 @@
             gain.gain.exponentialRampToValueAtTime(0.0001, now + voice.decay);
 
             osc.connect(gain);
-            gain.connect(masterGain);
+            gain.connect(targetDestination);
             osc.start(now);
             osc.stop(now + voice.decay + 0.05);
           });
@@ -948,7 +1026,7 @@
 
             osc.connect(filter);
             filter.connect(gain);
-            gain.connect(masterGain);
+            gain.connect(targetDestination);
             osc.start(now);
             osc.stop(now + dur + 0.05);
           });
@@ -965,7 +1043,7 @@
           gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
           osc.connect(gain);
-          gain.connect(masterGain);
+          gain.connect(targetDestination);
           osc.start(now);
           osc.stop(now + dur + 0.05);
 
@@ -978,7 +1056,7 @@
             overGain.gain.linearRampToValueAtTime(volume * 0.28, now + 0.02);
             overGain.gain.exponentialRampToValueAtTime(0.0001, now + dur * 0.65);
             overtone.connect(overGain);
-            overGain.connect(masterGain);
+            overGain.connect(targetDestination);
             overtone.start(now);
             overtone.stop(now + dur + 0.05);
           }
@@ -1003,6 +1081,7 @@
 
     let mainMode = 'solfeo'; // 'solfeo' (Tablero-Acuario) o 'imax' (Sábana Ondulatoria)
     let activeDensityKey = 'D1';
+    let solfeoTrajectory = 'row'; // 'row' (Fila a Fila DA), 'col' (Columna a Columna RECIBE), 'dialogue' (Contrapunto i,j <-> j,i)
 
     // Constantes de Cámara
     const CAM_3ESTRATOS_ELEV = 0.418; // ~24 grados
@@ -1015,6 +1094,7 @@
 
     // Grupo de Objetos del Tablero de Ajedrez Vivo 9x9
     let chessboardGroup = null;
+    let dyadicArcMesh = null; // Arco visual que conecta el par diádico en contrapunto
     let activeBoardColumns = {}; // Key: "u_v", Value: { mesh, spine, tip, ring, currentH, targetH, isAlive, density }
     let solfeoPlayingInterval = null;
     let isSolfeoPlaying = false;
@@ -1263,15 +1343,10 @@
     }
 
     // =========================================================================
-    // 6. MOTOR DE COLUMNAS VIVAS DE AJEDREZ (LIVING COLUMNS ENGINE)
+    // 6. MOTOR DE COLUMNAS VIVAS Y ARCOS DIÁDICOS EN 3D
     // =========================================================================
     /**
      * Erige o transmuta una columna viva en el tablero
-     * @param {number} u - Fila en tablero (0..8)
-     * @param {number} v - Columna en tablero (0..8)
-     * @param {number} densityVal - Valor cuantitativo de densidad
-     * @param {string} dyadLabel - Etiqueta de la díada (ej. "1A → 2A")
-     * @param {number} q81Num - Número Q81 (ej. 81, 77, 41...)
      */
     function erectOrMorphColumn(u, v, densityVal, dyadLabel, q81Num) {
       if (!chessboardGroup) return;
@@ -1281,7 +1356,6 @@
       const targetH = densityVal * DENSITY_SCALE;
       const isSpine = (u === v);
 
-      // Determinar color por estrato y naturaleza
       let colColor = 0x00E5FF;
       if (isSpine) {
         colColor = 0xFFE600; // Oro
@@ -1292,7 +1366,6 @@
       }
 
       if (activeBoardColumns[key]) {
-        // La columna ya existía: Transmutación suave
         const colObj = activeBoardColumns[key];
         colObj.targetH = targetH;
         colObj.density = densityVal;
@@ -1302,7 +1375,6 @@
         colObj.colMat.color.setHex(colColor);
         colObj.tipMat.color.setHex(colColor);
       } else {
-        // Crear nueva Columna Viva
         const colMat = new THREE.MeshPhongMaterial({
           color: colColor,
           transparent: true,
@@ -1312,13 +1384,12 @@
         });
 
         const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 1, 24);
-        cylGeo.translate(0, 0.5, 0); // Pivot en la base
+        cylGeo.translate(0, 0.5, 0);
 
         const cylMesh = new THREE.Mesh(cylGeo, colMat);
         cylMesh.position.set(x, 0, z);
         chessboardGroup.add(cylMesh);
 
-        // Perla esférica en la corona
         const tipGeo = new THREE.SphereGeometry(1.2, 18, 18);
         const tipMat = new THREE.MeshPhongMaterial({
           color: colColor,
@@ -1330,7 +1401,6 @@
         tipMesh.position.set(x, 0, z);
         chessboardGroup.add(tipMesh);
 
-        // Anillo de huella en la superficie Y = 0
         const ringGeo = new THREE.RingGeometry(0.95, 1.45, 24);
         ringGeo.rotateX(-Math.PI / 2);
         const ringMat = new THREE.MeshBasicMaterial({ color: colColor, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
@@ -1338,7 +1408,6 @@
         ringMesh.position.set(x, 0.08, z);
         chessboardGroup.add(ringMesh);
 
-        // Espina láser central
         const spineGeo = new THREE.BufferGeometry().setFromPoints([
           new THREE.Vector3(x, 0, z),
           new THREE.Vector3(x, 0, z)
@@ -1364,22 +1433,59 @@
       updateStandingCountUI();
     }
 
+    /**
+     * Traza el arco diádico relacional entre dos casillas en contrapunto
+     */
+    function showDyadicArc(u1, v1, h1, u2, v2, h2, delta) {
+      if (!chessboardGroup) return;
+      if (dyadicArcMesh) {
+        chessboardGroup.remove(dyadicArcMesh);
+        if (dyadicArcMesh.geometry) dyadicArcMesh.geometry.dispose();
+        if (dyadicArcMesh.material) dyadicArcMesh.material.dispose();
+        dyadicArcMesh = null;
+      }
+
+      if (u1 === u2 && v1 === v2) return; // Auto-posición
+
+      const p1 = new THREE.Vector3((v1 - 4) * STEP, h1, (u1 - 4) * STEP);
+      const p2 = new THREE.Vector3((v2 - 4) * STEP, h2, (u2 - 4) * STEP);
+      const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+      const dist = p1.distanceTo(p2);
+      mid.y += Math.max(3.5, dist * 0.22);
+
+      const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+      const pts = curve.getPoints(24);
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+
+      let arcCol = 0x00FF87;
+      if (delta > 2.0) arcCol = 0xFF9F1C; // Naranja disparidad
+      else if (h1 < 0 && h2 < 0) arcCol = 0xFF007F; // Magenta conflicto mutuo
+      else if (delta <= 0.8) arcCol = 0xFFE600; // Oro alta simetría
+
+      const mat = new THREE.LineBasicMaterial({
+        color: arcCol,
+        linewidth: 3.0,
+        transparent: true,
+        opacity: 0.95
+      });
+
+      dyadicArcMesh = new THREE.Line(geo, mat);
+      chessboardGroup.add(dyadicArcMesh);
+    }
+
     function updateLivingColumnsAnimation() {
       if (mainMode !== 'solfeo' || !chessboardGroup) return;
 
       Object.values(activeBoardColumns).forEach(col => {
-        // Interpolación viscoelástica
         col.currentH += (col.targetH - col.currentH) * 0.14;
 
         const h = col.currentH;
         const absH = Math.max(0.08, Math.abs(h));
         const dir = (h >= 0) ? 1 : -1;
 
-        // Escalar y orientar cilindro
         col.cylMesh.scale.set(1, absH * dir, 1);
         col.tipMesh.position.y = h;
 
-        // Actualizar espina láser
         const posAttr = col.spineLine.geometry.attributes.position;
         posAttr.setY(1, h);
         posAttr.needsUpdate = true;
@@ -1390,6 +1496,11 @@
       if (solfeoPlayingInterval) clearInterval(solfeoPlayingInterval);
       isSolfeoPlaying = false;
       updatePlaySolfeoButtonUI();
+
+      if (dyadicArcMesh && chessboardGroup) {
+        chessboardGroup.remove(dyadicArcMesh);
+        dyadicArcMesh = null;
+      }
 
       Object.values(activeBoardColumns).forEach(col => {
         chessboardGroup.remove(col.cylMesh);
@@ -1409,8 +1520,9 @@
       updateSolfeoStepUI(0);
       updateStandingCountUI();
 
-      // Desactivar celdas en la partitura HTML
-      document.querySelectorAll('.partitura-cell').forEach(el => el.classList.remove('active-note'));
+      document.querySelectorAll('.partitura-cell').forEach(el => {
+        el.classList.remove('active-note', 'partner-note');
+      });
     }
 
     function updateStandingCountUI() {
@@ -1420,7 +1532,7 @@
     }
 
     // =========================================================================
-    // 7. MOTOR DE SOLFEO FACTUAL DE LA PARTITURA (5 x 5)
+    // 7. MOTOR DE TRAYECTORIAS Y SOLFEO DE LA PARTITURA
     // =========================================================================
     function setSolfeoDensity(key) {
       activeDensityKey = key;
@@ -1443,7 +1555,6 @@
       renderSolfeoTable();
       buildSolfeoSequence();
 
-      // Si hay columnas vivas, transmutarlas a la nueva densidad
       if (Object.keys(activeBoardColumns).length > 0) {
         solfeoSequence.forEach(item => {
           const key = `${item.u}_${item.v}`;
@@ -1455,55 +1566,96 @@
       }
     }
 
-    function buildSolfeoSequence(onlySubjectIdx = null) {
+    function setSolfeoTrajectory(traj) {
+      solfeoTrajectory = traj;
+      ['row', 'col', 'dialogue'].forEach(t => {
+        const btn = document.getElementById(`btn-traj-${t}`);
+        if (btn) {
+          if (t === traj) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      const labels = {
+        row: '➡️ Fila a Fila (Dación DA)',
+        col: '⬇️ Columna a Columna (Recepción RECIBE)',
+        dialogue: '🔀 Contrapunto Diádico (i,j ⇄ j,i)'
+      };
+      document.getElementById('solfeo-traj-indicator').textContent = labels[traj] || traj;
+
+      buildSolfeoSequence();
+      solfeoCurrentStep = 0;
+      updateSolfeoStepUI(0);
+    }
+
+    function createSequenceItem(i, j, stepNum, opts = {}) {
+      const q81Num = M_NUM[i][j];
+      const coords = Q81_COORDINATES[q81Num] || { u: 4, v: 4, sym: '¡¿?!', name: 'Centro', q6: 'Indiferencia' };
+      const density = DENSITIES[activeDensityKey][i][j];
+      return {
+        step: stepNum,
+        i, j,
+        emitter: SUBJECT_LABELS[i],
+        receiver: SUBJECT_LABELS[j],
+        dyadLabel: `${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]}`,
+        q81Num,
+        u: coords.u,
+        v: coords.v,
+        sym: coords.sym,
+        name: coords.name,
+        q6: coords.q6,
+        density,
+        isSpine: (i === j),
+        isDialogueA: !!opts.isDialogueA,
+        isDialogueB: !!opts.isDialogueB,
+        partnerI: opts.partnerI !== undefined ? opts.partnerI : j,
+        partnerJ: opts.partnerJ !== undefined ? opts.partnerJ : i
+      };
+    }
+
+    function buildSolfeoSequence(filterMode = null, subjectIdx = null) {
       solfeoSequence = [];
       const matD = DENSITIES[activeDensityKey];
 
-      if (onlySubjectIdx !== null && onlySubjectIdx >= 0 && onlySubjectIdx < 5) {
-        // Solfeo exclusivo para la fila del sujeto seleccionado
-        const i = onlySubjectIdx;
+      if (filterMode === 'single_row' && subjectIdx !== null) {
+        // Solfeo exclusivo de la Fila del sujeto (Dación DA)
+        const i = subjectIdx;
         for (let j = 0; j < 5; j++) {
-          const q81Num = M_NUM[i][j];
-          const coords = Q81_COORDINATES[q81Num] || { u: 4, v: 4, sym: '¡¿?!', name: 'Centro', q6: 'Indiferencia' };
-          const density = matD[i][j];
-          solfeoSequence.push({
-            step: solfeoSequence.length + 1,
-            i, j,
-            emitter: SUBJECT_LABELS[i],
-            receiver: SUBJECT_LABELS[j],
-            dyadLabel: `${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]}`,
-            q81Num,
-            u: coords.u,
-            v: coords.v,
-            sym: coords.sym,
-            name: coords.name,
-            q6: coords.q6,
-            density,
-            isSpine: (i === j)
-          });
+          solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1));
+        }
+      } else if (filterMode === 'single_col' && subjectIdx !== null) {
+        // Solfeo exclusivo de la Columna del sujeto (Recepción RECIBE)
+        const j = subjectIdx;
+        for (let i = 0; i < 5; i++) {
+          solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1));
         }
       } else {
-        // Partitura Completa (las 25 celdas de 1A a 5A)
-        for (let i = 0; i < 5; i++) {
+        // Secuencias globales completas (25 notas)
+        if (solfeoTrajectory === 'row') {
+          // ➡️ 1. Fila a Fila (Dación DA)
+          for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+              solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1));
+            }
+          }
+        } else if (solfeoTrajectory === 'col') {
+          // ⬇️ 2. Columna a Columna (Recepción RECIBE)
           for (let j = 0; j < 5; j++) {
-            const q81Num = M_NUM[i][j];
-            const coords = Q81_COORDINATES[q81Num] || { u: 4, v: 4, sym: '¡¿?!', name: 'Centro', q6: 'Indiferencia' };
-            const density = matD[i][j];
-            solfeoSequence.push({
-              step: solfeoSequence.length + 1,
-              i, j,
-              emitter: SUBJECT_LABELS[i],
-              receiver: SUBJECT_LABELS[j],
-              dyadLabel: `${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]}`,
-              q81Num,
-              u: coords.u,
-              v: coords.v,
-              sym: coords.sym,
-              name: coords.name,
-              q6: coords.q6,
-              density,
-              isSpine: (i === j)
-            });
+            for (let i = 0; i < 5; i++) {
+              solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1));
+            }
+          }
+        } else if (solfeoTrajectory === 'dialogue') {
+          // 🔀 3. Contrapunto Diádico (i, j ⇄ j, i)
+          for (let i = 0; i < 5; i++) {
+            // Auto-posición primero
+            solfeoSequence.push(createSequenceItem(i, i, solfeoSequence.length + 1));
+
+            // Parejas en alternancia
+            for (let j = i + 1; j < 5; j++) {
+              solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1, { isDialogueA: true, partnerI: j, partnerJ: i }));
+              solfeoSequence.push(createSequenceItem(j, i, solfeoSequence.length + 1, { isDialogueB: true, partnerI: i, partnerJ: j }));
+            }
           }
         }
       }
@@ -1514,7 +1666,6 @@
       if (!table) return;
       const matD = DENSITIES[activeDensityKey];
 
-      // Calcular medias de fila y de columna
       const rowMeans = [];
       for (let i = 0; i < 5; i++) {
         let sum = 0;
@@ -1583,30 +1734,56 @@
     }
 
     function executeSolfeoItem(item) {
-      // 1. Resaltar celda en partitura
-      document.querySelectorAll('.partitura-cell').forEach(el => el.classList.remove('active-note'));
+      // 1. Resaltar celda activa y celda pareja en la partitura
+      document.querySelectorAll('.partitura-cell').forEach(el => {
+        el.classList.remove('active-note', 'partner-note');
+      });
+
       const activeCell = document.getElementById(`cell-${item.i}-${item.j}`);
       if (activeCell) activeCell.classList.add('active-note');
+
+      const partnerCell = document.getElementById(`cell-${item.j}-${item.i}`);
+      if (partnerCell && !item.isSpine) partnerCell.classList.add('partner-note');
 
       // 2. Erigir o transmutar columna viva en el tablero
       erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
 
-      // 3. Emitir sonido sinestésico 432 Hz
+      // 3. Trazar arco diádico si estamos en contrapunto
+      const counterpartDensity = DENSITIES[activeDensityKey][item.j][item.i];
+      const counterpartQ81 = M_NUM[item.j][item.i];
+      const counterpartCoords = Q81_COORDINATES[counterpartQ81] || { u: item.v, v: item.u };
+      const deltaRecip = Math.abs(item.density - counterpartDensity);
+
+      if (solfeoTrajectory === 'dialogue' && !item.isSpine) {
+        const h1 = item.density * DENSITY_SCALE;
+        const h2 = counterpartDensity * DENSITY_SCALE;
+        showDyadicArc(item.u, item.v, h1, counterpartCoords.u, counterpartCoords.v, h2, deltaRecip);
+      }
+
+      // 4. Paneo de audio espacial (Emisor izquierda, Receptor derecha)
+      let panVal = 0.0;
+      if (item.isDialogueA) panVal = -0.40;
+      else if (item.isDialogueB) panVal = +0.40;
+      else if (solfeoTrajectory === 'row') panVal = (item.j - 2) * 0.20;
+      else if (solfeoTrajectory === 'col') panVal = (item.i - 2) * 0.20;
+
+      // 5. Emitir sonido sinestésico 432 Hz
       playHarmonicChime(item.density, 0.35, {
         isSpine: item.isSpine,
         isDisparity: (item.density < -0.3),
         u: item.u,
-        v: item.v
+        v: item.v,
+        pan: panVal
       });
 
-      // 4. Actualizar ficha de diagnóstico del compás
-      updateSolfeoTelemetryCard(item);
+      // 6. Actualizar ficha de diagnóstico del compás
+      updateSolfeoTelemetryCard(item, deltaRecip, panVal);
 
-      // 5. Actualizar barra de progreso
+      // 7. Actualizar barra de progreso
       updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num, item.density);
     }
 
-    function updateSolfeoTelemetryCard(item) {
+    function updateSolfeoTelemetryCard(item, deltaRecip = 0, panVal = 0) {
       document.getElementById('solfeo-dyad-title').textContent = item.dyadLabel + (item.isSpine ? ' (Auto-posición)' : '');
       document.getElementById('solfeo-q81-title').textContent = `#${item.q81Num} ${item.sym}`;
       document.getElementById('solfeo-grid-cell').textContent = `${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
@@ -1628,10 +1805,42 @@
         strEl.className = 'text-cyan-300 block font-bold';
       }
 
-      // Frecuencia física
       const normVal = item.density / 4.44;
       const f = 216.0 * Math.pow(2, normVal * 1.2);
       document.getElementById('solfeo-freq-val').textContent = `${f.toFixed(1)} Hz ${item.isSpine ? '(Acorde Áureo)' : ''}`;
+
+      // Rol Diádico y Paneo
+      const voiceEl = document.getElementById('solfeo-voice-role');
+      if (item.isSpine) {
+        voiceEl.textContent = 'Auto-posición (Centro)';
+        voiceEl.className = 'text-amber-300 font-bold';
+      } else if (item.isDialogueA) {
+        voiceEl.textContent = `Emisión Primaria (${item.emitter} → ${item.receiver})`;
+        voiceEl.className = 'text-cyan-300 font-bold';
+      } else if (item.isDialogueB) {
+        voiceEl.textContent = `Contrarréplica / Respuesta (${item.emitter} → ${item.receiver})`;
+        voiceEl.className = 'text-emerald-300 font-bold';
+      } else {
+        voiceEl.textContent = `${item.emitter} → ${item.receiver}`;
+        voiceEl.className = 'text-slate-300';
+      }
+
+      // Reciprocidad Diádica
+      const recipRow = document.getElementById('solfeo-recip-row');
+      const recipDeltaEl = document.getElementById('solfeo-recip-delta');
+      if (item.isSpine) {
+        recipDeltaEl.textContent = 'Auto-referencia pura';
+        recipDeltaEl.className = 'text-amber-300 font-bold';
+      } else {
+        const simLabel = (deltaRecip < 0.6) ? 'Simetría Consonante' : (deltaRecip < 1.8 ? 'Asimetría Moderada' : 'Fricción Polarizada');
+        recipDeltaEl.textContent = `Δ = ${deltaRecip.toFixed(2)} (${simLabel})`;
+        recipDeltaEl.className = (deltaRecip < 0.6) ? 'text-emerald-400 font-bold' : (deltaRecip < 1.8 ? 'text-amber-400 font-bold' : 'text-rose-400 font-bold');
+      }
+
+      const panLbl = document.getElementById('solfeo-pan-lbl');
+      if (Math.abs(panVal) < 0.1) panLbl.textContent = '🎧 Panning Centro';
+      else if (panVal < 0) panLbl.textContent = `🎧 Panning Izquierda (${Math.round(Math.abs(panVal)*100)}% L)`;
+      else panLbl.textContent = `🎧 Panning Derecha (${Math.round(panVal*100)}% R)`;
 
       document.getElementById('solfeo-behavior-val').textContent = 'Columna Viva Erigida y Persistente';
     }
@@ -1655,7 +1864,7 @@
       if (isSolfeoPlaying) {
         initAudio();
         if (solfeoSequence.length === 0) buildSolfeoSequence();
-        const speed = parseInt(document.getElementById('solfeo-speed').value, 10) || 420;
+        const speed = parseInt(document.getElementById('solfeo-speed').value, 10) || 450;
 
         solfeoPlayingInterval = setInterval(() => {
           if (solfeoCurrentStep >= solfeoSequence.length) {
@@ -1703,7 +1912,14 @@
 
     function solfeoSubjectRow(subjIdx) {
       if (isSolfeoPlaying) togglePlaySolfeo();
-      buildSolfeoSequence(subjIdx);
+      buildSolfeoSequence('single_row', subjIdx);
+      solfeoCurrentStep = 0;
+      togglePlaySolfeo();
+    }
+
+    function solfeoSubjectCol(subjIdx) {
+      if (isSolfeoPlaying) togglePlaySolfeo();
+      buildSolfeoSequence('single_col', subjIdx);
       solfeoCurrentStep = 0;
       togglePlaySolfeo();
     }
@@ -1732,7 +1948,6 @@
 
         studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
 
-        // 3D: Mostrar Tablero de Ajedrez Vivo y ocultar los 4 acuarios IMAX
         if (chessboardGroup) chessboardGroup.visible = true;
         ['t1', 't2', 't3', 't4'].forEach(k => {
           if (aquariums[k].group) aquariums[k].group.visible = false;
@@ -1752,7 +1967,6 @@
 
         studyKey.textContent = 'SIMUL-AA-G1-T4-C1-V10-A16-ES-5';
 
-        // 3D: Ocultar Tablero y mostrar acuarios IMAX
         if (chessboardGroup) chessboardGroup.visible = false;
         ['t1', 't2', 't3', 't4'].forEach(k => {
           if (aquariums[k].group) aquariums[k].group.visible = true;
@@ -2116,7 +2330,6 @@
       raycaster.setFromCamera(mouse, camera);
 
       if (mainMode === 'solfeo' && chessboardGroup) {
-        // Raycast sobre las casillas del tablero
         const tiles = chessboardGroup.children.filter(c => c.userData && c.userData.cellCode);
         const intersects = raycaster.intersectObjects(tiles);
         if (intersects.length > 0) {
@@ -2124,12 +2337,10 @@
           const u = hit.userData.u;
           const v = hit.userData.v;
 
-          // Buscar si esta casilla corresponde a alguna nota en la partitura
           const found = solfeoSequence.find(item => item.u === u && item.v === v);
           if (found) {
             executeSolfeoItem(found);
           } else {
-            // Nota libre sobre el tablero
             erectOrMorphColumn(u, v, 2.5, `Casilla ${hit.userData.cellCode}`, 41);
             playHarmonicChime(2.5, 0.3, { u, v });
           }
@@ -2172,13 +2383,9 @@
     function animate(time) {
       requestAnimationFrame(animate);
 
-      // Animar columnas vivas del ajedrez
       updateLivingColumnsAnimation();
-
-      // Animar worldlines en modo IMAX
       updateWorldlinesPositions();
 
-      // Micro-órbita cinematográfica suave
       const wobbleEnabled = document.getElementById('chk-wobble').checked;
       if (wobbleEnabled && !isUserInteracting && !isSolfeoPlaying) {
         wobbleTime += 0.005;
