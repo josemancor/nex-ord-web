@@ -203,10 +203,13 @@
       <!-- SELECTOR DE MODO MAESTRO Y METADATOS (REGLA 11) -->
       <div class="flex items-center gap-2 flex-wrap text-xs">
         <div class="flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-sky-500/40">
-          <button onclick="setMainMode('solfeo')" id="btn-mode-solfeo" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/50 bg-amber-950/60 active">
-            ♟️ Ajedrez Vivo (Solfeo 9x9)
+          <button onclick="setMainMode('solfeo')" id="btn-mode-solfeo" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/50 bg-amber-950/60 active" title="Tablero Singular: Solfeo Micro-Relacional y Tablero Corto en Bordes">
+            ♟️ Tablero Singular
           </button>
-          <button onclick="setMainMode('imax')" id="btn-mode-imax" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold">
+          <button onclick="setMainMode('dual')" id="btn-mode-dual" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-cyan-300 border-cyan-500/40" title="Laboratorio Bifocal: Dos Tableros Gemelos DA y RC con Rayos de Resonancia">
+            ⚡⚡ Diálogo Dual DA ⇄ RC
+          </button>
+          <button onclick="setMainMode('imax')" id="btn-mode-imax" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold" title="Sábana Ondulatoria IMAX 4D con Filamentos Trans-Temporales">
             🌊 Sábana IMAX 4D
           </button>
         </div>
@@ -321,6 +324,70 @@
         </div>
       </div>
 
+    </section>
+
+    <!-- ⚡⚡ BARRA DUAL: CONTROLES DEL DIÁLOGO DUAL DA ⇄ RC CON RAYO DE RESONANCIA -->
+    <section id="bar-dual-controls" class="glass-panel rounded-2xl p-2 md:p-2.5 hidden flex-col gap-2 border border-cyan-500/40 shadow-lg shadow-cyan-500/10">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        
+        <!-- Selector de Par de Resonancia -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            PAR DE RESONANCIA:
+          </span>
+          <button onclick="setDualResonancePair('d2_d3')" id="btn-res-d2_d3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-amber-300 active" title="Resonancia Factual: Preferencia Dada (DA) vs Preferencia Recibida (REC)">
+            👉 D2 (DA) ⇄ 📥 D3 (REC) [Factual]
+          </button>
+          <button onclick="setDualResonancePair('d1_d4')" id="btn-res-d1_d4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300" title="Resonancia Metaperceptiva: Expectativa Emitida (p_DA) vs Expectativa Percibida (p_REC)">
+            📤 D1 (p_DA) ⇄ 👁️ D4 (p_REC) [Expectativas]
+          </button>
+          <button onclick="setDualResonancePair('d1_d3')" id="btn-res-d1_d3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-emerald-300" title="Resonancia de Lucidez: Expectativa Emitida vs Realidad Recibida">
+            📤 D1 (p_DA) ⇄ 📥 D3 (REC) [Lucidez]
+          </button>
+        </div>
+
+        <!-- Selector de Recorrido del Diálogo -->
+        <div class="flex items-center gap-1 bg-slate-950/90 border border-sky-500/40 p-1 rounded-xl mono text-xs flex-wrap">
+          <span class="text-[10px] text-slate-400 pl-1 pr-1 font-bold">RECORRIDO:</span>
+          <button onclick="setDualTrajectory('dialogue')" id="btn-dualtraj-dialogue" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-amber-300 active" title="Diálogo Diádico: Recorre las 10 parejas diádicas y las 5 auto-posiciones">
+            🔀 Diálogo Diádico (15)
+          </button>
+          <button onclick="setDualTrajectory('row')" id="btn-dualtraj-row" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300" title="Fila a Fila: Recorre los 25 compases secuenciales de la matriz">
+            ➡️ Fila a Fila (25)
+          </button>
+        </div>
+      </div>
+
+      <!-- Fila Inferior: Reproducción de Rayos y Cadencia -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/70">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
+            <button onclick="resetDualBoards()" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Limpiar ambos tableros a lámina cero">⏮</button>
+            <button onclick="stepDualManual(-1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Diálogo Anterior">◀</button>
+            <button onclick="togglePlayDual()" id="btn-play-dual" class="glass-btn px-3 py-1 rounded-lg text-xs font-bold text-emerald-300 border-emerald-500/50 bg-emerald-950/60 flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
+              <span id="play-dual-icon">⚡</span>
+              <span id="play-dual-lbl">REPRODUCIR RAYOS</span>
+            </button>
+            <button onclick="stepDualManual(1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Diálogo Siguiente">▶</button>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-slate-950/90 border border-sky-900/60 px-2.5 py-1 rounded-xl mono text-xs">
+            <span class="text-[10px] text-slate-400">Cadencia:</span>
+            <select id="dual-speed" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 text-[10px]">
+              <option value="1200">Solemne (1200ms)</option>
+              <option value="750" selected>Normal (750ms)</option>
+              <option value="350">Rápido (350ms)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Indicador de Resonancia en Vivo -->
+        <div class="mono text-[11px] bg-slate-950/80 px-3 py-1 rounded-xl border border-sky-950 flex items-center gap-2">
+          <span class="text-slate-400">FLUJO:</span>
+          <span class="text-cyan-300 font-bold" id="dual-flow-indicator">Tablero DA (L: -0.6) ────⚡────► Tablero RC (R: +0.6)</span>
+        </div>
+      </div>
     </section>
 
     <!-- 🎬 BARRA 2: CONTROLES IMAX 4D (MODO SÁBANA ONDULATORIA) -->
@@ -748,6 +815,9 @@
         <li>
           <strong class="text-amber-300">4. El Tablero Corto de los Marginales (Bordes Perimetrales 3D):</strong> Proyecta en el <strong class="text-cyan-300">Borde Oeste</strong> las 5 columnas de Dación Media (DA), en el <strong class="text-emerald-300">Borde Sur</strong> las 5 columnas de Recepción Media (RECIBE), y en el <strong class="text-amber-400">Vértice Sudoeste</strong> el Monolito Dorado de la Gran Media Global. Permite una lectura macroscópica de los estatus nodales y auditar el balance neto con arcos perimetrales.
         </li>
+        <li>
+          <strong class="text-cyan-300">5. Diálogo Dual DA ⇄ RC con Rayos de Resonancia:</strong> Laboratorio bifocal donde coexisten en el espacio el <strong class="text-cyan-300">Tablero DA (Oeste)</strong> y el <strong class="text-emerald-300">Tablero RC (Este)</strong>. Cada diálogo diádico proyecta una descarga de plasma voltaico que <strong class="text-amber-300">fluye como un rayo</strong> de una celda a otra con barrido acústico binaural (L ➔ R), revelando visualmente la resonancia simétrica armónica (rayo de oro puro) o la disonancia de fricción (rayo magenta abisal).
+        </li>
       </ul>
       <p>
         La <strong class="text-amber-300">Perspectiva Calibrada de 3 Estratos</strong> permite mantener en todo momento una visión simultánea del <strong class="text-emerald-300">Cielo Abierto (+Y)</strong>, la <strong class="text-cyan-300">Superficie de Flotación (Y = 0)</strong> y el <strong class="text-rose-400">Fondo Abisal (-Y)</strong>, garantizando que ninguna columna viva oculte a sus vecinas durante la ejecución polifónica.
@@ -1133,6 +1203,22 @@
     let marginalColumns = { rows: [], cols: [], grand: null };
     let marginalArcMesh = null;
     let marginalGroup = null;
+
+    // ⚡⚡ Objetos del Laboratorio Bifocal 3D: Dos Tableros Gemelos DA y RC con Rayos
+    let dualBoardsGroup = null;
+    let chessboardDAGroup = null;
+    let chessboardRCGroup = null;
+    let lightningGroup = null;
+    let activeBoardColumnsDA = {};
+    let activeBoardColumnsRC = {};
+    let activeLightningBolt = null;
+    let dualResonancePair = 'd2_d3'; // 'd2_d3' | 'd1_d4' | 'd1_d3'
+    let dualTrajectory = 'dialogue'; // 'dialogue' | 'row'
+    let dualSequence = [];
+    let dualCurrentStep = 0;
+    let isDualPlaying = false;
+    let dualPlayingInterval = null;
+    const LIGHTNING_SEGMENTS = 36;
     let activeBoardColumns = {}; // Key: "u_v", Value: { mesh, spine, tip, ring, currentH, targetH, isAlive, density }
     let solfeoPlayingInterval = null;
     let isSolfeoPlaying = false;
@@ -1220,6 +1306,9 @@
 
       // Construcción del Tablero de Ajedrez Vivo 9x9 con los 3 Estratos
       buildChessboardAquarium();
+
+      // Construcción del Laboratorio Bifocal 3D: Dos Tableros DA y RC con Rayos
+      buildDualBoards();
 
       // Construcción de los 4 Acuarios IMAX
       ['t1', 't2', 't3', 't4'].forEach(k => {
@@ -1655,6 +1744,434 @@
       }, 380);
     }
 
+    
+    // =========================================================================
+    // 5.2 CONSTRUCCIÓN DEL LABORATORIO BIFOCAL 3D: DOS TABLEROS DA Y RC CON RAYOS
+    // =========================================================================
+    const DUAL_BOARD_OFFSET_X = 38.0; // Distancia del centro a cada tablero (DA a -38, RC a +38)
+
+    function buildDualBoards() {
+      dualBoardsGroup = new THREE.Group();
+      dualBoardsGroup.visible = false;
+      scene.add(dualBoardsGroup);
+
+      // 1. Tablero DA (Dación / Emisión) en X = -38
+      chessboardDAGroup = createSingleChessboardGroup('DA', 0x00E5FF, -DUAL_BOARD_OFFSET_X, '📤 TABLERO DA: DACIÓN / EMISIÓN');
+      dualBoardsGroup.add(chessboardDAGroup);
+
+      // 2. Tablero RC (Recepción / Absorción) en X = +38
+      chessboardRCGroup = createSingleChessboardGroup('RC', 0x00FF87, +DUAL_BOARD_OFFSET_X, '📥 TABLERO RC: RECEPCIÓN / ABSORCIÓN');
+      dualBoardsGroup.add(chessboardRCGroup);
+
+      // 3. Grupo de Rayos y Arcos de Plasma Inter-Tablero
+      lightningGroup = new THREE.Group();
+      dualBoardsGroup.add(lightningGroup);
+
+      // 4. Lecho Abisal y Techo Celestial Extendidos para Ambos Tableros
+      const dualAbyssGeo = new THREE.PlaneGeometry(DUAL_BOARD_OFFSET_X * 2 + SPAN + 16, SPAN + 16, 20, 10);
+      dualAbyssGeo.rotateX(-Math.PI / 2);
+      const dualAbyssMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.10 });
+      const dualAbyssMesh = new THREE.Mesh(dualAbyssGeo, dualAbyssMat);
+      dualAbyssMesh.position.y = -24;
+      dualBoardsGroup.add(dualAbyssMesh);
+
+      const dualSkyGeo = new THREE.PlaneGeometry(DUAL_BOARD_OFFSET_X * 2 + SPAN + 16, SPAN + 16, 20, 10);
+      dualSkyGeo.rotateX(-Math.PI / 2);
+      const dualSkyMat = new THREE.MeshBasicMaterial({ color: 0x00FF87, wireframe: true, transparent: true, opacity: 0.08 });
+      const dualSkyMesh = new THREE.Mesh(dualSkyGeo, dualSkyMat);
+      dualSkyMesh.position.y = 24;
+      dualBoardsGroup.add(dualSkyMesh);
+
+      // Rótulos 3D de Orientación Cósmica
+      const badgeSkyDual = createTitleBadge('🌌 CIELO ABIERTO (+Y)', '#00FF87', 480, 110);
+      badgeSkyDual.position.set(0, 23.5, -SPAN / 2 - 4.5);
+      dualBoardsGroup.add(badgeSkyDual);
+
+      const badgeBridgeDual = createTitleBadge('⚡ CANAL INTER-TABLERO DE RESONANCIAS', '#FFE600', 640, 100);
+      badgeBridgeDual.position.set(0, 1.2, 0);
+      dualBoardsGroup.add(badgeBridgeDual);
+
+      const badgeAbyssDual = createTitleBadge('⚓ FONDO ABISAL (-Y)', '#FF007F', 480, 110);
+      badgeAbyssDual.position.set(0, -23.5, -SPAN / 2 - 4.5);
+      dualBoardsGroup.add(badgeAbyssDual);
+    }
+
+    /**
+     * Crea un tablero 9x9 con su marco de color, coordenadas y losetas de cristal
+     */
+    function createSingleChessboardGroup(boardType, themeColor, posX, titleLabel) {
+      const group = new THREE.Group();
+      group.position.x = posX;
+
+      const tileWidth = STEP * 0.94;
+      const tileThickness = 0.4;
+      const tileGeo = new THREE.BoxGeometry(tileWidth, tileThickness, tileWidth);
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const x = (v - 4) * STEP;
+          const z = (u - 4) * STEP;
+          const isSpine = (u === v);
+          const isEven = (u + v) % 2 === 0;
+
+          let tileColor = isEven ? 0x071126 : 0x0C1C3D;
+          let tileOpacity = 0.82;
+          let tileEmissive = 0x000000;
+
+          if (isSpine) {
+            tileColor = 0x221D06;
+            tileEmissive = 0x332800;
+            tileOpacity = 0.92;
+          }
+
+          const tileMat = new THREE.MeshPhongMaterial({
+            color: tileColor,
+            emissive: tileEmissive,
+            transparent: true,
+            opacity: tileOpacity,
+            shininess: 95
+          });
+
+          const tile = new THREE.Mesh(tileGeo, tileMat);
+          tile.position.set(x, -tileThickness / 2, z);
+          tile.userData = { boardType, u, v, isSpine, cellCode: getFigureCode(u, v) };
+          group.add(tile);
+
+          if (isSpine) {
+            const edgeGeo = new THREE.EdgesGeometry(tileGeo);
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0xFFE600, transparent: true, opacity: 0.65 });
+            const edge = new THREE.LineSegments(edgeGeo, edgeMat);
+            edge.position.copy(tile.position);
+            group.add(edge);
+          }
+        }
+      }
+
+      // Marco perimetral con el color temático
+      const boardFrameGeo = new THREE.BoxGeometry(SPAN + 2.5, 0.6, SPAN + 2.5);
+      const boardFrameEdge = new THREE.EdgesGeometry(boardFrameGeo);
+      const boardFrameMat = new THREE.LineBasicMaterial({ color: themeColor, transparent: true, opacity: 0.85 });
+      const boardFrame = new THREE.LineSegments(boardFrameEdge, boardFrameMat);
+      boardFrame.position.set(0, -0.3, 0);
+      group.add(boardFrame);
+
+      // Coordenadas periféricas
+      ROWS_EMISSION.forEach((letter, u) => {
+        const badge = createTitleBadge(letter, boardType === 'DA' ? '#38BDF8' : '#00FF87', 90, 90);
+        badge.scale.set(3.2, 3.2, 1);
+        badge.position.set(-SPAN / 2 - 3.2, 0.4, (u - 4) * STEP);
+        group.add(badge);
+      });
+
+      COLS_RECEPTION.forEach((num, v) => {
+        const badge = createTitleBadge(num, boardType === 'DA' ? '#38BDF8' : '#00FF87', 90, 90);
+        badge.scale.set(3.2, 3.2, 1);
+        badge.position.set((v - 4) * STEP, 0.4, SPAN / 2 + 3.2);
+        group.add(badge);
+      });
+
+      // Título 3D Flotante del Tablero
+      const titleBadge = createTitleBadge(titleLabel, boardType === 'DA' ? '#00E5FF' : '#00FF87', 560, 95);
+      titleBadge.position.set(0, 1.2, -SPAN / 2 - 5.0);
+      group.add(titleBadge);
+
+      return group;
+    }
+
+    /**
+     * Erige o transmuta una columna viva en uno de los tableros duales
+     */
+    function erectDualColumn(boardType, u, v, densityVal, dyadLabel, q81Num) {
+      const group = boardType === 'DA' ? chessboardDAGroup : chessboardRCGroup;
+      const dict = boardType === 'DA' ? activeBoardColumnsDA : activeBoardColumnsRC;
+      if (!group) return;
+
+      const key = `${u}_${v}`;
+      const x = (v - 4) * STEP;
+      const z = (u - 4) * STEP;
+      const targetH = densityVal * DENSITY_SCALE;
+      const isSpine = (u === v);
+
+      let colColor = boardType === 'DA' ? 0x00E5FF : 0x00FF87;
+      if (isSpine) colColor = 0xFFE600;
+      else if (densityVal < -0.3) colColor = 0xFF007F;
+
+      if (dict[key]) {
+        const colObj = dict[key];
+        colObj.targetH = targetH;
+        colObj.density = densityVal;
+        colObj.dyadLabel = dyadLabel;
+        colObj.q81Num = q81Num;
+        colObj.colorHex = colColor;
+        colObj.colMat.color.setHex(colColor);
+        colObj.tipMat.color.setHex(colColor);
+      } else {
+        const colMat = new THREE.MeshPhongMaterial({
+          color: colColor,
+          transparent: true,
+          opacity: 0.88,
+          shininess: 90,
+          side: THREE.DoubleSide
+        });
+
+        const cylGeo = new THREE.CylinderGeometry(0.9, 0.9, 1, 24);
+        cylGeo.translate(0, 0.5, 0);
+        const cylMesh = new THREE.Mesh(cylGeo, colMat);
+        cylMesh.position.set(x, 0, z);
+        group.add(cylMesh);
+
+        const tipGeo = new THREE.SphereGeometry(1.25, 18, 18);
+        const tipMat = new THREE.MeshPhongMaterial({
+          color: colColor,
+          emissive: colColor,
+          emissiveIntensity: 0.4,
+          shininess: 100
+        });
+        const tipMesh = new THREE.Mesh(tipGeo, tipMat);
+        tipMesh.position.set(x, 0, z);
+        group.add(tipMesh);
+
+        const spinePts = [new THREE.Vector3(x, 0, z), new THREE.Vector3(x, 1, z)];
+        const spineGeo = new THREE.BufferGeometry().setFromPoints(spinePts);
+        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({
+          color: 0xFFFFFF,
+          transparent: true,
+          opacity: 0.85
+        }));
+        group.add(spineLine);
+
+        dict[key] = {
+          key, boardType, u, v,
+          density: densityVal,
+          currentH: 0.08,
+          targetH,
+          cylMesh, tipMesh, spineLine, colMat, tipMat,
+          dyadLabel, q81Num
+        };
+      }
+    }
+
+    /**
+     * Genera un arco luminoso procedural que fluye como un rayo de plasma entre DA y RC
+     */
+    function fireDualLightning(uDA, vDA, denDA, uRC, vRC, denRC, dyadLabel) {
+      if (!lightningGroup) return;
+      clearDualLightning();
+
+      // Coordenadas absolutas en la escena global 3D
+      const x1 = -DUAL_BOARD_OFFSET_X + (vDA - 4) * STEP;
+      const y1 = denDA * DENSITY_SCALE;
+      const z1 = (uDA - 4) * STEP;
+
+      const x2 = +DUAL_BOARD_OFFSET_X + (vRC - 4) * STEP;
+      const y2 = denRC * DENSITY_SCALE;
+      const z2 = (uRC - 4) * STEP;
+
+      const p1 = new THREE.Vector3(x1, y1, z1);
+      const p2 = new THREE.Vector3(x2, y2, z2);
+      const dist = p1.distanceTo(p2);
+
+      const pMid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+      pMid.y = Math.max(y1, y2) + Math.max(14.0, dist * 0.28);
+
+      const baseCurve = new THREE.QuadraticBezierCurve3(p1, pMid, p2);
+      const basePoints = baseCurve.getPoints(LIGHTNING_SEGMENTS);
+
+      // Delta de resonancia física
+      const delta = Math.abs(denDA - denRC);
+      let arcColor = 0x00FF87;
+      let colorName = 'Verde Neón (Resonancia Armónica)';
+      if (delta <= 0.20) {
+        arcColor = 0xFFE600; // Oro puro
+        colorName = 'Oro Solar (Resonancia Simétrica Plena)';
+      } else if (delta <= 1.4) {
+        arcColor = 0xFF9F1C; // Ámbar
+        colorName = 'Ámbar Neón (Asimetría / Tensión Leve)';
+      } else {
+        arcColor = 0xFF007F; // Magenta
+        colorName = 'Magenta Fosa (Disonancia / Fricción)';
+      }
+
+      // 1. Núcleo de Plasma Blanco
+      const coreGeo = new THREE.BufferGeometry().setFromPoints(basePoints);
+      const coreMat = new THREE.LineBasicMaterial({
+        color: 0xFFFFFF,
+        linewidth: 2.0,
+        transparent: true,
+        opacity: 0.95
+      });
+      const coreLine = new THREE.Line(coreGeo, coreMat);
+      lightningGroup.add(coreLine);
+
+      // 2. Envoltura de Descarga Eléctrica Neón
+      const glowGeo = new THREE.BufferGeometry().setFromPoints(basePoints);
+      const glowMat = new THREE.LineBasicMaterial({
+        color: arcColor,
+        linewidth: 4.5,
+        transparent: true,
+        opacity: 0.85
+      });
+      const glowLine = new THREE.Line(glowGeo, glowMat);
+      lightningGroup.add(glowLine);
+
+      // 3. Orbe de Plasma Viajero (La Chispa que viaja por el rayo)
+      const sparkGeo = new THREE.SphereGeometry(1.6, 16, 16);
+      const sparkMat = new THREE.MeshPhongMaterial({
+        color: 0xFFFFFF,
+        emissive: arcColor,
+        emissiveIntensity: 0.9,
+        shininess: 100
+      });
+      const sparkMesh = new THREE.Mesh(sparkGeo, sparkMat);
+      sparkMesh.position.copy(p1);
+      lightningGroup.add(sparkMesh);
+
+      // 4. Luz de Descarga Puntual en el Vértice
+      const boltLight = new THREE.PointLight(arcColor, 2.5, 50);
+      boltLight.position.copy(p1);
+      lightningGroup.add(boltLight);
+
+      activeLightningBolt = {
+        p1, p2, pMid,
+        baseCurve,
+        basePoints,
+        coreLine,
+        glowLine,
+        sparkMesh,
+        boltLight,
+        arcColor,
+        colorName,
+        delta,
+        startTime: performance.now(),
+        duration: 750 // ms
+      };
+    }
+
+    function clearDualLightning() {
+      if (!activeLightningBolt || !lightningGroup) return;
+      const b = activeLightningBolt;
+      lightningGroup.remove(b.coreLine);
+      lightningGroup.remove(b.glowLine);
+      lightningGroup.remove(b.sparkMesh);
+      lightningGroup.remove(b.boltLight);
+
+      if (b.coreLine.geometry) b.coreLine.geometry.dispose();
+      if (b.coreLine.material) b.coreLine.material.dispose();
+      if (b.glowLine.geometry) b.glowLine.geometry.dispose();
+      if (b.glowLine.material) b.glowLine.material.dispose();
+      if (b.sparkMesh.geometry) b.sparkMesh.geometry.dispose();
+      if (b.sparkMesh.material) b.sparkMesh.material.dispose();
+
+      activeLightningBolt = null;
+    }
+
+    function updateLightningAnimation(now) {
+      if (!activeLightningBolt) return;
+      const b = activeLightningBolt;
+      const elapsed = now - b.startTime;
+      const progress = Math.min(1.0, elapsed / b.duration);
+
+      // Jitter procedural fractal en cada vértice intermedio (arco que fluye como un rayo)
+      const pts = [];
+      const jitterAmp = Math.sin(progress * Math.PI) * 1.5;
+      for (let k = 0; k <= LIGHTNING_SEGMENTS; k++) {
+        const pt = b.basePoints[k].clone();
+        if (k > 0 && k < LIGHTNING_SEGMENTS) {
+          pt.x += (Math.random() - 0.5) * jitterAmp * 1.6;
+          pt.y += (Math.random() - 0.5) * jitterAmp * 1.8;
+          pt.z += (Math.random() - 0.5) * jitterAmp * 1.6;
+        }
+        pts.push(pt);
+      }
+
+      b.coreLine.geometry.setFromPoints(pts);
+      b.glowLine.geometry.setFromPoints(pts);
+
+      // Desplazar la chispa viajera a lo largo de la curva
+      const sparkPos = b.baseCurve.getPoint(progress);
+      b.sparkMesh.position.copy(sparkPos);
+      b.boltLight.position.copy(sparkPos);
+
+      // Pulsación luminosa de la chispa
+      const sparkScale = 1.3 + Math.sin(now * 0.03) * 0.4;
+      b.sparkMesh.scale.set(sparkScale, sparkScale, sparkScale);
+
+      // Si completó el viaje: atenuar brillo progresivamente
+      if (progress >= 1.0) {
+        const fade = Math.max(0, 1.0 - (elapsed - b.duration) / 450);
+        b.coreLine.material.opacity = fade * 0.95;
+        b.glowLine.material.opacity = fade * 0.85;
+        b.sparkMesh.material.opacity = fade;
+        b.boltLight.intensity = fade * 2.5;
+
+        if (fade <= 0.02) {
+          clearDualLightning();
+        }
+      }
+    }
+
+    /**
+     * Barrido acústico estéreo envolvente a 432 Hz que fluye de Izquierda (DA) a Derecha (RC)
+     */
+    function playDualSweepTone(denDA, denRC, delta, durationMs = 750) {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const now = audioCtx.currentTime;
+        const dur = durationMs * 0.001;
+
+        const normDA = (denDA || 0) / 4.44;
+        const normRC = (denRC || 0) / 4.44;
+        const fDA = 216.0 * Math.pow(2, normDA * 1.2);
+        const fRC = 216.0 * Math.pow(2, normRC * 1.2);
+
+        // Panner que viaja de izquierda (-0.60) a derecha (+0.60)
+        let panner = null;
+        if (audioCtx.createStereoPanner) {
+          panner = audioCtx.createStereoPanner();
+          panner.pan.setValueAtTime(-0.60, now);
+          panner.pan.linearRampToValueAtTime(0.60, now + dur);
+          panner.connect(masterGain);
+        }
+        const targetDest = panner || masterGain;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = (delta > 1.4) ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(fDA, now);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(40, fRC), now + dur);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.32, now + dur * 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.1);
+
+        osc.connect(gain);
+        gain.connect(targetDest);
+        osc.start(now);
+        osc.stop(now + dur + 0.15);
+
+        // Impacto resonante final a la derecha (+0.6)
+        setTimeout(() => {
+          if (!audioEnabled || !audioCtx) return;
+          const hitNow = audioCtx.currentTime;
+          const hitOsc = audioCtx.createOscillator();
+          const hitGain = audioCtx.createGain();
+          hitOsc.type = 'sine';
+          hitOsc.frequency.setValueAtTime(fRC * (delta <= 0.20 ? 1.5 : 1.0), hitNow);
+          hitGain.gain.setValueAtTime(0.0001, hitNow);
+          hitGain.gain.linearRampToValueAtTime(0.24, hitNow + 0.02);
+          hitGain.gain.exponentialRampToValueAtTime(0.0001, hitNow + 0.4);
+          hitOsc.connect(hitGain);
+          hitGain.connect(targetDest);
+          hitOsc.start(hitNow);
+          hitOsc.stop(hitNow + 0.45);
+        }, durationMs * 0.85);
+
+      } catch (e) {
+        console.error('Audio sweep error:', e);
+      }
+    }
+
         // =========================================================================
     // 6. MOTOR DE COLUMNAS VIVAS Y ARCOS DIÁDICOS EN 3D
     // =========================================================================
@@ -1786,7 +2303,34 @@
       chessboardGroup.add(dyadicArcMesh);
     }
 
-    function updateLivingColumnsAnimation() {
+
+    function updateDualColumnsAnimation() {
+      if (!chessboardDAGroup || !chessboardRCGroup) return;
+
+      Object.values(activeBoardColumnsDA).forEach(col => {
+        col.currentH += (col.targetH - col.currentH) * 0.14;
+        const absH = Math.max(0.08, Math.abs(col.currentH));
+        const dir = col.currentH >= 0 ? 1 : -1;
+        col.cylMesh.scale.set(1, absH * dir, 1);
+        col.tipMesh.position.y = col.currentH;
+        const posAttr = col.spineLine.geometry.attributes.position;
+        posAttr.setY(1, col.currentH);
+        posAttr.needsUpdate = true;
+      });
+
+      Object.values(activeBoardColumnsRC).forEach(col => {
+        col.currentH += (col.targetH - col.currentH) * 0.14;
+        const absH = Math.max(0.08, Math.abs(col.currentH));
+        const dir = col.currentH >= 0 ? 1 : -1;
+        col.cylMesh.scale.set(1, absH * dir, 1);
+        col.tipMesh.position.y = col.currentH;
+        const posAttr = col.spineLine.geometry.attributes.position;
+        posAttr.setY(1, col.currentH);
+        posAttr.needsUpdate = true;
+      });
+    }
+
+        function updateLivingColumnsAnimation() {
       if (mainMode !== 'solfeo' || !chessboardGroup) return;
 
       Object.values(activeBoardColumns).forEach(col => {
@@ -2472,31 +3016,252 @@
       togglePlaySolfeo();
     }
 
+
     // =========================================================================
+    // 7.1 LÓGICA Y SECUENCIACIÓN DEL DIÁLOGO DUAL CON RAYOS
+    // =========================================================================
+    function setDualResonancePair(pair) {
+      dualResonancePair = pair;
+      ['d2_d3', 'd1_d4', 'd1_d3'].forEach(p => {
+        const btn = document.getElementById(`btn-res-${p}`);
+        if (btn) {
+          if (p === pair) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+      buildDualSequence();
+      dualCurrentStep = 0;
+      updateDualStepUI(0);
+    }
+
+    function setDualTrajectory(traj) {
+      dualTrajectory = traj;
+      ['dialogue', 'row'].forEach(t => {
+        const btn = document.getElementById(`btn-dualtraj-${t}`);
+        if (btn) {
+          if (t === traj) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+      buildDualSequence();
+      dualCurrentStep = 0;
+      updateDualStepUI(0);
+    }
+
+    function buildDualSequence() {
+      dualSequence = [];
+      let keyDA = 'D2', keyRC = 'D3';
+      if (dualResonancePair === 'd1_d4') { keyDA = 'D1'; keyRC = 'D4'; }
+      else if (dualResonancePair === 'd1_d3') { keyDA = 'D1'; keyRC = 'D3'; }
+
+      const matDA = DENSITIES[keyDA];
+      const matRC = DENSITIES[keyRC];
+
+      if (dualTrajectory === 'dialogue') {
+        // 1. Las 5 Auto-posiciones de identidad
+        for (let i = 0; i < 5; i++) {
+          const q81NumDA = M_NUM[i][i];
+          const coordsDA = Q81_COORDINATES[q81NumDA] || { u: 0, v: 0, sym: '<Ee>' };
+          const q81NumRC = M_NUM[i][i];
+          const coordsRC = Q81_COORDINATES[q81NumRC] || { u: 0, v: 0, sym: '<Ee>' };
+
+          dualSequence.push({
+            step: dualSequence.length + 1,
+            i, j: i,
+            isSpine: true,
+            emitter: SUBJECT_LABELS[i], receiver: SUBJECT_LABELS[i],
+            dyadLabel: `${SUBJECT_LABELS[i]} ⇄ ${SUBJECT_LABELS[i]}`,
+            uDA: coordsDA.u, vDA: coordsDA.v, q81DA: q81NumDA, denDA: matDA[i][i],
+            uRC: coordsRC.u, vRC: coordsRC.v, q81RC: q81NumRC, denRC: matRC[i][i]
+          });
+        }
+
+        // 2. Las 10 Parejas Diádicas (i, j)
+        for (let i = 0; i < 5; i++) {
+          for (let j = i + 1; j < 5; j++) {
+            const q81NumDA = M_NUM[i][j];
+            const coordsDA = Q81_COORDINATES[q81NumDA] || { u: 4, v: 4, sym: '¡¿?!' };
+            const q81NumRC = M_NUM[j][i];
+            const coordsRC = Q81_COORDINATES[q81NumRC] || { u: 4, v: 4, sym: '¡¿?!' };
+
+            dualSequence.push({
+              step: dualSequence.length + 1,
+              i, j,
+              isSpine: false,
+              emitter: SUBJECT_LABELS[i], receiver: SUBJECT_LABELS[j],
+              dyadLabel: `${SUBJECT_LABELS[i]} ⇄ ${SUBJECT_LABELS[j]}`,
+              uDA: coordsDA.u, vDA: coordsDA.v, q81DA: q81NumDA, denDA: matDA[i][j],
+              uRC: coordsRC.u, vRC: coordsRC.v, q81RC: q81NumRC, denRC: matRC[j][i]
+            });
+          }
+        }
+      } else {
+        // Recorrido Fila a Fila (25)
+        for (let i = 0; i < 5; i++) {
+          for (let j = 0; j < 5; j++) {
+            const q81NumDA = M_NUM[i][j];
+            const coordsDA = Q81_COORDINATES[q81NumDA] || { u: 4, v: 4, sym: '¡¿?!' };
+            const q81NumRC = M_NUM[j][i];
+            const coordsRC = Q81_COORDINATES[q81NumRC] || { u: 4, v: 4, sym: '¡¿?!' };
+
+            dualSequence.push({
+              step: dualSequence.length + 1,
+              i, j,
+              isSpine: (i === j),
+              emitter: SUBJECT_LABELS[i], receiver: SUBJECT_LABELS[j],
+              dyadLabel: `${SUBJECT_LABELS[i]} ➔ ${SUBJECT_LABELS[j]}`,
+              uDA: coordsDA.u, vDA: coordsDA.v, q81DA: q81NumDA, denDA: matDA[i][j],
+              uRC: coordsRC.u, vRC: coordsRC.v, q81RC: q81NumRC, denRC: matRC[j][i]
+            });
+          }
+        }
+      }
+    }
+
+    function executeDualItem(item) {
+      if (!item) return;
+
+      // 1. Erigir columna en Tablero DA (Izquierda)
+      erectDualColumn('DA', item.uDA, item.vDA, item.denDA, item.dyadLabel, item.q81DA);
+
+      // 2. Erigir columna en Tablero RC (Derecha)
+      erectDualColumn('RC', item.uRC, item.vRC, item.denRC, item.dyadLabel, item.q81RC);
+
+      // 3. Disparar el Rayo Eléctrico que fluye entre ambas celdas
+      fireDualLightning(item.uDA, item.vDA, item.denDA, item.uRC, item.vRC, item.denRC, item.dyadLabel);
+
+      // 4. Barrido Sonoro Estéreo 432 Hz
+      const delta = Math.abs(item.denDA - item.denRC);
+      playDualSweepTone(item.denDA, item.denRC, delta, 750);
+
+      // 5. Actualizar interfaz y ficha
+      updateDualStepUI(item.step, item.dyadLabel, delta, item);
+    }
+
+    function updateDualStepUI(step, dyad = '', delta = 0, item = null) {
+      const total = dualSequence.length || 15;
+      const indicator = document.getElementById('dual-flow-indicator');
+      if (step === 0) {
+        if (indicator) indicator.textContent = 'Pulsa REPRODUCIR RAYOS para iniciar el diálogo inter-tablero';
+      } else if (item) {
+        const signDA = item.denDA >= 0 ? '+' : '';
+        const signRC = item.denRC >= 0 ? '+' : '';
+        if (indicator) {
+          indicator.innerHTML = `Diálogo ${step}/${total}: <strong class="text-white">${dyad}</strong> • DA: ${signDA}${item.denDA.toFixed(2)} ────⚡[Δ = ${delta.toFixed(2)}]────► RC: ${signRC}${item.denRC.toFixed(2)}`;
+        }
+      }
+    }
+
+    function resetDualBoards() {
+      if (dualPlayingInterval) clearInterval(dualPlayingInterval);
+      isDualPlaying = false;
+      updatePlayDualButtonUI();
+      clearDualLightning();
+
+      if (chessboardDAGroup) {
+        Object.values(activeBoardColumnsDA).forEach(col => {
+          chessboardDAGroup.remove(col.cylMesh);
+          chessboardDAGroup.remove(col.tipMesh);
+          chessboardDAGroup.remove(col.spineLine);
+        });
+      }
+      activeBoardColumnsDA = {};
+
+      if (chessboardRCGroup) {
+        Object.values(activeBoardColumnsRC).forEach(col => {
+          chessboardRCGroup.remove(col.cylMesh);
+          chessboardRCGroup.remove(col.tipMesh);
+          chessboardRCGroup.remove(col.spineLine);
+        });
+      }
+      activeBoardColumnsRC = {};
+
+      dualCurrentStep = 0;
+      updateDualStepUI(0);
+    }
+
+    function togglePlayDual() {
+      isDualPlaying = !isDualPlaying;
+      updatePlayDualButtonUI();
+
+      if (isDualPlaying) {
+        initAudio();
+        if (dualSequence.length === 0) buildDualSequence();
+        const speed = parseInt(document.getElementById('dual-speed').value, 10) || 750;
+
+        dualPlayingInterval = setInterval(() => {
+          if (dualCurrentStep >= dualSequence.length) {
+            dualCurrentStep = 0;
+          }
+          executeDualItem(dualSequence[dualCurrentStep]);
+          dualCurrentStep++;
+        }, speed);
+      } else {
+        if (dualPlayingInterval) clearInterval(dualPlayingInterval);
+      }
+    }
+
+    function updatePlayDualButtonUI() {
+      const icon = document.getElementById('play-dual-icon');
+      const lbl = document.getElementById('play-dual-lbl');
+      const btn = document.getElementById('btn-play-dual');
+      if (!btn) return;
+      if (isDualPlaying) {
+        if (icon) icon.textContent = '⏸';
+        if (lbl) lbl.textContent = 'PAUSAR RAYOS';
+        btn.classList.add('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
+        btn.classList.remove('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
+      } else {
+        if (icon) icon.textContent = '⚡';
+        if (lbl) lbl.textContent = 'REPRODUCIR RAYOS';
+        btn.classList.remove('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
+        btn.classList.add('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
+      }
+    }
+
+    function stepDualManual(dir) {
+      if (isDualPlaying) togglePlayDual();
+      if (dualSequence.length === 0) buildDualSequence();
+      dualCurrentStep += dir;
+      if (dualCurrentStep > dualSequence.length) dualCurrentStep = 1;
+      if (dualCurrentStep < 1) dualCurrentStep = dualSequence.length;
+      executeDualItem(dualSequence[dualCurrentStep - 1]);
+    }
+
+        // =========================================================================
     // 8. CONMUTACIÓN DE MODO MAESTRO: AJEDREZ VIVO VS SÁBANA IMAX 4D
     // =========================================================================
     function setMainMode(mode) {
       mainMode = mode;
       const btnSolfeo = document.getElementById('btn-mode-solfeo');
+      const btnDual = document.getElementById('btn-mode-dual');
       const btnImax = document.getElementById('btn-mode-imax');
+
       const barSolfeo = document.getElementById('bar-solfeo-controls');
+      const barDual = document.getElementById('bar-dual-controls');
       const barImax = document.getElementById('bar-imax-controls');
+
       const panelSolfeo = document.getElementById('panel-solfeo-mode');
       const panelImax = document.getElementById('panel-imax-mode');
       const studyKey = document.getElementById('study-key');
 
-      if (mode === 'solfeo') {
-        btnSolfeo.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
-        btnImax.classList.remove('active', 'border-amber-500/50', 'bg-amber-950/60');
+      // Limpiar estados de botones
+      [btnSolfeo, btnDual, btnImax].forEach(b => {
+        if (b) b.classList.remove('active', 'border-amber-500/50', 'bg-amber-950/60', 'border-cyan-500/50', 'bg-cyan-950/60');
+      });
 
-        barSolfeo.classList.remove('hidden');
-        barImax.classList.add('hidden');
-        panelSolfeo.classList.remove('hidden');
-        panelImax.classList.add('hidden');
+      if (mode === 'solfeo') {
+        if (btnSolfeo) btnSolfeo.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
+        if (barSolfeo) barSolfeo.classList.remove('hidden');
+        if (barDual) barDual.classList.add('hidden');
+        if (barImax) barImax.classList.add('hidden');
+        if (panelSolfeo) panelSolfeo.classList.remove('hidden');
+        if (panelImax) panelImax.classList.add('hidden');
 
         studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
 
         if (chessboardGroup) chessboardGroup.visible = true;
+        if (dualBoardsGroup) dualBoardsGroup.visible = false;
         ['t1', 't2', 't3', 't4'].forEach(k => {
           if (aquariums[k].group) aquariums[k].group.visible = false;
         });
@@ -2504,18 +3269,39 @@
 
         apply3EstratosView();
 
-      } else {
-        btnImax.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
-        btnSolfeo.classList.remove('active', 'border-amber-500/50', 'bg-amber-950/60');
+      } else if (mode === 'dual') {
+        if (btnDual) btnDual.classList.add('active', 'border-cyan-500/50', 'bg-cyan-950/60');
+        if (barDual) barDual.classList.remove('hidden');
+        if (barSolfeo) barSolfeo.classList.add('hidden');
+        if (barImax) barImax.classList.add('hidden');
+        if (panelSolfeo) panelSolfeo.classList.remove('hidden');
+        if (panelImax) panelImax.classList.add('hidden');
 
-        barImax.classList.remove('hidden');
-        barSolfeo.classList.add('hidden');
-        panelImax.classList.remove('hidden');
-        panelSolfeo.classList.add('hidden');
+        studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
+
+        if (chessboardGroup) chessboardGroup.visible = false;
+        if (dualBoardsGroup) dualBoardsGroup.visible = true;
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          if (aquariums[k].group) aquariums[k].group.visible = false;
+        });
+        if (worldlinesGroup) worldlinesGroup.visible = false;
+
+        applyDualBoardsView();
+        buildDualSequence();
+        updateDualStepUI(0);
+
+      } else {
+        if (btnImax) btnImax.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
+        if (barImax) barImax.classList.remove('hidden');
+        if (barSolfeo) barSolfeo.classList.add('hidden');
+        if (barDual) barDual.classList.add('hidden');
+        if (panelImax) panelImax.classList.remove('hidden');
+        if (panelSolfeo) panelSolfeo.classList.add('hidden');
 
         studyKey.textContent = 'SIMUL-AA-G1-T4-C1-V10-A16-ES-5';
 
         if (chessboardGroup) chessboardGroup.visible = false;
+        if (dualBoardsGroup) dualBoardsGroup.visible = false;
         ['t1', 't2', 't3', 't4'].forEach(k => {
           if (aquariums[k].group) aquariums[k].group.visible = true;
         });
@@ -2523,6 +3309,17 @@
 
         setViewLayout(viewLayout);
       }
+    }
+
+    function applyDualBoardsView() {
+      const dist = 168;
+      const elev = 0.42; // ~24 grados
+      const azim = -0.30; // ~ -17 grados
+      camera.position.x = dist * Math.sin(azim) * Math.cos(elev);
+      camera.position.y = dist * Math.sin(elev);
+      camera.position.z = dist * Math.cos(azim) * Math.cos(elev);
+      controls.target.set(0, 0, 0);
+      controls.update();
     }
 
     // =========================================================================
@@ -2955,6 +3752,10 @@
       requestAnimationFrame(animate);
 
       updateLivingColumnsAnimation();
+      if (mainMode === 'dual') {
+        updateDualColumnsAnimation();
+        updateLightningAnimation(time);
+      }
       updateWorldlinesPositions();
 
       const wobbleEnabled = document.getElementById('chk-wobble').checked;
