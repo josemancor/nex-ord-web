@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VISORD Cinema • Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9) & Sábana IMAX 4D en Q81</title>
+  <title>VISORD Cinema • Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9, Trayecto Largo & Tablero Corto) & Sábana IMAX 4D en Q81</title>
   
   <!-- Three.js & OrbitControls: Carga primaria local de alta velocidad + Fallback dinámico CDN -->
   <script src="lib/three.min.js"></script>
@@ -196,7 +196,7 @@
             </h1>
             <span class="mono text-[10px] bg-gradient-to-r from-amber-500/30 via-emerald-500/30 to-cyan-500/30 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-full font-bold">EL IMAX DE LOS GRUPOS</span>
           </div>
-          <p class="text-[11px] text-slate-400 mono">Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9) & Sábana IMAX 4D en Q81</p>
+          <p class="text-[11px] text-slate-400 mono">Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9, Trayecto Largo & Tablero Corto) & Sábana IMAX 4D en Q81</p>
         </div>
       </div>
 
@@ -244,18 +244,49 @@
           </button>
         </div>
 
-        <!-- Selector de Trayectoria del Solfeo (Fila DA / Columna RECIBE / Contrapunto Diádico) -->
+        <!-- Selector de Escala de Solfeo: Trayecto Largo vs Tablero Corto -->
+        <div class="flex items-center gap-1 bg-slate-950/90 border border-amber-500/40 p-1 rounded-xl mono text-xs flex-wrap">
+          <span class="text-[10px] text-amber-400 pl-1 pr-1 font-bold">ESCALA:</span>
+          <button onclick="setSolfeoScale('long')" id="btn-scale-long" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-amber-300 active" title="Trayecto Largo: Los 25 compases micro-relacionales en la matriz (N x N)">
+            🎼 Trayecto Largo (25)
+          </button>
+          <button onclick="setSolfeoScale('short')" id="btn-scale-short" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300" title="Tablero Corto: Los promedios nodales en los bordes perimetrales del tablero">
+            ⚡ Tablero Corto (Marginales)
+          </button>
+        </div>
+
+        <!-- Selector de Trayectoria según Escala Activa -->
         <div class="flex items-center gap-1 bg-slate-950/90 border border-sky-500/40 p-1 rounded-xl mono text-xs flex-wrap">
           <span class="text-[10px] text-slate-400 pl-1 pr-1 font-bold">MELODÍA:</span>
-          <button onclick="setSolfeoTrajectory('row')" id="btn-traj-row" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300 active" title="Solfeo Fila a Fila: La voz de la Dación (DA)">
-            ➡️ Fila a Fila (Dación DA)
-          </button>
-          <button onclick="setSolfeoTrajectory('col')" id="btn-traj-col" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-300" title="Solfeo Columna a Columna: La voz de la Recepción (RECIBE)">
-            ⬇️ Columna a Columna (RECIBE)
-          </button>
-          <button onclick="setSolfeoTrajectory('dialogue')" id="btn-traj-dialogue" class="glass-btn px-2.5 py-1 rounded-lg text-xs font-bold text-amber-300" title="Contrapunto Diádico: Diálogo alternado de réplica (i,j ⇄ j,i)">
-            🔀 Contrapunto Diádico (i,j ⇄ j,i)
-          </button>
+          
+          <!-- Melodías Trayecto Largo (25) -->
+          <div id="sub-trajs-long" class="flex items-center gap-1 flex-wrap">
+            <button onclick="setSolfeoTrajectory('row')" id="btn-traj-row" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-cyan-300 active" title="Solfeo Fila a Fila: La voz de la Dación (DA)">
+              ➡️ Fila (DA)
+            </button>
+            <button onclick="setSolfeoTrajectory('col')" id="btn-traj-col" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-emerald-300" title="Solfeo Columna a Columna: La voz de la Recepción (RECIBE)">
+              ⬇️ Col (REC)
+            </button>
+            <button onclick="setSolfeoTrajectory('dialogue')" id="btn-traj-dialogue" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-amber-300" title="Contrapunto Diádico: Diálogo alternado de réplica (i,j ⇄ j,i)">
+              🔀 Diálogo (i,j ⇄ j,i)
+            </button>
+          </div>
+
+          <!-- Melodías Tablero Corto (Marginales en Bordes 3D) -->
+          <div id="sub-trajs-short" class="hidden flex items-center gap-1 flex-wrap">
+            <button onclick="setSolfeoTrajectory('short_row')" id="btn-traj-short_row" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-cyan-300" title="Tablero Corto: Recorre las 5 medias de dación en el borde oeste">
+              ➡️ Fila Media DA (5)
+            </button>
+            <button onclick="setSolfeoTrajectory('short_col')" id="btn-traj-short_col" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-emerald-300" title="Tablero Corto: Recorre las 5 medias de recepción en el borde sur">
+              ⬇️ Col Media REC (5)
+            </button>
+            <button onclick="setSolfeoTrajectory('short_dual')" id="btn-traj-short_dual" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-amber-300" title="Tablero Corto: Contrapunto de balance de cada sujeto (DA ↔ RECIBE) con arco perimetral 3D">
+              ⇄ Balance Nodal (10)
+            </button>
+            <button onclick="setSolfeoTrajectory('short_grand')" id="btn-traj-short_grand" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold text-amber-400" title="Tablero Corto: El Monolito Áureo de la Gran Media Global del grupo">
+              👑 Gran Media Global (1)
+            </button>
+          </div>
         </div>
 
       </div>
@@ -714,6 +745,9 @@
         <li>
           <strong class="text-amber-400">3. Contrapunto Diádico (El Diálogo Interactivo · i,j ⇄ j,i):</strong> Recorre la matriz agrupando a cada pareja diádica en acción y contrarréplica inmediata. Al sonar primero $(i, j)$ (emisor a la izquierda) y de inmediato $(j, i)$ (receptor a la derecha), se traza un arco luminoso en el espacio 3D y se revela al oído la reciprocidad consonante o la disonancia asimétrica del vínculo.
         </li>
+        <li>
+          <strong class="text-amber-300">4. El Tablero Corto de los Marginales (Bordes Perimetrales 3D):</strong> Proyecta en el <strong class="text-cyan-300">Borde Oeste</strong> las 5 columnas de Dación Media (DA), en el <strong class="text-emerald-300">Borde Sur</strong> las 5 columnas de Recepción Media (RECIBE), y en el <strong class="text-amber-400">Vértice Sudoeste</strong> el Monolito Dorado de la Gran Media Global. Permite una lectura macroscópica de los estatus nodales y auditar el balance neto con arcos perimetrales.
+        </li>
       </ul>
       <p>
         La <strong class="text-amber-300">Perspectiva Calibrada de 3 Estratos</strong> permite mantener en todo momento una visión simultánea del <strong class="text-emerald-300">Cielo Abierto (+Y)</strong>, la <strong class="text-cyan-300">Superficie de Flotación (Y = 0)</strong> y el <strong class="text-rose-400">Fondo Abisal (-Y)</strong>, garantizando que ninguna columna viva oculte a sus vecinas durante la ejecución polifónica.
@@ -1081,7 +1115,8 @@
 
     let mainMode = 'solfeo'; // 'solfeo' (Tablero-Acuario) o 'imax' (Sábana Ondulatoria)
     let activeDensityKey = 'D1';
-    let solfeoTrajectory = 'row'; // 'row' (Fila a Fila DA), 'col' (Columna a Columna RECIBE), 'dialogue' (Contrapunto i,j <-> j,i)
+    let solfeoScale = 'long'; // 'long' (25) | 'short' (marginales en bordes)
+    let solfeoTrajectory = 'row'; // long: 'row'|'col'|'dialogue'; short: 'short_row'|'short_col'|'short_dual'|'short_grand'
 
     // Constantes de Cámara
     const CAM_3ESTRATOS_ELEV = 0.418; // ~24 grados
@@ -1095,6 +1130,9 @@
     // Grupo de Objetos del Tablero de Ajedrez Vivo 9x9
     let chessboardGroup = null;
     let dyadicArcMesh = null; // Arco visual que conecta el par diádico en contrapunto
+    let marginalColumns = { rows: [], cols: [], grand: null };
+    let marginalArcMesh = null;
+    let marginalGroup = null;
     let activeBoardColumns = {}; // Key: "u_v", Value: { mesh, spine, tip, ring, currentH, targetH, isAlive, density }
     let solfeoPlayingInterval = null;
     let isSolfeoPlaying = false;
@@ -1340,9 +1378,284 @@
       const badgeAbyss = createTitleBadge('⚓ FONDO ABISAL (-Y)', '#FF007F', 480, 110);
       badgeAbyss.position.set(0, -23.5, -SPAN / 2 - 4.5);
       chessboardGroup.add(badgeAbyss);
+
+      // 4. EL TABLERO CORTO: Baluartes y Monolito en los Bordes Perimetrales
+      buildMarginalBorders();
     }
 
+
     // =========================================================================
+    // 5.1 EL TABLERO CORTO EN LOS BORDES DEL TABLERO 3D (MARGINALES)
+    // =========================================================================
+    const MARGINAL_X = -28.5; // Borde Oeste (Filas / Dación DA)
+    const MARGINAL_Z = +28.5; // Borde Sur (Columnas / Recepción RECIBE)
+    const MARGINAL_SPACING = 8.5;
+
+    function buildMarginalBorders() {
+      marginalGroup = new THREE.Group();
+      chessboardGroup.add(marginalGroup);
+
+      marginalColumns = { rows: [], cols: [], grand: null };
+
+      // 1. Borde Oeste: 5 Pedestales y Columnas Vivas de Dación Media (DA)
+      for (let i = 0; i < 5; i++) {
+        const z = (i - 2) * MARGINAL_SPACING;
+
+        const pedGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
+        const pedMat = new THREE.MeshPhongMaterial({ color: 0x07152B, transparent: true, opacity: 0.9, shininess: 80 });
+        const pedMesh = new THREE.Mesh(pedGeo, pedMat);
+        pedMesh.position.set(MARGINAL_X, -0.2, z);
+        pedMesh.userData = { type: 'marginalRow', idx: i };
+        marginalGroup.add(pedMesh);
+
+        const pedEdgeGeo = new THREE.EdgesGeometry(pedGeo);
+        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.8 });
+        const pedEdge = new THREE.LineSegments(pedEdgeGeo, pedEdgeMat);
+        pedEdge.position.copy(pedMesh.position);
+        marginalGroup.add(pedEdge);
+
+        const colMat = new THREE.MeshPhongMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.88, shininess: 90 });
+        const cylGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 24);
+        cylGeo.translate(0, 0.5, 0);
+        const cylMesh = new THREE.Mesh(cylGeo, colMat);
+        cylMesh.position.set(MARGINAL_X, 0, z);
+        cylMesh.scale.set(1, 0.1, 1);
+        cylMesh.userData = { type: 'marginalRow', idx: i };
+        marginalGroup.add(cylMesh);
+
+        const tipGeo = new THREE.SphereGeometry(1.35, 18, 18);
+        const tipMat = new THREE.MeshPhongMaterial({ color: 0x00E5FF, emissive: 0x00E5FF, emissiveIntensity: 0.35 });
+        const tipMesh = new THREE.Mesh(tipGeo, tipMat);
+        tipMesh.position.set(MARGINAL_X, 0, z);
+        tipMesh.userData = { type: 'marginalRow', idx: i };
+        marginalGroup.add(tipMesh);
+
+        const spinePts = [new THREE.Vector3(MARGINAL_X, 0, z), new THREE.Vector3(MARGINAL_X, 1, z)];
+        const spineGeo = new THREE.BufferGeometry().setFromPoints(spinePts);
+        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
+        marginalGroup.add(spineLine);
+
+        const badge = createTitleBadge(`${SUBJECT_LABELS[i]} (DA)`, '#38BDF8', 180, 70);
+        badge.position.set(MARGINAL_X, 1.1, z - 2.8);
+        marginalGroup.add(badge);
+
+        marginalColumns.rows.push({
+          idx: i,
+          label: `${SUBJECT_LABELS[i]} (DA)`,
+          pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
+          currentH: 0.1, targetH: 0.1
+        });
+      }
+
+      // 2. Borde Sur: 5 Pedestales y Columnas Vivas de Recepción Media (RECIBE)
+      for (let j = 0; j < 5; j++) {
+        const x = (j - 2) * MARGINAL_SPACING;
+
+        const pedGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
+        const pedMat = new THREE.MeshPhongMaterial({ color: 0x071D22, transparent: true, opacity: 0.9, shininess: 80 });
+        const pedMesh = new THREE.Mesh(pedGeo, pedMat);
+        pedMesh.position.set(x, -0.2, MARGINAL_Z);
+        pedMesh.userData = { type: 'marginalCol', idx: j };
+        marginalGroup.add(pedMesh);
+
+        const pedEdgeGeo = new THREE.EdgesGeometry(pedGeo);
+        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.8 });
+        const pedEdge = new THREE.LineSegments(pedEdgeGeo, pedEdgeMat);
+        pedEdge.position.copy(pedMesh.position);
+        marginalGroup.add(pedEdge);
+
+        const colMat = new THREE.MeshPhongMaterial({ color: 0x00FF87, transparent: true, opacity: 0.88, shininess: 90 });
+        const cylGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 24);
+        cylGeo.translate(0, 0.5, 0);
+        const cylMesh = new THREE.Mesh(cylGeo, colMat);
+        cylMesh.position.set(x, 0, MARGINAL_Z);
+        cylMesh.scale.set(1, 0.1, 1);
+        cylMesh.userData = { type: 'marginalCol', idx: j };
+        marginalGroup.add(cylMesh);
+
+        const tipGeo = new THREE.SphereGeometry(1.35, 18, 18);
+        const tipMat = new THREE.MeshPhongMaterial({ color: 0x00FF87, emissive: 0x00FF87, emissiveIntensity: 0.35 });
+        const tipMesh = new THREE.Mesh(tipGeo, tipMat);
+        tipMesh.position.set(x, 0, MARGINAL_Z);
+        tipMesh.userData = { type: 'marginalCol', idx: j };
+        marginalGroup.add(tipMesh);
+
+        const spinePts = [new THREE.Vector3(x, 0, MARGINAL_Z), new THREE.Vector3(x, 1, MARGINAL_Z)];
+        const spineGeo = new THREE.BufferGeometry().setFromPoints(spinePts);
+        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
+        marginalGroup.add(spineLine);
+
+        const badge = createTitleBadge(`${SUBJECT_LABELS[j]} (REC)`, '#00FF87', 180, 70);
+        badge.position.set(x, 1.1, MARGINAL_Z + 2.8);
+        marginalGroup.add(badge);
+
+        marginalColumns.cols.push({
+          idx: j,
+          label: `${SUBJECT_LABELS[j]} (REC)`,
+          pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
+          currentH: 0.1, targetH: 0.1
+        });
+      }
+
+      // 3. Vértice Sudoeste: Monolito Áureo de la Gran Media Global
+      const grandPedGeo = new THREE.CylinderGeometry(3.0, 3.4, 0.6, 8);
+      const grandPedMat = new THREE.MeshPhongMaterial({ color: 0x241F05, transparent: true, opacity: 0.95, shininess: 95 });
+      const grandPedMesh = new THREE.Mesh(grandPedGeo, grandPedMat);
+      grandPedMesh.position.set(MARGINAL_X, -0.3, MARGINAL_Z);
+      grandPedMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandPedMesh);
+
+      const grandEdgeGeo = new THREE.EdgesGeometry(grandPedGeo);
+      const grandEdge = new THREE.LineSegments(grandEdgeGeo, new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 2 }));
+      grandEdge.position.copy(grandPedMesh.position);
+      marginalGroup.add(grandEdge);
+
+      const grandColMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0x443500, transparent: true, opacity: 0.92, shininess: 100 });
+      const grandCylGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 8);
+      grandCylGeo.translate(0, 0.5, 0);
+      const grandCylMesh = new THREE.Mesh(grandCylGeo, grandColMat);
+      grandCylMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
+      grandCylMesh.scale.set(1, 0.2, 1);
+      grandCylMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandCylMesh);
+
+      const grandTipGeo = new THREE.OctahedronGeometry(1.9);
+      const grandTipMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.5, shininess: 100 });
+      const grandTipMesh = new THREE.Mesh(grandTipGeo, grandTipMat);
+      grandTipMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
+      grandTipMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandTipMesh);
+
+      const grandSpinePts = [new THREE.Vector3(MARGINAL_X, 0, MARGINAL_Z), new THREE.Vector3(MARGINAL_X, 1, MARGINAL_Z)];
+      const grandSpineGeo = new THREE.BufferGeometry().setFromPoints(grandSpinePts);
+      const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.9 }));
+      marginalGroup.add(grandSpineLine);
+
+      const grandBadge = createTitleBadge('MEDIA GLOBAL', '#FFE600', 240, 80);
+      grandBadge.position.set(MARGINAL_X - 1.0, 1.4, MARGINAL_Z + 3.4);
+      marginalGroup.add(grandBadge);
+
+      marginalColumns.grand = {
+        label: 'MEDIA GLOBAL',
+        pedMesh: grandPedMesh, cylMesh: grandCylMesh, tipMesh: grandTipMesh,
+        colMat: grandColMat, tipMat: grandTipMat, spineLine: grandSpineLine, badge: grandBadge,
+        currentH: 0.2, targetH: 0.2
+      };
+
+      // 4. Rótulos 3D de Orientación en los Bordes
+      const lblRowBorder = createTitleBadge('📤 DACIÓN MEDIA (DA)', '#38BDF8', 460, 90);
+      lblRowBorder.position.set(MARGINAL_X - 4.5, 1.4, 0);
+      marginalGroup.add(lblRowBorder);
+
+      const lblColBorder = createTitleBadge('📥 RECEPCIÓN MEDIA (RECIBE)', '#00FF87', 520, 90);
+      lblColBorder.position.set(0, 1.4, MARGINAL_Z + 4.5);
+      marginalGroup.add(lblColBorder);
+
+      const lblCornerBorder = createTitleBadge('👑 MONOLITO GLOBAL', '#FFE600', 360, 90);
+      lblCornerBorder.position.set(MARGINAL_X - 4.5, 1.4, MARGINAL_Z + 4.5);
+      marginalGroup.add(lblCornerBorder);
+
+      updateMarginals3D();
+    }
+
+    function updateMarginals3D() {
+      if (!marginalGroup || !marginalColumns.rows.length) return;
+      const matD = DENSITIES[activeDensityKey];
+
+      const rowMeans = [];
+      for (let i = 0; i < 5; i++) {
+        let sum = 0;
+        for (let j = 0; j < 5; j++) sum += matD[i][j];
+        rowMeans.push(sum / 5);
+      }
+
+      const colMeans = [];
+      for (let j = 0; j < 5; j++) {
+        let sum = 0;
+        for (let i = 0; i < 5; i++) sum += matD[i][j];
+        colMeans.push(sum / 5);
+      }
+
+      let grandSum = 0;
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) grandSum += matD[i][j];
+      const grandMean = grandSum / 25;
+
+      marginalColumns.rows.forEach((col, i) => {
+        const val = rowMeans[i];
+        col.targetH = val * DENSITY_SCALE;
+        col.density = val;
+        let c = val >= 0 ? 0x00E5FF : 0xFF007F;
+        col.colMat.color.setHex(c);
+        col.tipMat.color.setHex(c);
+        col.tipMat.emissive.setHex(c);
+      });
+
+      marginalColumns.cols.forEach((col, j) => {
+        const val = colMeans[j];
+        col.targetH = val * DENSITY_SCALE;
+        col.density = val;
+        let c = val >= 0 ? 0x00FF87 : 0xFF007F;
+        col.colMat.color.setHex(c);
+        col.tipMat.color.setHex(c);
+        col.tipMat.emissive.setHex(c);
+      });
+
+      if (marginalColumns.grand) {
+        marginalColumns.grand.targetH = grandMean * DENSITY_SCALE;
+        marginalColumns.grand.density = grandMean;
+      }
+    }
+
+    function showMarginalBalanceArc(subjectIdx, daMean, recMean, delta) {
+      if (!chessboardGroup || !marginalGroup) return;
+      if (marginalArcMesh) {
+        marginalGroup.remove(marginalArcMesh);
+        if (marginalArcMesh.geometry) marginalArcMesh.geometry.dispose();
+        if (marginalArcMesh.material) marginalArcMesh.material.dispose();
+        marginalArcMesh = null;
+      }
+
+      const zRow = (subjectIdx - 2) * MARGINAL_SPACING;
+      const xCol = (subjectIdx - 2) * MARGINAL_SPACING;
+      const hRow = daMean * DENSITY_SCALE;
+      const hCol = recMean * DENSITY_SCALE;
+
+      const p1 = new THREE.Vector3(MARGINAL_X, hRow, zRow);
+      const p2 = new THREE.Vector3(xCol, hCol, MARGINAL_Z);
+      const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+      const dist = p1.distanceTo(p2);
+      mid.y += Math.max(5.0, dist * 0.25);
+
+      const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+      const pts = curve.getPoints(28);
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+
+      let arcCol = 0x00FF87;
+      if (delta <= 0.15) arcCol = 0xFFE600;
+      else if (daMean > recMean + 0.15) arcCol = 0x00E5FF;
+      else if (recMean > daMean + 0.15) arcCol = 0x00FF87;
+      else if (daMean < 0 && recMean < 0) arcCol = 0xFF007F;
+
+      const mat = new THREE.LineBasicMaterial({
+        color: arcCol,
+        linewidth: 3.5,
+        transparent: true,
+        opacity: 0.95
+      });
+
+      marginalArcMesh = new THREE.Line(geo, mat);
+      marginalGroup.add(marginalArcMesh);
+    }
+
+    function pulseMarginalColumn(colObj) {
+      if (!colObj || !colObj.tipMesh) return;
+      colObj.tipMesh.scale.set(1.55, 1.55, 1.55);
+      setTimeout(() => {
+        if (colObj.tipMesh) colObj.tipMesh.scale.set(1, 1, 1);
+      }, 380);
+    }
+
+        // =========================================================================
     // 6. MOTOR DE COLUMNAS VIVAS Y ARCOS DIÁDICOS EN 3D
     // =========================================================================
     /**
@@ -1490,6 +1803,45 @@
         posAttr.setY(1, h);
         posAttr.needsUpdate = true;
       });
+
+      // Animación viva de Columnas Marginales en los Bordes
+      if (marginalColumns.rows) {
+        marginalColumns.rows.forEach(col => {
+          col.currentH += (col.targetH - col.currentH) * 0.14;
+          const absH = Math.max(0.1, Math.abs(col.currentH));
+          const dir = col.currentH >= 0 ? 1 : -1;
+          col.cylMesh.scale.set(1, absH * dir, 1);
+          col.tipMesh.position.y = col.currentH;
+          const posAttr = col.spineLine.geometry.attributes.position;
+          posAttr.setY(1, col.currentH);
+          posAttr.needsUpdate = true;
+        });
+      }
+
+      if (marginalColumns.cols) {
+        marginalColumns.cols.forEach(col => {
+          col.currentH += (col.targetH - col.currentH) * 0.14;
+          const absH = Math.max(0.1, Math.abs(col.currentH));
+          const dir = col.currentH >= 0 ? 1 : -1;
+          col.cylMesh.scale.set(1, absH * dir, 1);
+          col.tipMesh.position.y = col.currentH;
+          const posAttr = col.spineLine.geometry.attributes.position;
+          posAttr.setY(1, col.currentH);
+          posAttr.needsUpdate = true;
+        });
+      }
+
+      if (marginalColumns.grand) {
+        const g = marginalColumns.grand;
+        g.currentH += (g.targetH - g.currentH) * 0.14;
+        const absH = Math.max(0.2, Math.abs(g.currentH));
+        const dir = g.currentH >= 0 ? 1 : -1;
+        g.cylMesh.scale.set(1, absH * dir, 1);
+        g.tipMesh.position.y = g.currentH;
+        const posAttr = g.spineLine.geometry.attributes.position;
+        posAttr.setY(1, g.currentH);
+        posAttr.needsUpdate = true;
+      }
     }
 
     function resetSolfeoBoard() {
@@ -1554,6 +1906,7 @@
 
       renderSolfeoTable();
       buildSolfeoSequence();
+      updateMarginals3D();
 
       if (Object.keys(activeBoardColumns).length > 0) {
         solfeoSequence.forEach(item => {
@@ -1566,9 +1919,61 @@
       }
     }
 
+    function setSolfeoScale(scale) {
+      solfeoScale = scale;
+      const btnLong = document.getElementById('btn-scale-long');
+      const btnShort = document.getElementById('btn-scale-short');
+      const subLong = document.getElementById('sub-trajs-long');
+      const subShort = document.getElementById('sub-trajs-short');
+
+      if (scale === 'long') {
+        if (btnLong) btnLong.classList.add('active');
+        if (btnShort) btnShort.classList.remove('active');
+        if (subLong) subLong.classList.remove('hidden');
+        if (subShort) subShort.classList.add('hidden');
+        if (!['row', 'col', 'dialogue'].includes(solfeoTrajectory)) {
+          setSolfeoTrajectory('row');
+        } else {
+          setSolfeoTrajectory(solfeoTrajectory);
+        }
+      } else {
+        if (btnShort) btnShort.classList.add('active');
+        if (btnLong) btnLong.classList.remove('active');
+        if (subShort) subShort.classList.remove('hidden');
+        if (subLong) subLong.classList.add('hidden');
+        if (!['short_row', 'short_col', 'short_dual', 'short_grand'].includes(solfeoTrajectory)) {
+          setSolfeoTrajectory('short_row');
+        } else {
+          setSolfeoTrajectory(solfeoTrajectory);
+        }
+      }
+    }
+
     function setSolfeoTrajectory(traj) {
       solfeoTrajectory = traj;
-      ['row', 'col', 'dialogue'].forEach(t => {
+      if (['row', 'col', 'dialogue'].includes(traj)) {
+        solfeoScale = 'long';
+      } else {
+        solfeoScale = 'short';
+      }
+
+      const btnLong = document.getElementById('btn-scale-long');
+      const btnShort = document.getElementById('btn-scale-short');
+      const subLong = document.getElementById('sub-trajs-long');
+      const subShort = document.getElementById('sub-trajs-short');
+      if (solfeoScale === 'long') {
+        if (btnLong) btnLong.classList.add('active');
+        if (btnShort) btnShort.classList.remove('active');
+        if (subLong) subLong.classList.remove('hidden');
+        if (subShort) subShort.classList.add('hidden');
+      } else {
+        if (btnShort) btnShort.classList.add('active');
+        if (btnLong) btnLong.classList.remove('active');
+        if (subShort) subShort.classList.remove('hidden');
+        if (subLong) subLong.classList.add('hidden');
+      }
+
+      ['row', 'col', 'dialogue', 'short_row', 'short_col', 'short_dual', 'short_grand'].forEach(t => {
         const btn = document.getElementById(`btn-traj-${t}`);
         if (btn) {
           if (t === traj) btn.classList.add('active');
@@ -1577,9 +1982,13 @@
       });
 
       const labels = {
-        row: '➡️ Fila a Fila (Dación DA)',
-        col: '⬇️ Columna a Columna (Recepción RECIBE)',
-        dialogue: '🔀 Contrapunto Diádico (i,j ⇄ j,i)'
+        row: '➡️ Trayecto Largo: Fila a Fila (Dación DA)',
+        col: '⬇️ Trayecto Largo: Columna a Columna (RECIBE)',
+        dialogue: '🔀 Trayecto Largo: Contrapunto Diádico (i,j ⇄ j,i)',
+        short_row: '⚡ Tablero Corto: Dación Media Borde Oeste (5)',
+        short_col: '⚡ Tablero Corto: Recepción Media Borde Sur (5)',
+        short_dual: '⚡ Tablero Corto: Balance Nodal con Arco 3D (10)',
+        short_grand: '👑 Tablero Corto: Monolito de la Gran Media Global'
       };
       document.getElementById('solfeo-traj-indicator').textContent = labels[traj] || traj;
 
@@ -1648,15 +2057,83 @@
         } else if (solfeoTrajectory === 'dialogue') {
           // 🔀 3. Contrapunto Diádico (i, j ⇄ j, i)
           for (let i = 0; i < 5; i++) {
-            // Auto-posición primero
             solfeoSequence.push(createSequenceItem(i, i, solfeoSequence.length + 1));
-
-            // Parejas en alternancia
             for (let j = i + 1; j < 5; j++) {
               solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1, { isDialogueA: true, partnerI: j, partnerJ: i }));
               solfeoSequence.push(createSequenceItem(j, i, solfeoSequence.length + 1, { isDialogueB: true, partnerI: i, partnerJ: j }));
             }
           }
+        } else if (solfeoTrajectory === 'short_row') {
+          // ⚡ 4. Tablero Corto: Medias de Fila (Borde Oeste)
+          for (let i = 0; i < 5; i++) {
+            let sum = 0;
+            for (let j = 0; j < 5; j++) sum += matD[i][j];
+            const den = sum / 5;
+            solfeoSequence.push({
+              step: i + 1, totalSteps: 5,
+              type: 'short_row', i, j: -1, isMarginal: true,
+              emitter: SUBJECT_LABELS[i], receiver: 'GRUPO',
+              dyadLabel: `Dación Media ${SUBJECT_LABELS[i]}`,
+              q81Num: '--', sym: 'Marginal DA', density: den,
+              pan: -0.35, isSpine: false
+            });
+          }
+        } else if (solfeoTrajectory === 'short_col') {
+          // ⚡ 5. Tablero Corto: Medias de Columna (Borde Sur)
+          for (let j = 0; j < 5; j++) {
+            let sum = 0;
+            for (let i = 0; i < 5; i++) sum += matD[i][j];
+            const den = sum / 5;
+            solfeoSequence.push({
+              step: j + 1, totalSteps: 5,
+              type: 'short_col', i: -1, j, isMarginal: true,
+              emitter: 'GRUPO', receiver: SUBJECT_LABELS[j],
+              dyadLabel: `Recepción Media ${SUBJECT_LABELS[j]}`,
+              q81Num: '--', sym: 'Marginal REC', density: den,
+              pan: +0.35, isSpine: false
+            });
+          }
+        } else if (solfeoTrajectory === 'short_dual') {
+          // ⚡ 6. Tablero Corto: Balance Nodal con Arco 3D (5 Parejas / 10 Notas)
+          for (let s = 0; s < 5; s++) {
+            let rSum = 0, cSum = 0;
+            for (let k = 0; k < 5; k++) { rSum += matD[s][k]; cSum += matD[k][s]; }
+            const daMean = rSum / 5;
+            const recMean = cSum / 5;
+            // Voz A: Dación (Borde Oeste, Izquierda)
+            solfeoSequence.push({
+              step: s * 2 + 1, totalSteps: 10,
+              type: 'short_dual', i: s, j: -1, isMarginal: true,
+              subjectIdx: s, isVoiceA: true, isVoiceB: false,
+              emitter: SUBJECT_LABELS[s], receiver: 'GRUPO',
+              dyadLabel: `1/2 Dación: ${SUBJECT_LABELS[s]}`,
+              q81Num: '--', sym: 'DA Media', density: daMean,
+              counterpartDensity: recMean, pan: -0.40, isSpine: false
+            });
+            // Voz B: Recepción (Borde Sur, Derecha + Arco Perimetral 3D)
+            solfeoSequence.push({
+              step: s * 2 + 2, totalSteps: 10,
+              type: 'short_dual', i: -1, j: s, isMarginal: true,
+              subjectIdx: s, isVoiceA: false, isVoiceB: true,
+              emitter: 'GRUPO', receiver: SUBJECT_LABELS[s],
+              dyadLabel: `2/2 Recepción: ${SUBJECT_LABELS[s]}`,
+              q81Num: '--', sym: 'REC Media', density: recMean,
+              counterpartDensity: daMean, pan: +0.40, isSpine: false
+            });
+          }
+        } else if (solfeoTrajectory === 'short_grand') {
+          // 👑 7. Tablero Corto: Monolito de la Gran Media Global
+          let grandSum = 0;
+          for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) grandSum += matD[i][j];
+          const grandMean = grandSum / 25;
+          solfeoSequence.push({
+            step: 1, totalSteps: 1,
+            type: 'short_grand', i: -1, j: -1, isMarginal: true,
+            emitter: 'COLECTIVO', receiver: 'COLECTIVO',
+            dyadLabel: 'Gran Media Global del Grupo',
+            q81Num: 'GLOBAL', sym: 'Centroide', density: grandMean,
+            pan: 0.0, isSpine: true
+          });
         }
       }
     }
@@ -1712,14 +2189,14 @@
             <div class="font-black text-xs">${sign}${val.toFixed(2)}</div>
           </td>`;
         }
-        html += `<td class="p-1 font-bold text-slate-300 bg-slate-950/60">${rowMeans[i]}</td></tr>`;
+        html += `<td id="marginal-row-${i}" onclick="playMarginalRowDirect(${i})" class="partitura-cell p-1 font-bold text-cyan-300 bg-sky-950/40 cursor-pointer hover:bg-sky-800/60 border border-sky-500/30 transition-all" title="Dación Media de ${SUBJECT_LABELS[i]}: ${rowMeans[i]} (Pulsa para solfeo de borde)">${rowMeans[i]}</td></tr>`;
       }
 
-      html += '<tr class="font-bold bg-slate-950/80 text-slate-300"><td class="p-1 text-left text-cyan-300">MEDIA</td>';
-      colMeans.forEach(cm => {
-        html += `<td class="p-1">${cm}</td>`;
+      html += '<tr class="font-bold bg-slate-950/80 text-slate-300"><td class="p-1 text-left text-emerald-300 cursor-pointer hover:underline" onclick="setSolfeoTrajectory(\'short_col\')" title="Solfeo de Tablero Corto: Recepción Media">MEDIA (REC) ⚡</td>';
+      colMeans.forEach((cm, j) => {
+        html += `<td id="marginal-col-${j}" onclick="playMarginalColDirect(${j})" class="partitura-cell p-1 font-bold text-emerald-300 bg-emerald-950/40 cursor-pointer hover:bg-emerald-800/60 border border-emerald-500/30 transition-all" title="Recepción Media de ${SUBJECT_LABELS[j]}: ${cm} (Pulsa para solfeo de borde)">${cm}</td>`;
       });
-      html += `<td class="p-1 text-amber-300">${grandMean}</td></tr></tbody>`;
+      html += `<td id="marginal-grand" onclick="playMarginalGrandDirect()" class="partitura-cell p-1 font-black text-amber-300 bg-amber-950/60 cursor-pointer hover:bg-amber-800/60 border-2 border-amber-400/60 transition-all animate-pulse" title="Gran Media Global: ${grandMean} (Pulsa para solfeo del Monolito)">${grandMean}</td></tr></tbody>`;
 
       table.innerHTML = html;
     }
@@ -1733,12 +2210,72 @@
       }
     }
 
+    function playMarginalRowDirect(i) {
+      setSolfeoTrajectory('short_row');
+      solfeoCurrentStep = i + 1;
+      if (solfeoSequence[i]) executeSolfeoItem(solfeoSequence[i]);
+    }
+
+    function playMarginalColDirect(j) {
+      setSolfeoTrajectory('short_col');
+      solfeoCurrentStep = j + 1;
+      if (solfeoSequence[j]) executeSolfeoItem(solfeoSequence[j]);
+    }
+
+    function playMarginalGrandDirect() {
+      setSolfeoTrajectory('short_grand');
+      solfeoCurrentStep = 1;
+      if (solfeoSequence[0]) executeSolfeoItem(solfeoSequence[0]);
+    }
+
     function executeSolfeoItem(item) {
       // 1. Resaltar celda activa y celda pareja en la partitura
       document.querySelectorAll('.partitura-cell').forEach(el => {
         el.classList.remove('active-note', 'partner-note');
       });
 
+      // RAMA A: Solfeo del Tablero Corto (Marginales en Bordes Perimetrales)
+      if (item.isMarginal) {
+        if (item.type === 'short_row' || item.isVoiceA) {
+          const mCell = document.getElementById(`marginal-row-${item.i}`);
+          if (mCell) mCell.classList.add('active-note');
+          if (marginalArcMesh && marginalGroup) {
+            marginalGroup.remove(marginalArcMesh);
+            marginalArcMesh = null;
+          }
+          pulseMarginalColumn(marginalColumns.rows[item.i]);
+        } else if (item.type === 'short_col' || item.isVoiceB) {
+          const colIdx = item.j !== undefined && item.j >= 0 ? item.j : item.subjectIdx;
+          const mCell = document.getElementById(`marginal-col-${colIdx}`);
+          if (mCell) mCell.classList.add('active-note');
+          pulseMarginalColumn(marginalColumns.cols[colIdx]);
+
+          if (item.isVoiceB) {
+            const matD = DENSITIES[activeDensityKey];
+            let rSum = 0, cSum = 0;
+            for (let k = 0; k < 5; k++) { rSum += matD[item.subjectIdx][k]; cSum += matD[k][item.subjectIdx]; }
+            const daMean = rSum / 5;
+            const recMean = cSum / 5;
+            showMarginalBalanceArc(item.subjectIdx, daMean, recMean, Math.abs(daMean - recMean));
+          }
+        } else if (item.type === 'short_grand') {
+          const mCell = document.getElementById('marginal-grand');
+          if (mCell) mCell.classList.add('active-note');
+          pulseMarginalColumn(marginalColumns.grand);
+        }
+
+        playHarmonicChime(item.density, 0.38, {
+          isSpine: item.isSpine || (item.type === 'short_grand'),
+          isDisparity: (item.density < -0.3),
+          pan: item.pan || 0.0
+        });
+
+        updateSolfeoTelemetryCard(item, item.counterpartDensity !== undefined ? Math.abs(item.density - item.counterpartDensity) : 0, item.pan || 0);
+        updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num || '--', item.density);
+        return;
+      }
+
+      // RAMA B: Solfeo del Trayecto Largo (Matriz 25 Compases)
       const activeCell = document.getElementById(`cell-${item.i}-${item.j}`);
       if (activeCell) activeCell.classList.add('active-note');
 
@@ -1785,8 +2322,19 @@
 
     function updateSolfeoTelemetryCard(item, deltaRecip = 0, panVal = 0) {
       document.getElementById('solfeo-dyad-title').textContent = item.dyadLabel + (item.isSpine ? ' (Auto-posición)' : '');
-      document.getElementById('solfeo-q81-title').textContent = `#${item.q81Num} ${item.sym}`;
-      document.getElementById('solfeo-grid-cell').textContent = `${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
+      document.getElementById('solfeo-q81-title').textContent = item.isMarginal ? item.sym : `#${item.q81Num} ${item.sym}`;
+      
+      if (item.isMarginal) {
+        if (item.type === 'short_row' || item.isVoiceA) {
+          document.getElementById('solfeo-grid-cell').textContent = 'Borde Oeste (Dación DA)';
+        } else if (item.type === 'short_col' || item.isVoiceB) {
+          document.getElementById('solfeo-grid-cell').textContent = 'Borde Sur (Recepción REC)';
+        } else if (item.type === 'short_grand') {
+          document.getElementById('solfeo-grid-cell').textContent = 'Vértice Sudoeste (Monolito)';
+        }
+      } else {
+        document.getElementById('solfeo-grid-cell').textContent = `${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
+      }
 
       const sign = item.density >= 0 ? '+' : '';
       const denEl = document.getElementById('solfeo-density-val');
@@ -2330,6 +2878,29 @@
       raycaster.setFromCamera(mouse, camera);
 
       if (mainMode === 'solfeo' && chessboardGroup) {
+        // 1. Intersección con Columnas Marginales en los Bordes
+        const clickableMarginals = [];
+        if (marginalGroup) {
+          marginalGroup.traverse(child => {
+            if (child.userData && child.userData.type) clickableMarginals.push(child);
+          });
+        }
+        const mIntersects = raycaster.intersectObjects(clickableMarginals);
+        if (mIntersects.length > 0) {
+          const mHit = mIntersects[0].object;
+          if (mHit.userData.type === 'marginalRow') {
+            playMarginalRowDirect(mHit.userData.idx);
+            return;
+          } else if (mHit.userData.type === 'marginalCol') {
+            playMarginalColDirect(mHit.userData.idx);
+            return;
+          } else if (mHit.userData.type === 'marginalGrand') {
+            playMarginalGrandDirect();
+            return;
+          }
+        }
+
+        // 2. Intersección con Casillas del Tablero 9x9
         const tiles = chessboardGroup.children.filter(c => c.userData && c.userData.cellCode);
         const intersects = raycaster.intersectObjects(tiles);
         if (intersects.length > 0) {
