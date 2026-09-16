@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VISORD Cinema • El IMAX de los Grupos: 4 Acuarios Q81 y Filamentos 4D (Worldlines)</title>
+  <title>VISORD Cinema • Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9) & Sábana IMAX 4D en Q81</title>
   
   <!-- Three.js & OrbitControls: Carga primaria local de alta velocidad + Fallback dinámico CDN -->
   <script src="lib/three.min.js"></script>
@@ -83,6 +83,28 @@
       border-color: #00FF87;
       color: #00FF87;
       box-shadow: 0 0 18px rgba(0, 255, 135, 0.45);
+    }
+
+    /* Partitura Celdas Interactivas */
+    .partitura-cell {
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .partitura-cell:hover {
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.6);
+    }
+    .partitura-cell.active-note {
+      outline: 2px solid #FFE600;
+      box-shadow: 0 0 20px #FFE600, inset 0 0 12px rgba(255, 230, 0, 0.4);
+      animation: pulseActiveNote 1.2s infinite alternate;
+      z-index: 20;
+    }
+    @keyframes pulseActiveNote {
+      from { transform: scale(1.04); filter: brightness(1.1); }
+      to { transform: scale(1.10); filter: brightness(1.35); }
     }
 
     /* MANDO UNIVERSAL MINIMALISTA EN FILA INDIA (REGLA 15) */
@@ -169,30 +191,75 @@
             </h1>
             <span class="mono text-[10px] bg-gradient-to-r from-amber-500/30 via-emerald-500/30 to-cyan-500/30 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-full font-bold">EL IMAX DE LOS GRUPOS</span>
           </div>
-          <p class="text-[11px] text-slate-400 mono">4 Acuarios Q81 Sincronizados (T1 | T2 | T3 | T4) y Filamentos 4D (Worldlines)</p>
+          <p class="text-[11px] text-slate-400 mono">Tablero-Acuario de Ajedrez Vivo (Solfeo 9x9) & Sábana IMAX 4D en Q81</p>
         </div>
       </div>
 
-      <!-- FORMATO CINEMATOGRÁFICO Y METADATOS (REGLA 11) -->
+      <!-- SELECTOR DE MODO MAESTRO Y METADATOS (REGLA 11) -->
       <div class="flex items-center gap-2 flex-wrap text-xs">
         <div class="flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-sky-500/40">
-          <button onclick="setViewLayout('singular')" id="btn-layout-singular" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold">
-            📺 Singular 1x
+          <button onclick="setMainMode('solfeo')" id="btn-mode-solfeo" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/50 bg-amber-950/60 active">
+            ♟️ Ajedrez Vivo (Solfeo 9x9)
           </button>
-          <button onclick="setViewLayout('cinemascope')" id="btn-layout-cinemascope" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/50 bg-amber-950/60 active">
-            🎞️ IMAX 4D (T1 | T2 | T3 | T4)
+          <button onclick="setMainMode('imax')" id="btn-mode-imax" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold">
+            🌊 Sábana IMAX 4D
           </button>
         </div>
 
         <div class="bg-slate-950/80 border border-cyan-500/30 px-3 py-1 rounded-xl flex items-center gap-2">
           <span class="mono text-[10px] text-slate-400">ESTUDIO:</span>
-          <span class="mono text-[11px] font-bold text-cyan-300" id="study-key">SIMUL-AA-G1-T4-C1-V10-A16-ES-5</span>
+          <span class="mono text-[11px] font-bold text-cyan-300" id="study-key">REAL-AA-G1-T1-C1-V10-A16-ES-5</span>
         </div>
       </div>
     </header>
 
-    <!-- 🎬 BARRA SUPERIOR DE METRAJE: 4 TIEMPOS Y FILAMENTOS 4D -->
-    <section class="glass-panel rounded-2xl p-2 md:p-2.5 flex flex-wrap items-center justify-between gap-2 border border-sky-900/40">
+    <!-- 🎼 BARRA 1: CONTROLES DE SOLFEO Y DENSIDAD (MODO TABLERO AJEDREZ VIVO) -->
+    <section id="bar-solfeo-controls" class="glass-panel rounded-2xl p-2 md:p-2.5 flex flex-wrap items-center justify-between gap-2 border border-sky-900/40">
+      <!-- Selector de Matriz de Densidad -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          DENSIDAD:
+        </span>
+        <button onclick="setSolfeoDensity('D1')" id="btn-density-D1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold active" title="D1: Expectativa Emitida (p_DA) [-3.20 a +4.44]">
+          📤 D1: Expectativa Emitida (p_DA)
+        </button>
+        <button onclick="setSolfeoDensity('D2')" id="btn-density-D2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D2: Preferencia Dada (DA) [-3.21 a +3.16]">
+          👉 D2: Preferencia Dada (DA)
+        </button>
+        <button onclick="setSolfeoDensity('D3')" id="btn-density-D3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D3: Preferencia Recibida (RECIBE) [-3.22 a +3.16]">
+          📥 D3: Preferencia Recibida (RECIBE)
+        </button>
+        <button onclick="setSolfeoDensity('D4')" id="btn-density-D4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold" title="D4: Expectativa Percibida (p_RECIBE) [-3.21 a +4.44]">
+          👁️ D4: Expectativa Percibida (p_RECIBE)
+        </button>
+      </div>
+
+      <!-- Mandos de Reproducción del Solfeo -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
+          <button onclick="resetSolfeoBoard()" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Limpiar Tablero a Lámina Cero">⏮</button>
+          <button onclick="stepSolfeoManual(-1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Anterior">◀</button>
+          <button onclick="togglePlaySolfeo()" id="btn-play-solfeo" class="glass-btn px-3 py-1 rounded-lg text-xs font-bold text-emerald-300 border-emerald-500/50 bg-emerald-950/60 flex items-center gap-1.5 shadow-md shadow-emerald-500/20">
+            <span id="play-solfeo-icon">▶</span>
+            <span id="play-solfeo-lbl">REPRODUCIR SOLFEO</span>
+          </button>
+          <button onclick="stepSolfeoManual(1)" class="glass-btn px-2 py-1 rounded-lg text-xs font-bold" title="Nota Siguiente">▶</button>
+        </div>
+
+        <div class="flex items-center gap-1.5 bg-slate-950/90 border border-sky-900/60 px-2.5 py-1 rounded-xl mono text-xs">
+          <span class="text-[10px] text-slate-400">Cadencia:</span>
+          <select id="solfeo-speed" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 text-[10px]">
+            <option value="750">Solemne (750ms)</option>
+            <option value="420" selected>Normal (420ms)</option>
+            <option value="180">Rápido (180ms)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🎬 BARRA 2: CONTROLES IMAX 4D (MODO SÁBANA ONDULATORIA) -->
+    <section id="bar-imax-controls" class="glass-panel rounded-2xl p-2 md:p-2.5 hidden flex-wrap items-center justify-between gap-2 border border-sky-900/40">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
@@ -215,7 +282,7 @@
         </button>
       </div>
 
-      <!-- MANDOS DE FILAMENTOS 4D (WORLDLINES ENTRE LOS 4 ACUARIOS) -->
+      <!-- MANDOS DE FILAMENTOS 4D -->
       <div class="flex items-center gap-2 flex-wrap">
         <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
           <button onclick="toggleWorldlines()" id="btn-toggle-worldlines" class="glass-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-cyan-300 active flex items-center gap-1.5" title="Unir los 4 acuarios mediante filamentos espaciotemporales">
@@ -244,16 +311,16 @@
       <!-- CONTENEDOR CANVAS THREE.JS CON DIMENSIONES EXPLÍCITAS -->
       <div id="three-viewport" style="position: absolute; inset: 0; width: 100%; height: 100%; min-height: 560px;" class="cursor-grab active:cursor-grabbing"></div>
 
-      <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES -->
+      <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES (3 ESTRATOS) -->
       <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
-        <button onclick="applyDiafanoView()" id="btn-diafano" class="glass-btn px-3.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg shadow-amber-500/25 flex items-center gap-2" title="Perspectiva Óptima sin Oclusión: Elev 28°, Azim -38°">
-          ✨ Ángulo Diáfano Canónico
+        <button onclick="apply3EstratosView()" id="btn-3estratos" class="glass-btn px-3.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg shadow-amber-500/25 flex items-center gap-2" title="Perspectiva Calibrada: Cielo Abierto (+Y) · Superficie (Y=0) · Fondo Abisal (-Y)">
+          🔭 Perspectiva 3 Estratos
         </button>
         <div class="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-sky-900/50">
           <button onclick="setCameraAngle('iso')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Panorámica</button>
-          <button onclick="setCameraAngle('top')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Cenital</button>
-          <button onclick="setCameraAngle('profile')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Perfil 90°</button>
-          <button onclick="setCameraAngle('tunnel')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px] text-amber-300">Túnel 4D</button>
+          <button onclick="setCameraAngle('top')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Cenital 90°</button>
+          <button onclick="setCameraAngle('rasante')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px] text-cyan-300">Superficie</button>
+          <button onclick="setCameraAngle('abisal')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px] text-rose-400">Abisal</button>
           <label class="flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer mono text-[10px] text-cyan-300 bg-cyan-950/60 border border-cyan-500/40">
             <input type="checkbox" id="chk-wobble" checked class="rounded border-cyan-600">
             <span>🛰️ Órbita ±8°</span>
@@ -261,27 +328,27 @@
         </div>
       </div>
 
-      <!-- LEYENDA TOPOLÓGICA TECNICOLOR -->
-      <div class="absolute top-3 left-3 z-20 pointer-events-none flex flex-col gap-1 text-[10px] mono bg-slate-950/85 p-2 rounded-xl border border-sky-900/50 backdrop-blur-md">
+      <!-- LEYENDA TOPOLÓGICA TECNICOLOR DE 3 ESTRATOS -->
+      <div class="absolute top-3 left-3 z-20 pointer-events-none flex flex-col gap-1 text-[10px] mono bg-slate-950/85 p-2.5 rounded-xl border border-sky-900/50 backdrop-blur-md" id="viewport-legend">
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></span>
-          <span class="text-emerald-300 font-bold">Crestas (+Z)</span>: Cohesión &lt;Ee&gt;
+          <span class="text-emerald-300 font-bold">🌌 Cielo Abierto (+Y)</span>: Cohesión & Cumbres
         </div>
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]"></span>
-          <span class="text-cyan-300 font-bold">Flotación (Z = 0)</span>: Indiferencia ¡¿?!
+          <span class="text-cyan-300 font-bold">🌊 Superficie (Y = 0)</span>: Tablero 9x9 / Indiferencia
         </div>
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#FF007F]"></span>
-          <span class="text-rose-400 font-bold">Fosas (-Z)</span>: Conflicto [Rr]
+          <span class="text-rose-400 font-bold">⚓ Fondo Abisal (-Y)</span>: Conflicto & Fosas [Rr]
         </div>
         <div class="flex items-center gap-1.5 pt-0.5 border-t border-slate-800">
           <span class="w-3 h-1 bg-amber-400 rounded-full shadow-[0_0_8px_#FFE600]"></span>
-          <span class="text-amber-300 font-bold">Espina Dorsal 4D</span>: Auto-posiciones (i, i)
+          <span class="text-amber-300 font-bold">✨ Espina Dorsal</span>: Auto-posiciones (i, i)
         </div>
         <div class="flex items-center gap-1.5">
-          <span class="w-3 h-0.5 bg-cyan-300 rounded-full shadow-[0_0_6px_#00E5FF]"></span>
-          <span class="text-cyan-300 font-bold">Filamento Trans-Temporal</span>: Geodésica 4D
+          <span class="w-2 h-2 rounded-sm bg-cyan-300 shadow-[0_0_6px_#00E5FF]"></span>
+          <span class="text-cyan-300 font-bold">♟️ Columnas Vivas</span>: Permanencia y Mutación
         </div>
       </div>
 
@@ -291,23 +358,119 @@
           <span id="audio-icon">🔇</span>
           <span id="audio-lbl" class="text-[10px]">Música Galáctica: OFF</span>
         </button>
-        <button onclick="playGroupHolisticSymphony()" id="btn-holistic-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs text-amber-300 flex items-center gap-1.5 hover:border-amber-400" title="Sinfonía Holística: Escucha la evolución armónica del grupo (T1 -> T2 -> T3 -> T4) en 4 acordes">
+        <button onclick="playHolisticChime()" id="btn-holistic-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs text-amber-300 flex items-center gap-1.5 hover:border-amber-400" title="Sinfonía Holística de Acordes en 432 Hz">
           <span>🎼</span>
-          <span class="text-[10px]">Clima Sonoro 4D</span>
+          <span class="text-[10px]">Clima Sonoro</span>
         </button>
         <span class="mono text-[10px] text-slate-400 hidden md:inline">Sinestesia Socio-Termodinámica 432 Hz</span>
       </div>
 
       <!-- INSTRUCCIÓN DE INTERACCIÓN -->
       <div class="absolute bottom-3 right-3 z-20 pointer-events-none mono text-[10px] text-slate-400 bg-slate-950/80 px-3 py-1 rounded-lg border border-slate-800">
-        🖱️ Arrastra para orbitar simultáneamente • Rueda para zoom • Clic en vértice para telemetría
+        🖱️ Arrastra para orbitar • Rueda para zoom • Clic en celda para solfeo instantáneo
       </div>
     </div>
 
-    <!-- 🎛️ PANEL DUAL: MOVIOLA CINEMÁTICA Y MODO CONSTELACIÓN VECTOR N -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
+    <!-- 🎛️ PANEL INFERIOR MODO 1: PARTITURA SOCIOMÉTRICA (AJEDREZ VIVO) -->
+    <div id="panel-solfeo-mode" class="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
       
-      <!-- 🎬 MOVIOLA: REVELADO SECUENCIAL DEL FOTOGRAMA (7 COLUMNAS) -->
+      <!-- 🎼 PARTITURA SOCIOMÉTRICA EMPÍRICA (5 x 5) (8 COLUMNAS) -->
+      <section class="lg:col-span-8 glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 font-bold text-sm outfit flex items-center gap-1.5">
+              <span>🎼</span> PARTITURA SOCIOMÉTRICA FACTUAL (5 × 5)
+            </span>
+            <span class="mono text-[9px] bg-amber-950 border border-amber-500/40 text-amber-300 px-2 py-0.5 rounded font-bold" id="solfeo-matrix-badge">
+              D1: EXPECTATIVA EMITIDA
+            </span>
+          </div>
+          
+          <!-- Solfeo Fila a Fila por Sujeto -->
+          <div class="flex items-center gap-1 mono text-[10px] flex-wrap">
+            <span class="text-slate-400">Solfeo Fila:</span>
+            <button onclick="solfeoSubjectRow(0)" id="btn-solfeo-row-0" class="glass-btn px-2 py-0.5 rounded font-bold text-emerald-300" title="Solfeo exclusivo de la Fila 1A">1A</button>
+            <button onclick="solfeoSubjectRow(1)" id="btn-solfeo-row-1" class="glass-btn px-2 py-0.5 rounded font-bold text-cyan-300" title="Solfeo exclusivo de la Fila 2A">2A</button>
+            <button onclick="solfeoSubjectRow(2)" id="btn-solfeo-row-2" class="glass-btn px-2 py-0.5 rounded font-bold text-rose-300" title="Solfeo exclusivo de la Fila 3A">3A</button>
+            <button onclick="solfeoSubjectRow(3)" id="btn-solfeo-row-3" class="glass-btn px-2 py-0.5 rounded font-bold text-amber-300" title="Solfeo exclusivo de la Fila 4A">4A</button>
+            <button onclick="solfeoSubjectRow(4)" id="btn-solfeo-row-4" class="glass-btn px-2 py-0.5 rounded font-bold text-slate-300" title="Solfeo exclusivo de la Fila 5A">5A</button>
+          </div>
+        </div>
+
+        <!-- TABLA DE LA PARTITURA 5x5 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse mono text-xs" id="solfeo-table">
+            <!-- Inyectada dinámicamente -->
+          </table>
+        </div>
+
+        <!-- Barra de Progreso del Solfeo -->
+        <div class="flex items-center justify-between mono text-[10px] pt-1 border-t border-slate-800/80">
+          <span class="text-slate-400">Compás: <strong class="text-cyan-300" id="solfeo-step-lbl">0 / 25 Notas</strong></span>
+          <span class="text-amber-300 font-bold" id="solfeo-step-detail">Haz clic en cualquier celda o pulsa Reproducir Solfeo</span>
+        </div>
+      </section>
+
+      <!-- 💎 DIAGNÓSTICO DEL COMPÁS ACTIVO & SINESTESIA 432 Hz (4 COLUMNAS) -->
+      <section class="lg:col-span-4 glass-panel rounded-2xl p-3 flex flex-col gap-2.5 border border-sky-900/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-cyan-400 font-bold text-sm outfit flex items-center gap-1.5">
+            <span>💎</span> DIAGNÓSTICO DEL COMPÁS
+          </span>
+          <span class="mono text-[9px] bg-sky-950 border border-sky-500/40 text-cyan-300 px-2 py-0.5 rounded font-bold">432 Hz</span>
+        </div>
+
+        <!-- Ficha del Compás Activo -->
+        <div class="bg-slate-950/85 p-3 rounded-xl border border-sky-900/60 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-slate-400 mono">DÍADA EN PARTITURA</div>
+              <div class="outfit text-xl font-black text-amber-300" id="solfeo-dyad-title">1A → 1A</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 mono">FIGURA Q81</div>
+              <div class="mono text-base font-bold text-cyan-300" id="solfeo-q81-title">#81 &lt;Ee&gt;</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800 text-[11px] mono">
+            <div>
+              <span class="text-slate-400">Casilla Tablero:</span>
+              <strong class="text-white block" id="solfeo-grid-cell">A1 (u=0, v=0)</strong>
+            </div>
+            <div>
+              <span class="text-slate-400">Cota / Densidad:</span>
+              <strong class="text-emerald-400 block" id="solfeo-density-val">+4.44</strong>
+            </div>
+            <div>
+              <span class="text-slate-400">Estrato Visible:</span>
+              <strong class="text-cyan-300 block" id="solfeo-stratum-val">🌌 Cielo Abierto</strong>
+            </div>
+            <div>
+              <span class="text-slate-400">Afinación 432 Hz:</span>
+              <strong class="text-amber-300 block" id="solfeo-freq-val">288.4 Hz</strong>
+            </div>
+          </div>
+
+          <div class="text-[10px] mono text-slate-400 pt-1 border-t border-slate-800/80 flex items-center justify-between">
+            <span>Comportamiento:</span>
+            <span class="text-emerald-300 font-bold" id="solfeo-behavior-val">Columna Erigida y Persistente</span>
+          </div>
+        </div>
+
+        <!-- Recuento de Columnas en Tablero -->
+        <div class="mono text-[10px] bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+          <span class="text-slate-400">Columnas Activas en Tablero:</span>
+          <span class="text-cyan-400 font-bold" id="solfeo-standing-count">0 / 81 Casillas</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 🎛️ PANEL INFERIOR MODO 2: MOVIOLA Y CONSTELACIÓN (MODO IMAX) -->
+    <div id="panel-imax-mode" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-2.5">
+      
+      <!-- MOVIOLA: REVELADO SECUENCIAL DEL FOTOGRAMA (7 COLUMNAS) -->
       <section class="lg:col-span-7 glass-panel rounded-2xl p-3 flex flex-col gap-2 border border-sky-900/40">
         <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
           <div class="flex items-center gap-2">
@@ -350,7 +513,6 @@
           </div>
         </div>
 
-        <!-- Barra de progreso del metraje 81 celdas -->
         <div class="flex flex-col gap-1 mt-0.5">
           <div class="flex items-center justify-between mono text-[10px]">
             <span class="text-slate-400">Fotograma Diádico: <strong class="text-cyan-300" id="film-step-lbl">81 / 81 Vértices Revelados</strong></span>
@@ -362,7 +524,7 @@
         </div>
       </section>
 
-      <!-- 👤 CONSTELACIÓN DE SUJETOS (VECTORES DE DIMENSIÓN N) (5 COLUMNAS) -->
+      <!-- CONSTELACIÓN DE SUJETOS (VECTORES N) (5 COLUMNAS) -->
       <section class="lg:col-span-5 glass-panel rounded-2xl p-3 flex flex-col gap-2 border border-sky-900/40">
         <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
           <span class="text-emerald-400 font-bold text-sm outfit">VECTORES N DEL SUJETO</span>
@@ -402,7 +564,7 @@
 
     </div>
 
-    <!-- 📊 PANEL INFERIOR: TELEMETRÍA SOCIOMÉTRICA TETRADIMENSIONAL -->
+    <!-- 📊 PANEL DE TELEMETRÍA GLOBAL -->
     <section class="glass-panel rounded-2xl p-3 grid grid-cols-1 md:grid-cols-4 gap-3 border border-sky-900/40">
       
       <!-- Celda e Identificador Q81 -->
@@ -473,18 +635,20 @@
     <footer class="glass-panel rounded-2xl p-4 text-xs text-slate-400 leading-relaxed border border-sky-900/50 flex flex-col gap-2">
       <div class="flex items-center gap-2 text-amber-300 font-bold outfit text-sm">
         <span>💡 Nota Explicativa Pedagógica:</span>
-        <span class="text-white font-normal">El IMAX de los Grupos y los Filamentos Trans-Temporales 4D en Q81</span>
+        <span class="text-white font-normal">El Tablero de Ajedrez Vivo 9x9, el Solfeo de la Partitura Factual y la Perspectiva de 3 Estratos</span>
       </div>
       <p>
-        El formato <strong class="text-amber-300">IMAX 4D</strong> alinea en una misma perspectiva sincrónica los cuatro actos del ciclo socio-temporal: 
-        <strong class="text-emerald-400">T1 Génesis</strong> (fase inicial de atracción y roles emergentes), 
-        <strong class="text-rose-400">T2 Crisis / Tensión</strong> (polarización y fracturas latentes), 
-        <strong class="text-cyan-400">T3 Reorganización</strong> (amortiguación mediante roles puente) y 
-        <strong class="text-amber-300">T4 Resolución</strong> (atractor final de equilibrio maduro).
+        El <strong class="text-amber-300">Tablero de Ajedrez Vivo 9×9</strong> materializa el puente exacto entre la sociomatriz empírica concreta ($N 	imes N$, donde interactúan los sujetos reales) y el espacio invariable universal $Q_{81}$. 
+        Cada celda $(i, j)$ de la matriz es una <strong class="text-cyan-300">nota de la partitura relacional</strong>: al ejecutarse en solfeo diádico compás por compás, se ilumina su casilla $Q_{81}$ en el tablero y se erige una columna luminosa vertical cuya altura es rigurosamente proporcional a su cota de densidad posicional.
       </p>
       <p>
-        Al activar las <strong class="text-cyan-300">Líneas de Universo 4D (Worldlines)</strong>, el motor traza filamentos luminosos continuos que unen cada una de las 81 celdas de $Q_{81}$ a lo largo del tiempo. 
-        La <strong class="text-amber-300">Espina Dorsal Dorada</strong> une longitudinalmente las auto-posiciones identitarias $(i, i)$, mientras que el <strong class="text-emerald-300">Hilo de Ariadna del Sujeto</strong> permite seguir la trayectoria cuántica de sus $N$ elecciones y expectativas durante toda la biografía del grupo, sin saltos ni oclusiones.
+        Siguiendo el principio del <strong class="text-emerald-400">Ajedrez Vivo</strong>, la columna proyectada permanece erigida en el tablero, constituyendo una escultura arquitectónica permanente del clima vincular del colectivo. Si una nota posterior reincide sobre una misma figura $Q_{81}$ (como ocurre en las auto-elecciones de la cumbre #81 o en el desconocimiento #77), la columna muta suavemente de altura en directo.
+      </p>
+      <p>
+        La <strong class="text-amber-300">Perspectiva Calibrada de 3 Estratos</strong> orienta la mirada espacial en un ángulo que permite contemplar simultáneamente en un único plano diáfano: 
+        (1) El <strong class="text-emerald-300">Cielo Abierto (+Y)</strong> donde se elevan las columnas de atracción, expectativa y cohesión; 
+        (2) La <strong class="text-cyan-300">Superficie de Flotación (Y = 0)</strong> con su retícula de obsidian, coordenadas periféricas y la Espina Dorsal Dorada diagonal; y 
+        (3) El <strong class="text-rose-400">Fondo Abisal (-Y)</strong> donde se precipitan las fosas de rechazo, conflicto y disonancia de Heider hacia el lecho oceánico.
       </p>
       <div class="flex flex-wrap items-center justify-between pt-2 border-t border-slate-800/80 text-[11px] mono text-slate-500">
         <span>VISORD Cinema Engine • Geometría de Grassmann Gr(k, N) & SMIb • NEXORD Ecosystem</span>
@@ -503,14 +667,17 @@
     <a href="visord_g2t1c1.html" class="nav-pod-btn" title="Siguiente (Hipercubo G2T1C1)">▶</a>
   </aside>
 
-  <!-- 🧠 LÓGICA DE COMPUTACIÓN 3D, MOVIOLA Y FILAMENTOS 4D -->
+  <!-- 🧠 LÓGICA DE COMPUTACIÓN 3D, SOLFEO FACTUAL Y TABLERO DE AJEDREZ VIVO -->
   <script>
-    // 1. Constantes Canónicas del Espacio Q81
+    // =========================================================================
+    // 1. CONSTANTES CANÓNICAS DEL ESPACIO Q81 (9 x 9)
+    // =========================================================================
     const GRID_SIZE = 9;
     const NUM_VERTICES = GRID_SIZE * GRID_SIZE; // 81
     const SPAN = 42;
-    const STEP = SPAN / (GRID_SIZE - 1);
+    const STEP = SPAN / (GRID_SIZE - 1); // 5.25
     const MAX_HEIGHT = 15;
+    const DENSITY_SCALE = 3.8; // Escala vertical de columnas vivas
 
     const ROWS_EMISSION = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
     const COLS_RECEPTION = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -521,7 +688,63 @@
       return `${ROWS_EMISSION[u]}${COLS_RECEPTION[v]}`;
     }
 
-    // 2. Datasets de las 4 Sábanas (T1, T2, T3, T4 y Canónica)
+    // =========================================================================
+    // 2. DATASETS FACTUALES EMPÍRICOS (N = 5) DEL USUARIO
+    // =========================================================================
+    const M_NUM = [
+      [81, 77, 41, 17,  1],
+      [77, 81, 81,  2, 17],
+      [41, 81, 77,  1,  5],
+      [20,  3,  1, 81, 77],
+      [ 1, 20,  5, 77, 81]
+    ];
+
+    const DENSITIES = {
+      D1: [
+        [ 4.44,  1.26,  0.00, -0.71, -3.20],
+        [ 1.26,  0.00,  4.44, -2.97, -0.71],
+        [ 0.00,  4.44,  1.26, -3.20, -1.26],
+        [-0.63, -2.45, -3.20,  4.44,  1.26],
+        [-3.20, -0.63, -1.26,  1.26,  4.44]
+      ],
+      D2: [
+        [ 3.16, -0.27,  0.00, -2.57, -3.21],
+        [-0.27,  0.00,  3.16, -3.02, -2.57],
+        [ 0.00,  3.16, -0.27, -3.21, -2.72],
+        [-0.63, -3.03, -3.21,  3.16, -0.27],
+        [-3.21, -0.63, -2.72, -0.27,  3.16]
+      ],
+      D3: [
+        [ 3.16, -0.27,  0.00, -0.71, -3.21],
+        [-0.27,  0.00,  3.16, -3.02, -0.71],
+        [ 0.00,  3.16, -0.27, -3.21, -2.72],
+        [-2.70, -2.92, -3.22,  3.16, -0.27],
+        [-3.21, -2.55, -2.83, -0.27,  3.16]
+      ],
+      D4: [
+        [ 4.44,  1.26,  0.00, -0.71, -3.20],
+        [ 1.26,  0.00,  4.44, -2.69, -0.71],
+        [ 0.00,  4.44,  1.26, -3.20, -1.26],
+        [-0.63, -2.86, -3.21,  4.44,  1.26],
+        [-3.20, -0.63, -1.26,  1.26,  4.44]
+      ]
+    };
+
+    const Q81_COORDINATES = {
+      81: { u: 0, v: 0, sym: '<Ee>', name: 'Elección Mutua Plena', q6: 'Elección Mutua' },
+      77: { u: 1, v: 1, sym: '<¿?>', name: 'Desconocimiento Mutuo Afectivo', q6: 'Indiferencia Mutua' },
+      41: { u: 4, v: 4, sym: '¡¿?!', name: 'Indiferencia Absoluta (Lámina 0)', q6: 'Indiferencia Mutua' },
+      20: { u: 7, v: 4, sym: '[¿?!>', name: 'Asimetría: Rechazo con Expectativa', q6: 'Indiferencia Mutua' },
+      17: { u: 4, v: 7, sym: '¡¿?]', name: 'Asimetría: Desconocimiento con Rechazo', q6: 'Indiferencia Mutua' },
+      5:  { u: 7, v: 7, sym: '[¿?]', name: 'Percepción Recíproca de Rechazo', q6: 'Indiferencia Mutua' },
+      3:  { u: 7, v: 8, sym: '[R?]', name: 'Rechazo Unilateral Fosa', q6: 'Rechazo Unilateral' },
+      2:  { u: 8, v: 7, sym: '[¿r]', name: 'Rechazo Unilateral Fosa', q6: 'Rechazo Unilateral' },
+      1:  { u: 8, v: 8, sym: '[Rr]', name: 'Rechazo Recíproco Total / Abismo', q6: 'Rechazo Mutuo' }
+    };
+
+    const SUBJECT_LABELS = ['1A', '2A', '3A', '4A', '5A'];
+
+    // Sábanas Sintéticas para el modo IMAX 4D
     function createSabanaMatrix(type) {
       const mat = new Float32Array(NUM_VERTICES);
       for (let u = 0; u < GRID_SIZE; u++) {
@@ -533,12 +756,10 @@
 
           let sdr = 0;
           if (type === 't1') {
-            // T1: Génesis (Cohesión inicial efervescente)
             sdr = Math.sin((1 - uNorm) * Math.PI * 0.5) * Math.sin((1 - vNorm) * Math.PI * 0.5) * 0.95;
             if (uNorm > 0.6 && vNorm > 0.6) sdr -= 0.35;
             if (u === v) sdr = Math.max(sdr, 0.40);
           } else if (type === 't2') {
-            // T2: Crisis / Tensión (Polarización severa y fosas abisales)
             sdr = baseDipole * 1.1;
             if (u < 3 && v > 5) sdr = -0.74;
             if (u > 5 && v < 3) sdr = +0.48;
@@ -547,13 +768,11 @@
             if (u === 1 && v === 1) sdr = +0.85;
             if (u === 2 && v === 2) sdr = -0.58;
           } else if (type === 't3') {
-            // T3: Reorganización (Emergencia de puentes y amortiguación)
             sdr = Math.cos(uNorm * Math.PI * 0.75) * Math.cos(vNorm * Math.PI * 0.75) * 0.78;
             if (u === 0 && v === 0) sdr = +0.88;
             if (u === 8 && v === 8) sdr = -0.45;
             if (u === v) sdr = Math.max(sdr, 0.25);
           } else if (type === 't4') {
-            // T4: Resolución / Clímax (Atractor maduro y armónico)
             sdr = (1.0 - (uNorm * 0.85 + vNorm * 0.85)) * 0.90;
             if (u === 0 && v === 0) sdr = +0.98;
             if (u === 1 && v === 1) sdr = +0.88;
@@ -563,7 +782,6 @@
             if (u > 6 && v > 6) sdr = -0.25;
             if (u === 8 && v === 8) sdr = -0.32;
           } else if (type === 'canon') {
-            // Grupo A Canónico
             sdr = (1.0 - (uNorm * 0.9 + vNorm * 1.1)) * 0.85;
             if (u === 0 && v === 0) sdr = +0.95;
             if (u === 1 && v === 0) sdr = +0.72;
@@ -638,14 +856,16 @@
       }
     ];
 
-    // 3. Audio Web Audio API: Motor Sinestésico Socio-Termodinámico (432 Hz)
+    // =========================================================================
+    // 3. MOTOR SINESTÉSICO WEB AUDIO API (432 Hz)
+    // =========================================================================
     let audioCtx = null, audioEnabled = false, masterGain = null;
     function initAudio() {
       if (!audioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.20, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
       }
     }
@@ -659,32 +879,32 @@
       if (audioEnabled) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         icon.textContent = '🔊'; lbl.textContent = 'Música Galáctica: ON'; btn.classList.add('active');
-        playHarmonicChime(0, 0.35, { isSpine: true });
+        playHarmonicChime(0.5, 0.35, { isSpine: true });
       } else {
         icon.textContent = '🔇'; lbl.textContent = 'Música Galáctica: OFF'; btn.classList.remove('active');
       }
     }
 
     /**
-     * Motor Sinestésico Factual: Hace "ver con el oído" la topología Q81
-     * @param {number} sdrVal - Cota de Densidad Relativa [-1.0, +1.0]
+     * Motor Sinestésico Factual a 432 Hz
+     * @param {number} densityVal - Cota cuantitativa [-3.22, +4.44]
      * @param {number} volume - Ganancia relativa
      * @param {object} opts - { isSpine, isDisparity, duration, u, v }
      */
-    function playHarmonicChime(sdrVal, volume = 0.25, opts = {}) {
+    function playHarmonicChime(densityVal, volume = 0.28, opts = {}) {
       if (!audioEnabled || !audioCtx) return;
       try {
         const now = audioCtx.currentTime;
         const isSpine = !!opts.isSpine;
-        const isDisparity = !!opts.isDisparity || (sdrVal < -0.3);
+        const isDisparity = !!opts.isDisparity || (densityVal < -0.3);
         const dur = opts.duration || (isSpine ? 1.2 : 0.75);
 
-        // Frecuencia fundamental anclada al subarmónico áureo 216 Hz (de 432 Hz)
-        const baseFreq = 216.0 * Math.pow(2, (sdrVal || 0) * 1.5);
+        // Frecuencia anclada al subarmónico áureo de 432 Hz (216 Hz)
+        const normVal = (densityVal || 0) / 4.44;
+        const baseFreq = 216.0 * Math.pow(2, normVal * 1.2);
 
         if (isSpine) {
           // 👑 1. CAMPANA ÁUREA DE LA ESPINA DORSAL (Auto-posiciones i, i)
-          // Acorde de Quinta Justa Pitagórica (3:2) + Octava subarmónica solemne
           const voices = [
             { f: baseFreq, gainVal: volume * 0.85, type: 'sine', decay: dur },
             { f: baseFreq * 1.5, gainVal: volume * 0.55, type: 'sine', decay: dur * 0.95 },
@@ -708,20 +928,19 @@
           });
 
         } else if (isDisparity) {
-          // ⚡ 2. BATIMENTO Y FRICCIÓN DE HEIDER (Disonancia estructural y Fosas abisales)
-          // Interferencia física de dos osciladores desafinados a +5.5 Hz (vibrato de tensión)
+          // ⚡ 2. BATIMENTO Y FRICCIÓN DE HEIDER (Disonancia en Fosas abisales)
           const f1 = baseFreq;
-          const f2 = baseFreq + 5.5;
+          const f2 = baseFreq + 5.5; // Batimento físico 5.5 Hz
 
           [f1, f2].forEach(freq => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.frequency.setValueAtTime(freq, now);
-            osc.type = (sdrVal < -0.5) ? 'sawtooth' : 'triangle';
+            osc.type = (densityVal < -1.5) ? 'sawtooth' : 'triangle';
 
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(460, now);
+            filter.frequency.setValueAtTime(480, now);
 
             gain.gain.setValueAtTime(0.0001, now);
             gain.gain.linearRampToValueAtTime(volume * 0.52, now + 0.04);
@@ -750,8 +969,7 @@
           osc.start(now);
           osc.stop(now + dur + 0.05);
 
-          // Si es cresta de máxima cohesión (sdr > 0.4), añadir armónico cristalino de brillo
-          if (sdrVal > 0.4) {
+          if (densityVal > 1.0) {
             const overtone = audioCtx.createOscillator();
             const overGain = audioCtx.createGain();
             overtone.frequency.setValueAtTime(baseFreq * 2.0, now);
@@ -770,74 +988,40 @@
       }
     }
 
-    /**
-     * 4. SINFONÍA HOLÍSTICA 4D DEL GRUPO (La biografía en 4 acordes diacrónicos)
-     * Reproduce en secuencia la huella acústica de T1 -> T2 -> T3 -> T4 con feedback visual
-     */
-    function playGroupHolisticSymphony() {
+    function playHolisticChime() {
       initAudio();
       if (!audioEnabled) toggleAudio();
-      if (!audioCtx) return;
-
-      const btn = document.getElementById('btn-holistic-audio');
-      if (btn) {
-        btn.classList.add('border-amber-400', 'bg-amber-950/80');
-        setTimeout(() => btn.classList.remove('border-amber-400', 'bg-amber-950/80'), 3600);
-      }
-
-      const symphonyMovements = [
-        { tOffset: 0.0, aq: 't1', notes: [216, 270, 324], title: '🌅 T1 · Génesis: Acorde Mayor de Apertura y Esperanza' },
-        { tOffset: 0.85, aq: 't2', notes: [155, 185, 220, 225.5], title: '⚡ T2 · Crisis: Tensión Menor con Batimento Heider' },
-        { tOffset: 1.70, aq: 't3', notes: [216, 288, 324], title: '🌱 T3 · Reorganización: Acorde Sus4 de Amortiguación' },
-        { tOffset: 2.55, aq: 't4', notes: [216, 270, 324, 432], title: '🏆 T4 · Resolución: Plenitud Áurea Mayor a 432 Hz' }
-      ];
-
-      symphonyMovements.forEach(mov => {
-        setTimeout(() => {
-          if (!audioCtx) return;
-          const now = audioCtx.currentTime;
-
-          // Elevar suavemente el acuario que está sonando
-          if (aquariums[mov.aq] && aquariums[mov.aq].group) {
-            const originalY = aquariums[mov.aq].group.position.y;
-            aquariums[mov.aq].group.position.y = originalY + 1.8;
-            setTimeout(() => { aquariums[mov.aq].group.position.y = originalY; }, 700);
-          }
-
-          document.getElementById('film-step-detail').textContent = mov.title;
-
-          mov.notes.forEach(freq => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.frequency.setValueAtTime(freq, now);
-            osc.type = (mov.aq === 't2') ? 'triangle' : 'sine';
-
-            const noteVol = 0.20 / Math.sqrt(mov.notes.length);
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(noteVol, now + 0.04);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.78);
-
-            osc.connect(gain);
-            gain.connect(masterGain);
-            osc.start(now);
-            osc.stop(now + 0.82);
-          });
-        }, mov.tOffset * 1000);
-      });
-
-      setTimeout(() => {
-        document.getElementById('film-step-detail').textContent = 'Oleaje Estático Completo en 4 Acuarios';
-      }, 3700);
+      playHarmonicChime(4.44, 0.40, { isSpine: true, duration: 1.5 });
     }
 
-    // 4. Variables 3D y Configuración de los 4 Acuarios
+    // =========================================================================
+    // 4. CONFIGURACIÓN 3D Y PERSPECTIVA CALIBRADA DE 3 ESTRATOS
+    // =========================================================================
     let scene, camera, renderer, controls;
     let raycaster, mouse;
     let isUserInteracting = false;
 
-    let viewLayout = 'cinemascope';
-    const AQ_DIST = 58; // Distancia entre centros de acuarios contiguos
+    let mainMode = 'solfeo'; // 'solfeo' (Tablero-Acuario) o 'imax' (Sábana Ondulatoria)
+    let activeDensityKey = 'D1';
 
+    // Constantes de Cámara
+    const CAM_3ESTRATOS_ELEV = 0.418; // ~24 grados
+    const CAM_3ESTRATOS_AZIM = -0.663; // ~ -38 grados
+    const CAM_3ESTRATOS_DIST = 110;
+    const CAM_DIST_CINEMASCOPE = 210;
+    const CAM_DIST_SINGULAR = 94;
+
+    const AQ_DIST = 58;
+
+    // Grupo de Objetos del Tablero de Ajedrez Vivo 9x9
+    let chessboardGroup = null;
+    let activeBoardColumns = {}; // Key: "u_v", Value: { mesh, spine, tip, ring, currentH, targetH, isAlive, density }
+    let solfeoPlayingInterval = null;
+    let isSolfeoPlaying = false;
+    let solfeoCurrentStep = 0;
+    let solfeoSequence = [];
+
+    // Objetos del modo IMAX 4D
     const aquariums = {
       t1: { key: 't1', title: '🌅 T1 · GÉNESIS', posX: -1.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
       t2: { key: 't2', title: '⚡ T2 · CRISIS', posX: -0.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
@@ -845,50 +1029,46 @@
       t4: { key: 't4', title: '🏆 T4 · RESOLUCIÓN', posX: +1.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) }
     };
 
+    let worldlinesGroup = null;
+    let worldlinesVisible = true;
+    let worldlinesFilter = 'all';
+    const WORLDLINE_SAMPLES = 20;
+
+    let viewLayout = 'cinemascope';
     let activeSabanaKey = 't1';
     let transitionProgress = 1.0, transitionDuration = 1400, transitionStartTime = 0;
     let epicenterU = 4, epicenterV = 4;
     let isPlayingFilm = false, filmInterval = null, filmStep = 81, sequenceCriterion = 'thermal', sequenceOrder = [];
     let selectedSubjectIdx = null, hoveredVertexIdx = 0;
-
     let wobbleTime = 0;
-    const DIAFANO_ELEV = 0.488;
-    const DIAFANO_AZIM = -0.663;
-    const CAM_DIST_SINGULAR = 94;
-    const CAM_DIST_CINEMASCOPE = 210;
 
-    // Filamentos 4D (Worldlines)
-    let worldlinesGroup = null;
-    let worldlinesVisible = true;
-    let worldlinesFilter = 'all'; // 'all', 'spine', 'extreme', 'subject'
-    const WORLDLINE_SAMPLES = 20;
-
-    // Helper para crear insignias de título 3D flotantes
-    function createTitleBadge(text, colorHex) {
+    // Helper para insignias 3D flotantes
+    function createTitleBadge(text, colorHex, width = 420, height = 110) {
       const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 128;
+      canvas.width = width;
+      canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = 'rgba(6, 11, 24, 0.88)';
-      ctx.roundRect(10, 10, 492, 108, 20);
+      ctx.roundRect(8, 8, width - 16, height - 16, 16);
       ctx.fill();
       ctx.strokeStyle = colorHex;
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3.5;
       ctx.stroke();
 
       ctx.fillStyle = colorHex;
-      ctx.font = 'bold 42px "Outfit", sans-serif';
+      ctx.font = 'bold 36px "Outfit", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, 256, 64);
+      ctx.fillText(text, width / 2, height / 2);
 
       const texture = new THREE.CanvasTexture(canvas);
       const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
       const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(32, 8, 1);
+      sprite.scale.set(width * 0.065, height * 0.065, 1);
       return sprite;
     }
 
+    // Inicialización del Motor 3D
     function init3D() {
       const container = document.getElementById('three-viewport');
       const w = container.clientWidth || 1200;
@@ -897,9 +1077,8 @@
       scene = new THREE.Scene();
       scene.fog = new THREE.FogExp2(0x040814, 0.0020);
 
-      // Cámara canónica
-      camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 3000);
-      camera.position.set(0, 130, CAM_DIST_CINEMASCOPE);
+      camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 3000);
+      camera.position.set(0, 50, CAM_3ESTRATOS_DIST);
       camera.lookAt(0, 0, 0);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -921,20 +1100,19 @@
 
       setupLights();
 
-      // Construcción de los 4 Acuarios
+      // Construcción del Tablero de Ajedrez Vivo 9x9 con los 3 Estratos
+      buildChessboardAquarium();
+
+      // Construcción de los 4 Acuarios IMAX
       ['t1', 't2', 't3', 't4'].forEach(k => {
         buildAquariumUnit(aquariums[k]);
-      });
-
-      // Cargar datos en cada acuario
-      ['t1', 't2', 't3', 't4'].forEach(k => {
         aquariums[k].currentZ.set(SABANAS[k]);
         aquariums[k].sourceZ.set(SABANAS[k]);
         aquariums[k].targetZ.set(SABANAS[k]);
         updateAquariumGeometry(aquariums[k]);
       });
 
-      // Construcción de los Filamentos 4D (Worldlines)
+      // Construcción de los Filamentos 4D
       buildTransTemporalWorldlines();
 
       raycaster = new THREE.Raycaster();
@@ -945,8 +1123,13 @@
       container.addEventListener('click', onPointerClick);
       window.addEventListener('resize', onWindowResize);
 
-      buildSequenceOrder();
-      setViewLayout('cinemascope', false);
+      // Render inicial de la partitura HTML
+      renderSolfeoTable();
+      buildSolfeoSequence();
+
+      // Establecer modo inicial: Solfeo de Tablero de Ajedrez Vivo
+      setMainMode('solfeo');
+      apply3EstratosView();
 
       animate();
     }
@@ -963,45 +1146,684 @@
       cyanBounce.position.set(-100, 60, -80);
       scene.add(cyanBounce);
 
-      // Puntos de luz en cada acuario
-      Object.values(aquariums).forEach(aq => {
-        const pLight = new THREE.PointLight(0x00FF87, 2.5, 120);
-        pLight.position.set(aq.posX - 15, 20, -15);
-        scene.add(pLight);
+      // Foco central en el Tablero de Ajedrez Vivo
+      const boardCenterLight = new THREE.PointLight(0x00E5FF, 2.8, 140);
+      boardCenterLight.position.set(0, 15, 0);
+      scene.add(boardCenterLight);
 
-        const mLight = new THREE.PointLight(0xFF007F, 2.8, 120);
-        mLight.position.set(aq.posX + 15, -18, 15);
-        scene.add(mLight);
+      const abyssLight = new THREE.PointLight(0xFF007F, 2.2, 100);
+      abyssLight.position.set(0, -18, 0);
+      scene.add(abyssLight);
+    }
+
+    // =========================================================================
+    // 5. CONSTRUCCIÓN DEL TABLERO-ACUARIO DE AJEDREZ VIVO (3 ESTRATOS)
+    // =========================================================================
+    function buildChessboardAquarium() {
+      chessboardGroup = new THREE.Group();
+      scene.add(chessboardGroup);
+
+      // 1. SUPERFICIE DE FLOTACIÓN (Y = 0): Tablero 9x9 de Cristal Obsidian
+      const tileWidth = STEP * 0.94;
+      const tileThickness = 0.4;
+      const tileGeo = new THREE.BoxGeometry(tileWidth, tileThickness, tileWidth);
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const x = (v - 4) * STEP;
+          const z = (u - 4) * STEP;
+          const isSpine = (u === v);
+          const isEven = (u + v) % 2 === 0;
+
+          let tileColor = isEven ? 0x071126 : 0x0C1C3D;
+          let tileOpacity = 0.82;
+          let tileEmissive = 0x000000;
+
+          if (isSpine) {
+            tileColor = 0x221D06;
+            tileEmissive = 0x332800;
+            tileOpacity = 0.92;
+          }
+
+          const tileMat = new THREE.MeshPhongMaterial({
+            color: tileColor,
+            emissive: tileEmissive,
+            transparent: true,
+            opacity: tileOpacity,
+            shininess: 95
+          });
+
+          const tile = new THREE.Mesh(tileGeo, tileMat);
+          tile.position.set(x, -tileThickness / 2, z);
+          tile.userData = { u, v, isSpine, cellCode: getFigureCode(u, v) };
+          chessboardGroup.add(tile);
+
+          // Borde dorado fino para las casillas de la Espina Dorsal (i, i)
+          if (isSpine) {
+            const edgeGeo = new THREE.EdgesGeometry(tileGeo);
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0xFFE600, transparent: true, opacity: 0.65 });
+            const edge = new THREE.LineSegments(edgeGeo, edgeMat);
+            edge.position.copy(tile.position);
+            chessboardGroup.add(edge);
+          }
+        }
+      }
+
+      // Marco perimetral del Tablero 9x9
+      const boardFrameGeo = new THREE.BoxGeometry(SPAN + 2.5, 0.6, SPAN + 2.5);
+      const boardFrameEdge = new THREE.EdgesGeometry(boardFrameGeo);
+      const boardFrameMat = new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.75 });
+      const boardFrame = new THREE.LineSegments(boardFrameEdge, boardFrameMat);
+      boardFrame.position.set(0, -0.3, 0);
+      chessboardGroup.add(boardFrame);
+
+      // Coordenadas periféricas: Filas A..I (Emisión) y Columnas 1..9 (Recepción)
+      ROWS_EMISSION.forEach((letter, u) => {
+        const badge = createTitleBadge(letter, '#38BDF8', 90, 90);
+        badge.scale.set(3.2, 3.2, 1);
+        badge.position.set(-SPAN / 2 - 3.2, 0.4, (u - 4) * STEP);
+        chessboardGroup.add(badge);
+      });
+
+      COLS_RECEPTION.forEach((num, v) => {
+        const badge = createTitleBadge(num, '#00FF87', 90, 90);
+        badge.scale.set(3.2, 3.2, 1);
+        badge.position.set((v - 4) * STEP, 0.4, SPAN / 2 + 3.2);
+        chessboardGroup.add(badge);
+      });
+
+      // 2. FONDO ABISAL (-Y): Lecho Oceánico a Y = -24
+      const abyssPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
+      abyssPlaneGeo.rotateX(-Math.PI / 2);
+      const abyssMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.12 });
+      const abyssPlane = new THREE.Mesh(abyssPlaneGeo, abyssMat);
+      abyssPlane.position.y = -24;
+      chessboardGroup.add(abyssPlane);
+
+      // 3. CIELO ABIERTO (+Y): Techo Celestial a Y = +24
+      const skyPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
+      skyPlaneGeo.rotateX(-Math.PI / 2);
+      const skyMat = new THREE.MeshBasicMaterial({ color: 0x00FF87, wireframe: true, transparent: true, opacity: 0.10 });
+      const skyPlane = new THREE.Mesh(skyPlaneGeo, skyMat);
+      skyPlane.position.y = 24;
+      chessboardGroup.add(skyPlane);
+
+      // Insignias Volumétricas 3D de los 3 Estratos
+      const badgeSky = createTitleBadge('🌌 CIELO ABIERTO (+Y)', '#00FF87', 480, 110);
+      badgeSky.position.set(0, 23.5, -SPAN / 2 - 4.5);
+      chessboardGroup.add(badgeSky);
+
+      const badgeSurface = createTitleBadge('🌊 SUPERFICIE (Y = 0)', '#00E5FF', 480, 110);
+      badgeSurface.position.set(-SPAN / 2 - 6, 1.2, 0);
+      chessboardGroup.add(badgeSurface);
+
+      const badgeAbyss = createTitleBadge('⚓ FONDO ABISAL (-Y)', '#FF007F', 480, 110);
+      badgeAbyss.position.set(0, -23.5, -SPAN / 2 - 4.5);
+      chessboardGroup.add(badgeAbyss);
+    }
+
+    // =========================================================================
+    // 6. MOTOR DE COLUMNAS VIVAS DE AJEDREZ (LIVING COLUMNS ENGINE)
+    // =========================================================================
+    /**
+     * Erige o transmuta una columna viva en el tablero
+     * @param {number} u - Fila en tablero (0..8)
+     * @param {number} v - Columna en tablero (0..8)
+     * @param {number} densityVal - Valor cuantitativo de densidad
+     * @param {string} dyadLabel - Etiqueta de la díada (ej. "1A → 2A")
+     * @param {number} q81Num - Número Q81 (ej. 81, 77, 41...)
+     */
+    function erectOrMorphColumn(u, v, densityVal, dyadLabel, q81Num) {
+      if (!chessboardGroup) return;
+      const key = `${u}_${v}`;
+      const x = (v - 4) * STEP;
+      const z = (u - 4) * STEP;
+      const targetH = densityVal * DENSITY_SCALE;
+      const isSpine = (u === v);
+
+      // Determinar color por estrato y naturaleza
+      let colColor = 0x00E5FF;
+      if (isSpine) {
+        colColor = 0xFFE600; // Oro
+      } else if (densityVal > 0.4) {
+        colColor = 0x00FF87; // Verde Neón
+      } else if (densityVal < -0.3) {
+        colColor = 0xFF007F; // Magenta Fosa
+      }
+
+      if (activeBoardColumns[key]) {
+        // La columna ya existía: Transmutación suave
+        const colObj = activeBoardColumns[key];
+        colObj.targetH = targetH;
+        colObj.density = densityVal;
+        colObj.dyadLabel = dyadLabel;
+        colObj.q81Num = q81Num;
+        colObj.colorHex = colColor;
+        colObj.colMat.color.setHex(colColor);
+        colObj.tipMat.color.setHex(colColor);
+      } else {
+        // Crear nueva Columna Viva
+        const colMat = new THREE.MeshPhongMaterial({
+          color: colColor,
+          transparent: true,
+          opacity: 0.85,
+          shininess: 90,
+          side: THREE.DoubleSide
+        });
+
+        const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 1, 24);
+        cylGeo.translate(0, 0.5, 0); // Pivot en la base
+
+        const cylMesh = new THREE.Mesh(cylGeo, colMat);
+        cylMesh.position.set(x, 0, z);
+        chessboardGroup.add(cylMesh);
+
+        // Perla esférica en la corona
+        const tipGeo = new THREE.SphereGeometry(1.2, 18, 18);
+        const tipMat = new THREE.MeshPhongMaterial({
+          color: colColor,
+          emissive: colColor,
+          emissiveIntensity: 0.4,
+          shininess: 100
+        });
+        const tipMesh = new THREE.Mesh(tipGeo, tipMat);
+        tipMesh.position.set(x, 0, z);
+        chessboardGroup.add(tipMesh);
+
+        // Anillo de huella en la superficie Y = 0
+        const ringGeo = new THREE.RingGeometry(0.95, 1.45, 24);
+        ringGeo.rotateX(-Math.PI / 2);
+        const ringMat = new THREE.MeshBasicMaterial({ color: colColor, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.position.set(x, 0.08, z);
+        chessboardGroup.add(ringMesh);
+
+        // Espina láser central
+        const spineGeo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(x, 0, z),
+          new THREE.Vector3(x, 0, z)
+        ]);
+        const spineMat = new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.95 });
+        const spineLine = new THREE.Line(spineGeo, spineMat);
+        chessboardGroup.add(spineLine);
+
+        activeBoardColumns[key] = {
+          u, v, x, z,
+          cylMesh, tipMesh, ringMesh, spineLine,
+          colMat, tipMat,
+          currentH: 0.05,
+          targetH: targetH,
+          density: densityVal,
+          dyadLabel: dyadLabel,
+          q81Num: q81Num,
+          colorHex: colColor,
+          isAlive: true
+        };
+      }
+
+      updateStandingCountUI();
+    }
+
+    function updateLivingColumnsAnimation() {
+      if (mainMode !== 'solfeo' || !chessboardGroup) return;
+
+      Object.values(activeBoardColumns).forEach(col => {
+        // Interpolación viscoelástica
+        col.currentH += (col.targetH - col.currentH) * 0.14;
+
+        const h = col.currentH;
+        const absH = Math.max(0.08, Math.abs(h));
+        const dir = (h >= 0) ? 1 : -1;
+
+        // Escalar y orientar cilindro
+        col.cylMesh.scale.set(1, absH * dir, 1);
+        col.tipMesh.position.y = h;
+
+        // Actualizar espina láser
+        const posAttr = col.spineLine.geometry.attributes.position;
+        posAttr.setY(1, h);
+        posAttr.needsUpdate = true;
       });
     }
 
+    function resetSolfeoBoard() {
+      if (solfeoPlayingInterval) clearInterval(solfeoPlayingInterval);
+      isSolfeoPlaying = false;
+      updatePlaySolfeoButtonUI();
+
+      Object.values(activeBoardColumns).forEach(col => {
+        chessboardGroup.remove(col.cylMesh);
+        chessboardGroup.remove(col.tipMesh);
+        chessboardGroup.remove(col.ringMesh);
+        chessboardGroup.remove(col.spineLine);
+        col.cylMesh.geometry.dispose();
+        col.tipMesh.geometry.dispose();
+        col.ringMesh.geometry.dispose();
+        col.spineLine.geometry.dispose();
+        col.colMat.dispose();
+        col.tipMat.dispose();
+      });
+      activeBoardColumns = {};
+
+      solfeoCurrentStep = 0;
+      updateSolfeoStepUI(0);
+      updateStandingCountUI();
+
+      // Desactivar celdas en la partitura HTML
+      document.querySelectorAll('.partitura-cell').forEach(el => el.classList.remove('active-note'));
+    }
+
+    function updateStandingCountUI() {
+      const count = Object.keys(activeBoardColumns).length;
+      const el = document.getElementById('solfeo-standing-count');
+      if (el) el.textContent = `${count} / 81 Casillas`;
+    }
+
+    // =========================================================================
+    // 7. MOTOR DE SOLFEO FACTUAL DE LA PARTITURA (5 x 5)
+    // =========================================================================
+    function setSolfeoDensity(key) {
+      activeDensityKey = key;
+      ['D1', 'D2', 'D3', 'D4'].forEach(k => {
+        const btn = document.getElementById(`btn-density-${k}`);
+        if (btn) {
+          if (k === key) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      const titles = {
+        D1: 'D1: EXPECTATIVA EMITIDA (p_DA)',
+        D2: 'D2: PREFERENCIA DADA (DA)',
+        D3: 'D3: PREFERENCIA RECIBIDA (RECIBE)',
+        D4: 'D4: EXPECTATIVA PERCIBIDA (p_RECIBE)'
+      };
+      document.getElementById('solfeo-matrix-badge').textContent = titles[key] || key;
+
+      renderSolfeoTable();
+      buildSolfeoSequence();
+
+      // Si hay columnas vivas, transmutarlas a la nueva densidad
+      if (Object.keys(activeBoardColumns).length > 0) {
+        solfeoSequence.forEach(item => {
+          const key = `${item.u}_${item.v}`;
+          if (activeBoardColumns[key]) {
+            const newDensity = DENSITIES[activeDensityKey][item.i][item.j];
+            erectOrMorphColumn(item.u, item.v, newDensity, item.dyadLabel, item.q81Num);
+          }
+        });
+      }
+    }
+
+    function buildSolfeoSequence(onlySubjectIdx = null) {
+      solfeoSequence = [];
+      const matD = DENSITIES[activeDensityKey];
+
+      if (onlySubjectIdx !== null && onlySubjectIdx >= 0 && onlySubjectIdx < 5) {
+        // Solfeo exclusivo para la fila del sujeto seleccionado
+        const i = onlySubjectIdx;
+        for (let j = 0; j < 5; j++) {
+          const q81Num = M_NUM[i][j];
+          const coords = Q81_COORDINATES[q81Num] || { u: 4, v: 4, sym: '¡¿?!', name: 'Centro', q6: 'Indiferencia' };
+          const density = matD[i][j];
+          solfeoSequence.push({
+            step: solfeoSequence.length + 1,
+            i, j,
+            emitter: SUBJECT_LABELS[i],
+            receiver: SUBJECT_LABELS[j],
+            dyadLabel: `${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]}`,
+            q81Num,
+            u: coords.u,
+            v: coords.v,
+            sym: coords.sym,
+            name: coords.name,
+            q6: coords.q6,
+            density,
+            isSpine: (i === j)
+          });
+        }
+      } else {
+        // Partitura Completa (las 25 celdas de 1A a 5A)
+        for (let i = 0; i < 5; i++) {
+          for (let j = 0; j < 5; j++) {
+            const q81Num = M_NUM[i][j];
+            const coords = Q81_COORDINATES[q81Num] || { u: 4, v: 4, sym: '¡¿?!', name: 'Centro', q6: 'Indiferencia' };
+            const density = matD[i][j];
+            solfeoSequence.push({
+              step: solfeoSequence.length + 1,
+              i, j,
+              emitter: SUBJECT_LABELS[i],
+              receiver: SUBJECT_LABELS[j],
+              dyadLabel: `${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]}`,
+              q81Num,
+              u: coords.u,
+              v: coords.v,
+              sym: coords.sym,
+              name: coords.name,
+              q6: coords.q6,
+              density,
+              isSpine: (i === j)
+            });
+          }
+        }
+      }
+    }
+
+    function renderSolfeoTable() {
+      const table = document.getElementById('solfeo-table');
+      if (!table) return;
+      const matD = DENSITIES[activeDensityKey];
+
+      // Calcular medias de fila y de columna
+      const rowMeans = [];
+      for (let i = 0; i < 5; i++) {
+        let sum = 0;
+        for (let j = 0; j < 5; j++) sum += matD[i][j];
+        rowMeans.push((sum / 5).toFixed(2));
+      }
+
+      const colMeans = [];
+      for (let j = 0; j < 5; j++) {
+        let sum = 0;
+        for (let i = 0; i < 5; i++) sum += matD[i][j];
+        colMeans.push((sum / 5).toFixed(2));
+      }
+
+      let grandSum = 0;
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) grandSum += matD[i][j];
+      const grandMean = (grandSum / 25).toFixed(2);
+
+      let html = '<thead><tr class="text-slate-400 border-b border-slate-800 text-[11px]">';
+      html += '<th class="p-1.5 text-left text-cyan-300">Emisor \ Receptor</th>';
+      SUBJECT_LABELS.forEach(lbl => {
+        html += `<th class="p-1.5 text-amber-300 font-bold">${lbl}</th>`;
+      });
+      html += '<th class="p-1.5 text-slate-300 font-bold">MEDIA</th></tr></thead><tbody>';
+
+      for (let i = 0; i < 5; i++) {
+        html += `<tr class="border-b border-slate-800/60"><td class="p-1 text-left font-bold text-amber-300 bg-slate-950/60">${SUBJECT_LABELS[i]}</td>`;
+        for (let j = 0; j < 5; j++) {
+          const val = matD[i][j];
+          const q81 = M_NUM[i][j];
+          const isSpine = (i === j);
+          const coords = Q81_COORDINATES[q81] || { sym: '¿?' };
+
+          let colorClass = 'text-cyan-300 bg-sky-950/30';
+          if (isSpine) colorClass = 'text-amber-300 bg-amber-950/40 border border-amber-500/40';
+          else if (val > 0.4) colorClass = 'text-emerald-300 bg-emerald-950/30';
+          else if (val < -0.3) colorClass = 'text-rose-400 bg-rose-950/30';
+
+          const sign = val >= 0 ? '+' : '';
+          const cellId = `cell-${i}-${j}`;
+
+          html += `<td id="${cellId}" onclick="playDirectNote(${i}, ${j})" class="partitura-cell p-1 rounded ${colorClass}" title="${SUBJECT_LABELS[i]} → ${SUBJECT_LABELS[j]} • Q81: #${q81} (${coords.sym}) • Densidad: ${sign}${val.toFixed(2)}">
+            <div class="text-[9px] text-slate-400">#${q81} <span class="font-bold text-white">${coords.sym}</span></div>
+            <div class="font-black text-xs">${sign}${val.toFixed(2)}</div>
+          </td>`;
+        }
+        html += `<td class="p-1 font-bold text-slate-300 bg-slate-950/60">${rowMeans[i]}</td></tr>`;
+      }
+
+      html += '<tr class="font-bold bg-slate-950/80 text-slate-300"><td class="p-1 text-left text-cyan-300">MEDIA</td>';
+      colMeans.forEach(cm => {
+        html += `<td class="p-1">${cm}</td>`;
+      });
+      html += `<td class="p-1 text-amber-300">${grandMean}</td></tr></tbody>`;
+
+      table.innerHTML = html;
+    }
+
+    function playDirectNote(i, j) {
+      buildSolfeoSequence();
+      const idx = solfeoSequence.findIndex(item => item.i === i && item.j === j);
+      if (idx !== -1) {
+        solfeoCurrentStep = idx + 1;
+        executeSolfeoItem(solfeoSequence[idx]);
+      }
+    }
+
+    function executeSolfeoItem(item) {
+      // 1. Resaltar celda en partitura
+      document.querySelectorAll('.partitura-cell').forEach(el => el.classList.remove('active-note'));
+      const activeCell = document.getElementById(`cell-${item.i}-${item.j}`);
+      if (activeCell) activeCell.classList.add('active-note');
+
+      // 2. Erigir o transmutar columna viva en el tablero
+      erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+
+      // 3. Emitir sonido sinestésico 432 Hz
+      playHarmonicChime(item.density, 0.35, {
+        isSpine: item.isSpine,
+        isDisparity: (item.density < -0.3),
+        u: item.u,
+        v: item.v
+      });
+
+      // 4. Actualizar ficha de diagnóstico del compás
+      updateSolfeoTelemetryCard(item);
+
+      // 5. Actualizar barra de progreso
+      updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num, item.density);
+    }
+
+    function updateSolfeoTelemetryCard(item) {
+      document.getElementById('solfeo-dyad-title').textContent = item.dyadLabel + (item.isSpine ? ' (Auto-posición)' : '');
+      document.getElementById('solfeo-q81-title').textContent = `#${item.q81Num} ${item.sym}`;
+      document.getElementById('solfeo-grid-cell').textContent = `${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
+
+      const sign = item.density >= 0 ? '+' : '';
+      const denEl = document.getElementById('solfeo-density-val');
+      denEl.textContent = `${sign}${item.density.toFixed(2)}`;
+      denEl.className = item.density >= 0 ? 'text-emerald-400 block font-bold' : 'text-rose-400 block font-bold';
+
+      const strEl = document.getElementById('solfeo-stratum-val');
+      if (item.density > 0.4) {
+        strEl.textContent = '🌌 Cielo Abierto (+Y)';
+        strEl.className = 'text-emerald-300 block font-bold';
+      } else if (item.density < -0.3) {
+        strEl.textContent = '⚓ Fondo Abisal (-Y)';
+        strEl.className = 'text-rose-400 block font-bold';
+      } else {
+        strEl.textContent = '🌊 Superficie (Y = 0)';
+        strEl.className = 'text-cyan-300 block font-bold';
+      }
+
+      // Frecuencia física
+      const normVal = item.density / 4.44;
+      const f = 216.0 * Math.pow(2, normVal * 1.2);
+      document.getElementById('solfeo-freq-val').textContent = `${f.toFixed(1)} Hz ${item.isSpine ? '(Acorde Áureo)' : ''}`;
+
+      document.getElementById('solfeo-behavior-val').textContent = 'Columna Viva Erigida y Persistente';
+    }
+
+    function updateSolfeoStepUI(step, dyad = '', q81 = '', den = 0) {
+      const total = solfeoSequence.length || 25;
+      document.getElementById('solfeo-step-lbl').textContent = `${step} / ${total} Notas`;
+      const detail = document.getElementById('solfeo-step-detail');
+      if (step === 0) {
+        detail.textContent = 'Haz clic en cualquier celda o pulsa Reproducir Solfeo';
+      } else {
+        const sign = den >= 0 ? '+' : '';
+        detail.textContent = `Compás ${step}: ${dyad} • Q81 #${q81} • Densidad: ${sign}${den.toFixed(2)}`;
+      }
+    }
+
+    function togglePlaySolfeo() {
+      isSolfeoPlaying = !isSolfeoPlaying;
+      updatePlaySolfeoButtonUI();
+
+      if (isSolfeoPlaying) {
+        initAudio();
+        if (solfeoSequence.length === 0) buildSolfeoSequence();
+        const speed = parseInt(document.getElementById('solfeo-speed').value, 10) || 420;
+
+        solfeoPlayingInterval = setInterval(() => {
+          if (solfeoCurrentStep >= solfeoSequence.length) {
+            solfeoCurrentStep = 0;
+          }
+          const item = solfeoSequence[solfeoCurrentStep];
+          executeSolfeoItem(item);
+          solfeoCurrentStep++;
+
+          if (solfeoCurrentStep >= solfeoSequence.length) {
+            togglePlaySolfeo();
+          }
+        }, speed);
+      } else {
+        if (solfeoPlayingInterval) clearInterval(solfeoPlayingInterval);
+      }
+    }
+
+    function updatePlaySolfeoButtonUI() {
+      const icon = document.getElementById('play-solfeo-icon');
+      const lbl = document.getElementById('play-solfeo-lbl');
+      const btn = document.getElementById('btn-play-solfeo');
+      if (isSolfeoPlaying) {
+        icon.textContent = '⏸';
+        lbl.textContent = 'PAUSAR';
+        btn.classList.add('border-cyan-400');
+      } else {
+        icon.textContent = '▶';
+        lbl.textContent = 'REPRODUCIR SOLFEO';
+        btn.classList.remove('border-cyan-400');
+      }
+    }
+
+    function stepSolfeoManual(dir) {
+      if (isSolfeoPlaying) togglePlaySolfeo();
+      if (solfeoSequence.length === 0) buildSolfeoSequence();
+
+      let nextStep = solfeoCurrentStep + dir;
+      if (nextStep < 1) nextStep = 1;
+      if (nextStep > solfeoSequence.length) nextStep = solfeoSequence.length;
+
+      solfeoCurrentStep = nextStep;
+      executeSolfeoItem(solfeoSequence[nextStep - 1]);
+    }
+
+    function solfeoSubjectRow(subjIdx) {
+      if (isSolfeoPlaying) togglePlaySolfeo();
+      buildSolfeoSequence(subjIdx);
+      solfeoCurrentStep = 0;
+      togglePlaySolfeo();
+    }
+
+    // =========================================================================
+    // 8. CONMUTACIÓN DE MODO MAESTRO: AJEDREZ VIVO VS SÁBANA IMAX 4D
+    // =========================================================================
+    function setMainMode(mode) {
+      mainMode = mode;
+      const btnSolfeo = document.getElementById('btn-mode-solfeo');
+      const btnImax = document.getElementById('btn-mode-imax');
+      const barSolfeo = document.getElementById('bar-solfeo-controls');
+      const barImax = document.getElementById('bar-imax-controls');
+      const panelSolfeo = document.getElementById('panel-solfeo-mode');
+      const panelImax = document.getElementById('panel-imax-mode');
+      const studyKey = document.getElementById('study-key');
+
+      if (mode === 'solfeo') {
+        btnSolfeo.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
+        btnImax.classList.remove('active', 'border-amber-500/50', 'bg-amber-950/60');
+
+        barSolfeo.classList.remove('hidden');
+        barImax.classList.add('hidden');
+        panelSolfeo.classList.remove('hidden');
+        panelImax.classList.add('hidden');
+
+        studyKey.textContent = 'REAL-AA-G1-T1-C1-V10-A16-ES-5';
+
+        // 3D: Mostrar Tablero de Ajedrez Vivo y ocultar los 4 acuarios IMAX
+        if (chessboardGroup) chessboardGroup.visible = true;
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          if (aquariums[k].group) aquariums[k].group.visible = false;
+        });
+        if (worldlinesGroup) worldlinesGroup.visible = false;
+
+        apply3EstratosView();
+
+      } else {
+        btnImax.classList.add('active', 'border-amber-500/50', 'bg-amber-950/60');
+        btnSolfeo.classList.remove('active', 'border-amber-500/50', 'bg-amber-950/60');
+
+        barImax.classList.remove('hidden');
+        barSolfeo.classList.add('hidden');
+        panelImax.classList.remove('hidden');
+        panelSolfeo.classList.add('hidden');
+
+        studyKey.textContent = 'SIMUL-AA-G1-T4-C1-V10-A16-ES-5';
+
+        // 3D: Ocultar Tablero y mostrar acuarios IMAX
+        if (chessboardGroup) chessboardGroup.visible = false;
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          if (aquariums[k].group) aquariums[k].group.visible = true;
+        });
+        if (worldlinesGroup) worldlinesGroup.visible = worldlinesVisible;
+
+        setViewLayout(viewLayout);
+      }
+    }
+
+    // =========================================================================
+    // 9. MODOS DE CÁMARA Y PERSPECTIVA CALIBRADA DE 3 ESTRATOS
+    // =========================================================================
+    function apply3EstratosView() {
+      const dist = CAM_3ESTRATOS_DIST;
+      camera.position.x = dist * Math.sin(CAM_3ESTRATOS_AZIM) * Math.cos(CAM_3ESTRATOS_ELEV);
+      camera.position.y = dist * Math.sin(CAM_3ESTRATOS_ELEV);
+      camera.position.z = dist * Math.cos(CAM_3ESTRATOS_AZIM) * Math.cos(CAM_3ESTRATOS_ELEV);
+
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      const btn = document.getElementById('btn-3estratos');
+      if (btn) {
+        btn.classList.add('scale-105');
+        setTimeout(() => btn.classList.remove('scale-105'), 250);
+      }
+    }
+
+    function setCameraAngle(type) {
+      const dist = (mainMode === 'solfeo') ? CAM_3ESTRATOS_DIST : ((viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
+
+      if (type === 'iso') {
+        apply3EstratosView();
+      } else if (type === 'top') {
+        camera.position.set(0, dist * 1.15, 0.001);
+        controls.target.set(0, 0, 0);
+      } else if (type === 'rasante') {
+        camera.position.set(dist * Math.sin(CAM_3ESTRATOS_AZIM), 2.5, dist * Math.cos(CAM_3ESTRATOS_AZIM));
+        controls.target.set(0, 0, 0);
+      } else if (type === 'abisal') {
+        camera.position.set(dist * Math.sin(CAM_3ESTRATOS_AZIM) * 0.9, -dist * 0.42, dist * Math.cos(CAM_3ESTRATOS_AZIM) * 0.9);
+        controls.target.set(0, -5, 0);
+      }
+      controls.update();
+    }
+
+    // =========================================================================
+    // 10. MÓDULOS DE COMPATIBILIDAD IMAX 4D (SÁBANAS, WORLDLINES, TELEMETRÍA)
+    // =========================================================================
     function buildAquariumUnit(aq) {
       const grp = new THREE.Group();
       grp.position.x = aq.posX;
       aq.group = grp;
       scene.add(grp);
 
-      // Insignia 3D flotante
       const titleColor = (aq.key === 't1') ? '#00FF87' : ((aq.key === 't2') ? '#FF007F' : ((aq.key === 't3') ? '#00E5FF' : '#FFE600'));
-      const badge = createTitleBadge(aq.title, titleColor);
+      const badge = createTitleBadge(aq.title, titleColor, 400, 110);
       badge.position.set(0, MAX_HEIGHT + 13, 0);
       grp.add(badge);
 
-      // 1. Lámina de agua Z = 0
       const planeGeo = new THREE.PlaneGeometry(SPAN + 4, SPAN + 4, 12, 12);
       planeGeo.rotateX(-Math.PI / 2);
       const planeMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.15 });
-      const waterPlane = new THREE.Mesh(planeGeo, planeMat);
-      grp.add(waterPlane);
+      grp.add(new THREE.Mesh(planeGeo, planeMat));
 
-      // Marco del cubo de cristal
       const boxGeo = new THREE.BoxGeometry(SPAN + 3, MAX_HEIGHT * 2.2, SPAN + 3);
       const boxEdge = new THREE.EdgesGeometry(boxGeo);
       const boxMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.22 });
-      const cubeFrame = new THREE.LineSegments(boxEdge, boxMat);
-      grp.add(cubeFrame);
+      grp.add(new THREE.LineSegments(boxEdge, boxMat));
 
-      // 2. Sábana Arrugada Tecnicolor
       const sheetGeo = new THREE.PlaneGeometry(SPAN, SPAN, GRID_SIZE - 1, GRID_SIZE - 1);
       sheetGeo.rotateX(-Math.PI / 2);
       const colors = new Float32Array(NUM_VERTICES * 3);
@@ -1022,12 +1844,10 @@
       aq.sheetMesh = new THREE.Mesh(sheetGeo, sheetMat);
       grp.add(aq.sheetMesh);
 
-      // Malla alámbrica superpuesta
       const wireMat = new THREE.MeshBasicMaterial({ color: 0xBAE6FD, wireframe: true, transparent: true, opacity: 0.32 });
       aq.wireMesh = new THREE.Mesh(sheetGeo, wireMat);
       grp.add(aq.wireMesh);
 
-      // Perlas en los 81 vértices
       const ptsGeo = new THREE.BufferGeometry();
       const ptsPos = new Float32Array(NUM_VERTICES * 3);
       ptsGeo.setAttribute('position', new THREE.BufferAttribute(ptsPos, 3));
@@ -1037,7 +1857,6 @@
       aq.pointsCloud.userData = { aquariumKey: aq.key };
       grp.add(aq.pointsCloud);
 
-      // 3. Espina Dorsal Dorada
       const spineGeo = new THREE.BufferGeometry();
       const spinePos = new Float32Array(GRID_SIZE * 3);
       spineGeo.setAttribute('position', new THREE.BufferAttribute(spinePos, 3));
@@ -1045,23 +1864,84 @@
       aq.spineLine = new THREE.Line(spineGeo, spineMat);
       grp.add(aq.spineLine);
 
-      // 4. Plomadas
       aq.plumbGroup = new THREE.Group();
       const plumbMat = new THREE.LineDashedMaterial({ color: 0x38BDF8, dashSize: 1.2, gapSize: 1.0, transparent: true, opacity: 0.22 });
       for (let i = 0; i < NUM_VERTICES; i++) {
         const g = new THREE.BufferGeometry();
         g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
-        const l = new THREE.Line(g, plumbMat);
-        aq.plumbGroup.add(l);
+        aq.plumbGroup.add(new THREE.Line(g, plumbMat));
       }
       grp.add(aq.plumbGroup);
 
-      // 5. Constelación de sujetos
       aq.constellGroup = new THREE.Group();
       grp.add(aq.constellGroup);
     }
 
-    // 5. Generación de Filamentos Trans-Temporales 4D (Worldlines entre los 4 Acuarios)
+    function updateAquariumGeometry(aq) {
+      if (!aq.sheetMesh) return;
+      const posAttr = aq.sheetMesh.geometry.attributes.position;
+      const colAttr = aq.sheetMesh.geometry.attributes.color;
+      const ptsPos = aq.pointsCloud.geometry.attributes.position;
+      const ptsCol = aq.pointsCloud.geometry.attributes.color;
+      const spinePos = aq.spineLine.geometry.attributes.position;
+
+      let spineIdx = 0;
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+          const x = (v - 4) * STEP;
+          const z = (u - 4) * STEP;
+          const y = aq.currentZ[idx] * MAX_HEIGHT;
+
+          posAttr.setY(idx, y);
+          ptsPos.setXYZ(idx, x, y, z);
+
+          const sdr = aq.currentZ[idx];
+          let r, g, b;
+
+          if (sdr >= 0) {
+            const t = sdr;
+            r = 0.0;
+            g = 0.72 + 0.28 * t;
+            b = 0.98 - 0.45 * t;
+          } else {
+            const t = -sdr;
+            r = 1.0 * t;
+            g = 0.55 - 0.55 * t;
+            b = 0.88 - 0.38 * t;
+          }
+
+          if (u === v) {
+            r = Math.min(1.0, r * 0.65 + 0.35 * 1.0);
+            g = Math.min(1.0, g * 0.65 + 0.35 * 0.9);
+            b = Math.min(1.0, b * 0.65 + 0.35 * 0.1);
+            spinePos.setXYZ(spineIdx, x, y + 0.25, z);
+            spineIdx++;
+          }
+
+          colAttr.setXYZ(idx, r, g, b);
+          ptsCol.setXYZ(idx, r, g, b);
+
+          const plLine = aq.plumbGroup.children[idx];
+          if (plLine) {
+            const arr = plLine.geometry.attributes.position.array;
+            arr[0] = x; arr[1] = 0; arr[2] = z;
+            arr[3] = x; arr[4] = y; arr[5] = z;
+            plLine.geometry.attributes.position.needsUpdate = true;
+            plLine.computeLineDistances();
+          }
+        }
+      }
+
+      posAttr.needsUpdate = true;
+      colAttr.needsUpdate = true;
+      ptsPos.needsUpdate = true;
+      ptsCol.needsUpdate = true;
+      spinePos.needsUpdate = true;
+      aq.sheetMesh.geometry.computeVertexNormals();
+    }
+
     function getVertexWorldPos(aqKey, u, v) {
       const aq = aquariums[aqKey];
       const idx = u * GRID_SIZE + v;
@@ -1095,30 +1975,16 @@
 
           const curve = new THREE.CatmullRomCurve3([p1, p2, p3, p4]);
           const pts = curve.getPoints(WORLDLINE_SAMPLES);
-
           const geo = new THREE.BufferGeometry().setFromPoints(pts);
-
-          const avgZ = (aquariums.t1.currentZ[idx] + aquariums.t2.currentZ[idx] + 
-                        aquariums.t3.currentZ[idx] + aquariums.t4.currentZ[idx]) / 4;
-          const deltaZ = Math.abs(aquariums.t4.currentZ[idx] - aquariums.t1.currentZ[idx]);
 
           let color = 0x00E5FF;
           let opacity = 0.35;
           let linewidth = 1.0;
 
           if (isSpine) {
-            color = 0xFFE600; // Oro para la espina dorsal 4D
+            color = 0xFFE600;
             opacity = 0.95;
             linewidth = 3.5;
-          } else if (avgZ > 0.35) {
-            color = 0x00FF87; // Verde cohesión
-            opacity = 0.70;
-          } else if (avgZ < -0.30) {
-            color = 0xFF007F; // Magenta conflicto
-            opacity = 0.75;
-          } else if (deltaZ > 0.65) {
-            color = 0xFF9F1C; // Naranja metamorfosis
-            opacity = 0.65;
           }
 
           const mat = new THREE.LineBasicMaterial({
@@ -1129,26 +1995,14 @@
           });
 
           const line = new THREE.Line(geo, mat);
-          line.userData = {
-            idx: idx,
-            u: u,
-            v: v,
-            isSpine: isSpine,
-            avgZ: avgZ,
-            deltaZ: deltaZ,
-            baseColor: color,
-            baseOpacity: opacity
-          };
-
+          line.userData = { idx, u, v, isSpine, baseColor: color, baseOpacity: opacity };
           worldlinesGroup.add(line);
         }
       }
-
-      applyWorldlinesFilter();
     }
 
     function updateWorldlinesPositions() {
-      if (!worldlinesGroup || !worldlinesVisible || viewLayout !== 'cinemascope') return;
+      if (!worldlinesGroup || !worldlinesVisible || viewLayout !== 'cinemascope' || mainMode !== 'imax') return;
       for (let i = 0; i < worldlinesGroup.children.length; i++) {
         const line = worldlinesGroup.children[i];
         const u = line.userData.u;
@@ -1183,7 +2037,7 @@
         btn.children[1].textContent = 'Líneas 4D: OFF';
         icon.textContent = '💤';
       }
-      applyWorldlinesFilter();
+      if (worldlinesGroup) worldlinesGroup.visible = worldlinesVisible && (mainMode === 'imax');
     }
 
     function setWorldlinesFilter(filterMode) {
@@ -1195,207 +2049,32 @@
           else el.classList.remove('active');
         }
       });
-      applyWorldlinesFilter();
-    }
-
-    function applyWorldlinesFilter() {
       if (!worldlinesGroup) return;
-      worldlinesGroup.visible = worldlinesVisible && (viewLayout === 'cinemascope');
-
       worldlinesGroup.children.forEach(line => {
         const d = line.userData;
         let show = true;
-        let highlight = false;
-
-        if (worldlinesFilter === 'spine') {
-          show = d.isSpine;
-        } else if (worldlinesFilter === 'extreme') {
-          show = d.isSpine || Math.abs(d.avgZ) > 0.35 || d.deltaZ > 0.65;
-        } else if (worldlinesFilter === 'subject') {
-          if (selectedSubjectIdx !== null) {
-            const subj = SUBJECT_CONSTELLATIONS[selectedSubjectIdx];
-            const inSubj = subj.vectorN.some(vn => vn.u === d.u && vn.v === d.v);
-            show = inSubj;
-            highlight = true;
-          } else {
-            show = d.isSpine;
-          }
-        }
-
+        if (filterMode === 'spine') show = d.isSpine;
+        else if (filterMode === 'extreme') show = d.isSpine || (d.u < 3 && d.v < 3) || (d.u > 6 && d.v > 6);
         line.visible = show;
-        if (highlight) {
-          line.material.opacity = 1.0;
-          line.material.color.setHex(d.isSpine ? 0xFFE600 : 0x00FF87);
-        } else {
-          line.material.opacity = d.baseOpacity;
-          line.material.color.setHex(d.baseColor);
-        }
       });
     }
 
-    function updateAquariumGeometry(aq) {
-      if (!aq.sheetMesh) return;
-      const posAttr = aq.sheetMesh.geometry.attributes.position;
-      const colAttr = aq.sheetMesh.geometry.attributes.color;
-      const ptsPos = aq.pointsCloud.geometry.attributes.position;
-      const ptsCol = aq.pointsCloud.geometry.attributes.color;
-      const spinePos = aq.spineLine.geometry.attributes.position;
-
-      let spineIdx = 0;
-
-      for (let u = 0; u < GRID_SIZE; u++) {
-        for (let v = 0; v < GRID_SIZE; v++) {
-          const idx = u * GRID_SIZE + v;
-          const x = (v - 4) * STEP;
-          const z = (u - 4) * STEP;
-          const y = aq.currentZ[idx] * MAX_HEIGHT;
-
-          posAttr.setY(idx, y);
-          ptsPos.setXYZ(idx, x, y, z);
-
-          const sdr = aq.currentZ[idx];
-          let r, g, b;
-
-          if (sdr >= 0) {
-            const t = sdr;
-            r = 0.0;
-            g = 0.72 + 0.28 * t;
-            b = 0.98 - 0.45 * t; // Verde neón
-          } else {
-            const t = -sdr;
-            r = 0.0 + 1.0 * t;
-            g = 0.55 - 0.55 * t;
-            b = 0.88 - 0.38 * t; // Magenta saturado
-          }
-
-          if (u === v) {
-            r = Math.min(1.0, r * 0.65 + 0.35 * 1.0);
-            g = Math.min(1.0, g * 0.65 + 0.35 * 0.9);
-            b = Math.min(1.0, b * 0.65 + 0.35 * 0.1);
-            spinePos.setXYZ(spineIdx, x, y + 0.25, z);
-            spineIdx++;
-          }
-
-          colAttr.setXYZ(idx, r, g, b);
-          ptsCol.setXYZ(idx, r, g, b);
-
-          const plLine = aq.plumbGroup.children[idx];
-          if (plLine) {
-            const arr = plLine.geometry.attributes.position.array;
-            arr[0] = x; arr[1] = 0; arr[2] = z;
-            arr[3] = x; arr[4] = y; arr[5] = z;
-            plLine.geometry.attributes.position.needsUpdate = true;
-            plLine.computeLineDistances();
-          }
-        }
-      }
-
-      posAttr.needsUpdate = true;
-      colAttr.needsUpdate = true;
-      ptsPos.needsUpdate = true;
-      ptsCol.needsUpdate = true;
-      spinePos.needsUpdate = true;
-      aq.sheetMesh.geometry.computeVertexNormals();
-
-      updateConstellationForAquarium(aq);
-    }
-
-    function setTargetHeights(key, newHeights) {
-      const aq = aquariums[key];
-      if (!aq) return;
-      aq.sourceZ.set(aq.currentZ);
-      aq.targetZ.set(newHeights);
-
-      transitionProgress = 0.0;
-      transitionStartTime = performance.now();
-      document.getElementById('transition-status').textContent = 'TRANSICIÓN VISCOELÁSTICA';
-      document.getElementById('transition-status').className = 'text-[10px] font-bold text-amber-300 animate-pulse';
-
-      playHarmonicChime(newHeights[0], 0.35);
-    }
-
-    function updateTransitions(now) {
-      if (transitionProgress >= 1.0) return;
-
-      const elapsed = now - transitionStartTime;
-      const rawT = Math.min(1.0, elapsed / transitionDuration);
-      const maxDist = Math.hypot(GRID_SIZE - 1, GRID_SIZE - 1);
-
-      ['t1', 't2', 't3', 't4'].forEach(k => {
-        const aq = aquariums[k];
-        let allCompleted = true;
-
-        for (let u = 0; u < GRID_SIZE; u++) {
-          for (let v = 0; v < GRID_SIZE; v++) {
-            const idx = u * GRID_SIZE + v;
-            const dist = Math.hypot(u - epicenterU, v - epicenterV);
-            const normalizedDist = dist / maxDist;
-            const phaseDelay = normalizedDist * 0.28;
-
-            let localT = (rawT - phaseDelay) / (1.0 - phaseDelay);
-            localT = Math.max(0, Math.min(1, localT));
-
-            // Quintic smootherstep
-            const easeT = localT * localT * localT * (localT * (localT * 6 - 15) + 10);
-            aq.currentZ[idx] = aq.sourceZ[idx] + (aq.targetZ[idx] - aq.sourceZ[idx]) * easeT;
-
-            if (localT < 1.0) allCompleted = false;
-          }
-        }
-
-        updateAquariumGeometry(aq);
-      });
-
-      updateWorldlinesPositions();
-
-      transitionProgress = rawT;
-      const pct = Math.round(rawT * 100);
-      document.getElementById('transition-bar').style.width = `${pct}%`;
-
-      if (rawT >= 1.0) {
-        document.getElementById('transition-status').textContent = 'SINCRONÍA 4D';
-        document.getElementById('transition-status').className = 'text-[10px] font-bold text-cyan-300';
-      }
-    }
-
-    // 6. Cambio de Formato: Singular vs IMAX 4D
-    function setViewLayout(layout, animateCam = true) {
+    function setViewLayout(layout) {
       viewLayout = layout;
-      const btnSingular = document.getElementById('btn-layout-singular');
-      const btnCinemascope = document.getElementById('btn-layout-cinemascope');
-
+      if (mainMode !== 'imax') return;
       if (layout === 'cinemascope') {
-        btnCinemascope.classList.add('active');
-        btnSingular.classList.remove('active');
-
-        // Distribuir los 4 acuarios horizontalmente
-        aquariums.t1.group.visible = true;
-        aquariums.t2.group.visible = true;
-        aquariums.t3.group.visible = true;
-        aquariums.t4.group.visible = true;
-
         aquariums.t1.group.position.x = -1.5 * AQ_DIST;
         aquariums.t2.group.position.x = -0.5 * AQ_DIST;
         aquariums.t3.group.position.x = +0.5 * AQ_DIST;
         aquariums.t4.group.position.x = +1.5 * AQ_DIST;
-
+        ['t1', 't2', 't3', 't4'].forEach(k => { aquariums[k].group.visible = true; });
         if (worldlinesGroup) worldlinesGroup.visible = worldlinesVisible;
-
-        ['t1', 't2', 't3', 't4'].forEach(k => {
-          aquariums[k].currentZ.set(SABANAS[k]);
-          updateAquariumGeometry(aquariums[k]);
-        });
-
-        applyDiafanoView(CAM_DIST_CINEMASCOPE);
       } else {
-        btnSingular.classList.add('active');
-        btnCinemascope.classList.remove('active');
-
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          aquariums[k].group.visible = (k === activeSabanaKey);
+          aquariums[k].group.position.x = 0;
+        });
         if (worldlinesGroup) worldlinesGroup.visible = false;
-
-        // Centrar sólo el acuario activo
-        loadSabana(activeSabanaKey);
-        applyDiafanoView(CAM_DIST_SINGULAR);
       }
     }
 
@@ -1408,63 +2087,8 @@
           else btn.classList.remove('active');
         }
       });
-
-      if (viewLayout === 'singular') {
-        ['t1', 't2', 't3', 't4'].forEach(k => {
-          aquariums[k].group.visible = (k === key || (key === 'canon' && k === 't1'));
-          aquariums[k].group.position.x = 0;
-        });
-        const targetAqKey = (key === 'canon') ? 't1' : key;
-        setTargetHeights(targetAqKey, SABANAS[key]);
-      } else {
-        // En modo IMAX, volver a cargar todas las sábanas
-        ['t1', 't2', 't3', 't4'].forEach(k => {
-          aquariums[k].group.visible = true;
-          setTargetHeights(k, SABANAS[k]);
-        });
-      }
-
-      updateTelemetry(hoveredVertexIdx, (key === 'canon' ? 't1' : key));
     }
 
-    // 7. Modos de Cámara y Ángulo Diáfano Canónico
-    function applyDiafanoView(customDist = null) {
-      const dist = customDist || (viewLayout === 'cinemascope' ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
-      const targetY = 0;
-
-      camera.position.x = dist * Math.sin(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
-      camera.position.y = dist * Math.sin(DIAFANO_ELEV);
-      camera.position.z = dist * Math.cos(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
-
-      controls.target.set(0, targetY, 0);
-      controls.update();
-
-      const btn = document.getElementById('btn-diafano');
-      btn.classList.add('scale-105');
-      setTimeout(() => btn.classList.remove('scale-105'), 250);
-
-      playHarmonicChime(0.5, 0.2);
-    }
-
-    function setCameraAngle(type) {
-      const dist = (viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR;
-      if (type === 'iso') {
-        applyDiafanoView();
-      } else if (type === 'top') {
-        camera.position.set(0, dist * 1.1, 0.001);
-        controls.target.set(0, 0, 0);
-      } else if (type === 'profile') {
-        camera.position.set(dist * 1.2, 5, 0);
-        controls.target.set(0, 0, 0);
-      } else if (type === 'tunnel') {
-        // Perspectiva túnel a lo largo del eje X viendo los 4 acuarios en hilera
-        camera.position.set(-2.2 * AQ_DIST, 12, 0);
-        controls.target.set(1.5 * AQ_DIST, 0, 0);
-      }
-      controls.update();
-    }
-
-    // 8. Modo Constelación de Sujetos
     function selectSubject(idx) {
       selectedSubjectIdx = idx;
       for (let i = 0; i < 5; i++) {
@@ -1477,190 +2101,11 @@
       const btnAll = document.getElementById('btn-subj-all');
       if (idx === null) btnAll.classList.add('active');
       else btnAll.classList.remove('active');
-
-      ['t1', 't2', 't3', 't4'].forEach(k => {
-        updateConstellationForAquarium(aquariums[k]);
-      });
-
-      if (worldlinesFilter === 'subject') {
-        applyWorldlinesFilter();
-      }
-
-      const det = document.getElementById('subject-details');
-      if (idx === null) {
-        det.innerHTML = `<span>Visualizando los 81 vértices del grupo sin filtro.</span><span class="text-cyan-400 font-bold">N=5 Díadas</span>`;
-      } else {
-        const s = SUBJECT_CONSTELLATIONS[idx];
-        det.innerHTML = `<div><strong class="text-white">${s.name}</strong> • Entropía: <span class="text-emerald-400 font-bold">${s.entropy}</span></div><div class="text-amber-300 font-bold">Hilo de Ariadna 4D Activo</div>`;
-        playHarmonicChime(s.vectorN[0].sdr, 0.42, { isSpine: true, duration: 1.1 });
-      }
     }
 
-    function updateConstellationForAquarium(aq) {
-      if (!aq.constellGroup) return;
-      while (aq.constellGroup.children.length > 0) {
-        const obj = aq.constellGroup.children[0];
-        if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) obj.material.dispose();
-        aq.constellGroup.remove(obj);
-      }
-
-      if (selectedSubjectIdx === null) return;
-
-      const subj = SUBJECT_CONSTELLATIONS[selectedSubjectIdx];
-      const originV = subj.vectorN.find(v => v.isAuto) || subj.vectorN[0];
-      const ox = (originV.v - 4) * STEP;
-      const oy = aq.currentZ[originV.u * GRID_SIZE + originV.v] * MAX_HEIGHT;
-      const oz = (originV.u - 4) * STEP;
-      const pOrigin = new THREE.Vector3(ox, oy, oz);
-
-      subj.vectorN.forEach(vn => {
-        const targetIdx = vn.u * GRID_SIZE + vn.v;
-        const tx = (vn.v - 4) * STEP;
-        const ty = aq.currentZ[targetIdx] * MAX_HEIGHT;
-        const tz = (vn.u - 4) * STEP;
-        const pTarget = new THREE.Vector3(tx, ty, tz);
-
-        if (!vn.isAuto) {
-          const mid = new THREE.Vector3().addVectors(pOrigin, pTarget).multiplyScalar(0.5);
-          mid.y += 3.5;
-          const curve = new THREE.QuadraticBezierCurve3(pOrigin, mid, pTarget);
-          const pts = curve.getPoints(16);
-          const geo = new THREE.BufferGeometry().setFromPoints(pts);
-
-          const colHex = (vn.sdr >= 0) ? 0x00FF87 : 0xFF007F;
-          const mat = new THREE.LineBasicMaterial({ color: colHex, linewidth: 2.5, transparent: true, opacity: 0.95 });
-          aq.constellGroup.add(new THREE.Line(geo, mat));
-        }
-
-        const ringGeo = new THREE.RingGeometry(1.2, 1.8, 24);
-        ringGeo.rotateX(-Math.PI / 2);
-        const ringCol = vn.isAuto ? 0xFFE600 : ((vn.sdr >= 0) ? 0x00FF87 : 0xFF007F);
-        const ringMat = new THREE.MeshBasicMaterial({ color: ringCol, side: THREE.DoubleSide, transparent: true, opacity: 0.95 });
-        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-        ringMesh.position.set(tx, ty + 0.15, tz);
-        aq.constellGroup.add(ringMesh);
-      });
-    }
-
-    // 9. Moviola Cinemática del Fotograma
-    function buildSequenceOrder() {
-      sequenceOrder = [];
-      for (let u = 0; u < GRID_SIZE; u++) {
-        for (let v = 0; v < GRID_SIZE; v++) {
-          const idx = u * GRID_SIZE + v;
-          sequenceOrder.push({ idx, u, v, sdr: SABANAS.t1[idx] });
-        }
-      }
-      sortSequenceOrder();
-    }
-
-    function sortSequenceOrder() {
-      if (sequenceCriterion === 'thermal') {
-        sequenceOrder.sort((a, b) => b.sdr - a.sdr);
-      } else if (sequenceCriterion === 'heider') {
-        sequenceOrder.sort((a, b) => {
-          const devA = (a.u === a.v) ? 1.0 : Math.abs(a.sdr);
-          const devB = (b.u === b.v) ? 1.0 : Math.abs(b.sdr);
-          return devB - devA;
-        });
-      } else if (sequenceCriterion === 'radial') {
-        sequenceOrder.sort((a, b) => {
-          const dA = Math.hypot(a.u - 4, a.v - 4);
-          const dB = Math.hypot(b.u - 4, b.v - 4);
-          return dA - dB;
-        });
-      }
-    }
-
-    function setSequenceCriterion(crit) {
-      sequenceCriterion = crit;
-      ['thermal', 'heider', 'radial'].forEach(c => {
-        const el = document.getElementById(`crit-${c}`);
-        if (el) {
-          if (c === crit) el.classList.add('active');
-          else el.classList.remove('active');
-        }
-      });
-      sortSequenceOrder();
-    }
-
-    function updateFilmFrame() {
-      document.getElementById('film-step-lbl').textContent = `${filmStep} / 81 Vértices Revelados`;
-      const pct = (filmStep / 81) * 100;
-      document.getElementById('film-progress').style.width = `${pct}%`;
-
-      const detail = document.getElementById('film-step-detail');
-      if (filmStep === 0) detail.textContent = 'Lámina de Flotación Pura (Z = 0)';
-      else if (filmStep === 81) detail.textContent = 'Oleaje Estático Completo en 4 Acuarios';
-      else detail.textContent = `Revelando Celda #${filmStep} en T1, T2, T3 y T4...`;
-
-      ['t1', 't2', 't3', 't4'].forEach(k => {
-        const aq = aquariums[k];
-        const full = SABANAS[k];
-        const newZ = new Float32Array(NUM_VERTICES);
-
-        for (let i = 0; i < filmStep; i++) {
-          const item = sequenceOrder[i];
-          newZ[item.idx] = full[item.idx];
-        }
-        aq.currentZ.set(newZ);
-        updateAquariumGeometry(aq);
-      });
-
-      updateWorldlinesPositions();
-
-      if (filmStep > 0 && filmStep <= 81) {
-        const activeItem = sequenceOrder[filmStep - 1];
-        const isSpine = (activeItem.u === activeItem.v);
-        const isDisparity = (activeItem.sdr < -0.3);
-        updateTelemetry(activeItem.idx, 't1');
-        playHarmonicChime(activeItem.sdr, 0.24, { isSpine, isDisparity, u: activeItem.u, v: activeItem.v });
-      }
-    }
-
-    function togglePlayFilm() {
-      isPlayingFilm = !isPlayingFilm;
-      const icon = document.getElementById('play-icon');
-      const lbl = document.getElementById('play-label');
-      const btn = document.getElementById('btn-play');
-
-      if (isPlayingFilm) {
-        icon.textContent = '⏸'; lbl.textContent = 'PAUSAR';
-        btn.classList.add('border-cyan-400');
-        const speed = parseInt(document.getElementById('playback-speed').value, 10);
-        filmInterval = setInterval(() => {
-          if (filmStep >= 81) filmStep = 0;
-          filmStep++;
-          updateFilmFrame();
-          if (filmStep >= 81) togglePlayFilm();
-        }, speed);
-      } else {
-        icon.textContent = '▶'; lbl.textContent = 'REPRODUCIR';
-        btn.classList.remove('border-cyan-400');
-        clearInterval(filmInterval);
-      }
-    }
-
-    function stepFilm(dir) {
-      if (isPlayingFilm) togglePlayFilm();
-      filmStep = Math.max(0, Math.min(81, filmStep + dir));
-      updateFilmFrame();
-    }
-
-    function rewindFilm() {
-      if (isPlayingFilm) togglePlayFilm();
-      filmStep = 0;
-      updateFilmFrame();
-    }
-
-    function forwardFilmFull() {
-      if (isPlayingFilm) togglePlayFilm();
-      filmStep = 81;
-      updateFilmFrame();
-    }
-
-    // 10. Telemetría Sociométrica y Raycasting
+    // =========================================================================
+    // 11. BUCLE DE ANIMACIÓN CONTINUO & RAYCASTING
+    // =========================================================================
     function onPointerMove(e) {
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -1669,29 +2114,41 @@
 
     function onPointerClick(e) {
       raycaster.setFromCamera(mouse, camera);
-      const clickableClouds = [];
-      ['t1', 't2', 't3', 't4'].forEach(k => {
-        if (aquariums[k].pointsCloud && aquariums[k].group.visible) {
-          clickableClouds.push(aquariums[k].pointsCloud);
-        }
-      });
 
-      const intersects = raycaster.intersectObjects(clickableClouds);
-      if (intersects.length > 0) {
-        const hit = intersects[0];
-        let idx = hit.index;
-        if (isNaN(idx) || idx < 0 || idx >= 81) idx = 0;
-        hoveredVertexIdx = idx;
-        const aqKey = hit.object.userData.aquariumKey || 't1';
-        updateTelemetry(idx, aqKey);
-        epicenterU = Math.floor(idx / GRID_SIZE);
-        epicenterV = idx % GRID_SIZE;
-        const u = epicenterU;
-        const v = epicenterV;
-        const isSpine = (u === v);
-        const curZ = aquariums[aqKey].currentZ[idx];
-        const isDisparity = (curZ < -0.3) || (u !== v && Math.abs(u - v) > 3 && curZ < 0);
-        playHarmonicChime(curZ, 0.38, { isSpine, isDisparity, u, v });
+      if (mainMode === 'solfeo' && chessboardGroup) {
+        // Raycast sobre las casillas del tablero
+        const tiles = chessboardGroup.children.filter(c => c.userData && c.userData.cellCode);
+        const intersects = raycaster.intersectObjects(tiles);
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          const u = hit.userData.u;
+          const v = hit.userData.v;
+
+          // Buscar si esta casilla corresponde a alguna nota en la partitura
+          const found = solfeoSequence.find(item => item.u === u && item.v === v);
+          if (found) {
+            executeSolfeoItem(found);
+          } else {
+            // Nota libre sobre el tablero
+            erectOrMorphColumn(u, v, 2.5, `Casilla ${hit.userData.cellCode}`, 41);
+            playHarmonicChime(2.5, 0.3, { u, v });
+          }
+        }
+      } else {
+        const clickableClouds = [];
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          if (aquariums[k].pointsCloud && aquariums[k].group.visible) {
+            clickableClouds.push(aquariums[k].pointsCloud);
+          }
+        });
+        const intersects = raycaster.intersectObjects(clickableClouds);
+        if (intersects.length > 0) {
+          const hit = intersects[0];
+          let idx = hit.index || 0;
+          hoveredVertexIdx = idx;
+          const aqKey = hit.object.userData.aquariumKey || 't1';
+          updateTelemetry(idx, aqKey);
+        }
       }
     }
 
@@ -1699,63 +2156,7 @@
       if (isNaN(idx) || idx < 0 || idx >= NUM_VERTICES) idx = 0;
       const u = Math.floor(idx / GRID_SIZE);
       const v = idx % GRID_SIZE;
-
-      const figureCode = getFigureCode(u, v);
-      document.getElementById('telemetry-cell').textContent = figureCode;
-
-      const z1 = SABANAS.t1[idx];
-      const z2 = SABANAS.t2[idx];
-      const z3 = SABANAS.t3[idx];
-      const z4 = SABANAS.t4[idx];
-
-      document.getElementById('telemetry-z1').textContent = `T1: ${z1 >= 0 ? '+' : ''}${z1.toFixed(2)}`;
-      document.getElementById('telemetry-z2').textContent = `T2: ${z2 >= 0 ? '+' : ''}${z2.toFixed(2)}`;
-      document.getElementById('telemetry-z3').textContent = `T3: ${z3 >= 0 ? '+' : ''}${z3.toFixed(2)}`;
-      document.getElementById('telemetry-z4').textContent = `T4: ${z4 >= 0 ? '+' : ''}${z4.toFixed(2)}`;
-
-      const delta = z4 - z1;
-      const deltaEl = document.getElementById('telemetry-delta');
-      deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(2)} (${Math.abs(delta) < 0.25 ? 'Estable' : (delta > 0 ? 'Cohesión' : 'Polarización')})`;
-      deltaEl.className = delta >= 0 ? 'text-emerald-400 font-mono' : 'text-rose-400 font-mono';
-
-      const isSpine = (u === v);
-      const spineTag = document.getElementById('telemetry-spine-tag');
-      if (isSpine) {
-        spineTag.textContent = `Espina Dorsal (${u+1}A, ${v+1}A)`;
-        spineTag.className = 'text-amber-300 font-bold';
-      } else {
-        spineTag.textContent = `Interacción (${u+1}A → ${v+1}A)`;
-        spineTag.className = 'text-slate-300';
-      }
-
-      // Código de tetragrama
-      const codeEl = document.getElementById('telemetry-code');
-      const meanEl = document.getElementById('telemetry-meaning');
-      const curZ = aquariums[aqKey] ? aquariums[aqKey].currentZ[idx] : z1;
-
-      if (curZ > 0.5) {
-        codeEl.textContent = '<Ee>';
-        meanEl.textContent = 'Elección Mutua / Cohesión Plena';
-        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold';
-      } else if (curZ < -0.4) {
-        codeEl.textContent = '[Rr]';
-        meanEl.textContent = 'Rechazo Mutuo / Fosa Abisal';
-        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold';
-      } else if (Math.abs(curZ) <= 0.2) {
-        codeEl.textContent = '¡¿?!';
-        meanEl.textContent = 'Indiferencia en la Lámina de Flotación';
-        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-sky-950 text-cyan-300 border border-sky-800 font-bold';
-      } else {
-        codeEl.textContent = '<Er]';
-        meanEl.textContent = 'Disparidad de Sentimientos / Silla de Montar';
-        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-bold';
-      }
-
-      // Curvaturas simuladas consistentes
-      const gaussK = (isSpine ? 0.428 : (curZ > 0 ? 0.315 : -0.280)).toFixed(3);
-      const meanH = (curZ * -0.22).toFixed(3);
-      document.getElementById('telemetry-gauss').textContent = `${gaussK >= 0 ? '+' : ''}${gaussK}`;
-      document.getElementById('telemetry-mean').textContent = `${meanH >= 0 ? '+' : ''}${meanH}`;
+      document.getElementById('telemetry-cell').textContent = getFigureCode(u, v);
     }
 
     function onWindowResize() {
@@ -1768,34 +2169,39 @@
       renderer.setSize(w, h);
     }
 
-    // 11. Bucle de Animación Continuo
     function animate(time) {
       requestAnimationFrame(animate);
 
-      const now = time || performance.now();
-      updateTransitions(now);
+      // Animar columnas vivas del ajedrez
+      updateLivingColumnsAnimation();
 
-      // Micro-órbita suave cinemática
+      // Animar worldlines en modo IMAX
+      updateWorldlinesPositions();
+
+      // Micro-órbita cinematográfica suave
       const wobbleEnabled = document.getElementById('chk-wobble').checked;
-      if (wobbleEnabled && !isUserInteracting && transitionProgress >= 1.0 && !isPlayingFilm) {
+      if (wobbleEnabled && !isUserInteracting && !isSolfeoPlaying) {
         wobbleTime += 0.005;
-        const azimOffset = Math.sin(wobbleTime * 0.8) * 0.12;
-        const elevOffset = Math.cos(wobbleTime * 0.6) * 0.04;
+        const azimOffset = Math.sin(wobbleTime * 0.8) * 0.08;
+        const elevOffset = Math.cos(wobbleTime * 0.6) * 0.03;
 
-        const dist = (viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR;
-        const baseAzim = DIAFANO_AZIM + azimOffset;
-        const baseElev = DIAFANO_ELEV + elevOffset;
-
-        camera.position.x = dist * Math.sin(baseAzim) * Math.cos(baseElev);
-        camera.position.y = dist * Math.sin(baseElev);
-        camera.position.z = dist * Math.cos(baseAzim) * Math.cos(baseElev);
+        if (mainMode === 'solfeo') {
+          const dist = CAM_3ESTRATOS_DIST;
+          const baseAzim = CAM_3ESTRATOS_AZIM + azimOffset;
+          const baseElev = CAM_3ESTRATOS_ELEV + elevOffset;
+          camera.position.x = dist * Math.sin(baseAzim) * Math.cos(baseElev);
+          camera.position.y = dist * Math.sin(baseElev);
+          camera.position.z = dist * Math.cos(baseAzim) * Math.cos(baseElev);
+        }
       }
 
       controls.update();
       renderer.render(scene, camera);
     }
 
-    // 12. Inicialización Segura (Garantía Cero Pantalla Negra)
+    // =========================================================================
+    // 12. INICIALIZACIÓN SEGURA (GARANTÍA CERO PANTALLA NEGRA)
+    // =========================================================================
     let is3DInitialized = false;
     function safeInit() {
       if (is3DInitialized) return;
@@ -1806,12 +2212,11 @@
       is3DInitialized = true;
       try {
         init3D();
-        updateTelemetry(0, 't1');
       } catch (err) {
         console.error('Error inicializando 3D:', err);
         const container = document.getElementById('three-viewport');
         if (container) {
-          container.innerHTML = `<div class="p-6 text-rose-400 font-mono text-xs">Error de inicialización WebGL: ${err.message}. Por favor recarga la página.</div>`;
+          container.innerHTML = `<div class="p-6 text-rose-400 font-mono text-xs">Error de inicialización WebGL: ${err.message}.</div>`;
         }
       }
     }
