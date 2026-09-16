@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD Cinético 3D - Bolas Nacaradas & Electrones Ópticos</title>
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #030308; font-family: 'Inter', system-ui, sans-serif; }
+    #graph-container { width: 100vw; height: 100vh; }
+    #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, rgba(3,3,8,0.85) 120%); }
+    #hud { position: absolute; top: 20px; right: 20px; color: #F8FAFC; font-size: 13px; text-align: right; z-index: 100; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .hud-title { font-size: 16px; font-weight: 800; color: #38BDF8; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .hud-stat { font-size: 12px; color: #94A3B8; margin-bottom: 4px; }
+    .hud-smib { margin-top: 12px; font-size: 11px; color: #CBD5E1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; text-align: left; }
+    .smib-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot-e { background: #00F5D4; box-shadow: 0 0 8px #00F5D4; }
+    .dot-r { background: #FF0055; box-shadow: 0 0 8px #FF0055; }
+    .dot-mut { background: #10B981; box-shadow: 0 0 8px #10B981; }
+    .dot-meta { background: #A855F7; box-shadow: 0 0 8px #A855F7; }
+    .key { background: #334155; padding: 2px 6px; border-radius: 4px; color: white; font-size: 10px; }
+    #sim-warning { position: absolute; top: 20px; left: 20px; color: #FF0055; font-size: 18px; font-weight: 900; display: none; text-shadow: 0 0 15px #FF0055; background: rgba(0,0,0,0.8); padding: 8px 14px; border-radius: 8px; border: 1px solid #FF0055; }
+  </style>
+</head>
+<body>
+  <div id="graph-container"></div>
+  <div id="overlay"></div>
+  <div id="sim-warning">⚠️ PERTURBACIÓN TERMODINÁMICA (RECHAZO MUTUO)</div>
+  
+  <div id="hud">
+    <div class="hud-title">VISORD CINÉTICO - 1G1T1C</div>
+    <div class="hud-stat">Sujetos (Bolas Nacaradas): <b>5</b></div>
+    <div class="hud-stat">Conducciones Relacionales: <b>16</b></div>
+    
+    <div class="hud-smib">
+      <div style="font-weight: bold; margin-bottom: 6px; color: #F1F5F9;">Flujos de Electrones Ópticos (SMIb):</div>
+      <div class="smib-item"><span class="dot dot-e"></span> <b>E</b> : Elección Emitida (Verde Cian)</div>
+      <div class="smib-item"><span class="dot dot-r"></span> <b>R</b> : Rechazo Emitido (Rojo Carmesí)</div>
+      <div class="smib-item"><span class="dot dot-mut"></span> <b>E &lt;-&gt; E</b> : Reciprocidad Afirmativa (Esmeralda)</div>
+      <div class="smib-item"><span class="dot dot-meta"></span> <b>e / r</b> : Meta-Percepción (Violeta)</div>
+    </div>
+    
+    <div style="margin-top: 10px; font-size: 10.5px; color: #64748B; text-align: left;">
+      <div><span class="key">Arrastrar</span> Rotación 3D</div>
+      <div style="margin-top:3px;"><span class="key">Espacio</span> Onda de Choque</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three';
+    import ForceGraph3D from 'https://esm.sh/3d-force-graph';
+
+    const rawData = {"nodes": [{"id": "1A", "full_id": "1A", "size": 8.5, "nacar_type": 0, "in_pos": 2.0, "in_neg": 1.0}, {"id": "2A", "full_id": "2A", "size": 8.5, "nacar_type": 0, "in_pos": 2.0, "in_neg": 1.0}, {"id": "3A", "full_id": "3A", "size": 8.5, "nacar_type": 0, "in_pos": 2.0, "in_neg": 2.0}, {"id": "4A", "full_id": "4A", "size": 8.5, "nacar_type": 0, "in_pos": 2.0, "in_neg": 3.0}, {"id": "5A", "full_id": "5A", "size": 8.5, "nacar_type": 0, "in_pos": 2.0, "in_neg": 3.0}], "links": [{"source": "1A", "target": "2A", "type": 2, "label": "E<->"}, {"source": "1A", "target": "4A", "type": 4, "label": "R"}, {"source": "1A", "target": "5A", "type": 1, "label": "R<->"}, {"source": "2A", "target": "1A", "type": 2, "label": "E<->"}, {"source": "2A", "target": "3A", "type": 2, "label": "E<->"}, {"source": "2A", "target": "4A", "type": 1, "label": "R<->"}, {"source": "2A", "target": "5A", "type": 4, "label": "R"}, {"source": "3A", "target": "2A", "type": 2, "label": "E<->"}, {"source": "3A", "target": "4A", "type": 1, "label": "R<->"}, {"source": "3A", "target": "5A", "type": 1, "label": "R<->"}, {"source": "4A", "target": "2A", "type": 1, "label": "R<->"}, {"source": "4A", "target": "3A", "type": 1, "label": "R<->"}, {"source": "4A", "target": "5A", "type": 2, "label": "E<->"}, {"source": "5A", "target": "1A", "type": 1, "label": "R<->"}, {"source": "5A", "target": "3A", "type": 1, "label": "R<->"}, {"source": "5A", "target": "4A", "type": 2, "label": "E<->"}]};
+    const nodes = rawData.nodes;
+    const links = rawData.links;
+
+    const Graph = ForceGraph3D()(document.getElementById('graph-container'));
+
+    // Creación de Nodos: "Bolas de Billar Nacaradas" (Mother-of-Pearl Spheres)
+    Graph.nodeThreeObject(node => {
+        const radius = node.size || 5.0;
+        
+        # Geometría de Bola de Billar Perfecta (Alta Resolución)
+        const geometry = new THREE.SphereGeometry(radius, 48, 48);
+        
+        # Color nacarado base
+        let nacarColor = 0xF7F7F0; # Blanco Nácar Marfil
+        let emissiveColor = 0x222230;
+        
+        if (node.nacar_type === 0) {
+            nacarColor = 0xFFFDF0; # Nácar Dorado (Líder)
+            emissiveColor = 0x332800;
+        } else if (node.nacar_type === 3) {
+            nacarColor = 0xFFF0F2; # Nácar Carmesí (Tensional)
+            emissiveColor = 0x330008;
+        }
+
+        # Material Físico Nacarado (High-Gloss Clearcoat Polish)
+        const material = new THREE.MeshPhysicalMaterial({
+            color: nacarColor,
+            emissive: emissiveColor,
+            emissiveIntensity: 0.25,
+            roughness: 0.12,          # Superficie ultra-pulida nacarada
+            metalness: 0.05,
+            clearcoat: 1.0,           # Capa transparente de barniz/nácar
+            clearcoatRoughness: 0.08,
+            reflectivity: 0.95,
+            transparent: true,
+            opacity: 0.98
+        });
+        
+        const sphereMesh = new THREE.Mesh(geometry, material);
+        
+        # Etiqueta tipográfica impecable sobre la bola de billar (ej: 1A, 2A, 3B)
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 128; canvas.height = 64;
+        context.font = 'Black 36px Inter, sans-serif';
+        context.fillStyle = '#0F172A'; # Texto nítido oscuro
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        
+        # Placa nacarada de fondo para el texto
+        context.fillStyle = 'rgba(255, 255, 255, 0.92)';
+        context.beginPath();
+        context.roundRect(16, 8, 96, 48, 12);
+        context.fill();
+        
+        context.fillStyle = '#0F172A';
+        context.fillText(node.id, 64, 32);
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthWrite: false });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.scale.set(radius * 2.2, radius * 1.1, 1);
+        sprite.position.y = radius + 2.5;
+        sphereMesh.add(sprite);
+        
+        return sphereMesh;
+    });
+
+    # Renderizado de Conductos Relacionales y Diminutos Electrones Ópticos
+    Graph.nodeRelSize(4)
+      .linkColor(link => {
+          if(link.type === 0) return 'rgba(0, 245, 212, 0.25)';   # Cian para E
+          if(link.type === 1) return 'rgba(255, 0, 85, 0.30)';    # Rojo para R
+          if(link.type === 2) return 'rgba(16, 185, 129, 0.35)';  # Esmeralda para E<->E
+          if(link.type === 3) return 'rgba(168, 85, 247, 0.30)';  # Violeta Meta
+          return 'rgba(148, 163, 184, 0.20)';
+      })
+      .linkWidth(link => (link.type === 2 || link.type === 1) ? 1.0 : 0.7)
+      
+      # Flujos relacionales sutiles: Diminutos electrones ópticos
+      .linkDirectionalParticles(3) 
+      .linkDirectionalParticleWidth(1.4)                           # Diminuto tamaño fotónico
+      .linkDirectionalParticleSpeed(0.005)                         # Velocidad sutil y fluida
+      .linkDirectionalParticleColor(link => {
+          if(link.type === 0) return '#00F5D4'; # Electrón Cian (E)
+          if(link.type === 1) return '#FF0055'; # Electrón Rojo Carmesí (R)
+          if(link.type === 2) return '#10B981'; # Electrón Verde Esmeralda (E<->E)
+          if(link.type === 3) return '#A855F7'; # Electrón Violeta Óptico (Meta)
+          return '#FFFFFF';
+      })
+      .linkDirectionalParticleResolution(16) 
+      .graphData({ nodes, links });
+
+    # Iluminación de Estudio Fotográfico (Resalta el brillo nacarado de las bolas de billar)
+    const scene = Graph.scene();
+    scene.add(new THREE.AmbientLight(0xFFFFFF, 0.8)); # Luz de ambiente clara
+    
+    # Luz Direccional Cálida (Superior)
+    const sunLight = new THREE.DirectionalLight(0xFFFAEE, 2.0); 
+    sunLight.position.set(200, 400, 200); 
+    scene.add(sunLight);
+    
+    # Luz Contraluz Azul Frío (Efecto Nácar de Borde)
+    const rimLight = new THREE.DirectionalLight(0x38BDF8, 1.8); 
+    rimLight.position.set(-200, -200, -200); 
+    scene.add(rimLight);
+
+    # Marcador de Ejes Centrales Discretos
+    function createDashedAxis(p1, p2, colorHex) {
+        const mat = new THREE.LineDashedMaterial({ color: colorHex, dashSize: 3, gapSize: 5, transparent: true, opacity: 0.25 });
+        const geo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+        const line = new THREE.Line(geo, mat);
+        line.computeLineDistances();
+        scene.add(line);
+    }
+    createDashedAxis(new THREE.Vector3(-120, 0, 0), new THREE.Vector3(120, 0, 0), 0x94A3B8);
+    createDashedAxis(new THREE.Vector3(0, -120, 0), new THREE.Vector3(0, 120, 0), 0x94A3B8);
+    createDashedAxis(new THREE.Vector3(0, 0, -120), new THREE.Vector3(0, 0, 120), 0x94A3B8);
+    
+    # Núcleo de Origen Nacarado
+    const coreGeo = new THREE.SphereGeometry(2.5, 32, 32);
+    const coreMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, roughness: 0.1, clearcoat: 1.0 });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    scene.add(coreMesh);
+
+    # Rotación Suave de Cámara
+    let angle = 0;
+    const distance = 450;
+    let userInteracted = false;
+    Graph.controls().addEventListener('start', () => { userInteracted = true; });
+    
+    setInterval(() => {
+        if (!userInteracted) {
+            angle += Math.PI / 4000;
+            Graph.cameraPosition({
+                x: distance * Math.sin(angle),
+                z: distance * Math.cos(angle),
+                y: distance * 0.12 * Math.sin(angle * 2.0) 
+            });
+        }
+    }, 20);
+
+    Graph.d3Force('charge').strength(-70);
+    Graph.d3Force('link').distance(link => link.type === 1 ? 100 : 45).strength(link => link.type === 1 ? 0.2 : 1.2);
+
+    # Perturbación por Teclado
+    window.addEventListener('keydown', e => {
+        if(e.code === 'Space') {
+            document.getElementById('sim-warning').style.display = 'block';
+            Graph.d3Force('charge').strength(-400);
+            Graph.d3Force('link').strength(link => link.type === 1 ? 2.0 : 0.05);
+            Graph.d3ReheatSimulation();
+        }
+    });
+
+    window.addEventListener('keyup', e => {
+        if(e.code === 'Space') {
+            document.getElementById('sim-warning').style.display = 'none';
+            Graph.d3Force('charge').strength(-70);
+            Graph.d3Force('link').strength(link => link.type === 1 ? 0.2 : 1.2);
+            Graph.d3ReheatSimulation();
+        }
+    });
+
+  </script>
+</body>
+</html>
