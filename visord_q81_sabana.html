@@ -3474,6 +3474,53 @@
       return sprite;
     }
 
+    // Insignia 3D estilo Píldora / Glassmorphism de alta legibilidad con subtítulo opcional
+    function createPillBadgeSprite(text, colorHex, fontSize = 36, width = 120, height = 58, subText = null) {
+      const canvas = document.createElement('canvas');
+      canvas.width = width * 2;   // 2x Retina para nitidez cristalina
+      canvas.height = height * 2;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
+      ctx.clearRect(0, 0, width, height);
+
+      // Fondo píldora translúcido obsidian
+      const r = Math.min(14, height / 2);
+      ctx.beginPath();
+      ctx.roundRect(3, 3, width - 6, height - 6, r);
+      ctx.fillStyle = 'rgba(6, 14, 28, 0.88)';
+      ctx.fill();
+      ctx.strokeStyle = colorHex;
+      ctx.lineWidth = 2.4;
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 9;
+      ctx.stroke();
+
+      // Tipografía principal
+      ctx.shadowBlur = 6;
+      ctx.fillStyle = colorHex;
+      ctx.font = `900 ${fontSize}px "Outfit", "Roboto Mono", sans-serif`;
+      ctx.textAlign = 'center';
+
+      if (subText) {
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(text, width / 2, height * 0.58);
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = `bold 13px "Outfit", "Roboto Mono", sans-serif`;
+        ctx.textBaseline = 'top';
+        ctx.fillText(subText, width / 2, height * 0.60);
+      } else {
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, width / 2, height / 2);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(width * 0.045, height * 0.045, 1);
+      return sprite;
+    }
+
     // Inicialización del Motor 3D
     function init3D() {
       const container = document.getElementById('three-viewport');
@@ -3647,6 +3694,15 @@
       boardFrame.position.set(0, -0.3, 0);
       chessboardGroup.add(boardFrame);
 
+      // Esquinas Canónicas del Tablero 9x9: DA (Dación / Fila 1) y RC (Recepción / Col 9)
+      const cornerDaBoardBadge = createPillBadgeSprite('DA', '#00E5FF', 38, 130, 62, 'DACIÓN');
+      cornerDaBoardBadge.position.set(-22.8, 1.1, -22.8);
+      chessboardGroup.add(cornerDaBoardBadge);
+
+      const cornerRcBoardBadge = createPillBadgeSprite('RC', '#00FF87', 38, 130, 62, 'RECEPCIÓN');
+      cornerRcBoardBadge.position.set(+22.8, 1.1, +22.8);
+      chessboardGroup.add(cornerRcBoardBadge);
+
       // Coordenadas periféricas compactas en boardLabelsGroup (controlable con interruptor)
       if (!boardLabelsGroup) {
         boardLabelsGroup = new THREE.Group();
@@ -3698,7 +3754,25 @@
 
       marginalColumns = { rows: [], cols: [], grand: null };
 
-      // 1. Borde Oeste: 5 Pedestales y Columnas Vivas de Dación Media (DA)
+      // 0. Vértice Noroeste de los Marginales: Pedestal de Esquina e Insignia DA (Dación / Emisión)
+      const daCornerGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
+      const daCornerMat = new THREE.MeshPhongMaterial({ color: 0x07152B, transparent: true, opacity: 0.92, shininess: 90 });
+      const daCornerMesh = new THREE.Mesh(daCornerGeo, daCornerMat);
+      daCornerMesh.position.set(MARGINAL_X, -0.2, -25.5);
+      daCornerMesh.userData = { type: 'marginalCornerDA' };
+      marginalGroup.add(daCornerMesh);
+
+      const daCornerEdge = new THREE.LineSegments(new THREE.EdgesGeometry(daCornerGeo), new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.9 }));
+      daCornerEdge.position.copy(daCornerMesh.position);
+      marginalGroup.add(daCornerEdge);
+
+      const daBadge = createPillBadgeSprite('DA', '#00E5FF', 42, 140, 66, 'DACIÓN');
+      daBadge.position.set(MARGINAL_X - 4.5, 1.3, -25.5);
+      daBadge.userData = { type: 'marginalCornerDA' };
+      marginalGroup.add(daBadge);
+
+      // 1. Borde Oeste: 5 Pedestales y Columnas Vivas de Dación Media (1D, 2D, 3D, 4D, 5D)
+      const MARGINAL_ROW_LABELS = ['1D', '2D', '3D', '4D', '5D'];
       for (let i = 0; i < 5; i++) {
         const z = (i - 2) * MARGINAL_SPACING;
 
@@ -3736,19 +3810,68 @@
         const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
         marginalGroup.add(spineLine);
 
-        const badge = createCleanLabelSprite(SUBJECT_LABELS[i], '#38BDF8', 34);
-        badge.position.set(MARGINAL_X - 3.4, 0.8, z);
-        if (boardLabelsGroup) boardLabelsGroup.add(badge);
+        // Insignia 3D Píldora: 1D..5D visible en todo momento
+        const badge = createPillBadgeSprite(MARGINAL_ROW_LABELS[i], '#38BDF8', 36, 120, 58, SUBJECT_LABELS[i]);
+        badge.position.set(MARGINAL_X - 4.5, 1.0, z);
+        badge.userData = { type: 'marginalRow', idx: i };
+        marginalGroup.add(badge);
 
         marginalColumns.rows.push({
           idx: i,
-          label: `${SUBJECT_LABELS[i]} (DA)`,
+          label: `${MARGINAL_ROW_LABELS[i]} / ${SUBJECT_LABELS[i]} (DA)`,
           pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
           currentH: 0.1, targetH: 0.1
         });
       }
 
-      // 2. Borde Sur: 5 Pedestales y Columnas Vivas de Recepción Media (RECIBE)
+      // 2. Vértice Sudoeste: Monolito Áureo de la Gran Media Global
+      const grandPedGeo = new THREE.CylinderGeometry(3.0, 3.4, 0.6, 8);
+      const grandPedMat = new THREE.MeshPhongMaterial({ color: 0x241F05, transparent: true, opacity: 0.95, shininess: 95 });
+      const grandPedMesh = new THREE.Mesh(grandPedGeo, grandPedMat);
+      grandPedMesh.position.set(MARGINAL_X, -0.3, MARGINAL_Z);
+      grandPedMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandPedMesh);
+
+      const grandEdgeGeo = new THREE.EdgesGeometry(grandPedGeo);
+      const grandEdge = new THREE.LineSegments(grandEdgeGeo, new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 2 }));
+      grandEdge.position.copy(grandPedMesh.position);
+      marginalGroup.add(grandEdge);
+
+      const grandColMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0x443500, transparent: true, opacity: 0.92, shininess: 100 });
+      const grandCylGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 8);
+      grandCylGeo.translate(0, 0.5, 0);
+      const grandCylMesh = new THREE.Mesh(grandCylGeo, grandColMat);
+      grandCylMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
+      grandCylMesh.scale.set(1, 0.2, 1);
+      grandCylMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandCylMesh);
+
+      const grandTipGeo = new THREE.OctahedronGeometry(1.9);
+      const grandTipMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.5, shininess: 100 });
+      const grandTipMesh = new THREE.Mesh(grandTipGeo, grandTipMat);
+      grandTipMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
+      grandTipMesh.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandTipMesh);
+
+      const grandSpinePts = [new THREE.Vector3(MARGINAL_X, 0, MARGINAL_Z), new THREE.Vector3(MARGINAL_X, 1, MARGINAL_Z)];
+      const grandSpineGeo = new THREE.BufferGeometry().setFromPoints(grandSpinePts);
+      const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.9 }));
+      marginalGroup.add(grandSpineLine);
+
+      const grandBadge = createPillBadgeSprite('GLOBAL', '#FFE600', 32, 140, 62, 'MEDIA');
+      grandBadge.position.set(MARGINAL_X - 4.5, 1.5, MARGINAL_Z + 4.5);
+      grandBadge.userData = { type: 'marginalGrand' };
+      marginalGroup.add(grandBadge);
+
+      marginalColumns.grand = {
+        label: 'MEDIA GLOBAL',
+        pedMesh: grandPedMesh, cylMesh: grandCylMesh, tipMesh: grandTipMesh,
+        colMat: grandColMat, tipMat: grandTipMat, spineLine: grandSpineLine, badge: grandBadge,
+        currentH: 0.2, targetH: 0.2
+      };
+
+      // 3. Borde Sur: 5 Pedestales y Columnas Vivas de Recepción Media (1R, 2R, 3R, 4R, 5R)
+      const MARGINAL_COL_LABELS = ['1R', '2R', '3R', '4R', '5R'];
       for (let j = 0; j < 5; j++) {
         const x = (j - 2) * MARGINAL_SPACING;
 
@@ -3786,58 +3909,36 @@
         const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
         marginalGroup.add(spineLine);
 
-        const badge = createCleanLabelSprite(SUBJECT_LABELS[j], '#00FF87', 34);
-        badge.position.set(x, 0.8, MARGINAL_Z + 3.4);
-        if (boardLabelsGroup) boardLabelsGroup.add(badge);
+        // Insignia 3D Píldora: 1R..5R visible en todo momento
+        const badge = createPillBadgeSprite(MARGINAL_COL_LABELS[j], '#00FF87', 36, 120, 58, SUBJECT_LABELS[j]);
+        badge.position.set(x, 1.0, MARGINAL_Z + 4.5);
+        badge.userData = { type: 'marginalCol', idx: j };
+        marginalGroup.add(badge);
 
         marginalColumns.cols.push({
           idx: j,
-          label: `${SUBJECT_LABELS[j]} (REC)`,
+          label: `${MARGINAL_COL_LABELS[j]} / ${SUBJECT_LABELS[j]} (REC)`,
           pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
           currentH: 0.1, targetH: 0.1
         });
       }
 
-      // 3. Vértice Sudoeste: Monolito Áureo de la Gran Media Global
-      const grandPedGeo = new THREE.CylinderGeometry(3.0, 3.4, 0.6, 8);
-      const grandPedMat = new THREE.MeshPhongMaterial({ color: 0x241F05, transparent: true, opacity: 0.95, shininess: 95 });
-      const grandPedMesh = new THREE.Mesh(grandPedGeo, grandPedMat);
-      grandPedMesh.position.set(MARGINAL_X, -0.3, MARGINAL_Z);
-      grandPedMesh.userData = { type: 'marginalGrand' };
-      marginalGroup.add(grandPedMesh);
+      // 4. Vértice Sudeste de los Marginales: Pedestal de Esquina e Insignia RC (Recepción / Absorción)
+      const rcCornerGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
+      const rcCornerMat = new THREE.MeshPhongMaterial({ color: 0x071D22, transparent: true, opacity: 0.92, shininess: 90 });
+      const rcCornerMesh = new THREE.Mesh(rcCornerGeo, rcCornerMat);
+      rcCornerMesh.position.set(+25.5, -0.2, MARGINAL_Z);
+      rcCornerMesh.userData = { type: 'marginalCornerRC' };
+      marginalGroup.add(rcCornerMesh);
 
-      const grandEdgeGeo = new THREE.EdgesGeometry(grandPedGeo);
-      const grandEdge = new THREE.LineSegments(grandEdgeGeo, new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 2 }));
-      grandEdge.position.copy(grandPedMesh.position);
-      marginalGroup.add(grandEdge);
+      const rcCornerEdge = new THREE.LineSegments(new THREE.EdgesGeometry(rcCornerGeo), new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.9 }));
+      rcCornerEdge.position.copy(rcCornerMesh.position);
+      marginalGroup.add(rcCornerEdge);
 
-      const grandColMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0x443500, transparent: true, opacity: 0.92, shininess: 100 });
-      const grandCylGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 8);
-      grandCylGeo.translate(0, 0.5, 0);
-      const grandCylMesh = new THREE.Mesh(grandCylGeo, grandColMat);
-      grandCylMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
-      grandCylMesh.scale.set(1, 0.2, 1);
-      grandCylMesh.userData = { type: 'marginalGrand' };
-      marginalGroup.add(grandCylMesh);
-
-      const grandTipGeo = new THREE.OctahedronGeometry(1.9);
-      const grandTipMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.5, shininess: 100 });
-      const grandTipMesh = new THREE.Mesh(grandTipGeo, grandTipMat);
-      grandTipMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
-      grandTipMesh.userData = { type: 'marginalGrand' };
-      marginalGroup.add(grandTipMesh);
-
-      const grandSpinePts = [new THREE.Vector3(MARGINAL_X, 0, MARGINAL_Z), new THREE.Vector3(MARGINAL_X, 1, MARGINAL_Z)];
-      const grandSpineGeo = new THREE.BufferGeometry().setFromPoints(grandSpinePts);
-      const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.9 }));
-      marginalGroup.add(grandSpineLine);
-
-      marginalColumns.grand = {
-        label: 'MEDIA GLOBAL',
-        pedMesh: grandPedMesh, cylMesh: grandCylMesh, tipMesh: grandTipMesh,
-        colMat: grandColMat, tipMat: grandTipMat, spineLine: grandSpineLine, badge: null,
-        currentH: 0.2, targetH: 0.2
-      };
+      const rcBadge = createPillBadgeSprite('RC', '#00FF87', 42, 140, 66, 'RECEPCIÓN');
+      rcBadge.position.set(+25.5, 1.3, MARGINAL_Z + 4.5);
+      rcBadge.userData = { type: 'marginalCornerRC' };
+      marginalGroup.add(rcBadge);
 
       updateMarginals3D();
     }
@@ -7621,6 +7722,12 @@
             return;
           } else if (mHit.userData.type === 'marginalGrand') {
             playMarginalGrandDirect();
+            return;
+          } else if (mHit.userData.type === 'marginalCornerDA') {
+            playMarginalRowDirect(0);
+            return;
+          } else if (mHit.userData.type === 'marginalCornerRC') {
+            playMarginalColDirect(0);
             return;
           }
         }
