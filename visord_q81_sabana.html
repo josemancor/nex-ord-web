@@ -993,6 +993,22 @@
             </div>
           </div>
 
+          <!-- ORDENES DE PROYECCIÓN DE LA MATRIZ (9, 9) FIGURAS RELACIONALES Q81 -->
+          <div class="bg-slate-950/60 border border-slate-800 p-2 rounded-xl flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <span class="mono text-[10px] text-cyan-400 font-bold flex items-center gap-1">
+                <span>🌐</span> MATRIZ (9, 9) FIGURAS Q81:
+              </span>
+              <span class="mono text-[9px] text-slate-500">81 FIGURAS</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[9px] mono">
+              <button onclick="setSolfeoTrajectory('q81_vert')" id="btn-traj-q81_vert" class="glass-btn p-1.5 rounded font-bold text-slate-300" title="1) Orden Vertical: Columna a Columna (C1 a C9)">↕ 1. Vertical (C1..C9)</button>
+              <button onclick="setSolfeoTrajectory('q81_horiz')" id="btn-traj-q81_horiz" class="glass-btn p-1.5 rounded font-bold text-slate-300" title="2) Orden Horizontal: Fila a Fila (FA a FI)">↔ 2. Horizontal (FA..FI)</button>
+              <button onclick="setSolfeoTrajectory('q81_desc')" id="btn-traj-q81_desc" class="glass-btn p-1.5 rounded font-bold text-cyan-300" title="3) Orden Numeralizado Q81: Del 81 (Cohesión) al 1 (Abismo)">⬇ 3. Q81 (81➔1)</button>
+              <button onclick="setSolfeoTrajectory('q81_asc')" id="btn-traj-q81_asc" class="glass-btn p-1.5 rounded font-bold text-slate-300" title="4) Orden Numeralizado Q81: Del 1 (Abismo) al 81 (Cohesión)">⬆ 4. Q81 (1➔81)</button>
+            </div>
+          </div>
+
           <!-- RACK DE VOCES E INSTRUMENTOS (432 Hz) -->
           <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-2 flex flex-col gap-1.5">
             <div class="flex items-center justify-between border-b border-purple-900/30 pb-1">
@@ -1234,17 +1250,24 @@
             <button onclick="forwardFilmFull()" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Oleaje Completo">⏭</button>
           </div>
 
-          <div class="flex items-center gap-1 text-[10px] mono">
-            <span class="text-slate-400">Criterio:</span>
-            <button onclick="setSequenceCriterion('thermal')" id="crit-thermal" class="glass-btn px-2 py-1 rounded-lg font-bold text-cyan-300 active" title="De la Cohesión al Rechazo">
-              🔥 Polaridad
+          <div class="flex items-center gap-1 text-[10px] mono flex-wrap">
+            <span class="text-slate-400">Orden (9,9):</span>
+            <button onclick="setSequenceCriterion('vertical')" id="crit-vertical" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="1) Orden Vertical: Columna a Columna (1 a 9 / C1 a C9)">
+              ↕ Vertical
             </button>
-            <button onclick="setSequenceCriterion('heider')" id="crit-heider" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="De la Sintonía a la Disonancia">
-              🧠 Heider
+            <button onclick="setSequenceCriterion('horizontal')" id="crit-horizontal" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="2) Orden Horizontal: Fila a Fila (A a I / FA a FI)">
+              ↔ Horizontal
             </button>
-            <button onclick="setSequenceCriterion('radial')" id="crit-radial" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="Onda Concéntrica">
-              🌊 Ondas
+            <button onclick="setSequenceCriterion('q81_desc')" id="crit-q81_desc" class="glass-btn px-2 py-1 rounded-lg font-bold text-cyan-300 active" title="3) Orden Numeralizado Q81: Del 81 (Cohesión) al 1 (Abismo)">
+              ⬇ Q81 (81➔1)
             </button>
+            <button onclick="setSequenceCriterion('q81_asc')" id="crit-q81_asc" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="4) Orden Numeralizado Q81: Del 1 (Abismo) al 81 (Cohesión)">
+              ⬆ Q81 (1➔81)
+            </button>
+            <!-- Selectores retrocompatibles ocultos -->
+            <button onclick="setSequenceCriterion('thermal')" id="crit-thermal" class="hidden">Polaridad</button>
+            <button onclick="setSequenceCriterion('heider')" id="crit-heider" class="hidden">Heider</button>
+            <button onclick="setSequenceCriterion('radial')" id="crit-radial" class="hidden">Radial</button>
           </div>
         </div>
 
@@ -1680,17 +1703,129 @@
     const M_NUM = NEXORD_PAYLOAD.matrices.Q81;
     const SUBJECT_LABELS = NEXORD_PAYLOAD.metadata.sujetos;
 
-    const Q81_COORDINATES = {
-      81: { u: 0, v: 0, sym: '<Ee>', name: 'Elección Mutua Plena', q6: 'Elección Mutua' },
-      77: { u: 1, v: 1, sym: '<¿?>', name: 'Desconocimiento Mutuo Afectivo', q6: 'Indiferencia Mutua' },
-      41: { u: 4, v: 4, sym: '¡¿?!', name: 'Indiferencia Absoluta (Lámina 0)', q6: 'Indiferencia Mutua' },
-      20: { u: 7, v: 4, sym: '[¿?!>', name: 'Asimetría: Rechazo con Expectativa', q6: 'Indiferencia Mutua' },
-      17: { u: 4, v: 7, sym: '¡¿?]', name: 'Asimetría: Desconocimiento con Rechazo', q6: 'Indiferencia Mutua' },
-      5:  { u: 7, v: 7, sym: '[¿?]', name: 'Percepción Recíproca de Rechazo', q6: 'Indiferencia Mutua' },
-      3:  { u: 7, v: 8, sym: '[R?]', name: 'Rechazo Unilateral Fosa', q6: 'Rechazo Unilateral' },
-      2:  { u: 8, v: 7, sym: '[¿r]', name: 'Rechazo Unilateral Fosa', q6: 'Rechazo Unilateral' },
-      1:  { u: 8, v: 8, sym: '[Rr]', name: 'Rechazo Recíproco Total / Abismo', q6: 'Rechazo Mutuo' }
+    // =========================================================================
+    // MATRIZ (9, 9) Y CATÁLOGO CANÓNICO DE LAS 81 FIGURAS Q81 (MORALES & CORNEJO 2026)
+    // =========================================================================
+    const Q81_MATRIX_IDS = [
+      [81, 80, 78, 75, 71, 66, 60, 53, 45],
+      [79, 77, 74, 70, 65, 59, 52, 44, 36],
+      [76, 73, 69, 64, 58, 51, 43, 35, 28],
+      [72, 68, 63, 57, 50, 42, 34, 27, 21],
+      [67, 62, 56, 49, 41, 33, 26, 20, 15],
+      [61, 55, 48, 40, 32, 25, 19, 14, 10],
+      [54, 47, 39, 31, 24, 18, 13,  9,  6],
+      [46, 38, 30, 23, 17, 12,  8,  5,  3],
+      [37, 29, 22, 16, 11,  7,  4,  2,  1]
+    ];
+
+    const Q81_CATALOG = {
+       1: { id:  1, sym: "[Rr]", desc: "Rechazo recíproco total." },
+       2: { id:  2, sym: "[¿r]", desc: "Percepción acertada de rechazo con rechazo unilateral." },
+       3: { id:  3, sym: "[R?]", desc: "Percepción recíproca de rechazo con rechazo unilateral." },
+       4: { id:  4, sym: "[Er]", desc: "Percepción recíproca de rechazo con preferencias contrapuestas." },
+       5: { id:  5, sym: "[¿?]", desc: "Percepción recíproca de rechazo." },
+       6: { id:  6, sym: "[Re]", desc: "Percepciones mutuas de rechazo con preferencias contrapuestas." },
+       7: { id:  7, sym: "¡Rr]", desc: "Rechazo mutuo, con percepción unilateral de rechazo." },
+       8: { id:  8, sym: "[E?]", desc: "Percepción recíproca de rechazo con elección unilateral." },
+       9: { id:  9, sym: "[¿e]", desc: "Percepciones mutuas de rechazo con elección unilateral." },
+      10: { id: 10, sym: "[Rr!>", desc: "Rechazo mutuo, con percepción negativa unilateral." },
+      11: { id: 11, sym: "¡¿r]", desc: "Rechazo total ante la indiferencia." },
+      12: { id: 12, sym: "¡R?]", desc: "Percepción acertada de rechazo." },
+      13: { id: 13, sym: "[Ee]", desc: "Elección mutua con percepciones negativas (Paradoja)." },
+      14: { id: 14, sym: "[¿r!>", desc: "Percepción acertada de rechazo." },
+      15: { id: 15, sym: "[R?!>", desc: "Rechazo total en la indiferencia." },
+      16: { id: 16, sym: "¡Er]", desc: "Falsa percepción de rechazo con rechazo unilateral." },
+      17: { id: 17, sym: "¡¿?]", desc: "Percepción de rechazo unilateral." },
+      18: { id: 18, sym: "¡Re]", desc: "Percepción acertada de rechazo con elección unilateral." },
+      19: { id: 19, sym: "[Er!>", desc: "Percepción acertada de rechazo con elección unilateral." },
+      20: { id: 20, sym: "[¿?!>", desc: "Percepción de rechazo unilateral." },
+      21: { id: 21, sym: "[Re!>", desc: "Rechazo total con elección unilateral." },
+      22: { id: 22, sym: "<Rr]", desc: "Rechazo mutuo, con percepciones contrapuestas." },
+      23: { id: 23, sym: "¡E?]", desc: "Falsa percepción de elección." },
+      24: { id: 24, sym: "¡¿e]", desc: "Elección contradictoria." },
+      25: { id: 25, sym: "¡Rr!>", desc: "Rechazo recíproco con indiferencia perceptiva." },
+      26: { id: 26, sym: "[E?!>", desc: "Elección unilateral contradictoria." },
+      27: { id: 27, sym: "[¿e!>", desc: "Falsa percepción de rechazo con Indiferencia." },
+      28: { id: 28, sym: "[Rr>", desc: "Rechazo mutuo, con percepciones contrapuestas." },
+      29: { id: 29, sym: "<¿r]", desc: "Rechazo total con percepción unilateral de elección." },
+      30: { id: 30, sym: "<R?]", desc: "Percepción acertada de rechazo con percepción positiva unilateral." },
+      31: { id: 31, sym: "¡Ee]", desc: "Elección mutua, con percepción negativa unilateral." },
+      32: { id: 32, sym: "¡¿r!>", desc: "Rechazo unilateral en la Indiferencia." },
+      33: { id: 33, sym: "¡R?!>", desc: "Rechazo unilateral." },
+      34: { id: 34, sym: "[Ee!>", desc: "Elección mutua, con percepción negativa unilateral." },
+      35: { id: 35, sym: "[¿r>", desc: "Rechazo acertado con percepción positiva unilateral." },
+      36: { id: 36, sym: "[R?>", desc: "Percepción positiva con rechazo unilateral." },
+      37: { id: 37, sym: "<Er]", desc: "Oposición total de sentimientos." },
+      38: { id: 38, sym: "<¿?]", desc: "Percepciones contrapuestas." },
+      39: { id: 39, sym: "<Re]", desc: "Percepciones acertadas de elección y de rechazo." },
+      40: { id: 40, sym: "¡Er!>", desc: "Oposición real con indiferencia perceptiva." },
+      41: { id: 41, sym: "¡¿?!>", desc: "Desconocimiento absoluto." },
+      42: { id: 42, sym: "¡Re!>", desc: "Oposición efectiva con desconocimiento." },
+      43: { id: 43, sym: "[Er>", desc: "Percepciones acertadas contrapuestas." },
+      44: { id: 44, sym: "[¿?>", desc: "Desconocimiento mutuo con percepciones contrapuestas." },
+      45: { id: 45, sym: "[Re>", desc: "Oposición total de sentimientos." },
+      46: { id: 46, sym: "<E?]", desc: "Elección total con percepción negativa unilateral." },
+      47: { id: 47, sym: "<¿e]", desc: "Percepción acertada de elección con percepción negativa unilateral." },
+      48: { id: 48, sym: "<Rr!>", desc: "Rechazo mutuo, con percepción positiva unilateral." },
+      49: { id: 49, sym: "¡E?!>", desc: "Elección unilateral en la indiferencia." },
+      50: { id: 50, sym: "¡¿e!>", desc: "Elección unilateral en la indiferencia." },
+      51: { id: 51, sym: "¡Rr>", desc: "Rechazo mutuo, con percepción contradictoria." },
+      52: { id: 52, sym: "[E?>", desc: "Elección percibida con rechazo esperado." },
+      53: { id: 53, sym: "[¿e>", desc: "Relación positiva unilateral, con percepción de rechazo." },
+      54: { id: 54, sym: "<Ee]", desc: "Elección mutua, con percepciones contrapuestas." },
+      55: { id: 55, sym: "<¿r!>", desc: "Falsa percepción de elección en la indiferencia." },
+      56: { id: 56, sym: "<R?!>", desc: "Rechazo contradictorio en el desconocimiento." },
+      57: { id: 57, sym: "¡Ee!>", desc: "Elección mutua, con desconocimiento." },
+      58: { id: 58, sym: "¡¿r>", desc: "Rechazo contradictorio con desconocimiento." },
+      59: { id: 59, sym: "¡R?>", desc: "Indiferencia con percepción positiva contrariada." },
+      60: { id: 60, sym: "[Ee>", desc: "Elección mutua, con percepciones contrapuestas." },
+      61: { id: 61, sym: "<Er!>", desc: "Elección total con rechazo unilateral." },
+      62: { id: 62, sym: "<¿?!>", desc: "Percepción positiva unilateral." },
+      63: { id: 63, sym: "<Re!>", desc: "Percepción acertada de elección con rechazo unilateral." },
+      64: { id: 64, sym: "¡Er>", desc: "Percepción acertada de elección con rechazo unilateral." },
+      65: { id: 65, sym: "¡¿?>", desc: "Indiferencia con percepción positiva unilateral." },
+      66: { id: 66, sym: "¡Re>", desc: "Relación positiva unilateral, con rechazo efectivo." },
+      67: { id: 67, sym: "<E?!>", desc: "Elección esperada unilateral." },
+      68: { id: 68, sym: "<¿e!>", desc: "Percepción acertada de elección en la indiferencia." },
+      69: { id: 69, sym: "<Rr>", desc: "Rechazo mutuo, con percepciones positivas." },
+      70: { id: 70, sym: "¡E?>", desc: "Elección percibida unilateralmente." },
+      71: { id: 71, sym: "¡¿e>", desc: "Relación positiva unilateral." },
+      72: { id: 72, sym: "<Ee!>", desc: "Elección mutua, con percepción positiva unilateral." },
+      73: { id: 73, sym: "<¿r>", desc: "Percepciones positivas con rechazo unilateral." },
+      74: { id: 74, sym: "<R?>", desc: "Percepciones positivas con rechazo unilateral." },
+      75: { id: 75, sym: "¡Ee>", desc: "Elección mutua, con percepción positiva unilateral." },
+      76: { id: 76, sym: "<Er>", desc: "Oposición real, con percepciones positivas." },
+      77: { id: 77, sym: "<¿?>", desc: "Percepciones positivas con desconocimiento mutuo." },
+      78: { id: 78, sym: "<Re>", desc: "Oposición de preferencias con percepciones positivas." },
+      79: { id: 79, sym: "<E?>", desc: "Relación positiva parcial con desconocimiento." },
+      80: { id: 80, sym: "<¿e>", desc: "Elección unilateral con percepciones positivas." },
+      81: { id: 81, sym: "<Ee>", desc: "Elección total, mutua." }
     };
+
+    const Q81_ID_TO_COORDS = {};
+    for (let u = 0; u < 9; u++) {
+      for (let v = 0; v < 9; v++) {
+        Q81_ID_TO_COORDS[Q81_MATRIX_IDS[u][v]] = { u, v };
+      }
+    }
+
+    const Q81_COORDINATES = {};
+    for (let id = 1; id <= 81; id++) {
+      const c = Q81_ID_TO_COORDS[id];
+      const fig = Q81_CATALOG[id];
+      if (fig) {
+        fig.freq = +(432.0 * Math.pow(2.0, (id - 41.0) / 41.0)).toFixed(2);
+      }
+      if (c && fig) {
+        Q81_COORDINATES[id] = {
+          u: c.u, v: c.v,
+          sym: fig.sym,
+          name: fig.desc,
+          freq: fig.freq,
+          q6: (id > 50 ? 'Elección Mutua' : (id < 30 ? 'Rechazo Mutuo' : 'Indiferencia Mutua'))
+        };
+      }
+    }
 
     // Sábanas Sintéticas para el modo IMAX 4D
     function createSabanaMatrix(type) {
@@ -1879,10 +2014,15 @@
 
         const targetDestination = pannerNode || masterGain;
 
-        // Frecuencia anclada al subarmónico áureo de 432 Hz (216 Hz)
-        const maxRef = opts.maxRef || (Math.abs(densityVal) > 8 ? 15.2 : (Math.abs(densityVal) > 5 ? 7.6 : 4.44));
-        const normVal = (densityVal || 0) / maxRef;
-        const baseFreq = 216.0 * Math.pow(2, normVal * 1.2);
+        // Frecuencia anclada a la figura Q81 o al subarmónico áureo de 432 Hz (216 Hz)
+        let baseFreq = 216.0;
+        if (opts.freq) {
+          baseFreq = opts.freq;
+        } else {
+          const maxRef = opts.maxRef || (Math.abs(densityVal) > 8 ? 15.2 : (Math.abs(densityVal) > 5 ? 7.6 : 4.44));
+          const normVal = (densityVal || 0) / maxRef;
+          baseFreq = 216.0 * Math.pow(2, normVal * 1.2);
+        }
 
         if (isSpine) {
           // 👑 1. CAMPANA ÁUREA DE LA ESPINA DORSAL (Auto-posiciones i, i)
@@ -3432,7 +3572,7 @@
     let activeSabanaKey = 't1';
     let transitionProgress = 1.0, transitionDuration = 1400, transitionStartTime = 0;
     let epicenterU = 4, epicenterV = 4;
-    let isPlayingFilm = false, filmInterval = null, filmStep = 81, sequenceCriterion = 'thermal', sequenceOrder = [];
+    let isPlayingFilm = false, filmInterval = null, filmStep = 81, sequenceCriterion = 'q81_desc', sequenceOrder = [];
     let selectedSubjectIdx = null, hoveredVertexIdx = 0;
     let wobbleTime = 0;
 
@@ -5719,13 +5859,23 @@
         } else {
           setSolfeoTrajectory(solfeoTrajectory);
         }
-      } else {
+      } else if (scale === 'short') {
         if (btnShort) btnShort.classList.add('active');
         if (btnLong) btnLong.classList.remove('active');
         if (subShort) subShort.classList.remove('hidden');
         if (subLong) subLong.classList.add('hidden');
         if (!['short_row', 'short_col', 'short_dual', 'short_grand'].includes(solfeoTrajectory)) {
           setSolfeoTrajectory('short_row');
+        } else {
+          setSolfeoTrajectory(solfeoTrajectory);
+        }
+      } else if (scale === 'q81') {
+        if (btnLong) btnLong.classList.remove('active');
+        if (btnShort) btnShort.classList.remove('active');
+        if (subLong) subLong.classList.add('hidden');
+        if (subShort) subShort.classList.add('hidden');
+        if (!['q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc'].includes(solfeoTrajectory)) {
+          setSolfeoTrajectory('q81_desc');
         } else {
           setSolfeoTrajectory(solfeoTrajectory);
         }
@@ -5736,8 +5886,10 @@
       solfeoTrajectory = traj;
       if (['row', 'col', 'dialogue'].includes(traj)) {
         solfeoScale = 'long';
-      } else {
+      } else if (['short_row', 'short_col', 'short_dual', 'short_grand'].includes(traj)) {
         solfeoScale = 'short';
+      } else if (['q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc'].includes(traj)) {
+        solfeoScale = 'q81';
       }
 
       const btnLong = document.getElementById('btn-scale-long');
@@ -5749,18 +5901,28 @@
         if (btnShort) btnShort.classList.remove('active');
         if (subLong) subLong.classList.remove('hidden');
         if (subShort) subShort.classList.add('hidden');
-      } else {
+      } else if (solfeoScale === 'short') {
         if (btnShort) btnShort.classList.add('active');
         if (btnLong) btnLong.classList.remove('active');
         if (subShort) subShort.classList.remove('hidden');
         if (subLong) subLong.classList.add('hidden');
+      } else {
+        if (btnLong) btnLong.classList.remove('active');
+        if (btnShort) btnShort.classList.remove('active');
+        if (subLong) subLong.classList.add('hidden');
+        if (subShort) subShort.classList.add('hidden');
       }
 
-      ['row', 'col', 'dialogue', 'short_row', 'short_col', 'short_dual', 'short_grand'].forEach(t => {
+      ['row', 'col', 'dialogue', 'short_row', 'short_col', 'short_dual', 'short_grand', 'q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc'].forEach(t => {
         const btn = document.getElementById(`btn-traj-${t}`);
         if (btn) {
-          if (t === traj) btn.classList.add('active');
-          else btn.classList.remove('active');
+          if (t === traj) {
+            btn.classList.add('active', 'border-cyan-400', 'bg-cyan-950/80', 'text-cyan-300');
+            btn.classList.remove('text-slate-300');
+          } else {
+            btn.classList.remove('active', 'border-cyan-400', 'bg-cyan-950/80', 'text-cyan-300');
+            btn.classList.add('text-slate-300');
+          }
         }
       });
 
@@ -5771,13 +5933,50 @@
         short_row: '⚡ Tablero Corto: Dación Media Borde Oeste (5)',
         short_col: '⚡ Tablero Corto: Recepción Media Borde Sur (5)',
         short_dual: '⚡ Tablero Corto: Balance Nodal con Arco 3D (10)',
-        short_grand: '👑 Tablero Corto: Monolito de la Gran Media Global'
+        short_grand: '👑 Tablero Corto: Monolito de la Gran Media Global',
+        q81_vert: '↕️ Matriz (9,9): 1) Orden Vertical (Columna a Columna C1 a C9) [81]',
+        q81_horiz: '↔️ Matriz (9,9): 2) Orden Horizontal (Fila a Fila FA a FI) [81]',
+        q81_desc: '⬇️ Matriz (9,9): 3) Orden Numeralizado Q81 (81➔1) [81]',
+        q81_asc: '⬆️ Matriz (9,9): 4) Orden Numeralizado Q81 (1➔81) [81]'
       };
-      document.getElementById('solfeo-traj-indicator').textContent = labels[traj] || traj;
+      const ind = document.getElementById('solfeo-traj-indicator');
+      if (ind) ind.textContent = labels[traj] || traj;
 
       buildSolfeoSequence();
       solfeoCurrentStep = 0;
       updateSolfeoStepUI(0);
+    }
+
+    function createQ81SequenceItem(u, v, stepNum) {
+      const qId = Q81_MATRIX_IDS[u][v];
+      const cat = Q81_CATALOG[qId] || { sym: '??', desc: 'Figura Sociométrica', freq: 432 };
+      const rowLetter = String.fromCharCode(65 + u);
+      const colNum = v + 1;
+      const cellCode = `${rowLetter}${colNum}`;
+      const curIdx = u * 9 + v;
+      let den = 0.0;
+      if (typeof SABANAS !== 'undefined') {
+        const sabKey = (typeof activeSabanaKey !== 'undefined') ? activeSabanaKey : 't1';
+        if (SABANAS[sabKey]) den = SABANAS[sabKey][curIdx];
+      }
+      return {
+        step: stepNum,
+        totalSteps: 81,
+        type: 'q81_macro',
+        u, v,
+        i: u, j: v,
+        q81Num: qId,
+        cellCode,
+        sym: cat.sym,
+        desc: cat.desc,
+        freq: cat.freq || 432,
+        emitter: `Fila ${rowLetter}`,
+        receiver: `Columna ${colNum}`,
+        dyadLabel: `[${cellCode}] #${qId} ${cat.sym}`,
+        density: den,
+        isSpine: (u === v),
+        pan: (v - 4) * 0.10
+      };
     }
 
     function createSequenceItem(i, j, stepNum, opts = {}) {
@@ -5849,6 +6048,32 @@
               solfeoSequence.push(createSequenceItem(i, j, solfeoSequence.length + 1, { isDialogueA: true, partnerI: j, partnerJ: i }));
               solfeoSequence.push(createSequenceItem(j, i, solfeoSequence.length + 1, { isDialogueB: true, partnerI: i, partnerJ: j }));
             }
+          }
+        } else if (solfeoTrajectory === 'q81_vert') {
+          // ↕️ 1. Matriz (9,9): Orden Vertical (Columna a Columna C1 a C9) [81 Compases]
+          for (let v = 0; v < 9; v++) {
+            for (let u = 0; u < 9; u++) {
+              solfeoSequence.push(createQ81SequenceItem(u, v, solfeoSequence.length + 1));
+            }
+          }
+        } else if (solfeoTrajectory === 'q81_horiz') {
+          // ↔️ 2. Matriz (9,9): Orden Horizontal (Fila a Fila FA a FI) [81 Compases]
+          for (let u = 0; u < 9; u++) {
+            for (let v = 0; v < 9; v++) {
+              solfeoSequence.push(createQ81SequenceItem(u, v, solfeoSequence.length + 1));
+            }
+          }
+        } else if (solfeoTrajectory === 'q81_desc') {
+          // ⬇️ 3. Matriz (9,9): Orden Numeralizado Q81 Descendente (81 al 1) [81 Compases]
+          for (let qId = 81; qId >= 1; qId--) {
+            const coords = Q81_ID_TO_COORDS[qId] || { u: 0, v: 0 };
+            solfeoSequence.push(createQ81SequenceItem(coords.u, coords.v, solfeoSequence.length + 1));
+          }
+        } else if (solfeoTrajectory === 'q81_asc') {
+          // ⬆️ 4. Matriz (9,9): Orden Numeralizado Q81 Ascendente (1 al 81) [81 Compases]
+          for (let qId = 1; qId <= 81; qId++) {
+            const coords = Q81_ID_TO_COORDS[qId] || { u: 0, v: 0 };
+            solfeoSequence.push(createQ81SequenceItem(coords.u, coords.v, solfeoSequence.length + 1));
           }
         } else if (solfeoTrajectory === 'short_row') {
           // ⚡ 4. Tablero Corto: Medias de Fila (Borde Oeste)
@@ -6466,6 +6691,30 @@
         return;
       }
 
+      // RAMA C: Matriz (9, 9) Figuras Relacionales Sociométricas Q81 (81 Compases)
+      if (item.type === 'q81_macro') {
+        const colStatus = erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+
+        if (audioCtx && audioEnabled) {
+          playHarmonicChime(item.density, 0.35, {
+            freq: item.freq,
+            isSpine: item.isSpine,
+            u: item.u,
+            v: item.v,
+            pan: item.pan || 0.0
+          });
+          const pulseCol = (item.isSpine) ? 0xFFE600 : (item.density > 0.4 ? 0x00FF87 : (item.density < -0.3 ? 0xFF007F : 0x00E5FF));
+          pulseConcertCoronalRing(item.u, item.v, colStatus && colStatus.colorHex ? colStatus.colorHex : pulseCol);
+        }
+
+        updateSolfeoTelemetryCard(item, 0, item.pan || 0, colStatus ? colStatus.isRepeated : false, colStatus ? colStatus.hitCount : 1);
+        updateSolfeoStepUI(item.step, item.dyadLabel, item.q81Num, item.density, colStatus ? colStatus.isRepeated : false, colStatus ? colStatus.hitCount : 1);
+        if (typeof updateMoviolaUI === 'function') updateMoviolaUI(item.step);
+        pulseMultiAquariumCompas(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+        if (typeof updateTvWallCompas === 'function') updateTvWallCompas(item);
+        return;
+      }
+
       // RAMA B: Solfeo del Trayecto Largo (Matriz 25 Compases)
       const activeCell = document.getElementById(`cell-${item.i}-${item.j}`);
       if (activeCell) activeCell.classList.add('active-note');
@@ -6552,6 +6801,10 @@
         } else if (item.type === 'short_grand') {
           document.getElementById('solfeo-grid-cell').textContent = 'Vértice Sudoeste (Monolito)';
         }
+      } else if (item.type === 'q81_macro') {
+        const rowLetter = String.fromCharCode(65 + item.u);
+        const colNum = item.v + 1;
+        document.getElementById('solfeo-grid-cell').textContent = `Celda [${rowLetter}${colNum}] • ${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
       } else {
         document.getElementById('solfeo-grid-cell').textContent = `${getFigureCode(item.u, item.v)} (u=${item.u}, v=${item.v})`;
       }
@@ -6575,7 +6828,7 @@
 
       const maxRef = (Math.abs(item.density) > 8 ? 15.2 : (Math.abs(item.density) > 5 ? 7.6 : 4.44));
       const normVal = item.density / maxRef;
-      const f = 216.0 * Math.pow(2, normVal * 1.2);
+      const f = item.freq || (216.0 * Math.pow(2, normVal * 1.2));
       document.getElementById('solfeo-freq-val').textContent = `${f.toFixed(1)} Hz ${item.isSpine ? '(Acorde Áureo)' : ''}`;
 
       // Rol Diádico y Paneo
@@ -7814,13 +8067,38 @@
     // =========================================================================
     function initFilmSequence() {
       sequenceOrder = [];
-      for (let i = 0; i < NUM_VERTICES; i++) {
-        sequenceOrder.push(i);
-      }
 
-      if (sequenceCriterion === 'thermal') {
+      if (sequenceCriterion === 'vertical') {
+        // 1) Orden Vertical: Columna a Columna (1 a 9 / C1 a C9)
+        for (let v = 0; v < GRID_SIZE; v++) {
+          for (let u = 0; u < GRID_SIZE; u++) {
+            sequenceOrder.push(u * GRID_SIZE + v);
+          }
+        }
+      } else if (sequenceCriterion === 'horizontal') {
+        // 2) Orden Horizontal: Fila a Fila (A a I / FA a FI)
+        for (let u = 0; u < GRID_SIZE; u++) {
+          for (let v = 0; v < GRID_SIZE; v++) {
+            sequenceOrder.push(u * GRID_SIZE + v);
+          }
+        }
+      } else if (sequenceCriterion === 'q81_desc') {
+        // 3) Orden Numeralizado Q81: Del 81 (Cohesión) al 1 (Abismo)
+        for (let qId = 81; qId >= 1; qId--) {
+          const coords = Q81_ID_TO_COORDS[qId] || { u: 0, v: 0 };
+          sequenceOrder.push(coords.u * GRID_SIZE + coords.v);
+        }
+      } else if (sequenceCriterion === 'q81_asc') {
+        // 4) Orden Numeralizado Q81: Del 1 (Abismo) al 81 (Cohesión)
+        for (let qId = 1; qId <= 81; qId++) {
+          const coords = Q81_ID_TO_COORDS[qId] || { u: 0, v: 0 };
+          sequenceOrder.push(coords.u * GRID_SIZE + coords.v);
+        }
+      } else if (sequenceCriterion === 'thermal') {
+        for (let i = 0; i < NUM_VERTICES; i++) sequenceOrder.push(i);
         sequenceOrder.sort((a, b) => SABANAS.t1[b] - SABANAS.t1[a]);
       } else if (sequenceCriterion === 'heider') {
+        for (let i = 0; i < NUM_VERTICES; i++) sequenceOrder.push(i);
         sequenceOrder.sort((a, b) => {
           const ua = Math.floor(a / GRID_SIZE), va = a % GRID_SIZE;
           const ub = Math.floor(b / GRID_SIZE), vb = b % GRID_SIZE;
@@ -7830,6 +8108,7 @@
           return SABANAS.t1[b] - SABANAS.t1[a];
         });
       } else if (sequenceCriterion === 'radial') {
+        for (let i = 0; i < NUM_VERTICES; i++) sequenceOrder.push(i);
         sequenceOrder.sort((a, b) => {
           const ua = Math.floor(a / GRID_SIZE), va = a % GRID_SIZE;
           const ub = Math.floor(b / GRID_SIZE), vb = b % GRID_SIZE;
@@ -7837,19 +8116,25 @@
           const distSqB = (ub - 4) * (ub - 4) + (vb - 4) * (vb - 4);
           return distSqA - distSqB;
         });
+      } else {
+        // Default: 3) Orden Numeralizado Q81 Descendente
+        for (let qId = 81; qId >= 1; qId--) {
+          const coords = Q81_ID_TO_COORDS[qId] || { u: 0, v: 0 };
+          sequenceOrder.push(coords.u * GRID_SIZE + coords.v);
+        }
       }
     }
 
     function setSequenceCriterion(crit) {
       sequenceCriterion = crit;
-      ['thermal', 'heider', 'radial'].forEach(c => {
+      ['vertical', 'horizontal', 'q81_desc', 'q81_asc', 'thermal', 'heider', 'radial'].forEach(c => {
         const btn = document.getElementById(`crit-${c}`);
         if (btn) {
           if (c === crit) {
-            btn.classList.add('active', 'text-cyan-300');
+            btn.classList.add('active', 'text-cyan-300', 'border-cyan-400');
             btn.classList.remove('text-slate-300');
           } else {
-            btn.classList.remove('active', 'text-cyan-300');
+            btn.classList.remove('active', 'text-cyan-300', 'border-cyan-400');
             btn.classList.add('text-slate-300');
           }
         }
@@ -7895,7 +8180,12 @@
         const curIdx = sequenceOrder[filmStep - 1];
         const u = Math.floor(curIdx / GRID_SIZE);
         const v = curIdx % GRID_SIZE;
-        const code = getFigureCode(u, v);
+        const qId = Q81_MATRIX_IDS[u][v];
+        const qInfo = Q81_CATALOG[qId] || { sym: getFigureCode(u, v), desc: 'Figura Sociométrica', freq: 432 };
+        const rowLetter = String.fromCharCode(65 + u);
+        const colNum = v + 1;
+        const cellCode = `${rowLetter}${colNum}`;
+
         const d1 = SABANAS.t1[curIdx].toFixed(2);
         const d2 = SABANAS.t2[curIdx].toFixed(2);
         const d3 = SABANAS.t3[curIdx].toFixed(2);
@@ -7903,7 +8193,11 @@
 
         if (stepLbl) stepLbl.textContent = `${filmStep} / 81 Vértices Revelados`;
         if (stepDetail) {
-          stepDetail.innerHTML = `Vértice (${u},${v}) <strong class="text-cyan-300">${code}</strong> • T1:${d1} ➔ T2:${d2} ➔ T3:${d3} ➔ T4:${d4}`;
+          stepDetail.innerHTML = `Compás ${filmStep}/81 • Celda [${cellCode}] <strong class="text-cyan-300">#${qId} ${qInfo.sym}</strong> <em>"${qInfo.desc}"</em> • T1:${d1} ➔ T2:${d2} ➔ T3:${d3} ➔ T4:${d4}`;
+        }
+        const footerSub = document.getElementById('footer-subtitle-text');
+        if (footerSub) {
+          footerSub.innerHTML = `Compás ${filmStep}/81 • Celda [${cellCode}] • Figura Q81 #${qId} <strong class="text-cyan-300">${qInfo.sym}</strong> (${qInfo.desc}) • Tono: ${qInfo.freq.toFixed(1)} Hz • SDR T1:${d1}, T4:${d4}`;
         }
       }
     }
@@ -7961,8 +8255,13 @@
 
       if (dir > 0 && filmStep > 0 && audioCtx && audioEnabled) {
         const curIdx = sequenceOrder[filmStep - 1];
+        const u = Math.floor(curIdx / GRID_SIZE);
+        const v = curIdx % GRID_SIZE;
+        const qId = Q81_MATRIX_IDS[u][v];
+        const qInfo = Q81_CATALOG[qId];
         const avgSdr = (SABANAS.t1[curIdx] + SABANAS.t2[curIdx] + SABANAS.t3[curIdx] + SABANAS.t4[curIdx]) / 4;
-        playHarmonicChime(avgSdr * 4.0, 0.25, { u: Math.floor(curIdx / GRID_SIZE), v: curIdx % GRID_SIZE });
+        const freq = qInfo ? qInfo.freq : 432;
+        playHarmonicChime(avgSdr * 4.0, 0.25, { u, v, freq, isSpine: (u === v), pan: (v - 4) * 0.10 });
       }
     }
 
