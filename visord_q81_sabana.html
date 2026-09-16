@@ -3,23 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VISORD • Cinemascope & Tecnicolor: La Sábana Arrugada en Q81 (Tríptico Sincronizado)</title>
+  <title>VISORD Cinema • El IMAX de los Grupos: 4 Acuarios Q81 y Filamentos 4D (Worldlines)</title>
   
+  <!-- Three.js & OrbitControls: Carga primaria local de alta velocidad + Fallback dinámico CDN -->
+  <script src="lib/three.min.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script>
+    // Fallback resiliente a CDN si los scripts locales no se encuentran
+    (function() {
+      function loadScript(src, cb) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = cb;
+        s.onerror = function() { console.error('Fallo cargando script:', src); };
+        document.head.appendChild(s);
+      }
+      if (typeof THREE === 'undefined') {
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', function() {
+          if (typeof THREE !== 'undefined' && typeof THREE.OrbitControls === 'undefined') {
+            loadScript('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js', function() {
+              if (window.__triggerInit3D) window.__triggerInit3D();
+            });
+          }
+        });
+      } else if (typeof THREE.OrbitControls === 'undefined') {
+        loadScript('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js', function() {
+          if (window.__triggerInit3D) window.__triggerInit3D();
+        });
+      }
+    })();
+  </script>
+
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Three.js & OrbitControls -->
-  <script src="lib/three.min.js"></script>
-  <script src="lib/OrbitControls.js"></script>
-  <script>
-    if (typeof THREE === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
-      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
-    }
-  </script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,7 +61,7 @@
       background: rgba(8, 15, 36, 0.88);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.28);
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     
@@ -50,7 +69,7 @@
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.14);
       color: #CBD5E1;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .glass-btn:hover {
       background: rgba(0, 229, 255, 0.22);
@@ -124,14 +143,13 @@
     ::-webkit-scrollbar-thumb { background: #0284C7; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #00FF87; }
 
-    /* Canvas glow */
     #three-viewport {
       outline: none;
     }
   </style>
 </head>
 
-<body class="p-2 md:p-3.5 text-slate-100 flex flex-col items-center justify-start gap-2.5">
+<body class="p-2 md:p-3 text-slate-100 flex flex-col items-center justify-start gap-2.5">
 
   <!-- CONTENEDOR MAESTRO 1400px MÁXIMO -->
   <main class="w-full max-w-[1400px] flex flex-col gap-2.5">
@@ -149,69 +167,84 @@
             <h1 class="outfit text-base md:text-lg font-black tracking-wide text-white flex items-center gap-1.5">
               NEXORD <span class="text-cyan-400">VISORD CINEMA</span>
             </h1>
-            <span class="mono text-[10px] bg-gradient-to-r from-amber-500/30 via-emerald-500/30 to-cyan-500/30 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-full font-bold">CINEMASCOPE & TECNICOLOR</span>
+            <span class="mono text-[10px] bg-gradient-to-r from-amber-500/30 via-emerald-500/30 to-cyan-500/30 border border-amber-400/50 text-amber-300 px-2 py-0.5 rounded-full font-bold">EL IMAX DE LOS GRUPOS</span>
           </div>
-          <p class="text-[11px] text-slate-400 mono">La Sábana Arrugada en Q81(9, 9) • Tríptico Sincronizado (T1 | T2 | T3) y Vectores N</p>
+          <p class="text-[11px] text-slate-400 mono">4 Acuarios Q81 Sincronizados (T1 | T2 | T3 | T4) y Filamentos 4D (Worldlines)</p>
         </div>
       </div>
 
       <!-- FORMATO CINEMATOGRÁFICO Y METADATOS (REGLA 11) -->
       <div class="flex items-center gap-2 flex-wrap text-xs">
-        <!-- CONMUTADOR DE FORMATO: SINGULAR VS CINEMASCOPE TRÍPTICO -->
         <div class="flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-sky-500/40">
           <button onclick="setViewLayout('singular')" id="btn-layout-singular" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold">
-            📺 Singular
+            📺 Singular 1x
           </button>
           <button onclick="setViewLayout('cinemascope')" id="btn-layout-cinemascope" class="glass-btn px-3 py-1 rounded-lg mono text-xs font-bold text-amber-300 border-amber-500/50 bg-amber-950/60 active">
-            🎞️ Cinemascope Tríptico (T1 | T2 | T3)
+            🎞️ IMAX 4D (T1 | T2 | T3 | T4)
           </button>
         </div>
 
         <div class="bg-slate-950/80 border border-cyan-500/30 px-3 py-1 rounded-xl flex items-center gap-2">
           <span class="mono text-[10px] text-slate-400">ESTUDIO:</span>
-          <span class="mono text-[11px] font-bold text-cyan-300" id="study-key">SIMUL-AA-G1-T3-C1-V10-A16-ES-5</span>
+          <span class="mono text-[11px] font-bold text-cyan-300" id="study-key">SIMUL-AA-G1-T4-C1-V10-A16-ES-5</span>
         </div>
       </div>
     </header>
 
-    <!-- 🎬 BARRA SUPERIOR DE METRAJE: "SÁBANA A SÁBANA" -->
+    <!-- 🎬 BARRA SUPERIOR DE METRAJE: 4 TIEMPOS Y FILAMENTOS 4D -->
     <section class="glass-panel rounded-2xl p-2 md:p-2.5 flex flex-wrap items-center justify-between gap-2 border border-sky-900/40">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="mono text-[11px] text-amber-400 font-bold flex items-center gap-1 pl-1">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          TIEMPOS / METRAJE:
+          TIEMPOS:
         </span>
-        <button onclick="loadSabana('t1')" id="btn-sabana-t1" class="glass-btn px-3 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5 active">
+        <button onclick="loadSabana('t1')" id="btn-sabana-t1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5 active">
           🌅 T1: Génesis
         </button>
-        <button onclick="loadSabana('t2')" id="btn-sabana-t2" class="glass-btn px-3 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+        <button onclick="loadSabana('t2')" id="btn-sabana-t2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
           ⚡ T2: Crisis / Tensión
         </button>
-        <button onclick="loadSabana('t3')" id="btn-sabana-t3" class="glass-btn px-3 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
-          🌱 T3: Resolución
+        <button onclick="loadSabana('t3')" id="btn-sabana-t3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+          🌱 T3: Reorganización
         </button>
-        <button onclick="loadSabana('canon')" id="btn-sabana-canon" class="glass-btn px-3 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+        <button onclick="loadSabana('t4')" id="btn-sabana-t4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
+          🏆 T4: Resolución
+        </button>
+        <button onclick="loadSabana('canon')" id="btn-sabana-canon" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-semibold flex items-center gap-1.5">
           🏛️ Grupo A (1g1t1c)
         </button>
       </div>
 
-      <!-- ESTADO DE LA TRANSICIÓN VISCOELÁSTICA Y RITMO -->
-      <div class="flex items-center gap-2 bg-slate-950/90 border border-sky-900/60 px-3 py-1 rounded-xl mono text-xs">
-        <span class="text-[10px] text-slate-400">FLUIDEZ ONDULATORIA:</span>
-        <div class="w-16 bg-slate-800 h-1.5 rounded-full overflow-hidden">
-          <div id="transition-bar" class="bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 h-full w-full transition-all duration-75"></div>
+      <!-- MANDOS DE FILAMENTOS 4D (WORLDLINES ENTRE LOS 4 ACUARIOS) -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1 bg-slate-950/90 border border-cyan-500/40 p-1 rounded-xl mono text-xs">
+          <button onclick="toggleWorldlines()" id="btn-toggle-worldlines" class="glass-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-cyan-300 active flex items-center gap-1.5" title="Unir los 4 acuarios mediante filamentos espaciotemporales">
+            <span id="worldlines-icon">🌐</span>
+            <span>Líneas 4D: ON</span>
+          </button>
+          <button onclick="setWorldlinesFilter('all')" id="wl-flt-all" class="glass-btn px-2 py-1 rounded-lg text-[10px] active">81 Canales</button>
+          <button onclick="setWorldlinesFilter('spine')" id="wl-flt-spine" class="glass-btn px-2 py-1 rounded-lg text-[10px] text-amber-300">Espina 4D</button>
+          <button onclick="setWorldlinesFilter('extreme')" id="wl-flt-extreme" class="glass-btn px-2 py-1 rounded-lg text-[10px]">Crestas/Fosas</button>
+          <button onclick="setWorldlinesFilter('subject')" id="wl-flt-subject" class="glass-btn px-2 py-1 rounded-lg text-[10px] text-emerald-300">Sujeto N</button>
         </div>
-        <span class="text-[10px] font-bold text-cyan-300" id="transition-status">SINCRONÍA ACTIVA</span>
+
+        <div class="flex items-center gap-2 bg-slate-950/90 border border-sky-900/60 px-3 py-1 rounded-xl mono text-xs">
+          <span class="text-[10px] text-slate-400">ONDULACIÓN:</span>
+          <div class="w-14 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div id="transition-bar" class="bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 h-full w-full transition-all duration-75"></div>
+          </div>
+          <span class="text-[10px] font-bold text-cyan-300" id="transition-status">SINCRONÍA 4D</span>
+        </div>
       </div>
     </section>
 
     <!-- 🌌 ÁREA CENTRAL 3D: EL LIENZO PANORÁMICO CINEMASCOPE -->
-    <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/35 shadow-2xl" style="height: 520px;" id="aquarium-viewport-container">
+    <div class="relative w-full rounded-2xl overflow-hidden glass-panel border border-sky-500/35 shadow-2xl" style="height: 560px; min-height: 560px;" id="aquarium-viewport-container">
       
-      <!-- CONTENEDOR CANVAS THREE.JS -->
-      <div id="three-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+      <!-- CONTENEDOR CANVAS THREE.JS CON DIMENSIONES EXPLÍCITAS -->
+      <div id="three-viewport" style="position: absolute; inset: 0; width: 100%; height: 100%; min-height: 560px;" class="cursor-grab active:cursor-grabbing"></div>
 
-      <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES (PRESET ÁNGULO DIÁFANO) -->
+      <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES -->
       <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
         <button onclick="applyDiafanoView()" id="btn-diafano" class="glass-btn px-3.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg shadow-amber-500/25 flex items-center gap-2" title="Perspectiva Óptima sin Oclusión: Elev 28°, Azim -38°">
           ✨ Ángulo Diáfano Canónico
@@ -220,7 +253,7 @@
           <button onclick="setCameraAngle('iso')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Panorámica</button>
           <button onclick="setCameraAngle('top')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Cenital</button>
           <button onclick="setCameraAngle('profile')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Perfil 90°</button>
-          <button onclick="setCameraAngle('spine')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Espinas</button>
+          <button onclick="setCameraAngle('tunnel')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px] text-amber-300">Túnel 4D</button>
           <label class="flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer mono text-[10px] text-cyan-300 bg-cyan-950/60 border border-cyan-500/40">
             <input type="checkbox" id="chk-wobble" checked class="rounded border-cyan-600">
             <span>🛰️ Órbita ±8°</span>
@@ -232,19 +265,23 @@
       <div class="absolute top-3 left-3 z-20 pointer-events-none flex flex-col gap-1 text-[10px] mono bg-slate-950/85 p-2 rounded-xl border border-sky-900/50 backdrop-blur-md">
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></span>
-          <span class="text-emerald-300 font-bold">Crestas a Cielo Abierto (+Z)</span>: Cohesión &lt;Ee&gt;
+          <span class="text-emerald-300 font-bold">Crestas (+Z)</span>: Cohesión &lt;Ee&gt;
         </div>
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]"></span>
-          <span class="text-cyan-300 font-bold">Lámina de Flotación (Z = 0)</span>: Indiferencia ¡¿?!
+          <span class="text-cyan-300 font-bold">Flotación (Z = 0)</span>: Indiferencia ¡¿?!
         </div>
         <div class="flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#FF007F]"></span>
-          <span class="text-rose-400 font-bold">Fosas Abisales Submarinas (-Z)</span>: Conflicto [Rr]
+          <span class="text-rose-400 font-bold">Fosas (-Z)</span>: Conflicto [Rr]
         </div>
         <div class="flex items-center gap-1.5 pt-0.5 border-t border-slate-800">
-          <span class="w-3.5 h-1 bg-amber-400 rounded-full shadow-[0_0_8px_#FFE600]"></span>
-          <span class="text-amber-300 font-bold">Espina Dorsal Simétrica</span>: Auto-posiciones (i, i)
+          <span class="w-3 h-1 bg-amber-400 rounded-full shadow-[0_0_8px_#FFE600]"></span>
+          <span class="text-amber-300 font-bold">Espina Dorsal 4D</span>: Auto-posiciones (i, i)
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-0.5 bg-cyan-300 rounded-full shadow-[0_0_6px_#00E5FF]"></span>
+          <span class="text-cyan-300 font-bold">Filamento Trans-Temporal</span>: Geodésica 4D
         </div>
       </div>
 
@@ -271,19 +308,18 @@
         <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
           <div class="flex items-center gap-2">
             <span class="text-cyan-400 font-bold text-sm outfit">MOVIOLA DEL FOTOGRAMA</span>
-            <span class="mono text-[9px] bg-sky-950 border border-sky-500/40 text-sky-300 px-2 py-0.2 rounded font-bold">SECUENCIA RÍTMICA SINCRONIZADA</span>
+            <span class="mono text-[9px] bg-sky-950 border border-sky-500/40 text-sky-300 px-2 py-0.2 rounded font-bold">SECUENCIA RÍTMICA 4D</span>
           </div>
           <div class="flex items-center gap-1.5 mono text-[10px]">
             <span class="text-slate-400">Cadencia:</span>
             <select id="playback-speed" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-cyan-300 text-[10px]">
               <option value="600">Solemne / Cósmica (600ms)</option>
-              <option value="320" selected>Normal (320ms)</option>
-              <option value="140">Ráfaga Rápida (140ms)</option>
+              <option value="300" selected>Normal (300ms)</option>
+              <option value="120">Ráfaga Rápida (120ms)</option>
             </select>
           </div>
         </div>
 
-        <!-- CONTROLES DE REPRODUCCIÓN -->
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-1.5">
             <button onclick="rewindFilm()" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Reiniciar Fotograma a Z=0">⏮</button>
@@ -296,11 +332,10 @@
             <button onclick="forwardFilmFull()" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold" title="Oleaje Completo">⏭</button>
           </div>
 
-          <!-- CRITERIO DE SECUENCIACIÓN -->
           <div class="flex items-center gap-1 text-[10px] mono">
             <span class="text-slate-400">Criterio:</span>
             <button onclick="setSequenceCriterion('thermal')" id="crit-thermal" class="glass-btn px-2 py-1 rounded-lg font-bold text-cyan-300 active" title="De la Cohesión al Rechazo">
-              🔥 Polaridad Térmica
+              🔥 Polaridad
             </button>
             <button onclick="setSequenceCriterion('heider')" id="crit-heider" class="glass-btn px-2 py-1 rounded-lg font-bold text-slate-300" title="De la Sintonía a la Disonancia">
               🧠 Heider
@@ -311,154 +346,178 @@
           </div>
         </div>
 
-        <!-- PROGRESS BAR DEL FOTOGRAMA -->
-        <div class="flex flex-col gap-1 pt-0.5">
-          <div class="flex items-center justify-between mono text-[10px] text-slate-400">
-            <span>Celdas Reveladas Simultáneas: <strong class="text-cyan-300 font-bold" id="film-step-label">81 / 81</strong></span>
-            <span id="film-step-detail">Oleaje Estático Completo en Tríptico</span>
+        <!-- Barra de progreso del metraje 81 celdas -->
+        <div class="flex flex-col gap-1 mt-0.5">
+          <div class="flex items-center justify-between mono text-[10px]">
+            <span class="text-slate-400">Fotograma Diádico: <strong class="text-cyan-300" id="film-step-lbl">81 / 81 Vértices Revelados</strong></span>
+            <span class="text-amber-300 font-bold" id="film-step-detail">Oleaje Estático Completo en 4 Acuarios</span>
           </div>
-          <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
-            <div id="film-progress-bar" class="bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 h-full w-full transition-all duration-150"></div>
+          <div class="w-full bg-slate-900 border border-slate-700/60 h-2 rounded-full overflow-hidden p-0.5">
+            <div id="film-progress" class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-pink-500 h-full rounded-full transition-all duration-150" style="width: 100%;"></div>
           </div>
         </div>
       </section>
 
-      <!-- 👤 MODO CONSTELACIÓN: VECTORES N DEL SUJETO (5 COLUMNAS) -->
+      <!-- 👤 CONSTELACIÓN DE SUJETOS (VECTORES DE DIMENSIÓN N) (5 COLUMNAS) -->
       <section class="lg:col-span-5 glass-panel rounded-2xl p-3 flex flex-col gap-2 border border-sky-900/40">
         <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-          <div class="flex items-center gap-1.5">
-            <span class="text-amber-400 font-bold text-sm outfit">CONSTELACIÓN VECTORIAL</span>
-            <span class="mono text-[9px] bg-amber-950 border border-amber-500/40 text-amber-300 px-2 py-0.2 rounded font-bold">DIMENSIÓN N EN PARALELO</span>
-          </div>
-          <span class="text-[10px] mono text-slate-400">Biografía Relacional</span>
+          <span class="text-emerald-400 font-bold text-sm outfit">VECTORES N DEL SUJETO</span>
+          <span class="mono text-[9px] text-slate-400">DIMENSIÓN N = 5</span>
         </div>
 
-        <!-- SELECTOR DE SUJETO -->
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <button onclick="selectSubject(null)" id="btn-subj-all" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-white active">
-            🌟 Todos
+        <p class="text-[11px] text-slate-300">
+          El sujeto no es un punto aislado: es un <strong class="text-amber-300">vector de dimensión N</strong> disperso cuánticamente en Q81. Al seleccionarlo, se enciende su <strong class="text-emerald-300">Hilo de Ariadna 4D</strong> atravesando los 4 acuarios.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+          <button onclick="selectSubject(null)" id="btn-subj-all" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold active">
+            🌐 Grupo Íntegro
           </button>
-          <button onclick="selectSubject(0)" id="btn-subj-0" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
-            1A
+          <button onclick="selectSubject(0)" id="btn-subj-0" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-emerald-300">
+            1A (Líder)
           </button>
-          <button onclick="selectSubject(1)" id="btn-subj-1" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
-            2A
+          <button onclick="selectSubject(1)" id="btn-subj-1" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-cyan-300">
+            2A (Cohesivo)
           </button>
-          <button onclick="selectSubject(2)" id="btn-subj-2" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
-            3A
+          <button onclick="selectSubject(2)" id="btn-subj-2" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-rose-400">
+            3A (Fricción)
           </button>
-          <button onclick="selectSubject(3)" id="btn-subj-3" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
-            4A
+          <button onclick="selectSubject(3)" id="btn-subj-3" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-amber-300">
+            4A (Puente)
           </button>
-          <button onclick="selectSubject(4)" id="btn-subj-4" class="glass-btn px-2.5 py-1 rounded-xl mono text-xs font-bold text-cyan-300">
-            5A
+          <button onclick="selectSubject(4)" id="btn-subj-4" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs font-bold text-slate-300">
+            5A (Flotante)
           </button>
         </div>
 
-        <!-- RESUMEN DEL VECTOR N SELECCIONADO -->
-        <div id="subject-vector-summary" class="bg-slate-950/80 p-2 rounded-xl border border-sky-900/40 text-[10px] mono flex flex-col gap-1">
-          <div class="flex justify-between text-slate-400">
-            <span>Sujeto Activo: <strong class="text-white" id="subj-name">Visión Grupal Completa</strong></span>
-            <span class="text-cyan-400" id="subj-entropy">Entropía: S = 0.28</span>
-          </div>
-          <div class="flex items-center gap-1 text-[9px] text-slate-400 overflow-x-auto" id="subj-pills">
-            <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">Auto-posición anclada en Espina Dorsal</span>
-            <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">4 Lazos Alter</span>
-          </div>
+        <div id="subject-details" class="mono text-[10px] bg-slate-950/80 p-2 rounded-xl border border-sky-950 text-slate-400 min-h-[46px] flex items-center justify-between">
+          <span>Haz clic en un sujeto para proyectar sus 5 filamentos a lo largo del tiempo.</span>
+          <span class="text-cyan-400 font-bold">N=5 Díadas</span>
         </div>
       </section>
+
     </div>
 
-    <!-- 📊 PANEL DE TELEMETRÍA SOCIO-TERMODINÁMICA DETALLADA -->
-    <section class="glass-panel rounded-2xl p-3 grid grid-cols-2 md:grid-cols-6 gap-2 border border-sky-900/40 mono text-xs">
+    <!-- 📊 PANEL INFERIOR: TELEMETRÍA SOCIOMÉTRICA TETRADIMENSIONAL -->
+    <section class="glass-panel rounded-2xl p-3 grid grid-cols-1 md:grid-cols-4 gap-3 border border-sky-900/40">
       
-      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Vértice Seleccionado</span>
-        <span class="mono font-bold text-white text-sm flex items-center gap-1" id="tel-vertex-name">
-          Q81 &lt;Ee&gt;
-        </span>
-        <span class="text-[8px] text-emerald-400" id="tel-vertex-coord">(u:0, v:0) [Máxima Elección]</span>
+      <!-- Celda e Identificador Q81 -->
+      <div class="flex flex-col gap-1 border-r border-slate-800 pr-2">
+        <span class="mono text-[10px] text-slate-400">VÉRTICE / TETRAGRAMA ACTIVO</span>
+        <div class="flex items-center gap-2">
+          <span class="outfit text-xl font-black text-cyan-300" id="telemetry-cell">A1B1</span>
+          <span class="mono text-xs px-2 py-0.5 rounded bg-sky-950 text-cyan-400 border border-sky-800 font-bold" id="telemetry-code">&lt;Ee&gt;</span>
+        </div>
+        <span class="mono text-[10px] text-slate-400" id="telemetry-meaning">Elección Mutua Plena (Cresta Máxima)</span>
       </div>
 
-      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Cota Relativa (SDR)</span>
-        <div class="flex items-center gap-1.5">
-          <span class="mono font-extrabold text-base text-emerald-400" id="tel-sdr">+0.95</span>
-          <span id="tel-phase-badge" class="text-[8px] px-1.5 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">CIELO</span>
+      <!-- Evolución Diacrónica a través de los 4 Tiempos -->
+      <div class="flex flex-col gap-1 border-r border-slate-800 pr-2">
+        <span class="mono text-[10px] text-slate-400">TRAYECTORIA LONGITUDINAL 4D</span>
+        <div class="flex items-center gap-1.5 mono text-xs font-bold">
+          <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800" id="telemetry-z1">T1: +0.95</span>
+          <span>→</span>
+          <span class="px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800" id="telemetry-z2">T2: +0.65</span>
+          <span>→</span>
+          <span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800" id="telemetry-z3">T3: +0.82</span>
+          <span>→</span>
+          <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800" id="telemetry-z4">T4: +0.98</span>
+        </div>
+        <div class="mono text-[10px] text-slate-400 flex items-center justify-between">
+          <span>Variación Δ(T4 - T1):</span>
+          <strong class="text-emerald-400 font-mono" id="telemetry-delta">+0.03 (Estable)</strong>
         </div>
       </div>
 
-      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Díadas Alojadas</span>
-        <span class="mono font-bold text-slate-200 text-xs" id="tel-dyads">1A ⇄ 2A, 1A (Auto)</span>
-        <span class="text-[8px] text-slate-400" id="tel-dyads-count">2 díadas en centroide</span>
+      <!-- Topología de Superficie (Curvatura) -->
+      <div class="flex flex-col gap-1 border-r border-slate-800 pr-2">
+        <span class="mono text-[10px] text-slate-400">GEOMETRÍA DIFERENCIAL LOCAL</span>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Curvatura Gauss (K):</span>
+          <strong class="text-amber-300" id="telemetry-gauss">+0.428 (Domo Cohesivo)</strong>
+        </div>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Curvatura Media (H):</span>
+          <strong class="text-cyan-300" id="telemetry-mean">-0.210</strong>
+        </div>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Posición:</span>
+          <strong class="text-amber-400" id="telemetry-spine-tag">Espina Dorsal (i, i)</strong>
+        </div>
       </div>
 
-      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Curvatura de Gauss (K)</span>
-        <span class="mono font-bold text-amber-300 text-xs" id="tel-gauss">K = +0.18</span>
-        <span class="text-[8px] text-emerald-300 font-semibold" id="tel-gauss-type">Domo Elíptico</span>
+      <!-- Macro-Termodinámica del Grupo -->
+      <div class="flex flex-col gap-1">
+        <span class="mono text-[10px] text-slate-400">MACRO-TERMODINÁMICA GLOBAL</span>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Entropía Relacional (S):</span>
+          <strong class="text-emerald-400" id="telemetry-entropy">0.245 bits</strong>
+        </div>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Sintonía de Heider (SR):</span>
+          <strong class="text-cyan-300" id="telemetry-heider">94.8%</strong>
+        </div>
+        <div class="flex items-center justify-between mono text-xs">
+          <span class="text-slate-400">Atractor Colectivo:</span>
+          <strong class="text-emerald-300">Cohesión Resiliente</strong>
+        </div>
       </div>
 
-      <div class="flex flex-col justify-center border-r border-slate-800 pr-2">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Sintonía Grupal (SR)</span>
-        <span class="mono font-extrabold text-cyan-300 text-sm" id="tel-sr">0.82</span>
-        <span class="text-[8px] text-cyan-400">Resonancia Cohesiva</span>
-      </div>
-
-      <div class="flex flex-col justify-center">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Entropía Grupal (S_grupo)</span>
-        <span class="mono font-extrabold text-slate-200 text-sm" id="tel-entropy-group">0.24</span>
-        <span class="text-[8px] text-emerald-400 font-semibold">Baja Disipación</span>
-      </div>
     </section>
 
-    <!-- 💡 NOTA EXPLICATIVA PEDAGÓGICA (REGLA 10) -->
-    <footer class="glass-panel rounded-2xl p-3 mb-14 border border-sky-900/40 mono text-xs text-slate-400 flex flex-col gap-1.5">
-      <div class="flex items-center gap-2 text-amber-300 font-bold">
-        <span>💡</span>
-        <span>Nota Explicativa Pedagógica • Cinemascope y Tecnicolor en Q81:</span>
+    <!-- 💡 NOTA EXPLICATIVA PEDAGÓGICA CANÓNICA (REGLA 10) -->
+    <footer class="glass-panel rounded-2xl p-4 text-xs text-slate-400 leading-relaxed border border-sky-900/50 flex flex-col gap-2">
+      <div class="flex items-center gap-2 text-amber-300 font-bold outfit text-sm">
+        <span>💡 Nota Explicativa Pedagógica:</span>
+        <span class="text-white font-normal">El IMAX de los Grupos y los Filamentos Trans-Temporales 4D en Q81</span>
       </div>
-      <p class="leading-relaxed">
-        El formato <strong class="text-amber-300">Cinemascope Tríptico</strong> alinea en una misma panorámica galáctica los tres momentos del ciclo diacrónico: <strong class="text-emerald-400">T1 Génesis</strong>, <strong class="text-rose-400">T2 Crisis / Tensión</strong> y <strong class="text-cyan-400">T3 Resolución</strong>. Todos los acuarios orbitan, rotan y amplían su zoom en <strong class="text-white">estricta sincronía geométrica</strong>, permitiendo al investigador contrastar de un solo vistazo el comportamiento de la misma arruga o fosa diádica a lo largo del tiempo.
+      <p>
+        El formato <strong class="text-amber-300">IMAX 4D</strong> alinea en una misma perspectiva sincrónica los cuatro actos del ciclo socio-temporal: 
+        <strong class="text-emerald-400">T1 Génesis</strong> (fase inicial de atracción y roles emergentes), 
+        <strong class="text-rose-400">T2 Crisis / Tensión</strong> (polarización y fracturas latentes), 
+        <strong class="text-cyan-400">T3 Reorganización</strong> (amortiguación mediante roles puente) y 
+        <strong class="text-amber-300">T4 Resolución</strong> (atractor final de equilibrio maduro).
       </p>
-      <p class="leading-relaxed">
-        La paleta hiper-vibrante <strong class="text-cyan-300">Tecnicolor</strong> realza las firmas termodinámicas sin confusión óptica: cúpulas esmeralda de elección mutua, fosas magenta de rechazo, anclajes dorados en la Espina Dorsal y arcos cian de conexión intersubjetiva.
+      <p>
+        Al activar las <strong class="text-cyan-300">Líneas de Universo 4D (Worldlines)</strong>, el motor traza filamentos luminosos continuos que unen cada una de las 81 celdas de $Q_{81}$ a lo largo del tiempo. 
+        La <strong class="text-amber-300">Espina Dorsal Dorada</strong> une longitudinalmente las auto-posiciones identitarias $(i, i)$, mientras que el <strong class="text-emerald-300">Hilo de Ariadna del Sujeto</strong> permite seguir la trayectoria cuántica de sus $N$ elecciones y expectativas durante toda la biografía del grupo, sin saltos ni oclusiones.
       </p>
+      <div class="flex flex-wrap items-center justify-between pt-2 border-t border-slate-800/80 text-[11px] mono text-slate-500">
+        <span>VISORD Cinema Engine • Geometría de Grassmann Gr(k, N) & SMIb • NEXORD Ecosystem</span>
+        <span>Homologación Canónica: 16 de Septiembre de 2026</span>
+      </div>
     </footer>
 
   </main>
 
   <!-- 🧭 MANDO UNIVERSAL FLOTANTE EN FILA INDIA (REGLA 15) -->
-  <aside class="universal-nav-pod" aria-label="Mando Universal de Navegación">
-    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio / Portada Principal" aria-label="Inicio">🏠</a>
-    <a href="acuario_reactor_5x5.html" class="nav-pod-btn" title="Acuario Reactor 5x5" aria-label="Anterior">◀</a>
-    <a href="#three-viewport" class="nav-pod-btn" title="Subir al Lienzo 3D" aria-label="Subir">▲</a>
-    <a href="recursos.html" class="nav-pod-btn" title="Centro de Recursos y Filosofía" aria-label="Recursos">▼</a>
-    <a href="visord_oceano_cubo.html" class="nav-pod-btn" title="Cubo Socio-Oceánico 3D" aria-label="Siguiente">▶</a>
+  <aside class="universal-nav-pod" aria-label="Navegación Universal">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio / Portada NEXORD">🏠</a>
+    <a href="visord_oceano_cubo.html" class="nav-pod-btn" title="Atrás (Cubo 3D Previo)">◀</a>
+    <a href="nivel1_intuitivo.html" class="nav-pod-btn" title="Nivel Superior (Nivel 1)">▲</a>
+    <a href="visord_cultural.html" class="nav-pod-btn" title="Nivel Inferior (Cultural)">▼</a>
+    <a href="visord_g2t1c1.html" class="nav-pod-btn" title="Siguiente (Hipercubo G2T1C1)">▶</a>
   </aside>
 
-  <!-- ⚙️ SCRIPT MAESTRO: CINEMASCOPE TRÍPTICO THREE.JS & TECNICOLOR SHADING -->
+  <!-- 🧠 LÓGICA DE COMPUTACIÓN 3D, MOVIOLA Y FILAMENTOS 4D -->
   <script>
-    // =========================================================================
-    // 1. CONSTANTES TOPOLÓGICAS DE LA RETÍCULA Q81
-    // =========================================================================
+    // 1. Constantes Canónicas del Espacio Q81
     const GRID_SIZE = 9;
     const NUM_VERTICES = GRID_SIZE * GRID_SIZE; // 81
-    const SPAN = 64; // Ancho del acuario individual
+    const SPAN = 42;
     const STEP = SPAN / (GRID_SIZE - 1);
-    const MAX_HEIGHT = 20;
+    const MAX_HEIGHT = 15;
 
-    const ROWS_EMISSION = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
-    const COLS_RECEPTION = ['e>', 'e!', 'e]', '?>', '?!', '?]', 'r>', 'r!', 'r]'];
+    const ROWS_EMISSION = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    const COLS_RECEPTION = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     function getFigureCode(u, v) {
+      if (isNaN(u) || u < 0 || u >= 9) u = 0;
+      if (isNaN(v) || v < 0 || v >= 9) v = 0;
       return `${ROWS_EMISSION[u]}${COLS_RECEPTION[v]}`;
     }
 
-    // =========================================================================
-    // 2. DATASETS FACTUALES (T1, T2, T3, CANON)
-    // =========================================================================
+    // 2. Datasets de las 4 Sábanas (T1, T2, T3, T4 y Canónica)
     function createSabanaMatrix(type) {
       const mat = new Float32Array(NUM_VERTICES);
       for (let u = 0; u < GRID_SIZE; u++) {
@@ -470,23 +529,37 @@
 
           let sdr = 0;
           if (type === 't1') {
+            // T1: Génesis (Cohesión inicial efervescente)
             sdr = Math.sin((1 - uNorm) * Math.PI * 0.5) * Math.sin((1 - vNorm) * Math.PI * 0.5) * 0.95;
             if (uNorm > 0.6 && vNorm > 0.6) sdr -= 0.35;
             if (u === v) sdr = Math.max(sdr, 0.40);
           } else if (type === 't2') {
+            // T2: Crisis / Tensión (Polarización severa y fosas abisales)
             sdr = baseDipole * 1.1;
-            if (u < 3 && v > 5) sdr = -0.68;
+            if (u < 3 && v > 5) sdr = -0.74;
             if (u > 5 && v < 3) sdr = +0.48;
             if (u === 8 && v === 8) sdr = -1.0;
             if (u === 0 && v === 0) sdr = +0.92;
             if (u === 1 && v === 1) sdr = +0.85;
-            if (u === 2 && v === 2) sdr = -0.52;
+            if (u === 2 && v === 2) sdr = -0.58;
           } else if (type === 't3') {
-            sdr = Math.cos(uNorm * Math.PI * 0.8) * Math.cos(vNorm * Math.PI * 0.8) * 0.75;
+            // T3: Reorganización (Emergencia de puentes y amortiguación)
+            sdr = Math.cos(uNorm * Math.PI * 0.75) * Math.cos(vNorm * Math.PI * 0.75) * 0.78;
             if (u === 0 && v === 0) sdr = +0.88;
             if (u === 8 && v === 8) sdr = -0.45;
-            if (u === v) sdr = Math.max(sdr, 0.20);
+            if (u === v) sdr = Math.max(sdr, 0.25);
+          } else if (type === 't4') {
+            // T4: Resolución / Clímax (Atractor maduro y armónico)
+            sdr = (1.0 - (uNorm * 0.85 + vNorm * 0.85)) * 0.90;
+            if (u === 0 && v === 0) sdr = +0.98;
+            if (u === 1 && v === 1) sdr = +0.88;
+            if (u === 2 && v === 2) sdr = +0.75;
+            if (u === 3 && v === 3) sdr = +0.65;
+            if (u === 4 && v === 4) sdr = +0.35;
+            if (u > 6 && v > 6) sdr = -0.25;
+            if (u === 8 && v === 8) sdr = -0.32;
           } else if (type === 'canon') {
+            // Grupo A Canónico
             sdr = (1.0 - (uNorm * 0.9 + vNorm * 1.1)) * 0.85;
             if (u === 0 && v === 0) sdr = +0.95;
             if (u === 1 && v === 0) sdr = +0.72;
@@ -504,14 +577,13 @@
       t1: createSabanaMatrix('t1'),
       t2: createSabanaMatrix('t2'),
       t3: createSabanaMatrix('t3'),
+      t4: createSabanaMatrix('t4'),
       canon: createSabanaMatrix('canon')
     };
 
-    // Constelaciones vectoriales de dimensión N
     const SUBJECT_CONSTELLATIONS = [
       {
-        name: '1A (Líder Expansivo)',
-        entropy: 0.18,
+        name: '1A (Líder Expansivo)', entropy: 0.18,
         vectorN: [
           { partner: '1A', u: 0, v: 0, sdr: +0.95, isAuto: true, code: '<Ee>' },
           { partner: '2A', u: 0, v: 0, sdr: +0.95, isAuto: false, code: '<Ee>' },
@@ -521,8 +593,7 @@
         ]
       },
       {
-        name: '2A (Co-líder Cohesivo)',
-        entropy: 0.15,
+        name: '2A (Co-líder Cohesivo)', entropy: 0.15,
         vectorN: [
           { partner: '2A', u: 1, v: 1, sdr: +0.82, isAuto: true, code: '¡Ee!' },
           { partner: '1A', u: 0, v: 0, sdr: +0.95, isAuto: false, code: '<Ee>' },
@@ -532,8 +603,7 @@
         ]
       },
       {
-        name: '3A (Disidente / Fricción)',
-        entropy: 0.88,
+        name: '3A (Disidente / Fricción)', entropy: 0.88,
         vectorN: [
           { partner: '3A', u: 6, v: 6, sdr: -0.30, isAuto: true, code: '<Rr>' },
           { partner: '1A', u: 8, v: 8, sdr: -0.92, isAuto: false, code: '[Rr]' },
@@ -543,8 +613,7 @@
         ]
       },
       {
-        name: '4A (Puente Operativo)',
-        entropy: 0.32,
+        name: '4A (Puente Operativo)', entropy: 0.32,
         vectorN: [
           { partner: '4A', u: 3, v: 3, sdr: +0.45, isAuto: true, code: '<¿?>' },
           { partner: '1A', u: 1, v: 0, sdr: +0.70, isAuto: false, code: '¡Ee>' },
@@ -554,8 +623,7 @@
         ]
       },
       {
-        name: '5A (Aislado / En la Lámina)',
-        entropy: 0.42,
+        name: '5A (Aislado / En la Lámina)', entropy: 0.42,
         vectorN: [
           { partner: '5A', u: 4, v: 4, sdr:  0.00, isAuto: true, code: '¡¿?!' },
           { partner: '1A', u: 4, v: 4, sdr:  0.00, isAuto: false, code: '¡¿?!' },
@@ -566,110 +634,121 @@
       }
     ];
 
-    // =========================================================================
-    // 3. MOTOR WEB AUDIO API (ARMÓNICOS 432 HZ)
-    // =========================================================================
+    // 3. Audio Web Audio API (Armónicos 432 Hz)
     let audioCtx = null, audioEnabled = false, masterGain = null;
-
     function initAudio() {
       if (!audioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.14, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
       }
     }
-
     function toggleAudio() {
       initAudio();
       audioEnabled = !audioEnabled;
       const icon = document.getElementById('audio-icon');
       const lbl = document.getElementById('audio-lbl');
       const btn = document.getElementById('btn-audio');
-
       if (audioEnabled) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
-        icon.textContent = '🔊';
-        lbl.textContent = 'Música Galáctica: ON';
-        btn.classList.add('active');
+        icon.textContent = '🔊'; lbl.textContent = 'Música Galáctica: ON'; btn.classList.add('active');
         playHarmonicChime(0, 0.35);
       } else {
-        icon.textContent = '🔇';
-        lbl.textContent = 'Música Galáctica: OFF';
-        btn.classList.remove('active');
+        icon.textContent = '🔇'; lbl.textContent = 'Música Galáctica: OFF'; btn.classList.remove('active');
       }
     }
-
     function playHarmonicChime(sdrVal, volume = 0.25) {
       if (!audioEnabled || !audioCtx) return;
       try {
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        const baseFreq = 216.0 * Math.pow(2, sdrVal * 1.5);
+        const baseFreq = 216.0 * Math.pow(2, (sdrVal || 0) * 1.5);
         osc.frequency.setValueAtTime(baseFreq, now);
         osc.type = (sdrVal > 0.3) ? 'sine' : ((sdrVal < -0.3) ? 'triangle' : 'sine');
-
         gain.gain.setValueAtTime(0.001, now);
         gain.gain.linearRampToValueAtTime(volume, now + 0.04);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
-
-        osc.connect(gain);
-        gain.connect(masterGain);
-        osc.start(now);
-        osc.stop(now + 0.8);
-      } catch (e) {
-        console.warn(e);
-      }
+        osc.connect(gain); gain.connect(masterGain);
+        osc.start(now); osc.stop(now + 0.8);
+      } catch (e) {}
     }
 
-    // =========================================================================
-    // 4. CONFIGURACIÓN DEL ESCENARIO 3D EN CINEMASCOPE
-    // =========================================================================
+    // 4. Variables 3D y Configuración de los 4 Acuarios
     let scene, camera, renderer, controls;
     let raycaster, mouse;
+    let isUserInteracting = false;
 
-    let viewLayout = 'cinemascope'; // 'singular' o 'cinemascope'
-    const AQUARIUM_OFFSET_X = 76; // Separación entre los 3 acuarios en el tríptico
+    let viewLayout = 'cinemascope';
+    const AQ_DIST = 58; // Distancia entre centros de acuarios contiguos
 
-    // Tres acuarios sincronizados
     const aquariums = {
-      t1: { key: 't1', title: '🌅 T1 · GÉNESIS', posX: -AQUARIUM_OFFSET_X, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
-      t2: { key: 't2', title: '⚡ T2 · CRISIS / TENSIÓN', posX: 0, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
-      t3: { key: 't3', title: '🌱 T3 · RESOLUCIÓN', posX: +AQUARIUM_OFFSET_X, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) }
+      t1: { key: 't1', title: '🌅 T1 · GÉNESIS', posX: -1.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
+      t2: { key: 't2', title: '⚡ T2 · CRISIS', posX: -0.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
+      t3: { key: 't3', title: '🌱 T3 · REORGANIZACIÓN', posX: +0.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) },
+      t4: { key: 't4', title: '🏆 T4 · RESOLUCIÓN', posX: +1.5 * AQ_DIST, group: null, sheetMesh: null, wireMesh: null, pointsCloud: null, spineLine: null, plumbGroup: null, constellGroup: null, currentZ: new Float32Array(NUM_VERTICES), sourceZ: new Float32Array(NUM_VERTICES), targetZ: new Float32Array(NUM_VERTICES) }
     };
 
-    let activeSabanaKey = 't1'; // Para modo singular
-
-    // Transición suave
-    let transitionProgress = 1.0;
-    let transitionDuration = 1400;
-    let transitionStartTime = 0;
+    let activeSabanaKey = 't1';
+    let transitionProgress = 1.0, transitionDuration = 1400, transitionStartTime = 0;
     let epicenterU = 4, epicenterV = 4;
-
-    // Moviola sincronizada
     let isPlayingFilm = false, filmInterval = null, filmStep = 81, sequenceCriterion = 'thermal', sequenceOrder = [];
     let selectedSubjectIdx = null, hoveredVertexIdx = 0;
 
-    // Cámara Ángulo Diáfano
     let wobbleTime = 0;
-    const DIAFANO_ELEV = 0.488; // ~28°
-    const DIAFANO_AZIM = -0.663; // ~-38°
-    const CAM_DIST_SINGULAR = 96;
-    const CAM_DIST_CINEMASCOPE = 185;
+    const DIAFANO_ELEV = 0.488;
+    const DIAFANO_AZIM = -0.663;
+    const CAM_DIST_SINGULAR = 94;
+    const CAM_DIST_CINEMASCOPE = 210;
+
+    // Filamentos 4D (Worldlines)
+    let worldlinesGroup = null;
+    let worldlinesVisible = true;
+    let worldlinesFilter = 'all'; // 'all', 'spine', 'extreme', 'subject'
+    const WORLDLINE_SAMPLES = 20;
+
+    // Helper para crear insignias de título 3D flotantes
+    function createTitleBadge(text, colorHex) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'rgba(6, 11, 24, 0.88)';
+      ctx.roundRect(10, 10, 492, 108, 20);
+      ctx.fill();
+      ctx.strokeStyle = colorHex;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = colorHex;
+      ctx.font = 'bold 42px "Outfit", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 256, 64);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(32, 8, 1);
+      return sprite;
+    }
 
     function init3D() {
       const container = document.getElementById('three-viewport');
-      const w = container.clientWidth;
-      const h = container.clientHeight;
+      const w = container.clientWidth || 1200;
+      const h = container.clientHeight || 560;
 
       scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x040814, 0.0028);
+      scene.fog = new THREE.FogExp2(0x040814, 0.0020);
 
-      camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 1500);
+      // Cámara canónica
+      camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 3000);
+      camera.position.set(0, 130, CAM_DIST_CINEMASCOPE);
+      camera.lookAt(0, 0, 0);
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       renderer.setSize(w, h);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -678,36 +757,39 @@
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.maxDistance = 400;
-      controls.minDistance = 20;
+      controls.dampingFactor = 0.06;
+      controls.maxDistance = 600;
+      controls.minDistance = 25;
       controls.target.set(0, 0, 0);
+
+      controls.addEventListener('start', () => { isUserInteracting = true; });
+      controls.addEventListener('end', () => { isUserInteracting = false; });
 
       setupLights();
 
-      // Construir los 3 acuarios del tríptico
-      ['t1', 't2', 't3'].forEach(k => {
+      // Construcción de los 4 Acuarios
+      ['t1', 't2', 't3', 't4'].forEach(k => {
         buildAquariumUnit(aquariums[k]);
       });
 
-      // Construir rayos de enlace cuántico entre acuarios (puentes de fase)
-      buildInterAquariumConduits();
-
-      raycaster = new THREE.Raycaster();
-      raycaster.params.Points.threshold = 1.9;
-      mouse = new THREE.Vector2();
-
-      container.addEventListener('mousemove', onPointerMove);
-      container.addEventListener('click', onPointerClick);
-      window.addEventListener('resize', onWindowResize);
-
-      // Cargar datos iniciales
-      ['t1', 't2', 't3'].forEach(k => {
+      // Cargar datos en cada acuario
+      ['t1', 't2', 't3', 't4'].forEach(k => {
         aquariums[k].currentZ.set(SABANAS[k]);
         aquariums[k].sourceZ.set(SABANAS[k]);
         aquariums[k].targetZ.set(SABANAS[k]);
         updateAquariumGeometry(aquariums[k]);
       });
+
+      // Construcción de los Filamentos 4D (Worldlines)
+      buildTransTemporalWorldlines();
+
+      raycaster = new THREE.Raycaster();
+      raycaster.params.Points.threshold = 2.0;
+      mouse = new THREE.Vector2();
+
+      container.addEventListener('mousemove', onPointerMove);
+      container.addEventListener('click', onPointerClick);
+      window.addEventListener('resize', onWindowResize);
 
       buildSequenceOrder();
       setViewLayout('cinemascope', false);
@@ -716,47 +798,52 @@
     }
 
     function setupLights() {
-      const ambient = new THREE.AmbientLight(0x94A3B8, 1.5);
+      const ambient = new THREE.AmbientLight(0xCBD5E1, 1.8);
       scene.add(ambient);
 
-      const sun = new THREE.DirectionalLight(0xFFFBEB, 2.4);
-      sun.position.set(60, 90, 60);
+      const sun = new THREE.DirectionalLight(0xFFFBEB, 2.6);
+      sun.position.set(60, 140, 90);
       scene.add(sun);
 
-      const cyanBounce = new THREE.DirectionalLight(0x00E5FF, 1.8);
-      cyanBounce.position.set(-80, 40, -60);
+      const cyanBounce = new THREE.DirectionalLight(0x00E5FF, 1.9);
+      cyanBounce.position.set(-100, 60, -80);
       scene.add(cyanBounce);
 
-      // Bioluminiscencia en cada sector
-      [-AQUARIUM_OFFSET_X, 0, AQUARIUM_OFFSET_X].forEach(x => {
-        const pLight = new THREE.PointLight(0x00FF87, 2.8, 120);
-        pLight.position.set(x - 15, 20, -15);
+      // Puntos de luz en cada acuario
+      Object.values(aquariums).forEach(aq => {
+        const pLight = new THREE.PointLight(0x00FF87, 2.5, 120);
+        pLight.position.set(aq.posX - 15, 20, -15);
         scene.add(pLight);
 
-        const mLight = new THREE.PointLight(0xFF007F, 3.2, 120);
-        mLight.position.set(x + 15, -18, 15);
+        const mLight = new THREE.PointLight(0xFF007F, 2.8, 120);
+        mLight.position.set(aq.posX + 15, -18, 15);
         scene.add(mLight);
       });
     }
 
-    // Construye un cubo-acuario completo con su sábana, lámina de agua, espina dorsal y rótulo
     function buildAquariumUnit(aq) {
       const grp = new THREE.Group();
       grp.position.x = aq.posX;
       aq.group = grp;
       scene.add(grp);
 
-      // 1. Lámina de flotación Z = 0
-      const planeGeo = new THREE.PlaneGeometry(SPAN + 6, SPAN + 6, 14, 14);
+      // Insignia 3D flotante
+      const titleColor = (aq.key === 't1') ? '#00FF87' : ((aq.key === 't2') ? '#FF007F' : ((aq.key === 't3') ? '#00E5FF' : '#FFE600'));
+      const badge = createTitleBadge(aq.title, titleColor);
+      badge.position.set(0, MAX_HEIGHT + 13, 0);
+      grp.add(badge);
+
+      // 1. Lámina de agua Z = 0
+      const planeGeo = new THREE.PlaneGeometry(SPAN + 4, SPAN + 4, 12, 12);
       planeGeo.rotateX(-Math.PI / 2);
-      const planeMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.14 });
+      const planeMat = new THREE.MeshBasicMaterial({ color: 0x0284C7, wireframe: true, transparent: true, opacity: 0.15 });
       const waterPlane = new THREE.Mesh(planeGeo, planeMat);
       grp.add(waterPlane);
 
-      // Marco del cubo
-      const boxGeo = new THREE.BoxGeometry(SPAN + 4, MAX_HEIGHT * 2.2, SPAN + 4);
+      // Marco del cubo de cristal
+      const boxGeo = new THREE.BoxGeometry(SPAN + 3, MAX_HEIGHT * 2.2, SPAN + 3);
       const boxEdge = new THREE.EdgesGeometry(boxGeo);
-      const boxMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.16 });
+      const boxMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.22 });
       const cubeFrame = new THREE.LineSegments(boxEdge, boxMat);
       grp.add(cubeFrame);
 
@@ -764,13 +851,16 @@
       const sheetGeo = new THREE.PlaneGeometry(SPAN, SPAN, GRID_SIZE - 1, GRID_SIZE - 1);
       sheetGeo.rotateX(-Math.PI / 2);
       const colors = new Float32Array(NUM_VERTICES * 3);
+      for (let i = 0; i < NUM_VERTICES * 3; i += 3) {
+        colors[i] = 0.0; colors[i+1] = 0.8; colors[i+2] = 0.95;
+      }
       sheetGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const sheetMat = new THREE.MeshPhongMaterial({
         vertexColors: true,
         transparent: true,
-        opacity: 0.72,
-        shininess: 95,
+        opacity: 0.78,
+        shininess: 90,
         specular: 0x00FFFF,
         side: THREE.DoubleSide,
         depthWrite: false
@@ -779,7 +869,7 @@
       grp.add(aq.sheetMesh);
 
       // Malla alámbrica superpuesta
-      const wireMat = new THREE.MeshBasicMaterial({ color: 0xBAE6FD, wireframe: true, transparent: true, opacity: 0.26 });
+      const wireMat = new THREE.MeshBasicMaterial({ color: 0xBAE6FD, wireframe: true, transparent: true, opacity: 0.32 });
       aq.wireMesh = new THREE.Mesh(sheetGeo, wireMat);
       grp.add(aq.wireMesh);
 
@@ -788,7 +878,7 @@
       const ptsPos = new Float32Array(NUM_VERTICES * 3);
       ptsGeo.setAttribute('position', new THREE.BufferAttribute(ptsPos, 3));
       ptsGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      const ptsMat = new THREE.PointsMaterial({ size: 4.8, vertexColors: true, transparent: true, opacity: 0.95 });
+      const ptsMat = new THREE.PointsMaterial({ size: 5.5, vertexColors: true, transparent: true, opacity: 0.95 });
       aq.pointsCloud = new THREE.Points(ptsGeo, ptsMat);
       aq.pointsCloud.userData = { aquariumKey: aq.key };
       grp.add(aq.pointsCloud);
@@ -797,13 +887,13 @@
       const spineGeo = new THREE.BufferGeometry();
       const spinePos = new Float32Array(GRID_SIZE * 3);
       spineGeo.setAttribute('position', new THREE.BufferAttribute(spinePos, 3));
-      const spineMat = new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 3, transparent: true, opacity: 0.95 });
+      const spineMat = new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 3.5, transparent: true, opacity: 0.95 });
       aq.spineLine = new THREE.Line(spineGeo, spineMat);
       grp.add(aq.spineLine);
 
       // 4. Plomadas
       aq.plumbGroup = new THREE.Group();
-      const plumbMat = new THREE.LineDashedMaterial({ color: 0x38BDF8, dashSize: 1.2, gapSize: 1.0, transparent: true, opacity: 0.20 });
+      const plumbMat = new THREE.LineDashedMaterial({ color: 0x38BDF8, dashSize: 1.2, gapSize: 1.0, transparent: true, opacity: 0.22 });
       for (let i = 0; i < NUM_VERTICES; i++) {
         const g = new THREE.BufferGeometry();
         g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
@@ -817,26 +907,184 @@
       grp.add(aq.constellGroup);
     }
 
-    // Canales de enlace de fase entre acuarios (haces de luz en el espacio inter-acuarios)
-    function buildInterAquariumConduits() {
-      const conduitMat = new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.25 });
-      const pts1 = [ new THREE.Vector3(-AQUARIUM_OFFSET_X + SPAN/2, 0, 0), new THREE.Vector3(-SPAN/2, 0, 0) ];
-      const pts2 = [ new THREE.Vector3(SPAN/2, 0, 0), new THREE.Vector3(AQUARIUM_OFFSET_X - SPAN/2, 0, 0) ];
-
-      const geo1 = new THREE.BufferGeometry().setFromPoints(pts1);
-      const geo2 = new THREE.BufferGeometry().setFromPoints(pts2);
-
-      scene.add(new THREE.Line(geo1, conduitMat));
-      scene.add(new THREE.Line(geo2, conduitMat));
+    // 5. Generación de Filamentos Trans-Temporales 4D (Worldlines entre los 4 Acuarios)
+    function getVertexWorldPos(aqKey, u, v) {
+      const aq = aquariums[aqKey];
+      const idx = u * GRID_SIZE + v;
+      const x = (v - 4) * STEP + aq.group.position.x;
+      const y = aq.currentZ[idx] * MAX_HEIGHT + aq.group.position.y;
+      const z = (u - 4) * STEP + aq.group.position.z;
+      return new THREE.Vector3(x, y, z);
     }
 
-    // =========================================================================
-    // 5. ACTUALIZACIÓN GEOMÉTRICA DE CADA ACUARIO (60 FPS)
-    // =========================================================================
+    function buildTransTemporalWorldlines() {
+      if (worldlinesGroup) {
+        scene.remove(worldlinesGroup);
+        worldlinesGroup.traverse(c => {
+          if (c.geometry) c.geometry.dispose();
+          if (c.material) c.material.dispose();
+        });
+      }
+
+      worldlinesGroup = new THREE.Group();
+      scene.add(worldlinesGroup);
+
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+          const isSpine = (u === v);
+          
+          const p1 = getVertexWorldPos('t1', u, v);
+          const p2 = getVertexWorldPos('t2', u, v);
+          const p3 = getVertexWorldPos('t3', u, v);
+          const p4 = getVertexWorldPos('t4', u, v);
+
+          const curve = new THREE.CatmullRomCurve3([p1, p2, p3, p4]);
+          const pts = curve.getPoints(WORLDLINE_SAMPLES);
+
+          const geo = new THREE.BufferGeometry().setFromPoints(pts);
+
+          const avgZ = (aquariums.t1.currentZ[idx] + aquariums.t2.currentZ[idx] + 
+                        aquariums.t3.currentZ[idx] + aquariums.t4.currentZ[idx]) / 4;
+          const deltaZ = Math.abs(aquariums.t4.currentZ[idx] - aquariums.t1.currentZ[idx]);
+
+          let color = 0x00E5FF;
+          let opacity = 0.35;
+          let linewidth = 1.0;
+
+          if (isSpine) {
+            color = 0xFFE600; // Oro para la espina dorsal 4D
+            opacity = 0.95;
+            linewidth = 3.5;
+          } else if (avgZ > 0.35) {
+            color = 0x00FF87; // Verde cohesión
+            opacity = 0.70;
+          } else if (avgZ < -0.30) {
+            color = 0xFF007F; // Magenta conflicto
+            opacity = 0.75;
+          } else if (deltaZ > 0.65) {
+            color = 0xFF9F1C; // Naranja metamorfosis
+            opacity = 0.65;
+          }
+
+          const mat = new THREE.LineBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: opacity,
+            linewidth: linewidth
+          });
+
+          const line = new THREE.Line(geo, mat);
+          line.userData = {
+            idx: idx,
+            u: u,
+            v: v,
+            isSpine: isSpine,
+            avgZ: avgZ,
+            deltaZ: deltaZ,
+            baseColor: color,
+            baseOpacity: opacity
+          };
+
+          worldlinesGroup.add(line);
+        }
+      }
+
+      applyWorldlinesFilter();
+    }
+
+    function updateWorldlinesPositions() {
+      if (!worldlinesGroup || !worldlinesVisible || viewLayout !== 'cinemascope') return;
+      for (let i = 0; i < worldlinesGroup.children.length; i++) {
+        const line = worldlinesGroup.children[i];
+        const u = line.userData.u;
+        const v = line.userData.v;
+
+        const p1 = getVertexWorldPos('t1', u, v);
+        const p2 = getVertexWorldPos('t2', u, v);
+        const p3 = getVertexWorldPos('t3', u, v);
+        const p4 = getVertexWorldPos('t4', u, v);
+
+        const curve = new THREE.CatmullRomCurve3([p1, p2, p3, p4]);
+        const pts = curve.getPoints(WORLDLINE_SAMPLES);
+
+        const posAttr = line.geometry.attributes.position;
+        for (let j = 0; j < pts.length; j++) {
+          posAttr.setXYZ(j, pts[j].x, pts[j].y, pts[j].z);
+        }
+        posAttr.needsUpdate = true;
+      }
+    }
+
+    function toggleWorldlines() {
+      worldlinesVisible = !worldlinesVisible;
+      const btn = document.getElementById('btn-toggle-worldlines');
+      const icon = document.getElementById('worldlines-icon');
+      if (worldlinesVisible) {
+        btn.classList.add('active');
+        btn.children[1].textContent = 'Líneas 4D: ON';
+        icon.textContent = '🌐';
+      } else {
+        btn.classList.remove('active');
+        btn.children[1].textContent = 'Líneas 4D: OFF';
+        icon.textContent = '💤';
+      }
+      applyWorldlinesFilter();
+    }
+
+    function setWorldlinesFilter(filterMode) {
+      worldlinesFilter = filterMode;
+      ['all', 'spine', 'extreme', 'subject'].forEach(f => {
+        const el = document.getElementById(`wl-flt-${f}`);
+        if (el) {
+          if (f === filterMode) el.classList.add('active');
+          else el.classList.remove('active');
+        }
+      });
+      applyWorldlinesFilter();
+    }
+
+    function applyWorldlinesFilter() {
+      if (!worldlinesGroup) return;
+      worldlinesGroup.visible = worldlinesVisible && (viewLayout === 'cinemascope');
+
+      worldlinesGroup.children.forEach(line => {
+        const d = line.userData;
+        let show = true;
+        let highlight = false;
+
+        if (worldlinesFilter === 'spine') {
+          show = d.isSpine;
+        } else if (worldlinesFilter === 'extreme') {
+          show = d.isSpine || Math.abs(d.avgZ) > 0.35 || d.deltaZ > 0.65;
+        } else if (worldlinesFilter === 'subject') {
+          if (selectedSubjectIdx !== null) {
+            const subj = SUBJECT_CONSTELLATIONS[selectedSubjectIdx];
+            const inSubj = subj.vectorN.some(vn => vn.u === d.u && vn.v === d.v);
+            show = inSubj;
+            highlight = true;
+          } else {
+            show = d.isSpine;
+          }
+        }
+
+        line.visible = show;
+        if (highlight) {
+          line.material.opacity = 1.0;
+          line.material.color.setHex(d.isSpine ? 0xFFE600 : 0x00FF87);
+        } else {
+          line.material.opacity = d.baseOpacity;
+          line.material.color.setHex(d.baseColor);
+        }
+      });
+    }
+
     function updateAquariumGeometry(aq) {
+      if (!aq.sheetMesh) return;
       const posAttr = aq.sheetMesh.geometry.attributes.position;
       const colAttr = aq.sheetMesh.geometry.attributes.color;
       const ptsPos = aq.pointsCloud.geometry.attributes.position;
+      const ptsCol = aq.pointsCloud.geometry.attributes.color;
       const spinePos = aq.spineLine.geometry.attributes.position;
 
       let spineIdx = 0;
@@ -851,7 +1099,6 @@
           posAttr.setY(idx, y);
           ptsPos.setXYZ(idx, x, y, z);
 
-          // Sombreado Tecnicolor
           const sdr = aq.currentZ[idx];
           let r, g, b;
 
@@ -859,16 +1106,15 @@
             const t = sdr;
             r = 0.0;
             g = 0.72 + 0.28 * t;
-            b = 0.98 - 0.45 * t; // Verde neón hiper-brillante
+            b = 0.98 - 0.45 * t; // Verde neón
           } else {
             const t = -sdr;
             r = 0.0 + 1.0 * t;
             g = 0.55 - 0.55 * t;
-            b = 0.88 - 0.38 * t; // Magenta saturado profundo
+            b = 0.88 - 0.38 * t; // Magenta saturado
           }
 
           if (u === v) {
-            // Destello dorado de espina dorsal
             r = Math.min(1.0, r * 0.65 + 0.35 * 1.0);
             g = Math.min(1.0, g * 0.65 + 0.35 * 0.9);
             b = Math.min(1.0, b * 0.65 + 0.35 * 0.1);
@@ -877,8 +1123,8 @@
           }
 
           colAttr.setXYZ(idx, r, g, b);
+          ptsCol.setXYZ(idx, r, g, b);
 
-          // Plomada
           const plLine = aq.plumbGroup.children[idx];
           if (plLine) {
             const arr = plLine.geometry.attributes.position.array;
@@ -893,16 +1139,13 @@
       posAttr.needsUpdate = true;
       colAttr.needsUpdate = true;
       ptsPos.needsUpdate = true;
-      aq.pointsCloud.geometry.attributes.color.needsUpdate = true;
+      ptsCol.needsUpdate = true;
       spinePos.needsUpdate = true;
       aq.sheetMesh.geometry.computeVertexNormals();
 
       updateConstellationForAquarium(aq);
     }
 
-    // =========================================================================
-    // 6. TRANSICIÓN VISCOELÁSTICA Y PROPAGACIÓN ONDULATORIA
-    // =========================================================================
     function setTargetHeights(key, newHeights) {
       const aq = aquariums[key];
       if (!aq) return;
@@ -924,197 +1167,254 @@
       const rawT = Math.min(1.0, elapsed / transitionDuration);
       const maxDist = Math.hypot(GRID_SIZE - 1, GRID_SIZE - 1);
 
-      ['t1', 't2', 't3'].forEach(k => {
+      ['t1', 't2', 't3', 't4'].forEach(k => {
         const aq = aquariums[k];
+        let allCompleted = true;
+
         for (let u = 0; u < GRID_SIZE; u++) {
           for (let v = 0; v < GRID_SIZE; v++) {
             const idx = u * GRID_SIZE + v;
             const dist = Math.hypot(u - epicenterU, v - epicenterV);
-            const delay = (dist / maxDist) * 0.32;
-            const localT = Math.max(0, Math.min(1, (rawT - delay) / (1 - delay)));
-            const s = 6 * Math.pow(localT, 5) - 15 * Math.pow(localT, 4) + 10 * Math.pow(localT, 3);
-            const wobble = (localT < 1.0 && localT > 0.05) ? (0.035 * Math.exp(-3.5 * localT) * Math.sin(localT * Math.PI * 5)) : 0;
-            const factor = Math.min(1.0, s + wobble);
+            const normalizedDist = dist / maxDist;
+            const phaseDelay = normalizedDist * 0.28;
 
-            aq.currentZ[idx] = aq.sourceZ[idx] + (aq.targetZ[idx] - aq.sourceZ[idx]) * factor;
+            let localT = (rawT - phaseDelay) / (1.0 - phaseDelay);
+            localT = Math.max(0, Math.min(1, localT));
+
+            // Quintic smootherstep
+            const easeT = localT * localT * localT * (localT * (localT * 6 - 15) + 10);
+            aq.currentZ[idx] = aq.sourceZ[idx] + (aq.targetZ[idx] - aq.sourceZ[idx]) * easeT;
+
+            if (localT < 1.0) allCompleted = false;
           }
         }
+
         updateAquariumGeometry(aq);
       });
 
-      document.getElementById('transition-bar').style.width = `${(rawT * 100).toFixed(0)}%`;
+      updateWorldlinesPositions();
+
+      transitionProgress = rawT;
+      const pct = Math.round(rawT * 100);
+      document.getElementById('transition-bar').style.width = `${pct}%`;
 
       if (rawT >= 1.0) {
-        transitionProgress = 1.0;
-        ['t1', 't2', 't3'].forEach(k => {
-          aquariums[k].currentZ.set(aquariums[k].targetZ);
-          updateAquariumGeometry(aquariums[k]);
-        });
-        document.getElementById('transition-status').textContent = 'SINCRONÍA ACTIVA';
+        document.getElementById('transition-status').textContent = 'SINCRONÍA 4D';
         document.getElementById('transition-status').className = 'text-[10px] font-bold text-cyan-300';
       }
     }
 
-    // =========================================================================
-    // 7. GESTIÓN DE LAYOUT: CINEMASCOPE TRÍPTICO VS SINGULAR
-    // =========================================================================
-    function setViewLayout(mode, animateCam = true) {
-      viewLayout = mode;
-      document.getElementById('btn-layout-singular').classList.toggle('active', mode === 'singular');
-      document.getElementById('btn-layout-cinemascope').classList.toggle('active', mode === 'cinemascope');
+    // 6. Cambio de Formato: Singular vs IMAX 4D
+    function setViewLayout(layout, animateCam = true) {
+      viewLayout = layout;
+      const btnSingular = document.getElementById('btn-layout-singular');
+      const btnCinemascope = document.getElementById('btn-layout-cinemascope');
 
-      if (mode === 'cinemascope') {
-        // En Cinemascope se muestran los 3 en paralelo
+      if (layout === 'cinemascope') {
+        btnCinemascope.classList.add('active');
+        btnSingular.classList.remove('active');
+
+        // Distribuir los 4 acuarios horizontalmente
         aquariums.t1.group.visible = true;
         aquariums.t2.group.visible = true;
         aquariums.t3.group.visible = true;
+        aquariums.t4.group.visible = true;
 
-        aquariums.t1.group.position.x = -AQUARIUM_OFFSET_X;
-        aquariums.t2.group.position.x = 0;
-        aquariums.t3.group.position.x = +AQUARIUM_OFFSET_X;
+        aquariums.t1.group.position.x = -1.5 * AQ_DIST;
+        aquariums.t2.group.position.x = -0.5 * AQ_DIST;
+        aquariums.t3.group.position.x = +0.5 * AQ_DIST;
+        aquariums.t4.group.position.x = +1.5 * AQ_DIST;
 
-        applyDiafanoView(animateCam, CAM_DIST_CINEMASCOPE);
-      } else {
-        // En Singular se muestra solo el acuario activo en el centro
-        ['t1', 't2', 't3'].forEach(k => {
-          aquariums[k].group.visible = (k === activeSabanaKey);
-          aquariums[k].group.position.x = 0;
+        if (worldlinesGroup) worldlinesGroup.visible = worldlinesVisible;
+
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          aquariums[k].currentZ.set(SABANAS[k]);
+          updateAquariumGeometry(aquariums[k]);
         });
 
-        applyDiafanoView(animateCam, CAM_DIST_SINGULAR);
+        applyDiafanoView(CAM_DIST_CINEMASCOPE);
+      } else {
+        btnSingular.classList.add('active');
+        btnCinemascope.classList.remove('active');
+
+        if (worldlinesGroup) worldlinesGroup.visible = false;
+
+        // Centrar sólo el acuario activo
+        loadSabana(activeSabanaKey);
+        applyDiafanoView(CAM_DIST_SINGULAR);
       }
     }
 
     function loadSabana(key) {
       activeSabanaKey = key;
-      ['t1', 't2', 't3', 'canon'].forEach(k => {
+      ['t1', 't2', 't3', 't4', 'canon'].forEach(k => {
         const btn = document.getElementById(`btn-sabana-${k}`);
-        if (btn) btn.classList.remove('active');
+        if (btn) {
+          if (k === key) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
       });
-      const activeBtn = document.getElementById(`btn-sabana-${key}`);
-      if (activeBtn) activeBtn.classList.add('active');
 
       if (viewLayout === 'singular') {
-        ['t1', 't2', 't3'].forEach(k => {
+        ['t1', 't2', 't3', 't4'].forEach(k => {
           aquariums[k].group.visible = (k === key || (key === 'canon' && k === 't1'));
+          aquariums[k].group.position.x = 0;
+        });
+        const targetAqKey = (key === 'canon') ? 't1' : key;
+        setTargetHeights(targetAqKey, SABANAS[key]);
+      } else {
+        // En modo IMAX, volver a cargar todas las sábanas
+        ['t1', 't2', 't3', 't4'].forEach(k => {
+          aquariums[k].group.visible = true;
+          setTargetHeights(k, SABANAS[k]);
         });
       }
 
-      const targetData = (key === 'canon') ? SABANAS.canon : SABANAS[key];
-      const targetAqKey = (key === 'canon') ? 't1' : key;
-      setTargetHeights(targetAqKey, targetData);
-      updateTelemetry(hoveredVertexIdx, targetAqKey);
+      updateTelemetry(hoveredVertexIdx, (key === 'canon' ? 't1' : key));
     }
 
-    // =========================================================================
-    // 8. CONSTELACIÓN SINCRONIZADA EN TRÍPTICO (VECTOR DE DIMENSIÓN N)
-    // =========================================================================
-    function selectSubject(subjIdx) {
-      selectedSubjectIdx = subjIdx;
+    // 7. Modos de Cámara y Ángulo Diáfano Canónico
+    function applyDiafanoView(customDist = null) {
+      const dist = customDist || (viewLayout === 'cinemascope' ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
+      const targetY = 0;
+
+      camera.position.x = dist * Math.sin(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
+      camera.position.y = dist * Math.sin(DIAFANO_ELEV);
+      camera.position.z = dist * Math.cos(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
+
+      controls.target.set(0, targetY, 0);
+      controls.update();
+
+      const btn = document.getElementById('btn-diafano');
+      btn.classList.add('scale-105');
+      setTimeout(() => btn.classList.remove('scale-105'), 250);
+
+      playHarmonicChime(0.5, 0.2);
+    }
+
+    function setCameraAngle(type) {
+      const dist = (viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR;
+      if (type === 'iso') {
+        applyDiafanoView();
+      } else if (type === 'top') {
+        camera.position.set(0, dist * 1.1, 0.001);
+        controls.target.set(0, 0, 0);
+      } else if (type === 'profile') {
+        camera.position.set(dist * 1.2, 5, 0);
+        controls.target.set(0, 0, 0);
+      } else if (type === 'tunnel') {
+        // Perspectiva túnel a lo largo del eje X viendo los 4 acuarios en hilera
+        camera.position.set(-2.2 * AQ_DIST, 12, 0);
+        controls.target.set(1.5 * AQ_DIST, 0, 0);
+      }
+      controls.update();
+    }
+
+    // 8. Modo Constelación de Sujetos
+    function selectSubject(idx) {
+      selectedSubjectIdx = idx;
       for (let i = 0; i < 5; i++) {
-        document.getElementById(`btn-subj-${i}`).classList.remove('active');
+        const b = document.getElementById(`btn-subj-${i}`);
+        if (b) {
+          if (i === idx) b.classList.add('active');
+          else b.classList.remove('active');
+        }
       }
-      document.getElementById('btn-subj-all').classList.remove('active');
+      const btnAll = document.getElementById('btn-subj-all');
+      if (idx === null) btnAll.classList.add('active');
+      else btnAll.classList.remove('active');
 
-      if (subjIdx === null) {
-        document.getElementById('btn-subj-all').classList.add('active');
-        document.getElementById('subj-name').textContent = 'Visión Grupal Completa';
-        document.getElementById('subj-entropy').textContent = 'Entropía: S = 0.28';
-        document.getElementById('subj-pills').innerHTML = `
-          <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">Auto-posición anclada en Espina Dorsal</span>
-          <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">4 Lazos Alter</span>
-        `;
-      } else {
-        document.getElementById(`btn-subj-${subjIdx}`).classList.add('active');
-        const subj = SUBJECT_CONSTELLATIONS[subjIdx];
-        document.getElementById('subj-name').textContent = `${subj.name}`;
-        document.getElementById('subj-entropy').textContent = `Entropía: S = ${subj.entropy.toFixed(2)}`;
-
-        let pillsHtml = '';
-        subj.vectorN.forEach(item => {
-          if (item.isAuto) {
-            pillsHtml += `<span class="px-1.5 py-0.5 rounded bg-amber-950 border border-amber-500 text-amber-300 font-bold">Auto (${item.partner}): ${item.code} (${item.sdr >= 0 ? '+' : ''}${item.sdr.toFixed(2)})</span>`;
-          } else {
-            pillsHtml += `<span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300">${item.partner}: ${item.code}</span>`;
-          }
-        });
-        document.getElementById('subj-pills').innerHTML = pillsHtml;
-
-        playHarmonicChime(subj.vectorN[0].sdr, 0.4);
-      }
-
-      ['t1', 't2', 't3'].forEach(k => {
+      ['t1', 't2', 't3', 't4'].forEach(k => {
         updateConstellationForAquarium(aquariums[k]);
       });
+
+      if (worldlinesFilter === 'subject') {
+        applyWorldlinesFilter();
+      }
+
+      const det = document.getElementById('subject-details');
+      if (idx === null) {
+        det.innerHTML = `<span>Visualizando los 81 vértices del grupo sin filtro.</span><span class="text-cyan-400 font-bold">N=5 Díadas</span>`;
+      } else {
+        const s = SUBJECT_CONSTELLATIONS[idx];
+        det.innerHTML = `<div><strong class="text-white">${s.name}</strong> • Entropía: <span class="text-emerald-400 font-bold">${s.entropy}</span></div><div class="text-amber-300 font-bold">Hilo de Ariadna 4D Activo</div>`;
+        playHarmonicChime(0.6 - idx * 0.2, 0.4);
+      }
     }
 
     function updateConstellationForAquarium(aq) {
+      if (!aq.constellGroup) return;
       while (aq.constellGroup.children.length > 0) {
         const obj = aq.constellGroup.children[0];
-        aq.constellGroup.remove(obj);
         if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) obj.material.dispose();
+        aq.constellGroup.remove(obj);
       }
 
       if (selectedSubjectIdx === null) return;
 
       const subj = SUBJECT_CONSTELLATIONS[selectedSubjectIdx];
-      const autoItem = subj.vectorN.find(v => v.isAuto);
-      if (!autoItem) return;
+      const originV = subj.vectorN.find(v => v.isAuto) || subj.vectorN[0];
+      const ox = (originV.v - 4) * STEP;
+      const oy = aq.currentZ[originV.u * GRID_SIZE + originV.v] * MAX_HEIGHT;
+      const oz = (originV.u - 4) * STEP;
+      const pOrigin = new THREE.Vector3(ox, oy, oz);
 
-      const originX = (autoItem.v - 4) * STEP;
-      const originZ = (autoItem.u - 4) * STEP;
-      const originY = aq.currentZ[autoItem.u * GRID_SIZE + autoItem.v] * MAX_HEIGHT;
-      const startVec = new THREE.Vector3(originX, originY, originZ);
+      subj.vectorN.forEach(vn => {
+        const targetIdx = vn.u * GRID_SIZE + vn.v;
+        const tx = (vn.v - 4) * STEP;
+        const ty = aq.currentZ[targetIdx] * MAX_HEIGHT;
+        const tz = (vn.u - 4) * STEP;
+        const pTarget = new THREE.Vector3(tx, ty, tz);
 
-      subj.vectorN.forEach(item => {
-        const destX = (item.v - 4) * STEP;
-        const destZ = (item.u - 4) * STEP;
-        const destY = aq.currentZ[item.u * GRID_SIZE + item.v] * MAX_HEIGHT;
-        const endVec = new THREE.Vector3(destX, destY, destZ);
+        if (!vn.isAuto) {
+          const mid = new THREE.Vector3().addVectors(pOrigin, pTarget).multiplyScalar(0.5);
+          mid.y += 3.5;
+          const curve = new THREE.QuadraticBezierCurve3(pOrigin, mid, pTarget);
+          const pts = curve.getPoints(16);
+          const geo = new THREE.BufferGeometry().setFromPoints(pts);
 
-        if (item.isAuto) {
-          const ringGeo = new THREE.RingGeometry(1.8, 2.5, 32);
-          ringGeo.rotateX(-Math.PI / 2);
-          const ringMat = new THREE.MeshBasicMaterial({ color: 0xFFE600, side: THREE.DoubleSide });
-          const ring = new THREE.Mesh(ringGeo, ringMat);
-          ring.position.copy(startVec);
-          ring.position.y += 0.3;
-          aq.constellGroup.add(ring);
-        } else {
-          const midVec = new THREE.Vector3().addVectors(startVec, endVec).multiplyScalar(0.5);
-          midVec.y += 7.5;
-          const curve = new THREE.QuadraticBezierCurve3(startVec, midVec, endVec);
-          const pts = curve.getPoints(20);
-          const arcGeo = new THREE.BufferGeometry().setFromPoints(pts);
-
-          const arcCol = item.sdr >= 0 ? 0x00FF87 : 0xFF007F;
-          const arcMat = new THREE.LineBasicMaterial({ color: arcCol, linewidth: 2.5, transparent: true, opacity: 0.85 });
-          const arcLine = new THREE.Line(arcGeo, arcMat);
-          aq.constellGroup.add(arcLine);
+          const colHex = (vn.sdr >= 0) ? 0x00FF87 : 0xFF007F;
+          const mat = new THREE.LineBasicMaterial({ color: colHex, linewidth: 2.5, transparent: true, opacity: 0.95 });
+          aq.constellGroup.add(new THREE.Line(geo, mat));
         }
+
+        const ringGeo = new THREE.RingGeometry(1.2, 1.8, 24);
+        ringGeo.rotateX(-Math.PI / 2);
+        const ringCol = vn.isAuto ? 0xFFE600 : ((vn.sdr >= 0) ? 0x00FF87 : 0xFF007F);
+        const ringMat = new THREE.MeshBasicMaterial({ color: ringCol, side: THREE.DoubleSide, transparent: true, opacity: 0.95 });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.position.set(tx, ty + 0.15, tz);
+        aq.constellGroup.add(ringMesh);
       });
     }
 
-    // =========================================================================
-    // 9. MOVIOLA CINEMÁTICA SINCRONIZADA
-    // =========================================================================
+    // 9. Moviola Cinemática del Fotograma
     function buildSequenceOrder() {
       sequenceOrder = [];
-      for (let i = 0; i < NUM_VERTICES; i++) sequenceOrder.push(i);
+      for (let u = 0; u < GRID_SIZE; u++) {
+        for (let v = 0; v < GRID_SIZE; v++) {
+          const idx = u * GRID_SIZE + v;
+          sequenceOrder.push({ idx, u, v, sdr: SABANAS.t1[idx] });
+        }
+      }
+      sortSequenceOrder();
+    }
 
+    function sortSequenceOrder() {
       if (sequenceCriterion === 'thermal') {
-        sequenceOrder.sort((a, b) => SABANAS.t2[b] - SABANAS.t2[a]);
+        sequenceOrder.sort((a, b) => b.sdr - a.sdr);
       } else if (sequenceCriterion === 'heider') {
         sequenceOrder.sort((a, b) => {
-          const uA = Math.floor(a / GRID_SIZE), vA = a % GRID_SIZE;
-          const uB = Math.floor(b / GRID_SIZE), vB = b % GRID_SIZE;
-          return Math.abs(uA - vA) - Math.abs(uB - vB);
+          const devA = (a.u === a.v) ? 1.0 : Math.abs(a.sdr);
+          const devB = (b.u === b.v) ? 1.0 : Math.abs(b.sdr);
+          return devB - devA;
         });
       } else if (sequenceCriterion === 'radial') {
         sequenceOrder.sort((a, b) => {
-          const uA = Math.floor(a / GRID_SIZE), vA = a % GRID_SIZE;
-          const uB = Math.floor(b / GRID_SIZE), vB = b % GRID_SIZE;
-          return Math.hypot(uA - 4, vA - 4) - Math.hypot(uB - 4, vB - 4);
+          const dA = Math.hypot(a.u - 4, a.v - 4);
+          const dB = Math.hypot(b.u - 4, b.v - 4);
+          return dA - dB;
         });
       }
     }
@@ -1122,130 +1422,89 @@
     function setSequenceCriterion(crit) {
       sequenceCriterion = crit;
       ['thermal', 'heider', 'radial'].forEach(c => {
-        document.getElementById(`crit-${c}`).classList.remove('active');
+        const el = document.getElementById(`crit-${c}`);
+        if (el) {
+          if (c === crit) el.classList.add('active');
+          else el.classList.remove('active');
+        }
       });
-      document.getElementById(`crit-${crit}`).classList.add('active');
-      buildSequenceOrder();
-      applyFilmStep(filmStep);
+      sortSequenceOrder();
     }
 
-    function applyFilmStep(step) {
-      filmStep = Math.max(0, Math.min(NUM_VERTICES, step));
-      document.getElementById('film-step-label').textContent = `${filmStep} / 81`;
-      document.getElementById('film-progress-bar').style.width = `${(filmStep / 81 * 100).toFixed(0)}%`;
+    function updateFilmFrame() {
+      document.getElementById('film-step-lbl').textContent = `${filmStep} / 81 Vértices Revelados`;
+      const pct = (filmStep / 81) * 100;
+      document.getElementById('film-progress').style.width = `${pct}%`;
 
       const detail = document.getElementById('film-step-detail');
-      if (filmStep === 0) detail.textContent = 'Lámina Lisa en Calma (Z = 0) en Tríptico';
-      else if (filmStep === 81) detail.textContent = 'Oleaje Estático Completo en Tríptico';
-      else detail.textContent = `Revelando Celda #${filmStep} en T1, T2 y T3...`;
+      if (filmStep === 0) detail.textContent = 'Lámina de Flotación Pura (Z = 0)';
+      else if (filmStep === 81) detail.textContent = 'Oleaje Estático Completo en 4 Acuarios';
+      else detail.textContent = `Revelando Celda #${filmStep} en T1, T2, T3 y T4...`;
 
-      const activeSet = new Set(sequenceOrder.slice(0, filmStep));
+      ['t1', 't2', 't3', 't4'].forEach(k => {
+        const aq = aquariums[k];
+        const full = SABANAS[k];
+        const newZ = new Float32Array(NUM_VERTICES);
 
-      ['t1', 't2', 't3'].forEach(k => {
-        const newH = new Float32Array(NUM_VERTICES);
-        for (let i = 0; i < NUM_VERTICES; i++) {
-          newH[i] = activeSet.has(i) ? SABANAS[k][i] : 0;
+        for (let i = 0; i < filmStep; i++) {
+          const item = sequenceOrder[i];
+          newZ[item.idx] = full[item.idx];
         }
-        setTargetHeights(k, newH);
+        aq.currentZ.set(newZ);
+        updateAquariumGeometry(aq);
       });
 
+      updateWorldlinesPositions();
+
       if (filmStep > 0 && filmStep <= 81) {
-        const lastIdx = sequenceOrder[filmStep - 1];
-        updateTelemetry(lastIdx, 't2');
-        playHarmonicChime(SABANAS.t2[lastIdx], 0.22);
+        const activeItem = sequenceOrder[filmStep - 1];
+        updateTelemetry(activeItem.idx, 't1');
+        playHarmonicChime(activeItem.sdr, 0.22);
       }
     }
-
-    function stepFilm(dir) { pauseFilm(); applyFilmStep(filmStep + dir); }
-    function rewindFilm() { pauseFilm(); applyFilmStep(0); }
-    function forwardFilmFull() { pauseFilm(); applyFilmStep(81); }
 
     function togglePlayFilm() {
-      if (isPlayingFilm) pauseFilm();
-      else playFilm();
-    }
+      isPlayingFilm = !isPlayingFilm;
+      const icon = document.getElementById('play-icon');
+      const lbl = document.getElementById('play-label');
+      const btn = document.getElementById('btn-play');
 
-    function playFilm() {
-      isPlayingFilm = true;
-      document.getElementById('btn-play').classList.add('active');
-      document.getElementById('play-icon').textContent = '⏸';
-      document.getElementById('play-label').textContent = 'PAUSA';
-      if (filmStep >= 81) filmStep = 0;
-
-      const speed = parseInt(document.getElementById('playback-speed').value, 10) || 320;
-      clearInterval(filmInterval);
-      filmInterval = setInterval(() => {
-        if (filmStep < 81) applyFilmStep(filmStep + 1);
-        else pauseFilm();
-      }, speed);
-    }
-
-    function pauseFilm() {
-      isPlayingFilm = false;
-      clearInterval(filmInterval);
-      document.getElementById('btn-play').classList.remove('active');
-      document.getElementById('play-icon').textContent = '▶';
-      document.getElementById('play-label').textContent = 'REPRODUCIR';
-    }
-
-    // =========================================================================
-    // 10. CÁMARA DIÁFANA Y PERSPECTIVAS
-    // =========================================================================
-    function applyDiafanoView(animateTransition = true, customDist = null) {
-      const dist = customDist || (viewLayout === 'cinemascope' ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
-      const targetX = dist * Math.sin(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
-      const targetY = dist * Math.sin(DIAFANO_ELEV);
-      const targetZ = dist * Math.cos(DIAFANO_AZIM) * Math.cos(DIAFANO_ELEV);
-
-      if (!animateTransition) {
-        camera.position.set(targetX, targetY, targetZ);
-        controls.target.set(0, 0, 0);
-        controls.update();
-        return;
-      }
-
-      const startPos = camera.position.clone();
-      const endPos = new THREE.Vector3(targetX, targetY, targetZ);
-      const startTime = performance.now();
-
-      function tweenCam() {
-        const elapsed = performance.now() - startTime;
-        const t = Math.min(1.0, elapsed / 1000);
-        const ease = 0.5 - 0.5 * Math.cos(t * Math.PI);
-        camera.position.lerpVectors(startPos, endPos, ease);
-        controls.target.set(0, 0, 0);
-        controls.update();
-        if (t < 1.0) requestAnimationFrame(tweenCam);
-      }
-      tweenCam();
-    }
-
-    function setCameraAngle(type) {
-      const dist = (viewLayout === 'cinemascope' ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR);
-      let targetPos;
-      if (type === 'iso') targetPos = new THREE.Vector3(dist * 0.7, dist * 0.55, dist * 0.7);
-      else if (type === 'top') targetPos = new THREE.Vector3(0, dist * 1.15, 0.1);
-      else if (type === 'profile') targetPos = new THREE.Vector3(dist * 1.1, 0, 0);
-      else if (type === 'spine') targetPos = new THREE.Vector3(-dist * 0.65, dist * 0.45, -dist * 0.65);
-
-      if (targetPos) {
-        const startPos = camera.position.clone();
-        const startTime = performance.now();
-        function tween() {
-          const t = Math.min(1.0, (performance.now() - startTime) / 900);
-          const ease = 0.5 - 0.5 * Math.cos(t * Math.PI);
-          camera.position.lerpVectors(startPos, targetPos, ease);
-          controls.target.set(0, 0, 0);
-          controls.update();
-          if (t < 1.0) requestAnimationFrame(tween);
-        }
-        tween();
+      if (isPlayingFilm) {
+        icon.textContent = '⏸'; lbl.textContent = 'PAUSAR';
+        btn.classList.add('border-cyan-400');
+        const speed = parseInt(document.getElementById('playback-speed').value, 10);
+        filmInterval = setInterval(() => {
+          if (filmStep >= 81) filmStep = 0;
+          filmStep++;
+          updateFilmFrame();
+          if (filmStep >= 81) togglePlayFilm();
+        }, speed);
+      } else {
+        icon.textContent = '▶'; lbl.textContent = 'REPRODUCIR';
+        btn.classList.remove('border-cyan-400');
+        clearInterval(filmInterval);
       }
     }
 
-    // =========================================================================
-    // 11. TELEMETRÍA Y RAYCASTING
-    // =========================================================================
+    function stepFilm(dir) {
+      if (isPlayingFilm) togglePlayFilm();
+      filmStep = Math.max(0, Math.min(81, filmStep + dir));
+      updateFilmFrame();
+    }
+
+    function rewindFilm() {
+      if (isPlayingFilm) togglePlayFilm();
+      filmStep = 0;
+      updateFilmFrame();
+    }
+
+    function forwardFilmFull() {
+      if (isPlayingFilm) togglePlayFilm();
+      filmStep = 81;
+      updateFilmFrame();
+    }
+
+    // 10. Telemetría Sociométrica y Raycasting
     function onPointerMove(e) {
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -1254,108 +1513,115 @@
 
     function onPointerClick(e) {
       raycaster.setFromCamera(mouse, camera);
-      const objectsToTest = [];
-      ['t1', 't2', 't3'].forEach(k => {
-        if (aquariums[k].group.visible) objectsToTest.push(aquariums[k].pointsCloud);
+      const clickableClouds = [];
+      ['t1', 't2', 't3', 't4'].forEach(k => {
+        if (aquariums[k].pointsCloud && aquariums[k].group.visible) {
+          clickableClouds.push(aquariums[k].pointsCloud);
+        }
       });
 
-      const intersects = raycaster.intersectObjects(objectsToTest);
+      const intersects = raycaster.intersectObjects(clickableClouds);
       if (intersects.length > 0) {
         const hit = intersects[0];
-        const aqKey = hit.object.userData.aquariumKey || 't2';
-        const idx = hit.index;
+        let idx = hit.index;
+        if (isNaN(idx) || idx < 0 || idx >= 81) idx = 0;
+        hoveredVertexIdx = idx;
+        const aqKey = hit.object.userData.aquariumKey || 't1';
         updateTelemetry(idx, aqKey);
-        playHarmonicChime(aquariums[aqKey].currentZ[idx], 0.35);
+        epicenterU = Math.floor(idx / GRID_SIZE);
+        epicenterV = idx % GRID_SIZE;
+        playHarmonicChime(aquariums[aqKey].currentZ[idx], 0.4);
       }
     }
 
-    function updateTelemetry(idx, aqKey = 't2') {
-      hoveredVertexIdx = idx;
-      const aq = aquariums[aqKey];
+    function updateTelemetry(idx, aqKey = 't1') {
+      if (isNaN(idx) || idx < 0 || idx >= NUM_VERTICES) idx = 0;
       const u = Math.floor(idx / GRID_SIZE);
       const v = idx % GRID_SIZE;
-      const sdr = aq.currentZ[idx];
-      const fig = getFigureCode(u, v);
-      const isDiag = (u === v);
 
-      document.getElementById('tel-vertex-name').innerHTML = `
-        ${fig} <span class="text-[9px] mono px-1.5 py-0.2 rounded bg-cyan-950 border border-cyan-500/40 text-cyan-300">#${idx + 1} (${aqKey.toUpperCase()})</span>
-      `;
-      document.getElementById('tel-vertex-coord').textContent = `(u:${u}, v:${v}) ${isDiag ? '★ Espina Dorsal' : ''}`;
+      const figureCode = getFigureCode(u, v);
+      document.getElementById('telemetry-cell').textContent = figureCode;
 
-      const sdrEl = document.getElementById('tel-sdr');
-      sdrEl.textContent = (sdr >= 0 ? '+' : '') + sdr.toFixed(2);
-      sdrEl.className = `mono font-extrabold text-base ${sdr > 0.15 ? 'text-emerald-400' : (sdr < -0.15 ? 'text-rose-400' : 'text-cyan-300')}`;
+      const z1 = SABANAS.t1[idx];
+      const z2 = SABANAS.t2[idx];
+      const z3 = SABANAS.t3[idx];
+      const z4 = SABANAS.t4[idx];
 
-      const bPhase = document.getElementById('tel-phase-badge');
-      if (sdr > 0.15) {
-        bPhase.textContent = 'CIELO';
-        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-      } else if (sdr < -0.15) {
-        bPhase.textContent = 'FOSA';
-        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40';
+      document.getElementById('telemetry-z1').textContent = `T1: ${z1 >= 0 ? '+' : ''}${z1.toFixed(2)}`;
+      document.getElementById('telemetry-z2').textContent = `T2: ${z2 >= 0 ? '+' : ''}${z2.toFixed(2)}`;
+      document.getElementById('telemetry-z3').textContent = `T3: ${z3 >= 0 ? '+' : ''}${z3.toFixed(2)}`;
+      document.getElementById('telemetry-z4').textContent = `T4: ${z4 >= 0 ? '+' : ''}${z4.toFixed(2)}`;
+
+      const delta = z4 - z1;
+      const deltaEl = document.getElementById('telemetry-delta');
+      deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(2)} (${Math.abs(delta) < 0.25 ? 'Estable' : (delta > 0 ? 'Cohesión' : 'Polarización')})`;
+      deltaEl.className = delta >= 0 ? 'text-emerald-400 font-mono' : 'text-rose-400 font-mono';
+
+      const isSpine = (u === v);
+      const spineTag = document.getElementById('telemetry-spine-tag');
+      if (isSpine) {
+        spineTag.textContent = `Espina Dorsal (${u+1}A, ${v+1}A)`;
+        spineTag.className = 'text-amber-300 font-bold';
       } else {
-        bPhase.textContent = 'FLOTACIÓN';
-        bPhase.className = 'text-[8px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
+        spineTag.textContent = `Interacción (${u+1}A → ${v+1}A)`;
+        spineTag.className = 'text-slate-300';
       }
 
-      const dyadsEl = document.getElementById('tel-dyads');
-      const dyadsCountEl = document.getElementById('tel-dyads-count');
-      if (u === 0 && v === 0) {
-        dyadsEl.textContent = '1A ⇄ 2A, 1A (Auto)';
-        dyadsCountEl.textContent = '2 díadas en alianza';
-      } else if (u === 8 && v === 8) {
-        dyadsEl.textContent = '1A → 3A, 3A → 1A';
-        dyadsCountEl.textContent = '2 díadas en conflicto';
-      } else if (isDiag) {
-        dyadsEl.textContent = `Auto-posición (${u+1}A, ${u+1}A)`;
-        dyadsCountEl.textContent = 'Reflexiva Simétrica';
+      // Código de tetragrama
+      const codeEl = document.getElementById('telemetry-code');
+      const meanEl = document.getElementById('telemetry-meaning');
+      const curZ = aquariums[aqKey] ? aquariums[aqKey].currentZ[idx] : z1;
+
+      if (curZ > 0.5) {
+        codeEl.textContent = '<Ee>';
+        meanEl.textContent = 'Elección Mutua / Cohesión Plena';
+        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold';
+      } else if (curZ < -0.4) {
+        codeEl.textContent = '[Rr]';
+        meanEl.textContent = 'Rechazo Mutuo / Fosa Abisal';
+        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold';
+      } else if (Math.abs(curZ) <= 0.2) {
+        codeEl.textContent = '¡¿?!';
+        meanEl.textContent = 'Indiferencia en la Lámina de Flotación';
+        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-sky-950 text-cyan-300 border border-sky-800 font-bold';
       } else {
-        dyadsEl.textContent = `Vínculo Diádico (${u+1}A → ${v+1}A)`;
-        dyadsCountEl.textContent = 'Centroide Activo';
+        codeEl.textContent = '<Er]';
+        meanEl.textContent = 'Disparidad de Sentimientos / Silla de Montar';
+        codeEl.className = 'mono text-xs px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-bold';
       }
 
-      const kVal = (sdr * 0.22).toFixed(2);
-      document.getElementById('tel-gauss').textContent = `K = ${sdr >= 0 ? '+' : ''}${kVal}`;
-      const gType = document.getElementById('tel-gauss-type');
-      if (Math.abs(u - v) > 3) {
-        gType.textContent = 'Silla Hiperbólica (Disonancia)';
-        gType.className = 'text-[8px] text-amber-300 font-semibold';
-      } else if (sdr > 0.1) {
-        gType.textContent = 'Domo Elíptico (Cohesión)';
-        gType.className = 'text-[8px] text-emerald-300 font-semibold';
-      } else if (sdr < -0.1) {
-        gType.textContent = 'Cuenca Tectónica (Fricción)';
-        gType.className = 'text-[8px] text-rose-400 font-semibold';
-      } else {
-        gType.textContent = 'Plano Minimal (Equilibrio)';
-        gType.className = 'text-[8px] text-cyan-300 font-semibold';
-      }
+      // Curvaturas simuladas consistentes
+      const gaussK = (isSpine ? 0.428 : (curZ > 0 ? 0.315 : -0.280)).toFixed(3);
+      const meanH = (curZ * -0.22).toFixed(3);
+      document.getElementById('telemetry-gauss').textContent = `${gaussK >= 0 ? '+' : ''}${gaussK}`;
+      document.getElementById('telemetry-mean').textContent = `${meanH >= 0 ? '+' : ''}${meanH}`;
     }
 
     function onWindowResize() {
       const container = document.getElementById('three-viewport');
-      camera.aspect = container.clientWidth / container.clientHeight;
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth || 1200;
+      const h = container.clientHeight || 560;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(w, h);
     }
 
-    // =========================================================================
-    // 12. BUCLE DE RENDERIZADO A 60 FPS
-    // =========================================================================
-    function animate() {
+    // 11. Bucle de Animación Continuo
+    function animate(time) {
       requestAnimationFrame(animate);
 
-      const now = performance.now();
+      const now = time || performance.now();
       updateTransitions(now);
 
-      const chkWobble = document.getElementById('chk-wobble');
-      if (chkWobble && chkWobble.checked && controls.state === -1) {
-        wobbleTime += 0.008;
-        const azimOffset = Math.sin(wobbleTime) * 0.14;
-        const elevOffset = Math.cos(wobbleTime * 0.7) * 0.06;
+      // Micro-órbita suave cinemática
+      const wobbleEnabled = document.getElementById('chk-wobble').checked;
+      if (wobbleEnabled && !isUserInteracting && transitionProgress >= 1.0 && !isPlayingFilm) {
+        wobbleTime += 0.005;
+        const azimOffset = Math.sin(wobbleTime * 0.8) * 0.12;
+        const elevOffset = Math.cos(wobbleTime * 0.6) * 0.04;
 
-        const dist = camera.position.length();
+        const dist = (viewLayout === 'cinemascope') ? CAM_DIST_CINEMASCOPE : CAM_DIST_SINGULAR;
         const baseAzim = DIAFANO_AZIM + azimOffset;
         const baseElev = DIAFANO_ELEV + elevOffset;
 
@@ -1368,10 +1634,30 @@
       renderer.render(scene, camera);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      init3D();
-      updateTelemetry(0, 't1');
-    });
+    // 12. Inicialización Segura (Garantía Cero Pantalla Negra)
+    let is3DInitialized = false;
+    function safeInit() {
+      if (is3DInitialized) return;
+      if (typeof THREE === 'undefined' || typeof THREE.OrbitControls === 'undefined') {
+        setTimeout(safeInit, 50);
+        return;
+      }
+      is3DInitialized = true;
+      try {
+        init3D();
+        updateTelemetry(0, 't1');
+      } catch (err) {
+        console.error('Error inicializando 3D:', err);
+        const container = document.getElementById('three-viewport');
+        if (container) {
+          container.innerHTML = `<div class="p-6 text-rose-400 font-mono text-xs">Error de inicialización WebGL: ${err.message}. Por favor recarga la página.</div>`;
+        }
+      }
+    }
+
+    window.__triggerInit3D = safeInit;
+    window.addEventListener('DOMContentLoaded', safeInit);
+    window.addEventListener('load', safeInit);
   </script>
 </body>
 </html>
