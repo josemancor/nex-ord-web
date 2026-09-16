@@ -261,9 +261,9 @@
         <!-- Bloque C: Interruptores de Despeje, Datos Numéricos a Demanda y Mesa de Mezclas -->
         <div class="flex items-center gap-2 flex-wrap">
           <!-- Conmutador Rápido de Etiquetas 3D -->
-          <button onclick="toggleBoardLabels()" id="btn-toggle-labels" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 border border-cyan-400/50 bg-cyan-950/40 hover:bg-cyan-900/60 active flex items-center gap-1.5" title="Ocultar/Mostrar coordenadas A..I, 1..9 y pedestales para despejar completamente el tablero 3D">
+          <button onclick="toggleBoardLabels()" id="btn-toggle-labels" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 border border-slate-700 bg-slate-950/40 hover:bg-cyan-900/60 flex items-center gap-1.5" title="Ocultar/Mostrar etiquetas canónicas de los 5 sujetos para despejar completamente el tablero 3D">
             <span>🏷️</span>
-            <span id="lbl-toggle-labels">ETIQUETAS: ON</span>
+            <span id="lbl-toggle-labels">ETIQUETAS: OFF</span>
           </button>
 
           <!-- Conmutador A Demanda de Datos Numéricos -->
@@ -567,10 +567,14 @@
       <!-- 👑 MANDOS DE PERSPECTIVA FLOTANTES (3 ESTRATOS) -->
       <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
         <div class="flex items-center gap-1.5">
+          <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Activar/Desactivar Audio Sinestésico 432 Hz">
+            <span id="audio-icon">🔇</span>
+            <span id="audio-lbl" class="text-[10px]">Audio: OFF</span>
+          </button>
           <button onclick="toggleCinemaMode()" id="btn-toggle-cinema" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-slate-950/85 border-amber-500/40 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Modo Cine / Expansión Panorámica Inmersiva">
             <span>⛶</span> Cine
           </button>
-          <button onclick="toggleBoardLabels()" id="btn-vp-labels" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 bg-slate-950/85 border-cyan-500/40 shadow-lg flex items-center gap-1.5 active" title="Mostrar/Ocultar Rótulos y Coordenadas 3D del Tablero">
+          <button onclick="toggleBoardLabels()" id="btn-vp-labels" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5" title="Mostrar/Ocultar Rótulos 3D del Tablero">
             <span>🏷️</span> Etiquetas
           </button>
           <button onclick="apply3EstratosView()" id="btn-3estratos" class="glass-btn px-3.5 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg shadow-amber-500/25 flex items-center gap-2" title="Perspectiva Calibrada: Cielo Abierto (+Y) · Superficie (Y=0) · Fondo Abisal (-Y)">
@@ -633,28 +637,6 @@
         <button onclick="toggleNumericDataPanel()" id="btn-toggle-numbers-ticker" class="glass-btn px-2 py-0.5 rounded text-[10px] text-sky-300 hover:text-white border border-sky-500/40 font-bold hover:bg-sky-950/60">
           📊 Datos Numéricos ▼
         </button>
-      </div>
-
-      <!-- OVERLAY DE AUDIO CÓSMICO -->
-      <div class="absolute bottom-3 left-3 z-20 flex items-center gap-2 bg-slate-950/85 px-3 py-1.5 rounded-xl border border-sky-900/50">
-        <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs flex items-center gap-1.5">
-          <span id="audio-icon">🔇</span>
-          <span id="audio-lbl" class="text-[10px]">Música Galáctica: OFF</span>
-        </button>
-        <button onclick="playHolisticChime()" id="btn-holistic-audio" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs text-amber-300 flex items-center gap-1.5 hover:border-amber-400" title="Sinfonía Holística de Acordes en 432 Hz">
-          <span>🎼</span>
-          <span class="text-[10px]">Clima Sonoro</span>
-        </button>
-        <button onclick="toggleOceanRoar()" id="btn-overlay-ocean" class="glass-btn px-2.5 py-1 rounded-lg mono text-xs text-cyan-300 flex items-center gap-1.5 hover:border-cyan-400" title="Activar/Desactivar el Rugido del Océano">
-          <span>🌊</span>
-          <span class="text-[10px]" id="lbl-overlay-ocean">Océano: OFF</span>
-        </button>
-        <span class="mono text-[10px] text-slate-400 hidden md:inline">Sinestesia Socio-Termodinámica 432 Hz</span>
-      </div>
-
-      <!-- INSTRUCCIÓN DE INTERACCIÓN -->
-      <div class="absolute bottom-3 right-3 z-20 pointer-events-none mono text-[10px] text-slate-400 bg-slate-950/80 px-3 py-1 rounded-lg border border-slate-800">
-        🖱️ Arrastra para orbitar • Rueda para zoom • Clic en celda para solfeo instantáneo
       </div>
     </div>
 
@@ -1254,10 +1236,20 @@
       const btn = document.getElementById('btn-audio');
       if (audioEnabled) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
-        icon.textContent = '🔊'; lbl.textContent = 'Música Galáctica: ON'; btn.classList.add('active');
+        if (icon) icon.textContent = '🔊';
+        if (lbl) lbl.textContent = 'Audio: ON';
+        if (btn) {
+          btn.classList.add('active', 'border-amber-400', 'text-amber-300');
+          btn.classList.remove('border-slate-700', 'text-slate-400');
+        }
         playHarmonicChime(0.5, 0.35, { isSpine: true });
       } else {
-        icon.textContent = '🔇'; lbl.textContent = 'Música Galáctica: OFF'; btn.classList.remove('active');
+        if (icon) icon.textContent = '🔇';
+        if (lbl) lbl.textContent = 'Audio: OFF';
+        if (btn) {
+          btn.classList.remove('active', 'border-amber-400', 'text-amber-300');
+          btn.classList.add('border-slate-700', 'text-slate-400');
+        }
         if (isOceanRoarEnabled) toggleOceanRoar();
       }
     }
@@ -1904,8 +1896,6 @@
       const lbl = document.getElementById('lbl-toggle-ocean');
       const sel = document.getElementById('ocean-intensity');
       const icon = document.getElementById('ocean-icon');
-      const overlayBtn = document.getElementById('btn-overlay-ocean');
-      const overlayLbl = document.getElementById('lbl-overlay-ocean');
       const mixBtn = document.getElementById('btn-mix-ocean');
 
       if (isOceanRoarEnabled) {
@@ -1923,9 +1913,6 @@
         if (lbl) lbl.textContent = `OCÉANO: ${oceanIntensity.toUpperCase()}`;
         if (sel) sel.classList.remove('hidden');
         if (icon) icon.textContent = '🌊';
-
-        if (overlayBtn) overlayBtn.classList.add('active', 'border-cyan-400');
-        if (overlayLbl) overlayLbl.textContent = `Océano: ${oceanIntensity.toUpperCase()}`;
         if (mixBtn) mixBtn.classList.add('active');
 
         triggerOceanWaveSurge(2.0, 2.0, 4.0, true);
@@ -1941,9 +1928,6 @@
         }
         if (lbl) lbl.textContent = 'OCÉANO: OFF';
         if (icon) icon.textContent = '🌊';
-
-        if (overlayBtn) overlayBtn.classList.remove('active', 'border-cyan-400');
-        if (overlayLbl) overlayLbl.textContent = 'Océano: OFF';
         if (mixBtn) mixBtn.classList.remove('active');
       }
     }
@@ -1953,10 +1937,6 @@
       const lbl = document.getElementById('lbl-toggle-ocean');
       if (lbl && isOceanRoarEnabled) {
         lbl.textContent = `OCÉANO: ${oceanIntensity.toUpperCase()}`;
-      }
-      const overlayLbl = document.getElementById('lbl-overlay-ocean');
-      if (overlayLbl && isOceanRoarEnabled) {
-        overlayLbl.textContent = `Océano: ${oceanIntensity.toUpperCase()}`;
       }
       if (isOceanRoarEnabled && audioCtx && oceanMasterGain) {
         const baseLevel = (oceanIntensity === 'pleno') ? 0.44 : ((oceanIntensity === 'marejada') ? 0.26 : 0.14);
@@ -2151,14 +2131,18 @@
     // Grupo de Objetos del Tablero de Ajedrez Vivo 9x9
     let chessboardGroup = null;
     let boardLabelsGroup = null;
-    let areBoardLabelsVisible = true;
+    let areBoardLabelsVisible = false;
     let dyadicArcMesh = null; // Arco visual que conecta el par diádico en contrapunto
     let marginalColumns = { rows: [], cols: [], grand: null };
     let marginalArcMesh = null;
     let marginalGroup = null;
 
-    function toggleBoardLabels() {
-      areBoardLabelsVisible = !areBoardLabelsVisible;
+    function toggleBoardLabels(forceState = null) {
+      if (forceState !== null) {
+        areBoardLabelsVisible = forceState;
+      } else {
+        areBoardLabelsVisible = !areBoardLabelsVisible;
+      }
       if (boardLabelsGroup) {
         boardLabelsGroup.visible = areBoardLabelsVisible;
       }
@@ -2166,17 +2150,24 @@
       const lbl = document.getElementById('lbl-toggle-labels');
       if (btn) {
         if (areBoardLabelsVisible) {
-          btn.classList.add('active', 'border-cyan-400');
+          btn.classList.add('active', 'border-cyan-400', 'text-cyan-300');
+          btn.classList.remove('border-slate-700', 'text-slate-400');
           if (lbl) lbl.textContent = 'ETIQUETAS: ON';
         } else {
-          btn.classList.remove('active', 'border-cyan-400');
+          btn.classList.remove('active', 'border-cyan-400', 'text-cyan-300');
+          btn.classList.add('border-slate-700', 'text-slate-400');
           if (lbl) lbl.textContent = 'ETIQUETAS: OFF';
         }
       }
       const vpBtn = document.getElementById('btn-vp-labels');
       if (vpBtn) {
-        if (areBoardLabelsVisible) vpBtn.classList.add('active');
-        else vpBtn.classList.remove('active');
+        if (areBoardLabelsVisible) {
+          vpBtn.classList.add('active', 'border-cyan-400', 'text-cyan-300');
+          vpBtn.classList.remove('border-slate-700', 'text-slate-400');
+        } else {
+          vpBtn.classList.remove('active', 'border-cyan-400', 'text-cyan-300');
+          vpBtn.classList.add('border-slate-700', 'text-slate-400');
+        }
       }
     }
 
@@ -2519,6 +2510,29 @@
       return sprite;
     }
 
+    // Rótulo tipográfico puro sin caja ni bordes opacos (mínimo, translúcido y con resplandor)
+    function createCleanLabelSprite(text, colorHex, fontSize = 34, width = 140, height = 70) {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = colorHex;
+      ctx.font = `bold ${fontSize}px "Outfit", "Roboto Mono", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, width / 2, height / 2);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(width * 0.045, height * 0.045, 1);
+      return sprite;
+    }
+
     // Inicialización del Motor 3D
     function init3D() {
       const container = document.getElementById('three-viewport');
@@ -2686,20 +2700,6 @@
       chessboardGroup.add(boardLabelsGroup);
       boardLabelsGroup.visible = areBoardLabelsVisible;
 
-      ROWS_EMISSION.forEach((letter, u) => {
-        const badge = createTitleBadge(letter, '#38BDF8', 80, 80);
-        badge.scale.set(2.4, 2.4, 1);
-        badge.position.set(-SPAN / 2 - 2.2, 0.35, (u - 4) * STEP);
-        boardLabelsGroup.add(badge);
-      });
-
-      COLS_RECEPTION.forEach((num, v) => {
-        const badge = createTitleBadge(num, '#00FF87', 80, 80);
-        badge.scale.set(2.4, 2.4, 1);
-        badge.position.set((v - 4) * STEP, 0.35, SPAN / 2 + 2.2);
-        boardLabelsGroup.add(badge);
-      });
-
       // 2. FONDO ABISAL (-Y): Lecho Oceánico a Y = -24
       const abyssPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
       abyssPlaneGeo.rotateX(-Math.PI / 2);
@@ -2775,11 +2775,9 @@
         const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
         marginalGroup.add(spineLine);
 
-        const badge = createTitleBadge(`${SUBJECT_LABELS[i]} (DA)`, '#38BDF8', 140, 55);
-        badge.scale.set(1.8, 1.8, 1);
-        badge.position.set(MARGINAL_X, 0.9, z - 2.4);
+        const badge = createCleanLabelSprite(SUBJECT_LABELS[i], '#38BDF8', 34);
+        badge.position.set(MARGINAL_X - 3.4, 0.8, z);
         if (boardLabelsGroup) boardLabelsGroup.add(badge);
-        else marginalGroup.add(badge);
 
         marginalColumns.rows.push({
           idx: i,
@@ -2827,11 +2825,9 @@
         const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
         marginalGroup.add(spineLine);
 
-        const badge = createTitleBadge(`${SUBJECT_LABELS[j]} (REC)`, '#00FF87', 140, 55);
-        badge.scale.set(1.8, 1.8, 1);
-        badge.position.set(x, 0.9, MARGINAL_Z + 2.4);
+        const badge = createCleanLabelSprite(SUBJECT_LABELS[j], '#00FF87', 34);
+        badge.position.set(x, 0.8, MARGINAL_Z + 3.4);
         if (boardLabelsGroup) boardLabelsGroup.add(badge);
-        else marginalGroup.add(badge);
 
         marginalColumns.cols.push({
           idx: j,
@@ -2875,16 +2871,10 @@
       const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.9 }));
       marginalGroup.add(grandSpineLine);
 
-      const grandBadge = createTitleBadge('MEDIA GLOBAL', '#FFE600', 180, 60);
-      grandBadge.scale.set(1.8, 1.8, 1);
-      grandBadge.position.set(MARGINAL_X - 1.0, 1.2, MARGINAL_Z + 2.8);
-      if (boardLabelsGroup) boardLabelsGroup.add(grandBadge);
-      else marginalGroup.add(grandBadge);
-
       marginalColumns.grand = {
         label: 'MEDIA GLOBAL',
         pedMesh: grandPedMesh, cylMesh: grandCylMesh, tipMesh: grandTipMesh,
-        colMat: grandColMat, tipMat: grandTipMat, spineLine: grandSpineLine, badge: grandBadge,
+        colMat: grandColMat, tipMat: grandTipMat, spineLine: grandSpineLine, badge: null,
         currentH: 0.2, targetH: 0.2
       };
 
@@ -3090,21 +3080,6 @@
       const boardFrame = new THREE.LineSegments(boardFrameEdge, boardFrameMat);
       boardFrame.position.set(0, -0.3, 0);
       group.add(boardFrame);
-
-      // Coordenadas periféricas
-      ROWS_EMISSION.forEach((letter, u) => {
-        const badge = createTitleBadge(letter, boardType === 'DA' ? '#38BDF8' : '#00FF87', 90, 90);
-        badge.scale.set(3.2, 3.2, 1);
-        badge.position.set(-SPAN / 2 - 3.2, 0.4, (u - 4) * STEP);
-        group.add(badge);
-      });
-
-      COLS_RECEPTION.forEach((num, v) => {
-        const badge = createTitleBadge(num, boardType === 'DA' ? '#38BDF8' : '#00FF87', 90, 90);
-        badge.scale.set(3.2, 3.2, 1);
-        badge.position.set((v - 4) * STEP, 0.4, SPAN / 2 + 3.2);
-        group.add(badge);
-      });
 
       // Título 3D Flotante del Tablero
       const titleBadge = createTitleBadge(titleLabel, boardType === 'DA' ? '#00E5FF' : '#00FF87', 560, 95);
