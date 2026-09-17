@@ -1586,6 +1586,11 @@
   <!-- INPUT OCULTO PARA CARGA DE ARCHIVOS .sinfo (JSON) -->
   <input type="file" id="sinfo-file-input" accept=".sinfo,.json,application/json" class="hidden" onchange="handleSinfoFileSelected(event)">
 
+  <!-- 🎵 BANNER DISCRETO DE DESBLOQUEO DE AUDIO Y PANTALLA COMPLETA -->
+  <div id="audio-gesture-hint" onclick="unlockAudioAndFullscreenOnGesture()" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-[999999] px-4 py-2 rounded-full bg-slate-950/90 border border-emerald-400/80 text-emerald-300 mono text-xs font-bold shadow-[0_0_25px_rgba(0,255,135,0.4)] animate-pulse cursor-pointer flex items-center gap-2">
+    <span>🎼</span><span>TOCA EN CUALQUIER LUGAR PARA ACTIVAR EL SONIDO A 432 Hz Y PANTALLA COMPLETA</span>
+  </div>
+
   <!-- TOAST FLOTANTE DE NOTIFICACIÓN .sinfo -->
   <div id="sinfo-toast" class="hidden fixed top-6 right-6 z-[10000] max-w-lg bg-slate-950/95 border-2 border-emerald-400/80 rounded-2xl p-4 shadow-[0_0_35px_rgba(0,255,135,0.35)] backdrop-blur-xl transition-all duration-300 flex flex-col gap-3">
     <div class="flex items-start gap-3">
@@ -1607,12 +1612,12 @@
   </div>
 
   <!-- 🧭 MANDO UNIVERSAL FLOTANTE EN FILA INDIA (REGLA 15) -->
-  <aside class="universal-nav-pod" aria-label="Navegación Universal">
-    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio / Portada NEXORD">🏠</a>
-    <a href="visord_oceano_cubo.html" class="nav-pod-btn" title="Atrás (Cubo 3D Previo)">◀</a>
-    <a href="nivel1_intuitivo.html" class="nav-pod-btn" title="Nivel Superior (Nivel 1)">▲</a>
-    <a href="visord_cultural.html" class="nav-pod-btn" title="Nivel Inferior (Cultural)">▼</a>
-    <a href="visord_g2t1c1.html" class="nav-pod-btn" title="Siguiente (Hipercubo G2T1C1)">▶</a>
+  <aside class="universal-nav-pod" aria-label="Mando Universal NEXORD">
+    <button onclick="restartConcertHtml()" class="nav-pod-btn nav-pod-home" title="Reiniciar HTML / Concierto (F5)">🏠</button>
+    <button onclick="prevScenario()" class="nav-pod-btn" title="Escenario 3D Anterior (◀)">◀</button>
+    <button onclick="prevMovement()" class="nav-pod-btn" title="Movimiento Anterior (▲)">▲</button>
+    <button onclick="nextMovement()" class="nav-pod-btn" title="Movimiento Siguiente (▼)">▼</button>
+    <button onclick="nextScenario()" class="nav-pod-btn" title="Escenario 3D Siguiente (▶)">▶</button>
   </aside>
 
   <!-- 🧠 LÓGICA DE COMPUTACIÓN 3D, SOLFEO FACTUAL Y TABLERO DE AJEDREZ VIVO -->
@@ -4087,9 +4092,17 @@
 
         if (container) {
           container.classList.add('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
+          container.style.width = '100vw';
+          container.style.maxWidth = '100vw';
           container.style.height = '100vh';
           container.style.minHeight = '100vh';
+          container.style.maxHeight = '100vh';
+          container.style.margin = '0';
+          container.style.padding = '0';
+          container.style.border = 'none';
+          container.style.borderRadius = '0';
         }
+        document.body.style.overflow = 'hidden';
         if (centerStage) {
           centerStage.classList.remove('lg:col-span-6');
           centerStage.classList.add('w-full');
@@ -4130,9 +4143,17 @@
 
         if (container) {
           container.classList.remove('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
+          container.style.width = '';
+          container.style.maxWidth = '';
           container.style.height = '76vh';
           container.style.minHeight = '640px';
+          container.style.maxHeight = '';
+          container.style.margin = '';
+          container.style.padding = '';
+          container.style.border = '';
+          container.style.borderRadius = '';
         }
+        document.body.style.overflow = '';
         if (centerStage) {
           centerStage.classList.add('lg:col-span-6');
           centerStage.classList.remove('w-full');
@@ -4250,15 +4271,34 @@
       restartComplexProjection();
     }
 
-    // Atajos de Teclado (Escape para salir, Espacio para Play/Pausa)
+    // Atajos de Teclado (Escape para salir, Espacio para Play/Pausa, Flechas para Escenario y Movimiento)
     window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+
       if (e.key === 'Escape') {
-        if (isSalaOscuraActive) {
+        if (typeof smiaModalVisible !== 'undefined' && smiaModalVisible) {
+          toggleSmiaMatricesModal(false);
+        } else if (isSalaOscuraActive) {
           toggleSalaOscuraFullscreen(false);
         }
       } else if (e.key === ' ' && isSalaOscuraActive) {
         e.preventDefault();
         togglePlaySolfeo();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevScenario();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextScenario();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        prevMovement();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextMovement();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        restartConcertHtml();
       }
     });
 
@@ -4554,6 +4594,66 @@
       applyExperiencePreset('sinfonia', false);
 
       animate();
+
+      // INICIAR SIEMPRE A PANTALLA COMPLETA, SALA OSCURA, PANTALLA RELLENA AL TOPE Y ENCADENAMIENTO COMPLETO
+      startCanonicalAutoConcert();
+    }
+
+    function startCanonicalAutoConcert() {
+      // 1. Activar Sala Oscura a Pantalla Completa y Pantalla rellena al tope
+      toggleSalaOscuraFullscreen(true);
+
+      // 2. Iniciar siempre en Encadenamiento Completo (desde Movimiento 0: Adagio hasta Movimiento 6)
+      isChainMode = true;
+      currentMovementIdx = 0;
+      playCurrentMovement();
+
+      // 3. Forzar redimensionamiento del canvas a pantalla completa absoluta
+      setTimeout(onWindowResize, 60);
+      setTimeout(onWindowResize, 250);
+
+      // 4. Mecanismo de desbloqueo garantizado de audio a 432 Hz y fullscreen nativo ante restricción del navegador
+      setupBrowserGestureUnlock();
+    }
+
+    function unlockAudioAndFullscreenOnGesture() {
+      if (typeof audioCtx !== 'undefined' && audioCtx) {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } else {
+        initAudio();
+      }
+      if (!audioEnabled) {
+        audioEnabled = true;
+      }
+      if (typeof isOceanRoarEnabled !== 'undefined' && isOceanRoarEnabled) {
+        if (typeof initOceanAudio === 'function') initOceanAudio();
+        if (oceanMasterGain && audioCtx) {
+          const baseLevel = (oceanIntensity === 'pleno') ? 0.44 : ((oceanIntensity === 'marejada') ? 0.26 : 0.14);
+          oceanMasterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+          oceanMasterGain.gain.setTargetAtTime(baseLevel, audioCtx.currentTime, 0.4);
+        }
+      }
+      if (document.fullscreenElement === null && document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      const hint = document.getElementById('audio-gesture-hint');
+      if (hint) hint.classList.add('hidden');
+    }
+
+    function setupBrowserGestureUnlock() {
+      ['pointerdown', 'click', 'keydown', 'touchstart'].forEach(evt => {
+        window.addEventListener(evt, unlockAudioAndFullscreenOnGesture, { once: true, capture: true });
+      });
+
+      // Si el navegador suspende el audio por falta de interacción previa del usuario, avisar discretamente
+      setTimeout(() => {
+        if (audioCtx && audioCtx.state === 'suspended') {
+          const hint = document.getElementById('audio-gesture-hint');
+          if (hint) hint.classList.remove('hidden');
+        }
+      }, 350);
     }
 
     function setupLights() {
@@ -8438,6 +8538,90 @@
       playCurrentMovement();
     }
 
+    function nextMovement(keepChain = true) {
+      initAudio();
+      let nextIdx = (currentMovementIdx + 1) % GRAND_SYMPHONY_MOVEMENTS.length;
+      currentMovementIdx = nextIdx;
+      if (!keepChain) isChainMode = false;
+      playCurrentMovement();
+      if (typeof showSinfoToast === 'function') {
+        const mov = GRAND_SYMPHONY_MOVEMENTS[nextIdx];
+        showSinfoToast(
+          `MOVIMIENTO ${nextIdx + 1}/7`,
+          `▶ ${mov.name}: ${mov.subtitle}`,
+          'info'
+        );
+      }
+    }
+
+    function prevMovement(keepChain = true) {
+      initAudio();
+      let prevIdx = (currentMovementIdx - 1 + GRAND_SYMPHONY_MOVEMENTS.length) % GRAND_SYMPHONY_MOVEMENTS.length;
+      currentMovementIdx = prevIdx;
+      if (!keepChain) isChainMode = false;
+      playCurrentMovement();
+      if (typeof showSinfoToast === 'function') {
+        const mov = GRAND_SYMPHONY_MOVEMENTS[prevIdx];
+        showSinfoToast(
+          `MOVIMIENTO ${prevIdx + 1}/7`,
+          `◀ ${mov.name}: ${mov.subtitle}`,
+          'info'
+        );
+      }
+    }
+
+    function restartConcertHtml() {
+      window.location.reload();
+    }
+
+    const THEATRE_SCENARIOS = [
+      { mode: 'solfeo', name: 'Escenario 1: Tablero de Ajedrez Vivo (3 Estratos)', subtitle: 'Matrices D1..D4 y Celdas Q81' },
+      { mode: 'dual', name: 'Escenario 2: Laboratorio Bifocal Dual (DA / RC)', subtitle: 'Dos Tableros Gemelos con Rayos Relacionales' },
+      { mode: 'imax', name: 'Escenario 3: Sábana IMAX 4D (Diacronía T1..T4)', subtitle: '4 Acuarios Diacrónicos y Filamentos Temporales' },
+      { mode: 'pca', name: 'Escenario 4: Sociograma 3D y Nube PCA', subtitle: 'Proyección Espectral de Factores y Gravitación' },
+      { mode: 'multi', name: 'Escenario 5: Gran Tablero Acuárico Simultáneo GxTyCz', subtitle: 'Tutti Polifónico en Muro de Video de 13 Monitores' }
+    ];
+
+    function nextScenario() {
+      if (typeof smiaModalVisible !== 'undefined' && smiaModalVisible && typeof activeSmiaSliceIdx !== 'undefined') {
+        const slices = getConcertSlices();
+        activeSmiaSliceIdx = (activeSmiaSliceIdx + 1) % slices.length;
+        renderSmiaMatricesModal();
+        return;
+      }
+      const curIdx = THEATRE_SCENARIOS.findIndex(s => s.mode === mainMode);
+      const nextIdx = (curIdx >= 0) ? (curIdx + 1) % THEATRE_SCENARIOS.length : 0;
+      const target = THEATRE_SCENARIOS[nextIdx];
+      setMainMode(target.mode);
+      if (typeof showSinfoToast === 'function') {
+        showSinfoToast(
+          'CAMBIO DE ESCENARIO 3D',
+          `${target.name} • ${target.subtitle}`,
+          'info'
+        );
+      }
+    }
+
+    function prevScenario() {
+      if (typeof smiaModalVisible !== 'undefined' && smiaModalVisible && typeof activeSmiaSliceIdx !== 'undefined') {
+        const slices = getConcertSlices();
+        activeSmiaSliceIdx = (activeSmiaSliceIdx - 1 + slices.length) % slices.length;
+        renderSmiaMatricesModal();
+        return;
+      }
+      const curIdx = THEATRE_SCENARIOS.findIndex(s => s.mode === mainMode);
+      const prevIdx = (curIdx >= 0) ? (curIdx - 1 + THEATRE_SCENARIOS.length) % THEATRE_SCENARIOS.length : THEATRE_SCENARIOS.length - 1;
+      const target = THEATRE_SCENARIOS[prevIdx];
+      setMainMode(target.mode);
+      if (typeof showSinfoToast === 'function') {
+        showSinfoToast(
+          'CAMBIO DE ESCENARIO 3D',
+          `${target.name} • ${target.subtitle}`,
+          'info'
+        );
+      }
+    }
+
     function playCurrentMovement() {
       const mov = GRAND_SYMPHONY_MOVEMENTS[currentMovementIdx];
       if (!mov) return;
@@ -9247,6 +9431,24 @@
             if (statusEl) statusEl.textContent = '¡Ciclo Culminado!';
             const subEl = document.getElementById('footer-subtitle-text');
             if (subEl) subEl.textContent = '👑 Gran Ciclo Sinfónico Culminado • Tutti Polifónico y Acuarios Simultáneos Sincronizados a 432 Hz';
+
+            // Al finalizar se recupera luz de sala y bandas y se apaga música y ruido océano
+            if (isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+              toggleSalaOscuraFullscreen(false);
+            }
+            if (typeof toggleOceanRoar === 'function' && isOceanRoarEnabled) {
+              toggleOceanRoar(false);
+            }
+            if (isSolfeoPlaying) {
+              togglePlaySolfeo();
+            }
+            if (typeof showSinfoToast === 'function') {
+              showSinfoToast(
+                'CICLO SINFÓNICO CULMINADO',
+                'El Gran Concierto ha concluido sus 7 movimientos. Se ha restaurado la luz de sala y silenciado la orquesta.',
+                'info'
+              );
+            }
           }
           return;
         } else {
