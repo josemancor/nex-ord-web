@@ -821,6 +821,10 @@
               <button onclick="toggleBoardLabels()" id="btn-vp-labels" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5" title="Mostrar/Ocultar Rótulos 3D del Tablero">
                 <span>🏷️</span> Etiquetas
               </button>
+              <button onclick="toggleBoardGridMode()" id="btn-board-grid-mode" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 bg-slate-950/85 border-cyan-500/50 shadow-lg flex items-center gap-1.5 hover:border-cyan-300 hover:scale-105 transition-all" title="Alternar entre Tablero Sociomatriz N×N (5×5) y Sábana Macro Q81 (9×9)">
+                <span id="grid-mode-icon">🔲</span>
+                <span id="grid-mode-lbl" class="text-[10px]">Tablero: 5×5 (N×N)</span>
+              </button>
               <button onclick="apply3EstratosView()" id="btn-3estratos" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-bold text-amber-300 bg-amber-950/85 border-amber-500/60 shadow-lg flex items-center gap-1.5" title="Perspectiva 3 Estratos">
                 🔭 3 Estratos
               </button>
@@ -1631,6 +1635,31 @@
     const STEP = SPAN / (GRID_SIZE - 1); // 5.25
     const MAX_HEIGHT = 15;
     const DENSITY_SCALE = 3.8; // Escala vertical base de columnas vivas
+
+    // Modo Canónico de Cuadrícula del Tablero 3D:
+    // 'NN'  = Matriz Sociométrica Factual N×N (5×5 por defecto, alineada 1 a 1 con los sujetos 1A..5A)
+    // 'Q81' = Sábana Macro Q81 (9×9 casillas del espacio de 81 figuras)
+    let boardGridMode = 'NN';
+
+    function getBoardCellWorldPos(u, v) {
+      if (boardGridMode === 'NN') {
+        const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+        const step = (N > 1) ? (32.0 / (N - 1)) : 8.0;
+        return {
+          x: (v - (N - 1) / 2) * step,
+          z: (u - (N - 1) / 2) * step,
+          step: step,
+          N: N
+        };
+      } else {
+        return {
+          x: (v - 4) * STEP,
+          z: (u - 4) * STEP,
+          step: STEP,
+          N: 9
+        };
+      }
+    }
     function getDensityScale(key) {
       if (key === 'SDR') return 1.35;
       if (key === 'SDA' || key === 'SRC') return 2.2;
@@ -2720,8 +2749,9 @@
 
     function pulseConcertCoronalRing(u, v, arcColor = 0xFFE600) {
       if (!chessboardGroup) return;
-      const x = (v - 4) * STEP;
-      const z = (u - 4) * STEP;
+      const pos = getBoardCellWorldPos(u, v);
+      const x = pos.x;
+      const z = pos.z;
 
       const ringGeo = new THREE.RingGeometry(0.8, 1.4, 32);
       const ringMat = new THREE.MeshBasicMaterial({
@@ -3102,8 +3132,9 @@
       const arch = getMusicalNoteArchetype(sym, density, opts);
       const sprite = createMusicalGlyphSprite(arch, opts);
 
-      const x0 = (v - 4) * STEP;
-      const z0 = (u - 4) * STEP;
+      const pos0 = getBoardCellWorldPos(u, v);
+      const x0 = pos0.x;
+      const z0 = pos0.z;
       let targetH = 0.5;
       const colKey = `${u}_${v}`;
       if (activeBoardColumns[colKey]) {
@@ -4398,8 +4429,8 @@
       return sprite;
     }
 
-    // Insignia 3D estilo Píldora / Glassmorphism de alta legibilidad con subtítulo opcional
-    function createPillBadgeSprite(text, colorHex, fontSize = 36, width = 120, height = 58, subText = null) {
+    // Insignia 3D Minimalista y Discreta: CERO recuadros ni cajas opacas (tipografía pura con halo neón flotante)
+    function createPillBadgeSprite(text, colorHex, fontSize = 32, width = 100, height = 46, subText = null) {
       const canvas = document.createElement('canvas');
       canvas.width = width * 2;   // 2x Retina para nitidez cristalina
       canvas.height = height * 2;
@@ -4407,32 +4438,21 @@
       ctx.scale(2, 2);
       ctx.clearRect(0, 0, width, height);
 
-      // Fondo píldora translúcido obsidian
-      const r = Math.min(14, height / 2);
-      ctx.beginPath();
-      ctx.roundRect(3, 3, width - 6, height - 6, r);
-      ctx.fillStyle = 'rgba(6, 14, 28, 0.88)';
-      ctx.fill();
-      ctx.strokeStyle = colorHex;
-      ctx.lineWidth = 2.4;
+      // CERO RECUADROS: Fondo 100% transparente sin cajas ni trazos envolventes
       ctx.shadowColor = colorHex;
-      ctx.shadowBlur = 9;
-      ctx.stroke();
-
-      // Tipografía principal
-      ctx.shadowBlur = 6;
+      ctx.shadowBlur = 8;
       ctx.fillStyle = colorHex;
       ctx.font = `900 ${fontSize}px "Outfit", "Roboto Mono", sans-serif`;
       ctx.textAlign = 'center';
 
       if (subText) {
         ctx.textBaseline = 'bottom';
-        ctx.fillText(text, width / 2, height * 0.58);
+        ctx.fillText(text, width / 2, height * 0.52);
         ctx.shadowBlur = 0;
         ctx.fillStyle = '#94A3B8';
-        ctx.font = `bold 13px "Outfit", "Roboto Mono", sans-serif`;
+        ctx.font = `bold ${Math.round(fontSize * 0.44)}px "Outfit", "Roboto Mono", sans-serif`;
         ctx.textBaseline = 'top';
-        ctx.fillText(subText, width / 2, height * 0.60);
+        ctx.fillText(subText, width / 2, height * 0.56);
       } else {
         ctx.textBaseline = 'middle';
         ctx.fillText(text, width / 2, height / 2);
@@ -4441,68 +4461,43 @@
       const texture = new THREE.CanvasTexture(canvas);
       const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
       const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(width * 0.045, height * 0.045, 1);
+      // Escala reducida y discreta (~55% menor respecto al estándar previo)
+      sprite.scale.set(width * 0.020, height * 0.020, 1);
       return sprite;
     }
 
-    // Placa de Esquina Plana Horizontal (y = 0.02) para el Cuadro Grande (Zero Obstrucción)
-    function createFlatCornerPlate(text, subText, colorHex, size = 5.2) {
+    // Placa de Esquina Plana Horizontal (y = 0.02) - Cero recuadros, tipografía pura en el suelo
+    function createFlatCornerPlate(text, subText, colorHex, size = 3.6) {
       const canvas = document.createElement('canvas');
       canvas.width = 512;
       canvas.height = 512;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, 512, 512);
 
-      // 1. Fondo de cristal obsidian con esquinas biseladas
-      const r = 44;
-      ctx.beginPath();
-      ctx.roundRect(14, 14, 484, 484, r);
-      ctx.fillStyle = 'rgba(6, 14, 28, 0.95)';
-      ctx.fill();
-
-      // 2. Borde exterior neón resplandeciente
-      ctx.strokeStyle = colorHex;
-      ctx.lineWidth = 14;
+      // CERO CAJAS NI BORDES GRUESOS: Tipografía pura sobre suelo transparente con sutil resplandor neón
       ctx.shadowColor = colorHex;
-      ctx.shadowBlur = 22;
-      ctx.stroke();
-
-      // 3. Marcadores angulares de precisión HUD
-      ctx.shadowBlur = 10;
-      ctx.lineWidth = 6;
-      const m = 44;
-      ctx.beginPath();
-      ctx.moveTo(m, m + 44); ctx.lineTo(m, m); ctx.lineTo(m + 44, m);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(512 - m, 512 - m - 44); ctx.lineTo(512 - m, 512 - m); ctx.lineTo(512 - m - 44, 512 - m);
-      ctx.stroke();
-
-      // 4. Texto principal (DA o RC)
-      ctx.shadowBlur = 18;
+      ctx.shadowBlur = 16;
       ctx.fillStyle = colorHex;
-      ctx.font = '900 170px "Outfit", "Roboto Mono", sans-serif';
+      ctx.font = '900 160px "Outfit", "Roboto Mono", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, 256, 215);
+      ctx.fillText(text, 256, 210);
 
-      // 5. Subtítulo (DACIÓN o RECEPCIÓN)
       if (subText) {
         ctx.shadowBlur = 6;
-        ctx.fillStyle = '#CBD5E1';
-        ctx.font = 'bold 50px "Outfit", "Roboto Mono", sans-serif';
-        ctx.fillText(subText, 256, 355);
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = 'bold 52px "Outfit", "Roboto Mono", sans-serif';
+        ctx.fillText(subText, 256, 350);
       }
 
       const texture = new THREE.CanvasTexture(canvas);
-
       const geo = new THREE.PlaneGeometry(size, size);
       geo.rotateX(-Math.PI / 2); // Completamente horizontal sobre el suelo
 
       const mat = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
-        opacity: 0.96,
+        opacity: 0.95,
         depthWrite: false
       });
 
@@ -4690,15 +4685,19 @@
       chessboardGroup = new THREE.Group();
       scene.add(chessboardGroup);
 
-      // 1. SUPERFICIE DE FLOTACIÓN (Y = 0): Tablero 9x9 de Cristal Obsidian
-      const tileWidth = STEP * 0.94;
+      const isNN = (boardGridMode === 'NN');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+      const gridSize = isNN ? N : GRID_SIZE;
+      const step = isNN ? ((N > 1) ? (32.0 / (N - 1)) : 8.0) : STEP;
+      const tileWidth = step * 0.94;
       const tileThickness = 0.4;
       const tileGeo = new THREE.BoxGeometry(tileWidth, tileThickness, tileWidth);
 
-      for (let u = 0; u < GRID_SIZE; u++) {
-        for (let v = 0; v < GRID_SIZE; v++) {
-          const x = (v - 4) * STEP;
-          const z = (u - 4) * STEP;
+      // 1. SUPERFICIE DE FLOTACIÓN (Y = 0): Tablero N×N / 9×9 de Cristal Obsidian
+      for (let u = 0; u < gridSize; u++) {
+        for (let v = 0; v < gridSize; v++) {
+          const x = (v - (gridSize - 1) / 2) * step;
+          const z = (u - (gridSize - 1) / 2) * step;
           const isSpine = (u === v);
           const isEven = (u + v) % 2 === 0;
 
@@ -4722,7 +4721,8 @@
 
           const tile = new THREE.Mesh(tileGeo, tileMat);
           tile.position.set(x, -tileThickness / 2, z);
-          tile.userData = { u, v, isSpine, cellCode: getFigureCode(u, v) };
+          const cellCode = isNN ? `${SUBJECT_LABELS[u]}→${SUBJECT_LABELS[v]}` : getFigureCode(u, v);
+          tile.userData = { u, v, isSpine, cellCode, isNN };
           chessboardGroup.add(tile);
 
           // Borde dorado fino para las casillas de la Espina Dorsal (i, i)
@@ -4736,52 +4736,26 @@
         }
       }
 
-      // Marco perimetral del Tablero 9x9
-      const boardFrameGeo = new THREE.BoxGeometry(SPAN + 2.5, 0.6, SPAN + 2.5);
+      // Marco perimetral del Tablero
+      const boardSpan = (gridSize - 1) * step + tileWidth;
+      const boardFrameGeo = new THREE.BoxGeometry(boardSpan + 1.2, 0.5, boardSpan + 1.2);
       const boardFrameEdge = new THREE.EdgesGeometry(boardFrameGeo);
       const boardFrameMat = new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.75 });
       const boardFrame = new THREE.LineSegments(boardFrameEdge, boardFrameMat);
-      boardFrame.position.set(0, -0.3, 0);
+      boardFrame.position.set(0, -0.25, 0);
       chessboardGroup.add(boardFrame);
 
-      // Esquinas Canónicas del Cuadro Grande (Tablero 9x9): DA (Dación) y RC (Recepción)
-      // Placas horizontales planas en el marco exterior (y = 0.02) con cero obstrucción visual del tablero
-      const daCornerX = -25.2;
-      const daCornerZ = -25.2;
+      // Esquinas Canónicas DA y RC sobre el suelo sin cajas ni obstrucción visual
+      const halfBoard = boardSpan / 2;
+      const cornerOffset = halfBoard + 2.4;
 
-      const daCornerGeo = new THREE.BoxGeometry(5.4, 0.4, 5.4);
-      const daCornerMat = new THREE.MeshPhongMaterial({ color: 0x07152B, transparent: true, opacity: 0.92, shininess: 90 });
-      const daCornerMesh = new THREE.Mesh(daCornerGeo, daCornerMat);
-      daCornerMesh.position.set(daCornerX, -0.2, daCornerZ);
-      daCornerMesh.userData = { type: 'boardCornerDA' };
-      chessboardGroup.add(daCornerMesh);
-
-      const daCornerEdge = new THREE.LineSegments(new THREE.EdgesGeometry(daCornerGeo), new THREE.LineBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.9 }));
-      daCornerEdge.position.copy(daCornerMesh.position);
-      chessboardGroup.add(daCornerEdge);
-
-      const daPlate = createFlatCornerPlate('DA', 'DACIÓN', '#00E5FF', 5.4);
-      daPlate.position.set(daCornerX, 0.02, daCornerZ);
+      const daPlate = createFlatCornerPlate('DA', 'DACIÓN', '#00E5FF', 3.6);
+      daPlate.position.set(-cornerOffset, 0.02, -cornerOffset);
       daPlate.userData = { type: 'boardCornerDA' };
       chessboardGroup.add(daPlate);
 
-      // Esquina Sudeste del Cuadro Grande: RC (Recepción / Absorción)
-      const rcCornerX = +25.2;
-      const rcCornerZ = +25.2;
-
-      const rcCornerGeo = new THREE.BoxGeometry(5.4, 0.4, 5.4);
-      const rcCornerMat = new THREE.MeshPhongMaterial({ color: 0x071D22, transparent: true, opacity: 0.92, shininess: 90 });
-      const rcCornerMesh = new THREE.Mesh(rcCornerGeo, rcCornerMat);
-      rcCornerMesh.position.set(rcCornerX, -0.2, rcCornerZ);
-      rcCornerMesh.userData = { type: 'boardCornerRC' };
-      chessboardGroup.add(rcCornerMesh);
-
-      const rcCornerEdge = new THREE.LineSegments(new THREE.EdgesGeometry(rcCornerGeo), new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.9 }));
-      rcCornerEdge.position.copy(rcCornerMesh.position);
-      chessboardGroup.add(rcCornerEdge);
-
-      const rcPlate = createFlatCornerPlate('RC', 'RECEPCIÓN', '#00FF87', 5.4);
-      rcPlate.position.set(rcCornerX, 0.02, rcCornerZ);
+      const rcPlate = createFlatCornerPlate('RC', 'RECEPCIÓN', '#00FF87', 3.6);
+      rcPlate.position.set(+cornerOffset, 0.02, +cornerOffset);
       rcPlate.userData = { type: 'boardCornerRC' };
       chessboardGroup.add(rcPlate);
 
@@ -4800,7 +4774,7 @@
       boardLabelsGroup.visible = areBoardLabelsVisible;
 
       // 2. FONDO ABISAL (-Y): Lecho Oceánico a Y = -24
-      const abyssPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
+      const abyssPlaneGeo = new THREE.PlaneGeometry(boardSpan + 16, boardSpan + 16, 12, 12);
       abyssPlaneGeo.rotateX(-Math.PI / 2);
       const abyssMat = new THREE.MeshBasicMaterial({ color: 0x0D9488, wireframe: true, transparent: true, opacity: 0.14 });
       const abyssPlane = new THREE.Mesh(abyssPlaneGeo, abyssMat);
@@ -4808,7 +4782,7 @@
       chessboardGroup.add(abyssPlane);
 
       // 3. CIELO ABIERTO (+Y): Techo Celestial a Y = +24
-      const skyPlaneGeo = new THREE.PlaneGeometry(SPAN + 16, SPAN + 16, 12, 12);
+      const skyPlaneGeo = new THREE.PlaneGeometry(boardSpan + 16, boardSpan + 16, 12, 12);
       skyPlaneGeo.rotateX(-Math.PI / 2);
       const skyMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.12 });
       const skyPlane = new THREE.Mesh(skyPlaneGeo, skyMat);
@@ -4820,42 +4794,53 @@
 
       // 5. SUPERFICIE OCEÁNICA FLUIDA 3D (Y = 0): Malla Ondulatoria Marina
       buildOceanSurface();
+
+      updateBoardGridModeUI();
     }
 
 
     // =========================================================================
-    // 5.1 EL TABLERO CORTO EN LOS BORDES DEL TABLERO 3D (MARGINALES)
+    // 5.1 EL TABLERO CORTO EN LOS BORDES DEL TABLERO 3D (MARGINALES FACTUALES)
     // =========================================================================
-    const MARGINAL_X = -28.5; // Borde Oeste (Filas / Dación DA)
-    const MARGINAL_Z = +28.5; // Borde Sur (Columnas / Recepción RECIBE)
-    const MARGINAL_SPACING = 8.5;
-
     function buildMarginalBorders() {
       marginalGroup = new THREE.Group();
       chessboardGroup.add(marginalGroup);
 
       marginalColumns = { rows: [], cols: [], grand: null };
 
-      // 1. Borde Oeste: 5 Pedestales y Columnas Vivas de Dación Media (1D, 2D, 3D, 4D, 5D)
-      const MARGINAL_ROW_LABELS = ['1D', '2D', '3D', '4D', '5D'];
-      for (let i = 0; i < 5; i++) {
-        const z = (i - 2) * MARGINAL_SPACING;
+      const isNN = (boardGridMode === 'NN');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+      const numRows = isNN ? N : 9;
+      const numCols = isNN ? N : 9;
+      const step = isNN ? ((N > 1) ? (32.0 / (N - 1)) : 8.0) : STEP;
+      const tileWidth = step * 0.94;
+      const halfBoard = ((numRows - 1) * step + tileWidth) / 2;
+      const marginalOffset = halfBoard + 3.8;
+      const MARGINAL_X = -marginalOffset;
+      const MARGINAL_Z = +marginalOffset;
 
-        const pedGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
-        const pedMat = new THREE.MeshPhongMaterial({ color: 0x07152B, transparent: true, opacity: 0.9, shininess: 80 });
+      // 1. Borde Oeste: Pedestales y Columnas Vivas de Dación Media (1D..5D o FA..FI)
+      for (let i = 0; i < numRows; i++) {
+        const z = (i - (numRows - 1) / 2) * step;
+        const mainLbl = isNN ? `${i + 1}D` : `F${ROWS_EMISSION[i]}`;
+        const subLbl = isNN ? SUBJECT_LABELS[i] : null;
+
+        // Pedestal circular discreto de bajo perfil
+        const pedGeo = new THREE.CylinderGeometry(1.2, 1.35, 0.22, 24);
+        const pedMat = new THREE.MeshPhongMaterial({ color: 0x07152B, transparent: true, opacity: 0.88, shininess: 80 });
         const pedMesh = new THREE.Mesh(pedGeo, pedMat);
-        pedMesh.position.set(MARGINAL_X, -0.2, z);
+        pedMesh.position.set(MARGINAL_X, -0.11, z);
         pedMesh.userData = { type: 'marginalRow', idx: i };
         marginalGroup.add(pedMesh);
 
         const pedEdgeGeo = new THREE.EdgesGeometry(pedGeo);
-        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.8 });
+        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.65 });
         const pedEdge = new THREE.LineSegments(pedEdgeGeo, pedEdgeMat);
         pedEdge.position.copy(pedMesh.position);
         marginalGroup.add(pedEdge);
 
         const colMat = new THREE.MeshPhongMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.88, shininess: 90 });
-        const cylGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 24);
+        const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 1, 20);
         cylGeo.translate(0, 0.5, 0);
         const cylMesh = new THREE.Mesh(cylGeo, colMat);
         cylMesh.position.set(MARGINAL_X, 0, z);
@@ -4863,7 +4848,7 @@
         cylMesh.userData = { type: 'marginalRow', idx: i };
         marginalGroup.add(cylMesh);
 
-        const tipGeo = new THREE.SphereGeometry(1.35, 18, 18);
+        const tipGeo = new THREE.SphereGeometry(1.15, 16, 16);
         const tipMat = new THREE.MeshPhongMaterial({ color: 0x00E5FF, emissive: 0x00E5FF, emissiveIntensity: 0.35 });
         const tipMesh = new THREE.Mesh(tipGeo, tipMat);
         tipMesh.position.set(MARGINAL_X, 0, z);
@@ -4872,38 +4857,38 @@
 
         const spinePts = [new THREE.Vector3(MARGINAL_X, 0, z), new THREE.Vector3(MARGINAL_X, 1, z)];
         const spineGeo = new THREE.BufferGeometry().setFromPoints(spinePts);
-        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
+        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.7 }));
         marginalGroup.add(spineLine);
 
-        // Insignia 3D Píldora: 1D..5D visible en todo momento
-        const badge = createPillBadgeSprite(MARGINAL_ROW_LABELS[i], '#38BDF8', 36, 120, 58, SUBJECT_LABELS[i]);
-        badge.position.set(MARGINAL_X - 4.5, 1.0, z);
+        // Insignia 3D discreta sin recuadro opaco
+        const badge = createPillBadgeSprite(mainLbl, '#38BDF8', 30, 96, 44, subLbl);
+        badge.position.set(MARGINAL_X - 2.8, 0.6, z);
         badge.userData = { type: 'marginalRow', idx: i };
         marginalGroup.add(badge);
 
         marginalColumns.rows.push({
           idx: i,
-          label: `${MARGINAL_ROW_LABELS[i]} / ${SUBJECT_LABELS[i]} (DA)`,
+          label: `${mainLbl} ${subLbl ? '/ ' + subLbl : ''} (DA)`,
           pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
           currentH: 0.1, targetH: 0.1
         });
       }
 
       // 2. Vértice Sudoeste: Monolito Áureo de la Gran Media Global
-      const grandPedGeo = new THREE.CylinderGeometry(3.0, 3.4, 0.6, 8);
-      const grandPedMat = new THREE.MeshPhongMaterial({ color: 0x241F05, transparent: true, opacity: 0.95, shininess: 95 });
+      const grandPedGeo = new THREE.CylinderGeometry(1.6, 1.8, 0.28, 20);
+      const grandPedMat = new THREE.MeshPhongMaterial({ color: 0x241F05, transparent: true, opacity: 0.92, shininess: 95 });
       const grandPedMesh = new THREE.Mesh(grandPedGeo, grandPedMat);
-      grandPedMesh.position.set(MARGINAL_X, -0.3, MARGINAL_Z);
+      grandPedMesh.position.set(MARGINAL_X, -0.14, MARGINAL_Z);
       grandPedMesh.userData = { type: 'marginalGrand' };
       marginalGroup.add(grandPedMesh);
 
       const grandEdgeGeo = new THREE.EdgesGeometry(grandPedGeo);
-      const grandEdge = new THREE.LineSegments(grandEdgeGeo, new THREE.LineBasicMaterial({ color: 0xFFE600, linewidth: 2 }));
+      const grandEdge = new THREE.LineSegments(grandEdgeGeo, new THREE.LineBasicMaterial({ color: 0xFFE600, transparent: true, opacity: 0.8 }));
       grandEdge.position.copy(grandPedMesh.position);
       marginalGroup.add(grandEdge);
 
       const grandColMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0x443500, transparent: true, opacity: 0.92, shininess: 100 });
-      const grandCylGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 8);
+      const grandCylGeo = new THREE.CylinderGeometry(1.1, 1.1, 1, 16);
       grandCylGeo.translate(0, 0.5, 0);
       const grandCylMesh = new THREE.Mesh(grandCylGeo, grandColMat);
       grandCylMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
@@ -4911,7 +4896,7 @@
       grandCylMesh.userData = { type: 'marginalGrand' };
       marginalGroup.add(grandCylMesh);
 
-      const grandTipGeo = new THREE.OctahedronGeometry(1.9);
+      const grandTipGeo = new THREE.OctahedronGeometry(1.4);
       const grandTipMat = new THREE.MeshPhongMaterial({ color: 0xFFE600, emissive: 0xFFE600, emissiveIntensity: 0.5, shininess: 100 });
       const grandTipMesh = new THREE.Mesh(grandTipGeo, grandTipMat);
       grandTipMesh.position.set(MARGINAL_X, 0, MARGINAL_Z);
@@ -4920,11 +4905,11 @@
 
       const grandSpinePts = [new THREE.Vector3(MARGINAL_X, 0, MARGINAL_Z), new THREE.Vector3(MARGINAL_X, 1, MARGINAL_Z)];
       const grandSpineGeo = new THREE.BufferGeometry().setFromPoints(grandSpinePts);
-      const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.9 }));
+      const grandSpineLine = new THREE.Line(grandSpineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
       marginalGroup.add(grandSpineLine);
 
-      const grandBadge = createPillBadgeSprite('GLOBAL', '#FFE600', 32, 140, 62, 'MEDIA');
-      grandBadge.position.set(MARGINAL_X - 4.5, 1.5, MARGINAL_Z + 4.5);
+      const grandBadge = createPillBadgeSprite('GLOBAL', '#FFE600', 28, 104, 46, 'MEDIA');
+      grandBadge.position.set(MARGINAL_X - 2.8, 0.9, MARGINAL_Z + 2.8);
       grandBadge.userData = { type: 'marginalGrand' };
       marginalGroup.add(grandBadge);
 
@@ -4935,26 +4920,27 @@
         currentH: 0.2, targetH: 0.2
       };
 
-      // 3. Borde Sur: 5 Pedestales y Columnas Vivas de Recepción Media (1R, 2R, 3R, 4R, 5R)
-      const MARGINAL_COL_LABELS = ['1R', '2R', '3R', '4R', '5R'];
-      for (let j = 0; j < 5; j++) {
-        const x = (j - 2) * MARGINAL_SPACING;
+      // 3. Borde Sur: Pedestales y Columnas Vivas de Recepción Media (1R..5R o C1..C9)
+      for (let j = 0; j < numCols; j++) {
+        const x = (j - (numCols - 1) / 2) * step;
+        const mainLbl = isNN ? `${j + 1}R` : `C${COLS_RECEPTION[j]}`;
+        const subLbl = isNN ? SUBJECT_LABELS[j] : null;
 
-        const pedGeo = new THREE.BoxGeometry(4.2, 0.4, 4.2);
-        const pedMat = new THREE.MeshPhongMaterial({ color: 0x071D22, transparent: true, opacity: 0.9, shininess: 80 });
+        const pedGeo = new THREE.CylinderGeometry(1.2, 1.35, 0.22, 24);
+        const pedMat = new THREE.MeshPhongMaterial({ color: 0x071D22, transparent: true, opacity: 0.88, shininess: 80 });
         const pedMesh = new THREE.Mesh(pedGeo, pedMat);
-        pedMesh.position.set(x, -0.2, MARGINAL_Z);
+        pedMesh.position.set(x, -0.11, MARGINAL_Z);
         pedMesh.userData = { type: 'marginalCol', idx: j };
         marginalGroup.add(pedMesh);
 
         const pedEdgeGeo = new THREE.EdgesGeometry(pedGeo);
-        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.8 });
+        const pedEdgeMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.65 });
         const pedEdge = new THREE.LineSegments(pedEdgeGeo, pedEdgeMat);
         pedEdge.position.copy(pedMesh.position);
         marginalGroup.add(pedEdge);
 
         const colMat = new THREE.MeshPhongMaterial({ color: 0x00FF87, transparent: true, opacity: 0.88, shininess: 90 });
-        const cylGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 24);
+        const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 1, 20);
         cylGeo.translate(0, 0.5, 0);
         const cylMesh = new THREE.Mesh(cylGeo, colMat);
         cylMesh.position.set(x, 0, MARGINAL_Z);
@@ -4962,7 +4948,7 @@
         cylMesh.userData = { type: 'marginalCol', idx: j };
         marginalGroup.add(cylMesh);
 
-        const tipGeo = new THREE.SphereGeometry(1.35, 18, 18);
+        const tipGeo = new THREE.SphereGeometry(1.15, 16, 16);
         const tipMat = new THREE.MeshPhongMaterial({ color: 0x00FF87, emissive: 0x00FF87, emissiveIntensity: 0.35 });
         const tipMesh = new THREE.Mesh(tipGeo, tipMat);
         tipMesh.position.set(x, 0, MARGINAL_Z);
@@ -4971,18 +4957,17 @@
 
         const spinePts = [new THREE.Vector3(x, 0, MARGINAL_Z), new THREE.Vector3(x, 1, MARGINAL_Z)];
         const spineGeo = new THREE.BufferGeometry().setFromPoints(spinePts);
-        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 }));
+        const spineLine = new THREE.Line(spineGeo, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.7 }));
         marginalGroup.add(spineLine);
 
-        // Insignia 3D Píldora: 1R..5R visible en todo momento
-        const badge = createPillBadgeSprite(MARGINAL_COL_LABELS[j], '#00FF87', 36, 120, 58, SUBJECT_LABELS[j]);
-        badge.position.set(x, 1.0, MARGINAL_Z + 4.5);
+        const badge = createPillBadgeSprite(mainLbl, '#00FF87', 30, 96, 44, subLbl);
+        badge.position.set(x, 0.6, MARGINAL_Z + 2.8);
         badge.userData = { type: 'marginalCol', idx: j };
         marginalGroup.add(badge);
 
         marginalColumns.cols.push({
           idx: j,
-          label: `${MARGINAL_COL_LABELS[j]} / ${SUBJECT_LABELS[j]} (REC)`,
+          label: `${mainLbl} ${subLbl ? '/ ' + subLbl : ''} (REC)`,
           pedMesh, cylMesh, tipMesh, colMat, tipMat, spineLine, badge,
           currentH: 0.1, targetH: 0.1
         });
@@ -4993,51 +4978,98 @@
 
     function updateMarginals3D() {
       if (!marginalGroup || !marginalColumns.rows.length) return;
-      const matD = DENSITIES[activeDensityKey];
-
-      const rowMeans = [];
-      for (let i = 0; i < 5; i++) {
-        let sum = 0;
-        for (let j = 0; j < 5; j++) sum += matD[i][j];
-        rowMeans.push(sum / 5);
-      }
-
-      const colMeans = [];
-      for (let j = 0; j < 5; j++) {
-        let sum = 0;
-        for (let i = 0; i < 5; i++) sum += matD[i][j];
-        colMeans.push(sum / 5);
-      }
-
-      let grandSum = 0;
-      for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) grandSum += matD[i][j];
-      const grandMean = grandSum / 25;
-
+      const isNN = (boardGridMode === 'NN');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
       const scale = getDensityScale(activeDensityKey);
 
-      marginalColumns.rows.forEach((col, i) => {
-        const val = rowMeans[i];
-        col.targetH = val * scale;
-        col.density = val;
-        let c = val >= 0 ? 0x00E5FF : 0xFF007F;
-        col.colMat.color.setHex(c);
-        col.tipMat.color.setHex(c);
-        col.tipMat.emissive.setHex(c);
-      });
+      if (isNN) {
+        const matD = DENSITIES[activeDensityKey];
+        const rowMeans = [];
+        for (let i = 0; i < N; i++) {
+          let sum = 0;
+          for (let j = 0; j < N; j++) sum += (matD[i] ? matD[i][j] : 0);
+          rowMeans.push(sum / N);
+        }
 
-      marginalColumns.cols.forEach((col, j) => {
-        const val = colMeans[j];
-        col.targetH = val * scale;
-        col.density = val;
-        let c = val >= 0 ? 0x00FF87 : 0xFF007F;
-        col.colMat.color.setHex(c);
-        col.tipMat.color.setHex(c);
-        col.tipMat.emissive.setHex(c);
-      });
+        const colMeans = [];
+        for (let j = 0; j < N; j++) {
+          let sum = 0;
+          for (let i = 0; i < N; i++) sum += (matD[i] ? matD[i][j] : 0);
+          colMeans.push(sum / N);
+        }
 
-      if (marginalColumns.grand) {
-        marginalColumns.grand.targetH = grandMean * scale;
-        marginalColumns.grand.density = grandMean;
+        let grandSum = 0;
+        for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) grandSum += (matD[i] ? matD[i][j] : 0);
+        const grandMean = grandSum / (N * N);
+
+        marginalColumns.rows.forEach((col, i) => {
+          const val = rowMeans[i] || 0;
+          col.targetH = val * scale;
+          col.density = val;
+          let c = val >= 0 ? 0x00E5FF : 0xFF007F;
+          col.colMat.color.setHex(c);
+          col.tipMat.color.setHex(c);
+          col.tipMat.emissive.setHex(c);
+        });
+
+        marginalColumns.cols.forEach((col, j) => {
+          const val = colMeans[j] || 0;
+          col.targetH = val * scale;
+          col.density = val;
+          let c = val >= 0 ? 0x00FF87 : 0xFF007F;
+          col.colMat.color.setHex(c);
+          col.tipMat.color.setHex(c);
+          col.tipMat.emissive.setHex(c);
+        });
+
+        if (marginalColumns.grand) {
+          marginalColumns.grand.targetH = grandMean * scale;
+          marginalColumns.grand.density = grandMean;
+        }
+      } else {
+        // Q81 9×9
+        const sabKey = (typeof activeSabanaKey !== 'undefined') ? activeSabanaKey : 't1';
+        const arr = SABANAS[sabKey] || [];
+        const rowMeans = [];
+        for (let u = 0; u < 9; u++) {
+          let s = 0;
+          for (let v = 0; v < 9; v++) s += (arr[u * 9 + v] || 0);
+          rowMeans.push(s / 9);
+        }
+        const colMeans = [];
+        for (let v = 0; v < 9; v++) {
+          let s = 0;
+          for (let u = 0; u < 9; u++) s += (arr[u * 9 + v] || 0);
+          colMeans.push(s / 9);
+        }
+        let grandSum = 0;
+        for (let idx = 0; idx < 81; idx++) grandSum += (arr[idx] || 0);
+        const grandMean = grandSum / 81;
+
+        marginalColumns.rows.forEach((col, i) => {
+          const val = rowMeans[i] || 0;
+          col.targetH = val * scale;
+          col.density = val;
+          let c = val >= 0 ? 0x00E5FF : 0xFF007F;
+          col.colMat.color.setHex(c);
+          col.tipMat.color.setHex(c);
+          col.tipMat.emissive.setHex(c);
+        });
+
+        marginalColumns.cols.forEach((col, j) => {
+          const val = colMeans[j] || 0;
+          col.targetH = val * scale;
+          col.density = val;
+          let c = val >= 0 ? 0x00FF87 : 0xFF007F;
+          col.colMat.color.setHex(c);
+          col.tipMat.color.setHex(c);
+          col.tipMat.emissive.setHex(c);
+        });
+
+        if (marginalColumns.grand) {
+          marginalColumns.grand.targetH = grandMean * scale;
+          marginalColumns.grand.density = grandMean;
+        }
       }
     }
 
@@ -5050,8 +5082,18 @@
         marginalArcMesh = null;
       }
 
-      const zRow = (subjectIdx - 2) * MARGINAL_SPACING;
-      const xCol = (subjectIdx - 2) * MARGINAL_SPACING;
+      const isNN = (boardGridMode === 'NN');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+      const numRows = isNN ? N : 9;
+      const step = isNN ? ((N > 1) ? (32.0 / (N - 1)) : 8.0) : STEP;
+      const tileWidth = step * 0.94;
+      const halfBoard = ((numRows - 1) * step + tileWidth) / 2;
+      const marginalOffset = halfBoard + 3.8;
+      const MARGINAL_X = -marginalOffset;
+      const MARGINAL_Z = +marginalOffset;
+
+      const zRow = (subjectIdx - (numRows - 1) / 2) * step;
+      const xCol = (subjectIdx - (numRows - 1) / 2) * step;
       const scale = getDensityScale(activeDensityKey);
       const hRow = daMean * scale;
       const hCol = recMean * scale;
@@ -5081,6 +5123,47 @@
 
       marginalArcMesh = new THREE.Line(geo, mat);
       marginalGroup.add(marginalArcMesh);
+    }
+
+    // Funciones de Conmutación Dinámica del Tablero (N×N vs 9×9)
+    function rebuildChessboard() {
+      if (typeof resetSolfeoBoard === 'function') resetSolfeoBoard();
+      if (chessboardGroup) {
+        scene.remove(chessboardGroup);
+        while (chessboardGroup.children.length > 0) {
+          const obj = chessboardGroup.children[0];
+          chessboardGroup.remove(obj);
+          if (obj.geometry) obj.geometry.dispose();
+          if (obj.material) {
+            if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+            else obj.material.dispose();
+          }
+        }
+        chessboardGroup = null;
+      }
+      buildChessboardAquarium();
+      updateBoardGridModeUI();
+    }
+
+    function toggleBoardGridMode() {
+      boardGridMode = (boardGridMode === 'NN') ? 'Q81' : 'NN';
+      rebuildChessboard();
+    }
+
+    function updateBoardGridModeUI() {
+      const lbl = document.getElementById('grid-mode-lbl');
+      const icon = document.getElementById('grid-mode-icon');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+      if (lbl) {
+        if (boardGridMode === 'NN') {
+          lbl.textContent = `Tablero: ${N}×${N} (N×N)`;
+          if (icon) icon.textContent = '🔲';
+        } else {
+          lbl.textContent = 'Tablero: 9×9 (Q81)';
+          if (icon) icon.textContent = '🌐';
+        }
+      }
+      updateStandingCountUI();
     }
 
     function pulseMarginalColumn(colObj) {
@@ -7369,8 +7452,9 @@
     function erectOrMorphColumn(u, v, densityVal, dyadLabel, q81Num, isBatchMorph = false) {
       if (!chessboardGroup) return null;
       const key = `${u}_${v}`;
-      const x = (v - 4) * STEP;
-      const z = (u - 4) * STEP;
+      const pos = getBoardCellWorldPos(u, v);
+      const x = pos.x;
+      const z = pos.z;
       const targetH = densityVal * getDensityScale(activeDensityKey);
       const isSpine = (u === v);
 
@@ -7440,14 +7524,17 @@
           side: THREE.DoubleSide
         });
 
-        const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 1, 24);
+        const cylRadius = Math.min(1.15, pos.step * 0.14);
+        const tipRadius = Math.min(1.5, pos.step * 0.18);
+
+        const cylGeo = new THREE.CylinderGeometry(cylRadius, cylRadius, 1, 24);
         cylGeo.translate(0, 0.5, 0);
 
         const cylMesh = new THREE.Mesh(cylGeo, colMat);
         cylMesh.position.set(x, 0, z);
         chessboardGroup.add(cylMesh);
 
-        const tipGeo = new THREE.SphereGeometry(1.2, 18, 18);
+        const tipGeo = new THREE.SphereGeometry(tipRadius, 18, 18);
         const tipMat = new THREE.MeshPhongMaterial({
           color: colColor,
           emissive: colColor,
@@ -7458,7 +7545,7 @@
         tipMesh.position.set(x, 0, z);
         chessboardGroup.add(tipMesh);
 
-        const ringGeo = new THREE.RingGeometry(0.95, 1.45, 24);
+        const ringGeo = new THREE.RingGeometry(cylRadius * 1.1, cylRadius * 1.7, 24);
         ringGeo.rotateX(-Math.PI / 2);
         const ringMat = new THREE.MeshBasicMaterial({ color: colColor, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
@@ -7512,8 +7599,10 @@
 
       if (u1 === u2 && v1 === v2) return; // Auto-posición
 
-      const p1 = new THREE.Vector3((v1 - 4) * STEP, h1, (u1 - 4) * STEP);
-      const p2 = new THREE.Vector3((v2 - 4) * STEP, h2, (u2 - 4) * STEP);
+      const pos1 = getBoardCellWorldPos(u1, v1);
+      const pos2 = getBoardCellWorldPos(u2, v2);
+      const p1 = new THREE.Vector3(pos1.x, h1, pos1.z);
+      const p2 = new THREE.Vector3(pos2.x, h2, pos2.z);
       const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
       const dist = p1.distanceTo(p2);
       mid.y += Math.max(3.5, dist * 0.22);
@@ -7699,7 +7788,10 @@
     function updateStandingCountUI() {
       const count = Object.keys(activeBoardColumns).length;
       const el = document.getElementById('solfeo-standing-count');
-      if (el) el.textContent = `${count} / 81 Casillas`;
+      const isNN = (boardGridMode === 'NN');
+      const N = (typeof SUBJECT_LABELS !== 'undefined' && SUBJECT_LABELS.length) ? SUBJECT_LABELS.length : 5;
+      const total = isNN ? (N * N) : 81;
+      if (el) el.textContent = `${count} / ${total} Casillas`;
     }
 
     // =========================================================================
@@ -7792,10 +7884,13 @@
       solfeoTrajectory = traj;
       if (['row', 'col', 'dialogue'].includes(traj)) {
         solfeoScale = 'long';
+        if (boardGridMode !== 'NN') { boardGridMode = 'NN'; rebuildChessboard(); }
       } else if (['short_row', 'short_col', 'short_dual', 'short_grand'].includes(traj)) {
         solfeoScale = 'short';
+        if (boardGridMode !== 'NN') { boardGridMode = 'NN'; rebuildChessboard(); }
       } else if (['q81_vert', 'q81_horiz', 'q81_desc', 'q81_asc', 'q81_arpegio', 'q81_dens_desc', 'q81_dens_asc', 'q81_marg_row', 'q81_marg_col', 'q81_marg_dual', 'q81_marg_grand'].includes(traj)) {
         solfeoScale = 'q81';
+        if (boardGridMode !== 'Q81') { boardGridMode = 'Q81'; rebuildChessboard(); }
       }
 
       const btnLong = document.getElementById('btn-scale-long');
@@ -8944,7 +9039,9 @@
       if (partnerCell && !item.isSpine) partnerCell.classList.add('partner-note');
 
       // 2. Erigir o transmutar columna viva en el tablero
-      const colStatus = erectOrMorphColumn(item.u, item.v, item.density, item.dyadLabel, item.q81Num);
+      const targetU = (boardGridMode === 'NN') ? item.i : item.u;
+      const targetV = (boardGridMode === 'NN') ? item.j : item.v;
+      const colStatus = erectOrMorphColumn(targetU, targetV, item.density, item.dyadLabel, item.q81Num);
       if (colStatus && colStatus.isRepeated && activeCell) {
         activeCell.classList.add('repeat-note');
       }
@@ -8959,7 +9056,11 @@
         const scale = getDensityScale(activeDensityKey);
         const h1 = item.density * scale;
         const h2 = counterpartDensity * scale;
-        showDyadicArc(item.u, item.v, h1, counterpartCoords.u, counterpartCoords.v, h2, deltaRecip);
+        if (boardGridMode === 'NN') {
+          showDyadicArc(item.i, item.j, h1, item.j, item.i, h2, deltaRecip);
+        } else {
+          showDyadicArc(item.u, item.v, h1, counterpartCoords.u, counterpartCoords.v, h2, deltaRecip);
+        }
       }
 
       // 4. Paneo de audio espacial (Emisor izquierda, Receptor derecha)
@@ -8973,8 +9074,8 @@
       if (isConcertMode) {
         playPolyphonicConcertChord(item.i, item.j, {
           isSpine: item.isSpine,
-          u: item.u,
-          v: item.v,
+          u: targetU,
+          v: targetV,
           dyadLabel: item.dyadLabel,
           q81Num: item.q81Num
         });
@@ -8982,13 +9083,13 @@
         if (colStatus && colStatus.isRepeated) {
           rippleColor = colStatus.colorHex;
         }
-        pulseConcertCoronalRing(item.u, item.v, rippleColor);
+        pulseConcertCoronalRing(targetU, targetV, rippleColor);
       } else {
         playHarmonicChime(item.density, 0.35, {
           isSpine: item.isSpine,
           isDisparity: (item.density < -0.3),
-          u: item.u,
-          v: item.v,
+          u: targetU,
+          v: targetV,
           pan: panVal
         });
       }
@@ -10780,7 +10881,12 @@
           const u = hit.userData.u;
           const v = hit.userData.v;
 
-          const found = solfeoSequence.find(item => item.u === u && item.v === v);
+          const found = solfeoSequence.find(item => {
+            if (boardGridMode === 'NN') {
+              return item.i === u && item.j === v;
+            }
+            return item.u === u && item.v === v;
+          });
           if (found) {
             executeSolfeoItem(found);
           } else {
