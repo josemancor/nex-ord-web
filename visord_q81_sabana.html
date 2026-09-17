@@ -1587,11 +1587,22 @@
   <input type="file" id="sinfo-file-input" accept=".sinfo,.json,application/json" class="hidden" onchange="handleSinfoFileSelected(event)">
 
   <!-- TOAST FLOTANTE DE NOTIFICACIÓN .sinfo -->
-  <div id="sinfo-toast" class="hidden fixed top-6 right-6 z-[10000] max-w-md bg-slate-950/95 border-2 border-emerald-400/80 rounded-2xl p-4 shadow-[0_0_35px_rgba(0,255,135,0.35)] backdrop-blur-xl transition-all duration-300 flex items-start gap-3">
-    <span id="sinfo-toast-icon" class="text-2xl">🎼</span>
-    <div class="flex flex-col gap-0.5">
-      <span id="sinfo-toast-title" class="mono text-xs font-black text-emerald-300 tracking-wide">PARTITURA SINFÓNICA CARGADA</span>
-      <span id="sinfo-toast-msg" class="mono text-[11px] text-slate-300">Archivo procesado con éxito.</span>
+  <div id="sinfo-toast" class="hidden fixed top-6 right-6 z-[10000] max-w-lg bg-slate-950/95 border-2 border-emerald-400/80 rounded-2xl p-4 shadow-[0_0_35px_rgba(0,255,135,0.35)] backdrop-blur-xl transition-all duration-300 flex flex-col gap-3">
+    <div class="flex items-start gap-3">
+      <span id="sinfo-toast-icon" class="text-2xl">🎼</span>
+      <div class="flex-1 flex flex-col gap-0.5">
+        <span id="sinfo-toast-title" class="mono text-xs font-black text-emerald-300 tracking-wide">PARTITURA SINFÓNICA CARGADA</span>
+        <span id="sinfo-toast-msg" class="mono text-[11px] text-slate-300">Archivo procesado con éxito.</span>
+      </div>
+      <button onclick="document.getElementById('sinfo-toast').classList.add('hidden')" class="text-slate-500 hover:text-white mono text-xs px-1.5 py-0.5 rounded" title="Cerrar">✕</button>
+    </div>
+    <div id="sinfo-toast-actions" class="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+      <button id="btn-toast-start-concert" onclick="startConcertFromSinfo()" class="glass-btn px-3 py-1.5 rounded-xl mono text-xs font-black text-slate-950 bg-emerald-400 hover:bg-emerald-300 border border-emerald-300 flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,255,135,0.4)] transition-all cursor-pointer">
+        <span>▶</span> Iniciar Concierto
+      </button>
+      <button id="btn-toast-view-smia" onclick="toggleSmiaMatricesModal(true)" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-cyan-300 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/40 flex items-center gap-1 transition-all cursor-pointer">
+        <span>🔬</span> Ver Matrices SMI
+      </button>
     </div>
   </div>
 
@@ -1765,6 +1776,20 @@
       C1: {
         name: 'Criterio 1: Afectivo / Simpatía',
         matrices: {
+          SMIb: [
+            ["AAAA", "BAAB", "0A00", "cD0d", "eE0e"],
+            ["BAAB", "AAAA", "AAAA", "00da", "cD0d"],
+            ["0A00", "AAAA", "BAAB", "eE0e", "dD0c"],
+            ["00ad", "00cd", "e00e", "AAAA", "BAAB"],
+            ["e00e", "00ad", "c00d", "BAAB", "AAAA"]
+          ],
+          SMIa: [
+            ["(Ee)", "(Ee)", "¡Ea!", "¡Er!", "[Rr]"],
+            ["(Ee)", "(Ee)", "(Ee)", "¡Re!", "¡Er!"],
+            ["¡Ea!", "(Ee)", "(Ee)", "[Rr]", "¡Re!"],
+            ["¡Re!", "¡Re!", "[Rr]", "(Ee)", "(Ee)"],
+            ["[Rr]", "¡Re!", "¡Re!", "(Ee)", "(Ee)"]
+          ],
           D1: [[ 4.44, 1.26, 0.00, -0.71, -3.20], [ 1.26, 0.00, 4.44, -2.97, -0.71], [ 0.00, 4.44, 1.26, -3.20, -1.26], [-0.63, -2.45, -3.20, 4.44, 1.26], [-3.20, -0.63, -1.26, 1.26, 4.44]],
           D2: [[ 3.16,-0.27, 0.00, -2.57, -3.21], [-0.27, 0.00, 3.16, -3.02, -2.57], [ 0.00, 3.16,-0.27, -3.21, -2.72], [-0.63, -3.03, -3.21, 3.16, -0.27], [-3.21, -0.63, -2.72, -0.27, 3.16]],
           D3: [[ 3.16,-0.27, 0.00, -0.71, -3.21], [-0.27, 0.00, 3.16, -3.02, -0.71], [ 0.00, 3.16,-0.27, -3.21, -2.72], [-2.70, -2.92, -3.22, 3.16, -0.27], [-3.21, -2.55, -2.83, -0.27, 3.16]],
@@ -1774,21 +1799,97 @@
       C2: {
         name: 'Criterio 2: Funcional / Tarea Operativa',
         matrices: {
+          SMIb: [
+            ["AAAA", "AAAA", "BA0B", "AAAA", "BA0B"],
+            ["AAAA", "AAAA", "AAAA", "BA0B", "0000"],
+            ["AB00", "AAAA", "AAAA", "AAAA", "BA0B"],
+            ["AAAA", "00BA", "AAAA", "AAAA", "BA0B"],
+            ["AB00", "0000", "AB00", "AB00", "AAAA"]
+          ],
+          SMIa: [
+            ["(Ee)", "(Ee)", "¡Ea!", "(Ee)", "¡Ea!"],
+            ["(Ee)", "(Ee)", "(Ee)", "¡Ea!", "¡¿?!"],
+            ["¡aE!", "(Ee)", "(Ee)", "(Ee)", "¡Ea!"],
+            ["(Ee)", "¡aE!", "(Ee)", "(Ee)", "¡Ea!"],
+            ["¡aE!", "¡¿?!", "¡aE!", "¡aE!", "(Ee)"]
+          ],
           D1: [[ 4.44, 2.80, 0.50,  1.80, -1.20], [ 2.80, 4.44, 3.20,  2.10, -0.50], [ 0.50, 3.20, 4.44, -0.80,  0.20], [ 1.80, 2.10, -0.80, 4.44,  2.50], [-1.20, -0.50, 0.20,  2.50, 4.44]],
           D2: [[ 3.16, 2.10, 0.30,  1.50, -0.90], [ 2.10, 3.16, 2.40,  1.60, -0.30], [ 0.30, 2.40, 3.16, -0.60,  0.10], [ 1.50, 1.60, -0.60, 3.16,  1.90], [-0.90, -0.30, 0.10,  1.90, 3.16]],
           D3: [[ 3.16, 2.10, 0.30,  1.50, -0.90], [ 2.10, 3.16, 2.40,  1.60, -0.30], [ 0.30, 2.40, 3.16, -0.60,  0.10], [ 1.50, 1.60, -0.60, 3.16,  1.90], [-0.90, -0.30, 0.10,  1.90, 3.16]],
           D4: [[ 4.44, 2.80, 0.50,  1.80, -1.20], [ 2.80, 4.44, 3.20,  2.10, -0.50], [ 0.50, 3.20, 4.44, -0.80,  0.20], [ 1.80, 2.10, -0.80, 4.44,  2.50], [-1.20, -0.50, 0.20,  2.50, 4.44]]
         }
       },
-      G1: { name: 'Grupo A (1A..5A)', subjects: ['1A', '2A', '3A', '4A', '5A'] },
+      G1: {
+        name: 'Grupo A (1A..5A)',
+        subjects: ['1A', '2A', '3A', '4A', '5A'],
+        matrices: {
+          SMIb: [
+            ["AAAA", "BAAB", "0A00", "cD0d", "eE0e"],
+            ["BAAB", "AAAA", "AAAA", "00da", "cD0d"],
+            ["0A00", "AAAA", "BAAB", "eE0e", "dD0c"],
+            ["00ad", "00cd", "e00e", "AAAA", "BAAB"],
+            ["e00e", "00ad", "c00d", "BAAB", "AAAA"]
+          ]
+        }
+      },
       G2: {
         name: 'Grupo B (1B..5B)',
         subjects: ['1B', '2B', '3B', '4B', '5B'],
         matrices: {
+          SMIb: [
+            ["AAAA", "BAAB", "c0D0", "d0C0", "eE0e"],
+            ["BAAB", "AAAA", "c0D0", "0000", "eE0e"],
+            ["0D0c", "0D0c", "AAAA", "BAAB", "eE0e"],
+            ["0D0c", "0000", "BAAB", "AAAA", "eE0e"],
+            ["e00e", "e00e", "e00e", "e00e", "AAAA"]
+          ],
+          SMIa: [
+            ["(Ee)", "(Ee)", "¡Er!", "¡Er!", "[Rr]"],
+            ["(Ee)", "(Ee)", "¡Er!", "¡¿?!", "[Rr]"],
+            ["¡Re!", "¡Re!", "(Ee)", "(Ee)", "[Rr]"],
+            ["¡Re!", "¡¿?!", "(Ee)", "(Ee)", "[Rr]"],
+            ["[Rr]", "[Rr]", "[Rr]", "[Rr]", "(Ee)"]
+          ],
           D1: [[ 4.44,  2.10, -1.20, -0.50,  3.10], [ 2.10,  4.44,  1.50, -1.80,  0.60], [-1.20,  1.50,  4.44,  2.20, -2.10], [-0.50, -1.80,  2.20,  4.44,  1.40], [ 3.10,  0.60, -2.10,  1.40,  4.44]],
           D2: [[ 3.16,  1.60, -0.90, -0.40,  2.30], [ 1.60,  3.16,  1.10, -1.30,  0.40], [-0.90,  1.10,  3.16,  1.60, -1.50], [-0.40, -1.30,  1.60,  3.16,  1.00], [ 2.30,  0.40, -1.50,  1.00,  3.16]],
           D3: [[ 3.16,  1.60, -0.90, -0.40,  2.30], [ 1.60,  3.16,  1.10, -1.30,  0.40], [-0.90,  1.10,  3.16,  1.60, -1.50], [-0.40, -1.30,  1.60,  3.16,  1.00], [ 2.30,  0.40, -1.50,  1.00,  3.16]],
           D4: [[ 4.44,  2.10, -1.20, -0.50,  3.10], [ 2.10,  4.44,  1.50, -1.80,  0.60], [-1.20,  1.50,  4.44,  2.20, -2.10], [-0.50, -1.80,  2.20,  4.44,  1.40], [ 3.10,  0.60, -2.10,  1.40,  4.44]]
+        }
+      },
+      T1: {
+        name: 'Tiempo 1: Génesis',
+        matrices: {
+          SMIb: [
+            ["AAAA", "BA00", "0000", "0000", "0000"],
+            ["00BA", "AAAA", "BA00", "0000", "0000"],
+            ["0000", "00BA", "AAAA", "0000", "0000"],
+            ["0000", "0000", "0000", "AAAA", "BA00"],
+            ["0000", "0000", "0000", "00BA", "AAAA"]
+          ]
+        }
+      },
+      T2: {
+        name: 'Tiempo 2: Tensión / Polarización',
+        matrices: {
+          SMIb: [
+            ["AAAA", "BAAB", "cD0d", "cD0d", "eE0e"],
+            ["BAAB", "AAAA", "cD0d", "00da", "eE0e"],
+            ["0D0c", "0D0c", "AAAA", "BAAB", "dD0c"],
+            ["0D0c", "00ad", "BAAB", "AAAA", "cD0d"],
+            ["e00e", "e00e", "c00d", "00dc", "AAAA"]
+          ]
+        }
+      },
+      T3: {
+        name: 'Tiempo 3: Madurez / Resolución',
+        matrices: {
+          SMIb: [
+            ["AAAA", "AAAA", "BA0B", "cD0d", "0000"],
+            ["AAAA", "AAAA", "AAAA", "0000", "0000"],
+            ["0BBA", "AAAA", "AAAA", "BAAB", "0000"],
+            ["00dc", "0000", "BAAB", "AAAA", "BAAB"],
+            ["0000", "0000", "0000", "BAAB", "AAAA"]
+          ]
         }
       }
     };
@@ -6161,73 +6262,211 @@
       renderSmiaMatricesModal(tabKey);
     }
 
+    // =========================================================================
+    // 5.4 MOTOR DE DERIVACIÓN FACTORIAL CANÓNICA DESDE SMIb (REGLA 5)
+    // =========================================================================
+    const SMIb_WEIGHTS = {
+      'A': 4.44, 'B': 3.16, 'C': 2.10, 'D': 1.26, 'E': 0.60,
+      'a': -4.44, 'b': -3.16, 'c': -2.10, 'd': -1.26, 'e': -0.60,
+      '0': 0.00
+    };
+
+    function smibCharToWeight(c) {
+      if (!c || c === '0') return 0.0;
+      if (SMIb_WEIGHTS[c] !== undefined) return SMIb_WEIGHTS[c];
+      const up = c.toUpperCase();
+      if (SMIb_WEIGHTS[up] !== undefined) {
+        return c === up ? SMIb_WEIGHTS[up] : -SMIb_WEIGHTS[up];
+      }
+      return 0.0;
+    }
+
+    function parseSmibSymbols(code) {
+      if (!code || typeof code !== 'string' || code.length < 4) return { a1: '¡', a2: '¿', a3: '?', a4: '!' };
+      const c1 = code[0], c2 = code[1], c3 = code[2], c4 = code[3];
+      const a1 = (c1.toUpperCase() === c1 && c1 !== '0') ? '<' : ((c1.toLowerCase() === c1 && c1 !== '0') ? '[' : '¡');
+      const a2 = (c2.toUpperCase() === c2 && c2 !== '0') ? 'E' : ((c2.toLowerCase() === c2 && c2 !== '0') ? 'R' : '¿');
+      const a3 = (c3.toUpperCase() === c3 && c3 !== '0') ? 'e' : ((c3.toLowerCase() === c3 && c3 !== '0') ? 'r' : '?');
+      const a4 = (c4.toUpperCase() === c4 && c4 !== '0') ? '>' : ((c4.toLowerCase() === c4 && c4 !== '0') ? ']' : '!');
+      return { a1, a2, a3, a4 };
+    }
+
+    function smibToSmiaCell(code, partnerCode = "") {
+      if (!code || typeof code !== 'string' || code.length < 4) return '¡¿?!';
+      let { a1, a2, a3, a4 } = parseSmibSymbols(code);
+
+      if (a3 === '?' && partnerCode && partnerCode.length >= 2) {
+        const part = parseSmibSymbols(partnerCode);
+        if (part.a2 === 'E') a3 = 'e';
+        else if (part.a2 === 'R') a3 = 'r';
+      }
+
+      if (a2 === 'E' && a3 === 'e') return '(Ee)';
+      if (a2 === 'R' && a3 === 'r') return '[Rr]';
+      if (a2 === 'E' && a3 === 'r') return '¡Er!';
+      if (a2 === 'R' && a3 === 'e') return '¡Re!';
+      if (a2 === 'E') return '¡Ea!';
+      if (a3 === 'e') return '¡aE!';
+      if (a2 === 'R') return '¡Ra!';
+      if (a3 === 'r') return '¡aR!';
+      return '¡¿?!';
+    }
+
+    function smibToQ81Id(code) {
+      const { a1, a2, a3, a4 } = parseSmibSymbols(code);
+      let col = 8;
+      if (a1 === '<' && a2 === 'E') col = 0;
+      else if (a1 === '<' && a2 === '¿') col = 1;
+      else if (a1 === '<' && a2 === 'R') col = 2;
+      else if (a1 === '¡' && a2 === 'E') col = 3;
+      else if (a1 === '¡' && a2 === '¿') col = 4;
+      else if (a1 === '¡' && a2 === 'R') col = 5;
+      else if (a1 === '[' && a2 === 'E') col = 6;
+      else if (a1 === '[' && a2 === '¿') col = 7;
+
+      let row = 8;
+      if (a3 === 'e' && a4 === '>') row = 0;
+      else if (a3 === '?' && a4 === '>') row = 1;
+      else if (a3 === 'r' && a4 === '>') row = 2;
+      else if (a3 === 'e' && a4 === '!') row = 3;
+      else if (a3 === '?' && a4 === '!') row = 4;
+      else if (a3 === 'r' && a4 === '!') row = 5;
+      else if (a3 === 'e' && a4 === ']') row = 6;
+      else if (a3 === '?' && a4 === ']') row = 7;
+
+      return (Q81_MATRIX_IDS[row] && Q81_MATRIX_IDS[row][col]) || 41;
+    }
+
+    function deriveAllFromSmib(smibMat) {
+      if (!Array.isArray(smibMat) || smibMat.length === 0) return null;
+      const n = smibMat.length;
+      const smia = [];
+      const q81 = [];
+      const d1 = [];
+      const d2 = [];
+      const d3 = [];
+      const d4 = [];
+
+      let sumSdr = 0.0, sumBdr = 0.0, offDiagCount = 0;
+
+      for (let i = 0; i < n; i++) {
+        smia[i] = [];
+        q81[i] = [];
+        d1[i] = [];
+        d2[i] = [];
+        d3[i] = [];
+        d4[i] = [];
+
+        for (let j = 0; j < n; j++) {
+          if (i === j) {
+            smia[i][j] = '(Ee)';
+            q81[i][j] = 81;
+            d1[i][j] = 4.44;
+            d2[i][j] = 3.16;
+            d3[i][j] = 3.16;
+            d4[i][j] = 4.44;
+          } else {
+            const code = String((smibMat[i] && smibMat[i][j]) || '0000');
+            const partnerCode = String((smibMat[j] && smibMat[j][i]) || '');
+            smia[i][j] = smibToSmiaCell(code, partnerCode);
+            q81[i][j] = smibToQ81Id(code);
+
+            const wA1 = smibCharToWeight(code[0]);
+            const wA2 = smibCharToWeight(code[1]);
+            let wA3 = smibCharToWeight(code[2]);
+            const wA4 = smibCharToWeight(code[3]);
+            if (wA3 === 0.0 && partnerCode && partnerCode.length > 1) {
+              wA3 = smibCharToWeight(partnerCode[1]);
+            }
+
+            const valD1 = +(wA1 * 0.40 + wA2 * 0.60).toFixed(2);
+            const valD2 = +(wA2 * 0.50 + wA3 * 0.50).toFixed(2);
+            const valD3 = +(wA3 * 0.50 + wA4 * 0.50).toFixed(2);
+            const valD4 = +(wA3 * 0.60 + wA4 * 0.40).toFixed(2);
+
+            d1[i][j] = valD1;
+            d2[i][j] = valD2;
+            d3[i][j] = valD3;
+            d4[i][j] = valD4;
+
+            sumSdr += valD2;
+            sumBdr += Math.abs(valD2);
+            offDiagCount++;
+          }
+        }
+      }
+
+      const meanSdr = offDiagCount > 0 ? +(sumSdr / offDiagCount).toFixed(2) : 0.0;
+      const meanBdr = offDiagCount > 0 ? +(sumBdr / offDiagCount).toFixed(2) : 0.0;
+
+      return {
+        SMIa: smia,
+        Q81: q81,
+        D1: d1,
+        D2: d2,
+        D3: d3,
+        D4: d4,
+        termodinamica: {
+          BDR: meanBdr,
+          SDR: meanSdr,
+          phi_Tononi: +(Math.min(1.0, Math.max(0.2, 0.5 + meanSdr * 0.2))).toFixed(2),
+          fiedler_lambda2: +(Math.max(0.1, 1.2 + meanSdr * 0.3)).toFixed(3),
+          frustracion_Heider: +(Math.max(0.05, 0.25 - meanSdr * 0.1)).toFixed(2),
+          estrada_EE: +(10.0 + meanBdr * 5.0).toFixed(2)
+        }
+      };
+    }
+
     function getConcertSlices() {
       const g1Subjects = (NEXORD_PAYLOAD.metadata && NEXORD_PAYLOAD.metadata.sujetos) || ['1A', '2A', '3A', '4A', '5A'];
       const g2Subjects = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.subjects) || ['1B', '2B', '3B', '4B', '5B'];
 
-      const g1c1Smia = (NEXORD_PAYLOAD.matrices && NEXORD_PAYLOAD.matrices.SMIa) || [
-        ["(Ee)", "(Ee)", "¡Ea!", "¡Er!", "[Rr]"],
-        ["(Ee)", "(Ee)", "(Ee)", "¡Re!", "¡Er!"],
-        ["¡Ea!", "(Ee)", "(Ee)", "[Rr]", "¡Re!"],
-        ["¡Re!", "¡Re!", "[Rr]", "(Ee)", "(Ee)"],
-        ["[Rr]", "¡Re!", "¡Re!", "(Ee)", "(Ee)"]
+      const g1c1Smib = (NEXORD_PAYLOAD.matrices && NEXORD_PAYLOAD.matrices.SMIb) || [
+        ["AAAA", "BAAB", "0A00", "cD0d", "eE0e"],
+        ["BAAB", "AAAA", "AAAA", "00da", "cD0d"],
+        ["0A00", "AAAA", "BAAB", "eE0e", "dD0c"],
+        ["00ad", "00cd", "e00e", "AAAA", "BAAB"],
+        ["e00e", "00ad", "c00d", "BAAB", "AAAA"]
       ];
 
-      const g1c2Smia = (MULTIDIM_PAYLOAD.C2 && MULTIDIM_PAYLOAD.C2.matrices && MULTIDIM_PAYLOAD.C2.matrices.SMIa) || [
-        ["(Ee)", "(Ee)", "¡Ea!", "(Ee)", "¡Ea!"],
-        ["(Ee)", "(Ee)", "(Ee)", "¡Ea!", "¡¿?!"],
-        ["¡aE!", "(Ee)", "(Ee)", "(Ee)", "¡Ea!"],
-        ["(Ee)", "¡aE!", "(Ee)", "(Ee)", "¡Ea!"],
-        ["¡aE!", "¡¿?!", "¡aE!", "¡aE!", "(Ee)"]
+      const g1c2Smib = (MULTIDIM_PAYLOAD.C2 && MULTIDIM_PAYLOAD.C2.matrices && MULTIDIM_PAYLOAD.C2.matrices.SMIb) || [
+        ["AAAA", "AAAA", "BA0B", "AAAA", "BA0B"],
+        ["AAAA", "AAAA", "AAAA", "BA0B", "0000"],
+        ["AB00", "AAAA", "AAAA", "AAAA", "BA0B"],
+        ["AAAA", "00BA", "AAAA", "AAAA", "BA0B"],
+        ["AB00", "0000", "AB00", "AB00", "AAAA"]
       ];
 
-      const g2c1Smia = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.matrices && MULTIDIM_PAYLOAD.G2.matrices.SMIa) || [
-        ["(Ee)", "(Ee)", "¡Er!", "¡Er!", "[Rr]"],
-        ["(Ee)", "(Ee)", "¡Er!", "¡¿?!", "[Rr]"],
-        ["¡Re!", "¡Re!", "(Ee)", "(Ee)", "[Rr]"],
-        ["¡Re!", "¡¿?!", "(Ee)", "(Ee)", "[Rr]"],
-        ["[Rr]", "[Rr]", "[Rr]", "[Rr]", "(Ee)"]
+      const g2c1Smib = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.matrices && MULTIDIM_PAYLOAD.G2.matrices.SMIb) || [
+        ["AAAA", "BAAB", "c0D0", "d0C0", "eE0e"],
+        ["BAAB", "AAAA", "c0D0", "0000", "eE0e"],
+        ["0D0c", "0D0c", "AAAA", "BAAB", "eE0e"],
+        ["0D0c", "0000", "BAAB", "AAAA", "eE0e"],
+        ["e00e", "e00e", "e00e", "e00e", "AAAA"]
       ];
 
-      const g2c2Smia = [
-        ["(Ee)", "¡Ea!", "¡Er!", "¡¿?!", "¡Er!"],
-        ["¡aE!", "(Ee)", "¡¿?!", "¡Er!", "¡¿?!"],
-        ["¡Re!", "¡¿?!", "(Ee)", "¡Ea!", "[Rr]"],
-        ["¡¿?!", "¡Re!", "¡aE!", "(Ee)", "¡Er!"],
-        ["¡Re!", "¡¿?!", "[Rr]", "¡Re!", "(Ee)"]
+      const g2c2Smib = [
+        ["AAAA", "BA00", "cD0d", "0000", "cD0d"],
+        ["0A00", "AAAA", "0000", "cD0d", "0000"],
+        ["00da", "0000", "AAAA", "BA00", "e00e"],
+        ["0000", "00da", "0A00", "AAAA", "cD0d"],
+        ["00da", "0000", "e00e", "00da", "AAAA"]
       ];
 
-      const g1c1Den = (DENSITIES && DENSITIES['SDR']) || (NEXORD_PAYLOAD.matrices && NEXORD_PAYLOAD.matrices.D2) || [
-        [ 3.16, -0.27,  0.00, -2.57, -3.21],
-        [-0.27,  0.00,  3.16, -3.02, -2.57],
-        [ 0.00,  3.16, -0.27, -3.21, -2.72],
-        [-0.63, -3.03, -3.21,  3.16, -0.27],
-        [-3.21, -0.63, -2.72, -0.27,  3.16]
-      ];
+      const g1c1Der = deriveAllFromSmib(g1c1Smib) || {};
+      const g1c2Der = deriveAllFromSmib(g1c2Smib) || {};
+      const g2c1Der = deriveAllFromSmib(g2c1Smib) || {};
+      const g2c2Der = deriveAllFromSmib(g2c2Smib) || {};
 
-      const g1c2Den = (MULTIDIM_PAYLOAD.C2 && MULTIDIM_PAYLOAD.C2.matrices && MULTIDIM_PAYLOAD.C2.matrices.D2) || [
-        [ 3.16, 2.10, 0.30,  1.50, -0.90],
-        [ 2.10, 3.16, 2.40,  1.60, -0.30],
-        [ 0.30, 2.40, 3.16, -0.60,  0.10],
-        [ 1.50, 1.60, -0.60, 3.16,  1.90],
-        [-0.90, -0.30, 0.10,  1.90, 3.16]
-      ];
+      const g1c1Smia = (NEXORD_PAYLOAD.matrices && NEXORD_PAYLOAD.matrices.SMIa) || g1c1Der.SMIa;
+      const g1c2Smia = (MULTIDIM_PAYLOAD.C2 && MULTIDIM_PAYLOAD.C2.matrices && MULTIDIM_PAYLOAD.C2.matrices.SMIa) || g1c2Der.SMIa;
+      const g2c1Smia = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.matrices && MULTIDIM_PAYLOAD.G2.matrices.SMIa) || g2c1Der.SMIa;
+      const g2c2Smia = g2c2Der.SMIa;
 
-      const g2c1Den = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.matrices && MULTIDIM_PAYLOAD.G2.matrices.D2) || [
-        [ 3.16,  1.60, -0.90, -0.40,  2.30],
-        [ 1.60,  3.16,  1.10, -1.30,  0.40],
-        [-0.90,  1.10,  3.16,  1.60, -1.50],
-        [-0.40, -1.30,  1.60,  3.16,  1.00],
-        [ 2.30,  0.40, -1.50,  1.00,  3.16]
-      ];
-
-      const g2c2Den = [
-        [ 3.16,  1.20, -1.50,  0.00, -2.10],
-        [ 0.80,  3.16,  0.00, -1.80,  0.00],
-        [-1.60,  0.00,  3.16,  1.40, -3.20],
-        [ 0.00, -1.70,  0.90,  3.16, -2.40],
-        [-2.20,  0.00, -3.10, -2.10,  3.16]
-      ];
+      const g1c1Den = (DENSITIES && DENSITIES['SDR']) || (NEXORD_PAYLOAD.matrices && NEXORD_PAYLOAD.matrices.D2) || g1c1Der.D2;
+      const g1c2Den = (MULTIDIM_PAYLOAD.C2 && MULTIDIM_PAYLOAD.C2.matrices && MULTIDIM_PAYLOAD.C2.matrices.D2) || g1c2Der.D2;
+      const g2c1Den = (MULTIDIM_PAYLOAD.G2 && MULTIDIM_PAYLOAD.G2.matrices && MULTIDIM_PAYLOAD.G2.matrices.D2) || g2c1Der.D2;
+      const g2c2Den = g2c2Der.D2;
 
       return [
         {
@@ -6236,12 +6475,13 @@
           subtitle: 'Sociomatriz Base de Cohesión y Subgrupos Afectivos',
           movIdx: 0,
           subjects: g1Subjects,
+          smib: g1c1Smib,
           smia: g1c1Smia,
           density: g1c1Den,
-          bdrVal: NEXORD_PAYLOAD.termodinamica?.BDR || 0.12,
-          sdrVal: NEXORD_PAYLOAD.termodinamica?.SDR || 0.88,
-          lambda2: NEXORD_PAYLOAD.termodinamica?.fiedler_lambda2 || 1.414,
-          phi: NEXORD_PAYLOAD.termodinamica?.phi_Tononi || 0.74,
+          bdrVal: NEXORD_PAYLOAD.termodinamica?.BDR ?? (g1c1Der.termodinamica?.BDR || 0.12),
+          sdrVal: NEXORD_PAYLOAD.termodinamica?.SDR ?? (g1c1Der.termodinamica?.SDR || 0.88),
+          lambda2: NEXORD_PAYLOAD.termodinamica?.fiedler_lambda2 ?? (g1c1Der.termodinamica?.fiedler_lambda2 || 1.414),
+          phi: NEXORD_PAYLOAD.termodinamica?.phi_Tononi ?? (g1c1Der.termodinamica?.phi_Tononi || 0.74),
           color: '#00FF87'
         },
         {
@@ -6250,12 +6490,13 @@
           subtitle: 'Sociomatriz Instrumental de Eficiencia y Coordinación Operativa',
           movIdx: 2,
           subjects: g1Subjects,
+          smib: g1c2Smib,
           smia: g1c2Smia,
           density: g1c2Den,
-          bdrVal: 0.18,
-          sdrVal: 1.15,
-          lambda2: 1.820,
-          phi: 0.89,
+          bdrVal: g1c2Der.termodinamica?.BDR || 0.18,
+          sdrVal: g1c2Der.termodinamica?.SDR || 1.15,
+          lambda2: g1c2Der.termodinamica?.fiedler_lambda2 || 1.820,
+          phi: g1c2Der.termodinamica?.phi_Tononi || 0.89,
           color: '#38BDF8'
         },
         {
@@ -6264,12 +6505,13 @@
           subtitle: 'Sociomatriz de Tensión Polarizada y Fricción Inter-Nodal',
           movIdx: 4,
           subjects: g2Subjects,
+          smib: g2c1Smib,
           smia: g2c1Smia,
           density: g2c1Den,
-          bdrVal: 0.28,
-          sdrVal: -0.62,
-          lambda2: 0.540,
-          phi: 0.38,
+          bdrVal: g2c1Der.termodinamica?.BDR || 0.28,
+          sdrVal: g2c1Der.termodinamica?.SDR || -0.62,
+          lambda2: g2c1Der.termodinamica?.fiedler_lambda2 || 0.540,
+          phi: g2c1Der.termodinamica?.phi_Tononi || 0.38,
           color: '#FF007F'
         },
         {
@@ -6278,12 +6520,13 @@
           subtitle: 'Sociomatriz Instrumental de Coordinación en Grupo B',
           movIdx: 4,
           subjects: g2Subjects,
+          smib: g2c2Smib,
           smia: g2c2Smia,
           density: g2c2Den,
-          bdrVal: 0.22,
-          sdrVal: -0.15,
-          lambda2: 0.820,
-          phi: 0.52,
+          bdrVal: g2c2Der.termodinamica?.BDR || 0.22,
+          sdrVal: g2c2Der.termodinamica?.SDR || -0.15,
+          lambda2: g2c2Der.termodinamica?.fiedler_lambda2 || 0.820,
+          phi: g2c2Der.termodinamica?.phi_Tononi || 0.52,
           color: '#F59E0B'
         },
         {
@@ -6292,6 +6535,7 @@
           subtitle: 'Morfogénesis Diacrónica: Génesis (T1), Fricción (T2) y Madurez (T3)',
           movIdx: 3,
           subjects: g1Subjects,
+          smib: g1c1Smib,
           smia: g1c1Smia,
           density: g1c1Den,
           bdrVal: 0.15,
@@ -6428,7 +6672,7 @@
       };
     }
 
-    function renderSmiaNxNTableHtml(smiaMatrix, densityMatrix, subjects, sliceTitle, sliceKey, movIdx) {
+    function renderSmiaNxNTableHtml(smiaMatrix, densityMatrix, subjects, sliceTitle, sliceKey, movIdx, smibMatrix = null) {
       const n = subjects.length;
       let html = `
         <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 bg-slate-950/80 flex flex-col gap-2.5">
@@ -6438,7 +6682,7 @@
                 <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
                 ${sliceTitle}
               </span>
-              <span class="text-[10px] text-slate-400 mono">Sociomatriz Ideográfica SMIa ($N = ${n}$)</span>
+              <span class="text-[10px] text-slate-400 mono">Sociomatriz Ideográfica SMIa & SMIb ($N = ${n}$)</span>
             </div>
             <button onclick="playSliceFromModal(${movIdx})" class="glass-btn px-2.5 py-1 rounded-lg mono text-[10px] font-bold text-emerald-300 border border-emerald-500/50 bg-emerald-950/60 hover:bg-emerald-900/80 flex items-center gap-1 transition-all shadow-md" title="Reproducir este corte en el concierto">
               <span>▶</span> Reproducir en Concierto
@@ -6465,8 +6709,9 @@
         html += `<td class="p-1.5 text-left font-bold text-cyan-300">${subjects[i]}</td>`;
         for (let j = 0; j < n; j++) {
           const code = (smiaMatrix && smiaMatrix[i] && smiaMatrix[i][j]) ? String(smiaMatrix[i][j]) : '¡¿?!';
-          const den = (densityMatrix && densityMatrix[i] && typeof densityMatrix[i][j] === 'number') ? densityMatrix[i][j] : 0;
           const isSelf = (i === j);
+          const smibCode = (smibMatrix && smibMatrix[i] && smibMatrix[i][j]) ? String(smibMatrix[i][j]) : (isSelf ? 'AAAA' : '----');
+          const den = (densityMatrix && densityMatrix[i] && typeof densityMatrix[i][j] === 'number') ? densityMatrix[i][j] : 0;
 
           let cellClass = 'bg-slate-950/60 text-slate-400 border border-slate-800/40';
           if (isSelf) {
@@ -6484,10 +6729,11 @@
           }
 
           html += `
-            <td class="p-1.5 ${cellClass} rounded-lg m-0.5" title="${subjects[i]} ➔ ${subjects[j]} • SMIa: ${code} • Densidad: ${den >= 0 ? '+' : ''}${den.toFixed(2)}">
+            <td class="p-1.5 ${cellClass} rounded-lg m-0.5" title="${subjects[i]} ➔ ${subjects[j]} • SMIb: ${smibCode} • SMIa: ${code} • Densidad: ${den >= 0 ? '+' : ''}${den.toFixed(2)}">
               <div class="flex flex-col items-center leading-none">
-                <span class="text-[11px] font-mono">${isSelf ? '●' : code}</span>
-                <span class="text-[9px] text-slate-400 font-mono mt-0.5">${isSelf ? '0.00' : (den >= 0 ? `+${den.toFixed(1)}` : den.toFixed(1))}</span>
+                <span class="text-[11px] font-mono font-bold">${isSelf ? '●' : code}</span>
+                <span class="text-[9px] text-cyan-300/80 font-mono tracking-wider mt-0.5">${smibCode}</span>
+                <span class="text-[8px] text-slate-400 font-mono mt-0.5">${isSelf ? '0.00' : (den >= 0 ? `+${den.toFixed(1)}` : den.toFixed(1))}</span>
               </div>
             </td>
           `;
@@ -6626,7 +6872,7 @@
           const reduced = computeReduced3x3Matrix(sl.smia, sl.density);
           html += `
             <div class="flex flex-col gap-2 bg-slate-900/40 p-3 rounded-2xl border border-slate-800 shadow-xl">
-              ${renderSmiaNxNTableHtml(sl.smia, sl.density, sl.subjects, sl.title, sl.key, sl.movIdx)}
+              ${renderSmiaNxNTableHtml(sl.smia, sl.density, sl.subjects, sl.title, sl.key, sl.movIdx, sl.smib)}
               ${renderReduced3x3TableHtml(reduced, `Matriz Reducida (3, 3) · ${sl.key.toUpperCase()}`, sl.subtitle, sl.color)}
               <div class="flex items-center justify-between px-2 text-[10px] mono text-slate-400 pt-1 border-t border-slate-800/60">
                 <span>BDR: <strong class="text-purple-300">${sl.bdrVal}</strong> • SDR: <strong class="text-cyan-300">${sl.sdrVal}</strong></span>
@@ -6700,7 +6946,7 @@
         const reduced = computeReduced3x3Matrix(sl.smia, sl.density);
         container.innerHTML = `
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            ${renderSmiaNxNTableHtml(sl.smia, sl.density, sl.subjects, sl.title, sl.key, sl.movIdx)}
+            ${renderSmiaNxNTableHtml(sl.smia, sl.density, sl.subjects, sl.title, sl.key, sl.movIdx, sl.smib)}
             <div class="flex flex-col gap-3">
               ${renderReduced3x3TableHtml(reduced, `Matriz Reducida (3, 3) · ${sl.title}`, sl.subtitle, sl.color)}
               <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 bg-slate-950/80 mono text-xs flex flex-col gap-2">
@@ -6763,6 +7009,31 @@
       reader.readAsText(file);
     }
 
+    function startConcertFromSinfo() {
+      // 1. Ocultar toast de sinfo
+      const toast = document.getElementById('sinfo-toast');
+      if (toast) toast.classList.add('hidden');
+
+      // 2. Cerrar modal de matrices si estaba abierto
+      if (smiaModalVisible) {
+        toggleSmiaMatricesModal(false);
+      }
+
+      // 3. Pasar a pantalla completa / sala oscura si no está activa
+      if (!isSalaOscuraActive && typeof toggleSalaOscuraFullscreen === 'function') {
+        toggleSalaOscuraFullscreen(true);
+      }
+
+      // 4. Seleccionar Movimiento 0 y reproducir
+      selectSymphonyMovement(0);
+
+      showSinfoToast(
+        'CONCIERTO EN MARCHA',
+        'Iniciando Gran Ciclo Socio-Sinfónico con partitura .sinfo a 432 Hz.',
+        'success'
+      );
+    }
+
     function loadSinfoFromText(jsonText, fileName = 'partitura.sinfo') {
       try {
         const data = JSON.parse(jsonText);
@@ -6780,9 +7051,43 @@
           }
         }
 
+        // Colecciones enriquecidas de la partitura
+        if (data.SMIb_s) {
+          NEXORD_PAYLOAD.SMIb_s = data.SMIb_s;
+          if (!data.matrices || !data.matrices.SMIb) {
+            const baseSmib = data.SMIb_s.base || data.SMIb_s.g1t1c1 || Object.values(data.SMIb_s)[0];
+            if (baseSmib) {
+              if (!data.matrices) data.matrices = {};
+              data.matrices.SMIb = baseSmib;
+            }
+          }
+        }
+        if (data.aE_s) NEXORD_PAYLOAD.aE_s = data.aE_s;
+        if (data.oE_s) NEXORD_PAYLOAD.oE_s = data.oE_s;
+        if (data.etiquetas_sujetos) NEXORD_PAYLOAD.etiquetas_sujetos = data.etiquetas_sujetos;
+        if (data.criterios) NEXORD_PAYLOAD.criterios = data.criterios;
+        if (data.tiempos) NEXORD_PAYLOAD.tiempos = data.tiempos;
+        if (data.VAR) NEXORD_PAYLOAD.VAR = data.VAR;
+        if (data.AAG) NEXORD_PAYLOAD.AAG = data.AAG;
+
         if (data.matrices) {
+          if (Array.isArray(data.matrices.SMIb)) {
+            NEXORD_PAYLOAD.matrices.SMIb = data.matrices.SMIb;
+            // Auto-derivar capas ausentes desde SMIb
+            if (!data.matrices.SMIa || !data.matrices.Q81 || !data.matrices.D1) {
+              const derived = deriveAllFromSmib(data.matrices.SMIb);
+              if (derived) {
+                if (!data.matrices.SMIa) NEXORD_PAYLOAD.matrices.SMIa = derived.SMIa;
+                if (!data.matrices.Q81) NEXORD_PAYLOAD.matrices.Q81 = derived.Q81;
+                if (!data.matrices.D1) NEXORD_PAYLOAD.matrices.D1 = derived.D1;
+                if (!data.matrices.D2) NEXORD_PAYLOAD.matrices.D2 = derived.D2;
+                if (!data.matrices.D3) NEXORD_PAYLOAD.matrices.D3 = derived.D3;
+                if (!data.matrices.D4) NEXORD_PAYLOAD.matrices.D4 = derived.D4;
+                if (!data.termodinamica) NEXORD_PAYLOAD.termodinamica = derived.termodinamica;
+              }
+            }
+          }
           if (Array.isArray(data.matrices.SMIa)) NEXORD_PAYLOAD.matrices.SMIa = data.matrices.SMIa;
-          if (Array.isArray(data.matrices.SMIb)) NEXORD_PAYLOAD.matrices.SMIb = data.matrices.SMIb;
           if (Array.isArray(data.matrices.Q81)) NEXORD_PAYLOAD.matrices.Q81 = data.matrices.Q81;
           if (Array.isArray(data.matrices.D1)) NEXORD_PAYLOAD.matrices.D1 = data.matrices.D1;
           if (Array.isArray(data.matrices.D2)) NEXORD_PAYLOAD.matrices.D2 = data.matrices.D2;
@@ -6796,6 +7101,22 @@
 
         if (data.multidim) {
           Object.assign(MULTIDIM_PAYLOAD, data.multidim);
+          // Auto-derivar para cortes de multidim si tienen SMIb y faltan capas
+          Object.keys(MULTIDIM_PAYLOAD).forEach(k => {
+            const sl = MULTIDIM_PAYLOAD[k];
+            if (sl && sl.matrices && sl.matrices.SMIb && (!sl.matrices.SMIa || !sl.matrices.D2)) {
+              const dCut = deriveAllFromSmib(sl.matrices.SMIb);
+              if (dCut) {
+                if (!sl.matrices.SMIa) sl.matrices.SMIa = dCut.SMIa;
+                if (!sl.matrices.Q81) sl.matrices.Q81 = dCut.Q81;
+                if (!sl.matrices.D1) sl.matrices.D1 = dCut.D1;
+                if (!sl.matrices.D2) sl.matrices.D2 = dCut.D2;
+                if (!sl.matrices.D3) sl.matrices.D3 = dCut.D3;
+                if (!sl.matrices.D4) sl.matrices.D4 = dCut.D4;
+                if (!sl.termodinamica) sl.termodinamica = dCut.termodinamica;
+              }
+            }
+          });
         }
 
         if (NEXORD_PAYLOAD.matrices) {
@@ -6851,6 +7172,14 @@
         version: "1.0",
         export_date: new Date().toISOString(),
         metadata: NEXORD_PAYLOAD.metadata || {},
+        SMIb_s: NEXORD_PAYLOAD.SMIb_s || { base: NEXORD_PAYLOAD.matrices?.SMIb },
+        aE_s: NEXORD_PAYLOAD.aE_s || {},
+        oE_s: NEXORD_PAYLOAD.oE_s || {},
+        etiquetas_sujetos: NEXORD_PAYLOAD.etiquetas_sujetos || { base: NEXORD_PAYLOAD.metadata?.sujetos },
+        criterios: NEXORD_PAYLOAD.criterios || { C1: "Dimensión Afectiva / Simpatía", C2: "Dimensión Funcional / Tarea Operativa" },
+        tiempos: NEXORD_PAYLOAD.tiempos || { T1: "Génesis", T2: "Tensión", T3: "Madurez" },
+        VAR: NEXORD_PAYLOAD.VAR || {},
+        AAG: NEXORD_PAYLOAD.AAG || {},
         matrices: NEXORD_PAYLOAD.matrices || {},
         smia_names: NEXORD_PAYLOAD.smia_names || {},
         termodinamica: NEXORD_PAYLOAD.termodinamica || {},
