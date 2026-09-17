@@ -356,6 +356,16 @@ window.toggleHeroAudio = function() {
         return;
     }
 
+    function syncHeroNavPodUI(isPlaying) {
+        const navBtn = document.getElementById("nav-pod-btn-play");
+        const navIcon = document.getElementById("nav-pod-play-icon");
+        if (navIcon) navIcon.textContent = isPlaying ? "⏸" : "▶";
+        if (navBtn) {
+            navBtn.classList.toggle("playing", isPlaying);
+            navBtn.title = isPlaying ? "Pausar Presentación (Play/Stop)" : "Reproducir Presentación (Play/Stop)";
+        }
+    }
+
     if (heroAudioPlaying) {
         window.speechSynthesis.cancel();
         heroAudioPlaying = false;
@@ -363,6 +373,7 @@ window.toggleHeroAudio = function() {
         if (icon) icon.textContent = "🔊";
         if (text) text.textContent = "Escuchar Presentación";
         window._heroActiveUtterance = null;
+        syncHeroNavPodUI(false);
         return;
     }
 
@@ -386,6 +397,7 @@ window.toggleHeroAudio = function() {
         if (btn) btn.classList.add("playing");
         if (icon) icon.textContent = "❚❚";
         if (text) text.textContent = "Pausar Locución";
+        syncHeroNavPodUI(true);
     };
 
     utter.onend = () => {
@@ -394,6 +406,7 @@ window.toggleHeroAudio = function() {
         if (icon) icon.textContent = "🔊";
         if (text) text.textContent = "Escuchar Presentación";
         window._heroActiveUtterance = null;
+        syncHeroNavPodUI(false);
     };
 
     utter.onerror = () => {
@@ -402,6 +415,7 @@ window.toggleHeroAudio = function() {
         if (icon) icon.textContent = "🔊";
         if (text) text.textContent = "Escuchar Presentación";
         window._heroActiveUtterance = null;
+        syncHeroNavPodUI(false);
     };
 
     if (window.speechSynthesis.paused) {
@@ -417,4 +431,20 @@ window.toggleHeroAudio = function() {
 window.addEventListener('beforeunload', () => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 });
+
+window.toggleUniversalNavPodPlay = function() {
+    if (typeof togglePlayComplex === 'function') {
+        togglePlayComplex();
+    } else if (typeof toggleMoviolaPlay === 'function') {
+        toggleMoviolaPlay();
+    } else if (typeof toggleNavPodPlayWaves === 'function') {
+        toggleNavPodPlayWaves();
+    } else if (typeof toggleNavPodPlayAcuario === 'function') {
+        toggleNavPodPlayAcuario();
+    } else if (typeof toggleNavPodPlayPentagrama === 'function') {
+        toggleNavPodPlayPentagrama();
+    } else if (typeof toggleHeroAudio === 'function') {
+        toggleHeroAudio();
+    }
+};
 

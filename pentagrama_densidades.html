@@ -572,6 +572,21 @@
       pointer-events: none;
       cursor: default;
     }
+    .nav-pod-play {
+      color: #00FF87 !important;
+    }
+    .nav-pod-play:hover {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #00FF87 !important;
+      transform: scale(1.32) !important;
+      filter: drop-shadow(0 0 12px rgba(0, 255, 135, 0.95)) !important;
+    }
+    .nav-pod-play.playing {
+      color: #00E5FF !important;
+      filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.95)) !important;
+    }
 
 </style>
 </head>
@@ -2139,6 +2154,36 @@
         }
 
         window.addEventListener("resize", renderPentagrama);
+
+        let isPentagramaPlaying = false;
+        let pentagramaTimer = null;
+        let presetCycleIdx = 0;
+        const presetKeys = ['g1', 'g2', 'ambos', 'promedio'];
+
+        window.toggleNavPodPlayPentagrama = function() {
+            isPentagramaPlaying = !isPentagramaPlaying;
+            if (isPentagramaPlaying) {
+                pentagramaTimer = setInterval(() => {
+                    presetCycleIdx = (presetCycleIdx + 1) % presetKeys.length;
+                    const key = presetKeys[presetCycleIdx];
+                    const btn = document.querySelector(`.preset-btn[data-preset="${key}"]`);
+                    if (btn) btn.click();
+                }, 2200);
+            } else {
+                if (pentagramaTimer) clearInterval(pentagramaTimer);
+            }
+            syncNavPodPentagramaUI();
+        };
+
+        function syncNavPodPentagramaUI() {
+            const navBtn = document.getElementById('nav-pod-btn-play');
+            const navIcon = document.getElementById('nav-pod-play-icon');
+            if (navIcon) navIcon.innerText = isPentagramaPlaying ? '⏸' : '▶';
+            if (navBtn) {
+                navBtn.classList.toggle('playing', isPentagramaPlaying);
+                navBtn.title = isPentagramaPlaying ? 'Pausar Rotación de Presets (Play/Stop)' : 'Reproducir Secuencia de Presets (Play/Stop)';
+            }
+        }
     });
 </script>
 
@@ -2152,6 +2197,9 @@
     <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollBy({top: -window.innerHeight*0.8, behavior: 'smooth'})" title="Subir"><span>▲</span></button>
     <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollBy({top: window.innerHeight*0.8, behavior: 'smooth'})" title="Bajar"><span>▼</span></button>
     <button class="nav-pod-btn nav-pod-next-lvl" onclick="window.history.forward()" title="Adelante"><span>▶</span></button>
+    <button onclick="toggleNavPodPlayPentagrama()" id="nav-pod-btn-play" class="nav-pod-btn nav-pod-play" title="Reproducir / Detener Secuencia de Presets (Play/Stop)">
+      <span id="nav-pod-play-icon">▶</span>
+    </button>
   </nav>
 
 </body>

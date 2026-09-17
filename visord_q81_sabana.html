@@ -191,6 +191,22 @@
       color: #030712 !important;
       box-shadow: 0 0 18px rgba(255, 230, 0, 0.95) !important;
     }
+    .nav-pod-play {
+      color: #00FF87 !important;
+      border-color: rgba(0, 255, 135, 0.45) !important;
+    }
+    .nav-pod-play:hover {
+      background: #00FF87 !important;
+      border-color: #00FF87 !important;
+      color: #030712 !important;
+      transform: scale(1.18) !important;
+      box-shadow: 0 0 18px rgba(0, 255, 135, 0.95) !important;
+    }
+    .nav-pod-play.playing {
+      color: #00E5FF !important;
+      border-color: #00E5FF !important;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.6) !important;
+    }
 
     /* Scrollbars ciber Tecnicolor */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -805,8 +821,8 @@
           </div>
 
           <!-- MANDOS DE PERSPECTIVA FLOTANTES (ESQUINA SUPERIOR DERECHA) -->
-          <div id="viewport-top-right-controls" class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
-            <div class="flex items-center gap-1.5">
+          <div id="viewport-top-right-controls" class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end max-w-[65%] pointer-events-none">
+            <div class="flex items-center gap-1.5 flex-wrap justify-end pointer-events-auto">
               <button onclick="toggleAudio()" id="btn-audio" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-slate-400 bg-slate-950/85 border-slate-700 shadow-lg flex items-center gap-1.5 hover:border-amber-400" title="Activar/Desactivar Audio Sinestésico 432 Hz">
                 <span id="audio-icon">🔇</span>
                 <span id="audio-lbl" class="text-[10px]">Audio: OFF</span>
@@ -832,7 +848,7 @@
                 <span>📺</span> Muro 13 TVs
               </button>
             </div>
-            <div class="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-sky-900/50">
+            <div class="flex items-center gap-1 bg-slate-950/85 p-1 rounded-xl border border-sky-900/50 pointer-events-auto">
               <button onclick="setCameraAngle('iso')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Panorámica</button>
               <button onclick="setCameraAngle('top')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px]">Cenital</button>
               <button onclick="setCameraAngle('rasante')" class="glass-btn px-2 py-1 rounded-lg mono text-[10px] text-cyan-300">Superficie</button>
@@ -844,12 +860,28 @@
             </div>
           </div>
 
-          <!-- LEYENDA TOPOLÓGICA DESPLEGABLE DE 3 ESTRATOS -->
-          <div class="absolute top-3 left-3 z-20 flex flex-col items-start gap-1">
-            <button onclick="toggleLegendBox()" id="btn-toggle-legend" class="glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-sky-300 bg-slate-950/85 border-sky-500/40 shadow-lg flex items-center gap-1.5 hover:border-sky-400" title="Mostrar/Ocultar Leyenda Topológica de los 3 Estratos">
+          <!-- CONTENEDOR SUPERIOR IZQUIERDO: INDICADOR CANÓNICO GTC + LEYENDA 3 ESTRATOS -->
+          <div class="absolute top-3.5 left-3.5 z-30 flex flex-col items-start gap-2 pointer-events-none">
+            
+            <!-- MARCADOR CANÓNICO DE COMBINACIÓN GTC ACTIVA (TAMAÑO MEDIANO, VISIBLE A PANTALLA COMPLETA) -->
+            <div id="gtc-active-indicator" onclick="showGtcTelemetryToast()" class="pointer-events-auto flex items-center gap-3 bg-slate-950/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-cyan-500/50 shadow-[0_0_25px_rgba(0,229,255,0.25)] transition-all cursor-pointer select-none hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(0,229,255,0.4)]" title="Combinación Multidimensional Canónica GTC en Visualización Activa • Clic para Telemetría">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#00E5FF] shrink-0"></span>
+              <div class="flex flex-col gap-0.5">
+                <div class="flex items-center gap-2">
+                  <span id="gtc-display-main" class="mono text-sm md:text-base font-black tracking-wider text-white">
+                    <span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C1</span>
+                  </span>
+                  <span id="gtc-display-tag" class="mono text-xs px-2 py-0.5 rounded bg-sky-950/80 text-cyan-300 border border-sky-600/50 font-bold">1g1t1c</span>
+                </div>
+                <span id="gtc-display-desc" class="mono text-[11px] md:text-xs text-slate-300 font-medium">Grupo A • T1 Génesis • C1 Afectivo</span>
+              </div>
+            </div>
+
+            <!-- BOTÓN Y VENTANA DESPLEGABLE DE LEYENDA TOPOLÓGICA DE 3 ESTRATOS -->
+            <button onclick="toggleLegendBox()" id="btn-toggle-legend" class="pointer-events-auto glass-btn px-2.5 py-1.5 rounded-xl mono text-xs font-bold text-sky-300 bg-slate-950/85 border-sky-500/40 shadow-lg flex items-center gap-1.5 hover:border-sky-400" title="Mostrar/Ocultar Leyenda Topológica de los 3 Estratos">
               <span>ℹ️</span> Leyenda 3 Estratos
             </button>
-            <div class="hidden flex-col gap-1 text-[10px] mono bg-slate-950/95 p-2.5 rounded-xl border border-sky-900/70 shadow-2xl backdrop-blur-md" id="viewport-legend-box">
+            <div class="pointer-events-auto hidden flex-col gap-1 text-[10px] mono bg-slate-950/95 p-2.5 rounded-xl border border-sky-900/70 shadow-2xl backdrop-blur-md" id="viewport-legend-box">
               <div class="flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38BDF8]"></span>
                 <span class="text-sky-300 font-bold">🌌 Bóveda Celeste (+Y)</span>: Cielo Azul Claro Estrellado & Cumbres
@@ -1622,6 +1654,9 @@
     <button onclick="prevMovement()" class="nav-pod-btn" title="Movimiento Anterior (▲)">▲</button>
     <button onclick="nextMovement()" class="nav-pod-btn" title="Movimiento Siguiente (▼)">▼</button>
     <button onclick="nextScenario()" class="nav-pod-btn" title="Escenario 3D Siguiente (▶)">▶</button>
+    <button onclick="togglePlayComplex()" id="nav-pod-btn-play" class="nav-pod-btn nav-pod-play" title="Reproducir / Detener Concierto (Play/Stop)">
+      <span id="nav-pod-play-icon">▶</span>
+    </button>
   </aside>
 
   <!-- 🧠 LÓGICA DE COMPUTACIÓN 3D, SOLFEO FACTUAL Y TABLERO DE AJEDREZ VIVO -->
@@ -4106,6 +4141,7 @@
       const btnStepRight = document.getElementById('btn-step-right');
       const btnCinema = document.getElementById('btn-toggle-cinema');
       const btnHeaderSala = document.getElementById('btn-mode-sala-oscura');
+      const gtcIndicator = document.getElementById('gtc-active-indicator');
 
       if (isSalaOscuraActive) {
         // ACTIVAR SALA OSCURA A PANTALLA COMPLETA
@@ -4120,6 +4156,8 @@
         if (vpLegendBox) vpLegendBox.classList.add('hidden');
         if (btnStepLeft) btnStepLeft.style.display = 'none';
         if (btnStepRight) btnStepRight.style.display = 'none';
+        if (gtcIndicator) gtcIndicator.style.display = 'flex';
+        if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
 
         if (container) {
           container.classList.add('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
@@ -4157,7 +4195,9 @@
         applyLuzDeSalaState();
 
         if (document.fullscreenElement === null && document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen().catch(() => {});
+          document.documentElement.requestFullscreen().then(() => {
+            hasEnteredNativeFullscreen = true;
+          }).catch(() => {});
         }
       } else {
         // DESACTIVAR SALA OSCURA / RESTAURAR TEATRO
@@ -4171,6 +4211,8 @@
         if (vpLegendBtn) vpLegendBtn.style.display = '';
         if (btnStepLeft) btnStepLeft.style.display = '';
         if (btnStepRight) btnStepRight.style.display = '';
+        if (gtcIndicator) gtcIndicator.style.display = 'flex';
+        if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
 
         if (container) {
           container.classList.remove('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen', 'm-0', 'p-0', 'rounded-none', 'border-0');
@@ -4263,12 +4305,33 @@
       }
     }
 
+    function syncNavPodPlayUI() {
+      const isPlaying = (typeof isSolfeoPlaying !== 'undefined' && isSolfeoPlaying) ||
+                        (typeof isPlayingFilm !== 'undefined' && isPlayingFilm) ||
+                        (typeof isDualPlaying !== 'undefined' && isDualPlaying);
+      const navBtn = document.getElementById('nav-pod-btn-play');
+      const navIcon = document.getElementById('nav-pod-play-icon');
+      if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '▶';
+      if (navBtn) {
+        if (isPlaying) {
+          navBtn.classList.add('playing');
+          navBtn.title = 'Detener / Pausar Concierto (Espacio)';
+        } else {
+          navBtn.classList.remove('playing');
+          navBtn.title = 'Reproducir Concierto (Espacio)';
+        }
+      }
+    }
+
     function togglePlayComplex() {
       if (mainMode === 'imax') {
         togglePlayFilm();
+      } else if (mainMode === 'dual') {
+        togglePlayDual();
       } else {
         togglePlaySolfeo();
       }
+      syncNavPodPlayUI();
     }
 
     function stepForwardComplex() {
@@ -4296,6 +4359,7 @@
       if (subEl) subEl.textContent = '🏠 Reiniciado al inicio • Compás 0';
       const dockTeleprompter = document.getElementById('dock-teleprompter-text');
       if (dockTeleprompter) dockTeleprompter.textContent = '🏠 Reiniciado al inicio • Pulsa PLAY para comenzar';
+      syncNavPodPlayUI();
     }
 
     function stopAndResetConcert() {
@@ -4333,8 +4397,12 @@
       }
     });
 
+    let hasEnteredNativeFullscreen = false;
     document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement && isSalaOscuraActive) {
+      if (document.fullscreenElement) {
+        hasEnteredNativeFullscreen = true;
+      } else if (hasEnteredNativeFullscreen && isSalaOscuraActive) {
+        hasEnteredNativeFullscreen = false;
         toggleSalaOscuraFullscreen(false);
       }
     });
@@ -4381,6 +4449,161 @@
     let isPlayingFilm = false, filmInterval = null, filmStep = 81, sequenceCriterion = 'q81_desc', sequenceOrder = [];
     let selectedSubjectIdx = null, hoveredVertexIdx = 0;
     let wobbleTime = 0;
+
+    // Estado Canónico Multidimensional GTC
+    let activeGroupKey = 'g1';     // 'g1' | 'g2'
+    let activeCriterionKey = 'c1'; // 'c1' | 'c2'
+
+    function showGtcTelemetryToast() {
+      const tagEl = document.getElementById('gtc-display-tag');
+      const tag = tagEl ? tagEl.textContent : '1g1t1c';
+      const descEl = document.getElementById('gtc-display-desc');
+      const desc = descEl ? descEl.textContent : 'Grupo A • T1 Génesis • C1 Afectivo';
+      if (typeof showSinfoToast === 'function') {
+        showSinfoToast(`COMBINACIÓN GTC (${tag})`, desc, 'info');
+      }
+    }
+
+    function updateGtcIndicatorUI(step) {
+      const gtcMainEl = document.getElementById('gtc-display-main');
+      const gtcTagEl = document.getElementById('gtc-display-tag');
+      const gtcDescEl = document.getElementById('gtc-display-desc');
+      if (!gtcMainEl || !gtcTagEl || !gtcDescEl) return;
+
+      let gLabel = (activeGroupKey === 'g2') ? 'G2' : 'G1';
+      let gNum = (activeGroupKey === 'g2') ? 2 : 1;
+      let gDesc = (activeGroupKey === 'g2') ? 'Grupo B' : 'Grupo A';
+
+      let tLabel = 'T1';
+      let tNum = 1;
+      let tDesc = 'T1 Génesis';
+      const sabKey = (typeof activeSabanaKey !== 'undefined') ? activeSabanaKey : 't1';
+      if (sabKey === 't2') { tLabel = 'T2'; tNum = 2; tDesc = 'T2 Crisis / Tensión'; }
+      else if (sabKey === 't3') { tLabel = 'T3'; tNum = 3; tDesc = 'T3 Reorganización'; }
+      else if (sabKey === 't4') { tLabel = 'T4'; tNum = 4; tDesc = 'T4 Resolución / Clímax'; }
+
+      let cLabel = (activeCriterionKey === 'c2') ? 'C2' : 'C1';
+      let cNum = (activeCriterionKey === 'c2') ? 2 : 1;
+      let cDesc = (activeCriterionKey === 'c2') ? 'C2 Tarea Operativa' : 'C1 Afectivo / Simpatía';
+
+      let tag = `${gNum}g${tNum}t${cNum}c`;
+      let mainHtml = `<span class="text-cyan-300">${gLabel}</span> · <span class="text-amber-300">${tLabel}</span> · <span class="text-emerald-300">${cLabel}</span>`;
+      let desc = `${gDesc} • ${tDesc} • ${cDesc}`;
+
+      // 1. Sincronización precisa ante movimientos de la Gran Sinfonía (7 fases)
+      if (typeof currentMovementIdx !== 'undefined' && typeof GRAND_SYMPHONY_MOVEMENTS !== 'undefined') {
+        const curMov = GRAND_SYMPHONY_MOVEMENTS[currentMovementIdx];
+        if (curMov) {
+          if (curMov.id === 0 || curMov.id === 1) {
+            mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C1</span>`;
+            tag = '1g1t1c';
+            desc = (curMov.id === 0)
+              ? 'Grupo A • T1 Génesis • C1 Afectivo (Adagio Preludio)'
+              : 'Grupo A • T1 Génesis • C1 Afectivo (Bordes y Centroide)';
+          } else if (curMov.id === 2) {
+            if (typeof step === 'number' && step > 0) {
+              if (step <= 10) {
+                mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-pink-300">C1</span>`;
+                tag = '1g1t1c';
+                desc = `Grupo A • T1 Génesis • C1 Afectivo (Compás ${step}/20)`;
+              } else {
+                mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C2</span>`;
+                tag = '1g1t2c';
+                desc = `Grupo A • T1 Génesis • C2 Tarea Operativa (Compás ${step}/20)`;
+              }
+            } else {
+              mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-pink-300">C1</span>➔<span class="text-emerald-300">C2</span>`;
+              tag = '1g1t[c1➔c2]';
+              desc = 'Grupo A • T1 Génesis • Modulación C1 Afectivo ➔ C2 Tarea';
+            }
+          } else if (curMov.id === 3) {
+            if (typeof step === 'number' && step > 0) {
+              if (step <= 8) {
+                mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-sky-300">T1</span> · <span class="text-emerald-300">C1</span>`;
+                tag = '1g1t1c';
+                desc = `Grupo A • T1 Génesis • C1 Afectivo (Compás ${step}/24)`;
+              } else if (step <= 16) {
+                mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T2</span> · <span class="text-emerald-300">C1</span>`;
+                tag = '1g2t1c';
+                desc = `Grupo A • T2 Crisis / Tensión • C1 Afectivo (Compás ${step}/24)`;
+              } else {
+                mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-emerald-300">T3</span> · <span class="text-emerald-300">C1</span>`;
+                tag = '1g3t1c';
+                desc = `Grupo A • T3 Madurez / Reorg. • C1 Afectivo (Compás ${step}/24)`;
+              }
+            } else {
+              mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">[T1➔T2➔T3]</span> · <span class="text-emerald-300">C1</span>`;
+              tag = '1g[t1➔t3]1c';
+              desc = 'Grupo A • Morfogénesis Diacrónica T1 ➔ T2 ➔ T3 • C1 Afectivo';
+            }
+          } else if (curMov.id === 4) {
+            if (typeof step === 'number' && step > 0) {
+              if (step <= 10) {
+                mainHtml = `<span class="text-cyan-300">G1 (A)</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C1</span>`;
+                tag = '1g1t1c';
+                desc = `Grupo A (1A..5A) • T1 Génesis • C1 Afectivo (Compás ${step}/20)`;
+              } else {
+                mainHtml = `<span class="text-amber-400">G2 (B)</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C1</span>`;
+                tag = '2g1t1c';
+                desc = `Grupo B (1B..5B) • T1 Génesis • C1 Afectivo (Compás ${step}/20)`;
+              }
+            } else {
+              mainHtml = `<span class="text-cyan-300">[G1</span>➔<span class="text-amber-400">G2]</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C1</span>`;
+              tag = '[g1➔g2]1t1c';
+              desc = 'Contraste Inter-Grupal: Grupo A (1A..5A) frente a Grupo B (1B..5B)';
+            }
+          } else if (curMov.id === 5) {
+            mainHtml = `<span class="text-purple-300">Planos</span> · <span class="text-cyan-300">GT</span> · <span class="text-amber-300">GC</span> · <span class="text-emerald-300">TC</span>`;
+            tag = 'gt·gc·tc';
+            desc = 'Proyecciones Bivariadas Cruzadas (18 Compases)';
+          } else if (curMov.id === 6) {
+            mainHtml = `<span class="text-amber-300">TUTTI</span> · <span class="text-cyan-300">Gx</span> · <span class="text-amber-300">Ty</span> · <span class="text-emerald-300">Cz</span>`;
+            tag = 'gxtycz';
+            desc = 'Clímax Orquestal: Gran Tablero Acuárico Simultáneo (GxTyCz)';
+          }
+        }
+      }
+
+      // 2. Sincronización ante modal de matrices SMIa abierto
+      if (typeof smiaModalVisible !== 'undefined' && smiaModalVisible && typeof activeSmiaSliceIdx !== 'undefined' && typeof getConcertSlices === 'function') {
+        const slices = getConcertSlices();
+        const curSlice = slices[activeSmiaSliceIdx];
+        if (curSlice) {
+          if (curSlice.key === 'g1c1') {
+            mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-pink-300">C1</span>`;
+            tag = '1g1t1c';
+            desc = 'Grupo A • T1 Génesis • C1 Afectivo / Simpatía';
+          } else if (curSlice.key === 'g1c2') {
+            mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C2</span>`;
+            tag = '1g1t2c';
+            desc = 'Grupo A • T1 Génesis • C2 Funcional / Tarea Operativa';
+          } else if (curSlice.key === 'g2c1') {
+            mainHtml = `<span class="text-amber-400">G2</span> · <span class="text-amber-300">T1</span> · <span class="text-pink-300">C1</span>`;
+            tag = '2g1t1c';
+            desc = 'Grupo B • T1 Génesis • C1 Afectivo (Fricción / Ostracismo)';
+          } else if (curSlice.key === 'g2c2') {
+            mainHtml = `<span class="text-amber-400">G2</span> · <span class="text-amber-300">T1</span> · <span class="text-emerald-300">C2</span>`;
+            tag = '2g1t2c';
+            desc = 'Grupo B • T1 Génesis • C2 Funcional / Tarea Operativa';
+          }
+        }
+      }
+
+      // 3. Sincronización con modo IMAX puro
+      if (typeof mainMode !== 'undefined' && mainMode === 'imax' && (!GRAND_SYMPHONY_MOVEMENTS || currentMovementIdx === 3)) {
+        mainHtml = `<span class="text-cyan-300">G1</span> · <span class="text-amber-300">[T1..T4]</span> · <span class="text-emerald-300">C1</span>`;
+        tag = '1g[t1..t4]1c';
+        desc = 'Grupo A • Sábana IMAX 4D (Diacronía T1..T4) • C1 Afectivo';
+      } else if (typeof mainMode !== 'undefined' && mainMode === 'multi') {
+        mainHtml = `<span class="text-amber-400">G2</span> · <span class="text-amber-300">T2</span> · <span class="text-emerald-300">C2</span>`;
+        tag = '2g2t2c';
+        desc = 'Corpus Multidimensional Acuárico G2 · T2 · C2';
+      }
+
+      gtcMainEl.innerHTML = mainHtml;
+      gtcTagEl.textContent = tag;
+      gtcDescEl.textContent = desc;
+    }
 
     // Helper para insignias 3D flotantes (tipografía pura translúcida y resplandeciente sin recuadros opacos)
     function createTitleBadge(text, colorHex, width = 340, height = 70) {
@@ -5620,6 +5843,17 @@
       if (subEl && channelNames[channelKey]) {
         subEl.textContent = `📺 Canal Seleccionado: ${channelNames[channelKey]} • 432 Hz Synch`;
       }
+
+      if (channelKey === 'c1') activeCriterionKey = 'c1';
+      else if (channelKey === 'c2') activeCriterionKey = 'c2';
+      else if (channelKey === 'g1') activeGroupKey = 'g1';
+      else if (channelKey === 'g2') activeGroupKey = 'g2';
+      else if (['t1', 't2', 't3', 't4'].includes(channelKey)) {
+        activeSabanaKey = channelKey;
+        if (typeof selectSabana === 'function') selectSabana(channelKey);
+      }
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
+
       playHarmonicChime(0.5, 0.25, { isSpine: true, pan: 0.0 });
     }
 
@@ -7042,6 +7276,7 @@
     }
 
     function renderSmiaMatricesModal(tabKey = 'all') {
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
       const container = document.getElementById('smia-modal-content');
       if (!container) return;
 
@@ -7337,6 +7572,7 @@
         if (teleEl) {
           teleEl.textContent = `Partitura .sinfo Cargada • Listo para Reproducir`;
         }
+        if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
 
       } catch (err) {
         console.error('Error parseando .sinfo:', err);
@@ -8732,6 +8968,7 @@
       solfeoCurrentStep = 0;
 
       updateChainUI();
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI(0);
       const statusEl = document.getElementById('symphony-cycle-status');
       if (statusEl) statusEl.textContent = `Movimiento ${currentMovementIdx + 1}/7`;
 
@@ -9450,6 +9687,7 @@
     }
 
     function updateSolfeoStepUI(step, dyad = '', q81 = '', den = 0, isRepeated = false, repeatCount = 1) {
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI(step);
       const total = solfeoSequence.length || 25;
       const stepLbl = document.getElementById('solfeo-step-lbl');
       if (stepLbl) stepLbl.textContent = `${step} / ${total} Notas`;
@@ -9633,6 +9871,7 @@
           }
         }
       }
+      syncNavPodPlayUI();
     }
 
     function stepSolfeoManual(dir) {
@@ -9900,6 +10139,7 @@
         btn.classList.remove('border-amber-500/80', 'bg-amber-950/80', 'text-amber-300');
         btn.classList.add('border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-300');
       }
+      syncNavPodPlayUI();
     }
 
     function stepDualManual(dir) {
@@ -10040,6 +10280,7 @@
 
         applyMultiAquariumView();
       }
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
     }
 
     function applyDualBoardsView() {
@@ -10404,6 +10645,7 @@
 
     function selectSabana(key) {
       loadSabana(key);
+      if (typeof updateGtcIndicatorUI === 'function') updateGtcIndicatorUI();
       const aq = aquariums[key];
       if (!aq) return;
       initAudio();
@@ -10689,6 +10931,7 @@
           dockPlayLbl.textContent = 'PLAY';
         }
       }
+      syncNavPodPlayUI();
     }
 
     function stepFilm(dir) {

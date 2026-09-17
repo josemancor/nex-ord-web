@@ -1110,6 +1110,21 @@
       pointer-events: none;
       cursor: default;
     }
+    .nav-pod-play {
+      color: #00FF87 !important;
+    }
+    .nav-pod-play:hover {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #00FF87 !important;
+      transform: scale(1.32) !important;
+      filter: drop-shadow(0 0 12px rgba(0, 255, 135, 0.95)) !important;
+    }
+    .nav-pod-play.playing {
+      color: #00E5FF !important;
+      filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.95)) !important;
+    }
 
 </style>
 </head>
@@ -3059,7 +3074,28 @@
             btnPlay.classList.toggle('playing', STATE.isPlayingWaves);
             document.getElementById('play-icon').innerText = STATE.isPlayingWaves ? '⏸' : '▶';
             document.getElementById('play-text').innerText = STATE.isPlayingWaves ? 'Pausar Olas' : 'Olas Vivas';
+            syncNavPodWavesUI();
         });
+
+    window.toggleNavPodPlayWaves = function() {
+        const btnPlay = document.getElementById('btn-play-waves');
+        if (btnPlay) {
+            btnPlay.click();
+        } else {
+            STATE.isPlayingWaves = !STATE.isPlayingWaves;
+            syncNavPodWavesUI();
+        }
+    };
+
+    function syncNavPodWavesUI() {
+        const navBtn = document.getElementById('nav-pod-btn-play');
+        const navIcon = document.getElementById('nav-pod-play-icon');
+        if (navIcon) navIcon.innerText = STATE.isPlayingWaves ? '⏸' : '▶';
+        if (navBtn) {
+            navBtn.classList.toggle('playing', !!STATE.isPlayingWaves);
+            navBtn.title = STATE.isPlayingWaves ? 'Pausar Olas (Play/Stop)' : 'Reproducir Olas (Play/Stop)';
+        }
+    }
 
         // Vaivén de Criterios: Activar / Pausar
         function toggleVaiven() {
@@ -3458,6 +3494,9 @@
     <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollBy({top: -window.innerHeight*0.8, behavior: 'smooth'})" title="Subir"><span>▲</span></button>
     <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollBy({top: window.innerHeight*0.8, behavior: 'smooth'})" title="Bajar"><span>▼</span></button>
     <button class="nav-pod-btn nav-pod-next-lvl" onclick="window.history.forward()" title="Adelante"><span>▶</span></button>
+    <button onclick="toggleNavPodPlayWaves()" id="nav-pod-btn-play" class="nav-pod-btn nav-pod-play" title="Reproducir / Pausar Olas (Play/Stop)">
+      <span id="nav-pod-play-icon">▶</span>
+    </button>
   </nav>
 
 </body>

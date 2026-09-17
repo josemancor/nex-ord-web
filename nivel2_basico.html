@@ -2346,6 +2346,22 @@
       color: #FFFFFF !important;
       box-shadow: 0 0 14px rgba(255, 0, 127, 0.7) !important;
     }
+        .nav-pod-play {
+      color: #00FF87 !important;
+      border-color: rgba(0, 255, 135, 0.4) !important;
+    }
+    .nav-pod-play:hover {
+      background: #00FF87 !important;
+      border-color: #00FF87 !important;
+      color: #030308 !important;
+      transform: scale(1.18) !important;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.95) !important;
+    }
+    .nav-pod-play.playing {
+      color: #00E5FF !important;
+      border-color: #00E5FF !important;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.6) !important;
+    }
     .nav-pod-disabled {
       opacity: 0.22;
       pointer-events: none;
@@ -2869,6 +2885,9 @@
       <span>▼</span>
     </button>
     <a href="nivel3_esquema.html" class="nav-pod-btn nav-pod-next-lvl" title="Nivel Siguiente (Nivel 3: Esquema Operativo)"><span>▶</span></a>
+    <button onclick="toggleCaratulaAudio()" id="nav-pod-btn-play" class="nav-pod-btn nav-pod-play" title="Reproducir / Detener Locución (Play/Stop)">
+      <span id="nav-pod-play-icon">▶</span>
+    </button>
   </nav>
 
         <section id="pantalla-2-caratula" class="screen-section transit-caratula-section">
@@ -3815,6 +3834,7 @@
     function scrollToScreen(id) {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
       const el = document.getElementById(id);
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
@@ -3829,6 +3849,7 @@
     function continueToLevel(targetId) {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
       scrollToScreen(targetId);
     }
 
@@ -4752,6 +4773,7 @@
   };
 
   if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
   if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
 
   function updateUnifiedHud() {
@@ -4898,6 +4920,7 @@
   function scrollToScreen(screenId) {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
     const el = document.getElementById(screenId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -4912,6 +4935,7 @@
   function continueToLevel(targetId) {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
     scrollToScreen(targetId);
   }
 
@@ -4972,18 +4996,21 @@
 
     window.caratulaSpeechUtter.onstart = () => {
       window.isCaratulaAudioPlaying = true;
+      syncNavPodAudioUI(true);
       if (btnAudio) btnAudio.classList.add('playing');
       if (playIcon) playIcon.textContent = '⏹';
     };
 
     window.caratulaSpeechUtter.onend = () => {
       window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
     };
 
     window.caratulaSpeechUtter.onerror = () => {
       window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
     };
@@ -4991,10 +5018,22 @@
     window.speechSynthesis.speak(window.caratulaSpeechUtter);
   }
 
+  
+  function syncNavPodAudioUI(isPlaying) {
+    const navBtn = document.getElementById('nav-pod-btn-play');
+    const navIcon = document.getElementById('nav-pod-play-icon');
+    if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '▶';
+    if (navBtn) {
+      navBtn.classList.toggle('playing', !!isPlaying);
+      navBtn.title = isPlaying ? 'Pausar Locución (Play/Stop)' : 'Reproducir Locución (Play/Stop)';
+    }
+  }
+
   function toggleCaratulaAudio() {
     if (window.isCaratulaAudioPlaying) {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       window.isCaratulaAudioPlaying = false;
+      syncNavPodAudioUI(false);
       const btnAudio = document.getElementById('btn-audio-caratula');
       const playIcon = document.getElementById('audio-play-icon');
       if (btnAudio) btnAudio.classList.remove('playing');
