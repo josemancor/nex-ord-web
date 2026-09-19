@@ -30,6 +30,9 @@
       0% { transform: scale(0.7); opacity: 0; }
       100% { transform: scale(1.0); opacity: 1; }
     }
+    .band-slider {
+      background: linear-gradient(90deg, rgba(255,0,127,0.3) 0%, rgba(251,191,36,0.3) 50%, rgba(0,255,135,0.3) 100%);
+    }
   </style>
 </head>
 <body class="bg-transparent text-[var(--foreground)] antialiased p-2 select-none">
@@ -43,21 +46,17 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-xs font-extrabold tracking-widest text-cyan-400 uppercase">VISORD ORQUESTA SOCIOMÉTRICA</span>
+            <span class="text-xs font-extrabold tracking-widest text-cyan-400 uppercase">VISORD ORQUESTA SERIAL</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700" id="badge-matrix-tag">Sociomatriz Única • N=5</span>
           </div>
           <h1 class="text-sm md:text-base font-black tracking-wide text-white flex items-center gap-2">
-            POLIFONÍA CUADRIDIMENSIONAL: SUJETO • ORDEN • POSICIÓN • PREFERENCIA
+            BANDAS DE OSCILACIÓN (1-N) • TEMPO OSCILANTE • VIOLÍN (+) vs TROMBÓN (-)
           </h1>
         </div>
       </div>
       
       <!-- CONTROLES SUPERIORES: AUDIO Y CONFIGURACIÓN GRUPAL -->
       <div class="flex items-center gap-2">
-        <button id="btn-variation-toggle" onclick="toggleMelodicVariation()" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm" title="Alternar entre escala melódica viva y tonos fijos">
-          <span>🎵</span> <span id="variation-label">ESCALA VIVA: ON</span>
-        </button>
-
         <button id="btn-audio-toggle" onclick="toggleAudio()" class="px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/20">
           <span id="audio-icon">🔊</span> <span id="audio-label">AUDIO: ON</span>
         </button>
@@ -73,113 +72,118 @@
       </div>
     </div>
 
-    <!-- CANONICAL 4D FORMULA BAR: SUJETO - ORDEN - POSICIÓN - PREFERENCIA ... RECIPROCIDAD -->
-    <div class="mt-2.5 bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-purple-950/40 border border-cyan-500/30 rounded-xl p-2.5 shadow-md">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs font-mono">
-        <div class="flex items-center gap-1.5 font-black text-cyan-300">
-          <span class="text-sm">📐</span> <span class="tracking-wider uppercase">FÓRMULA CANÓNICA:</span>
+    <!-- PREFERENCE POLARITY SHOWCASE: VIOLIN (+) vs TROMBONE (-) -->
+    <div class="mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono">
+      <div class="p-2.5 rounded-xl bg-emerald-950/25 border border-emerald-500/30 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-lg border border-emerald-500/40">
+            🎻
+          </div>
+          <div>
+            <div class="font-black text-emerald-300 text-[11px] flex items-center gap-1">
+              <span>PREFERENCIA POSITIVA (+): VIOLÍN</span>
+            </div>
+            <div class="text-[10px] text-slate-300 font-sans">Canto lírico • Cuerda frotada con vibrato expresivo (5.3Hz)</div>
+            <div class="text-[9px] text-emerald-400/80 font-sans">Orden preferencial descendente (1ª en cúspide → 2ª desciende)</div>
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-1 text-[11px]">
-          <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-200 border border-cyan-500/40 font-bold" title="1. Identidad nodal del participante (1..5) → Tono base fundamental f0 en escala pentatónica">1. SUJETO (Tono Base f₀)</span>
-          <span class="text-slate-500">→</span>
-          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-500/40 font-bold" title="2. Jerarquía de elección (1º, 2º...) → Dirección escalar (Ascendente en afinidad, Descendente en rechazo)">2. ORDEN (Escala Asc/Desc)</span>
-          <span class="text-slate-500">→</span>
-          <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 font-bold" title="3. Cuadrante del tetragrama (A1..A4) → Instrumento acústico y envolvente temporal (Expectativa larga, Fáctica corta)">3. POSICIÓN (Instrumento & Duración)</span>
-          <span class="text-slate-500">→</span>
-          <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-200 border border-purple-500/40 font-bold" title="4. Polaridad del lazo (+, 0, -) → Altura tonal modal (Alto, Medio, Bajo)">4. PREFERENCIA (Registro Polar)</span>
-          <span class="text-pink-400 font-black animate-pulse text-sm">...</span>
-          <span class="px-2 py-0.5 rounded bg-pink-500/20 text-pink-200 border border-pink-500/40 font-extrabold" title="Emergencia dialéctica de la díada (i, j) → Consonancia <Ee>, Fricción [Rr], o Contrapunto <Er]">[+] RECIPROCIDAD (Acorde Diádico)</span>
+        <button onclick="demoViolinTrombone('violin')" class="px-2.5 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-200 border border-emerald-500/40 text-[10px] font-bold transition-all">
+          Probar Violín
+        </button>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-rose-950/25 border border-rose-500/30 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center text-lg border border-rose-500/40">
+            🎺
+          </div>
+          <div>
+            <div class="font-black text-rose-300 text-[11px] flex items-center gap-1">
+              <span>PREFERENCIA NEGATIVA (-): TROMBÓN</span>
+            </div>
+            <div class="text-[10px] text-slate-300 font-sans">Metal de bronce • Glissando de vara sombrío descendente</div>
+            <div class="text-[9px] text-rose-400/80 font-sans">Caída a la base de la banda y resonancia gutural de fricción</div>
+          </div>
         </div>
+        <button onclick="demoViolinTrombone('trombone')" class="px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500/40 text-rose-200 border border-rose-500/40 text-[10px] font-bold transition-all">
+          Probar Trombón
+        </button>
       </div>
     </div>
 
-    <!-- 4 INSTRUMENTS RACK (p_DA, DA, REC, p_REC) -->
+    <!-- SUBJECT OSCILLATION BANDS STRIP: | 196Hz ... 294Hz | (1 to N) -->
     <div class="mt-2 bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
-      <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center justify-between mb-1.5">
         <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <span>🎼 BANCO DE LOS 4 INSTRUMENTOS CANÓNICOS (POSICIÓN & DURACIÓN):</span>
-          <span class="text-slate-500 font-normal">(Expectativa más larga que realidad fáctica)</span>
+          <span>📊 BANDAS DETERMINADAS DE OSCILACIÓN | &nbsp; | (SUJETOS 1 A 5):</span>
+          <span class="text-slate-500 font-normal">(Orden preferencial descendente dentro de su banda)</span>
         </span>
-        <span class="text-[10px] text-cyan-400/80 font-mono">Toca para escuchar escala de cada posición</span>
+        <span class="text-[10px] text-cyan-400/80 font-mono">Toca un sujeto para barrer su banda</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-2 text-xs font-mono" id="subject-bands-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- 4 POSITIONS RACK WITH OSCILLATING TEMPO -->
+    <div class="mt-2 bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span>⏱️ LAS 4 POSICIONES & TEMPO OSCILANTE ENTRE MÁRGENES:</span>
+          <span class="text-slate-500 font-normal">(Expectativa más larga que la realidad fáctica)</span>
+        </span>
+        <span class="text-[10px] text-amber-300 font-mono" id="live-tempo-indicator">Tempo oscilante: ~220ms</span>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono">
         <!-- POSICIÓN 1: A1 (p_DA) -->
-        <div onclick="demoInstrument(1)" class="cursor-pointer group p-2 rounded-lg bg-cyan-950/20 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+        <div onclick="demoPosition(1)" class="cursor-pointer group p-2 rounded-lg bg-cyan-950/20 border border-cyan-500/30 hover:border-cyan-400 transition-all">
           <div class="flex items-center justify-between">
             <span class="text-cyan-300 font-bold flex items-center gap-1">
               <span>🌬️</span> <span>A1: p_DA</span>
             </span>
-            <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-200">~420ms (Larga)</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-200">390-470ms</span>
           </div>
-          <div class="text-[10px] text-slate-300 font-sans mt-1">Flauta de Viento / Pad</div>
-          <div class="text-[9px] text-slate-500 font-sans">Expectativa emisor (prospectiva)</div>
+          <div class="text-[10px] text-slate-300 font-sans mt-0.5">Expectativa Emisor</div>
+          <div class="text-[9px] text-slate-500 font-sans">Flauta / Suspensión elástica</div>
         </div>
 
         <!-- POSICIÓN 2: A2 (DA) -->
-        <div onclick="demoInstrument(2)" class="cursor-pointer group p-2 rounded-lg bg-emerald-950/20 border border-emerald-500/30 hover:border-emerald-400 transition-all">
+        <div onclick="demoPosition(2)" class="cursor-pointer group p-2 rounded-lg bg-emerald-950/20 border border-emerald-500/30 hover:border-emerald-400 transition-all">
           <div class="flex items-center justify-between">
             <span class="text-emerald-300 font-bold flex items-center gap-1">
               <span>🎯</span> <span>A2: DA</span>
             </span>
-            <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-200">~190ms (Corta)</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-200">170-220ms</span>
           </div>
-          <div class="text-[10px] text-slate-300 font-sans mt-1">Pluck Percusivo / Marimba</div>
-          <div class="text-[9px] text-slate-500 font-sans">Preferencia fáctica emisor</div>
+          <div class="text-[10px] text-slate-300 font-sans mt-0.5">Preferencia Fáctica Emisor</div>
+          <div class="text-[9px] text-slate-500 font-sans">Pluck / Pulso decidido</div>
         </div>
 
         <!-- POSICIÓN 3: A3 (REC) -->
-        <div onclick="demoInstrument(3)" class="cursor-pointer group p-2 rounded-lg bg-indigo-950/20 border border-indigo-500/30 hover:border-indigo-400 transition-all">
+        <div onclick="demoPosition(3)" class="cursor-pointer group p-2 rounded-lg bg-indigo-950/20 border border-indigo-500/30 hover:border-indigo-400 transition-all">
           <div class="flex items-center justify-between">
             <span class="text-indigo-300 font-bold flex items-center gap-1">
               <span>🎻</span> <span>A3: REC</span>
             </span>
-            <span class="text-[9px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-200">~210ms (Corta)</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-200">180-240ms</span>
           </div>
-          <div class="text-[10px] text-slate-300 font-sans mt-1">Cuerda / Viola Cálida</div>
-          <div class="text-[9px] text-slate-500 font-sans">Preferencia fáctica recibida</div>
+          <div class="text-[10px] text-slate-300 font-sans mt-0.5">Preferencia Fáctica Recibida</div>
+          <div class="text-[9px] text-slate-500 font-sans">Cuerda / Recepción corpórea</div>
         </div>
 
         <!-- POSICIÓN 4: A4 (p_REC) -->
-        <div onclick="demoInstrument(4)" class="cursor-pointer group p-2 rounded-lg bg-purple-950/20 border border-purple-500/30 hover:border-purple-400 transition-all">
+        <div onclick="demoPosition(4)" class="cursor-pointer group p-2 rounded-lg bg-purple-950/20 border border-purple-500/30 hover:border-purple-400 transition-all">
           <div class="flex items-center justify-between">
             <span class="text-purple-300 font-bold flex items-center gap-1">
               <span>🪕</span> <span>A4: p_REC</span>
             </span>
-            <span class="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-200">~440ms (Larga)</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-200">410-490ms</span>
           </div>
-          <div class="text-[10px] text-slate-300 font-sans mt-1">Arpa Celestial / Cristal</div>
-          <div class="text-[9px] text-slate-500 font-sans">Expectativa reflejada (eco)</div>
+          <div class="text-[10px] text-slate-300 font-sans mt-0.5">Expectativa Recibida</div>
+          <div class="text-[9px] text-slate-500 font-sans">Arpa / Eco suspendido</div>
         </div>
-      </div>
-    </div>
-
-    <!-- SUBJECT TONAL IDENTITY & SOUND CHECK STRIP -->
-    <div class="mt-2 bg-slate-950/80 border border-slate-800/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-      <div class="flex items-center gap-2 text-[11px]">
-        <span class="text-slate-400 font-semibold">Tono Base de Sujeto:</span>
-        <button onclick="demoSubjectVoice(0)" class="px-2 py-0.5 rounded bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/40 font-mono font-bold hover:bg-[#38BDF8]/30 transition-all" title="Probar escala de Sujeto 1">
-          1: C4 261Hz
-        </button>
-        <button onclick="demoSubjectVoice(1)" class="px-2 py-0.5 rounded bg-[#00FF87]/15 text-[#00FF87] border border-[#00FF87]/40 font-mono font-bold hover:bg-[#00FF87]/30 transition-all" title="Probar escala de Sujeto 2">
-          2: D4 293Hz
-        </button>
-        <button onclick="demoSubjectVoice(2)" class="px-2 py-0.5 rounded bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/40 font-mono font-bold hover:bg-[#FBBF24]/30 transition-all" title="Probar escala de Sujeto 3">
-          3: E4 329Hz
-        </button>
-        <button onclick="demoSubjectVoice(3)" class="px-2 py-0.5 rounded bg-[#C084FC]/15 text-[#C084FC] border border-[#C084FC]/40 font-mono font-bold hover:bg-[#C084FC]/30 transition-all" title="Probar escala de Sujeto 4">
-          4: G4 392Hz
-        </button>
-        <button onclick="demoSubjectVoice(4)" class="px-2 py-0.5 rounded bg-[#FB7185]/15 text-[#FB7185] border border-[#FB7185]/40 font-mono font-bold hover:bg-[#FB7185]/30 transition-all" title="Probar escala de Sujeto 5">
-          5: A4 440Hz
-        </button>
-      </div>
-
-      <div class="flex items-center gap-2 text-[10px] font-mono">
-        <span class="text-slate-500">Dirección Escalar:</span>
-        <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold" title="Elección: Escala Ascendente hacia la luz (1ª 8ª → 2ª 10ª → 12ª → 15ª)">📈 Elección: Ascendente</span>
-        <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold" title="Neutro: Ondulación templada (1ª → 3ª → 5ª)">〰️ Neutro: Ondulación</span>
-        <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold" title="Rechazo: Escala Descendente a la profundidad (1º Sub-4ª → 2º Sub-8ª)">📉 Rechazo: Descendente</span>
       </div>
     </div>
 
@@ -235,7 +239,7 @@
       <div class="md:col-span-7 bg-slate-950/70 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            📋 SOCIOMATRIZ TETRAGRÁMICA <span class="text-[10px] text-slate-500 font-normal">(Toca una celda para oír su diálogo melódico)</span>
+            📋 SOCIOMATRIZ TETRAGRÁMICA <span class="text-[10px] text-slate-500 font-normal">(Toca una celda para oír Violín ⇄ Trombón)</span>
           </span>
           <div class="flex items-center gap-1 bg-slate-900 rounded p-0.5 text-[10px]">
             <button id="btn-view-smia" onclick="setViewMode('SMIa')" class="px-2 py-0.5 rounded font-bold bg-cyan-500/20 text-cyan-300">SMIa</button>
@@ -287,10 +291,10 @@
 
         <div class="mt-2 pt-1.5 border-t border-slate-800/80 text-[10px] text-slate-400 flex items-center justify-between">
           <span class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 2=&lt;Ee&gt; (Consonancia Viva)
-            <span class="w-2 h-2 rounded-full bg-rose-400 ml-1"></span> 1=[Rr] (Fricción Profunda)
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 2=&lt;Ee&gt; (Violín Lírico)
+            <span class="w-2 h-2 rounded-full bg-rose-400 ml-1"></span> 1=[Rr] (Trombón Sombrío)
           </span>
-          <span class="font-mono text-cyan-400 text-[9px]" id="audio-engine-state">Web Audio API • 4 Timbres</span>
+          <span class="font-mono text-cyan-400 text-[9px]" id="audio-engine-state">Bandas 1-N • Violín/Trombón</span>
         </div>
       </div>
 
@@ -299,42 +303,15 @@
   </div>
 
   <script>
-    // 5 Unique Subjects: Canonical Pentatonic Scale
-    const SUBJECT_TONES = [
-      { id: 1, name: '1', note: 'C4', freq: 261.63, color: '#38BDF8', glow: 'rgba(56, 189, 248, 0.7)' },
-      { id: 2, name: '2', note: 'D4', freq: 293.66, color: '#00FF87', glow: 'rgba(0, 255, 135, 0.7)' },
-      { id: 3, name: '3', note: 'E4', freq: 329.63, color: '#FBBF24', glow: 'rgba(251, 191, 36, 0.7)' },
-      { id: 4, name: '4', note: 'G4', freq: 392.00, color: '#C084FC', glow: 'rgba(192, 132, 252, 0.7)' },
-      { id: 5, name: '5', note: 'A4', freq: 440.00, color: '#FB7185', glow: 'rgba(251, 113, 133, 0.7)' }
+    // 5 Unique Subjects with DETERMINED OSCILLATION BANDS | min ... max |
+    // Ordered from 1 to N with escalating vocal/instrumental tessituras
+    const SUBJECT_BANDS = [
+      { id: 1, name: '1', note: 'C4', fMin: 196.0, fBase: 261.63, fMax: 329.63, color: '#38BDF8', glow: 'rgba(56, 189, 248, 0.7)', role: 'Barítono/Bajo' },
+      { id: 2, name: '2', note: 'D4', fMin: 220.0, fBase: 293.66, fMax: 369.99, color: '#00FF87', glow: 'rgba(0, 255, 135, 0.7)', role: 'Tenor' },
+      { id: 3, name: '3', note: 'E4', fMin: 246.9, fBase: 329.63, fMax: 415.30, color: '#FBBF24', glow: 'rgba(251, 191, 36, 0.7)', role: 'Contralto' },
+      { id: 4, name: '4', note: 'G4', fMin: 293.7, fBase: 392.00, fMax: 493.88, color: '#C084FC', glow: 'rgba(192, 132, 252, 0.7)', role: 'Mezzosoprano' },
+      { id: 5, name: '5', note: 'A4', fMin: 329.6, fBase: 440.00, fMax: 554.37, color: '#FB7185', glow: 'rgba(251, 113, 133, 0.7)', role: 'Soprano' }
     ];
-
-    // INTERVAL PALETTES WITHIN EACH RANGE (ANTI-MONOTONY ARCHITECTURE)
-    // Structured for ascending scale in choices (+) and descending scale in rejections (-)
-    const RANGE_SCALES = {
-      high: [
-        { name: '8ª (Tónica Alta)', st: 12, mult: 2.000 },
-        { name: '9ª (Segunda Alta)', st: 14, mult: 2.245 },
-        { name: '10ª (Tercera Mayor)', st: 16, mult: 2.520 },
-        { name: '12ª (Quinta Alta)', st: 19, mult: 2.997 },
-        { name: '13ª (Sexta Mayor)', st: 21, mult: 3.364 },
-        { name: '15ª (Doble Octava)', st: 24, mult: 4.000 }
-      ],
-      medium: [
-        { name: '1ª (Fundamental Pura)', st: 0, mult: 1.000 },
-        { name: '2ª (Segunda Suspendida)', st: 2, mult: 1.122 },
-        { name: '3ª (Tercera Dulce)', st: 4, mult: 1.260 },
-        { name: '4ª (Cuarta Justa)', st: 5, mult: 1.335 },
-        { name: '5ª (Quinta Templada)', st: 7, mult: 1.498 }
-      ],
-      low: [
-        { name: 'Sub-8ª (Tónica Profunda)', st: -12, mult: 0.500 },
-        { name: 'Sub-7ª (Séptima Baja)', st: -10, mult: 0.561 },
-        { name: 'Sub-6ª (Sexta Tensión)', st: -9, mult: 0.595 },
-        { name: 'Sub-5ª (Quinta Grave)', st: -7, mult: 0.667 },
-        { name: 'Sub-Tritono (Fricción)', st: -6, mult: 0.707 },
-        { name: 'Sub-4ª (Bajo Moderado)', st: -5, mult: 0.749 }
-      ]
-    };
 
     // Factual Data from NEXORD Canonical Corpus
     const G1_ORD = [
@@ -403,8 +380,6 @@
     let isPlaying = false;
     let playTimer = null;
     let audioEnabled = true;
-    let melodicVariationEnabled = true;
-    let melodicStepCounter = 0;
 
     // ==========================================
     // NATIVE WEB AUDIO SYNTHESIZER
@@ -444,232 +419,207 @@
       }
     }
 
-    function toggleMelodicVariation() {
-      melodicVariationEnabled = !melodicVariationEnabled;
-      const btn = document.getElementById('btn-variation-toggle');
-      const label = document.getElementById('variation-label');
-      if (melodicVariationEnabled) {
-        btn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm';
-        label.innerText = 'ESCALA VIVA: ON';
-      } else {
-        btn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-slate-800 text-slate-400 border border-slate-700';
-        label.innerText = 'ESCALA VIVA: OFF';
-      }
-    }
-
     /**
-     * OBTENCIÓN DE NOTA DENTRO DEL RANGO CON ESCALA ASCENDENTE O DESCENDENTE
-     * - Elecciones: Escala ASCENDENTE hacia la luz y la cúspide armónica (1ª 8ª -> 2ª 10ª/12ª/15ª)
-     * - Rechazos: Escala DESCENDENTE hacia el abismo de la fricción (1º Sub-4ª/5ª -> 2º Sub-8ª)
-     * - Neutro: Ondulación templada (1ª fundamental -> 3ª dulce -> 5ª pura)
+     * CÁLCULO DE FRECUENCIA DENTRO DE LA BANDA DEL SUJETO | fMin ... fMax |
+     * ORDEN PREFERENCIAL DESCENDENTE:
+     * - 1ª Elección ('A'): Techo de su banda (fMax) en la luz de la preferencia máxima.
+     * - 2ª Elección ('B'): Desciende hacia la zona media-alta de la banda.
+     * - Neutro ('0'): Centro exacto de la banda (fBase).
+     * - 1º Rechazo ('b'): Desciende hacia la zona baja de la banda.
+     * - 2º Rechazo ('a'): Suelo inferior de la banda (fMin) o sub-octava profunda.
      */
-    function getHumanizedNote(baseFreq, polarity, rankChar = '', seqOffset = 0) {
-      if (!melodicVariationEnabled) {
-        let mult = polarity > 0 ? 2.0 : (polarity < 0 ? 0.5 : 1.0);
-        let name = polarity > 0 ? 'Tono Alto (+ Fijo)' : (polarity < 0 ? 'Tono Bajo (- Fijo)' : 'Tono Medio (0 Fijo)');
-        return { freq: baseFreq * mult, intervalName: name, mult: mult };
-      }
-
-      let palette;
-      let selectedInterval;
+    function getBandFreq(sIdx, rankChar, polarity) {
+      const b = SUBJECT_BANDS[sIdx];
+      let freq;
+      let noteName = '';
 
       if (polarity > 0) {
-        palette = RANGE_SCALES.high;
+        // PREFERENCIA POSITIVA (VIOLÍN): Zona alta de la banda en orden descendente
         if (rankChar === 'A') {
-          // 1ª Elección: Escala ascendente base (8ª Tónica, 9ª Segunda, 10ª Tercera Mayor)
-          let asc1 = [palette[0], palette[1], palette[2]];
-          selectedInterval = asc1[(seqOffset + (melodicStepCounter++)) % asc1.length];
-        } else if (rankChar === 'B') {
-          // 2ª Elección: Escala ascendente hacia la cúspide (10ª Tercera, 12ª Quinta, 13ª Sexta, 15ª Doble Octava)
-          let asc2 = [palette[2], palette[3], palette[4], palette[5]];
-          selectedInterval = asc2[(seqOffset + (melodicStepCounter++)) % asc2.length];
+          // 1ª Elección: Techo de la banda
+          freq = b.fMax;
+          noteName = `Techo Banda (${Math.round(freq)}Hz)`;
         } else {
-          selectedInterval = palette[Math.floor(Math.random() * palette.length)];
+          // 2ª Elección: Desciende un peldaño
+          freq = b.fBase * 1.12; 
+          noteName = `Banda Alta (${Math.round(freq)}Hz)`;
         }
       } else if (polarity < 0) {
-        palette = RANGE_SCALES.low;
+        // PREFERENCIA NEGATIVA (TROMBÓN): Zona baja de la banda en orden descendente
         if (rankChar === 'b') {
-          // 1º Rechazo: Comienzo de escala descendente a registro grave moderado
-          let desc1 = [palette[5], palette[4], palette[3]]; // Sub-4ª -> Sub-Tritono -> Sub-5ª
-          selectedInterval = desc1[(seqOffset + (melodicStepCounter++)) % desc1.length];
-        } else if (rankChar === 'a') {
-          // 2º Rechazo (Máximo): Escala descendente al suelo más profundo
-          let desc2 = [palette[2], palette[1], palette[0]]; // Sub-6ª -> Sub-7ª -> Sub-8ª profunda
-          selectedInterval = desc2[(seqOffset + (melodicStepCounter++)) % desc2.length];
+          // 1º Rechazo: Descenso a zona baja
+          freq = b.fBase * 0.82;
+          noteName = `Banda Baja (${Math.round(freq)}Hz)`;
         } else {
-          selectedInterval = palette[Math.floor(Math.random() * palette.length)];
+          // 2º Rechazo (Máximo): Suelo de la banda
+          freq = b.fMin;
+          noteName = `Suelo Banda (${Math.round(freq)}Hz)`;
         }
       } else {
-        // Tono Medio (Reposo / 0): ondulación templada
-        palette = RANGE_SCALES.medium;
-        selectedInterval = palette[(seqOffset + (melodicStepCounter++)) % palette.length];
+        // NEUTRO: Frecuencia centro
+        freq = b.fBase;
+        noteName = `Centro Banda (${Math.round(freq)}Hz)`;
       }
 
-      // Micro-fluctuación de calidez acústica humana (±8 cents)
-      let microDetuneCents = (Math.random() * 16 - 8);
+      // Micro-fluctuación de calidez acústica (±6 cents)
+      let microDetuneCents = (Math.random() * 12 - 6);
       let microFactor = Math.pow(2, microDetuneCents / 1200);
+      freq = freq * microFactor;
 
-      let finalFreq = baseFreq * selectedInterval.mult * microFactor;
-
-      return {
-        freq: finalFreq,
-        intervalName: selectedInterval.name,
-        mult: selectedInterval.mult
-      };
+      return { freq, noteName };
     }
 
     /**
-     * SINTETIZADOR DE LOS 4 INSTRUMENTOS CANÓNICOS
-     * @param {number} position 1=A1(p_DA), 2=A2(DA), 3=A3(REC), 4=A4(p_REC)
-     * @param {number} sIdx Índice del sujeto (0..4)
-     * @param {number} polarity +1 (elección), 0 (neutro), -1 (rechazo)
-     * @param {number} startTime Tiempo de inicio opcional en audioCtx
-     * @param {string} rankChar Carácter del rango ('A', 'B', 'b', 'a')
-     * @param {number} seqOffset Índice de desplazamiento en escala
+     * TEMPO OSCILANTE ENTRE MÁRGENES SEGÚN POSICIÓN
+     * A1 (p_DA): 390ms - 470ms (Expectativa elástica prolongada)
+     * A2 (DA):   170ms - 220ms (Fáctica concisa)
+     * A3 (REC):  180ms - 240ms (Fáctica recibida)
+     * A4 (p_REC):410ms - 490ms (Expectativa suspendida)
      */
-    function playInstrument(position, sIdx, polarity = 0, startTime = 0, rankChar = '', seqOffset = 0) {
+    function getOscillatingTempo(position) {
+      let tMin, tMax;
+      if (position === 1) { tMin = 0.39; tMax = 0.47; }
+      else if (position === 2) { tMin = 0.17; tMax = 0.22; }
+      else if (position === 3) { tMin = 0.18; tMax = 0.24; }
+      else { tMin = 0.41; tMax = 0.49; }
+
+      let dur = tMin + Math.random() * (tMax - tMin);
+      return dur;
+    }
+
+    /**
+     * SÍNTESIS ACÚSTICA: VIOLÍN (+) VS TROMBÓN (-)
+     */
+    function playInstrument(position, sIdx, polarity = 0, startTime = 0, rankChar = '') {
       if (!audioEnabled) return;
       try {
         const ctx = getAudioCtx();
         const now = startTime > 0 ? startTime : ctx.currentTime;
-        const tone = SUBJECT_TONES[sIdx];
+        const b = SUBJECT_BANDS[sIdx];
         
-        // Obtener frecuencia con progresión escalar ascendente/descendente
-        const noteData = getHumanizedNote(tone.freq, polarity, rankChar, seqOffset);
-        const freq = noteData.freq;
+        // Frecuencia dentro de la banda con orden preferencial descendente
+        const bandData = getBandFreq(sIdx, rankChar, polarity);
+        const freq = bandData.freq;
+        
+        // Tempo oscilante elástico entre ciertos márgenes
+        const dur = getOscillatingTempo(position);
+        const durMs = Math.round(dur * 1000);
+        document.getElementById('live-tempo-indicator').innerText = `Tempo oscilante: ~${durMs}ms`;
 
-        // Ligeras variaciones dinámicas humanas de duración y volumen (±10%)
-        const humanDurScale = 0.92 + Math.random() * 0.16;
-        const humanGainScale = 0.90 + Math.random() * 0.20;
+        const gainNode = ctx.createGain();
+        gainNode.connect(analyserNode);
 
-        if (position === 1) {
+        let instrumentLabel = '';
+
+        if (polarity > 0) {
           // ==============================================================
-          // POSICIÓN 1: A1 (p_DA) — FLAUTA DE VIENTO / PAD ETÉREO (LARGA)
-          // Expectativa del emisor: envolvente prolongada (~420ms)
+          // PREFERENCIA POSITIVA (+): VIOLÍN LÍRICO
+          // Cuerda frotada brillante, vibrato expresivo, orden descendente
           // ==============================================================
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          const filter = ctx.createBiquadFilter();
-
-          osc.type = 'sine';
-          // Leve inflexión interrogativa ascendente (+4% de frecuencia)
-          osc.frequency.setValueAtTime(freq, now);
-          osc.frequency.linearRampToValueAtTime(freq * 1.04, now + 0.18);
-
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(freq * 3.2, now);
-
-          let dur = 0.42 * humanDurScale;
-          let peakGain = 0.12 * humanGainScale;
-
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(peakGain, now + 0.04); // Ataque suave
-          gain.gain.exponentialRampToValueAtTime(peakGain * 0.65, now + dur * 0.55); // Sustain
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur); // Caída etérea larga
-
-          osc.connect(filter);
-          filter.connect(gain);
-          gain.connect(analyserNode);
-
-          osc.start(now);
-          osc.stop(now + dur + 0.03);
-
-        } else if (position === 2) {
-          // ==============================================================
-          // POSICIÓN 2: A2 (DA) — PLUCK PERCUSIVO / MARIMBA FÁCTICA (CORTA)
-          // Preferencia fáctica del emisor: impacto rápido y conciso (~190ms)
-          // ==============================================================
-          const osc = ctx.createOscillator();
-          const oscHar = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now);
-
-          oscHar.type = 'sine';
-          oscHar.frequency.setValueAtTime(freq * 2.0, now);
-
-          let dur = 0.19 * humanDurScale;
-          let peakGain = 0.18 * humanGainScale;
-
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(peakGain, now + 0.008); // Ataque percusivo 8ms
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur); // Caída rápida fáctica
-
-          osc.connect(gain);
-          oscHar.connect(gain);
-          gain.connect(analyserNode);
-
-          osc.start(now);
-          oscHar.start(now);
-          osc.stop(now + dur + 0.02);
-          oscHar.stop(now + dur + 0.02);
-
-        } else if (position === 3) {
-          // ==============================================================
-          // POSICIÓN 3: A3 (REC) — CUERDA FROTADA / VIOLA CÁLIDA (CORTA)
-          // Preferencia fáctica recibida: cuerpo sensible de resonancia (~210ms)
-          // ==============================================================
+          instrumentLabel = '🎻 Violín Lírico';
           const osc = ctx.createOscillator();
           const filter = ctx.createBiquadFilter();
-          const gain = ctx.createGain();
+          const vibrato = ctx.createOscillator();
+          const vibratoGain = ctx.createGain();
 
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(freq, now);
 
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(Math.min(freq * 2.5, 950), now);
-          filter.Q.setValueAtTime(3.5, now);
+          // Vibrato expresivo de violín (5.3 Hz)
+          vibrato.type = 'sine';
+          vibrato.frequency.setValueAtTime(5.3, now);
+          vibratoGain.gain.setValueAtTime(position === 1 || position === 4 ? 6.0 : 4.0, now);
+          vibrato.connect(osc.frequency);
+          vibrato.start(now);
+          vibrato.stop(now + dur + 0.05);
 
-          let dur = 0.21 * humanDurScale;
-          let peakGain = 0.14 * humanGainScale;
+          // Resonancia de caja de violín
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(Math.min(freq * 3.5, 2600), now);
+          filter.Q.setValueAtTime(2.2, now);
 
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(peakGain, now + 0.025); // Ataque de arco
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur); // Pulso fáctico recibido
+          let attack = (position === 1 || position === 4) ? 0.045 : 0.02;
+          gainNode.gain.setValueAtTime(0.0001, now);
+          gainNode.gain.linearRampToValueAtTime(0.15, now + attack);
+          gainNode.gain.exponentialRampToValueAtTime(0.11, now + dur * 0.6);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
           osc.connect(filter);
-          filter.connect(gain);
-          gain.connect(analyserNode);
+          filter.connect(gainNode);
 
           osc.start(now);
-          osc.stop(now + dur + 0.02);
+          osc.stop(now + dur + 0.05);
+
+        } else if (polarity < 0) {
+          // ==============================================================
+          // PREFERENCIA NEGATIVA (-): TROMBÓN SOMBRÍO
+          // Metal cobrizo, glissando de vara hacia el grave, resonancia
+          // ==============================================================
+          instrumentLabel = '🎺 Trombón Sombrío';
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+
+          osc1.type = 'sawtooth';
+          osc2.type = 'triangle';
+
+          // Glissando descendente de vara de trombón
+          let targetFreq = freq * 0.93;
+          osc1.frequency.setValueAtTime(freq, now);
+          osc1.frequency.exponentialRampToValueAtTime(targetFreq, now + dur * 0.7);
+
+          osc2.frequency.setValueAtTime(freq * 0.998, now);
+          osc2.frequency.exponentialRampToValueAtTime(targetFreq * 0.998, now + dur * 0.7);
+
+          // Filtro de campana de metal de trombón
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(Math.min(freq * 4.0, 920), now);
+          filter.frequency.exponentialRampToValueAtTime(Math.max(freq * 1.5, 200), now + dur * 0.85);
+          filter.Q.setValueAtTime(4.2, now);
+
+          let attack = (position === 1 || position === 4) ? 0.04 : 0.018;
+          gainNode.gain.setValueAtTime(0.0001, now);
+          gainNode.gain.linearRampToValueAtTime(0.19, now + attack);
+          gainNode.gain.exponentialRampToValueAtTime(0.13, now + dur * 0.5);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gainNode);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + dur + 0.05);
+          osc2.stop(now + dur + 0.05);
 
         } else {
           // ==============================================================
-          // POSICIÓN 4: A4 (p_REC) — ARPA CELESTIAL / CRISTAL RESONANTE (LARGA)
-          // Expectativa reflejada: resonancia difusa en suspensión (~440ms)
+          // NEUTRO (0): CUENCO ZEN / SORDINA TEMPLADA
           // ==============================================================
+          instrumentLabel = '🪵 Cuenco Zen (Neutro)';
           const osc = ctx.createOscillator();
-          const oscBell = ctx.createOscillator();
-          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
 
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, now);
 
-          oscBell.type = 'sine';
-          oscBell.frequency.setValueAtTime(freq * 2.75, now); // Armónico cristalino
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(freq * 2.0, now);
 
-          let dur = 0.44 * humanDurScale;
-          let peakGain = 0.12 * humanGainScale;
+          gainNode.gain.setValueAtTime(0.0001, now);
+          gainNode.gain.linearRampToValueAtTime(0.09, now + 0.03);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(peakGain, now + 0.015);
-          gain.gain.exponentialRampToValueAtTime(peakGain * 0.35, now + dur * 0.45);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur); // Eco largo
-
-          osc.connect(gain);
-          oscBell.connect(gain);
-          gain.connect(analyserNode);
+          osc.connect(filter);
+          filter.connect(gainNode);
 
           osc.start(now);
-          oscBell.start(now);
           osc.stop(now + dur + 0.03);
-          oscBell.stop(now + dur + 0.03);
         }
 
-        // Feedback en el badge de voz viva con el desglose de la Fórmula 4D Canónica
-        updateLiveVoiceBadge(position, sIdx, polarity, noteData.intervalName, rankChar);
+        // Feedback en el badge de voz viva y actualización de cursor en banda
+        updateLiveVoiceBadge(position, sIdx, polarity, bandData.noteName, rankChar, durMs, instrumentLabel);
+        animateBandCursor(sIdx, freq);
 
       } catch(e) {
         console.error("Audio synth error:", e);
@@ -677,42 +627,85 @@
     }
 
     /**
-     * DESGLOSE CANÓNICO EN TIEMPO REAL: SUJETO • ORDEN • POSICIÓN • PREFERENCIA
+     * DESGLOSE CANÓNICO: SUJETO (BANDA) • ORDEN • POSICIÓN • PREFERENCIA (VIOLÍN/TROMBÓN)
      */
-    function updateLiveVoiceBadge(position, sIdx, polarity, intervalName = '', rankChar = '') {
+    function updateLiveVoiceBadge(position, sIdx, polarity, noteName, rankChar, durMs, instrumentLabel) {
       const b = document.getElementById('live-voice-badge');
       if (!b) return;
-      const t = SUBJECT_TONES[sIdx];
+      const band = SUBJECT_BANDS[sIdx];
       const posNames = ['A1: p_DA (Viento)', 'A2: DA (Pluck)', 'A3: REC (Cuerda)', 'A4: p_REC (Arpa)'];
       
       let ordText = (rankChar === 'A' || rankChar === 'B') 
-        ? (rankChar === 'A' ? '1ª Elección' : '2ª Elección')
+        ? (rankChar === 'A' ? '1ª Pref (Desc)' : '2ª Pref (Desc)')
         : ((rankChar === 'b' || rankChar === 'a') 
             ? (rankChar === 'b' ? '1º Rechazo' : '2º Rechazo') 
             : 'Neutro');
 
-      let polText = polarity > 0 ? '+ Alto' : (polarity < 0 ? '- Bajo' : '0 Medio');
+      let polColor = polarity > 0 ? 'text-emerald-400' : (polarity < 0 ? 'text-rose-400' : 'text-amber-400');
       
-      b.innerHTML = `<span class="text-cyan-400 font-mono font-black">[S: ${t.name}]</span> <span class="text-slate-600">•</span> <span class="text-emerald-400 font-mono font-bold">[Ord: ${ordText}]</span> <span class="text-slate-600">•</span> <span class="text-indigo-400 font-mono font-bold">[Pos: ${posNames[position-1]}]</span> <span class="text-slate-600">•</span> <span class="text-purple-400 font-mono font-bold">[Pref: ${polText}]</span> <span class="text-slate-600">→</span> <span class="text-amber-300 font-bold font-mono">${intervalName || 'Escala'}</span>`;
+      b.innerHTML = `<span class="text-cyan-400 font-mono font-black">[S: ${band.name}]</span> <span class="text-slate-600">•</span> <span class="text-emerald-400 font-mono font-bold">[Ord: ${ordText}]</span> <span class="text-slate-600">•</span> <span class="text-indigo-400 font-mono font-bold">[Pos: ${posNames[position-1]}]</span> <span class="text-slate-600">•</span> <span class="${polColor} font-mono font-bold">[${instrumentLabel}]</span> <span class="text-slate-600">→</span> <span class="text-amber-300 font-bold font-mono">${noteName} (~${durMs}ms)</span>`;
     }
 
-    // Demo directo de instrumentos individuales (avanza en escala ascendente)
-    let demoScaleOffset = 0;
-    function demoInstrument(position) {
+    // Animación del cursor en la banda | min ... max |
+    function animateBandCursor(sIdx, freq) {
+      const b = SUBJECT_BANDS[sIdx];
+      const cursor = document.getElementById(`band-cursor-${sIdx}`);
+      if (!cursor) return;
+      let pct = ((freq - b.fMin) / (b.fMax - b.fMin)) * 100;
+      pct = Math.max(5, Math.min(95, pct));
+      cursor.style.left = `${pct}%`;
+      cursor.style.transform = 'scale(1.4)';
+      setTimeout(() => {
+        cursor.style.transform = 'scale(1.0)';
+      }, 300);
+    }
+
+    // Renderizar bandas de oscilación en la interfaz
+    function renderBands() {
+      const container = document.getElementById('subject-bands-container');
+      if (!container) return;
+      let html = '';
+      SUBJECT_BANDS.forEach((b, idx) => {
+        html += `
+          <div onclick="demoSubjectBand(${idx})" class="p-2 rounded-lg bg-slate-900/70 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all">
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="font-bold font-mono" style="color:${b.color}">Sujeto ${b.name} (${b.note})</span>
+              <span class="text-[9px] text-slate-500 font-sans">${b.role}</span>
+            </div>
+            <div class="relative h-4 rounded bg-slate-950 border border-slate-800 flex items-center px-1 overflow-hidden band-slider">
+              <span class="absolute left-1 text-[8px] text-slate-400 font-mono">| ${Math.round(b.fMin)}Hz</span>
+              <span class="absolute right-1 text-[8px] text-slate-400 font-mono">${Math.round(b.fMax)}Hz |</span>
+              <div id="band-cursor-${idx}" class="absolute w-2.5 h-2.5 rounded-full bg-cyan-300 border border-white shadow-sm transition-all duration-200" style="left:50%; margin-left:-5px;"></div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Demos individuales
+    function demoViolinTrombone(type) {
       getAudioCtx();
-      playInstrument(position, 0, 1, 0, 'A', demoScaleOffset++);
+      if (type === 'violin') {
+        playInstrument(2, 0, 1, 0, 'A');
+      } else {
+        playInstrument(2, 0, -1, 0, 'a');
+      }
     }
 
-    // Demo de la voz completa de un sujeto (frase melódica ascendente en elecciones)
-    function demoSubjectVoice(sIdx) {
+    function demoSubjectBand(sIdx) {
       getAudioCtx();
       const ctx = getAudioCtx();
       const now = ctx.currentTime;
-      // Frase melódica viva: p_DA (+ 1ª), DA (+ 2ª asc), REC (0), p_REC (0)
-      playInstrument(1, sIdx, 1, now, 'A', 0);
-      playInstrument(2, sIdx, 1, now + 0.34, 'B', 1);
-      playInstrument(3, sIdx, 0, now + 0.60, '', 0);
-      playInstrument(4, sIdx, 0, now + 0.86, '', 1);
+      // Barrido en orden preferencial descendente: 1ª (violín techo) -> 2ª (violín medio) -> rechazo (trombón suelo)
+      playInstrument(2, sIdx, 1, now, 'A');
+      playInstrument(2, sIdx, 1, now + 0.35, 'B');
+      playInstrument(2, sIdx, -1, now + 0.70, 'a');
+    }
+
+    function demoPosition(pos) {
+      getAudioCtx();
+      playInstrument(pos, 0, 1, 0, 'A');
     }
 
     /**
@@ -730,7 +723,6 @@
       let raw_ij = curM[i][j];
       let raw_ji = curM[j][i];
 
-      // Determinar polaridades (+1, 0, -1)
       function charToPol(c) {
         if (c >= 'A' && c <= 'Z') return 1;
         if (c >= 'a' && c <= 'z') return -1;
@@ -742,29 +734,35 @@
       let pol_A3 = charToPol(raw_ji[1]);
       let pol_A4 = charToPol(raw_ji[0]);
 
-      // Secuencia armónica del diálogo con escala melódica interna:
-      // 1. Emisor i: A1 (p_DA: Flauta, larga)
-      playInstrument(1, i, pol_A1, now, raw_ij[0], 0);
-      // 2. Emisor i: A2 (DA: Pluck fáctico, corta, siguiente grado de la escala)
-      playInstrument(2, i, pol_A2, now + 0.34, raw_ij[1], 1);
-      // 3. Receptor j: A3 (REC: Cuerda fáctica, corta)
-      playInstrument(3, j, pol_A3, now + 0.62, raw_ji[1], 0);
-      // 4. Receptor j: A4 (p_REC: Arpa difusa, larga, siguiente grado de la escala)
-      playInstrument(4, j, pol_A4, now + 0.88, raw_ji[0], 1);
+      // Secuencia armónica del diálogo con Violín (+) vs Trombón (-):
+      // 1. Emisor i: A1 (p_DA: Expectativa elástica)
+      playInstrument(1, i, pol_A1, now, raw_ij[0]);
+      // 2. Emisor i: A2 (DA: Fáctica concisa)
+      playInstrument(2, i, pol_A2, now + 0.36, raw_ij[1]);
+      // 3. Receptor j: A3 (REC: Cuerda fáctica recibida)
+      playInstrument(3, j, pol_A3, now + 0.65, raw_ji[1]);
+      // 4. Receptor j: A4 (p_REC: Expectativa reflejada)
+      playInstrument(4, j, pol_A4, now + 0.92, raw_ji[0]);
 
-      // Si es mutualidad pura, añadir acorde de resonancia al final
+      // Si es mutualidad pura, acorde diádico
       if (pol_A2 === 1 && pol_A3 === 1) {
-        // Elección mutua <Ee>: Acorde consonante en escala ascendente
+        // Dúo de Violines Líricos en consonancia
         setTimeout(() => {
-          playInstrument(2, i, 1, 0, 'A', 0);
-          playInstrument(2, j, 1, 0, 'B', 1);
-        }, 1150);
+          playInstrument(2, i, 1, 0, 'A');
+          playInstrument(2, j, 1, 0, 'B');
+        }, 1200);
       } else if (pol_A2 === -1 && pol_A3 === -1) {
-        // Rechazo mutuo [Rr]: Acorde de fricción grave en escala descendente
+        // Dúo de Trombones Sombríos en fricción
         setTimeout(() => {
-          playInstrument(3, i, -1, 0, 'a', 0);
-          playInstrument(3, j, -1, 0, 'b', 1);
-        }, 1150);
+          playInstrument(2, i, -1, 0, 'a');
+          playInstrument(2, j, -1, 0, 'b');
+        }, 1200);
+      } else if ((pol_A2 === 1 && pol_A3 === -1) || (pol_A2 === -1 && pol_A3 === 1)) {
+        // Contrapunto violín y trombón colisionando
+        setTimeout(() => {
+          playInstrument(2, i, pol_A2, 0, raw_ij[1]);
+          playInstrument(2, j, pol_A3, 0, raw_ji[1]);
+        }, 1200);
       }
     }
 
@@ -825,7 +823,7 @@
           } else {
             togglePlay();
           }
-        }, 1350);
+        }, 1380);
       } else {
         clearInterval(playTimer);
       }
@@ -852,11 +850,10 @@
         }
       }
 
-      // Reproducir los sujetos activos en cascada melódica ascendente (elecciones) o descendente (rechazos)
       emittingSubjects.forEach((sIdx, idx) => {
         setTimeout(() => {
-          playInstrument(pos, sIdx, pol, 0, targetChar, idx);
-        }, idx * 175);
+          playInstrument(pos, sIdx, pol, 0, targetChar);
+        }, idx * 180);
       });
     }
 
@@ -871,15 +868,15 @@
       if (currentStep === 0) {
         badgeEl.className = 'px-3 py-1 rounded-lg text-xs font-extrabold font-mono border border-amber-400/40 bg-amber-400/10 text-amber-300';
         badgeEl.innerText = '0º: REPOSO |0⟩';
-        descEl.innerHTML = '<span class="text-amber-300 font-extrabold">0º: REPOSO</span> <span class="text-slate-600">•</span> <span class="text-amber-300 font-black tracking-widest">"0 ¡¿?!"</span> <span class="text-slate-400">(Campo cuántico en reposo / 0=Nulo en tono medio templado: Emisor <span class="text-amber-300 font-bold">¡¿</span> | Receptor <span class="text-amber-300 font-bold">?!</span>).</span>';
+        descEl.innerHTML = '<span class="text-amber-300 font-extrabold">0º: REPOSO</span> <span class="text-slate-600">•</span> <span class="text-amber-300 font-black tracking-widest">"0 ¡¿?!"</span> <span class="text-slate-400">(Campo cuántico en reposo / Cuenco zen en tono centro de banda).</span>';
         return;
       }
 
       let r = Math.ceil(currentStep / 2);
       let isA1 = (currentStep % 2 === 1);
       let isElection = (r <= 2);
-      let rankText = isElection ? `${r}ª Elección (Escala Ascendente)` : `${r - 2}º Rechazo (Escala Descendente)`;
-      let tetraName = isA1 ? 'A1 (p_DA: 🌬️ Viento)' : 'A2 (DA: 🎯 Pluck)';
+      let rankText = isElection ? `${r}ª Elección (Violín • Descendente)` : `${r - 2}º Rechazo (Trombón • Descendente)`;
+      let tetraName = isA1 ? 'A1 (p_DA: Expectativa)' : 'A2 (DA: Fáctica)';
 
       badgeEl.className = isA1 
         ? 'px-3 py-1 rounded-lg text-xs font-extrabold font-mono border border-cyan-400/40 bg-cyan-400/10 text-cyan-300'
@@ -899,7 +896,7 @@
             let isPos = (charToCheck >= 'A' && charToCheck <= 'Z');
             let quad1 = isA1 ? 1 : 2;
             let quad2 = isA1 ? 4 : 3;
-            let tTone = SUBJECT_TONES[i];
+            let tTone = SUBJECT_BANDS[i];
 
             let val1, val2;
             if (tickerMode === 'puzzle') {
@@ -940,11 +937,11 @@
             if (c_ij === targetChar && c_ji === targetChar) {
               let sCode = (i + 1);
               let tCode = (j + 1);
-              let chordLabel = `${SUBJECT_TONES[i].note}+${SUBJECT_TONES[j].note}`;
+              let chordLabel = `${SUBJECT_BANDS[i].note}+${SUBJECT_BANDS[j].note}`;
               if (isElection) {
-                stars.push(`<span class="text-emerald-400 font-black cursor-pointer" onclick="playCellDuo(${i},${j})" title="Acorde Consonante Ascendente ${chordLabel}">⭐ "2 &lt;Ee&gt;" &lt;${sCode}-${tCode}&gt; [${chordLabel}]</span>`);
+                stars.push(`<span class="text-emerald-400 font-black cursor-pointer" onclick="playCellDuo(${i},${j})" title="Dúo de Violines ${chordLabel}">⭐ "2 &lt;Ee&gt;" &lt;${sCode}-${tCode}&gt; [Dúo Violines]</span>`);
               } else {
-                stars.push(`<span class="text-rose-400 font-black cursor-pointer" onclick="playCellDuo(${i},${j})" title="Acorde de Fricción Descendente ${chordLabel}">⭐ "1 [Rr]" [${sCode}-${tCode}]</span>`);
+                stars.push(`<span class="text-rose-400 font-black cursor-pointer" onclick="playCellDuo(${i},${j})" title="Dúo de Trombones ${chordLabel}">⭐ "1 [Rr]" [${sCode}-${tCode}] [Dúo Trombones]</span>`);
               }
             }
           }
@@ -961,22 +958,20 @@
       const headerRow = document.getElementById('matrix-header-row');
       const body = document.getElementById('matrix-body');
 
-      // Headers with subject tone accents
       let hHtml = '<th class="py-1 px-2 text-slate-500 font-mono text-[10px]">Emisor \\ Receptor</th>';
       for (let j = 0; j < 5; j++) {
-        let tone = SUBJECT_TONES[j];
-        hHtml += `<th class="py-1 px-2 font-bold font-mono text-xs cursor-pointer hover:underline" onclick="demoSubjectVoice(${j})" style="color:${tone.color};" title="Probar voz Sujeto ${j+1} (${tone.note})">${j + 1}</th>`;
+        let tone = SUBJECT_BANDS[j];
+        hHtml += `<th class="py-1 px-2 font-bold font-mono text-xs cursor-pointer hover:underline" onclick="demoSubjectBand(${j})" style="color:${tone.color};" title="Probar banda Sujeto ${j+1} (${tone.note})">${j + 1}</th>`;
       }
       headerRow.innerHTML = hHtml;
 
-      // Rows
       let bHtml = '';
       for (let i = 0; i < 5; i++) {
-        let toneI = SUBJECT_TONES[i];
-        let rHtml = `<tr><th class="py-1 px-2 font-bold font-mono text-left text-xs bg-slate-900/50 cursor-pointer hover:underline" onclick="demoSubjectVoice(${i})" style="color:${toneI.color};" title="Probar voz Sujeto ${i+1} (${toneI.note})">${i + 1}</th>`;
+        let toneI = SUBJECT_BANDS[i];
+        let rHtml = `<tr><th class="py-1 px-2 font-bold font-mono text-left text-xs bg-slate-900/50 cursor-pointer hover:underline" onclick="demoSubjectBand(${i})" style="color:${toneI.color};" title="Probar banda Sujeto ${i+1} (${toneI.note})">${i + 1}</th>`;
         
         for (let j = 0; j < 5; j++) {
-          let toneJ = SUBJECT_TONES[j];
+          let toneJ = SUBJECT_BANDS[j];
           if (i === j) {
             rHtml += `<td class="py-1 px-2 bg-slate-900/90 text-slate-600 font-mono text-xs">·</td>`;
             continue;
@@ -1048,10 +1043,10 @@
             }
 
             let safeC = char.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            let tooltip = (pIdx === 0) ? `A1 (p_DA: 🌬️ Viento): Expectativa emitida por Sujeto ${i+1} (${toneI.note})`
-                        : (pIdx === 1) ? `A2 (DA: 🎯 Pluck): Preferencia fáctica de Sujeto ${i+1} (${toneI.note})`
-                        : (pIdx === 2) ? `A3 (REC: 🎻 Cuerda): Preferencia recibida de Sujeto ${j+1} (${toneJ.note})`
-                        : `A4 (p_REC: 🪕 Arpa): Expectativa recibida de Sujeto ${j+1} (${toneJ.note})`;
+            let tooltip = (pIdx === 0) ? `A1 (p_DA): Expectativa de Sujeto ${i+1}`
+                        : (pIdx === 1) ? `A2 (DA): Preferencia de Sujeto ${i+1}`
+                        : (pIdx === 2) ? `A3 (REC): Recibida de Sujeto ${j+1}`
+                        : `A4 (p_REC): Expectativa recibida de Sujeto ${j+1}`;
 
             return `<span style="color:${color}; font-weight:${weight}; ${glow}" title="${tooltip}" class="px-0.5">${safeC}</span>`;
           }
@@ -1088,7 +1083,6 @@
         vacuumBadge.style.display = 'none';
       }
 
-      // Dibujar onda de audio en tiempo real en la base del canvas si hay audio
       if (analyserNode && waveDataArray) {
         analyserNode.getByteTimeDomainData(waveDataArray);
         ctx.lineWidth = 1.5;
@@ -1113,7 +1107,7 @@
 
       for (let i = 0; i < 5; i++) {
         let angle = (i * 2 * Math.PI / 5) - (Math.PI / 2);
-        let tone = SUBJECT_TONES[i];
+        let tone = SUBJECT_BANDS[i];
         nodePos.push({
           x: cx + radius * Math.cos(angle),
           y: cy + radius * Math.sin(angle),
@@ -1123,7 +1117,6 @@
         });
       }
 
-      // Draw edges active at currentStep
       let edgeCount = 0;
       for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
@@ -1162,7 +1155,6 @@
       }
       document.getElementById('edge-count-label').innerText = `${edgeCount} enlaces armónicos`;
 
-      // Draw Nodes with Subject Distinctive Tones
       nodePos.forEach((n, idx) => {
         let isEmittingNow = false;
         if (currentStep > 0) {
@@ -1203,12 +1195,12 @@
     }
 
     function render() {
+      renderBands();
       renderTicker();
       renderMatrix();
       renderCanvas();
     }
 
-    // Animation loop for live oscilloscope on canvas
     function animLoop() {
       if (analyserNode && isPlaying) {
         renderCanvas();
