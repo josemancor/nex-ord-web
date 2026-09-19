@@ -1597,7 +1597,7 @@
                                     <button type="button" class="agile-btn" onclick="genesisLast()" title="Fin: Red Completa">⏭</button>
                                     <input type="range" id="genesis-slider" min="0" max="10" value="10" style="flex:1; accent-color:#00FF87; cursor:pointer;" oninput="onGenesisSliderChange(this.value)">
                                 </div>
-                                <div id="genesis-step-desc" class="genesis-step-desc" onclick="cycleTickerMode()" title="Clic para alternar notación: Inversa/Base-0 (1,3,1,0) • Numérica (1,3,1,1) • Signos (+/-) • Letras SMIb (Z) • Glifos SMIa (<>)" style="cursor:pointer;">)" style="cursor:pointer;">)" style="cursor:pointer;">
+                                <div id="genesis-step-desc" class="genesis-step-desc" onclick="cycleTickerMode()" title="Clic para alternar notación: Puzzle Canónico (2=pos, 1=neg, 0=nulo) • Glifos SMIa (<>) • Signos (+/-) • Base-0 (1,3,1,0) • Numérica (1,3,1,1) • Letras SMIb (Z)" style="cursor:pointer;">)" style="cursor:pointer;">)" style="cursor:pointer;">
                                     Red completa proyectada. Desliza o pulsa Play para ver la percolación de vínculos paso a paso.
                                 </div>
                             </div>
@@ -5556,8 +5556,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
     }
 
     function formatGenesisTicker(step, maxS) {
+        let tickerMode = (typeof agileMatrixState !== 'undefined' && agileMatrixState.tickerMode) ? agileMatrixState.tickerMode : 'puzzle'; // 'puzzle' (2=pos, 1=neg, 0=nulo), 'glyph' (<>), 'sign' (+/-), 'zero' (1,3,1,0), 'num' (1-based), 'letter' (Z)
+
         if (step === 0) {
-            return '<span style="color:#FFE600; font-weight:800;">0º: REPOSO</span> <span style="color:#64748B;">•</span> <span style="color:#FFE600; font-weight:800; text-shadow:0 0 8px rgba(255,230,0,0.5);" title="Indiferencia / Neutralidad basal Q81 (¡¿?!): Par Emisor ¡¿ (A1=¡, A2=¿) • Par Receptor ?! (A3=?, A4=!)">¡¿?!</span> <span style="color:#94A3B8;">(Red en latencia: Emisor <span style="color:#FFE600; font-weight:700;">¡¿</span> | Receptor <span style="color:#FFE600; font-weight:700;">?!</span>).</span>';
+            let nuloDesc = (tickerMode === 'puzzle') ? '"0 ¡¿?!"' : '¡¿?!';
+            return '<span style="color:#FFE600; font-weight:800;">0º: REPOSO</span> <span style="color:#64748B;">•</span> <span style="color:#FFE600; font-weight:800; text-shadow:0 0 8px rgba(255,230,0,0.5);" title="0=Nulo: Diada basal &quot;0 ¡¿?!&quot; • Par Emisor ¡¿ (A1=¡, A2=¿) • Par Receptor ?! (A3=?, A4=!)">' + nuloDesc + '</span> <span style="color:#94A3B8;">(0=Nulo / Latencia: Emisor <span style="color:#FFE600; font-weight:700;">¡¿</span> | Receptor <span style="color:#FFE600; font-weight:700;">?!</span>).</span>';
         }
         let maxR = Math.floor(maxS / 2);
         if (step >= maxS) {
@@ -5568,8 +5571,6 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let isA1 = (step % 2 === 1);
         let n = (typeof n_nodes !== 'undefined' && n_nodes) ? n_nodes : ((typeof currentMatrix !== 'undefined' && currentMatrix) ? currentMatrix.length : 10);
         if (typeof currentMatrix === 'undefined' || !currentMatrix || currentMatrix.length === 0) return '';
-        
-        let tickerMode = (typeof agileMatrixState !== 'undefined' && agileMatrixState.tickerMode) ? agileMatrixState.tickerMode : 'zero'; // 'zero' (1,3,1,0), 'num' (1,3,1,1), 'sign' (+/-), 'letter' (Z), 'glyph' (<>)
 
         function getSubjCode(idx) {
             if (typeof g_activeGroup !== 'undefined' && g_activeGroup === '2') {
@@ -5597,7 +5598,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
                     let s1, s2;
-                    if (tickerMode === 'zero') {
+                    if (tickerMode === 'puzzle') {
+                        // Norma Canónica del Puzzle: 2=positivo ("2 <Ee>"), 1=negativo ("1 [Rr]"), 0=nulo ("0 ¡¿?!")
+                        s1 = isPos ? '<span style="color:#00FF87; font-weight:700;">2</span>' : '<span style="color:#FF007F; font-weight:700;">1</span>';
+                        s2 = s1;
+                    } else if (tickerMode === 'zero') {
                         s1 = isPos ? ('<span style="color:#00FF87; font-weight:700;">' + (r - 1) + '</span>') : ('<span style="color:#FF007F; font-weight:700;">' + (r - 1) + '</span>');
                         s2 = s1;
                     } else if (tickerMode === 'num') {
@@ -5613,8 +5618,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">&lt;</span>' : '<span style="color:#FF007F;">[</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">&gt;</span>' : '<span style="color:#FF007F;">]</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? 'Expectativa Atracción (<)' : 'Expectativa Rechazo ([)');
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? 'Expectativa Recibida (>)' : 'Expectativa Recibida (])');
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? '2=Positivo • Expectativa Atracción (<)' : '1=Negativo • Expectativa Rechazo ([)');
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? '2=Positivo • Expectativa Recibida (>)' : '1=Negativo • Expectativa Recibida (])');
                     itemsA1.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',1,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',4,' + s2 + ')</span>');
                 }
             }
@@ -5637,7 +5642,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
                     let s1, s2;
-                    if (tickerMode === 'zero') {
+                    if (tickerMode === 'puzzle') {
+                        // Norma Canónica del Puzzle: 2=positivo ("2 <Ee>"), 1=negativo ("1 [Rr]"), 0=nulo ("0 ¡¿?!")
+                        s1 = isPos ? '<span style="color:#00FF87; font-weight:700;">2</span>' : '<span style="color:#FF007F; font-weight:700;">1</span>';
+                        s2 = s1;
+                    } else if (tickerMode === 'zero') {
                         s1 = isPos ? ('<span style="color:#00FF87; font-weight:700;">' + (r - 1) + '</span>') : ('<span style="color:#FF007F; font-weight:700;">' + (r - 1) + '</span>');
                         s2 = s1;
                     } else if (tickerMode === 'num') {
@@ -5653,8 +5662,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">E</span>' : '<span style="color:#FF007F;">R</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">e</span>' : '<span style="color:#FF007F;">r</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? 'Elección (E) → Par <E' : 'Rechazo (R) → Par [R');
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? 'Elección Recibida (e) → Par e>' : 'Rechazo Recibido (r) → Par r]');
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? '2=Positivo • Elección (E) → Par <E' : '1=Negativo • Rechazo (R) → Par [R');
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? '2=Positivo • Elección Recibida (e) → Par e>' : '1=Negativo • Rechazo Recibido (r) → Par r]');
                     itemsA2.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',2,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',3,' + s2 + ')</span>');
                 }
             }
@@ -5672,9 +5681,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                     let is_pos = (c_ij >= 'A' && c_ij <= 'Z') && (c_ji >= 'A' && c_ji <= 'Z');
                     let is_neg = !(c_ij >= 'A' && c_ij <= 'Z') && !(c_ji >= 'A' && c_ji <= 'Z');
                     if (is_pos) {
-                        mutStars.push('<span style="color:#00FF87; font-weight:800; text-shadow:0 0 8px rgba(0,255,135,0.6);" title="Elección Mutua cristalizada <Ee> entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ &lt;' + getSubjCode(i) + '-' + getSubjCode(j) + '&gt;</span>');
+                        let labelPos = (tickerMode === 'puzzle') ? '⭐ &quot;2 &lt;Ee&gt;&quot;' : '⭐ &lt;' + getSubjCode(i) + '-' + getSubjCode(j) + '&gt;';
+                        mutStars.push('<span style="color:#00FF87; font-weight:800; text-shadow:0 0 8px rgba(0,255,135,0.6);" title="Elección Mutua cristalizada 2 &lt;Ee&gt; entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">' + labelPos + '</span>');
                     } else if (is_neg) {
-                        mutStars.push('<span style="color:#FF007F; font-weight:800; text-shadow:0 0 8px rgba(255,0,127,0.6);" title="Rechazo Mutuo cristalizado [Rr] entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ [' + getSubjCode(i) + '-' + getSubjCode(j) + ']</span>');
+                        let labelNeg = (tickerMode === 'puzzle') ? '⭐ &quot;1 [Rr]&quot;' : '⭐ [' + getSubjCode(i) + '-' + getSubjCode(j) + ']';
+                        mutStars.push('<span style="color:#FF007F; font-weight:800; text-shadow:0 0 8px rgba(255,0,127,0.6);" title="Rechazo Mutuo cristalizado 1 [Rr] entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">' + labelNeg + '</span>');
                     } else {
                         mutStars.push('<span style="color:#FF9F1C; font-weight:800; text-shadow:0 0 8px rgba(255,159,28,0.6);" title="Oposición de Sentimientos cristalizada <Er]/[Re> entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ OS(' + getSubjCode(i) + '-' + getSubjCode(j) + ')</span>');
                     }
@@ -5690,16 +5701,18 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
 
     function cycleTickerMode() {
         if (typeof agileMatrixState === 'undefined') return;
-        if (!agileMatrixState.tickerMode || agileMatrixState.tickerMode === 'zero') {
-            agileMatrixState.tickerMode = 'num';
-        } else if (agileMatrixState.tickerMode === 'num') {
+        if (!agileMatrixState.tickerMode || agileMatrixState.tickerMode === 'puzzle') {
+            agileMatrixState.tickerMode = 'glyph';
+        } else if (agileMatrixState.tickerMode === 'glyph') {
             agileMatrixState.tickerMode = 'sign';
         } else if (agileMatrixState.tickerMode === 'sign') {
-            agileMatrixState.tickerMode = 'letter';
-        } else if (agileMatrixState.tickerMode === 'letter') {
-            agileMatrixState.tickerMode = 'glyph';
-        } else {
             agileMatrixState.tickerMode = 'zero';
+        } else if (agileMatrixState.tickerMode === 'zero') {
+            agileMatrixState.tickerMode = 'num';
+        } else if (agileMatrixState.tickerMode === 'num') {
+            agileMatrixState.tickerMode = 'letter';
+        } else {
+            agileMatrixState.tickerMode = 'puzzle';
         }
         updateGenesisBadgeAndDesc();
     }
