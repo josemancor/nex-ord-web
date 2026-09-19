@@ -2277,7 +2277,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                                 <button type="button" class="agile-btn" onclick="genesisLast()" title="Fin: Red Completa">⏭</button>
                                 <input type="range" id="genesis-slider" min="0" max="8" value="8" style="flex:1; accent-color:#00FF87; cursor:pointer;" oninput="onGenesisSliderChange(this.value)">
                             </div>
-                            <div id="genesis-step-desc" class="genesis-step-desc" onclick="cycleTickerMode()" title="Clic para alternar notación: Signos (+/-) • Letras SMIb (Z) • Glifos SMIa (<>)" style="cursor:pointer;">
+                            <div id="genesis-step-desc" class="genesis-step-desc" onclick="cycleTickerMode()" title="Clic para alternar notación: Numérica (1,3,1,1) • Signos (+/-) • Letras SMIb (Z) • Glifos SMIa (<>)" style="cursor:pointer;">)" style="cursor:pointer;">
                                 Red completa proyectada. Desliza o pulsa Play para ver la percolación de vínculos paso a paso.
                             </div>
                         </div>
@@ -7925,7 +7925,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let n = (typeof n_nodes !== 'undefined' && n_nodes) ? n_nodes : ((typeof currentMatrix !== 'undefined' && currentMatrix) ? currentMatrix.length : 10);
         if (typeof currentMatrix === 'undefined' || !currentMatrix || currentMatrix.length === 0) return '';
         
-        let tickerMode = (typeof agileMatrixState !== 'undefined' && agileMatrixState.tickerMode) ? agileMatrixState.tickerMode : 'sign';
+        let tickerMode = (typeof agileMatrixState !== 'undefined' && agileMatrixState.tickerMode) ? agileMatrixState.tickerMode : 'num';
 
         function getSubjCode(idx) {
             if (typeof g_activeGroup !== 'undefined' && g_activeGroup === '2') {
@@ -7944,7 +7944,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
 
         // A1: Expectativas formuladas por los emisores
-        // Formato ultra-condensado: (i,j,1,+) en A1 celda (i,j) y (j,i,4,+) en A4 celda (j,i)
+        // Formato ultra-condensado: (i,j,1,1) en A1 celda (i,j) y (j,i,4,1) en A4 celda (j,i)
         let itemsA1 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -7953,7 +7953,10 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
                     let s1, s2;
-                    if (tickerMode === 'sign') {
+                    if (tickerMode === 'num') {
+                        s1 = isPos ? ('<span style="color:#00FF87; font-weight:700;">' + r + '</span>') : ('<span style="color:#FF007F; font-weight:700;">-' + r + '</span>');
+                        s2 = s1;
+                    } else if (tickerMode === 'sign') {
                         s1 = isPos ? '<span style="color:#00FF87; font-weight:700;">+</span>' : '<span style="color:#FF007F; font-weight:700;">-</span>';
                         s2 = s1;
                     } else if (tickerMode === 'letter') {
@@ -7963,8 +7966,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">&lt;</span>' : '<span style="color:#FF007F;">[</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">&gt;</span>' : '<span style="color:#FF007F;">]</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? 'Atracción (+)' : 'Rechazo (-)');
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? 'Atracción Recibida (+)' : 'Rechazo Recibido (-)');
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? ('Atracción R' + r + 'º (+)') : ('Rechazo R' + r + 'º (-)'));
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? ('Atracción Recibida R' + r + 'º (+)') : ('Rechazo Recibido R' + r + 'º (-)'));
                     itemsA1.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',1,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',4,' + s2 + ')</span>');
                 }
             }
@@ -7977,7 +7980,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
 
         // A2: Preferencias efectivas formuladas por los emisores
-        // Formato ultra-condensado: (i,j,2,+) en A2 celda (i,j) y (j,i,3,+) en A3 celda (j,i)
+        // Formato ultra-condensado: (i,j,2,1) en A2 celda (i,j) y (j,i,3,1) en A3 celda (j,i)
         let itemsA2 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -7986,7 +7989,10 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
                     let s1, s2;
-                    if (tickerMode === 'sign') {
+                    if (tickerMode === 'num') {
+                        s1 = isPos ? ('<span style="color:#00FF87; font-weight:700;">' + r + '</span>') : ('<span style="color:#FF007F; font-weight:700;">-' + r + '</span>');
+                        s2 = s1;
+                    } else if (tickerMode === 'sign') {
                         s1 = isPos ? '<span style="color:#00FF87; font-weight:700;">+</span>' : '<span style="color:#FF007F; font-weight:700;">-</span>';
                         s2 = s1;
                     } else if (tickerMode === 'letter') {
@@ -7996,8 +8002,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">E</span>' : '<span style="color:#FF007F;">R</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">e</span>' : '<span style="color:#FF007F;">r</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? 'Elección (+)' : 'Rechazo (-)');
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? 'Elección Recibida (+)' : 'Rechazo Recibido (-)');
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? ('Elección R' + r + 'º (+)') : ('Rechazo R' + r + 'º (-)'));
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? ('Elección Recibida R' + r + 'º (+)') : ('Rechazo Recibido R' + r + 'º (-)'));
                     itemsA2.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',2,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',3,' + s2 + ')</span>');
                 }
             }
@@ -8033,12 +8039,14 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
 
     function cycleTickerMode() {
         if (typeof agileMatrixState === 'undefined') return;
-        if (!agileMatrixState.tickerMode || agileMatrixState.tickerMode === 'sign') {
+        if (!agileMatrixState.tickerMode || agileMatrixState.tickerMode === 'num') {
+            agileMatrixState.tickerMode = 'sign';
+        } else if (agileMatrixState.tickerMode === 'sign') {
             agileMatrixState.tickerMode = 'letter';
         } else if (agileMatrixState.tickerMode === 'letter') {
             agileMatrixState.tickerMode = 'glyph';
         } else {
-            agileMatrixState.tickerMode = 'sign';
+            agileMatrixState.tickerMode = 'num';
         }
         updateGenesisBadgeAndDesc();
     }
