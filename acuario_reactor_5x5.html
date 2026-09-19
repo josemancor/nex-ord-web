@@ -298,8 +298,11 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
+        <button id="btn-toggle-audio-mode" onclick="toggleAudioMode()" class="px-2 py-0.5 rounded bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold transition flex items-center gap-1 shadow-sm text-[10px]" title="Alternar entre Gesto Diádico Unificado (fusión instantánea ~380ms) y Desfile Analítico (2 voces)">
+          <span>⚡ Modo: GESTO UNIFICADO</span>
+        </button>
         <span id="aquarium-acoustic-voice-badge" class="text-slate-300 font-mono text-[10px]">
-          <span class="text-cyan-400 font-bold">1A [ _ ↗ ^ ] "U-o-A-É"</span> ☀️ Aéreo ⇄ <span class="text-emerald-400 font-bold">2A [ ^ ↘ _ ] "Í-e-o-u"</span> ☀️ Aéreo → Resonancia Prosódica
+          <span class="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-mono font-black">💚 &lt;Ee&gt;</span> <strong style="color:#38BDF8;">1A</strong> (☀️ Aéreo) <span class="text-slate-400">➔</span> <strong style="color:#06B6D4;">2A</strong> (☀️ Aéreo) | <strong class="text-emerald-300">Abrazo Armónico Consonante</strong> (380ms)
         </span>
       </div>
     </div>
@@ -551,8 +554,255 @@
       }
     }
 
+    let audioModeUnified = true; // Por defecto: Gesto Diádico Unificado (~380ms)
+
+    function toggleAudioMode() {
+      audioModeUnified = !audioModeUnified;
+      const btn = document.getElementById('btn-toggle-audio-mode');
+      if (btn) {
+        if (audioModeUnified) {
+          btn.innerHTML = '<span>⚡ Modo: GESTO UNIFICADO</span>';
+          btn.className = 'px-2 py-0.5 rounded bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold transition flex items-center gap-1 shadow-sm text-[10px]';
+          btn.title = 'Modo actual: Gesto Diádico Unificado (~380ms). Clic para cambiar a Desfile Analítico (2 voces).';
+        } else {
+          btn.innerHTML = '<span>👥 Modo: DIÁLOGO 2 VOCES</span>';
+          btn.className = 'px-2 py-0.5 rounded bg-sky-950/90 hover:bg-sky-900 border border-sky-500/50 text-sky-300 font-bold transition flex items-center gap-1 shadow-sm text-[10px]';
+          btn.title = 'Modo actual: Desfile Analítico de 2 Voces. Clic para cambiar a Gesto Diádico Unificado.';
+        }
+      }
+    }
+
+    // =========================================================================
+    // MOTOR DE GESTO DIÁDICO UNIFICADO (MELODÍA RELACIONAL FUSIONADA ~380ms)
+    // Identidad por vector de inicio-llegada (i -> j) y relación por curva SMIb
+    // =========================================================================
+    function playUnifiedRelationalMelody(i, j) {
+      if (!audioEnabled) return;
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+
+      const instI = AQUARIUM_INSTRUMENTS[i];
+      const instJ = AQUARIUM_INSTRUMENTS[j];
+      const zij = matrixZ[i][j];
+      const zji = matrixZ[j][i];
+      const delta = Math.abs(zij - zji);
+
+      const bothCielo = (zij >= waterLevel && zji >= waterLevel);
+      const bothAgua = (zij < waterLevel && zji < waterLevel);
+      const isAsymmetric = !bothCielo && !bothAgua;
+      const isDiagonal = (i === j);
+
+      // Duración orgánica de una sola respiración (~380ms)
+      const dur = 0.38;
+
+      // Frecuencias base de origen (i) y destino (j) moduladas por energía
+      const fStart = instI.fBase * (0.88 + 0.24 * Math.max(0, Math.min(1, zij)));
+      const fEnd = isDiagonal ? fStart : instJ.fBase * (0.88 + 0.24 * Math.max(0, Math.min(1, zji)));
+
+      // Oscilador de excitación
+      const osc = ctx.createOscillator();
+      osc.type = (i === 2 || j === 2) ? 'triangle' : 'sawtooth';
+
+      // Filtros de formantes vocálicos dinámicos F1 y F2
+      const f1 = ctx.createBiquadFilter();
+      const f2 = ctx.createBiquadFilter();
+      f1.type = 'bandpass'; f1.Q.setValueAtTime(4.2, now);
+      f2.type = 'bandpass'; f2.Q.setValueAtTime(5.0, now);
+
+      const f1G = ctx.createGain(); f1G.gain.setValueAtTime(0.55, now);
+      const f2G = ctx.createGain(); f2G.gain.setValueAtTime(0.45, now);
+
+      // Filtro del medio (presión hidrostática vs cielo libre)
+      const mediumFilter = ctx.createBiquadFilter();
+      mediumFilter.type = 'lowpass';
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.0001, now);
+
+      let gestureName = '';
+      let smibIcon = '';
+
+      if (isDiagonal) {
+        // ----------------------------------------------------
+        // 1. DIAGONAL TESTIGO: Auto-resonancia simétrica
+        // ----------------------------------------------------
+        gestureName = 'Auto-resonancia Centrada';
+        smibIcon = '💎 [Diagonal]';
+
+        osc.frequency.setValueAtTime(fStart, now);
+        osc.frequency.exponentialRampToValueAtTime(fStart * 1.25, now + dur * 0.45);
+        osc.frequency.exponentialRampToValueAtTime(fStart, now + dur);
+
+        f1.frequency.setValueAtTime(500, now);
+        f1.frequency.linearRampToValueAtTime(750, now + dur * 0.45);
+        f1.frequency.linearRampToValueAtTime(500, now + dur);
+
+        f2.frequency.setValueAtTime(900, now);
+        f2.frequency.linearRampToValueAtTime(1250, now + dur * 0.45);
+        f2.frequency.linearRampToValueAtTime(900, now + dur);
+
+        const isCieloSelf = (zij >= waterLevel);
+        mediumFilter.frequency.setValueAtTime(isCieloSelf ? 3800 : 380, now);
+        mediumFilter.Q.setValueAtTime(isCieloSelf ? 0.9 : 3.2, now);
+
+        masterGain.gain.linearRampToValueAtTime(0.20, now + 0.03);
+        masterGain.gain.setValueAtTime(0.18, now + dur * 0.6);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.04);
+
+      } else if (bothCielo) {
+        // ----------------------------------------------------
+        // 2. ELECCIÓN MUTUA / CIELO ABIERTO (<Ee>)
+        // Gesto Consonante Ascendente (Abrazo Armónico)
+        // ----------------------------------------------------
+        gestureName = 'Abrazo Armónico Consonante';
+        smibIcon = '💚 <Ee>';
+
+        const fBridge = Math.sqrt(fStart * fEnd) * 1.05;
+        osc.frequency.setValueAtTime(fStart, now);
+        osc.frequency.exponentialRampToValueAtTime(fBridge, now + dur * 0.40);
+        osc.frequency.exponentialRampToValueAtTime(fEnd, now + dur * 0.85);
+
+        // Formante asciende de vocal cerrada a abierta y luminosa (u -> o -> a -> e)
+        f1.frequency.setValueAtTime(360, now);
+        f1.frequency.linearRampToValueAtTime(700, now + dur * 0.5);
+        f1.frequency.linearRampToValueAtTime(500, now + dur);
+
+        f2.frequency.setValueAtTime(800, now);
+        f2.frequency.linearRampToValueAtTime(1400, now + dur * 0.5);
+        f2.frequency.linearRampToValueAtTime(2000, now + dur);
+
+        mediumFilter.frequency.setValueAtTime(4500, now);
+        mediumFilter.Q.setValueAtTime(1.0, now);
+
+        masterGain.gain.linearRampToValueAtTime(0.22, now + 0.03);
+        masterGain.gain.setValueAtTime(0.20, now + dur * 0.75);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.06);
+
+        // Armónico complementario en quinta justa que corona la consonancia
+        const subOsc = ctx.createOscillator();
+        const subG = ctx.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(fEnd * 1.5, now + dur * 0.35);
+        subG.gain.setValueAtTime(0.0001, now);
+        subG.gain.linearRampToValueAtTime(0.08, now + dur * 0.45);
+        subG.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.05);
+        subOsc.connect(subG);
+        subG.connect(ctx.destination);
+        subOsc.start(now + dur * 0.35);
+        subOsc.stop(now + dur + 0.06);
+
+      } else if (isAsymmetric) {
+        // ----------------------------------------------------
+        // 3. OPOSICIÓN / CIZALLADURA ASIMÉTRICA (<Er] o [Re>)
+        // Gesto con Quiebro Tonal y Frenada Brusca
+        // ----------------------------------------------------
+        gestureName = 'Quiebro Asimétrico / Tropezón';
+        smibIcon = (zij > zji) ? '⚡ <Er]' : '⚡ [Re>';
+
+        const fPeak = (fStart + fEnd) / 2 * 1.15;
+        const fDrop = fEnd * 0.72; // Colapso descendente repentino
+
+        osc.frequency.setValueAtTime(fStart, now);
+        osc.frequency.exponentialRampToValueAtTime(fPeak, now + dur * 0.35);
+        osc.frequency.exponentialRampToValueAtTime(fDrop, now + dur * 0.85);
+
+        // Formante se distorsiona y desinfla hacia gutural
+        f1.frequency.setValueAtTime(650, now);
+        f1.frequency.linearRampToValueAtTime(450, now + dur * 0.4);
+        f1.frequency.linearRampToValueAtTime(280, now + dur);
+
+        f2.frequency.setValueAtTime(1500, now);
+        f2.frequency.linearRampToValueAtTime(1100, now + dur * 0.4);
+        f2.frequency.linearRampToValueAtTime(650, now + dur);
+
+        mediumFilter.frequency.setValueAtTime(zij >= waterLevel ? 3500 : 400, now);
+        mediumFilter.frequency.exponentialRampToValueAtTime(zji >= waterLevel ? 3500 : 320, now + dur);
+        mediumFilter.Q.setValueAtTime(4.0, now);
+
+        masterGain.gain.linearRampToValueAtTime(0.24, now + 0.02);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.02);
+
+        // Micro-batimiento de cizalladura disonante
+        const shearOsc = ctx.createOscillator();
+        const shearG = ctx.createGain();
+        shearOsc.type = 'sawtooth';
+        shearOsc.frequency.setValueAtTime(fDrop * 1.06, now + dur * 0.35);
+        shearG.gain.setValueAtTime(0.0001, now);
+        shearG.gain.linearRampToValueAtTime(0.08, now + dur * 0.42);
+        shearG.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.03);
+        shearOsc.connect(shearG);
+        shearG.connect(ctx.destination);
+        shearOsc.start(now + dur * 0.35);
+        shearOsc.stop(now + dur + 0.04);
+
+      } else {
+        // ----------------------------------------------------
+        // 4. LATENCIA SUBMARINA / RETRAIMIENTO ([Rr] o ¡¿?!)
+        // Murmullo Abisal Gravitatorio
+        // ----------------------------------------------------
+        gestureName = 'Murmullo Abisal Submarino';
+        smibIcon = delta > 0.25 ? '💔 [Rr]' : '⚪ ¡¿?!';
+
+        osc.frequency.setValueAtTime(fStart * 0.85, now);
+        osc.frequency.exponentialRampToValueAtTime(fEnd * 0.85, now + dur);
+
+        f1.frequency.setValueAtTime(320, now);
+        f1.frequency.linearRampToValueAtTime(300, now + dur);
+        f2.frequency.setValueAtTime(700, now);
+        f2.frequency.linearRampToValueAtTime(680, now + dur);
+
+        mediumFilter.frequency.setValueAtTime(340, now);
+        mediumFilter.Q.setValueAtTime(3.8, now);
+
+        masterGain.gain.linearRampToValueAtTime(0.16, now + 0.04);
+        masterGain.gain.setValueAtTime(0.14, now + dur * 0.7);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.05);
+      }
+
+      osc.connect(f1);
+      osc.connect(f2);
+      f1.connect(f1G);
+      f2.connect(f2G);
+      f1G.connect(mediumFilter);
+      f2G.connect(mediumFilter);
+      mediumFilter.connect(masterGain);
+      masterGain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + dur + 0.08);
+
+      updateUnifiedMelodyBadge(i, j, zij, zji, gestureName, smibIcon, dur);
+    }
+
+    function updateUnifiedMelodyBadge(i, j, zij, zji, gestureName, smibIcon, dur) {
+      const badge = document.getElementById('aquarium-acoustic-voice-badge');
+      if (!badge) return;
+      const instI = AQUARIUM_INSTRUMENTS[i];
+      const instJ = AQUARIUM_INSTRUMENTS[j];
+      const stateI = zij >= waterLevel ? '<span class="text-amber-300 font-bold">☀️ Aéreo</span>' : '<span class="text-sky-400 font-bold">🌊 Submarino</span>';
+      const stateJ = zji >= waterLevel ? '<span class="text-amber-300 font-bold">☀️ Aéreo</span>' : '<span class="text-sky-400 font-bold">🌊 Submarino</span>';
+
+      let stateRel = '';
+      if (i === j) {
+        stateRel = '<span class="text-amber-300 font-bold">💎 Diagonal Testigo</span>';
+      } else if (zij >= waterLevel && zji >= waterLevel) {
+        stateRel = '<span class="text-emerald-400 font-bold">💚 Resonancia de Cielo</span>';
+      } else if (zij < waterLevel && zji < waterLevel) {
+        stateRel = '<span class="text-sky-400 font-bold">🌊 Latencia Submarina</span>';
+      } else {
+        stateRel = '<span class="text-rose-400 font-bold">⚡ Cizalladura Asimétrica</span>';
+      }
+
+      badge.innerHTML = `<span class="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-mono font-black">${smibIcon}</span> <strong style="color:${instI.color};">${instI.code}</strong> (${stateI}) <span class="text-slate-400">➔</span> <strong style="color:${instJ.color};">${instJ.code}</strong> (${stateJ}) | <strong class="text-emerald-300">${gestureName}</strong> <span class="text-[9px] text-slate-400">(${Math.round(dur * 1000)}ms)</span> | ${stateRel}`;
+    }
+
     function playAquariumDuo(i, j) {
       if (!audioEnabled) return;
+      if (audioModeUnified) {
+        playUnifiedRelationalMelody(i, j);
+        return;
+      }
       getAudioCtx();
       const ctx = getAudioCtx();
       const now = ctx.currentTime;
