@@ -7924,6 +7924,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let isA1 = (step % 2 === 1);
         let n = (typeof n_nodes !== 'undefined' && n_nodes) ? n_nodes : ((typeof currentMatrix !== 'undefined' && currentMatrix) ? currentMatrix.length : 10);
         if (typeof currentMatrix === 'undefined' || !currentMatrix || currentMatrix.length === 0) return '';
+        let isSMIbView = (typeof agileMatrixState !== 'undefined' && agileMatrixState.currentView === 'SMIb');
 
         function getSubjCode(idx) {
             if (typeof g_activeGroup !== 'undefined' && g_activeGroup === '2') {
@@ -7942,7 +7943,9 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
 
         // A1: Expectativas formuladas por los emisores
-        // Formato canónico condensado: (i,j,1,<) en A1 celda (i,j) y (j,i,4,>) en A4 celda (j,i)
+        // Formato canónico condensado:
+        // - En SMIa: (i,j,1,<) en A1 celda (i,j) y (j,i,4,>) en A4 celda (j,i)
+        // - En SMIb: (i,j,1,Z) en A1 celda (i,j) y (j,i,4,Z) en A4 celda (j,i) donde Z es mayúscula (o minúscula para rechazo)
         let itemsA1 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -7950,8 +7953,14 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 let c_ij = currentMatrix[i][j][0];
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
-                    let s1 = isPos ? '<span style="color:#00FF87;">&lt;</span>' : '<span style="color:#FF007F;">[</span>';
-                    let s2 = isPos ? '<span style="color:#00FF87;">&gt;</span>' : '<span style="color:#FF007F;">]</span>';
+                    let s1, s2;
+                    if (isSMIbView) {
+                        s1 = isPos ? ('<span style="color:#00FF87;">' + c_ij + '</span>') : ('<span style="color:#FF007F;">' + c_ij + '</span>');
+                        s2 = s1;
+                    } else {
+                        s1 = isPos ? '<span style="color:#00FF87;">&lt;</span>' : '<span style="color:#FF007F;">[</span>';
+                        s2 = isPos ? '<span style="color:#00FF87;">&gt;</span>' : '<span style="color:#FF007F;">]</span>';
+                    }
                     let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA)';
                     let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC)';
                     itemsA1.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',1,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',4,' + s2 + ')</span>');
@@ -7966,7 +7975,9 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
 
         // A2: Preferencias efectivas formuladas por los emisores
-        // Formato canónico condensado: (i,j,2,E) en A2 celda (i,j) y (j,i,3,e) en A3 celda (j,i)
+        // Formato canónico condensado:
+        // - En SMIa: (i,j,2,E) en A2 celda (i,j) y (j,i,3,e) en A3 celda (j,i)
+        // - En SMIb: (i,j,2,Z) en A2 celda (i,j) y (j,i,3,Z) en A3 celda (j,i) donde Z es mayúscula (o minúscula para rechazo)
         let itemsA2 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -7974,8 +7985,14 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 let c_ij = currentMatrix[i][j][1];
                 if (getCharRank(c_ij) === r) {
                     let isPos = (c_ij >= 'A' && c_ij <= 'Z');
-                    let s1 = isPos ? '<span style="color:#00FF87;">E</span>' : '<span style="color:#FF007F;">R</span>';
-                    let s2 = isPos ? '<span style="color:#00FF87;">e</span>' : '<span style="color:#FF007F;">r</span>';
+                    let s1, s2;
+                    if (isSMIbView) {
+                        s1 = isPos ? ('<span style="color:#00FF87;">' + c_ij + '</span>') : ('<span style="color:#FF007F;">' + c_ij + '</span>');
+                        s2 = s1;
+                    } else {
+                        s1 = isPos ? '<span style="color:#00FF87;">E</span>' : '<span style="color:#FF007F;">R</span>';
+                        s2 = isPos ? '<span style="color:#00FF87;">e</span>' : '<span style="color:#FF007F;">r</span>';
+                    }
                     let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA)';
                     let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC)';
                     itemsA2.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',2,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',3,' + s2 + ')</span>');
