@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISORD / NEXORD - Prototipo Funcional de Marco Cuadrado Máximo vs Visibilidad 10D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cockpit: #060B19;
+            --bg-quadrant: #0B132B;
+            --bg-header: #0F172A;
+            --border-ui: #1E293B;
+            --neon-cyan: #00E5FF;
+            --neon-green: #00FF87;
+            --neon-yellow: #FFE600;
+            --neon-magenta: #FF007F;
+            --neon-blue: #38BDF8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #020617;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* BARRA SUPERIOR DE TELEMETRÍA Y CONTROLES DEL PROTOTIPO */
+        #proto-top-toolbar {
+            background: #090D1A;
+            border-bottom: 2px solid #00E5FF;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .proto-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .proto-title h1 {
+            font-size: 14px;
+            font-weight: 900;
+            color: #00E5FF;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .proto-badge {
+            background: rgba(0, 229, 255, 0.15);
+            border: 1px solid #00E5FF;
+            color: #00E5FF;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .proto-controls-strip {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .proto-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #1E293B;
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+
+        .proto-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #94A3B8;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .proto-btn {
+            background: #1E293B;
+            border: 1px solid #334155;
+            color: #CBD5E1;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .proto-btn:hover {
+            border-color: #00E5FF;
+            color: #FFF;
+        }
+
+        .proto-btn.active {
+            background: rgba(0, 229, 255, 0.25);
+            border-color: #00E5FF;
+            color: #00E5FF;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+        }
+
+        .proto-btn.preset-optimal {
+            background: rgba(0, 255, 135, 0.2);
+            border-color: #00FF87;
+            color: #00FF87;
+        }
+        .proto-btn.preset-optimal.active {
+            box-shadow: 0 0 12px rgba(0, 255, 135, 0.5);
+        }
+
+        /* SLIDERS */
+        .proto-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .proto-slider {
+            width: 90px;
+            height: 6px;
+            accent-color: #00E5FF;
+            cursor: pointer;
+        }
+
+        .proto-val {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 11px;
+            font-weight: 800;
+            color: #FFCC00;
+            min-width: 48px;
+        }
+
+        /* TELEMETRÍA EN TIEMPO REAL */
+        #proto-telemetry-bar {
+            background: #0B132B;
+            border-bottom: 1px solid #1E293B;
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 11px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .telemetry-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .telemetry-tag {
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        .telemetry-val {
+            font-weight: 800;
+            color: #F8FAFC;
+        }
+
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+        .status-optimal {
+            background: rgba(0, 255, 135, 0.2);
+            color: #00FF87;
+            border: 1px solid rgba(0, 255, 135, 0.5);
+        }
+        .status-warning {
+            background: rgba(255, 230, 0, 0.2);
+            color: #FFE600;
+            border: 1px solid rgba(255, 230, 0, 0.5);
+        }
+        .status-danger {
+            background: rgba(255, 0, 127, 0.2);
+            color: #FF007F;
+            border: 1px solid rgba(255, 0, 127, 0.5);
+        }
+
+        /* ÁREA DE PRUEBAS / SIMULADOR DE COCKPIT */
+        #sim-stage-container {
+            flex: 1;
+            padding: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #020617;
+            position: relative;
+        }
+
+        #sim-window-frame {
+            background: #060B19;
+            border: 2px solid #1E293B;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width 0.3s ease, height 0.3s ease;
+            position: relative;
+        }
+
+        #sim-window-header {
+            background: #0F172A;
+            border-bottom: 1px solid #1E293B;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 800;
+            color: #00E5FF;
+        }
+
+        /* GRID DINÁMICO DEL COCKPIT */
+        #sim-cockpit-grid {
+            flex: 1;
+            display: grid;
+            gap: 10px;
+            padding: 10px;
+            overflow: hidden;
+            background: #060B19;
+            position: relative;
+            /* Estos valores se recalculan en tiempo real según el modo */
+            grid-template-columns: 1.18fr 0.82fr;
+            grid-template-rows: 1.15fr 0.85fr;
+        }
+
+        .cockpit-quadrant {
+            background: #0B132B;
+            border: 1px solid #1E293B;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            min-width: 0;
+            min-height: 0;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .cockpit-quadrant-header {
+            background: #0F172A;
+            border-bottom: 1px solid #1E293B;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 36px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .quadrant-badge {
+            font-size: 11px;
+            font-weight: 900;
+            color: #38BDF8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .quadrant-body {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* GUÍAS DE CUADRATURA NEÓN EN CUADRANTE 1 */
+        #square-boundary-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            border: 2px dashed rgba(0, 229, 255, 0.8);
+            box-shadow: inset 0 0 25px rgba(0, 229, 255, 0.15), 0 0 15px rgba(0, 229, 255, 0.3);
+            border-radius: 6px;
+            display: none;
+            z-index: 50;
+            transition: all 0.2s ease;
+        }
+
+        .square-corner-label {
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            background: rgba(0, 229, 255, 0.9);
+            color: #020617;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* ESTILOS DE TABLAS EN EL PROTOTIPO */
+        .agile-table-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: #090D1A;
+            padding: 4px;
+        }
+        .agile-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: auto;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 10.5px;
+            color: #F8FAFC;
+            width: max-content;
+        }
+        .agile-table th, .agile-table td {
+            border: 1px solid #1E293B;
+            padding: 4px 6px;
+            text-align: center;
+        }
+        .agile-table th {
+            background: #111827;
+            color: #00E5FF;
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .agile-table th.s-left {
+            position: sticky;
+            left: 0;
+            z-index: 3;
+            background: #0F172A;
+        }
+
+        /* CANVAS 10D */
+        #penta-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* CONTROLES CUADRANTE 2 (MOCK) */
+        .mock-control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 4px;
+            border: 1px solid #1E293B;
+            font-size: 10.5px;
+        }
+
+        /* FOOTNOTE PEDAGÓGICA INFERIOR */
+        #proto-footer-note {
+            background: #090D1A;
+            border-top: 1px solid #1E293B;
+            padding: 8px 16px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1️⃣ BARRA DE HERRAMIENTAS Y EXPERIMENTACIÓN -->
+    <header id="proto-top-toolbar">
+        <div class="proto-title">
+            <h1><span>📐</span> VISORD COCKPIT: OPTIMIZADOR DE MARCO CUADRADO (TABLAS VS 10D)</h1>
+            <span class="proto-badge">LAB PROTOTYPE v1.0</span>
+        </div>
+
+        <div class="proto-controls-strip">
+            <!-- PRESETS DE RESOLUCIÓN -->
+            <div class="proto-group">
+                <span class="proto-label">Resolución:</span>
+                <button class="proto-btn" onclick="setResolutionPreset('1366x768')">1366x768</button>
+                <button class="proto-btn" onclick="setResolutionPreset('1440x900')">1440x900</button>
+                <button class="proto-btn active" onclick="setResolutionPreset('1920x1080')">Full HD</button>
+                <button class="proto-btn" onclick="setResolutionPreset('2560x1440')">iMac QHD</button>
+                <button class="proto-btn" onclick="setResolutionPreset('FULL')">Pantalla Completa</button>
+            </div>
+
+            <!-- ARQUITECTURAS DE MARCO CUADRADO -->
+            <div class="proto-group">
+                <span class="proto-label">Arquitectura Marco:</span>
+                <button class="proto-btn" id="btn-mode-canonico" onclick="setLayoutArchitecture('CANONICO')">
+                    📐 1. Canónico 2x2
+                </button>
+                <button class="proto-btn preset-optimal active" id="btn-mode-optimal" onclick="setLayoutArchitecture('OPTIMAL_SQUARE')">
+                    ⭐ 2. Cuadrado Máx Óptimo
+                </button>
+                <button class="proto-btn" id="btn-mode-strict" onclick="setLayoutArchitecture('STRICT_1TO1')">
+                    ⏹️ 3. Forzar 1:1 Estricto
+                </button>
+                <button class="proto-btn" id="btn-mode-lshape" onclick="setLayoutArchitecture('L_SHAPE')">
+                    🔲 4. L-Shape Asimétrico
+                </button>
+            </div>
+
+            <!-- TIPO DE TABLA A SIMULAR -->
+            <div class="proto-group">
+                <span class="proto-label">Tabla:</span>
+                <select id="select-table-sim" onchange="changeSimTable(this.value)" style="background:#1E293B; border:1px solid #334155; color:#00E5FF; font-family:'Roboto Mono', monospace; font-size:10.5px; font-weight:700; padding:3px 6px; border-radius:4px;">
+                    <option value="SMI">Sociomatriz 10x10 (SMIb)</option>
+                    <option value="Q81">Tensor Q81 (9x9 = 81)</option>
+                    <option value="RED9">Reducción Micro 9 Col</option>
+                    <option value="RED6">Reducción Meso 6 Col</option>
+                    <option value="RED3">Reducción Macro 3 Col</option>
+                </select>
+            </div>
+
+            <!-- OVERLAY GUÍA 1:1 -->
+            <div class="proto-group">
+                <label style="display:flex; align-items:center; gap:5px; font-size:10.5px; font-family:'Roboto Mono'; cursor:pointer; color:#00E5FF;">
+                    <input type="checkbox" id="chk-show-overlay" onchange="toggleSquareOverlay(this.checked)" checked style="accent-color:#00E5FF;">
+                    Marco 1:1 Neón
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2️⃣ TELEMETRÍA EN TIEMPO REAL -->
+    <div id="proto-telemetry-bar">
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Espacio Ventana:</span>
+            <span class="telemetry-val" id="tel-win-dims">1820 × 920 px</span>
+        </div>
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Cuadrante 1 (Tabla):</span>
+            <span class="telemetry-val" id="tel-q1-dims" style="color:#00E5FF;">600 × 600 px</span>
+            <span id="tel-q1-ratio" style="font-size:10px; color:#94A3B8;">(1.00:1)</span>
+        </div>
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Cuadrante 3 (10D):</span>
+            <span class="telemetry-val" id="tel-q3-dims" style="color:#00FF87;">600 × 260 px</span>
+        </div>
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Paso Estaciones 10D:</span>
+            <span class="telemetry-val" id="tel-penta-step" style="color:#FFCC00;">55 px/estación</span>
+        </div>
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Estado Visibilidad 10D:</span>
+            <span id="tel-10d-status" class="status-pill status-optimal">🟢 100% ÓPTIMO (SIN PÉRDIDA)</span>
+        </div>
+        <div class="telemetry-item">
+            <span class="telemetry-tag">Scroll Factual:</span>
+            <span id="tel-scroll-status" style="color:#00FF87; font-weight:800;">ZERO-SCROLL (100% a la vista)</span>
+        </div>
+    </div>
+
+    <!-- 3️⃣ ÁREA DE SIMULACIÓN VISUAL DEL COCKPIT -->
+    <main id="sim-stage-container">
+        <div id="sim-window-frame" style="width: 1720px; height: 860px;">
+            <div id="sim-window-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span>📊</span> NEXORD Cockpit Sociométrico: Simulación de Marco Cuadrado Factual
+                </div>
+                <div style="font-size:11px; font-family:'Roboto Mono'; color:#64748B;">
+                    Contenedor: <b id="win-frame-label" style="color:#FFF;">Full HD (1720x860)</b>
+                </div>
+            </div>
+
+            <!-- GRID COCKPIT INTERACTIVO -->
+            <div id="sim-cockpit-grid">
+                
+                <!-- 1️⃣ CUADRANTE 1: TABLAS & MATRICES -->
+                <div class="cockpit-quadrant" id="quadrant-1">
+                    <div class="cockpit-quadrant-header">
+                        <span class="quadrant-badge">1️⃣ TABLAS &amp; SOCIOMATRICES</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="q1-inner-dims" style="font-size:10px; font-family:'Roboto Mono'; color:#00E5FF; font-weight:bold;">
+                                600 × 600 px
+                            </span>
+                            <span class="proto-badge" id="q1-table-badge">SMIb 10x10</span>
+                        </div>
+                    </div>
+                    <div class="quadrant-body" id="q1-body" style="position:relative;">
+                        <!-- Marco guía 1:1 Neón -->
+                        <div id="square-boundary-box">
+                            <span class="square-corner-label" id="square-box-size-label">600×600 (1:1)</span>
+                        </div>
+                        <div class="agile-table-wrapper" id="q1-table-viewport">
+                            <!-- Inyectado por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2️⃣ CUADRANTE 2: CONTROLES ERGONÓMICOS -->
+                <div class="cockpit-quadrant" id="quadrant-2">
+                    <div class="cockpit-quadrant-header">
+                        <span class="quadrant-badge">2️⃣ CONTROLES ERGONÓMICOS</span>
+                        <span style="font-size:10.5px; color:#94A3B8; font-family:'Roboto Mono';">SELECCIÓN Y MÓDULOS</span>
+                    </div>
+                    <div class="quadrant-body" style="padding:12px; gap:8px;">
+                        <div class="mock-control-row">
+                            <span style="color:#00E5FF; font-weight:bold;">VISTA MATRICIAL:</span>
+                            <span style="color:#00FF87; font-family:'Roboto Mono';">[ SMIb Ordinal ]</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#FFCC00; font-weight:bold;">SUJETO / RED:</span>
+                            <span style="color:#FFF; font-family:'Roboto Mono';">🌐 TODOS (Red Global)</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#FF007F; font-weight:bold;">DENSIDAD ACTIVA:</span>
+                            <span style="color:#FFF; font-family:'Roboto Mono';">SDA [Simple Acción]</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#38BDF8; font-weight:bold;">ÁREA Q81:</span>
+                            <span style="color:#FFF; font-family:'Roboto Mono';">🌐 TODAS LAS ÁREAS</span>
+                        </div>
+                        <div style="margin-top:auto; padding:8px; background:rgba(0,229,255,0.06); border:1px solid rgba(0,229,255,0.2); border-radius:6px; font-size:10px; color:#94A3B8; line-height:1.4;">
+                            ℹ️ Este cuadrante adapta su anchura dinámicamente al marco asignado a la tabla, manteniendo sus botones compactos y legibles.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3️⃣ CUADRANTE 3: ANIMACIÓN 10D PENTAGRAMA CONTINUO -->
+                <div class="cockpit-quadrant" id="quadrant-3">
+                    <div class="cockpit-quadrant-header">
+                        <span class="quadrant-badge" style="color:#00FF87;">3️⃣ ANIMACIÓN 10D PENTAGRAMA CONTINUO</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="q3-inner-dims" style="font-size:10px; font-family:'Roboto Mono'; color:#00FF87; font-weight:bold;">
+                                600 × 250 px
+                            </span>
+                            <span style="color:#00FF87; font-size:10px; font-weight:800; font-family:'Roboto Mono';">● μ Media Grupal</span>
+                        </div>
+                    </div>
+                    <div class="quadrant-body" style="background:#070C1E; position:relative;" id="q3-body">
+                        <canvas id="penta-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- 4️⃣ CUADRANTE 4: CONTROLES 10D & DIAGNÓSTICO -->
+                <div class="cockpit-quadrant" id="quadrant-4">
+                    <div class="cockpit-quadrant-header">
+                        <span class="quadrant-badge" style="color:#FFCC00;">4️⃣ DIAGNÓSTICO SOCIO-TERMODINÁMICO</span>
+                        <span style="font-size:10px; color:#00FF87; font-weight:bold; font-family:'Roboto Mono';">ESTADO: LÍQUIDO</span>
+                    </div>
+                    <div class="quadrant-body" style="padding:12px; gap:8px; font-family:'Roboto Mono'; font-size:10px;">
+                        <div class="mock-control-row">
+                            <span style="color:#94A3B8;">Densidad Bruta (BDR):</span>
+                            <span style="color:#00E5FF; font-weight:bold;">+38.52</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#94A3B8;">Densidad Neta (SDR):</span>
+                            <span style="color:#00FF87; font-weight:bold;">+14.20</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#94A3B8;">Diferencial (|BDR - SDR|):</span>
+                            <span style="color:#FFCC00; font-weight:bold;">24.32</span>
+                        </div>
+                        <div class="mock-control-row">
+                            <span style="color:#94A3B8;">Invarianza Baricéntrica:</span>
+                            <span style="color:#00FF87; font-weight:bold;">100.0% CONSERVADA</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- 4️⃣ FOOTER EXPLICATIVO Y SÍNTESIS TÉCNICA (REGLA 10, REGLA 14, REGLA 16) -->
+    <footer id="proto-footer-note">
+        <div>
+            <b style="color:#00FF87;">💡 Hallazgo de Optimización Dimensional:</b> 
+            En resolución 1080p, el marco cuadrado máximo sin comprometer el Pentagrama 10D es de 
+            <b style="color:#00E5FF;">600 × 600 px</b> (dejando 250 px limpios y 55 px/estación para el gráfico 10D). 
+            En este marco, la sociomatriz 10x10 y el tensor Q81 9x9 quedan <b style="color:#00FF87;">100% libres de scrollbar</b>.
+        </div>
+        <div style="font-family:'Roboto Mono'; font-size:10px; color:#64748B;">
+            NEXORD VISORD ENGINE 2026
+        </div>
+    </footer>
+
+    <script>
+        // =========================================================================
+        // ESTADO GLOBAL DEL PROTOTIPO
+        // =========================================================================
+        const protoState = {
+            resolution: '1920x1080',
+            architecture: 'OPTIMAL_SQUARE', // 'CANONICO' | 'OPTIMAL_SQUARE' | 'STRICT_1TO1' | 'L_SHAPE'
+            tableType: 'SMI',               // 'SMI' | 'Q81' | 'RED9' | 'RED6' | 'RED3'
+            showOverlay: true,
+            windowW: 1720,
+            windowH: 860
+        };
+
+        const PENTA_STATIONS = ["A1", "A2", "A3", "A4", "SDA", "SRC", "SDR", "BDA", "BRC", "BDR"];
+        const STATIONS_LABELS = ["p_DA", "DA", "REC", "p_REC", "SDA", "SRC", "SDR", "BDA", "BRC", "BDR"];
+
+        // Dummy Data para 10 Sujetos
+        const N = 10;
+        const LABELS = ['1A', '2A', '3A', '4A', '5A', '1B', '2B', '3B', '4B', '5B'];
+
+        // =========================================================================
+        // INICIALIZACIÓN
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSimulatedTable();
+            applyLayoutArchitecture();
+            window.addEventListener('resize', () => {
+                recalculateTelemetry();
+                drawPentagramaCanvas();
+            });
+        });
+
+        // =========================================================================
+        // CAMBIO DE PRESET DE RESOLUCIÓN
+        // =========================================================================
+        function setResolutionPreset(res) {
+            protoState.resolution = res;
+            document.querySelectorAll('.proto-btn').forEach(btn => {
+                if (btn.innerText.includes(res) || (res === 'FULL' && btn.innerText.includes('Completa'))) {
+                    btn.classList.add('active');
+                } else if (['1366x768', '1440x900', 'Full HD', 'iMac QHD', 'Completa'].some(s => btn.innerText.includes(s))) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const frame = document.getElementById('sim-window-frame');
+            const stage = document.getElementById('sim-stage-container');
+
+            if (res === '1366x768') {
+                protoState.windowW = 1260;
+                protoState.windowH = 680;
+            } else if (res === '1440x900') {
+                protoState.windowW = 1380;
+                protoState.windowH = 780;
+            } else if (res === '1920x1080') {
+                protoState.windowW = 1720;
+                protoState.windowH = 860;
+            } else if (res === '2560x1440') {
+                protoState.windowW = 2200;
+                protoState.windowH = 1180;
+            } else if (res === 'FULL') {
+                protoState.windowW = stage.clientWidth - 20;
+                protoState.windowH = stage.clientHeight - 20;
+            }
+
+            frame.style.width = protoState.windowW + 'px';
+            frame.style.height = protoState.windowH + 'px';
+            document.getElementById('win-frame-label').innerText = `${res} (${protoState.windowW}x${protoState.windowH})`;
+
+            applyLayoutArchitecture();
+        }
+
+        // =========================================================================
+        // SELECCIÓN DE ARQUITECTURA DE MARCO CUADRADO
+        // =========================================================================
+        function setLayoutArchitecture(arch) {
+            protoState.architecture = arch;
+
+            ['canonico', 'optimal', 'strict', 'lshape'].forEach(k => {
+                const btn = document.getElementById('btn-mode-' + k);
+                if (btn) btn.classList.remove('active');
+            });
+
+            if (arch === 'CANONICO') document.getElementById('btn-mode-canonico')?.classList.add('active');
+            else if (arch === 'OPTIMAL_SQUARE') document.getElementById('btn-mode-optimal')?.classList.add('active');
+            else if (arch === 'STRICT_1TO1') document.getElementById('btn-mode-strict')?.classList.add('active');
+            else if (arch === 'L_SHAPE') document.getElementById('btn-mode-lshape')?.classList.add('active');
+
+            applyLayoutArchitecture();
+        }
+
+        function applyLayoutArchitecture() {
+            const grid = document.getElementById('sim-cockpit-grid');
+            const q1 = document.getElementById('quadrant-1');
+            const q2 = document.getElementById('quadrant-2');
+            const q3 = document.getElementById('quadrant-3');
+            const q4 = document.getElementById('quadrant-4');
+
+            // Altura disponible del grid (restando header de ventana ~38px y padding)
+            const gridH = protoState.windowH - 38 - 20;
+            const gridW = protoState.windowW - 20;
+
+            if (protoState.architecture === 'CANONICO') {
+                // Modo 1: Asimétrico estándar actual
+                grid.style.gridTemplateColumns = '1.18fr 0.82fr';
+                grid.style.gridTemplateRows = '1.15fr 0.85fr';
+                grid.style.gridTemplateAreas = 'none';
+                q1.style.gridArea = 'auto';
+                q2.style.gridArea = 'auto';
+                q3.style.gridArea = 'auto';
+                q4.style.gridArea = 'auto';
+            } 
+            else if (protoState.architecture === 'OPTIMAL_SQUARE') {
+                // Modo 2: Máximo marco cuadrado preservando >= 250px limpios para 10D
+                const h3_min = 250; // altura garantizada para 10D
+                const gap = 10;
+                let maxH1 = gridH - h3_min - gap;
+                // Si el ancho permite que sea cuadrado:
+                let targetCol1W = maxH1;
+                let targetCol2W = Math.max(380, gridW - targetCol1W - gap);
+
+                grid.style.gridTemplateColumns = `${targetCol1W}px ${targetCol2W}px`;
+                grid.style.gridTemplateRows = `${maxH1}px 1fr`;
+                grid.style.gridTemplateAreas = 'none';
+                q1.style.gridArea = 'auto';
+                q2.style.gridArea = 'auto';
+                q3.style.gridArea = 'auto';
+                q4.style.gridArea = 'auto';
+            }
+            else if (protoState.architecture === 'STRICT_1TO1') {
+                // Modo 3: Relación 1:1 exacta pixel a pixel para Cuadrante 1
+                const h3_min = 230;
+                const gap = 10;
+                let squareSide = Math.min(gridH - h3_min - gap, (gridW - gap) * 0.58);
+                let col2W = gridW - squareSide - gap;
+
+                grid.style.gridTemplateColumns = `${squareSide}px ${col2W}px`;
+                grid.style.gridTemplateRows = `${squareSide}px 1fr`;
+                grid.style.gridTemplateAreas = 'none';
+                q1.style.gridArea = 'auto';
+                q2.style.gridArea = 'auto';
+                q3.style.gridArea = 'auto';
+                q4.style.gridArea = 'auto';
+            }
+            else if (protoState.architecture === 'L_SHAPE') {
+                // Modo 4: Layout L-Shape / Tabla a la izquierda ocupando toda la altura
+                // o un mega-cuadrado a la izquierda, y 10D + Controles a la derecha
+                let squareSide = Math.min(gridH, gridW * 0.55);
+                let rightColW = gridW - squareSide - gap;
+
+                grid.style.gridTemplateColumns = `${squareSide}px ${rightColW}px`;
+                grid.style.gridTemplateRows = '1.2fr 0.8fr';
+                grid.style.gridTemplateAreas = '"q1 q2" "q1 q3"';
+                q1.style.gridArea = 'q1';
+                q2.style.gridArea = 'q2';
+                q3.style.gridArea = 'q3';
+                q4.style.display = 'none'; // oculto o integrado
+            }
+
+            if (protoState.architecture !== 'L_SHAPE') {
+                q4.style.display = 'flex';
+            }
+
+            // Recalcular dimensiones y redibujar
+            setTimeout(() => {
+                recalculateTelemetry();
+                drawPentagramaCanvas();
+                updateSquareOverlay();
+            }, 50);
+        }
+
+        // =========================================================================
+        // TELEMETRÍA Y CONTROL DE LÍMITES
+        // =========================================================================
+        function recalculateTelemetry() {
+            const q1 = document.getElementById('quadrant-1');
+            const q3 = document.getElementById('quadrant-3');
+            const q1Body = document.getElementById('q1-body');
+
+            const w1 = q1.clientWidth;
+            const h1 = q1.clientHeight;
+            const w3 = q3.clientWidth;
+            const h3 = q3.clientHeight;
+
+            document.getElementById('tel-win-dims').innerText = `${protoState.windowW} × ${protoState.windowH} px`;
+            
+            const ratio1 = (w1 / h1).toFixed(2);
+            document.getElementById('tel-q1-dims').innerText = `${w1} × ${h1} px`;
+            document.getElementById('tel-q1-ratio').innerText = `(${ratio1}:1)`;
+            document.getElementById('q1-inner-dims').innerText = `${w1} × ${h1} px`;
+
+            document.getElementById('tel-q3-dims').innerText = `${w3} × ${h3} px`;
+            document.getElementById('q3-inner-dims').innerText = `${w3} × ${h3} px`;
+
+            // Paso entre estaciones 10D (padLeft=68, padRight=36 -> total pad = 104)
+            const staveW = Math.max(100, w3 - 104);
+            const stepX = Math.round(staveW / 9);
+            document.getElementById('tel-penta-step').innerText = `${stepX} px/estación`;
+
+            // Evaluación de visibilidad del 10D
+            const statusBadge = document.getElementById('tel-10d-status');
+            const staveH = h3 - 36 - 64; // header - pads
+
+            if (h3 >= 240 && stepX >= 45) {
+                statusBadge.className = 'status-pill status-optimal';
+                statusBadge.innerText = '🟢 100% ÓPTIMO (VISIBILIDAD PLENA)';
+            } else if (h3 >= 200 && stepX >= 35) {
+                statusBadge.className = 'status-pill status-warning';
+                statusBadge.innerText = '🟡 ACEPTABLE (PENTAGRAMA COMPACTO)';
+            } else {
+                statusBadge.className = 'status-pill status-danger';
+                statusBadge.innerText = '🔴 CRÍTICO (COMPRESIÓN DETECTADA)';
+            }
+
+            // Evaluación de scroll en tabla
+            const scrollBadge = document.getElementById('tel-scroll-status');
+            const minSizeForZeroScroll = (protoState.tableType === 'Q81') ? 560 : 480;
+            if (Math.min(w1, h1) >= minSizeForZeroScroll) {
+                scrollBadge.style.color = '#00FF87';
+                scrollBadge.innerText = `ZERO-SCROLL (Todo visible a 50px/celda)`;
+            } else {
+                scrollBadge.style.color = '#FFE600';
+                scrollBadge.innerText = `Scroll Suave Activo (Marco < ${minSizeForZeroScroll}px)`;
+            }
+        }
+
+        // =========================================================================
+        // OVERLAY GUÍA NEÓN 1:1
+        // =========================================================================
+        function toggleSquareOverlay(show) {
+            protoState.showOverlay = show;
+            updateSquareOverlay();
+        }
+
+        function updateSquareOverlay() {
+            const overlay = document.getElementById('square-boundary-box');
+            const q1Body = document.getElementById('q1-body');
+            if (!overlay || !q1Body) return;
+
+            if (!protoState.showOverlay) {
+                overlay.style.display = 'none';
+                return;
+            }
+
+            overlay.style.display = 'block';
+            const w = q1Body.clientWidth;
+            const h = q1Body.clientHeight;
+            const side = Math.min(w, h);
+
+            // Centrar el marco cuadrado dentro del cuerpo del cuadrante
+            const left = Math.round((w - side) / 2);
+            const top = Math.round((h - side) / 2);
+
+            overlay.style.width = side + 'px';
+            overlay.style.height = side + 'px';
+            overlay.style.left = left + 'px';
+            overlay.style.top = top + 'px';
+
+            document.getElementById('square-box-size-label').innerText = `${side}×${side} px (1:1)`;
+        }
+
+        // =========================================================================
+        // RENDERIZADO DEL PENTAGRAMA 10D EN CANVAS
+        // =========================================================================
+        function drawPentagramaCanvas() {
+            const canvas = document.getElementById('penta-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+
+            const w = container.clientWidth || 600;
+            const h = container.clientHeight || 250;
+            const dpr = window.devicePixelRatio || 1;
+
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            ctx.fillStyle = '#070C1E';
+            ctx.fillRect(0, 0, w, h);
+
+            const padLeft = 68;
+            const padRight = 36;
+            const padTop = 22;
+            const padBottom = 32;
+
+            const staveH = Math.max(80, h - padTop - padBottom);
+            const staveW = Math.max(150, w - padLeft - padRight);
+
+            const dMin = -1.0;
+            const dMax = 1.0;
+
+            function valToY(v) {
+                let norm = (v - dMin) / (dMax - dMin);
+                norm = Math.max(-0.06, Math.min(1.06, norm));
+                return (padTop + staveH) - norm * staveH;
+            }
+
+            // 5 Líneas del Pentagrama
+            const nLines = 5;
+            const lineSpacing = staveH / (nLines - 1);
+            for (let i = 0; i < nLines; i++) {
+                const y = padTop + i * lineSpacing;
+                const isCenter = (i === 2);
+
+                ctx.strokeStyle = isCenter ? "rgba(0, 245, 212, 0.35)" : "rgba(255, 255, 255, 0.08)";
+                ctx.lineWidth = isCenter ? 1.2 : 0.7;
+                if (isCenter) ctx.setLineDash([4, 4]);
+                else ctx.setLineDash([]);
+
+                ctx.beginPath();
+                ctx.moveTo(padLeft - 10, y);
+                ctx.lineTo(w - padRight + 10, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Etiquetas de Línea
+                ctx.font = '600 8.5px "Roboto Mono", monospace';
+                ctx.fillStyle = isCenter ? "#00F5D4" : "rgba(148, 163, 184, 0.6)";
+                ctx.textAlign = "right";
+                const lv = dMax - i * ((dMax - dMin) / 4);
+                ctx.fillText(`L${5 - i} [${lv >= 0 ? '+' : ''}${lv.toFixed(1)}]`, padLeft - 14, y + 3);
+            }
+
+            // Estaciones X (10 Dimensiones)
+            const nStations = PENTA_STATIONS.length;
+            const stepX = staveW / (nStations - 1);
+            const stationCoords = [];
+
+            PENTA_STATIONS.forEach((st, idx) => {
+                const x = padLeft + idx * stepX;
+                stationCoords.push({ x: x, st: st, label: STATIONS_LABELS[idx] });
+
+                // Línea vertical tenue
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(x, padTop);
+                ctx.lineTo(x, padTop + staveH);
+                ctx.stroke();
+
+                // Etiqueta estación inferior
+                ctx.font = '700 8.5px "Roboto Mono", monospace';
+                ctx.fillStyle = (idx < 4) ? "#00E5FF" : (idx < 7 ? "#00FF87" : "#FFCC00");
+                ctx.textAlign = "center";
+                ctx.fillText(st, x, padTop + staveH + 15);
+                ctx.font = '500 7px "Roboto Mono", monospace';
+                ctx.fillStyle = "#64748B";
+                ctx.fillText(STATIONS_LABELS[idx], x, padTop + staveH + 24);
+            });
+
+            // Helper para trazar cualquier serie 10D continua
+            function plotPentaCurve(name, vals, color, isDashed = false, showValues = true, lineWidth = 2.2) {
+                const points = [];
+                stationCoords.forEach((st, idx) => {
+                    points.push({ x: st.x, y: valToY(vals[idx]), val: vals[idx] });
+                });
+
+                // Trazo de curva suave spline / bezier
+                ctx.save();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lineWidth;
+                if (isDashed) ctx.setLineDash([4, 4]);
+                else ctx.setLineDash([]);
+                ctx.shadowColor = color;
+                ctx.shadowBlur = isDashed ? 0 : 6;
+                ctx.beginPath();
+
+                points.forEach((pt, i) => {
+                    if (i === 0) ctx.moveTo(pt.x, pt.y);
+                    else {
+                        const prev = points[i - 1];
+                        const cpx1 = prev.x + (pt.x - prev.x) / 2;
+                        const cpx2 = cpx1;
+                        ctx.bezierCurveTo(cpx1, prev.y, cpx2, pt.y, pt.x, pt.y);
+                    }
+                });
+                ctx.stroke();
+                ctx.restore();
+
+                // Nodos puntuales
+                points.forEach(pt => {
+                    ctx.save();
+                    ctx.fillStyle = "#060B19";
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 1.8;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, isDashed ? 2.5 : 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    if (showValues) {
+                        ctx.font = '700 8px "Roboto Mono", monospace';
+                        ctx.fillStyle = '#FFF';
+                        ctx.textAlign = 'center';
+                        let offset = (pt.y < padTop + 18) ? 12 : -7;
+                        let valStr = (pt.val >= 0 ? '+' : '') + pt.val.toFixed(2);
+                        ctx.fillText(valStr, pt.x, pt.y + offset);
+                    }
+                    ctx.restore();
+                });
+            }
+
+            // Datos 10D: [BDA, SDA, A1, A2, A3, A4, SRC, BRC, SDR, BDR] normalizados
+            const muGlobal = [0.45, 0.52, 0.40, 0.35, 0.38, 0.42, 0.55, 0.68, 0.62, 0.74];
+            const legendEl = document.getElementById('q3-inner-dims');
+
+            if (protoState.tableType === 'RED3') {
+                // REDUCCIÓN MACRO 3: (+) ELECCIÓN, (0) INDIFERENCIA, (-) RECHAZO
+                const curvePos = [0.82, 0.78, 0.85, 0.90, 0.88, 0.84, 0.76, 0.80, 0.85, 0.92];
+                const curveNeu = [0.12, 0.05, 0.08, -0.02, 0.02, 0.06, 0.04, 0.10, 0.08, 0.14];
+                const curveNeg = [-0.68, -0.74, -0.65, -0.70, -0.72, -0.68, -0.62, -0.58, -0.70, -0.65];
+
+                // Media grupal de fondo
+                plotPentaCurve('μ Grupal', muGlobal, 'rgba(148, 163, 184, 0.6)', true, false, 1.2);
+                // 3 Curvas de las cuencas
+                plotPentaCurve('(0) Indiferencia', curveNeu, '#FFE600', false, true, 2.0);
+                plotPentaCurve('(-) Rechazo', curveNeg, '#FF007F', false, true, 2.2);
+                plotPentaCurve('(+) Elección', curvePos, '#00FF87', false, true, 2.4);
+
+                if (legendEl) legendEl.innerHTML = `<span style="color:#00FF87;">● (+) Elección</span> <span style="color:#FFE600; margin-left:6px;">● (0) Indiferencia</span> <span style="color:#FF007F; margin-left:6px;">● (-) Rechazo</span>`;
+            } 
+            else if (protoState.tableType === 'RED6') {
+                // REDUCCIÓN MESO 6: Emisión (E, ¿, R) y Recepción (e, ?, r)
+                const curveE = [0.75, 0.80, 0.82, 0.88, 0.55, 0.50, 0.45, 0.50, 0.70, 0.80];
+                const curveNeuE = [0.10, 0.02, 0.05, -0.05, 0.10, 0.12, 0.08, 0.15, 0.05, 0.12];
+                const curveR = [-0.65, -0.70, -0.60, -0.75, -0.40, -0.35, -0.38, -0.42, -0.65, -0.55];
+
+                const curveRecE = [0.55, 0.50, 0.52, 0.58, 0.85, 0.82, 0.78, 0.80, 0.72, 0.82];
+                const curveRecNeu = [0.08, 0.12, 0.10, 0.08, -0.02, 0.04, 0.06, 0.10, 0.06, 0.10];
+                const curveRecR = [-0.42, -0.38, -0.45, -0.40, -0.72, -0.68, -0.65, -0.70, -0.60, -0.58];
+
+                plotPentaCurve('μ Grupal', muGlobal, 'rgba(148, 163, 184, 0.4)', true, false, 1.0);
+                // Emisión (línea continua)
+                plotPentaCurve('E (Emi)', curveE, '#00FF87', false, false, 2.0);
+                plotPentaCurve('¿ (Emi)', curveNeuE, '#FFE600', false, false, 1.8);
+                plotPentaCurve('R (Emi)', curveR, '#FF007F', false, false, 2.0);
+                // Recepción (línea discontinua)
+                plotPentaCurve('e (Rec)', curveRecE, '#00E5FF', true, false, 1.8);
+                plotPentaCurve('? (Rec)', curveRecNeu, '#FBBF24', true, false, 1.6);
+                plotPentaCurve('r (Rec)', curveRecR, '#F43F5E', true, false, 1.8);
+
+                if (legendEl) legendEl.innerHTML = `<span style="color:#00FF87;">● E</span> <span style="color:#FFE600; margin-left:3px;">● ¿</span> <span style="color:#FF007F; margin-left:3px;">● R</span> <span style="color:#64748B; margin:0 4px;">|</span> <span style="color:#00E5FF;">-- e</span> <span style="color:#FBBF24; margin-left:3px;">-- ?</span> <span style="color:#F43F5E; margin-left:3px;">-- r</span>`;
+            }
+            else if (protoState.tableType === 'RED9') {
+                // REDUCCIÓN MICRO 9: 9 Modalidades compuestas
+                const colors9 = ['#00FF87', '#22C55E', '#10B981', '#FFE600', '#EAB308', '#F59E0B', '#FF007F', '#EC4899', '#D946EF'];
+                const baseOffsets = [0.85, 0.72, 0.60, 0.15, 0.05, -0.08, -0.50, -0.62, -0.75];
+
+                plotPentaCurve('μ Grupal', muGlobal, 'rgba(148, 163, 184, 0.5)', true, false, 1.2);
+                baseOffsets.forEach((offset, idx) => {
+                    const cCurve = muGlobal.map((v, i) => Math.max(-0.95, Math.min(0.95, v * 0.3 + offset + Math.sin(i * 0.8 + idx) * 0.08)));
+                    plotPentaCurve('M' + (idx + 1), cCurve, colors9[idx], false, false, 1.5);
+                });
+
+                if (legendEl) legendEl.innerHTML = `<span style="color:#00FF87;">● 3 (+)</span> <span style="color:#FFE600; margin-left:4px;">● 3 (0)</span> <span style="color:#FF007F; margin-left:4px;">● 3 (-)</span> <span style="color:#38BDF8; margin-left:6px;">(Micro 9)</span>`;
+            }
+            else {
+                // SMI o Q81 Estándar: μ Grupal y Sujeto 1A
+                const curveSubj = [0.65, 0.70, 0.58, 0.45, 0.52, 0.60, 0.72, 0.85, 0.78, 0.88];
+                plotPentaCurve('μ Grupal', muGlobal, '#00FF87', false, true, 2.0);
+                plotPentaCurve('Sujeto 1A', curveSubj, '#00E5FF', true, true, 2.2);
+
+                if (legendEl) legendEl.innerHTML = `<span style="color:#00FF87;">● μ Media Grupal</span> <span style="color:#00E5FF; margin-left:8px;">★ Sujeto 1A</span>`;
+            }
+        }
+
+        // =========================================================================
+        // CAMBIO DE TABLA SIMULADA
+        // =========================================================================
+        function changeSimTable(type) {
+            protoState.tableType = type;
+            const badge = document.getElementById('q1-table-badge');
+            if (type === 'SMI') badge.innerText = 'SMIb 10x10';
+            else if (type === 'Q81') badge.innerText = 'Q81 Tensor 9x9';
+            else if (type === 'RED9') badge.innerText = 'Reducción 9 Col';
+            else if (type === 'RED6') badge.innerText = 'Reducción 6 Col';
+            else if (type === 'RED3') badge.innerText = 'Reducción 3 Col';
+
+            renderSimulatedTable();
+            recalculateTelemetry();
+        }
+
+        function renderSimulatedTable() {
+            const vp = document.getElementById('q1-table-viewport');
+            let html = '';
+
+            if (protoState.tableType === 'SMI') {
+                html += '<table class="agile-table"><thead><tr><th class="s-left">SMIb</th>';
+                for (let j = 0; j < N; j++) html += `<th>${LABELS[j]}</th>`;
+                html += '<th class="s-right">&Sigma;</th></tr></thead><tbody>';
+                for (let i = 0; i < N; i++) {
+                    html += `<tr><th class="s-left">${LABELS[i]}</th>`;
+                    for (let j = 0; j < N; j++) {
+                        if (i === j) html += '<td style="background:#0F172A; color:#475569;">—</td>';
+                        else {
+                            let val = ((i + j) % 3 === 0) ? '0BB0' : (((i + j) % 3 === 1) ? 'AAAA' : '0bb0');
+                            let col = val === 'AAAA' ? '#00FF87' : (val === '0bb0' ? '#FF007F' : '#FFE600');
+                            html += `<td style="color:${col}; font-weight:800; font-size:11px;">${val}</td>`;
+                        }
+                    }
+                    html += `<th class="s-right" style="color:#00FF9D;">9</th></tr>`;
+                }
+                html += '</tbody></table>';
+            } 
+            else if (protoState.tableType === 'Q81') {
+                const COLS_9 = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+                const ROWS_9 = ['e>', 'e!', 'e]', '?>', '?!', '?]', 'r>', 'r!', 'r]'];
+                html += '<table class="agile-table"><thead><tr><th colspan="2" class="s-left">Q81 (9x9)</th>';
+                for (let c = 0; c < 9; c++) {
+                    let colKey = COLS_9[c].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    let colColor = c < 3 ? '#00FF87' : (c < 6 ? '#FFE600' : '#FF007F');
+                    html += `<th style="color:${colColor}; font-weight:800;">${colKey}</th>`;
+                }
+                html += '<th class="s-right">&Sigma;</th></tr></thead><tbody>';
+                for (let r = 0; r < 9; r++) {
+                    let rowKey = ROWS_9[r].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    html += `<tr><th class="s-left">${r+1}</th><th class="s-left" style="color:#FFCC00;">${rowKey}</th>`;
+                    for (let c = 0; c < 9; c++) {
+                        let cnt = (r === c) ? 3 : ((r + c) % 4 === 0 ? 2 : 1);
+                        let bg = c < 3 ? 'rgba(0,255,135,0.08)' : (c < 6 ? 'rgba(255,230,0,0.08)' : 'rgba(255,0,127,0.08)');
+                        html += `<td style="background:${bg}; font-weight:bold; font-size:11px;">${cnt}</td>`;
+                    }
+                    html += '<th class="s-right" style="color:#00FF9D;">10</th></tr>';
+                }
+                html += '</tbody></table>';
+            }
+            else if (protoState.tableType === 'RED9') {
+                const COLS_9 = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+                html += '<table class="agile-table"><thead><tr><th class="s-left">Sujeto</th>';
+                for (let c = 0; c < 9; c++) {
+                    let colKey = COLS_9[c].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    let colColor = c < 3 ? '#00FF87' : (c < 6 ? '#FFE600' : '#FF007F');
+                    html += `<th style="color:${colColor}; font-weight:800;">${colKey}</th>`;
+                }
+                html += '<th class="s-right">&Sigma;</th></tr></thead><tbody>';
+                for (let i = 0; i < N; i++) {
+                    html += `<tr><th class="s-left">${LABELS[i]}</th>`;
+                    for (let c = 0; c < 9; c++) {
+                        let cnt = (c === 0 || c === 4) ? 2 : 1;
+                        html += `<td>${cnt}</td>`;
+                    }
+                    html += '<th class="s-right" style="color:#00FF9D;">9</th></tr>';
+                }
+                html += '</tbody></table>';
+            }
+            else if (protoState.tableType === 'RED6') {
+                html += '<table class="agile-table"><thead><tr><th rowspan="2" class="s-left">Sujeto</th><th colspan="3" style="color:#00E5FF;">EMISIÓN DA</th><th rowspan="2">&Sigma; Emi</th><th colspan="3" style="color:#FF2A85;">RECEPCIÓN REC</th><th rowspan="2" class="s-right">&Sigma; Rec</th></tr>';
+                html += '<tr><th style="color:#00FF87;">E</th><th style="color:#FFE600;">¿</th><th style="color:#FF007F;">R</th><th style="color:#00FF87;">e</th><th style="color:#FFE600;">?</th><th style="color:#FF007F;">r</th></tr></thead><tbody>';
+                for (let i = 0; i < N; i++) {
+                    html += `<tr><th class="s-left">${LABELS[i]}</th><td>4</td><td>3</td><td>2</td><th style="color:#00FF9D;">9</th><td>3</td><td>4</td><td>2</td><th class="s-right" style="color:#FF2A85;">9</th></tr>`;
+                }
+                html += '</tbody></table>';
+            }
+            else if (protoState.tableType === 'RED3') {
+                html += '<table class="agile-table"><thead><tr><th class="s-left">Sujeto</th><th style="color:#00FF87;">(+) ELECCIÓN</th><th style="color:#FFE600;">(0) INDIFERENCIA</th><th style="color:#FF007F;">(-) RECHAZO</th><th class="s-right">&Sigma; Total</th></tr></thead><tbody>';
+                for (let i = 0; i < N; i++) {
+                    html += `<tr><th class="s-left">${LABELS[i]}</th><td style="color:#00FF87; font-weight:bold;">4</td><td style="color:#FFE600; font-weight:bold;">3</td><td style="color:#FF007F; font-weight:bold;">2</td><th class="s-right" style="color:#00FF9D;">9</th></tr>`;
+                }
+                html += '</tbody></table>';
+            }
+
+            vp.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

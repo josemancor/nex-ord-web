@@ -191,7 +191,23 @@ class VisordHubEngine {
         
         if (countNodes) countNodes.innerText = numNodes;
         if (countSubjects) countSubjects.innerText = numSubjects;
-        if (countLinks) countLinks.innerText = numSubjects > 0 ? (numSubjects * 3) : 0; // Aproximación visual
+        if (countLinks) {
+            let actualLinks = 0;
+            if (this.payload && this.payload.raw_matrices) {
+                Object.values(this.payload.raw_matrices).forEach(m => {
+                    if (m.data) {
+                        m.data.forEach(row => {
+                            row.forEach(cell => {
+                                if (cell && cell !== '0000' && (cell[1] !== '0' || cell[2] !== '0')) actualLinks++;
+                            });
+                        });
+                    }
+                });
+            } else if (this.payload && this.payload.relations) {
+                actualLinks = Object.keys(this.payload.relations).length;
+            }
+            countLinks.innerText = actualLinks > 0 ? actualLinks : (numSubjects > 0 ? (numSubjects * 3) : 0);
+        }
 
         // Actualizar Contadores de Densidad Termodinámica (BDR / SDR) en la barra superior
         if (countBdr || countSdr) {

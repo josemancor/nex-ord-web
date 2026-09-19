@@ -149,7 +149,7 @@
             pointer-events: none;
         }
         .hub-container {
-            max-width: 1260px;
+            max-width: 1540px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -2380,6 +2380,7 @@
                 <button class="dock-tab active" data-tab="matrix">👥 Matriz NxN (SMIb / SMIa)</button>
                 <button class="dock-tab" data-tab="freq">📈 Frecuencias y Estatus</button>
                 <button class="dock-tab" data-tab="density">⚡ Balance y Justificación BDR/SDR</button>
+                <button class="dock-tab" data-tab="reductions">🔲 Reducciones Q81 (9, 6, 3)</button>
             </div>
             <div class="dock-actions">
                 <button id="btn-dock-expand" class="btn-dock-icon" title="Maximizar / Restaurar altura">⛶</button>
@@ -2575,8 +2576,10 @@
         let isMoviolaPlaying = false;
         let moviolaTimer = null;
         let isSpinning = false;
-        let activeDockTab = 'matrix'; // 'matrix', 'freq', 'density'
+        let activeDockTab = 'matrix'; // 'matrix', 'freq', 'density', 'reductions'
         let activeMatrixLayer = 'SMIb'; // 'SMIb', 'SMIa', 'A1', 'A2', 'A3', 'A4', 'DIADA'
+        let activeCulturalReduction = 3; // 9, 6, 3
+        let activeCulturalReductionMode = 'FREC'; // 'FREC', 'DENS'
 
         // Three.js Core
         let scene, camera, renderer, controls;
@@ -3312,6 +3315,9 @@
             } else if (activeDockTab === 'density') {
                 subbar.style.display = 'none';
                 body.innerHTML = renderDensityJustificationHTML(wConf, tcData);
+            } else if (activeDockTab === 'reductions') {
+                subbar.style.display = 'none';
+                body.innerHTML = renderCulturalReductionsHTML(wConf, tcData);
             }
         }
 
@@ -3382,7 +3388,7 @@
         function renderMatrixTableHTML(wConf, tcData) {
             const chars = wConf.characters;
             const N = chars.length;
-            const smib = tcData.smib_matrix || [];
+            const smib = getEffectiveSMIb(wConf, tcData);
             const layer = activeMatrixLayer; // 'SMIb', 'SMIa', 'A1', 'A2', 'A3', 'A4', 'DIADA'
 
             // Configuración de encabezados y descripciones según la capa activa
@@ -3672,7 +3678,7 @@
         function renderFrequenciesTableHTML(wConf, tcData) {
             const chars = wConf.characters;
             const N = chars.length;
-            const smib = tcData.smib_matrix || [];
+            const smib = getEffectiveSMIb(wConf, tcData);
 
             let html = `
             <div style="overflow-x:auto;">
@@ -3812,6 +3818,352 @@
                 </div>
             </div>
             `;
+        }
+
+        // =========================================================================
+        // PESTAÑA 4: REDUCCIONES CANÓNICAS Q81 (9, 6, 3 COLUMNAS) & INVARIANZA
+        // =========================================================================
+        function setCulturalReduction(n) {
+            activeCulturalReduction = n;
+            updateSociometricDock();
+        }
+        window.setCulturalReduction = setCulturalReduction;
+
+        function setCulturalReductionMode(mode) {
+            activeCulturalReductionMode = mode;
+            updateSociometricDock();
+        }
+        window.setCulturalReductionMode = setCulturalReductionMode;
+
+        function getEffectiveSMIb(wConf, tcData) {
+            if (tcData.smib_matrix && tcData.smib_matrix.length > 0) {
+                return tcData.smib_matrix;
+            }
+            const N = wConf.characters.length;
+            const matrix = Array.from({ length: N }, () => Array(N).fill('0000'));
+            const edges = tcData.edges || [];
+            edges.forEach(e => {
+                const u = e.src;
+                const v = e.tgt;
+                if (u >= 0 && u < N && v >= 0 && v < N && u !== v) {
+                    const isPos = (e.type === 'E');
+                    const charCode = isPos ? 'A' : 'a';
+                    let curUV = matrix[u][v].split('');
+                    curUV[1] = charCode; // A2 DA
+                    curUV[0] = charCode; // A1 p_DA
+                    matrix[u][v] = curUV.join('');
+
+                    let curVU = matrix[v][u].split('');
+                    curVU[2] = charCode; // A3 RECIBE
+                    curVU[3] = charCode; // A4 p_RECIBE
+                    matrix[v][u] = curVU.join('');
+                }
+            });
+            return matrix;
+        }
+
+        function renderCulturalReductionsHTML(wConf, tcData) {
+            const chars = wConf.characters;
+            const N = chars.length;
+            const smib = getEffectiveSMIb(wConf, tcData);
+            const nCols = activeCulturalReduction;
+            const isFreq = (activeCulturalReductionMode === 'FREC');
+            const totalDyads = N * (N - 1);
+
+            const COLS_9 = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+            const COLS_9_NAMES = [
+                'Elección (esperando Elección)', 'Elección (indiferencia esperada)', 'Elección (esperando Rechazo)',
+                'Indiferencia (esperando Elección)', 'Indiferencia (indiferencia mutua)', 'Indiferencia (esperando Rechazo)',
+                'Rechazo (esperando Elección)', 'Rechazo (indiferencia esperada)', 'Rechazo (esperando Rechazo)'
+            ];
+            const COLS_9_AREAS = ['POS', 'POS', 'POS', 'NEU', 'NEU', 'NEU', 'NEG', 'NEG', 'NEG'];
+
+            const COLS_6 = ['E', '¿', 'R', 'e', '?', 'r'];
+            const COLS_6_NAMES = [
+                'Elección Emitida DA (A2 = E)', 'Indiferencia Emitida DA (A2 = ¿)', 'Rechazo Emitido DA (A2 = R)',
+                'Elección Recibida REC (A3 = e)', 'Indiferencia Recibida REC (A3 = ?)', 'Rechazo Recibido REC (A3 = r)'
+            ];
+            const COLS_6_AREAS = ['POS', 'NEU', 'NEG', 'POS', 'NEU', 'NEG'];
+
+            const COLS_3 = ['POS', 'NEU', 'NEG'];
+            const COLS_3_LABELS = ['(+) ELECCIÓN', '(0) INDIFERENCIA', '(-) RECHAZO'];
+            const COLS_3_NAMES = [
+                'Cuenca Polar Positiva / Elección (<Ee>, E, e)',
+                'Cuenca Polar Neutra / Indiferencia (¡¿?!)',
+                'Cuenca Polar Negativa / Rechazo ([Rr], R, r)'
+            ];
+
+            const AREA_THEME = {
+                'POS': { border: 'rgba(0, 255, 135, 0.8)', color: '#00FF87', bg: 'rgba(0, 255, 135, 0.12)' },
+                'NEU': { border: 'rgba(255, 230, 0, 0.8)', color: '#FFE600', bg: 'rgba(255, 230, 0, 0.12)' },
+                'NEG': { border: 'rgba(255, 0, 127, 0.8)', color: '#FF007F', bg: 'rgba(255, 0, 127, 0.12)' }
+            };
+
+            let levelLabel = (nCols === 9) ? 'Nivel Micro 9 (Modalidades de Acción DA)' : (nCols === 6) ? 'Nivel Meso 6 (Descriptores Q6a Emitido/Recibido)' : 'Nivel Macro 3 (Cuencas Polares)';
+
+            let html = `
+            <div style="background:rgba(11,19,43,0.85); border-left:4px solid #00E5FF; border-radius:8px; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <span style="color:#00E5FF; font-size:0.88rem; font-weight:800;">🔲 REDUCCIÓN CANÓNICA Q81 &bull; ${levelLabel}</span>
+                        <div style="display:flex; gap:4px;">
+                            <button onclick="setCulturalReduction(9)" style="padding:3px 8px; font-size:0.70rem; font-weight:700; border-radius:4px; border:1px solid ${nCols === 9 ? '#00FF87' : 'rgba(255,255,255,0.15)'}; background:${nCols === 9 ? 'rgba(0,255,135,0.25)' : 'rgba(15,23,42,0.6)'}; color:${nCols === 9 ? '#00FF87' : '#94A3B8'}; cursor:pointer;">9 Col (Micro)</button>
+                            <button onclick="setCulturalReduction(6)" style="padding:3px 8px; font-size:0.70rem; font-weight:700; border-radius:4px; border:1px solid ${nCols === 6 ? '#00E5FF' : 'rgba(255,255,255,0.15)'}; background:${nCols === 6 ? 'rgba(0,229,255,0.25)' : 'rgba(15,23,42,0.6)'}; color:${nCols === 6 ? '#00E5FF' : '#94A3B8'}; cursor:pointer;">6 Col (Meso)</button>
+                            <button onclick="setCulturalReduction(3)" style="padding:3px 8px; font-size:0.70rem; font-weight:700; border-radius:4px; border:1px solid ${nCols === 3 ? '#FBBF24' : 'rgba(255,255,255,0.15)'}; background:${nCols === 3 ? 'rgba(251,191,36,0.25)' : 'rgba(15,23,42,0.6)'}; color:${nCols === 3 ? '#FBBF24' : '#94A3B8'}; cursor:pointer;">3 Col (Macro)</button>
+                        </div>
+                    </div>
+                    <div style="color:#94A3B8; font-size:0.72rem; margin-top:4px;">
+                        Masa Total: <b style="color:#00FF87;">${totalDyads} díadas</b> | BDR: <b style="color:#38BDF8;">${tcData.bdr}</b> | SDR: <b style="color:#FBBF24;">${tcData.sdr}</b> | Conservación e Invarianza Baricéntrica 100%
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:0.70rem; color:#94A3B8;">Métrica:</span>
+                    <button onclick="setCulturalReductionMode('FREC')" style="padding:3px 8px; font-size:0.70rem; font-weight:700; border-radius:4px; border:1px solid ${isFreq ? '#38BDF8' : 'rgba(255,255,255,0.15)'}; background:${isFreq ? 'rgba(56,189,248,0.25)' : 'rgba(15,23,42,0.6)'}; color:${isFreq ? '#38BDF8' : '#94A3B8'}; cursor:pointer;">Frecuencias (f)</button>
+                    <button onclick="setCulturalReductionMode('DENS')" style="padding:3px 8px; font-size:0.70rem; font-weight:700; border-radius:4px; border:1px solid ${!isFreq ? '#FF9F1C' : 'rgba(255,255,255,0.15)'}; background:${!isFreq ? 'rgba(255,159,28,0.25)' : 'rgba(15,23,42,0.6)'}; color:${!isFreq ? '#FF9F1C' : '#94A3B8'}; cursor:pointer;">Densidades (W)</button>
+                </div>
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table class="cyber-table">
+            `;
+
+            if (nCols === 9) {
+                html += `
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align:left; min-width:140px;">Personaje / Rol</th>
+                            <th colspan="3" style="background:#003322; color:#00FF87; border-bottom:1px solid #00FF87;">ELECCIÓN (+)</th>
+                            <th colspan="3" style="background:#332b00; color:#FFE600; border-bottom:1px solid #FFE600;">INDIFERENCIA (0)</th>
+                            <th colspan="3" style="background:#3b0724; color:#FF007F; border-bottom:1px solid #FF007F;">RECHAZO (-)</th>
+                            <th rowspan="2" style="color:#FBBF24; min-width:65px;">&Sigma; Total</th>
+                        </tr>
+                        <tr>`;
+                for (let c = 0; c < 9; c++) {
+                    const colKey = COLS_9[c];
+                    const safeKey = colKey.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    const theme = AREA_THEME[COLS_9_AREAS[c]];
+                    html += `<th style="color:${theme.color}; cursor:help;" title="${COLS_9_NAMES[c]}">${safeKey}</th>`;
+                }
+                html += `</tr></thead><tbody>`;
+
+                const colCounts = Array(9).fill(0);
+                const colWeights = Array(9).fill(0);
+
+                chars.forEach((char, i) => {
+                    const rowCounts = Array(9).fill(0);
+                    const rowWeights = Array(9).fill(0);
+                    let rowSum = 0;
+                    let rowWeightSum = 0;
+
+                    for (let j = 0; j < N; j++) {
+                        if (i === j) continue;
+                        const cell = (smib[i] && smib[i][j]) ? smib[i][j] : '0000';
+                        const p0 = parseCellChar(cell[0]);
+                        const p1 = parseCellChar(cell[1]);
+                        const isPos0 = p0.isPos, isNeg0 = p0.isNeg;
+                        const isPos1 = p1.isPos, isNeg1 = p1.isNeg;
+                        const a1Key = isPos0 ? '<' : (isNeg0 ? '[' : '¡');
+                        const a2Key = isPos1 ? 'E' : (isNeg1 ? 'R' : '¿');
+                        const key = `${a1Key}${a2Key}`;
+                        const cIdx = COLS_9.indexOf(key);
+                        if (cIdx >= 0) {
+                            rowCounts[cIdx]++;
+                            rowSum++;
+                            colCounts[cIdx]++;
+                            const w = p1.weight !== 0 ? p1.weight : (p0.weight !== 0 ? p0.weight * 0.5 : 0.0);
+                            rowWeights[cIdx] += w;
+                            rowWeightSum += w;
+                            colWeights[cIdx] += w;
+                        }
+                    }
+
+                    const isEgo = (activeEgoIndex === i);
+                    html += `<tr style="${isEgo ? 'background:rgba(0,255,135,0.15);' : ''}">
+                        <td style="text-align:left; font-weight:700; color:${char.color || '#FFF'}; white-space:nowrap;">
+                            ${char.name} <span style="font-size:0.68rem; color:#94A3B8; font-weight:normal;">(${char.role || char.id})</span>
+                        </td>`;
+
+                    for (let c = 0; c < 9; c++) {
+                        const count = rowCounts[c];
+                        const theme = AREA_THEME[COLS_9_AREAS[c]];
+                        if (isFreq) {
+                            html += `<td style="color:${count > 0 ? theme.color : '#475569'}; font-weight:${count > 0 ? '700' : 'normal'};">${count > 0 ? count : '—'}</td>`;
+                        } else {
+                            const val = rowWeights[c];
+                            html += `<td style="color:${val !== 0 ? (val > 0 ? '#00FF87' : '#FF007F') : '#475569'}; font-weight:${val !== 0 ? '700' : 'normal'};">${val !== 0 ? (val > 0 ? '+' : '') + val.toFixed(2) : '—'}</td>`;
+                        }
+                    }
+                    html += `<td style="color:#FBBF24; font-weight:800;">${isFreq ? rowSum : (rowWeightSum >= 0 ? '+' : '') + rowWeightSum.toFixed(2)}</td></tr>`;
+                });
+
+                // Totales
+                html += `</tbody><tfoot><tr style="background:rgba(15,23,42,0.9); font-weight:800; border-top:2px solid #38BDF8;">
+                    <td style="text-align:left; color:#00E5FF;">TOTALES DE CAMPO</td>`;
+                let grandCount = 0;
+                let grandWeight = 0;
+                for (let c = 0; c < 9; c++) {
+                    grandCount += colCounts[c];
+                    grandWeight += colWeights[c];
+                    const theme = AREA_THEME[COLS_9_AREAS[c]];
+                    html += `<td style="color:${theme.color};">${isFreq ? colCounts[c] : (colWeights[c] >= 0 ? '+' : '') + colWeights[c].toFixed(2)}</td>`;
+                }
+                html += `<td style="color:#00FF87; font-size:0.80rem;">${isFreq ? grandCount : (grandWeight >= 0 ? '+' : '') + grandWeight.toFixed(2)}</td></tr></tfoot>`;
+
+            } else if (nCols === 6) {
+                html += `
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align:left; min-width:140px;">Personaje / Rol</th>
+                            <th colspan="3" style="background:#0F172A; color:#38BDF8; border-bottom:1px solid #38BDF8;">PREFERENCIAS EMITIDAS (DA)</th>
+                            <th colspan="3" style="background:#1E1B4B; color:#A78BFA; border-bottom:1px solid #A78BFA;">PREFERENCIAS RECIBIDAS (REC)</th>
+                            <th rowspan="2" style="color:#FBBF24; min-width:65px;">&Sigma; Emit / Rec</th>
+                        </tr>
+                        <tr>`;
+                for (let c = 0; c < 6; c++) {
+                    const theme = AREA_THEME[COLS_6_AREAS[c]];
+                    html += `<th style="color:${theme.color}; cursor:help;" title="${COLS_6_NAMES[c]}">${COLS_6[c]}</th>`;
+                }
+                html += `</tr></thead><tbody>`;
+
+                const colCounts = Array(6).fill(0);
+                const colWeights = Array(6).fill(0);
+
+                chars.forEach((char, i) => {
+                    const rowCounts = Array(6).fill(0);
+                    const rowWeights = Array(6).fill(0);
+
+                    for (let j = 0; j < N; j++) {
+                        if (i === j) continue;
+                        const cell = (smib[i] && smib[i][j]) ? smib[i][j] : '0000';
+                        const p1 = parseCellChar(cell[1]); // A2 DA
+                        const p2 = parseCellChar(cell[2]); // A3 REC
+
+                        // Emitidas
+                        if (p1.isPos) { rowCounts[0]++; colCounts[0]++; rowWeights[0] += p1.weight; colWeights[0] += p1.weight; }
+                        else if (p1.isNeu) { rowCounts[1]++; colCounts[1]++; }
+                        else if (p1.isNeg) { rowCounts[2]++; colCounts[2]++; rowWeights[2] += p1.weight; colWeights[2] += p1.weight; }
+
+                        // Recibidas
+                        if (p2.isPos) { rowCounts[3]++; colCounts[3]++; rowWeights[3] += p2.weight; colWeights[3] += p2.weight; }
+                        else if (p2.isNeu) { rowCounts[4]++; colCounts[4]++; }
+                        else if (p2.isNeg) { rowCounts[5]++; colCounts[5]++; rowWeights[5] += p2.weight; colWeights[5] += p2.weight; }
+                    }
+
+                    const isEgo = (activeEgoIndex === i);
+                    html += `<tr style="${isEgo ? 'background:rgba(0,255,135,0.15);' : ''}">
+                        <td style="text-align:left; font-weight:700; color:${char.color || '#FFF'}; white-space:nowrap;">
+                            ${char.name} <span style="font-size:0.68rem; color:#94A3B8; font-weight:normal;">(${char.role || char.id})</span>
+                        </td>`;
+
+                    for (let c = 0; c < 6; c++) {
+                        const count = rowCounts[c];
+                        const theme = AREA_THEME[COLS_6_AREAS[c]];
+                        if (isFreq) {
+                            html += `<td style="color:${count > 0 ? theme.color : '#475569'}; font-weight:${count > 0 ? '700' : 'normal'};">${count > 0 ? count : '—'}</td>`;
+                        } else {
+                            const val = rowWeights[c];
+                            html += `<td style="color:${val !== 0 ? (val > 0 ? '#00FF87' : '#FF007F') : '#475569'}; font-weight:${val !== 0 ? '700' : 'normal'};">${val !== 0 ? (val > 0 ? '+' : '') + val.toFixed(2) : '—'}</td>`;
+                        }
+                    }
+                    html += `<td style="color:#FBBF24; font-weight:800;">${isFreq ? `${N-1} / ${N-1}` : 'DA & REC'}</td></tr>`;
+                });
+
+                // Totales 6 cols
+                html += `</tbody><tfoot><tr style="background:rgba(15,23,42,0.9); font-weight:800; border-top:2px solid #38BDF8;">
+                    <td style="text-align:left; color:#00E5FF;">TOTALES DE CAMPO</td>`;
+                for (let c = 0; c < 6; c++) {
+                    const theme = AREA_THEME[COLS_6_AREAS[c]];
+                    html += `<td style="color:${theme.color};">${isFreq ? colCounts[c] : (colWeights[c] >= 0 ? '+' : '') + colWeights[c].toFixed(2)}</td>`;
+                }
+                html += `<td style="color:#00FF87; font-size:0.80rem;">${isFreq ? `${totalDyads} / ${totalDyads}` : '100%'}</td></tr></tfoot>`;
+
+            } else { // nCols === 3 (Macro 3)
+                html += `
+                    <thead>
+                        <tr>
+                            <th style="text-align:left; min-width:140px;">Personaje / Rol</th>
+                            <th style="background:#003322; color:#00FF87; border-bottom:1px solid #00FF87;" title="${COLS_3_NAMES[0]}">(+) ELECCIÓN / COHESIÓN</th>
+                            <th style="background:#332b00; color:#FFE600; border-bottom:1px solid #FFE600;" title="${COLS_3_NAMES[1]}">(0) INDIFERENCIA MUTUA</th>
+                            <th style="background:#3b0724; color:#FF007F; border-bottom:1px solid #FF007F;" title="${COLS_3_NAMES[2]}">(-) RECHAZO / TENSIÓN</th>
+                            <th style="color:#FBBF24; min-width:65px;">&Sigma; Total (${N-1})</th>
+                        </tr>
+                    </thead><tbody>`;
+
+                const colCounts = [0, 0, 0];
+                const colWeights = [0, 0, 0];
+
+                chars.forEach((char, i) => {
+                    const rowCounts = [0, 0, 0];
+                    const rowWeights = [0, 0, 0];
+                    let rowSum = 0;
+                    let rowWeightSum = 0;
+
+                    for (let j = 0; j < N; j++) {
+                        if (i === j) continue;
+                        const cell = (smib[i] && smib[i][j]) ? smib[i][j] : '0000';
+                        const p1 = parseCellChar(cell[1]); // A2
+                        const p2 = parseCellChar(cell[2]); // A3
+                        const netWeight = p1.weight + p2.weight;
+
+                        let bin = 1; // NEU
+                        if (netWeight > 0.05 || (p1.isPos && !p2.isNeg)) {
+                            bin = 0; // POS
+                        } else if (netWeight < -0.05 || (p1.isNeg && !p2.isPos)) {
+                            bin = 2; // NEG
+                        }
+
+                        rowCounts[bin]++;
+                        colCounts[bin]++;
+                        rowSum++;
+                        rowWeights[bin] += netWeight;
+                        colWeights[bin] += netWeight;
+                        rowWeightSum += netWeight;
+                    }
+
+                    const isEgo = (activeEgoIndex === i);
+                    html += `<tr style="${isEgo ? 'background:rgba(0,255,135,0.15);' : ''}">
+                        <td style="text-align:left; font-weight:700; color:${char.color || '#FFF'}; white-space:nowrap;">
+                            ${char.name} <span style="font-size:0.68rem; color:#94A3B8; font-weight:normal;">(${char.role || char.id})</span>
+                        </td>`;
+
+                    for (let c = 0; c < 3; c++) {
+                        const count = rowCounts[c];
+                        const theme = AREA_THEME[COLS_3[c]];
+                        if (isFreq) {
+                            html += `<td style="color:${count > 0 ? theme.color : '#475569'}; font-weight:${count > 0 ? '700' : 'normal'};">${count > 0 ? count : '—'}</td>`;
+                        } else {
+                            const val = rowWeights[c];
+                            html += `<td style="color:${val !== 0 ? (val > 0 ? '#00FF87' : '#FF007F') : '#475569'}; font-weight:${val !== 0 ? '700' : 'normal'};">${val !== 0 ? (val > 0 ? '+' : '') + val.toFixed(2) : '—'}</td>`;
+                        }
+                    }
+                    html += `<td style="color:#FBBF24; font-weight:800;">${isFreq ? rowSum : (rowWeightSum >= 0 ? '+' : '') + rowWeightSum.toFixed(2)}</td></tr>`;
+                });
+
+                // Totales 3 cols
+                html += `</tbody><tfoot><tr style="background:rgba(15,23,42,0.9); font-weight:800; border-top:2px solid #38BDF8;">
+                    <td style="text-align:left; color:#00E5FF;">TOTALES DE CAMPO</td>`;
+                let grandCount = 0;
+                let grandWeight = 0;
+                for (let c = 0; c < 3; c++) {
+                    grandCount += colCounts[c];
+                    grandWeight += colWeights[c];
+                    const theme = AREA_THEME[COLS_3[c]];
+                    html += `<td style="color:${theme.color};">${isFreq ? colCounts[c] : (colWeights[c] >= 0 ? '+' : '') + colWeights[c].toFixed(2)}</td>`;
+                }
+                html += `<td style="color:#00FF87; font-size:0.80rem;">${isFreq ? grandCount : (grandWeight >= 0 ? '+' : '') + grandWeight.toFixed(2)}</td></tr></tfoot>`;
+            }
+
+            html += `
+                </table>
+            </div>
+
+            <div style="margin-top:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 14px; font-size:0.75rem; line-height:1.4;">
+                <strong style="color:#38BDF8;">💡 Nota:</strong>
+                <span>Las reducciones canónicas (81 &rarr; 9 &rarr; 6 &rarr; 3) sintetizan las dinámicas y alianzas del elenco en cuencas de atracción y fricción con conservación estricta de las ${totalDyads} díadas y del baricentro socio-térmico (BDR ${tcData.bdr}, SDR ${tcData.sdr}).</span>
+            </div>
+            `;
+
+            return html;
         }
 
         // Hover en celda de matriz para iluminar vínculo en 3D
