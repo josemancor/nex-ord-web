@@ -124,12 +124,21 @@
         </div>
       </div>
 
-      <!-- ESTADO DE REACTIVIDAD DEL REACTOR -->
-      <div class="flex items-center gap-2 bg-slate-900/80 border border-sky-900/50 px-2.5 py-1 rounded-xl">
-        <div id="reactor-status-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></div>
-        <div class="flex flex-col text-right">
-          <span class="text-[9px] mono uppercase text-slate-400 font-semibold" id="reactor-status-label">ESTABLE CRÍTICO</span>
-          <span class="text-[11px] mono font-bold text-cyan-300" id="reactor-keff-val">k_eff = 1.00</span>
+      <!-- CONTROLES DE AUDIO HIDROACÚSTICO Y REACTIVIDAD -->
+      <div class="flex items-center gap-2">
+        <button id="btn-audio-toggle" onclick="toggleAudio()" class="px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/20">
+          <span id="audio-icon">🔊</span> <span id="audio-label">AUDIO: ON</span>
+        </button>
+        <button onclick="triggerReactorWave()" class="px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 shadow-sm shadow-indigo-500/20" title="Barrido armónico en espiral de las 25 columnas del reactor">
+          <span>🌊</span> <span>ONDA DEL REACTOR</span>
+        </button>
+
+        <div class="flex items-center gap-2 bg-slate-900/80 border border-sky-900/50 px-2.5 py-1 rounded-xl">
+          <div id="reactor-status-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#00FF87]"></div>
+          <div class="flex flex-col text-right">
+            <span class="text-[9px] mono uppercase text-slate-400 font-semibold" id="reactor-status-label">ESTABLE CRÍTICO</span>
+            <span class="text-[11px] mono font-bold text-cyan-300" id="reactor-keff-val">k_eff = 1.00</span>
+          </div>
         </div>
       </div>
     </div>
@@ -261,6 +270,37 @@
       </div>
     </div>
 
+    <!-- IDENTIDADES ACÚSTICAS ("PEDRO Y EL LOBO") Y VOZ HIDROACÚSTICA -->
+    <div class="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 bg-slate-950/90 rounded-xl border border-cyan-500/30 text-[10px] mono">
+      <div class="flex items-center gap-2">
+        <span class="text-cyan-300 font-extrabold flex items-center gap-1">
+          <span>🎭</span> <span>VOCES ("PEDRO Y EL LOBO"):</span>
+        </span>
+        <div class="flex items-center gap-1" id="subject-instruments-pills">
+          <button onclick="demoAquariumSubject(0)" class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-sky-300 transition" title="1A: Contrabajo Imperial (Madera Subgrave)">
+            🎻 1A Contrabajo
+          </button>
+          <button onclick="demoAquariumSubject(1)" class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 transition" title="2A: Fagot Socarrón (Lengüeta Doble)">
+            🎷 2A Fagot
+          </button>
+          <button onclick="demoAquariumSubject(2)" class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-emerald-300 transition" title="3A: Trompa Noble (Metal Cálido)">
+            📯 3A Trompa
+          </button>
+          <button onclick="demoAquariumSubject(3)" class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-teal-300 transition" title="4A: Viola Cantabile (Cuerda Aterciopelada)">
+            🎻 4A Viola
+          </button>
+          <button onclick="demoAquariumSubject(4)" class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-rose-300 transition" title="5A: Violín Virtuoso (Canto Soprano)">
+            🎻 5A Violín
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="aquarium-acoustic-voice-badge" class="text-slate-300 font-mono text-[10px]">
+          <span class="text-cyan-400 font-bold">[1A: 🎻 Contrabajo]</span> ☀️ Aéreo (196Hz) ⇄ <span class="text-emerald-400 font-bold">[2A: 🎷 Fagot]</span> ☀️ Aéreo (247Hz) → Acorde Resonancia
+        </span>
+      </div>
+    </div>
+
     <!-- BALANCES HIDROSTÁTICOS NETOS DE LOS 5 SUJETOS (SUMIDERO VS MANANTIAL) -->
     <div class="flex flex-wrap items-center justify-between gap-1 px-2 py-1 bg-slate-950/90 rounded-xl border border-sky-900/40 text-[10px] mono">
       <span class="text-slate-400 font-bold">BALANCES NETOS ΔDi (D_rec - D_dar):</span>
@@ -303,6 +343,296 @@
     ];
 
     let targetZ = JSON.parse(JSON.stringify(matrixZ));
+
+    // =======================================================
+    // MOTOR HIDROACÚSTICO DEL ACUARIO REACTOR (PEDRO Y EL LOBO)
+    // =======================================================
+    let audioCtx = null;
+    let audioEnabled = true;
+
+    const AQUARIUM_INSTRUMENTS = [
+      { id: 1, code: '1A', name: 'Contrabajo Imperial', icon: '🎻', fMin: 130.81, fBase: 164.81, fMax: 196.00, color: '#38BDF8' },
+      { id: 2, code: '2A', name: 'Fagot Socarrón', icon: '🎷', fMin: 164.81, fBase: 196.00, fMax: 246.94, color: '#06B6D4' },
+      { id: 3, code: '3A', name: 'Trompa Noble', icon: '📯', fMin: 196.00, fBase: 261.63, fMax: 293.66, color: '#00FF87' },
+      { id: 4, code: '4A', name: 'Viola Cantabile', icon: '🎻', fMin: 220.00, fBase: 293.66, fMax: 329.63, color: '#10B981' },
+      { id: 5, code: '5A', name: 'Violín Virtuoso', icon: '🎻', fMin: 329.63, fBase: 440.00, fMax: 554.37, color: '#FB7185' }
+    ];
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('btn-audio-toggle');
+      const icon = document.getElementById('audio-icon');
+      const label = document.getElementById('audio-label');
+      if (audioEnabled) {
+        getAudioCtx();
+        btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/20';
+        icon.innerText = '🔊';
+        label.innerText = 'AUDIO: ON';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-slate-900 text-slate-500 border border-slate-800';
+        icon.innerText = '🔇';
+        label.innerText = 'AUDIO: OFF';
+      }
+    }
+
+    function playAquariumVoice(sIdx, zVal, startTime = 0, isResponse = false) {
+      if (!audioEnabled) return { freq: 220, isCielo: false };
+      try {
+        const ctx = getAudioCtx();
+        const now = startTime > 0 ? startTime : ctx.currentTime;
+        const inst = AQUARIUM_INSTRUMENTS[sIdx % AQUARIUM_INSTRUMENTS.length];
+        
+        // Frecuencia modulada por la cota Z dentro de la banda del sujeto
+        const freq = inst.fMin + Math.max(0, Math.min(1, zVal)) * (inst.fMax - inst.fMin);
+        const isCielo = (zVal >= waterLevel);
+        const dur = isCielo ? 0.32 : 0.44;
+
+        const masterGain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        if (isCielo) {
+          // ☀️ CIELO ABIERTO: Timbre pleno aéreo brillante
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(3600, now);
+          filter.Q.setValueAtTime(1.2, now);
+
+          masterGain.gain.setValueAtTime(0.0001, now);
+          masterGain.gain.linearRampToValueAtTime(0.18, now + 0.025);
+          masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+          // Splash cuántico de ruptura de superficie libre
+          const splashOsc = ctx.createOscillator();
+          const splashGain = ctx.createGain();
+          splashOsc.type = 'sine';
+          splashOsc.frequency.setValueAtTime(1850 + Math.random() * 350, now);
+          splashOsc.frequency.exponentialRampToValueAtTime(900, now + 0.04);
+          splashGain.gain.setValueAtTime(0.035, now);
+          splashGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+          splashOsc.connect(splashGain);
+          splashGain.connect(ctx.destination);
+          splashOsc.start(now);
+          splashOsc.stop(now + 0.05);
+
+        } else {
+          // 🌊 LATENCIA SUBMARINA: Filtro hidroacústico amortiguado
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(360, now); // Filtro submarino salino
+          filter.Q.setValueAtTime(3.8, now); // Resonancia acústica acuática
+
+          masterGain.gain.setValueAtTime(0.0001, now);
+          masterGain.gain.linearRampToValueAtTime(0.12, now + 0.04);
+          masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+        }
+
+        const osc = ctx.createOscillator();
+        if (sIdx === 0) {
+          osc.type = 'sawtooth'; // Contrabajo
+        } else if (sIdx === 1) {
+          osc.type = 'sawtooth'; // Fagot
+        } else if (sIdx === 2) {
+          osc.type = 'triangle'; // Trompa
+        } else if (sIdx === 3) {
+          osc.type = 'sawtooth'; // Viola
+        } else {
+          osc.type = 'sawtooth'; // Violín
+        }
+        osc.frequency.setValueAtTime(freq, now);
+
+        osc.connect(filter);
+        filter.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + dur + 0.05);
+
+        return { freq, isCielo };
+      } catch (e) {
+        console.error("Aquarium audio error:", e);
+        return { freq: 220, isCielo: false };
+      }
+    }
+
+    function playAquariumDuo(i, j) {
+      if (!audioEnabled) return;
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+
+      const zij = matrixZ[i][j];
+      const zji = matrixZ[j][i];
+      const v1 = playAquariumVoice(i, zij, now, false);
+      const v2 = playAquariumVoice(j, zji, now + 0.28, true);
+
+      const delta = Math.abs(zij - zji);
+      const bothCielo = (zij >= waterLevel && zji >= waterLevel);
+
+      if (bothCielo) {
+        // Acorde Consonante de Resonancia a Cielo Abierto
+        setTimeout(() => {
+          playAquariumVoice(i, zij, 0, false);
+          playAquariumVoice(j, zji, 0, true);
+        }, 580);
+      } else if (delta >= 0.38) {
+        // Glissando de Cizalladura Friccional
+        setTimeout(() => {
+          playShearFriction(i, j, delta);
+        }, 580);
+      }
+
+      updateAcousticBadge(i, j, zij, zji, bothCielo, delta);
+    }
+
+    function playShearFriction(i, j, delta) {
+      if (!audioEnabled) return;
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const g = ctx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'sawtooth';
+      let f1 = AQUARIUM_INSTRUMENTS[i].fBase;
+      let f2 = AQUARIUM_INSTRUMENTS[j].fBase * 1.06;
+
+      osc1.frequency.setValueAtTime(f1, now);
+      osc1.frequency.exponentialRampToValueAtTime(f1 * 0.88, now + 0.35);
+
+      osc2.frequency.setValueAtTime(f2, now);
+      osc2.frequency.exponentialRampToValueAtTime(f2 * 0.88, now + 0.35);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(0.14, now + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+      osc1.connect(g);
+      osc2.connect(g);
+      g.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 0.38);
+      osc2.stop(now + 0.38);
+    }
+
+    function triggerReactorWave() {
+      getAudioCtx();
+      let count = 0;
+      for (let r = 0; r <= 3; r++) {
+        for (let i = 0; i < N; i++) {
+          for (let j = 0; j < N; j++) {
+            let dist = Math.max(Math.abs(i - 2), Math.abs(j - 2));
+            if (dist === r) {
+              let delay = count * 0.055;
+              let zij = matrixZ[i][j];
+              setTimeout(() => {
+                playAquariumVoice(i, zij, 0);
+              }, delay * 1000);
+              count++;
+            }
+          }
+        }
+      }
+    }
+
+    function demoAquariumSubject(idx) {
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      playAquariumVoice(idx, 0.22, now);
+      playAquariumVoice(idx, 0.86, now + 0.35);
+    }
+
+    function soundNetBalance(idx) {
+      if (!audioEnabled) return;
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const inst = AQUARIUM_INSTRUMENTS[idx];
+      
+      let d_rec = 0, d_dar = 0;
+      for (let k = 0; k < N; k++) {
+        if (k !== idx) {
+          d_dar += matrixZ[idx][k];
+          d_rec += matrixZ[k][idx];
+        }
+      }
+      let net = d_rec - d_dar;
+
+      if (net > 0.4) {
+        // Sumidero: Tono grave centrípeto de absorción
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(inst.fBase, now);
+        osc.frequency.exponentialRampToValueAtTime(inst.fMin * 0.9, now + 0.4);
+        g.gain.setValueAtTime(0.18, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } else if (net < -0.4) {
+        // Manantial: Arpegio ascendente que proyecta al cielo
+        playAquariumVoice(idx, 0.40, now);
+        playAquariumVoice(idx, 0.70, now + 0.15);
+        playAquariumVoice(idx, 0.95, now + 0.30);
+      } else {
+        // Homeostático
+        playAquariumVoice(idx, 0.50, now);
+      }
+    }
+
+    function soundPresetChange(name) {
+      if (!audioEnabled) return;
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      if (name === 'subcritical') {
+        playAquariumVoice(0, 0.20, now);
+        playAquariumVoice(1, 0.20, now + 0.08);
+        playAquariumVoice(2, 0.20, now + 0.16);
+      } else if (name === 'critical') {
+        playAquariumVoice(0, 0.85, now);
+        playAquariumVoice(2, 0.85, now + 0.08);
+        playAquariumVoice(4, 0.90, now + 0.16);
+      } else if (name === 'shear') {
+        playShearFriction(0, 4, 0.8);
+      } else {
+        triggerReactorWave();
+      }
+    }
+
+    function updateAcousticBadge(i, j, zij, zji, bothCielo, delta) {
+      const badge = document.getElementById('aquarium-acoustic-voice-badge');
+      if (!badge) return;
+      const instI = AQUARIUM_INSTRUMENTS[i];
+      const instJ = AQUARIUM_INSTRUMENTS[j];
+      const stateI = zij >= waterLevel ? '<span class="text-amber-300 font-bold">☀️ Aéreo</span>' : '<span class="text-sky-400 font-bold">🌊 Submarino</span>';
+      const stateJ = zji >= waterLevel ? '<span class="text-amber-300 font-bold">☀️ Aéreo</span>' : '<span class="text-sky-400 font-bold">🌊 Submarino</span>';
+
+      let chordText = '';
+      if (bothCielo) {
+        chordText = '<span class="text-emerald-400 font-bold">⭐ Acorde Resonancia Cielo</span>';
+      } else if (delta >= 0.38) {
+        chordText = '<span class="text-rose-400 font-bold">⚡ Cizalladura / Fricción</span>';
+      } else {
+        chordText = '<span class="text-slate-400">🌊 Corriente Submarina</span>';
+      }
+
+      badge.innerHTML = `<span style="color:${instI.color};" class="font-bold">[${instI.code}: ${instI.icon} ${instI.name.split(' ')[0]}]</span> ${stateI} ⇄ <span style="color:${instJ.color};" class="font-bold">[${instJ.code}: ${instJ.icon} ${instJ.name.split(' ')[0]}]</span> ${stateJ} → ${chordText}`;
+    }
+
 
     // Nivel de agua Z_mar [0.0 .. 1.0]
     let waterLevel = 0.50;
@@ -979,6 +1309,7 @@
       }
 
       // CÁLCULO DE CURVATURAS DIFERENCIALES K Y H EN LA CELDA (i, j)
+      const { i, j } = selectedCell;
       const h_step = 1.0;
       // Derivadas primeras centradas o progresivas en la retícula
       const Sx = (j < N - 1 ? (matrixZ[i][j+1] - (j > 0 ? matrixZ[i][j-1] : matrixZ[i][j])) / (j > 0 ? 2 : 1) : (matrixZ[i][j] - matrixZ[i][j-1]));
@@ -1030,6 +1361,7 @@
       }
 
       setTimeout(updateTelemetry, 100);
+      soundPresetChange(name);
     }
 
     function setViewMode(mode) {
@@ -1067,6 +1399,7 @@
       // Selecciona la celda de cruce con el líder o la diagonal
       selectedCell = { i: idx, j: (idx === 2 ? 0 : (idx === 0 ? 1 : 3)) };
       updateTelemetry();
+      soundNetBalance(idx);
     }
 
     function resetCamera() {
@@ -1109,6 +1442,7 @@
       if (cell) {
         selectedCell = cell;
         updateTelemetry();
+        playAquariumDuo(cell.i, cell.j);
       }
     });
 
