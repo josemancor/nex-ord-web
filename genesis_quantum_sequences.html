@@ -195,6 +195,46 @@
       </div>
     </div>
 
+    <!-- SELECTOR DE PATRONES TONALES PROSÓDICOS (_-_^, ^-_, etc.) -->
+    <div class="mt-2.5 bg-slate-950/90 border border-emerald-500/30 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-emerald-300 font-extrabold flex items-center gap-1">
+          <span>🎼</span> <span>PATRONES TONALES:</span>
+        </span>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="playCustomPatternN8('_-_^')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón _-_^: Impulso y Rebote Ascendente (Grave -> Medio -> Grave -> Salto Agudo)">
+            <span class="font-mono text-cyan-400 bg-cyan-950/90 px-1 py-0.2 rounded font-black">_ - _ ^</span>
+            <span class="text-[10px] text-slate-300 font-sans">Impulso / Rebote</span>
+          </button>
+          <button onclick="playCustomPatternN8('^-_')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón ^-_: Cascada Descendente Gradual (Agudo -> Medio -> Grave)">
+            <span class="font-mono text-emerald-400 bg-emerald-950/90 px-1 py-0.2 rounded font-black">^ - _</span>
+            <span class="text-[10px] text-slate-300 font-sans">Cascada Descendente</span>
+          </button>
+          <button onclick="playCustomPatternN8('_--^')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón _--^: Rampa con Meseta (Grave -> Medio -> Medio -> Agudo)">
+            <span class="font-mono text-amber-400 bg-amber-950/90 px-1 py-0.2 rounded font-black">_ - - ^</span>
+            <span class="text-[10px] text-slate-300 font-sans">Rampa Meseta</span>
+          </button>
+          <button onclick="playCustomPatternN8('-^-_')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-rose-500/40 hover:border-rose-400 text-rose-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón -^-_: Campana Simétrica / Pico Central (Medio -> Agudo -> Medio -> Grave)">
+            <span class="font-mono text-rose-400 bg-rose-950/90 px-1 py-0.2 rounded font-black">- ^ - _</span>
+            <span class="text-[10px] text-slate-300 font-sans">Campana / Pico</span>
+          </button>
+          <button onclick="playCustomPatternN8('^-_-')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-purple-500/40 hover:border-purple-400 text-purple-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón ^-_-: Zigzag Descendente (Agudo -> Grave -> Medio -> Grave)">
+            <span class="font-mono text-purple-400 bg-purple-950/90 px-1 py-0.2 rounded font-black">^ - _ -</span>
+            <span class="text-[10px] text-slate-300 font-sans">Zigzag</span>
+          </button>
+          <button onclick="playCustomPatternN8('^^__')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-sky-500/40 hover:border-sky-400 text-sky-300 transition flex items-center gap-1.5 font-bold shadow-sm" title="Patrón ^^__: Doble Escalón en Suspensión">
+            <span class="font-mono text-sky-400 bg-sky-950/90 px-1 py-0.2 rounded font-black">^ ^ _ _</span>
+            <span class="text-[10px] text-slate-300 font-sans">Doble Caída</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-[10px] text-slate-400">
+        <span class="px-1.5 py-0.5 rounded bg-slate-900 text-cyan-300 font-mono">_ = Grave</span>
+        <span class="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-300 font-mono">- = Medio</span>
+        <span class="px-1.5 py-0.5 rounded bg-slate-900 text-rose-300 font-mono">^ = Agudo</span>
+      </div>
+    </div>
+
     <!-- SUBJECT OSCILLATION BANDS STRIP (1 to N) -->
     <div class="mt-2.5 bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
       <div class="flex items-center justify-between mb-1.5">
@@ -1130,6 +1170,78 @@
       const badge = document.getElementById('live-voice-badge');
       if (badge) {
         badge.innerHTML = `<span style="color:${c.color}">[${c.name}: ${c.icon} ${c.instrument}]</span> • Nombre Prosódico: <strong class="text-emerald-300 font-mono">"${c.phoneme}"</strong> • Contorno <span class="px-1 py-0.2 rounded bg-cyan-950 text-cyan-300 font-mono">${c.glyphFull}</span> (${c.descContour}) • 4 Pasos: ${contour.join('→')}`;
+      }
+      currentSelectedSubjectIdx = sIdx;
+    }
+
+    let currentSelectedSubjectIdx = 0;
+
+    const PROSODIC_TIERS_NEXORD = {
+      '_': 1.000, // Grave (Base)
+      '-': 1.250, // Medio (3ª mayor)
+      '^': 1.500  // Agudo (5ª justa)
+    };
+
+    function playCustomPatternN8(patternStr) {
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const sIdx = currentSelectedSubjectIdx;
+      const c = SUBJECT_BANDS[sIdx % SUBJECT_BANDS.length];
+      const stepDur = 0.12;
+      const totalDur = stepDur * patternStr.length;
+
+      const osc = ctx.createOscillator();
+      if (sIdx === 0) osc.type = 'sawtooth';
+      else if (sIdx === 1) osc.type = 'sawtooth';
+      else if (sIdx === 2) osc.type = 'triangle';
+      else if (sIdx === 3) osc.type = 'sawtooth';
+      else if (sIdx === 4) osc.type = 'square';
+      else if (sIdx === 5) osc.type = 'sawtooth';
+      else if (sIdx === 6) osc.type = 'sine';
+      else osc.type = 'sawtooth';
+
+      const f1 = ctx.createBiquadFilter();
+      const f2 = ctx.createBiquadFilter();
+      f1.type = 'bandpass'; f1.Q.setValueAtTime(5.0, now);
+      f2.type = 'bandpass'; f2.Q.setValueAtTime(6.0, now);
+
+      const g1 = ctx.createGain(); g1.gain.setValueAtTime(0.60, now);
+      const g2 = ctx.createGain(); g2.gain.setValueAtTime(0.40, now);
+
+      const patternVowels = patternStr.length === 3 ? ['u', 'a', 'e'] : ['u', 'o', 'a', 'e'];
+
+      for (let k = 0; k < patternStr.length; k++) {
+        const tStep = now + k * stepDur;
+        const sym = patternStr[k];
+        const ratio = PROSODIC_TIERS_NEXORD[sym] || 1.0;
+        const targetFreq = c.fBase * ratio;
+        const vChar = patternVowels[k % patternVowels.length];
+        const [ff1, ff2] = VOWEL_FORMANTS_NEXORD[vChar];
+
+        osc.frequency.setValueAtTime(targetFreq, tStep);
+        f1.frequency.setValueAtTime(ff1, tStep);
+        f2.frequency.setValueAtTime(ff2, tStep);
+        animateBandCursor(sIdx, targetFreq);
+      }
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.0001, now);
+      masterGain.gain.linearRampToValueAtTime(0.24, now + 0.03);
+      masterGain.gain.setValueAtTime(0.22, now + totalDur * 0.8);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + totalDur + 0.05);
+
+      osc.connect(f1); osc.connect(f2);
+      f1.connect(g1); f2.connect(g2);
+      g1.connect(masterGain); g2.connect(masterGain);
+      masterGain.connect(analyserNode);
+
+      osc.start(now);
+      osc.stop(now + totalDur + 0.08);
+
+      const badge = document.getElementById('live-voice-badge');
+      if (badge) {
+        badge.innerHTML = `<span style="color:${c.color}">[${c.name}: ${c.icon} ${c.instrument}]</span> • Patrón Tonal Activo: <strong class="text-cyan-300 font-mono">[ ${patternStr} ]</strong> (${patternStr.split('').join(' ')}) • Articulación Vocálica Directa`;
       }
     }
 

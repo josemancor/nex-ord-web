@@ -304,6 +304,46 @@
       </div>
     </div>
 
+    <!-- SELECTOR INTERACTIVO DE PATRONES TONALES (_-_^, ^-_, _--^, -^-_, etc.) -->
+    <div class="flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1.5 bg-slate-950/80 rounded-xl border border-emerald-500/30 text-[10px] mono">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-emerald-300 font-extrabold flex items-center gap-1">
+          <span>🎼</span> <span>PATRONES TONALES:</span>
+        </span>
+        <div class="flex items-center gap-1.5 flex-wrap" id="prosodic-patterns-pills">
+          <button onclick="playCustomProsodicPattern('_-_^')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón _-_^: Impulso y Rebote Ascendente (Grave -> Medio -> Grave -> Salto Agudo)">
+            <span class="font-mono text-cyan-400 bg-cyan-950/90 px-1 py-0.2 rounded font-black">_ - _ ^</span>
+            <span class="text-[9px] text-slate-300 font-sans">Impulso / Rebote</span>
+          </button>
+          <button onclick="playCustomProsodicPattern('^-_')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón ^-_: Cascada Descendente Gradual (Agudo -> Medio -> Grave)">
+            <span class="font-mono text-emerald-400 bg-emerald-950/90 px-1 py-0.2 rounded font-black">^ - _</span>
+            <span class="text-[9px] text-slate-300 font-sans">Cascada Descendente</span>
+          </button>
+          <button onclick="playCustomProsodicPattern('_--^')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 text-amber-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón _--^: Rampa con Meseta (Grave -> Medio -> Medio -> Agudo)">
+            <span class="font-mono text-amber-400 bg-amber-950/90 px-1 py-0.2 rounded font-black">_ - - ^</span>
+            <span class="text-[9px] text-slate-300 font-sans">Rampa Meseta</span>
+          </button>
+          <button onclick="playCustomProsodicPattern('-^-_')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-rose-500/40 hover:border-rose-400 text-rose-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón -^-_: Campana Simétrica / Pico Central (Medio -> Agudo -> Medio -> Grave)">
+            <span class="font-mono text-rose-400 bg-rose-950/90 px-1 py-0.2 rounded font-black">- ^ - _</span>
+            <span class="text-[9px] text-slate-300 font-sans">Campana / Pico</span>
+          </button>
+          <button onclick="playCustomProsodicPattern('^-_-')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-purple-500/40 hover:border-purple-400 text-purple-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón ^-_-: Zigzag Descendente (Agudo -> Grave -> Medio -> Grave)">
+            <span class="font-mono text-purple-400 bg-purple-950/90 px-1 py-0.2 rounded font-black">^ - _ -</span>
+            <span class="text-[9px] text-slate-300 font-sans">Zigzag</span>
+          </button>
+          <button onclick="playCustomProsodicPattern('^^__')" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-sky-500/40 hover:border-sky-400 text-sky-300 transition flex items-center gap-1 font-bold shadow-sm" title="Patrón ^^__: Doble Escalón en Suspensión">
+            <span class="font-mono text-sky-400 bg-sky-950/90 px-1 py-0.2 rounded font-black">^ ^ _ _</span>
+            <span class="text-[9px] text-slate-300 font-sans">Doble Caída</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 text-[9px] text-slate-400">
+        <span class="px-1 py-0.2 rounded bg-slate-900 text-cyan-300 font-mono">_ = Grave</span>
+        <span class="px-1 py-0.2 rounded bg-slate-900 text-emerald-300 font-mono">- = Medio</span>
+        <span class="px-1 py-0.2 rounded bg-slate-900 text-rose-300 font-mono">^ = Agudo</span>
+      </div>
+    </div>
+
     <!-- BALANCES HIDROSTÁTICOS NETOS DE LOS 5 SUJETOS (SUMIDERO VS MANANTIAL) -->
     <div class="flex flex-wrap items-center justify-between gap-1 px-2 py-1 bg-slate-950/90 rounded-xl border border-sky-900/40 text-[10px] mono">
       <span class="text-slate-400 font-bold">BALANCES NETOS ΔDi (D_rec - D_dar):</span>
@@ -621,6 +661,91 @@
         setTimeout(() => {
           demoAquariumSubject(idx);
         }, delay * 1000);
+      }
+    }
+
+    const PROSODIC_TIERS = {
+      '_': 1.000, // Grave (Base)
+      '-': 1.250, // Medio (3ª mayor)
+      '^': 1.500  // Agudo (5ª justa)
+    };
+
+    function playCustomProsodicPattern(patternStr, sIdx = null) {
+      if (!audioEnabled) return;
+      getAudioCtx();
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const idx = (sIdx !== null) ? sIdx : (selectedCell ? selectedCell.i : 0);
+      const inst = AQUARIUM_INSTRUMENTS[idx % AQUARIUM_INSTRUMENTS.length];
+      const zij = matrixZ[selectedCell.i][selectedCell.j];
+      const isCielo = (zij >= waterLevel);
+
+      const basePitch = inst.fMin + Math.max(0, Math.min(1, zij)) * (inst.fMax - inst.fMin);
+      const stepDur = 0.11; // 110ms por nota del patrón
+      const totalDur = stepDur * patternStr.length;
+
+      const osc = ctx.createOscillator();
+      if (idx === 0) osc.type = 'sawtooth';
+      else if (idx === 1) osc.type = 'sawtooth';
+      else if (idx === 2) osc.type = 'triangle';
+      else if (idx === 3) osc.type = 'sawtooth';
+      else osc.type = 'sawtooth';
+
+      const f1Filter = ctx.createBiquadFilter();
+      const f2Filter = ctx.createBiquadFilter();
+      f1Filter.type = 'bandpass'; f1Filter.Q.setValueAtTime(4.5, now);
+      f2Filter.type = 'bandpass'; f2Filter.Q.setValueAtTime(5.5, now);
+
+      const f1Gain = ctx.createGain(); f1Gain.gain.setValueAtTime(0.60, now);
+      const f2Gain = ctx.createGain(); f2Gain.gain.setValueAtTime(0.40, now);
+
+      const patternVowels = patternStr.length === 3 ? ['u', 'a', 'e'] : ['u', 'o', 'a', 'e'];
+
+      for (let k = 0; k < patternStr.length; k++) {
+        const tStep = now + k * stepDur;
+        const sym = patternStr[k];
+        const ratio = PROSODIC_TIERS[sym] || 1.0;
+        const targetF0 = basePitch * ratio;
+        const vowel = patternVowels[k % patternVowels.length];
+        const [f1, f2] = VOWEL_FORMANTS[vowel];
+
+        osc.frequency.setValueAtTime(targetF0, tStep);
+        f1Filter.frequency.setValueAtTime(f1, tStep);
+        f2Filter.frequency.setValueAtTime(f2, tStep);
+      }
+
+      const mediumFilter = ctx.createBiquadFilter();
+      const masterGain = ctx.createGain();
+
+      if (isCielo) {
+        mediumFilter.type = 'lowpass';
+        mediumFilter.frequency.setValueAtTime(4200, now);
+        masterGain.gain.setValueAtTime(0.0001, now);
+        masterGain.gain.linearRampToValueAtTime(0.24, now + 0.02);
+        masterGain.gain.setValueAtTime(0.20, now + totalDur * 0.8);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + totalDur + 0.04);
+      } else {
+        mediumFilter.type = 'lowpass';
+        mediumFilter.frequency.setValueAtTime(360, now);
+        mediumFilter.Q.setValueAtTime(3.8, now);
+        masterGain.gain.setValueAtTime(0.0001, now);
+        masterGain.gain.linearRampToValueAtTime(0.15, now + 0.03);
+        masterGain.gain.setValueAtTime(0.12, now + totalDur * 0.8);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + totalDur + 0.04);
+      }
+
+      osc.connect(f1Filter); osc.connect(f2Filter);
+      f1Filter.connect(f1Gain); f2Filter.connect(f2Gain);
+      f1Gain.connect(mediumFilter); f2Gain.connect(mediumFilter);
+      mediumFilter.connect(masterGain);
+      masterGain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + totalDur + 0.06);
+
+      const badge = document.getElementById('aquarium-acoustic-voice-badge');
+      if (badge) {
+        badge.innerHTML = `<span style="color:${inst.color};" class="font-bold">🎼 PATRÓN TONAL [ ${patternStr} ]:</span> ${inst.code} (${inst.name}) | Entonación: <strong class="text-cyan-300 font-mono">${patternStr.split('').join(' ')}</strong> | Estado: ${isCielo ? '<span class="text-amber-300 font-bold">☀️ Aéreo</span>' : '<span class="text-sky-400 font-bold">🌊 Submarino</span>'}`;
       }
     }
 
