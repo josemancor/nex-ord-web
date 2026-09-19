@@ -4476,6 +4476,7 @@
                     let isDim = false;
                     let isStepGlowing = false;
 
+                    let step_a1 = 9999, step_a2 = 9999, step_a3 = 9999, step_a4 = 9999;
                     // Sincronización Génesis Ordinal celda a celda en SMIa y SMIb
                     if (typeof agileMatrixState !== 'undefined' && agileMatrixState.genesisStep !== undefined && agileMatrixState.genesisStep < agileMatrixState.maxGenesisStep) {
                         let step = agileMatrixState.genesisStep;
@@ -4485,22 +4486,30 @@
                         let r_a3 = getCharRank(raw_ji[1]);
                         let r_a4 = getCharRank(raw_ji[0]);
 
-                        let step_a1 = (r_a1 > 0) ? (2 * r_a1 - 1) : 9999;
-                        let step_a2 = (r_a2 > 0) ? (2 * r_a2) : 9999;
-                        let step_a3 = (r_a3 > 0) ? (2 * r_a3) : 9999;
-                        let step_a4 = (r_a4 > 0) ? (2 * r_a4 - 1) : 9999;
+                        step_a1 = (r_a1 > 0) ? (2 * r_a1 - 1) : 9999;
+                        step_a2 = (r_a2 > 0) ? (2 * r_a2) : 9999;
+                        step_a3 = (r_a3 > 0) ? (2 * r_a3) : 9999;
+                        step_a4 = (r_a4 > 0) ? (2 * r_a4 - 1) : 9999;
 
                         let baseChars = isSMIa ? smiaStr : rawVal;
-                        let c1 = (step_a1 <= step) ? baseChars[0] : '·';
-                        let c2 = (step_a2 <= step) ? baseChars[1] : '·';
-                        let c3 = (step_a3 <= step) ? baseChars[2] : '·';
-                        let c4 = (step_a4 <= step) ? baseChars[3] : '·';
+                        let defC1 = isSMIa ? '¡' : '0';
+                        let defC2 = isSMIa ? '¿' : '0';
+                        let defC3 = isSMIa ? '?' : '0';
+                        let defC4 = isSMIa ? '!' : '0';
+
+                        // Al inicio del cómputo todas las celdas son ¡¿?! (o 0000);
+                        // a medida que se recorre la secuencia ordinal se van modificando.
+                        // Si al cerrar un cuadrante/tetragrama no hay ni 1 ni 2, por defecto es 0 (¡¿?!).
+                        let c1 = (step_a1 <= step) ? baseChars[0] : defC1;
+                        let c2 = (step_a2 <= step) ? baseChars[1] : defC2;
+                        let c3 = (step_a3 <= step) ? baseChars[2] : defC3;
+                        let c4 = (step_a4 <= step) ? baseChars[3] : defC4;
 
                         tetraChars = `${c1}${c2}${c3}${c4}`;
-                        if (c1 === '·' && c2 === '·' && c3 === '·' && c4 === '·') {
-                            isDim = true;
-                            cellOpacity = "0.12";
-                            cellBg = "rgba(15, 23, 42, 0.2)";
+                        let isAllBasal = (c1 === defC1 && c2 === defC2 && c3 === defC3 && c4 === defC4);
+                        if (isAllBasal && step === 0) {
+                            cellOpacity = "0.6";
+                            cellBg = "rgba(15, 23, 42, 0.35)";
                         } else if (step_a1 === step || step_a2 === step || step_a3 === step || step_a4 === step) {
                             isStepGlowing = true;
                             cellBorder = "1px solid #00E5FF";
@@ -4516,9 +4525,20 @@
                         let ch = tetraChars[p];
                         let isPosActive = agileMatrixState.activeTetraPositions.has(pKey);
 
+                        let isAwakened = true;
+                        let isCurrent = false;
+                        if (typeof agileMatrixState !== 'undefined' && agileMatrixState.genesisStep !== undefined && agileMatrixState.genesisStep < agileMatrixState.maxGenesisStep) {
+                            let step_pos = [step_a1, step_a2, step_a3, step_a4][p];
+                            isAwakened = (step_pos <= agileMatrixState.genesisStep);
+                            isCurrent = (step_pos === agileMatrixState.genesisStep);
+                        }
+
                         let chColor = '#94A3B8';
-                        if (ch === '·') { chColor = '#475569'; }
-                        else if (isSMIa) {
+                        if (!isAwakened) {
+                            chColor = '#475569';
+                        } else if (isCurrent) {
+                            chColor = '#00E5FF';
+                        } else if (isSMIa) {
                             if (p === 0) chColor = (ch === '<') ? '#00FF87' : (ch === '[' ? '#FF007F' : '#FFE600');
                             else if (p === 1) chColor = (ch === 'E') ? '#00FF87' : (ch === 'R' ? '#FF007F' : '#FFE600');
                             else if (p === 2) chColor = (ch === 'e') ? '#00FF87' : (ch === 'r' ? '#FF007F' : '#FFE600');
@@ -4526,12 +4546,16 @@
                         } else {
                             if (ch >= 'A' && ch <= 'Z') chColor = '#00FF87';
                             else if (ch >= 'a' && ch <= 'z') chColor = '#FF007F';
-                            else chColor = '#94A3B8';
+                            else chColor = '#FFE600';
                         }
 
+                        let textGlow = (isCurrent || isAwakened) ? `text-shadow:0 0 5px ${chColor}aa;` : '';
+                        let fontWeight = isAwakened ? '900' : '500';
+                        let charOpacity = isAwakened ? '1' : '0.4';
+
                         let spanStyle = isPosActive
-                            ? `color:${chColor}; font-weight:900; font-size:14px; text-shadow:0 0 5px ${chColor}aa; display:inline-block; padding:0 1px;`
-                            : `color:#475569; font-weight:normal; font-size:11px; opacity:0.25; display:inline-block; padding:0 1px;`;
+                            ? `color:${chColor}; font-weight:${fontWeight}; font-size:14px; ${textGlow} opacity:${charOpacity}; display:inline-block; padding:0 1px;`
+                            : `color:#475569; font-weight:normal; font-size:11px; opacity:0.2; display:inline-block; padding:0 1px;`;
 
                         let safeChar = ch.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                         tetraHtml += `<span style="${spanStyle}" title="${posTooltips[p]}">${safeChar}</span>`;
