@@ -9511,8 +9511,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             return (idx + 1).toString();
         }
 
-        // A1: Expectativas formuladas por los emisores
-        // Formato ultra-condensado cuádruple: (i,j,1,0) en A1 celda (i,j) y (j,i,4,0) en A4 celda (j,i)
+        // A1: Expectativas formuladas por los emisores (p_DA / p_REC)
+        // En celda (i, j) escribe A1 (< o [). En celda conjugada (j, i) escribe A4 (> o ]).
         let itemsA1 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -9537,8 +9537,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">&lt;</span>' : '<span style="color:#FF007F;">[</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">&gt;</span>' : '<span style="color:#FF007F;">]</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? ('Atracción R' + r + 'º (+)') : ('Rechazo R' + r + 'º (-)'));
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? ('Atracción Recibida R' + r + 'º (+)') : ('Rechazo Recibido R' + r + 'º (-)'));
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 1 (A1: p_DA) • ' + (isPos ? 'Expectativa Atracción (<)' : 'Expectativa Rechazo ([)');
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 4 (A4: p_REC) • ' + (isPos ? 'Expectativa Recibida (>)' : 'Expectativa Recibida (])');
                     itemsA1.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',1,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',4,' + s2 + ')</span>');
                 }
             }
@@ -9550,8 +9550,9 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             return '<span style="color:#FFCC00; font-weight:800;">' + r + 'º:</span> <span style="color:#00E5FF; font-weight:700;">A1</span> ' + a1_str;
         }
 
-        // A2: Preferencias efectivas formuladas por los emisores
-        // Formato ultra-condensado cuádruple: (i,j,2,0) en A2 celda (i,j) y (j,i,3,0) en A3 celda (j,i)
+        // A2: Preferencias efectivas formuladas por los emisores (DA / REC)
+        // En celda (i, j) escribe A2 (E o R) completando el par DA: <E o [R
+        // En celda conjugada (j, i) escribe A3 (e o r) completando el par REC: e> o r]
         let itemsA2 = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -9576,8 +9577,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         s1 = isPos ? '<span style="color:#00FF87;">E</span>' : '<span style="color:#FF007F;">R</span>';
                         s2 = isPos ? '<span style="color:#00FF87;">e</span>' : '<span style="color:#FF007F;">r</span>';
                     }
-                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? ('Elección R' + r + 'º (+)') : ('Rechazo R' + r + 'º (-)'));
-                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? ('Elección Recibida R' + r + 'º (+)') : ('Rechazo Recibido R' + r + 'º (-)'));
+                    let t1 = 'Celda (' + getSubjCode(i) + ',' + getSubjCode(j) + ') • Cuadrante 2 (A2: DA) • ' + (isPos ? 'Elección (E) → Par <E' : 'Rechazo (R) → Par [R');
+                    let t2 = 'Celda (' + getSubjCode(j) + ',' + getSubjCode(i) + ') • Cuadrante 3 (A3: REC) • ' + (isPos ? 'Elección Recibida (e) → Par e>' : 'Rechazo Recibido (r) → Par r]');
                     itemsA2.push('<span title="' + t1 + '" style="cursor:help;">(' + getSubjCode(i) + ',' + getSubjCode(j) + ',2,' + s1 + ')</span>, <span title="' + t2 + '" style="cursor:help;">(' + getSubjCode(j) + ',' + getSubjCode(i) + ',3,' + s2 + ')</span>');
                 }
             }
@@ -9595,11 +9596,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                     let is_pos = (c_ij >= 'A' && c_ij <= 'Z') && (c_ji >= 'A' && c_ji <= 'Z');
                     let is_neg = !(c_ij >= 'A' && c_ij <= 'Z') && !(c_ji >= 'A' && c_ji <= 'Z');
                     if (is_pos) {
-                        mutStars.push('<span style="color:#00FF87; font-weight:800; text-shadow:0 0 8px rgba(0,255,135,0.6);" title="Elección Mutua cristalizada entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ &lt;' + getSubjCode(i) + '-' + getSubjCode(j) + '&gt;</span>');
+                        mutStars.push('<span style="color:#00FF87; font-weight:800; text-shadow:0 0 8px rgba(0,255,135,0.6);" title="Elección Mutua cristalizada <Ee> entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ &lt;' + getSubjCode(i) + '-' + getSubjCode(j) + '&gt;</span>');
                     } else if (is_neg) {
-                        mutStars.push('<span style="color:#FF007F; font-weight:800; text-shadow:0 0 8px rgba(255,0,127,0.6);" title="Rechazo Mutuo cristalizado entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ [' + getSubjCode(i) + '-' + getSubjCode(j) + ']</span>');
+                        mutStars.push('<span style="color:#FF007F; font-weight:800; text-shadow:0 0 8px rgba(255,0,127,0.6);" title="Rechazo Mutuo cristalizado [Rr] entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ [' + getSubjCode(i) + '-' + getSubjCode(j) + ']</span>');
                     } else {
-                        mutStars.push('<span style="color:#FF9F1C; font-weight:800; text-shadow:0 0 8px rgba(255,159,28,0.6);" title="Oposición de Sentimientos cristalizada entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ OS(' + getSubjCode(i) + '-' + getSubjCode(j) + ')</span>');
+                        mutStars.push('<span style="color:#FF9F1C; font-weight:800; text-shadow:0 0 8px rgba(255,159,28,0.6);" title="Oposición de Sentimientos cristalizada <Er]/[Re> entre ' + getSubjCode(i) + ' y ' + getSubjCode(j) + '">⭐ OS(' + getSubjCode(i) + '-' + getSubjCode(j) + ')</span>');
                     }
                 }
             }
