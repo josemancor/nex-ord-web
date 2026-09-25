@@ -277,11 +277,8 @@ body.dial-active .active-dial-container {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  cursor: grab;
-  touch-action: none;
-}
-.dial-wrapper.is-dragging {
-  cursor: grabbing !important;
+  cursor: default;
+  touch-action: manipulation;
 }
 
 /* Bezel Exterior */
@@ -293,40 +290,6 @@ body.dial-active .active-dial-container {
   border: 1.5px solid rgba(56, 189, 248, 0.25);
   box-shadow: 0 0 45px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 255, 135, 0.08);
   pointer-events: none;
-}
-
-/* Marcador Cenital Fijo [12:00] */
-.zenith-marker-box {
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 25;
-  pointer-events: none;
-}
-.zenith-arrow {
-  width: 0;
-  height: 0;
-  border-left: 13px solid transparent;
-  border-right: 13px solid transparent;
-  border-top: 18px solid var(--accent-cyan);
-  filter: drop-shadow(0 0 12px var(--accent-cyan));
-}
-.zenith-pill {
-  margin-top: -3px;
-  background: rgba(7, 11, 20, 0.95);
-  border: 1px solid var(--accent-cyan);
-  color: var(--accent-cyan);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 255, 135, 0.4);
 }
 
 /* SVG del Dial Rotatorio */
@@ -351,10 +314,11 @@ svg#dial-svg {
 }
 .sector-slice:hover {
   fill-opacity: 0.65;
+  stroke: rgba(0, 240, 255, 0.7);
   filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.85));
 }
 .sector-slice.active {
-  fill-opacity: 0.85;
+  fill-opacity: 0.88;
   stroke: var(--accent-cyan);
   stroke-width: 4.5;
   filter: drop-shadow(0 0 25px rgba(0, 255, 135, 0.95));
@@ -406,6 +370,12 @@ svg#dial-svg {
   text-anchor: middle;
   dominant-baseline: central;
   text-shadow: 0 0 8px rgba(0,0,0,0.95);
+  transition: fill 0.2s ease, font-size 0.2s ease, text-shadow 0.2s ease;
+}
+.sector-text.active {
+  fill: #00FF87;
+  font-size: 11.5px;
+  text-shadow: 0 0 12px rgba(0, 255, 135, 0.95), 0 0 4px #000;
 }
 
 /* Núcleo Central Inmutable: Principio DAR + RECIBIR */
@@ -471,39 +441,6 @@ svg#dial-svg {
   margin-top: 4px;
 }
 
-/* Barra Auxiliar de Navegación */
-.dial-controls-bar {
-  margin-top: 22px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  z-index: 20;
-}
-.dial-step-btn {
-  background: rgba(11, 19, 43, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #38BDF8;
-  padding: 7px 18px;
-  border-radius: 8px;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 1px;
-}
-.dial-step-btn:hover {
-  background: rgba(56, 189, 248, 0.25);
-  border-color: #38BDF8;
-  color: #fff;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
-}
-.dial-hint-text {
-  font-family: 'Roboto Mono', monospace;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  letter-spacing: 0.8px;
-}
 
 /* Panel Lateral Dinámico */
 .info-panel {
@@ -767,19 +704,13 @@ svg#dial-svg {
          ===================================================================== -->
     <div class="active-dial-container" id="active-dial">
       
-      <!-- Columna Izquierda: Dial y Controles -->
+      <!-- Columna Izquierda: Rueda del Menú -->
       <div class="dial-column">
         
-        <div class="dial-wrapper" id="dial-wrapper" title="Arrastra el dial con el ratón o usa la rueda para girar">
+        <div class="dial-wrapper" id="dial-wrapper" title="Pasa el puntero por los recuadros para ver su información • Pulsa para entrar">
           
           <!-- Bezel Exterior Graduado -->
           <div class="dial-bezel"></div>
-
-          <!-- Marcador Cenital Fijo [12:00] -->
-          <div class="zenith-marker-box">
-            <div class="zenith-arrow"></div>
-            <div class="zenith-pill">12:00 CENIT</div>
-          </div>
 
           <!-- SVG Radial Giratorio (9 Sectores + Triángulo Tesla 3-6-9) -->
           <svg id="dial-svg" viewBox="0 0 560 560">
@@ -802,13 +733,6 @@ svg#dial-svg {
               <span class="core-hint" id="core-hint">✕ CERRAR</span>
             </div>
           </div>
-        </div>
-
-        <!-- Barra Auxiliar de Navegación y Tips Táctiles -->
-        <div class="dial-controls-bar">
-          <button class="dial-step-btn" onclick="stepSector(-1)" title="Girar al sector anterior (Sentido antihorario)">◀ ANTERIOR</button>
-          <span class="dial-hint-text">Arrastra el dial • Rueda del ratón • Teclas ◀ ▶</span>
-          <button class="dial-step-btn" onclick="stepSector(1)" title="Girar al sector siguiente (Sentido horario)">SIGUIENTE ▶</button>
         </div>
 
       </div>
@@ -1110,9 +1034,34 @@ SECTORS_DATA.forEach((sec, i) => {
   path.setAttribute("fill", sec.color);
   path.dataset.index = i;
   
-  path.addEventListener("click", () => {
-    if (hasDraggedNoticeably) return;
-    snapToSector(i);
+  // Soporte táctil móvil (primer tap muestra info, segundo tap o botón abre módulo)
+  let touchActivated = false;
+  path.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "touch") {
+      if (activeIndex !== i) {
+        touchActivated = true;
+        activateSector(i);
+      } else {
+        touchActivated = false;
+      }
+    }
+  });
+
+  // Al pasar el puntero (hover en desktop): despliega la información lateral y permanece
+  path.addEventListener("mouseenter", () => {
+    activateSector(i);
+  });
+  
+  // Al pulsar en el recuadro: abre directamente el enlace
+  path.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (touchActivated) {
+      touchActivated = false;
+      return;
+    }
+    if (sec && sec.link) {
+      window.location.href = sec.link;
+    }
   });
   
   svgGroup.appendChild(path);
@@ -1165,94 +1114,49 @@ function getSectorLocalizedTitle(idx) {
 }
 
 // =============================================================================
-// CINÉTICA: SELECTOR ROTATORIO CONTINUO (DRAG & ROTATE + INERCIA + RUEDA)
+// NAVEGACIÓN Y ACTIVACIÓN DE SECTORES (HOVER + CLICK DIRECTO)
 // =============================================================================
-let isDragging = false;
-let startPointerAngle = 0;
-let startRotation = 0;
-let lastPointerAngle = 0;
-let lastMoveTime = 0;
-let angularVelocity = 0;
-let hasDraggedNoticeably = false;
-
-function getPointerAngle(e) {
-  const rect = dialWrapper.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  const rad = Math.atan2(clientY - centerY, clientX - centerX);
-  return (rad * 180 / Math.PI);
+function activateSector(i) {
+  activeIndex = i;
+  highlightSectorVisualsOnly(i);
+  updatePanel(SECTORS_DATA[i]);
+  playPrecisionTick(SECTORS_DATA[i].isTesla);
 }
 
-function onPointerDown(e) {
-  if (e.target.closest('.core-static') || e.target.closest('.zenith-marker-box')) {
-    return;
+function highlightSectorVisualsOnly(targetIndex) {
+  document.querySelectorAll(".sector-slice").forEach((el, idx) => {
+    el.classList.toggle("active", idx === targetIndex);
+  });
+  sectorTextElements.forEach((el, idx) => {
+    el.classList.toggle("active", idx === targetIndex);
+  });
+}
+
+function stepSector(direction) {
+  const nextIndex = (activeIndex + direction + NUM_SECTORS) % NUM_SECTORS;
+  activateSector(nextIndex);
+}
+
+// Navegación por teclado (Flechas y Enter)
+window.addEventListener("keydown", (e) => {
+  if (!document.body.classList.contains("dial-active")) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    e.preventDefault();
+    stepSector(1);
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    e.preventDefault();
+    stepSector(-1);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (SECTORS_DATA[activeIndex] && SECTORS_DATA[activeIndex].link) {
+      window.location.href = SECTORS_DATA[activeIndex].link;
+    }
+  } else if (e.key === "Escape") {
+    closeDial();
   }
-  isDragging = true;
-  hasDraggedNoticeably = false;
-  startPointerAngle = getPointerAngle(e);
-  startRotation = currentRotation;
-  lastPointerAngle = startPointerAngle;
-  lastMoveTime = performance.now();
-  angularVelocity = 0;
+});
 
-  dialWrapper.classList.add("is-dragging");
-  svgGroup.style.transition = "none";
-}
-
-function onPointerMove(e) {
-  if (!isDragging) return;
-  const currentAngle = getPointerAngle(e);
-  let delta = currentAngle - startPointerAngle;
-
-  if (delta > 180) delta -= 360;
-  if (delta < -180) delta += 360;
-
-  if (Math.abs(delta) > 2.5) {
-    hasDraggedNoticeably = true;
-  }
-
-  currentRotation = startRotation + delta;
-  svgGroup.style.transform = `rotate(${currentRotation}deg)`;
-
-  const now = performance.now();
-  const dt = now - lastMoveTime;
-  if (dt > 12) {
-    let stepDelta = currentAngle - lastPointerAngle;
-    if (stepDelta > 180) stepDelta -= 360;
-    if (stepDelta < -180) stepDelta += 360;
-    angularVelocity = stepDelta / dt;
-    lastPointerAngle = currentAngle;
-    lastMoveTime = now;
-  }
-
-  const normAngle = (((-currentRotation % 360) + 360) % 360);
-  const previewIndex = Math.round(normAngle / ANGLE_STEP) % NUM_SECTORS;
-  highlightSectorVisualsOnly(previewIndex);
-}
-
-function onPointerUp(e) {
-  if (!isDragging) return;
-  isDragging = false;
-  dialWrapper.classList.remove("is-dragging");
-
-  let projectedRotation = currentRotation + (angularVelocity * 140);
-  const normAngle = (((-projectedRotation % 360) + 360) % 360);
-  const targetIndex = Math.round(normAngle / ANGLE_STEP) % NUM_SECTORS;
-
-  snapToSector(targetIndex);
-}
-
-dialWrapper.addEventListener("mousedown", onPointerDown);
-window.addEventListener("mousemove", onPointerMove);
-window.addEventListener("mouseup", onPointerUp);
-
-dialWrapper.addEventListener("touchstart", onPointerDown, { passive: true });
-window.addEventListener("touchmove", onPointerMove, { passive: true });
-window.addEventListener("touchend", onPointerUp);
-
-// Rueda del Ratón
+// Rueda del Ratón opcional para ciclar sectores
 let wheelAccumulator = 0;
 let wheelCooldown = false;
 
@@ -1270,63 +1174,19 @@ dialWrapper.addEventListener("wheel", (e) => {
     setTimeout(() => {
       wheelCooldown = false;
       wheelAccumulator = 0;
-    }, 200);
+    }, 180);
   }
 }, { passive: false });
-
-// Navegación por teclado
-window.addEventListener("keydown", (e) => {
-  if (!document.body.classList.contains("dial-active")) return;
-  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-    e.preventDefault();
-    stepSector(1);
-  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-    e.preventDefault();
-    stepSector(-1);
-  } else if (e.key === "Escape") {
-    closeDial();
-  }
-});
-
-// =============================================================================
-// ANCLAJE CENITAL INMUTABLE (12:00) Y TRANSICIÓN SUAVE
-// =============================================================================
-function stepSector(direction) {
-  const nextIndex = (activeIndex + direction + NUM_SECTORS) % NUM_SECTORS;
-  snapToSector(nextIndex);
-}
-
-function snapToSector(targetIndex) {
-  activeIndex = targetIndex;
-  const targetAngle = -targetIndex * ANGLE_STEP;
-
-  let delta = (targetAngle - currentRotation) % 360;
-  if (delta > 180) delta -= 360;
-  if (delta < -180) delta += 360;
-
-  currentRotation += delta;
-
-  svgGroup.style.transition = "transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)";
-  svgGroup.style.transform = `rotate(${currentRotation}deg)`;
-
-  highlightSectorVisualsOnly(targetIndex);
-  updatePanel(SECTORS_DATA[targetIndex]);
-  playPrecisionTick(SECTORS_DATA[targetIndex].isTesla);
-}
-
-function highlightSectorVisualsOnly(targetIndex) {
-  document.querySelectorAll(".sector-slice").forEach((el, idx) => {
-    el.classList.toggle("active", idx === targetIndex);
-  });
-}
 
 // =============================================================================
 // ACTUALIZACIÓN DINÁMICA DEL PANEL DE INFORMACIÓN
 // =============================================================================
+let updatePanelTimer = null;
 function updatePanel(data) {
+  if (updatePanelTimer) clearTimeout(updatePanelTimer);
   panelContent.classList.add("fade-out");
   
-  setTimeout(() => {
+  updatePanelTimer = setTimeout(() => {
     panelBadge.textContent = data.badge;
     panelBadge.style.color = data.color;
     panelBadge.style.borderColor = data.color;
@@ -1360,7 +1220,7 @@ function updatePanel(data) {
     });
 
     panelContent.classList.remove("fade-out");
-  }, 160);
+  }, 120);
 }
 
 // =============================================================================
@@ -1400,12 +1260,13 @@ function playPrecisionTick(isTesla) {
 // =============================================================================
 function openDial() {
   document.body.classList.add("dial-active");
-  snapToSector(0);
+  activateSector(0);
 }
 
 function openDialAt(idx) {
   document.body.classList.add("dial-active");
-  snapToSector(idx);
+  const target = (idx >= 0 && idx < NUM_SECTORS) ? idx : 0;
+  activateSector(target);
 }
 
 function closeDial() {
