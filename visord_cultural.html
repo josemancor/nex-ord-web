@@ -2958,11 +2958,140 @@
 
             // Actualizar Suite de Tablas Sociométricas en vivo
             updateSociometricDock();
+
+            // Sonificación Procedural Reactiva
+            if (typeof VisordProceduralAudio !== 'undefined' && !isImmediate) {
+                const edges = tcData.edges || [];
+                const pos = edges.filter(e => e.type === 'E').length;
+                const neg = edges.filter(e => e.type === 'R').length;
+                const mut = edges.some(e => e.mutual);
+                const s = pos > neg ? 'A' : (neg > pos ? 'a' : '0');
+                VisordProceduralAudio.playLinkStep(Math.max(1, Math.min(4, c)), s, tcData.coords.length);
+                if (mut) {
+                    setTimeout(() => {
+                        VisordProceduralAudio.playDyadClosure('EE');
+                    }, 120);
+                }
+            }
         }
 
         // =========================================================================
-        // RECONSTRUCCIÓN DE VÍNCULOS 3D (ARISTAS E y R CON RESPLANDOR NEÓN)
+        // MOTOR DE SONIFICACIÓN PROCEDURAL SMIb (WEB AUDIO API)
         // =========================================================================
+        const VisordProceduralAudio = (function() {
+            let ctx = null;
+            let audioEnabled = true;
+
+            function getContext() {
+                if (!ctx && (window.AudioContext || window.webkitAudioContext)) {
+                    ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (ctx && ctx.state === 'suspended') {
+                    ctx.resume().catch(() => {});
+                }
+                return ctx;
+            }
+
+            function toggleAudio() {
+                audioEnabled = !audioEnabled;
+                return audioEnabled;
+            }
+
+            function playLinkStep(order, sign, totalN) {
+                if (!audioEnabled) return;
+                const audio = getContext();
+                if (!audio) return;
+                try {
+                    const now = audio.currentTime;
+                    const osc = audio.createOscillator();
+                    const gain = audio.createGain();
+                    osc.connect(gain);
+                    gain.connect(audio.destination);
+
+                    let rank = (order && order > 0) ? order : 1;
+                    let N = totalN || 8;
+                    let s = (sign || 'A').toUpperCase();
+
+                    if (s === 'A' || s === 'E') {
+                        let baseFreq = 880 - ((rank - 1) / Math.max(1, N - 1)) * 357;
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(baseFreq, now);
+                        osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.98, now + 0.14);
+
+                        gain.gain.setValueAtTime(0.0001, now);
+                        gain.gain.linearRampToValueAtTime(0.06, now + 0.015);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+
+                        osc.start(now);
+                        osc.stop(now + 0.17);
+                    } else if (s === '0' || s === 'NEUTRAL') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(220, now);
+                        osc.frequency.exponentialRampToValueAtTime(140, now + 0.04);
+
+                        gain.gain.setValueAtTime(0.0001, now);
+                        gain.gain.linearRampToValueAtTime(0.035, now + 0.005);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+
+                        osc.start(now);
+                        osc.stop(now + 0.06);
+                    } else {
+                        let baseFreq = 120 + ((rank - 1) / Math.max(1, N - 1)) * 60;
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(baseFreq, now);
+
+                        gain.gain.setValueAtTime(0.0001, now);
+                        gain.gain.linearRampToValueAtTime(0.055, now + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+                        osc.start(now);
+                        osc.stop(now + 0.19);
+                    }
+                } catch (e) {}
+            }
+
+            function playDyadClosure(q81Type) {
+                if (!audioEnabled) return;
+                const audio = getContext();
+                if (!audio) return;
+                try {
+                    const now = audio.currentTime;
+                    let freqs = [523.25, 659.25, 783.99];
+                    let waveType = 'sine';
+                    let vol = 0.04;
+
+                    if (q81Type === 'RR' || q81Type === 'Rr') {
+                        freqs = [185.0, 220.0, 311.13];
+                        waveType = 'triangle';
+                        vol = 0.045;
+                    } else if (q81Type === 'OS' || q81Type === 'Er') {
+                        freqs = [330.0, 415.3, 493.88];
+                        waveType = 'sine';
+                        vol = 0.035;
+                    }
+
+                    freqs.forEach((freq, idx) => {
+                        const osc = audio.createOscillator();
+                        const gain = audio.createGain();
+                        osc.type = waveType;
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+
+                        gain.gain.setValueAtTime(0.0001, now + idx * 0.03);
+                        gain.gain.linearRampToValueAtTime(vol, now + idx * 0.03 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.03 + 0.28);
+
+                        osc.connect(gain);
+                        gain.connect(audio.destination);
+
+                        osc.start(now + idx * 0.03);
+                        osc.stop(now + idx * 0.03 + 0.30);
+                    });
+                } catch (e) {}
+            }
+
+            return { getContext, toggleAudio, playLinkStep, playDyadClosure };
+        })();
+
         // =========================================================================
         // RECONSTRUCCIÓN DE VÍNCULOS 3D VOLUMÉTRICOS (TUBOS NEÓN + FLECHAS DE FLUJO)
         // =========================================================================
@@ -2980,13 +3109,43 @@
                 const c2 = subjectMeshes[edge.tgt];
                 if (!c1 || !c2) return;
 
+                // Vínculos Neutros ('0'): Línea de puntos discreta atenuda
+                if (edge.type === "0" || edge.type === "NEUTRAL" || edge.type === "ZERO") {
+                    const lineGeo = new THREE.BufferGeometry().setFromPoints([
+                        c1.mesh.position.clone(),
+                        c2.mesh.position.clone()
+                    ]);
+                    const lineMat = new THREE.LineDashedMaterial({
+                        color: 0x64748B,
+                        dashSize: 0.18,
+                        gapSize: 0.12,
+                        transparent: true,
+                        opacity: 0.22
+                    });
+                    const edgeMesh = new THREE.Line(lineGeo, lineMat);
+                    edgeMesh.computeLineDistances();
+                    edgeMesh.userData = {
+                        src: edge.src,
+                        tgt: edge.tgt,
+                        type: '0',
+                        isDotted: true,
+                        mutual: false,
+                        weight: 0,
+                        baseColor: 0x64748B,
+                        baseOpacity: 0.22
+                    };
+                    scene.add(edgeMesh);
+                    edgeObjects.push(edgeMesh);
+                    return;
+                }
+
                 const isE = (edge.type === "E");
                 if (isE) eCount++; else rCount++;
 
                 const isMutual = !!edge.mutual;
                 const col = isE ? 0x00FF87 : 0xFF007F;
 
-                // Geometría cilíndrica estilizada y esbelta (vínculos refinados)
+                // Geometría cilíndrica estilizada y esbelta en banda estrecha canónica (0.014 - 0.022)
                 const radius = isMutual ? 0.022 : 0.014;
                 const cylGeo = new THREE.CylinderGeometry(radius, radius, 1, 10);
                 const edgeMat = new THREE.MeshStandardMaterial({
@@ -3048,6 +3207,12 @@
                 if (c1 && c2 && edgeMesh) {
                     const p1 = c1.mesh.position;
                     const p2 = c2.mesh.position;
+                    if (edgeMesh.userData && edgeMesh.userData.isDotted) {
+                        const pts = [p1.clone(), p2.clone()];
+                        edgeMesh.geometry.setFromPoints(pts);
+                        edgeMesh.computeLineDistances();
+                        return;
+                    }
                     const sub = new THREE.Vector3().subVectors(p2, p1);
                     const dist = sub.length();
                     if (dist > 0.001) {

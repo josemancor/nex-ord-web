@@ -129,6 +129,9 @@
         <button id="btn-audio-toggle" onclick="toggleAudio()" class="px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/20">
           <span id="audio-icon">🔊</span> <span id="audio-label">AUDIO: ON</span>
         </button>
+        <button id="btn-drone-toggle" onclick="toggleDrone()" class="px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/20" title="Activar/Desactivar Lecho Acústico Continuo de Clima Grupal (Drone)">
+          <span id="drone-icon">🎵</span> <span id="drone-label">DRONE: ON</span>
+        </button>
         <button onclick="triggerReactorWave()" class="px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 shadow-sm shadow-indigo-500/20" title="Barrido armónico en espiral de las 25 columnas del reactor">
           <span>🌊</span> <span>ONDA DEL REACTOR</span>
         </button>
@@ -232,6 +235,96 @@
         <span class="text-cyan-300 font-bold" id="mean-h-val">H = -0.04</span>
         <span class="text-slate-400 text-[9px]">(ΔP = 2γH)</span>
       </div>
+    </div>
+
+    <!-- =========================================================================
+         PANEL DE CLIMA GRUPAL MACRO (5 INDICADORES CANÓNICOS DERIVADOS DE BREVE)
+         El Fondo / Ecosistema Socio-Termodinámico en el que ocurren las secuencias
+         ========================================================================= -->
+    <div id="group-climate-panel" class="flex flex-col md:flex-row items-stretch justify-between gap-2 p-2 bg-slate-950/90 rounded-xl border border-sky-900/50 shadow-lg text-[10px] mono">
+      
+      <!-- BADGE PRINCIPAL Y DESCRIPCIÓN DEL CLIMA -->
+      <div class="flex items-center gap-2.5 border-b md:border-b-0 md:border-r border-sky-900/40 pb-1.5 md:pb-0 md:pr-3 min-w-[280px]">
+        <div id="climate-icon-box" class="w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-emerald-950 border border-emerald-500/40 shadow-[0_0_12px_rgba(0,255,135,0.3)]">
+          <span id="climate-icon">🌿</span>
+        </div>
+        <div class="flex flex-col justify-center">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">CLIMA GRUPAL (BREVE):</span>
+            <span id="climate-title" class="font-extrabold text-emerald-400 text-xs tracking-tight">ARMÓNICO COHESIVO</span>
+          </div>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span class="text-slate-400 text-[9px] flex items-center gap-1">
+              <span>🎵</span> <span id="climate-drone-desc" class="text-cyan-300 font-semibold">5ª Justa + Octava (55 Hz)</span>
+            </span>
+            <span class="text-[8px] px-1 py-0.2 rounded bg-sky-950/80 text-sky-300 border border-sky-700/40" id="climate-ground-tag">Lecho Activo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOS 5 INDICADORES NUMÉRICOS CANÓNICOS -->
+      <div class="grid grid-cols-5 gap-1.5 flex-1 items-center">
+        <!-- 1. W Kendall (Consenso) -->
+        <div class="flex flex-col bg-slate-900/80 px-1.5 py-1 rounded border border-sky-900/40 text-center" title="Coeficiente de Concordancia W de Kendall (0 = Dispersión caótica, 1 = Consenso unánime)">
+          <div class="flex items-center justify-between text-[8px] text-slate-400">
+            <span class="font-bold text-slate-300">W</span>
+            <span>Consenso</span>
+          </div>
+          <span class="font-mono font-extrabold text-xs text-emerald-400 mt-0.5" id="climate-w-val">0.38</span>
+          <div class="w-full bg-slate-950 h-1 rounded-full mt-1 overflow-hidden border border-slate-800">
+            <div id="climate-w-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 38%;"></div>
+          </div>
+        </div>
+
+        <!-- 2. rho Reciprocidad -->
+        <div class="flex flex-col bg-slate-900/80 px-1.5 py-1 rounded border border-sky-900/40 text-center" title="Reciprocidad Simétrica Diádica (-1 = Oposición pura / Cizalladura, +1 = Elección mutua perfecta)">
+          <div class="flex items-center justify-between text-[8px] text-slate-400">
+            <span class="font-bold text-slate-300">ρ_mut</span>
+            <span>Simetría</span>
+          </div>
+          <span class="font-mono font-extrabold text-xs text-cyan-300 mt-0.5" id="climate-rho-val">+1.00</span>
+          <div class="w-full bg-slate-950 h-1 rounded-full mt-1 overflow-hidden border border-slate-800">
+            <div id="climate-rho-bar" class="h-full bg-cyan-400 transition-all duration-300" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- 3. J Borda (Jerarquía) -->
+        <div class="flex flex-col bg-slate-900/80 px-1.5 py-1 rounded border border-sky-900/40 text-center" title="Índice de Jerarquía y Polarización de Borda (0 = Totalmente horizontal, 1 = Máxima pirámide líder/paria)">
+          <div class="flex items-center justify-between text-[8px] text-slate-400">
+            <span class="font-bold text-slate-300">J_borda</span>
+            <span>Jerarquía</span>
+          </div>
+          <span class="font-mono font-extrabold text-xs text-amber-300 mt-0.5" id="climate-j-val">0.26</span>
+          <div class="w-full bg-slate-950 h-1 rounded-full mt-1 overflow-hidden border border-slate-800">
+            <div id="climate-j-bar" class="h-full bg-amber-400 transition-all duration-300" style="width: 26%;"></div>
+          </div>
+        </div>
+
+        <!-- 4. H Entropía (Agitación Térmica) -->
+        <div class="flex flex-col bg-slate-900/80 px-1.5 py-1 rounded border border-sky-900/40 text-center" title="Entropía Térmica Ordinal de Shannon (0 = Estructura congelada rígida, 1 = Máxima agitación térmica / caos)">
+          <div class="flex items-center justify-between text-[8px] text-slate-400">
+            <span class="font-bold text-slate-300">H_ord</span>
+            <span>Entropía</span>
+          </div>
+          <span class="font-mono font-extrabold text-xs text-purple-300 mt-0.5" id="climate-h-val">0.94</span>
+          <div class="w-full bg-slate-950 h-1 rounded-full mt-1 overflow-hidden border border-slate-800">
+            <div id="climate-h-bar" class="h-full bg-purple-400 transition-all duration-300" style="width: 94%;"></div>
+          </div>
+        </div>
+
+        <!-- 5. Delta Meta (Tensión Metaperceptiva) -->
+        <div class="flex flex-col bg-slate-900/80 px-1.5 py-1 rounded border border-sky-900/40 text-center" title="Tensión Metaperceptiva Media (Desfase entre lo que se espera y lo que se recibe; 0 = Lúcido, 1 = Desengaño / Frustración)">
+          <div class="flex items-center justify-between text-[8px] text-slate-400">
+            <span class="font-bold text-slate-300">Δ_meta</span>
+            <span>Tensión</span>
+          </div>
+          <span class="font-mono font-extrabold text-xs text-rose-300 mt-0.5" id="climate-delta-val">0.35</span>
+          <div class="w-full bg-slate-950 h-1 rounded-full mt-1 overflow-hidden border border-slate-800">
+            <div id="climate-delta-bar" class="h-full bg-rose-400 transition-all duration-300" style="width: 35%;"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- PANEL DE TELEMETRÍA DIÁDICA (LATENCIA VS MANIFESTACIÓN) -->
@@ -419,12 +512,412 @@
         contour: [4, 4, 1, 1], glyph: '^^__', glyphFull: '[ ‾ ‾ _ _ ]', vowels: ['i', 'i', 'a', 'u'], phoneme: 'Í-Í-a-u', desc: 'Doble Escalón Alto-Bajo' }
     ];
 
+    // =========================================================================
+    // MOTOR DE CLIMA GRUPAL MACRO (5 INDICADORES CANÓNICOS DERIVADOS DE BREVE)
+    // El Fondo / Ecosistema Socio-Termodinámico en el que ocurren las secuencias
+    // =========================================================================
+    let droneActive = true;
+    let droneGain = null;
+    let droneOsc1 = null;
+    let droneOsc2 = null;
+    let droneSub = null;
+    let droneFilter = null;
+    let droneLFO = null;
+    let droneLFOGain = null;
+
+    let currentClimate = {
+      W: 0.38,
+      rho: 1.0,
+      J: 0.26,
+      H: 0.94,
+      deltaMeta: 0.35,
+      name: 'ARMÓNICO COHESIVO',
+      color: '#00FF87',
+      bg: 'rgba(0, 255, 135, 0.15)',
+      border: 'rgba(0, 255, 135, 0.45)',
+      icon: '🌿',
+      droneDesc: '5ª Justa + Octava Consonante (55 Hz)'
+    };
+
+    function computeGroupClimate(mat) {
+      const n = mat.length;
+      
+      // 1. RANGOS ORDINALES BREVE POR FILA (1 a n-1)
+      const ranks = [];
+      for (let i = 0; i < n; i++) {
+        ranks[i] = [];
+        const row = [];
+        for (let j = 0; j < n; j++) {
+          if (i !== j) row.push({ j, val: mat[i][j] });
+        }
+        row.sort((a, b) => b.val - a.val);
+        row.forEach((item, rIdx) => {
+          ranks[i][item.j] = rIdx + 1;
+        });
+      }
+
+      // A) CONCORDANCIA / COHESIÓN GLOBAL DE KENDALL (W)
+      const R = new Array(n).fill(0);
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < n; i++) {
+          if (i !== j && ranks[i] && ranks[i][j] !== undefined) R[j] += ranks[i][j];
+        }
+      }
+      const meanR = (n * (n - 1)) / 2;
+      let S = 0;
+      for (let j = 0; j < n; j++) {
+        S += Math.pow(R[j] - meanR, 2);
+      }
+      const m = n - 1;
+      const sMax = (Math.pow(m, 2) * (Math.pow(n, 3) - n)) / 12;
+      const W_kendall = Math.max(0, Math.min(1, sMax > 0 ? S / sMax : 0));
+
+      // B) RECIPROCIDAD SIMÉTRICA MEDIA (rho_mut)
+      let sumXY = 0, sumX = 0, sumY = 0, sumX2 = 0, sumY2 = 0, pairCount = 0;
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          const x = mat[i][j];
+          const y = mat[j][i];
+          sumX += x;
+          sumY += y;
+          sumXY += x * y;
+          sumX2 += x * x;
+          sumY2 += y * y;
+          pairCount++;
+        }
+      }
+      const meanX = sumX / (pairCount || 1);
+      const meanY = sumY / (pairCount || 1);
+      const numRho = sumXY - pairCount * meanX * meanY;
+      const denRho = Math.sqrt(Math.max(0, sumX2 - pairCount * meanX * meanX) * Math.max(0, sumY2 - pairCount * meanY * meanY));
+      const rho_mut = denRho > 0.0001 ? Math.max(-1, Math.min(1, numRho / denRho)) : 0.0;
+
+      // C) POLARIZACIÓN / JERARQUÍA DE BORDA (J_borda)
+      const B = new Array(n).fill(0);
+      let sumTotalZ = 0;
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < n; i++) {
+          if (i !== j) {
+            B[j] += mat[i][j];
+            sumTotalZ += mat[i][j];
+          }
+        }
+      }
+      const meanB = B.reduce((a, b) => a + b, 0) / n;
+      let varB = 0;
+      for (let j = 0; j < n; j++) varB += Math.pow(B[j] - meanB, 2);
+      const sigmaB = Math.sqrt(varB / n);
+      const maxSigmaB = (n - 1) / 2.0;
+      const J_borda = Math.max(0, Math.min(1, sigmaB / maxSigmaB));
+      const meanZ = sumTotalZ / (n * (n - 1) || 1);
+
+      // D) ENTROPÍA TÉRMICA INFORMACIONAL (H_ord)
+      const bins = [0, 0, 0, 0, 0];
+      let totalValues = 0;
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          if (i !== j) {
+            const binIdx = Math.min(4, Math.max(0, Math.floor(mat[i][j] * 5)));
+            bins[binIdx]++;
+            totalValues++;
+          }
+        }
+      }
+      let shEntropy = 0;
+      bins.forEach(count => {
+        if (count > 0) {
+          const p = count / (totalValues || 1);
+          shEntropy -= p * Math.log(p);
+        }
+      });
+      const maxShEntropy = Math.log(5);
+      const H_ord = Math.max(0, Math.min(1, shEntropy / maxShEntropy));
+
+      // E) TENSIÓN METAPERCEPTIVA (Delta_meta)
+      let sumDeltaMeta = 0;
+      for (let i = 0; i < n; i++) {
+        const selfExpect = mat[i][i];
+        const receivedAvg = B[i] / (n - 1);
+        sumDeltaMeta += Math.abs(selfExpect - receivedAvg);
+      }
+      const Delta_meta = Math.max(0, Math.min(1, sumDeltaMeta / n));
+
+      // CLASIFICACIÓN DIAGNÓSTICA DEL CLIMA GRUPAL
+      let cName = '';
+      let cColor = '';
+      let cBg = '';
+      let cBorder = '';
+      let cIcon = '';
+      let dDesc = '';
+
+      if (J_borda <= 0.05 && meanZ < 0.30) {
+        cName = 'SUBCRÍTICO HOMEOSTÁTICO';
+        cColor = '#38BDF8';
+        cBg = 'rgba(56, 189, 248, 0.15)';
+        cBorder = 'rgba(56, 189, 248, 0.45)';
+        cIcon = '🌊';
+        dDesc = 'Bordón Abisal Calmo (48 Hz)';
+      } else if (rho_mut >= 0.70) {
+        cName = 'ARMÓNICO COHESIVO';
+        cColor = '#00FF87';
+        cBg = 'rgba(0, 255, 135, 0.15)';
+        cBorder = 'rgba(0, 255, 135, 0.45)';
+        cIcon = '🌿';
+        dDesc = '5ª Justa + Octava Consonante (55 Hz)';
+      } else if (rho_mut < 0.0 || (J_borda >= 0.50 && rho_mut <= 0.10)) {
+        cName = 'CISMA Y CIZALLADURA';
+        cColor = '#FF007F';
+        cBg = 'rgba(255, 0, 127, 0.15)';
+        cBorder = 'rgba(255, 0, 127, 0.45)';
+        cIcon = '⚡';
+        dDesc = 'Tritono Latente + Fricción (62 Hz)';
+      } else if (J_borda >= 0.40) {
+        cName = 'POLARIZADO (FACCIÓN / PARIA)';
+        cColor = '#FFE600';
+        cBg = 'rgba(255, 230, 0, 0.15)';
+        cBorder = 'rgba(255, 230, 0, 0.45)';
+        cIcon = '👑';
+        dDesc = '4ª Suspendida + Tensión (58 Hz)';
+      } else if (H_ord >= 0.85) {
+        cName = 'ENTRÓPICO TURBULENTO';
+        cColor = '#FF9F1C';
+        cBg = 'rgba(255, 159, 28, 0.15)';
+        cBorder = 'rgba(255, 159, 28, 0.45)';
+        cIcon = '🌪️';
+        dDesc = 'Cluster Disonante en Oleaje (52 Hz)';
+      } else {
+        cName = 'EQUILIBRADO TRANSICIONAL';
+        cColor = '#38BDF8';
+        cBg = 'rgba(56, 189, 248, 0.15)';
+        cBorder = 'rgba(56, 189, 248, 0.45)';
+        cIcon = '⚖️';
+        dDesc = 'Bordón Subacuático Estable (50 Hz)';
+      }
+
+      return {
+        W: W_kendall,
+        rho: rho_mut,
+        J: J_borda,
+        H: H_ord,
+        deltaMeta: Delta_meta,
+        name: cName,
+        color: cColor,
+        bg: cBg,
+        border: cBorder,
+        icon: cIcon,
+        droneDesc: dDesc
+      };
+    }
+
+    function updateGroupClimateUI() {
+      currentClimate = computeGroupClimate(matrixZ);
+      
+      const titleEl = document.getElementById('climate-title');
+      const iconEl = document.getElementById('climate-icon');
+      const iconBox = document.getElementById('climate-icon-box');
+      const droneDescEl = document.getElementById('climate-drone-desc');
+
+      if (titleEl) {
+        titleEl.textContent = currentClimate.name;
+        titleEl.style.color = currentClimate.color;
+      }
+      if (iconEl) iconEl.textContent = currentClimate.icon;
+      if (iconBox) {
+        iconBox.style.backgroundColor = currentClimate.bg;
+        iconBox.style.borderColor = currentClimate.border;
+        iconBox.style.boxShadow = `0 0 14px ${currentClimate.border}`;
+      }
+      if (droneDescEl) {
+        droneDescEl.textContent = currentClimate.droneDesc;
+      }
+
+      const wEl = document.getElementById('climate-w-val');
+      const wBar = document.getElementById('climate-w-bar');
+      if (wEl) wEl.textContent = currentClimate.W.toFixed(2);
+      if (wBar) wBar.style.width = `${Math.round(currentClimate.W * 100)}%`;
+
+      const rhoEl = document.getElementById('climate-rho-val');
+      const rhoBar = document.getElementById('climate-rho-bar');
+      if (rhoEl) rhoEl.textContent = (currentClimate.rho >= 0 ? '+' : '') + currentClimate.rho.toFixed(2);
+      if (rhoBar) rhoBar.style.width = `${Math.round(Math.max(0, (currentClimate.rho + 1) / 2) * 100)}%`;
+
+      const jEl = document.getElementById('climate-j-val');
+      const jBar = document.getElementById('climate-j-bar');
+      if (jEl) jEl.textContent = currentClimate.J.toFixed(2);
+      if (jBar) jBar.style.width = `${Math.round(currentClimate.J * 100)}%`;
+
+      const hEl = document.getElementById('climate-h-val');
+      const hBar = document.getElementById('climate-h-bar');
+      if (hEl) hEl.textContent = currentClimate.H.toFixed(2);
+      if (hBar) hBar.style.width = `${Math.round(currentClimate.H * 100)}%`;
+
+      const deltaEl = document.getElementById('climate-delta-val');
+      const deltaBar = document.getElementById('climate-delta-bar');
+      if (deltaEl) deltaEl.textContent = currentClimate.deltaMeta.toFixed(2);
+      if (deltaBar) deltaBar.style.width = `${Math.round(currentClimate.deltaMeta * 100)}%`;
+
+      updateDroneToClimate(currentClimate);
+    }
+
+    // =========================================================================
+    // LECHO ACÚSTICO CONTINUO (AMBIENT DRONE DE CLIMA GRUPAL)
+    // =========================================================================
+    function initGroupClimateDrone() {
+      if (!audioCtx) return;
+      if (droneGain) return;
+
+      try {
+        const ctx = audioCtx;
+        const now = ctx.currentTime;
+
+        droneGain = ctx.createGain();
+        droneGain.gain.setValueAtTime(droneActive && audioEnabled ? 0.08 : 0.0001, now);
+
+        droneFilter = ctx.createBiquadFilter();
+        droneFilter.type = 'lowpass';
+        droneFilter.frequency.setValueAtTime(220, now);
+        droneFilter.Q.setValueAtTime(1.8, now);
+
+        droneOsc1 = ctx.createOscillator();
+        droneOsc1.type = 'sine';
+        droneOsc1.frequency.setValueAtTime(55.0, now);
+
+        droneOsc2 = ctx.createOscillator();
+        droneOsc2.type = 'triangle';
+        droneOsc2.frequency.setValueAtTime(82.4, now);
+
+        droneSub = ctx.createOscillator();
+        droneSub.type = 'sine';
+        droneSub.frequency.setValueAtTime(27.5, now);
+
+        droneLFO = ctx.createOscillator();
+        droneLFO.frequency.setValueAtTime(0.18, now);
+        droneLFOGain = ctx.createGain();
+        droneLFOGain.gain.setValueAtTime(25.0, now);
+
+        droneLFO.connect(droneLFOGain);
+        droneLFOGain.connect(droneFilter.frequency);
+
+        const osc1Gain = ctx.createGain(); osc1Gain.gain.setValueAtTime(0.55, now);
+        const osc2Gain = ctx.createGain(); osc2Gain.gain.setValueAtTime(0.35, now);
+        const subGain = ctx.createGain(); subGain.gain.setValueAtTime(0.40, now);
+
+        droneOsc1.connect(osc1Gain);
+        droneOsc2.connect(osc2Gain);
+        droneSub.connect(subGain);
+
+        osc1Gain.connect(droneFilter);
+        osc2Gain.connect(droneFilter);
+        subGain.connect(droneFilter);
+
+        droneFilter.connect(droneGain);
+        droneGain.connect(ctx.destination);
+
+        droneOsc1.start(now);
+        droneOsc2.start(now);
+        droneSub.start(now);
+        droneLFO.start(now);
+
+        updateDroneToClimate(currentClimate);
+      } catch (err) {
+        console.warn("Drone audio init error:", err);
+      }
+    }
+
+    function updateDroneToClimate(climate) {
+      if (!droneGain || !audioCtx) return;
+      try {
+        const ctx = audioCtx;
+        const now = ctx.currentTime;
+        const rampTime = 1.0;
+
+        const f0 = 48.0 + climate.J * 20.0;
+        droneOsc1.frequency.linearRampToValueAtTime(f0, now + rampTime);
+        droneSub.frequency.linearRampToValueAtTime(f0 * 0.5, now + rampTime);
+
+        let harmonicRatio = 1.5; // Quinta justa
+        if (climate.name === 'CISMA Y CIZALLADURA') {
+          harmonicRatio = 1.4142; // Tritono
+        } else if (climate.name === 'POLARIZADO (FACCIÓN / PARIA)') {
+          harmonicRatio = 1.3333; // Cuarta suspendida
+        } else if (climate.name === 'ENTRÓPICO TURBULENTO') {
+          harmonicRatio = 1.189; // Tercera menor / tensión
+        }
+
+        const detuneBeating = climate.deltaMeta * 3.0;
+        droneOsc2.frequency.linearRampToValueAtTime(f0 * harmonicRatio + detuneBeating, now + rampTime);
+
+        const filterCutoff = 140 + climate.H * 280;
+        droneFilter.frequency.linearRampToValueAtTime(filterCutoff, now + rampTime);
+        droneFilter.Q.linearRampToValueAtTime(1.2 + climate.deltaMeta * 2.5, now + rampTime);
+
+        const targetGain = (droneActive && audioEnabled) ? 0.08 + climate.W * 0.03 : 0.0001;
+        droneGain.gain.linearRampToValueAtTime(targetGain, now + 0.3);
+      } catch (e) {
+        console.warn("Drone update error:", e);
+      }
+    }
+
+    function duckDroneOnGesture() {
+      if (!droneGain || !audioCtx || !droneActive || !audioEnabled) return;
+      try {
+        const ctx = audioCtx;
+        const now = ctx.currentTime;
+        const currentVal = droneGain.gain.value;
+        droneGain.gain.cancelScheduledValues(now);
+        droneGain.gain.setValueAtTime(currentVal, now);
+        droneGain.gain.linearRampToValueAtTime(Math.max(0.001, currentVal * 0.38), now + 0.03);
+        droneGain.gain.linearRampToValueAtTime(currentVal, now + 0.45);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function toggleDrone() {
+      droneActive = !droneActive;
+      const btn = document.getElementById('btn-drone-toggle');
+      const icon = document.getElementById('drone-icon');
+      const label = document.getElementById('drone-label');
+      const tag = document.getElementById('climate-ground-tag');
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+
+      if (droneActive && audioEnabled) {
+        if (droneGain) {
+          droneGain.gain.cancelScheduledValues(now);
+          droneGain.gain.linearRampToValueAtTime(0.08, now + 0.3);
+        }
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/20';
+        if (icon) icon.innerText = '🎵';
+        if (label) label.innerText = 'DRONE: ON';
+        if (tag) {
+          tag.innerText = 'Lecho Activo';
+          tag.className = 'text-[8px] px-1 py-0.2 rounded bg-sky-950/80 text-sky-300 border border-sky-700/40';
+        }
+      } else {
+        if (droneGain) {
+          droneGain.gain.cancelScheduledValues(now);
+          droneGain.gain.linearRampToValueAtTime(0.0001, now + 0.3);
+        }
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-slate-900 text-slate-500 border border-slate-800';
+        if (icon) icon.innerText = '🔇';
+        if (label) label.innerText = 'DRONE: OFF';
+        if (tag) {
+          tag.innerText = 'Mute';
+          tag.className = 'text-[8px] px-1 py-0.2 rounded bg-slate-900 text-slate-500 border border-slate-800';
+        }
+      }
+    }
+
     function getAudioCtx() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
+      }
+      if (!droneGain) {
+        initGroupClimateDrone();
       }
       return audioCtx;
     }
@@ -436,10 +929,18 @@
       const label = document.getElementById('audio-label');
       if (audioEnabled) {
         getAudioCtx();
+        if (droneGain && audioCtx) {
+          droneGain.gain.cancelScheduledValues(audioCtx.currentTime);
+          droneGain.gain.linearRampToValueAtTime(droneActive ? 0.08 : 0.0001, audioCtx.currentTime + 0.3);
+        }
         btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/20';
         icon.innerText = '🔊';
         label.innerText = 'AUDIO: ON';
       } else {
+        if (droneGain && audioCtx) {
+          droneGain.gain.cancelScheduledValues(audioCtx.currentTime);
+          droneGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        }
         btn.className = 'px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all flex items-center gap-1.5 bg-slate-900 text-slate-500 border border-slate-800';
         icon.innerText = '🔇';
         label.innerText = 'AUDIO: OFF';
@@ -450,6 +951,7 @@
       if (!audioEnabled) return { freq: 220, isCielo: false };
       try {
         const ctx = getAudioCtx();
+        duckDroneOnGesture();
         const now = startTime > 0 ? startTime : ctx.currentTime;
         const inst = AQUARIUM_INSTRUMENTS[sIdx % AQUARIUM_INSTRUMENTS.length];
         
@@ -580,6 +1082,7 @@
       if (!audioEnabled) return;
       getAudioCtx();
       const ctx = getAudioCtx();
+      duckDroneOnGesture();
       const now = ctx.currentTime;
 
       const instI = AQUARIUM_INSTRUMENTS[i];
@@ -1328,8 +1831,8 @@
       const w4 = project3D(-b, b, hWater, originX, originY);
 
       ctx.save();
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = currentClimate ? currentClimate.color + '99' : 'rgba(0, 229, 255, 0.45)';
+      ctx.lineWidth = 1.8;
       ctx.setLineDash([4, 3]);
       ctx.beginPath();
       ctx.moveTo(w1.px, w1.py);
@@ -1357,17 +1860,35 @@
       ctx.lineTo(w4.px, w4.py);
       ctx.closePath();
 
-      // Gradiente del espejo de agua
+      // Gradiente del espejo de agua matizado por el Clima Grupal
       const grad = ctx.createLinearGradient(w1.px, w1.py, w3.px, w3.py);
-      grad.addColorStop(0, 'rgba(14, 165, 233, 0.18)');
-      grad.addColorStop(0.5, 'rgba(0, 229, 255, 0.22)');
-      grad.addColorStop(1, 'rgba(3, 105, 161, 0.15)');
+      if (currentClimate && currentClimate.color === '#FF007F') {
+        grad.addColorStop(0, 'rgba(255, 0, 127, 0.20)');
+        grad.addColorStop(0.5, 'rgba(244, 63, 94, 0.22)');
+        grad.addColorStop(1, 'rgba(136, 19, 55, 0.16)');
+      } else if (currentClimate && currentClimate.color === '#00FF87') {
+        grad.addColorStop(0, 'rgba(0, 255, 135, 0.18)');
+        grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.22)');
+        grad.addColorStop(1, 'rgba(5, 150, 105, 0.15)');
+      } else if (currentClimate && currentClimate.color === '#FFE600') {
+        grad.addColorStop(0, 'rgba(255, 230, 0, 0.18)');
+        grad.addColorStop(0.5, 'rgba(245, 158, 11, 0.22)');
+        grad.addColorStop(1, 'rgba(180, 83, 9, 0.15)');
+      } else if (currentClimate && currentClimate.color === '#FF9F1C') {
+        grad.addColorStop(0, 'rgba(255, 159, 28, 0.20)');
+        grad.addColorStop(0.5, 'rgba(251, 146, 60, 0.22)');
+        grad.addColorStop(1, 'rgba(154, 52, 18, 0.16)');
+      } else {
+        grad.addColorStop(0, 'rgba(14, 165, 233, 0.18)');
+        grad.addColorStop(0.5, 'rgba(0, 229, 255, 0.22)');
+        grad.addColorStop(1, 'rgba(3, 105, 161, 0.15)');
+      }
       ctx.fillStyle = grad;
       ctx.fill();
 
-      // Trazado de ondas en la superficie
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      ctx.lineWidth = 0.8;
+      // Trazado de ondas en la superficie con reflejo del clima
+      ctx.strokeStyle = currentClimate ? currentClimate.color + '44' : 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1.0;
       ctx.stroke();
       ctx.restore();
     }
@@ -1669,6 +2190,8 @@
         shearEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> Cizalladura / Rompiente de Fase';
         shearEl.className = 'mono font-bold text-rose-400 text-xs flex items-center gap-1';
       }
+
+      updateGroupClimateUI();
     }
 
     function setPreset(name) {
@@ -2069,6 +2592,7 @@
 
     setPreset('propuesto');
     updateTelemetry();
+    updateGroupClimateUI();
     render();
 
     window.toggleNavPodPlayAcuario = function() {

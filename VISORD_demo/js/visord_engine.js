@@ -17,6 +17,7 @@ class VisordHubEngine {
         this.layers = {
             'MACRO': new THREE.Group(),    // Capa 0: Centroides (Activos)
             'MICRO': new THREE.Group(),    // Capa 1: Sujetos (Ilustrativos)
+            'SMIB_LINKS': new THREE.Group(), // Capa Canónica: Vínculos SMIb & Cristalización
             'FEATURES': new THREE.Group(), // Capa 2: Figuras Quatuor
             'SUPP': new THREE.Group(),     // Capa 3: Variables Complementarias
             'TRIADIC': new THREE.Group(),  // Capa 4: META_percepción Triádica
@@ -31,6 +32,7 @@ class VisordHubEngine {
         this.state = {
             'MACRO': true,
             'MICRO': true,
+            'SMIB_LINKS': true,
             'FEATURES': false,
             'SUPP': false,
             'TRIADIC': false,
@@ -728,6 +730,13 @@ class VisordHubEngine {
         // 5. Capa UNIVERSE (Proyección básica de sujetos brutos)
         this.buildUniverse();
         
+        // 6. Capa SMIB_LINKS (Canon Universal 3D/4D de la Matriz SMIb)
+        try {
+            this.buildSMIbCrystallization();
+        } catch (errSmib) {
+            console.warn("[VISORD Engine] Inicialización diferida de SMIb links:", errSmib);
+        }
+        
         this.updateLayerVisibility();
         
         // Ajustar cámara dinámicamente según el tamaño del Universo
@@ -935,6 +944,474 @@ class VisordHubEngine {
         
         // Resetear animadores
         this.setTime(0);
+    }
+
+    // =========================================================================
+    // CANON UNIVERSAL DE VISUALIZACIÓN 3D/4D Y CRISTALIZACIÓN DE LA MATRIZ SMIb
+    // =========================================================================
+
+    getCharRank(ch) {
+        if (!ch || ch === '0') return 0;
+        const code = ch.charCodeAt(0);
+        if (code >= 65 && code <= 90) return code - 64; // 'A' = 1, 'B' = 2...
+        if (code >= 97 && code <= 122) return code - 96; // 'a' = 1, 'b' = 2...
+        return 0;
+    }
+
+    computeKendallTauB(x, y) {
+        if (!x || !y || x.length !== y.length || x.length < 2) return 0;
+        const n = x.length;
+        let P = 0, Q = 0, Tx = 0, Ty = 0;
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                const dx = x[i] - x[j];
+                const dy = y[i] - y[j];
+                if (dx > 0) {
+                    if (dy > 0) P++;
+                    else if (dy < 0) Q++;
+                    else Ty++;
+                } else if (dx < 0) {
+                    if (dy > 0) Q++;
+                    else if (dy < 0) P++;
+                    else Ty++;
+                } else {
+                    if (dy !== 0) Tx++;
+                }
+            }
+        }
+        const denom = Math.sqrt((P + Q + Tx) * (P + Q + Ty));
+        return denom > 1e-9 ? ((P - Q) / denom) : 0;
+    }
+
+    /**
+     * Calcula la ordenación canónica de sujetos por su coeficiente Kendall de Recepción (RC) decreciente
+     * @param {Array<Array<string>>} matrix2D - Sociomatriz NxN con tetragramas SMIb o caracteres
+     * @returns {Array<{index: number, rc: number, recVector: number[]}>}
+     */
+    computeKendallReceptionOrder(matrix2D) {
+        if (!matrix2D || !Array.isArray(matrix2D) || matrix2D.length === 0) return [];
+        const N = matrix2D.length;
+        const recMatrix = Array.from({ length: N }, () => new Array(N).fill(0));
+
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                if (i === j) continue;
+                const cell = matrix2D[i][j];
+                let a2 = '0';
+                if (typeof cell === 'string') {
+                    // Si es tetragrama canónico (A1 A2 A3 A4), la preferencia emitida por i a j es A2
+                    a2 = cell.length >= 2 ? cell[1] : (cell.length === 1 ? cell[0] : '0');
+                } else if (typeof cell === 'number') {
+                    a2 = cell > 0 ? 'A' : (cell < 0 ? 'a' : '0');
+                }
+
+                // Escala de puntuación ordinal invariante:
+                // Mayúsculas 'A'..'Z': 1º elección tiene el valor más alto (+26, +25...)
+                // '0': neutro = 0
+                // Minúsculas 'a'..'z': 1º rechazo tiene el valor más bajo (-26, -25...)
+                let score = 0;
+                if (a2 >= 'A' && a2 <= 'Z') {
+                    score = 27 - (a2.charCodeAt(0) - 64);
+                } else if (a2 >= 'a' && a2 <= 'z') {
+                    score = -27 + (a2.charCodeAt(0) - 96);
+                }
+                recMatrix[j][i] = score; // Receptor j recibe de emisor i
+            }
+        }
+
+        const results = [];
+        for (let k = 0; k < N; k++) {
+            let sumTau = 0;
+            let count = 0;
+            for (let m = 0; m < N; m++) {
+                if (k === m) continue;
+                const tau = this.computeKendallTauB(recMatrix[k], recMatrix[m]);
+                sumTau += tau;
+                count++;
+            }
+            const avgRC = count > 0 ? (sumTau / count) : 0;
+            results.push({
+                index: k,
+                rc: avgRC,
+                recVector: recMatrix[k]
+            });
+        }
+
+        // Ordenar descendentemente por Kendall de Recepción
+        results.sort((a, b) => b.rc - a.rc);
+        return results;
+    }
+
+    extractSMIbMatrixFromPayload(preferredKey = null) {
+        if (!this.payload) return null;
+        if (this.payload.smib_matrix && Array.isArray(this.payload.smib_matrix)) {
+            return this.payload.smib_matrix;
+        }
+        if (this.payload.raw_matrices) {
+            const keys = Object.keys(this.payload.raw_matrices);
+            const targetKey = (preferredKey && this.payload.raw_matrices[preferredKey]) ? preferredKey : keys[0];
+            const rawObj = this.payload.raw_matrices[targetKey];
+            if (rawObj) {
+                const smibRaw = rawObj.SMIb || rawObj.smib_matrix || rawObj.SMIa;
+                if (Array.isArray(smibRaw)) {
+                    if (smibRaw.length > 0 && typeof smibRaw[0] === 'object' && !Array.isArray(smibRaw[0])) {
+                        const n = smibRaw.length;
+                        const mat = [];
+                        for (let r = 0; r < n; r++) {
+                            const row = [];
+                            const keysInRow = Object.keys(smibRaw[r]);
+                            for (let c = 0; c < n; c++) {
+                                const kName = (c + 1).toString();
+                                const altK = keysInRow[c] || kName;
+                                const val = smibRaw[r][kName] !== undefined ? smibRaw[r][kName] : (smibRaw[r][altK] || '0');
+                                row.push(val);
+                            }
+                            mat.push(row);
+                        }
+                        return mat;
+                    } else if (Array.isArray(smibRaw[0])) {
+                        return smibRaw;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    buildSMIbCrystallization(matrix2D = null, customCoords = null) {
+        const layer = this.layers['SMIB_LINKS'] || (this.layers['SMIB_LINKS'] = new THREE.Group());
+        if (!this.scene.children.includes(layer)) this.scene.add(layer);
+
+        // Limpiar contenido previo de la capa
+        while (layer.children.length > 0) {
+            const obj = layer.children[0];
+            if (obj.geometry) obj.geometry.dispose();
+            if (obj.material) {
+                if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                else obj.material.dispose();
+            }
+            layer.remove(obj);
+        }
+
+        const smib = matrix2D || this.extractSMIbMatrixFromPayload();
+        if (!smib || !Array.isArray(smib) || smib.length === 0) return;
+
+        const N = smib.length;
+        this.smibMatrix = smib;
+
+        // 1. Obtener ordenación por Kendall de Recepción
+        const sortedOrder = this.computeKendallReceptionOrder(smib);
+        this.smibSortedNodes = sortedOrder;
+
+        // 2. Extraer o generar posiciones 3D para cada sujeto
+        const nodePositions = [];
+        const subjectMeshes = [];
+
+        if (this.layers['MICRO'] && this.layers['MICRO'].children.length > 0) {
+            this.layers['MICRO'].children.forEach(ch => {
+                if (ch.userData && ch.userData.type === 'Sujeto') {
+                    subjectMeshes.push(ch);
+                }
+            });
+        }
+
+        for (let i = 0; i < N; i++) {
+            let pos = null;
+            if (customCoords && customCoords[i]) {
+                pos = new THREE.Vector3(customCoords[i][0], customCoords[i][1], customCoords[i][2]);
+            } else if (subjectMeshes[i] && subjectMeshes[i].position) {
+                pos = subjectMeshes[i].position.clone();
+            } else {
+                const angle = (2 * Math.PI * i) / N;
+                const rad = 7.5;
+                pos = new THREE.Vector3(rad * Math.cos(angle), Math.sin(angle * 2) * 1.5, rad * Math.sin(angle));
+            }
+            nodePositions.push(pos);
+        }
+        this.smibNodePositions = nodePositions;
+
+        // 3. Crear objetos de vínculo (directed edges & dyadic closures)
+        this.smibLinks = [];
+        this.smibDyads = new Map();
+
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                if (i === j) continue;
+                const cell = smib[i][j];
+                let a1 = '0', a2 = '0', a3 = '0', a4 = '0';
+                if (typeof cell === 'string') {
+                    if (cell.length >= 4) {
+                        a1 = cell[0]; a2 = cell[1]; a3 = cell[2]; a4 = cell[3];
+                    } else if (cell.length >= 2) {
+                        a1 = cell[0]; a2 = cell[1];
+                    } else if (cell.length === 1) {
+                        a2 = cell[0];
+                    }
+                }
+
+                const rank_a1 = this.getCharRank(a1);
+                const rank_a2 = this.getCharRank(a2);
+                const isPos_a2 = a2 >= 'A' && a2 <= 'Z';
+                const isNeg_a2 = a2 >= 'a' && a2 <= 'z';
+                const isNeutral = (!isPos_a2 && !isNeg_a2) || a2 === '0';
+
+                // Calibración en Banda Estrecha:
+                // Grosor entre 1.0px y 2.8px (o radio 0.012 a 0.024)
+                const strokeWidth = isNeutral ? 1.0 : Math.max(1.0, 2.8 - (rank_a2 - 1) * 0.45);
+                const tubeRadius = isNeutral ? 0.010 : Math.max(0.012, 0.024 - (rank_a2 - 1) * 0.003);
+
+                const p1 = nodePositions[i];
+                const p2 = nodePositions[j];
+                const points = [p1, p2];
+
+                let lineMesh;
+                if (isNeutral) {
+                    // Canon de Neutralidad: Línea punteada (. . .) en ámbar suave, opacidad sutil
+                    const geom = new THREE.BufferGeometry().setFromPoints(points);
+                    const matDashed = new THREE.LineDashedMaterial({
+                        color: 0xFFE600,
+                        dashSize: 0.25,
+                        gapSize: 0.20,
+                        transparent: true,
+                        opacity: 0.22,
+                        depthWrite: false
+                    });
+                    lineMesh = new THREE.Line(geom, matDashed);
+                    lineMesh.computeLineDistances();
+                } else {
+                    // Vínculo Activo: Filamento cilíndrico esbelto o línea sólida
+                    const dir = new THREE.Vector3().subVectors(p2, p1);
+                    const dist = dir.length();
+                    const cylGeo = new THREE.CylinderGeometry(tubeRadius, tubeRadius, 1, 8);
+                    const colHex = isPos_a2 ? 0x00FF87 : 0xFF007F;
+                    const matSolid = new THREE.MeshStandardMaterial({
+                        color: colHex,
+                        emissive: colHex,
+                        emissiveIntensity: 0.65,
+                        transparent: true,
+                        opacity: isPos_a2 ? 0.85 : 0.90,
+                        depthWrite: false
+                    });
+                    lineMesh = new THREE.Mesh(cylGeo, matSolid);
+                    lineMesh.position.copy(p1).addScaledVector(dir, 0.5);
+                    lineMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+                    lineMesh.scale.set(1, dist, 1);
+                }
+
+                lineMesh.visible = false;
+                lineMesh.userData = {
+                    type: 'SMIb_Vínculo',
+                    source: i,
+                    target: j,
+                    cell: cell,
+                    a1: a1,
+                    a2: a2,
+                    rank: rank_a2 || 1,
+                    sign: a2,
+                    isNeutral: isNeutral,
+                    strokeWidth: strokeWidth,
+                    tubeRadius: tubeRadius
+                };
+
+                layer.add(lineMesh);
+                this.smibLinks.push(lineMesh);
+
+                const dyadKey = Math.min(i, j) + '_' + Math.max(i, j);
+                if (!this.smibDyads.has(dyadKey)) {
+                    this.smibDyads.set(dyadKey, {
+                        nodeA: Math.min(i, j),
+                        nodeB: Math.max(i, j),
+                        linkAB: null,
+                        linkBA: null,
+                        closed: false
+                    });
+                }
+                const dObj = this.smibDyads.get(dyadKey);
+                if (i < j) dObj.linkAB = lineMesh;
+                else dObj.linkBA = lineMesh;
+            }
+        }
+
+        this.smibMoviola = {
+            totalSteps: sortedOrder.length * 2,
+            currentStep: 0,
+            isPlaying: false,
+            intervalId: null
+        };
+        console.log(`[VISORD Engine] SMIb Crystallization construida: N=${N}, Vínculos=${this.smibLinks.length}, Nodos ordenados por Kendall RC.`);
+    }
+
+    playSMIbCrystallization(stepDelayMs = 500, onStepCallback = null, onCompleteCallback = null) {
+        if (!this.smibSortedNodes || this.smibSortedNodes.length === 0) {
+            this.buildSMIbCrystallization();
+        }
+        if (!this.smibSortedNodes || this.smibSortedNodes.length === 0) return;
+
+        this.pauseSMIbCrystallization();
+        this.smibMoviola.isPlaying = true;
+        if (this.layers['SMIB_LINKS']) this.layers['SMIB_LINKS'].visible = true;
+
+        const totalNodes = this.smibSortedNodes.length;
+        const totalSteps = totalNodes * 2;
+        let step = this.smibMoviola.currentStep >= totalSteps ? 0 : this.smibMoviola.currentStep;
+
+        this.smibMoviola.intervalId = setInterval(() => {
+            if (step >= totalSteps) {
+                this.pauseSMIbCrystallization();
+                if (typeof onCompleteCallback === 'function') onCompleteCallback();
+                return;
+            }
+            this.setSMIbMoviolaStep(step);
+            if (typeof onStepCallback === 'function') onStepCallback(step, totalSteps);
+            step++;
+        }, stepDelayMs);
+    }
+
+    pauseSMIbCrystallization() {
+        if (this.smibMoviola && this.smibMoviola.intervalId) {
+            clearInterval(this.smibMoviola.intervalId);
+            this.smibMoviola.intervalId = null;
+        }
+        if (this.smibMoviola) this.smibMoviola.isPlaying = false;
+    }
+
+    setSMIbMoviolaStep(step) {
+        if (!this.smibSortedNodes || this.smibSortedNodes.length === 0) return;
+        this.smibMoviola.currentStep = step;
+        const totalNodes = this.smibSortedNodes.length;
+
+        const nodeIdxInOrder = Math.floor(step / 2);
+        const isPhaseA2 = (step % 2 === 1);
+        const activeNode = this.smibSortedNodes[nodeIdxInOrder];
+        if (!activeNode) return;
+
+        const activeSubjIdx = activeNode.index;
+
+        // Actualizar visibilidad de vínculos
+        this.smibLinks.forEach(link => {
+            const src = link.userData.source;
+            const srcOrderIdx = this.smibSortedNodes.findIndex(item => item.index === src);
+            if (srcOrderIdx < nodeIdxInOrder || (srcOrderIdx === nodeIdxInOrder && isPhaseA2)) {
+                link.visible = true;
+            } else {
+                link.visible = false;
+            }
+        });
+
+        // Comprobar y disparar cierres diádicos
+        if (isPhaseA2) {
+            this.smibLinks.forEach(link => {
+                if (link.userData.source === activeSubjIdx) {
+                    if (this.audio) {
+                        this.audio.playLinkStep(link.userData.rank, link.userData.sign, totalNodes);
+                    }
+                }
+            });
+
+            this.smibDyads.forEach(dyad => {
+                if ((dyad.nodeA === activeSubjIdx || dyad.nodeB === activeSubjIdx) && !dyad.closed) {
+                    const partnerIdx = (dyad.nodeA === activeSubjIdx) ? dyad.nodeB : dyad.nodeA;
+                    const partnerOrderIdx = this.smibSortedNodes.findIndex(item => item.index === partnerIdx);
+
+                    if (partnerOrderIdx < nodeIdxInOrder) {
+                        dyad.closed = true;
+
+                        const a2_AtoB = dyad.linkAB ? dyad.linkAB.userData.a2 : '0';
+                        const a2_BtoA = dyad.linkBA ? dyad.linkBA.userData.a2 : '0';
+                        const isPosA = a2_AtoB >= 'A' && a2_AtoB <= 'Z';
+                        const isPosB = a2_BtoA >= 'A' && a2_BtoA <= 'Z';
+                        const isNegA = a2_AtoB >= 'a' && a2_AtoB <= 'z';
+                        const isNegB = a2_BtoA >= 'a' && a2_BtoA <= 'z';
+
+                        let q81Type = '??';
+                        let closureCol = 0xFFE600;
+
+                        if (isPosA && isPosB) {
+                            q81Type = 'Ee';
+                            closureCol = 0x00FF87;
+                        } else if (isNegA && isNegB) {
+                            q81Type = 'Rr';
+                            closureCol = 0xFF007F;
+                        } else if ((isPosA && isNegB) || (isNegA && isPosB)) {
+                            q81Type = 'Er';
+                            closureCol = 0xFF9F1C;
+                        }
+
+                        [dyad.linkAB, dyad.linkBA].forEach(l => {
+                            if (l && l.material) {
+                                if (l.material.emissive) {
+                                    l.material.emissive.setHex(closureCol);
+                                    l.material.emissiveIntensity = 1.0;
+                                }
+                                if (l.material.color) l.material.color.setHex(closureCol);
+                            }
+                        });
+
+                        if (this.audio) {
+                            this.audio.playDyadClosure(q81Type);
+                        }
+
+                        // Detección Forense de Dinámicas Invisibles y Fricción Oculta (Sistema I255)
+                        const a1_AtoB = dyad.linkAB ? (dyad.linkAB.userData.a1 || '0') : '0';
+                        const a1_BtoA = dyad.linkBA ? (dyad.linkBA.userData.a1 || '0') : '0';
+
+                        const detectDyn = (c_pda, c_da, c_rec, c_prec) => {
+                            const isP = ch => ch >= 'A' && ch <= 'Z';
+                            const isN = ch => ch >= 'a' && ch <= 'z';
+                            const is0 = ch => (!isP(ch) && !isN(ch)) || ch === '0' || ch === '?' || ch === '!' || ch === '¡' || ch === '¿';
+                            if (isN(c_pda) && isP(c_da) && isP(c_rec)) return { code: '[Ee]', name: 'Alianza Sospechosa' };
+                            if (isP(c_pda) && isN(c_da) && isP(c_rec)) return { code: '<Re', name: 'Desprecio al Adulador' };
+                            if (isP(c_pda) && isN(c_rec)) return { code: '<r', name: 'Decepción Traumática' };
+                            if (isN(c_da) && isP(c_prec)) return { code: 'R>', name: 'Traición Latente' };
+                            if (isP(c_da) && (is0(c_rec) || is0(c_prec))) return { code: '?!', name: 'Ninguneo / Vacío Afectivo' };
+                            if (isP(c_da) && isN(c_prec)) return { code: 'E]', name: 'Elección Expiatoria' };
+                            if (isN(c_pda) && isP(c_da)) return { code: '[E', name: 'Inmolación Relacional' };
+                            if (isN(c_pda) && isP(c_rec)) return { code: '[e', name: 'Síndrome del Impostor' };
+                            return null;
+                        };
+
+                        const dynA = detectDyn(a1_AtoB, a2_AtoB, a2_BtoA, a1_BtoA);
+                        const dynB = detectDyn(a1_BtoA, a2_BtoA, a2_AtoB, a1_AtoB);
+                        const activeDyn = dynA || dynB;
+
+                        if (activeDyn) {
+                            dyad.invisibleDynamic = activeDyn;
+                            if (this.audio && typeof this.audio.playInvisibleFrictionWarning === 'function') {
+                                setTimeout(() => {
+                                    this.audio.playInvisibleFrictionWarning(activeDyn.code);
+                                }, 180);
+                            }
+                            if (typeof window !== 'undefined' && window.dispatchEvent) {
+                                window.dispatchEvent(new CustomEvent('visord-invisible-friction', {
+                                    detail: {
+                                        dyad,
+                                        dynamic: activeDyn,
+                                        nodeA: dyad.nodeA,
+                                        nodeB: dyad.nodeB,
+                                        step: step
+                                    }
+                                }));
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            if (this.audio) {
+                this.audio.playLinkStep(1, '0', totalNodes);
+            }
+        }
+    }
+
+    resetSMIbCrystallization() {
+        this.pauseSMIbCrystallization();
+        if (this.smibLinks) {
+            this.smibLinks.forEach(l => { l.visible = false; });
+        }
+        if (this.smibDyads) {
+            this.smibDyads.forEach(d => { d.closed = false; });
+        }
+        if (this.smibMoviola) this.smibMoviola.currentStep = 0;
     }
 
     toggleSubjectLabel(id, isVisible) {
