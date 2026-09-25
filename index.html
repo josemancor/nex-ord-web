@@ -759,8 +759,6 @@ svg#dial-svg {
 // =============================================================================
 // DICCIONARIOS MULTILINGÜES (8 IDIOMAS)
 // =============================================================================
-let currentLang = 'es';
-
 const I18N = {
   es: {
     flag: '🇪🇸', code: 'ES',
@@ -867,6 +865,29 @@ const I18N = {
     tooltip_explore: '点击任意位置以探索刻度盘'
   }
 };
+
+// =============================================================================
+// DETECCIÓN Y PERSISTENCIA DE IDIOMA EN MEMORIA LOCAL (localStorage)
+// =============================================================================
+function detectInitialLanguage() {
+  // 1. Parámetro en URL: ?lang=fr
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const urlLang = params.get('lang');
+    if (urlLang && I18N[urlLang]) return urlLang;
+  } catch (e) {}
+
+  // 2. Memoria persistente del usuario (localStorage)
+  try {
+    const saved = localStorage.getItem('nexord_lang');
+    if (saved && I18N[saved]) return saved;
+  } catch (e) {}
+
+  // 3. Idioma por defecto: Español
+  return 'es';
+}
+
+let currentLang = detectInitialLanguage();
 
 // =============================================================================
 // ARQUITECTURA DE LOS 9 SECTORES CANÓNICOS (TESLA 3-6-9)
@@ -1289,6 +1310,10 @@ window.addEventListener("click", (e) => {
 function setLanguage(lang) {
   if (!I18N[lang]) return;
   currentLang = lang;
+  try {
+    localStorage.setItem("nexord_lang", lang);
+  } catch (e) {}
+  document.documentElement.lang = lang;
   const dict = I18N[lang];
 
   document.getElementById("lang-flag").textContent = dict.flag;
@@ -1322,6 +1347,9 @@ function setLanguage(lang) {
 
   document.getElementById("lang-dropdown").classList.remove("open");
 }
+
+// Inicialización de la interfaz con el idioma guardado en memoria (localStorage) o por defecto
+setLanguage(currentLang);
 </script>
 </body>
 </html>
