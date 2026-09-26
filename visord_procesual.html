@@ -1436,6 +1436,41 @@
       box-shadow: 0 0 14px rgba(0, 255, 135, 0.6);
       transform: translateY(-1px);
     }
+  
+    /* SELECTOR DE IDIOMA HUD (Canón 4 Idiomas) */
+    .hud-lang-picker {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(4, 7, 16, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 3px 6px;
+      gap: 3px;
+      margin-left: 6px;
+      flex-shrink: 0;
+    }
+    .hud-lang-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-mono, monospace);
+      transition: all 0.2s ease;
+    }
+    .hud-lang-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .hud-lang-btn.active {
+      background: #00FF87;
+      color: #03060F;
+      font-weight: 900;
+    }
+
   </style>
 </head>
 <body>
@@ -1443,7 +1478,7 @@
   <!-- CABECERA INSTITUCIONAL MINIMALISTA -->
   <header class="app-header">
     <a href="index.html" class="brand-section">
-      <img src="LOGO_NEXORD_OFICIAL.png" alt="NEXORD Logo" class="brand-logo" onerror="this.src='LOGO_NEX_ORD_OFICIAL.png';">
+      <img src="LOGO_NEXORD_OFICIAL.png" alt="NEXORD Logo" class="brand-logo" onerror="this.src='assets/logo_nexord_base.png';">
       <div class="brand-title">
         NEXORD <span class="brand-badge">VISORD PROCESUAL</span>
         <span class="brand-sub" id="hdrCorpusCode">· CULTURAL-AA-G2-T1-C1-V10-A16-ES-5 · 25 de Septiembre de 2026</span>
@@ -1452,14 +1487,14 @@
 
     <!-- SELECTOR DE ESCENARIO / CORPUS TEXTUAL UNIVERSAL -->
     <div class="corpus-selector-group">
-      <span class="corpus-lbl">📖 GUION:</span>
+      <span class="corpus-lbl" data-i18n="lbl_script">📖 GUION:</span>
       <select id="selCorpusPreset" class="corpus-select" onchange="onSelectCorpusPreset(this.value)">
         <option value="dawes_orbell_5">🪙 Dilema Bien Común (Dawes & Orbell, N=5)</option>
         <option value="12_angry_men_8">⚖️ Jurado Deliberante / 12 Hombres en Pugna (N=8)</option>
         <option value="labor_mediation_6">🤝 Mediación Laboral / Negociación Bipartita (N=6)</option>
         <option value="socrates_trial_5">🏛️ Juicio a Sócrates / Litigio Clásico (N=5)</option>
       </select>
-      <button class="corpus-ingest-btn" onclick="openScriptIngestorModal()" title="Cargar, pegar o editar cualquier texto o guion procesual">
+      <button class="corpus-ingest-btn" onclick="openScriptIngestorModal()" title="Cargar, pegar o editar cualquier texto o guion procesual" data-i18n="btn_ingest">
         📂 CARGAR GUION PROCESUAL
       </button>
     </div>
@@ -1468,22 +1503,22 @@
     <div class="header-center-ctrl">
       <div class="mode-toggle-group">
         <button class="mode-btn active" id="btnModeRuedoFocus" onclick="setLayoutMode('ruedo-focus')" title="El Ruedo a pantalla completa majestuoso · Tablas en segundo plano">
-          🎯 FOCO RUEDO
+          <span data-i18n="btn_mode_ruedo">🎯 FOCO RUEDO</span>
         </button>
         <button class="mode-btn" id="btnModeSplit" onclick="setLayoutMode('split')" title="Ruedo a un lado + Tabla simultánea de resultados en directo al otro">
-          ⚖️ SPLIT
+          <span data-i18n="btn_mode_split">⚖️ SPLIT</span>
         </button>
         <button class="mode-btn" id="btnModeTablesFocus" onclick="setLayoutMode('tables-focus')" title="Tablas de contabilidad a pantalla completa">
-          📊 TABLAS
+          <span data-i18n="btn_mode_tables">📊 TABLAS</span>
         </button>
         <button class="mode-btn" id="btnModeRuedoWings" onclick="setLayoutMode('ruedo')" title="Ruedo con sus burladeros laterales">
-          📡 BURLADEROS
+          <span data-i18n="btn_mode_wings">📡 BURLADEROS</span>
         </button>
       </div>
 
       <!-- BOTÓN RÁPIDO PARA VER CONTABILIDAD EN SEGUNDO PLANO -->
       <button class="btn-toggle-bg-tables" id="btnToggleBgTables" onclick="toggleTelemetryDrawer()" title="Desplegar las tablas de contabilidad de segundo plano (Tecla T)">
-        <span>📊</span> <span>CONTABILIDAD (T)</span>
+        <span>📊</span> <span data-i18n="btn_accounting">CONTABILIDAD (T)</span>
       </button>
 
       <!-- SELECTOR N RÁPIDO -->
@@ -1496,19 +1531,26 @@
 
       <div class="header-autoplay-pill" id="hdrAutoPlayPill" onclick="togglePlay()" title="Control Maestro de Inicio / Pausa">
         <span class="auto-pulse-indicator" id="autoPulseIndicator"></span>
-        <span id="hdrPlayText">RADAR ACTIVO</span>
+        <span id="hdrPlayText" data-i18n="radar_active">RADAR ACTIVO</span>
       </div>
     </div>
 
     <div class="header-nav">
+      <!-- SELECTOR DE IDIOMA HUD -->
+      <div class="hud-lang-picker" role="radiogroup" aria-label="Selector de idioma">
+        <button class="hud-lang-btn active" data-lang="es" onclick="setLanguage('es')">ES</button>
+        <button class="hud-lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="hud-lang-btn" data-lang="ru" onclick="setLanguage('ru')">RU</button>
+        <button class="hud-lang-btn" data-lang="zh" onclick="setLanguage('zh')">ZH</button>
+      </div>
       <a href="radiografias_relacionales.html" class="hdr-btn" title="◀ VISORD Anterior: Radiografías Relacionales">
-        ◀ Radiografías
+        <span data-i18n="nav_radiografias">◀ Radiografías</span>
       </a>
-      <a href="recursos.html" class="hdr-btn" title="VISORD Siguiente: Recursos ▶">
-        Recursos ▶
+      <a href="recursos.html" class="hdr-btn" title="VISORD Siguiente: <span data-i18n="nav_recursos">Recursos ▶</span>">
+        <span data-i18n="nav_recursos">Recursos ▶</span>
       </a>
       <a href="index.html" class="hdr-btn" title="Ir al Portal Institucional NEXORD">
-        🏠 Portal
+        <span data-i18n="nav_portal">🏠 Portal</span>
       </a>
     </div>
   </header>
@@ -1518,7 +1560,7 @@
     <div class="tele-inner">
       <div class="tele-ctrl-group">
         <button class="tele-btn-action" id="btnTeleStart" onclick="togglePlay()" title="Iniciar / Pausar">
-          <span id="telePlayIcon">⏸</span> <span id="telePlayLabel">PAUSAR</span>
+          <span id="telePlayIcon">⏸</span> <span id="telePlayLabel" data-i18n="tele_pause">PAUSAR</span>
         </button>
         <button class="tele-btn-sub" onclick="stepPrev()" title="Turno Anterior">⏮</button>
         <button class="tele-btn-sub" onclick="stepNext()" title="Turno Siguiente">⏭</button>
@@ -1735,7 +1777,7 @@
     <div class="drawer-tab-handle" onclick="toggleTelemetryDrawer()">
       <div class="drawer-tab-left">
         <span class="drawer-pulse-dot"></span>
-        <span class="drawer-title">📊 TABLAS DE CONTABILIDAD EN SEGUNDO PLANO</span>
+        <span class="drawer-title"><span data-i18n="btn_mode_tables">📊 TABLAS</span> DE CONTABILIDAD EN SEGUNDO PLANO</span>
         <span class="drawer-stat">FONDO: <b id="drawerBoteVal">🪙 50.0 F</b></span>
         <span class="drawer-stat">CLIMA: <b id="drawerClimaVal">&lt;Ee&gt; COHESIÓN</b></span>
         <span class="drawer-stat">SDR: <b id="drawerSdrVal">0.840</b></span>
@@ -1758,7 +1800,7 @@
     <a href="radiografias_relacionales.html" class="nav-pod-btn" title="◀ Estación Anterior: Radiografías Relacionales">◀</a>
     <a href="#teleprompterLine" class="nav-pod-btn" title="Subir al Teleprompter">▲</a>
     <a href="#mainContainer" class="nav-pod-btn" title="Ir al Ruedo">▼</a>
-    <a href="recursos.html" class="nav-pod-btn" title="Estación Siguiente: Recursos ▶">▶</a>
+    <a href="recursos.html" class="nav-pod-btn" title="Estación Siguiente: <span data-i18n="nav_recursos">Recursos ▶</span>">▶</a>
   </nav>
 
   <!-- MODAL: OBSERVADOR UNIVERSAL DE TEXTOS PROCESUALES & SMART INGESTOR -->
@@ -1902,6 +1944,164 @@
     </div>
   </div>
   <script>
+
+    // =========================================================================
+    // DICCIONARIOS DE INTERNACIONALIZACIÓN (ES, EN, RU, ZH) - VISORD PROCESUAL
+    // =========================================================================
+    const I18N_PROCESUAL = {
+      es: {
+        lbl_script: "📖 GUION:",
+        btn_ingest: "📂 CARGAR GUION PROCESUAL",
+        btn_mode_ruedo: "🎯 FOCO RUEDO",
+        btn_mode_split: "⚖️ SPLIT",
+        btn_mode_tables: "📊 TABLAS",
+        btn_mode_wings: "📡 BURLADEROS",
+        btn_accounting: "CONTABILIDAD (T)",
+        radar_active: "RADAR ACTIVO",
+        radar_paused: "PAUSADO",
+        nav_radiografias: "◀ Radiografías",
+        nav_recursos: "Recursos ▶",
+        nav_portal: "🏠 Portal",
+        tele_pause: "PAUSAR",
+        tele_play: "REPRODUCIR",
+        turn_prefix: "TURNO",
+        role_inic: "⚡ DA INICIATIVA",
+        role_resp: "⚡ DA RESPUESTA",
+        role_prov: "🛡️ RC INTERPEL",
+        role_repl: "🛡️ RC RÉPLICA",
+        role_pause: "⏳ PAUSA",
+        role_torbellino: "⏳ TORBELLINO",
+        silence_lbl: "SILENCIO",
+        plenary_lbl: "PLENARIO",
+        opt_dawes: "🪙 Dilema Bien Común (Dawes & Orbell, N=5)",
+        opt_12men: "⚖️ Jurado Deliberante / 12 Hombres en Pugna (N=8)",
+        opt_labor: "🤝 Mediación Laboral / Negociación Bipartita (N=6)",
+        opt_socrates: "🏛️ Juicio a Sócrates / Litigio Clásico (N=5)"
+      },
+      en: {
+        lbl_script: "📖 SCRIPT:",
+        btn_ingest: "📂 LOAD PROCESS SCRIPT",
+        btn_mode_ruedo: "🎯 ARENA FOCUS",
+        btn_mode_split: "⚖️ SPLIT",
+        btn_mode_tables: "📊 TABLES",
+        btn_mode_wings: "📡 WINGS",
+        btn_accounting: "ACCOUNTING (T)",
+        radar_active: "ACTIVE RADAR",
+        radar_paused: "PAUSED",
+        nav_radiografias: "◀ Radiographies",
+        nav_recursos: "Resources ▶",
+        nav_portal: "🏠 Portal",
+        tele_pause: "PAUSE",
+        tele_play: "PLAY",
+        turn_prefix: "TURN",
+        role_inic: "⚡ EMITS INITIATIVE",
+        role_resp: "⚡ EMITS RESPONSE",
+        role_prov: "🛡️ RC QUESTIONED",
+        role_repl: "🛡️ RC FEEDBACK",
+        role_pause: "⏳ PAUSE",
+        role_torbellino: "⏳ WHIRLWIND",
+        silence_lbl: "SILENCE",
+        plenary_lbl: "PLENARY",
+        opt_dawes: "🪙 Commons Dilemma (Dawes & Orbell, N=5)",
+        opt_12men: "⚖️ Deliberating Jury / 12 Angry Men (N=8)",
+        opt_labor: "🤝 Labor Mediation / Bipartite Negotiation (N=6)",
+        opt_socrates: "🏛️ Trial of Socrates / Classical Litigation (N=5)"
+      },
+      ru: {
+        lbl_script: "📖 СЦЕНАРИЙ:",
+        btn_ingest: "📂 ЗАГРУЗИТЬ СЦЕНАРИЙ",
+        btn_mode_ruedo: "🎯 ФОКУС АРЕНЫ",
+        btn_mode_split: "⚖️ СЕГМЕНТ",
+        btn_mode_tables: "📊 ТАБЛИЦЫ",
+        btn_mode_wings: "📡 БОРТА",
+        btn_accounting: "БУХГАЛТЕРИЯ (T)",
+        radar_active: "АКТИВНЫЙ РАДАР",
+        radar_paused: "ПАУЗА",
+        nav_radiografias: "◀ Рентгенограммы",
+        nav_recursos: "Ресурсы ▶",
+        nav_portal: "🏠 Портал",
+        tele_pause: "ПАУЗА",
+        tele_play: "ПУСК",
+        turn_prefix: "РАУНД",
+        role_inic: "⚡ ИНИЦИАТИВА",
+        role_resp: "⚡ ОТВЕТ",
+        role_prov: "🛡️ ЗАПРОС",
+        role_repl: "🛡️ РЕПЛИКА",
+        role_pause: "⏳ ПАУЗА",
+        role_torbellino: "⏳ ВИХРЬ",
+        silence_lbl: "ТИШИНА",
+        plenary_lbl: "ПЛЕНУМ",
+        opt_dawes: "🪙 Дилемма общего блага (Dawes & Orbell, N=5)",
+        opt_12men: "⚖️ Совещание присяжных / 12 разгневанных мужчин (N=8)",
+        opt_labor: "🤝 Трудовая медиация / Переговоры (N=6)",
+        opt_socrates: "🏛️ Суд над Сократом / Классический процесс (N=5)"
+      },
+      zh: {
+        lbl_script: "📖 过程剧本：",
+        btn_ingest: "📂 载入过程剧本",
+        btn_mode_ruedo: "🎯 环形擂台聚焦",
+        btn_mode_split: "⚖️ 分屏视图",
+        btn_mode_tables: "📊 数据表格",
+        btn_mode_wings: "📡 阵营侧翼",
+        btn_accounting: "会计台账 (T)",
+        radar_active: "雷达运行中",
+        radar_paused: "已暂停",
+        nav_radiografias: "◀ 射线透视",
+        nav_recursos: "资源库 ▶",
+        nav_portal: "🏠 平台门户",
+        tele_pause: "暂停",
+        tele_play: "播放",
+        turn_prefix: "轮次",
+        role_inic: "⚡ 主动倡议",
+        role_resp: "⚡ 作出回应",
+        role_prov: "🛡️ 受到质询",
+        role_repl: "🛡️ 收到反馈",
+        role_pause: "⏳ 停顿",
+        role_torbellino: "⏳ 集体风暴",
+        silence_lbl: "沉默",
+        plenary_lbl: "全体大会",
+        opt_dawes: "🪙 公共品困境 (Dawes & Orbell, N=5)",
+        opt_12men: "⚖️ 审议陪审团 / 十二怒汉 (N=8)",
+        opt_labor: "🤝 劳资调解 / 双边谈判 (N=6)",
+        opt_socrates: "🏛️ 苏格拉底的审判 / 古典诉讼 (N=5)"
+      }
+    };
+
+    function setLanguage(lang) {
+      lang = lang || localStorage.getItem('nexord_lang') || 'es';
+      if (!I18N_PROCESUAL[lang]) lang = 'es';
+      localStorage.setItem('nexord_lang', lang);
+      document.documentElement.lang = lang;
+
+      const dict = I18N_PROCESUAL[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      document.querySelectorAll('.hud-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      // Update preset dropdown options
+      const selPreset = document.getElementById('selCorpusPreset');
+      if (selPreset) {
+        const optD = selPreset.querySelector('option[value="dawes_orbell_5"]');
+        const opt12 = selPreset.querySelector('option[value="12_angry_men_8"]');
+        const optL = selPreset.querySelector('option[value="labor_mediation_6"]');
+        const optS = selPreset.querySelector('option[value="socrates_trial_5"]');
+        if (optD) optD.textContent = dict.opt_dawes;
+        if (opt12) opt12.textContent = dict.opt_12men;
+        if (optL) optL.textContent = dict.opt_labor;
+        if (optS) optS.textContent = dict.opt_socrates;
+      }
+
+      // Re-render teleprompter turn with localized words
+      if (typeof renderTurn === 'function' && typeof currentTurnIndex === 'number') {
+        renderTurn(currentTurnIndex);
+      }
+    }
+
     /* =========================================================================
        VISORD PROCESUAL: OBSERVADOR UNIVERSAL DE TEXTOS Y DIÁLOGOS
        NÚCLEO SOCIO-TERMODINÁMICO DE OBSERVACIÓN SECUENCIAL Y TOPOLÓGICA
@@ -4444,6 +4644,11 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         play();
       }, 500);
     });
-  </script>
+  
+    // Inicialización reactiva de idioma
+    const initialLangProc = localStorage.getItem('nexord_lang') || 'es';
+    setLanguage(initialLangProc);
+
+</script>
 </body>
 </html>

@@ -411,7 +411,42 @@
       cursor: default;
     }
 
-</style>
+
+        /* Selector de Idiomas HUD */
+        .hud-lang-picker {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(0, 255, 135, 0.25);
+            border-radius: 8px;
+            padding: 3px 6px;
+        }
+        .hud-lang-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94A3B8;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .hud-lang-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .hud-lang-btn.active {
+            background: rgba(0, 255, 135, 0.18);
+            border-color: #00FF87;
+            color: #00FF87;
+            box-shadow: 0 0 8px rgba(0, 255, 135, 0.35);
+        }
+
+    </style>
 </head>
 <body id="top">
 
@@ -420,11 +455,17 @@
         <div class="brand-container">
             <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='assets/logo_nexord_base.png'" class="brand-logo">
             <div class="brand-titles">
-                <div class="brand-main">NEXORD <span>GLOSARIO</span></div>
+                <div class="brand-main" id="brand-title">NEXORD <span>GLOSARIO</span></div>
             </div>
         </div>
         <div class="header-nav-btns">
-            <button type="button" onclick="volverALlamada()" class="btn-esc-return" title="Volver a la llamada (o pulsa la tecla ESC)">
+            <div class="hud-lang-picker" aria-label="Idioma / Language">
+                <button type="button" class="hud-lang-btn active" data-lang="es" onclick="setLanguage('es')">ES</button>
+                <button type="button" class="hud-lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button type="button" class="hud-lang-btn" data-lang="ru" onclick="setLanguage('ru')">RU</button>
+                <button type="button" class="hud-lang-btn" data-lang="zh" onclick="setLanguage('zh')">ZH</button>
+            </div>
+            <button type="button" onclick="volverALlamada()" class="btn-esc-return" id="btn-esc-return" title="Volver a la llamada (o pulsa la tecla ESC)">
                 <kbd class="kbd-esc">ESC</kbd> <span>Volver a la llamada</span>
             </button>
         </div>
@@ -432,7 +473,7 @@
 
     <!-- HERO & BUSCADOR INTERACTIVO EN TIEMPO REAL -->
     <div class="search-hero">
-        <h1 class="hero-title">Glosario de Sociometría Ordinal</h1>
+        <h1 class="hero-title" id="hero-title">Glosario de Sociometría Ordinal</h1>
         <p class="hero-desc">
             Fundamentación epistemológica, algorítmica y socio-termodinámica de la plataforma <strong>NEXORD</strong> y del visualizador <strong>VISORD</strong>.
             CERN Zenodo DOI: <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" style="color:#00FF87; text-decoration:none; font-family:'Roboto Mono';">10.5281/zenodo.18941691</a>.
@@ -446,14 +487,14 @@
 
         <!-- Píldoras de Filtrado -->
         <div class="category-pills">
-            <button class="pill-btn active" data-cat="all">Todos los Términos</button>
-            <button class="pill-btn" data-cat="siglas">📋 Siglas y Abreviaturas</button>
-            <button class="pill-btn" data-cat="fundamentos">🧲 Moreno y Lewin</button>
-            <button class="pill-btn" data-cat="termodinamica">🔥 Socio-Termodinámica</button>
-            <button class="pill-btn" data-cat="topologia">💎 Topología y Q81</button>
-            <button class="pill-btn" data-cat="grassmann">📐 Geometría Grassmann</button>
-            <button class="pill-btn" data-cat="agrupamiento">📐 Agrupamiento Progresivo Q81(9,9) e Indicadores</button>
-            <button class="pill-btn" data-cat="caso">📊 Ejemplo Densidad (N=4)</button>
+            <button class="pill-btn active" data-cat="all" id="pill-all">Todos los Términos</button>
+            <button class="pill-btn" data-cat="siglas" id="pill-siglas">📋 Siglas y Abreviaturas</button>
+            <button class="pill-btn" data-cat="fundamentos" id="pill-fundamentos">🧲 Moreno y Lewin</button>
+            <button class="pill-btn" data-cat="termodinamica" id="pill-termodinamica">🔥 Socio-Termodinámica</button>
+            <button class="pill-btn" data-cat="topologia" id="pill-topologia">💎 Topología y Q81</button>
+            <button class="pill-btn" data-cat="grassmann" id="pill-grassmann">📐 Geometría Grassmann</button>
+            <button class="pill-btn" data-cat="agrupamiento" id="pill-agrupamiento">📐 Agrupamiento Progresivo Q81(9,9) e Indicadores</button>
+            <button class="pill-btn" data-cat="caso" id="pill-caso">📊 Ejemplo Densidad (N=4)</button>
         </div>
     </div>
 
@@ -462,34 +503,34 @@
 
         <!-- BANNER NORMATIVO CANÓNICO REGLA 5: DEFINICIÓN DE LAS 4 POSICIONES -->
         <div class="rule5-banner" data-category="termodinamica topologia siglas">
-            <div class="rule5-title">
+            <div class="rule5-title" id="rule5-title">
                 ⚖️ Definición de las 4 Posiciones del Tetragrama SMIb (A1, A2, A3, A4) &bull; Regla Metodológica 5
             </div>
-            <p style="font-size: 0.82rem; color: #CBD5E1; margin-bottom: 10px;">
+            <p style="font-size: 0.82rem; color: #CBD5E1; margin-bottom: 10px;" id="rule5-intro">
                 Queda formalmente blindada la interpretación conceptual matemática de las cuatro componentes en cada celda \((i, j)\):
             </p>
             <div class="rule5-grid">
                 <div class="rule5-item">
                     <div class="rule5-tag">A1 (p_DA)</div>
-                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;">
+                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;" id="rule5-a1">
                         La <strong>expectativa que el emisor (\(S_i\)) tiene de lo que hará el partner (\(S_j\))</strong>. Marcas angulares: <code>&lt;</code>, <code>¡</code>, <code>[</code>.
                     </div>
                 </div>
                 <div class="rule5-item">
                     <div class="rule5-tag">A2 (DA)</div>
-                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;">
+                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;" id="rule5-a2">
                         La <strong>preferencia efectiva que el emisor (\(S_i\)) otorga al partner (\(S_j\))</strong>. Símbolos mayúsculas: <code>E</code>, <code>¿</code>, <code>R</code>.
                     </div>
                 </div>
                 <div class="rule5-item">
                     <div class="rule5-tag">A3 (RECIBE)</div>
-                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;">
+                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;" id="rule5-a3">
                         La <strong>preferencia efectiva que el partner (\(S_j\)) otorga al emisor (\(S_i\))</strong>. Símbolos minúsculas: <code>e</code>, <code>?</code>, <code>r</code>.
                     </div>
                 </div>
                 <div class="rule5-item">
                     <div class="rule5-tag">A4 (p_RECIBE)</div>
-                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;">
+                    <div style="font-size:0.80rem; color:#E2E8F0; margin-top:3px;" id="rule5-a4">
                         La <strong>expectativa que el partner (\(S_j\)) tiene de lo que hará el emisor (\(S_i\))</strong>. Marcas angulares: <code>&gt;</code>, <code>!</code>, <code>]</code>.
                     </div>
                 </div>
@@ -499,121 +540,121 @@
         <!-- SECCIÓN 1: SIGLAS Y ABREVIATURAS -->
         <section class="glossary-section" id="sec-siglas" data-category="siglas">
             <div class="section-header">
-                <h2>📋 Tabla de Siglas y Abreviaturas Teóricas</h2>
-                <span class="sec-badge">NEXORD 2026</span>
+                <h2 id="sec-siglas-title">📋 Tabla de Siglas y Abreviaturas Teóricas</h2>
+                <span class="sec-badge" id="sec-siglas-badge">NEXORD 2026</span>
             </div>
             <div class="table-responsive">
                 <table class="siglas-table" id="table-siglas">
                     <thead>
                         <tr>
-                            <th style="width: 14%;">Sigla</th>
-                            <th style="width: 32%;">Identificador Completo</th>
-                            <th style="width: 54%;">Definición Conceptual y Procedimental</th>
+                            <th style="width: 14%;" id="th-sigla">Sigla</th>
+                            <th style="width: 32%;" id="th-name">Identificador Completo</th>
+                            <th style="width: 54%;" id="th-desc">Definición Conceptual y Procedimental</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+<tr>
                             <td class="sigla-code">TAG</td>
-                            <td>Técnicas de Análisis Grupal</td>
-                            <td>Conjunto integrado de instrumentos psicométricos, estadísticos y socio-espaciales de evaluación de dinámicas en colectivos humanos (Cornejo, 1988).</td>
+                            <td id="sigla-name-0">Técnicas de Análisis Grupal</td>
+                            <td id="sigla-desc-0">Conjunto integrado de instrumentos psicométricos, estadísticos y socio-espaciales de evaluación de dinámicas en colectivos humanos (Cornejo, 1988).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">SMIa</td>
-                            <td>Sociomatriz Integrada Abstraída / Ampliada</td>
-                            <td>Reflejo categórico sin ponderación de ranking de la matriz SMIb, donde cada vínculo se traduce en una de las 81 figuras relacionales del tensor \(Q_{81}\).</td>
+                            <td id="sigla-name-1">Sociomatriz Integrada Abstraída / Ampliada</td>
+                            <td id="sigla-desc-1">Reflejo categórico sin ponderación de ranking de la matriz SMIb, donde cada vínculo se traduce en una de las 81 figuras relacionales del tensor \(Q_{81}\).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">SMIb</td>
-                            <td>Sociomatriz Integrada Bipolar (4 Vías)</td>
-                            <td>Estructura matricial \(N 	imes N\) fundamental de NEXORD que reúne en cada casilla el orden de elección jerárquico y las 4 posiciones (\(A_1, A_2, A_3, A_4\)).</td>
+                            <td id="sigla-name-2">Sociomatriz Integrada Bipolar (4 Vías)</td>
+                            <td id="sigla-desc-2">Estructura matricial \(N 	imes N\) fundamental de NEXORD que reúne en cada casilla el orden de elección jerárquico y las 4 posiciones (\(A_1, A_2, A_3, A_4\)).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">BDR</td>
-                            <td>Densidad Relacional Absoluta (Inercia Total)</td>
-                            <td>Inercia o carga bruta de actividad consumida en el sistema: \(BDR_i = \sum_{j 
+                            <td id="sigla-name-3">Densidad Relacional Absoluta (Inercia Total)</td>
+                            <td id="sigla-desc-3">Inercia o carga bruta de actividad consumida en el sistema: \(BDR_i = \sum_{j 
 e i} (|A_1| + |A_2| + |A_3| + |A_4|)\), en rango \([0.0, 4(N-1)]\).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">SDR</td>
-                            <td>Densidad Relacional Relativa Neta</td>
-                            <td>Tensión estructural neta normalizada: \(SDR_i = rac{SDA_i + SRC_i}{	ext{Máximo Teórico}} \in [-1.0, +1.0]\). Mide el saldo neto entre atracción y marginación.</td>
+                            <td id="sigla-name-4">Densidad Relacional Relativa Neta</td>
+                            <td id="sigla-desc-4">Tensión estructural neta normalizada: \(SDR_i = rac{SDA_i + SRC_i}{	ext{Máximo Teórico}} \in [-1.0, +1.0]\). Mide el saldo neto entre atracción y marginación.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">SDA</td>
-                            <td>Densidad Relacional Emitida (Dada)</td>
-                            <td>Volumen total de energía relacional relativa que el emisor declara hacia el colectivo (\(A_1 + A_2\)) modulado por los pesos jerárquicos de rango.</td>
+                            <td id="sigla-name-5">Densidad Relacional Emitida (Dada)</td>
+                            <td id="sigla-desc-5">Volumen total de energía relacional relativa que el emisor declara hacia el colectivo (\(A_1 + A_2\)) modulado por los pesos jerárquicos de rango.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">SRC</td>
-                            <td>Densidad Relacional Recibida</td>
-                            <td>Volumen total de energía relacional que el sujeto recibe del grupo (\(A_3 + A_4\)) modulado por el estatus de los electores.</td>
+                            <td id="sigla-name-6">Densidad Relacional Recibida</td>
+                            <td id="sigla-desc-6">Volumen total de energía relacional que el sujeto recibe del grupo (\(A_3 + A_4\)) modulado por el estatus de los electores.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">BDA / BRC</td>
-                            <td>Densidades Absolutas Emitida y Recibida</td>
-                            <td>Magnitudes escalares brutas de actividad emitida (\(BDA = |A_1| + |A_2|\)) y recibida (\(BRC = |A_3| + |A_4|\)), independientes del signo.</td>
+                            <td id="sigla-name-7">Densidades Absolutas Emitida y Recibida</td>
+                            <td id="sigla-desc-7">Magnitudes escalares brutas de actividad emitida (\(BDA = |A_1| + |A_2|\)) y recibida (\(BRC = |A_3| + |A_4|\)), independientes del signo.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">\(\mathcal{S}_i\)</td>
-                            <td>Entropía Socio-Termodinámica</td>
-                            <td>Métrica de fricción y disipación por fuerzas cruzadas contrapuestas: \(\mathcal{S}_i = \frac{BDR_i - |SDA_i + SRC_i|}{BDR_i} \in [0.0, 1.0]\).</td>
+                            <td id="sigla-name-8">Entropía Socio-Termodinámica</td>
+                            <td id="sigla-desc-8">Métrica de fricción y disipación por fuerzas cruzadas contrapuestas: \(\mathcal{S}_i = \frac{BDR_i - |SDA_i + SRC_i|}{BDR_i} \in [0.0, 1.0]\).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">IEE</td>
-                            <td>Índice de Energía Estructural</td>
-                            <td>Densidad relacional ponderada tensorial que combina el estatus del emisor, el rango jerárquico y la figura diádica \(Q_{81}\).</td>
+                            <td id="sigla-name-9">Índice de Energía Estructural</td>
+                            <td id="sigla-desc-9">Densidad relacional ponderada tensorial que combina el estatus del emisor, el rango jerárquico y la figura diádica \(Q_{81}\).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">Q₈₁</td>
-                            <td>Catálogo de las 81 Figuras Diádicas</td>
-                            <td>Espacio producto cartesiano \(3 \times 3 \times 3 \times 3\) que clasifica exhaustivamente todas las posibles configuraciones relacionales de 4 vías.</td>
+                            <td id="sigla-name-10">Catálogo de las 81 Figuras Diádicas</td>
+                            <td id="sigla-desc-10">Espacio producto cartesiano \(3 \times 3 \times 3 \times 3\) que clasifica exhaustivamente todas las posibles configuraciones relacionales de 4 vías.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">aE / oE</td>
-                            <td>Aceptación y Ostracismo Esperado</td>
-                            <td>Umbrales sintéticos de frontera en formato BREVE que fijan el límite de atracción esperada (\(1^\circ \dots aE\)) y de marginación esperada (\((N-oE)^\circ \dots N-1\)).</td>
+                            <td id="sigla-name-11">Aceptación y Ostracismo Esperado</td>
+                            <td id="sigla-desc-11">Umbrales sintéticos de frontera en formato BREVE que fijan el límite de atracción esperada (\(1^\circ \dots aE\)) y de marginación esperada (\((N-oE)^\circ \dots N-1\)).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">ISV</td>
-                            <td>Índice de Silencio e Invisibilidad</td>
-                            <td>Disonancia agencial y tasa de omisión/silencio sufrido: proporción de respuestas neutras o nulas (\('0'\)) recibidas en relación con las emitidas.</td>
+                            <td id="sigla-name-12">Índice de Silencio e Invisibilidad</td>
+                            <td id="sigla-desc-12">Disonancia agencial y tasa de omisión/silencio sufrido: proporción de respuestas neutras o nulas (\('0'\)) recibidas en relación con las emitidas.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">IIR</td>
-                            <td>Inconsistencia Relacional</td>
-                            <td>Varianza poblacional de las nominaciones recibidas por un sujeto, indicativa de liderazgos disputados o ambivalencia grupal.</td>
+                            <td id="sigla-name-13">Inconsistencia Relacional</td>
+                            <td id="sigla-desc-13">Varianza poblacional de las nominaciones recibidas por un sujeto, indicativa de liderazgos disputados o ambivalencia grupal.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">Gr(k, N)</td>
-                            <td>Variedad de Grassmann (Grassmannian)</td>
-                            <td>Variedad diferencial donde cada punto representa un subespacio de dimensión \(k\) inmerso en un espacio euclídeo de dimensión \(N\).</td>
+                            <td id="sigla-name-14">Variedad de Grassmann (Grassmannian)</td>
+                            <td id="sigla-desc-14">Variedad diferencial donde cada punto representa un subespacio de dimensión \(k\) inmerso en un espacio euclídeo de dimensión \(N\).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">d<sub>G</sub></td>
-                            <td>Distancia Geodésica de Grassmann</td>
-                            <td>Medida topológica del ángulo geodésico \(\theta = \arccos(\langle U_{T1}, U_{T2} \rangle)\) entre los subespacios de dos colectivos o tiempos.</td>
+                            <td id="sigla-name-15">Distancia Geodésica de Grassmann</td>
+                            <td id="sigla-desc-15">Medida topológica del ángulo geodésico \(\theta = \arccos(\langle U_{T1}, U_{T2} \rangle)\) entre los subespacios de dos colectivos o tiempos.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">AFC / PCA</td>
-                            <td>Análisis Factorial de Correspondencias / Componentes</td>
-                            <td>Métodos multivariantes de compresión espacial (Benzécri, 1973; Pearson, 1901) que proyectan las distancias chi-cuadrado y euclídeas de la red.</td>
+                            <td id="sigla-name-16">Análisis Factorial de Correspondencias / Componentes</td>
+                            <td id="sigla-desc-16">Métodos multivariantes de compresión espacial (Benzécri, 1973; Pearson, 1901) que proyectan las distancias chi-cuadrado y euclídeas de la red.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">AAG</td>
-                            <td>Análisis de la Actividad Grupal</td>
-                            <td>Diferencial semántico de 16 adjetivos bipolares en 4 factores: Temático, Funcional, Cognitivo y Afectivo (Munné; Vicente & Cornejo, 1998).</td>
+                            <td id="sigla-name-17">Análisis de la Actividad Grupal</td>
+                            <td id="sigla-desc-17">Diferencial semántico de 16 adjetivos bipolares en 4 factores: Temático, Funcional, Cognitivo y Afectivo (Munné; Vicente & Cornejo, 1998).</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">VAR</td>
-                            <td>Variables Socio-Demográficas / Disposicionales</td>
-                            <td>10 variables de caracterización cualitativa/ordinal de los sujetos: edad, estatus, rigidez, respeto normativo, empatía, racionalidad, etc.</td>
+                            <td id="sigla-name-18">Variables Socio-Demográficas / Disposicionales</td>
+                            <td id="sigla-desc-18">10 variables de caracterización cualitativa/ordinal de los sujetos: edad, estatus, rigidez, respeto normativo, empatía, racionalidad, etc.</td>
                         </tr>
-                        <tr>
+<tr>
                             <td class="sigla-code">IPA / SYMLOG</td>
-                            <td>Observación Sistemática de Bales</td>
-                            <td>Sistemas clásicos de codificación del proceso interactivo (Bales, 1950) y campo tridimensional Up-Down, Positive-Negative, Forward-Backward (1979).</td>
+                            <td id="sigla-name-19">Observación Sistemática de Bales</td>
+                            <td id="sigla-desc-19">Sistemas clásicos de codificación del proceso interactivo (Bales, 1950) y campo tridimensional Up-Down, Positive-Negative, Forward-Backward (1979).</td>
                         </tr>
-                    </tbody>
+</tbody>
                 </table>
             </div>
         </section>
@@ -621,44 +662,44 @@ e i} (|A_1| + |A_2| + |A_3| + |A_4|)\), en rango \([0.0, 4(N-1)]\).</td>
         <!-- SECCIÓN 2: MORENO Y LEWIN (FUNDAMENTOS) -->
         <section class="glossary-section" id="sec-fundamentos" data-category="fundamentos">
             <div class="section-header">
-                <h2>🧲 Fundamentos de Sociometría y Teoría de Campo</h2>
-                <span class="sec-badge">Moreno & Lewin</span>
+                <h2 id="sec-fund-title">🧲 Fundamentos de Sociometría y Teoría de Campo</h2>
+                <span class="sec-badge" id="sec-fund-badge">Moreno & Lewin</span>
             </div>
             <div class="term-grid">
-                <div class="term-card">
-                    <div class="term-title">Sociometría Clásica <span class="term-author">J. L. Moreno (1934)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-0">
+                    <div class="term-title" id="term-title-0">Sociometría Clásica <span class="term-author">J. L. Moreno (1934)</span></div>
+                    <div class="term-body" id="term-body-0">
                         Investigación matemática de la evolución y estructura interna de los grupos humanos a través de la cuantificación de las fuerzas de atracción y repulsión afectiva. Moreno postuló que los grupos no son meros agregados de individuos, sino redes socioafectivas interdependientes estructuradas por corrientes de simpatía y rechazo.
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Sociatría <span class="term-author">J. L. Moreno (1934)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-1">
+                    <div class="term-title" id="term-title-1">Sociatría <span class="term-author">J. L. Moreno (1934)</span></div>
+                    <div class="term-body" id="term-body-1">
                         La vertiente terapéutica y reparadora de la sociometría («la medicina de la sociedad»). Mientras la sociometría mide y diagnostica el tejido social, la sociatría constituye la praxis clínica orientada a reorganizar, sanar y dinamizar los vínculos hacia estructuras más funcionales y satisfactorias.
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Tele y Átomo Social <span class="term-author">J. L. Moreno (1934)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-2">
+                    <div class="term-title" id="term-title-2">Tele y Átomo Social <span class="term-author">J. L. Moreno (1934)</span></div>
+                    <div class="term-body" id="term-body-2">
                         El <strong>Tele</strong> es la unidad elemental de empatía y reciprocidad afectiva bidireccional (positiva o negativa) que une a dos personas. El <strong>Átomo Social</strong> es la constelación sociométrica mínima: el individuo junto con el núcleo de todas las personas significativas con quienes sostiene intercambios de tele.
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Teoría del Campo <span class="term-author">Kurt Lewin (1936, 1951)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-3">
+                    <div class="term-title" id="term-title-3">Teoría del Campo <span class="term-author">Kurt Lewin (1936, 1951)</span></div>
+                    <div class="term-body" id="term-body-3">
                         Principio paradigmático que sostiene que la conducta (\(C\)) es función del campo dinámico total que opera en el instante presente: \(C = f(P, A)\), donde \(P\) es la persona y \(A\) es su ambiente psicológico. Todo comportamiento obedece a un equilibrio dinámico de vectores en tensión.
                     </div>
                     <div class="term-formula">\(C = f(P, A)\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Espacio Vital y Locomoción <span class="term-author">Kurt Lewin (1936)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-4">
+                    <div class="term-title" id="term-title-4">Espacio Vital y Locomoción <span class="term-author">Kurt Lewin (1936)</span></div>
+                    <div class="term-body" id="term-body-4">
                         El <strong>Espacio Vital</strong> es la totalidad de factores psicológicos, físicos y sociales que determinan la conducta en un momento dado. La <strong>Locomoción</strong> es el desplazamiento que efectúa el individuo o el grupo a través de las regiones de su espacio vital para acercarse a valencias positivas o huir de valencias negativas.
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Equilibrio Cuasi-Estacionario <span class="term-author">Kurt Lewin (1947)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-5">
+                    <div class="term-title" id="term-title-5">Equilibrio Cuasi-Estacionario <span class="term-author">Kurt Lewin (1947)</span></div>
+                    <div class="term-body" id="term-body-5">
                         Concepción de los hábitos y normas del grupo como un estado estacionario dinámico, comparable al flujo de un río donde las fuerzas impulsoras (atracción) y las fuerzas restrictivas (fricción, barreras) se cancelan mutuamente. La intervención requiere tres fases: <em>Descongelar</em>, <em>Mover</em> y <em>Recongelar</em>.
                     </div>
                 </div>
@@ -668,13 +709,13 @@ e i} (|A_1| + |A_2| + |A_3| + |A_4|)\), en rango \([0.0, 4(N-1)]\).</td>
         <!-- SECCIÓN 3: SOCIO-TERMODINÁMICA -->
         <section class="glossary-section" id="sec-termodinamica" data-category="termodinamica">
             <div class="section-header">
-                <h2>🔥 Socio-Termodinámica Grupal (BDR, SDR, Entropía)</h2>
-                <span class="sec-badge">NEXORD Engine</span>
+                <h2 id="sec-term-title">🔥 Socio-Termodinámica Grupal (BDR, SDR, Entropía)</h2>
+                <span class="sec-badge" id="sec-term-badge">NEXORD Engine</span>
             </div>
             <div class="term-grid">
-                <div class="term-card">
-                    <div class="term-title">Densidad Relacional Absoluta (BDR) <span class="term-author">NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-6">
+                    <div class="term-title" id="term-title-6">Densidad Relacional Absoluta (BDR) <span class="term-author">NEXORD</span></div>
+                    <div class="term-body" id="term-body-6">
                         Energía o masa escalar total invertida en el sistema relacional, sumando los módulos de todos los vectores sin considerar el signo:
                         \(BDR_i = \sum_{j 
 e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
@@ -682,37 +723,37 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                     </div>
                     <div class="term-formula">\(BDR_i \in [0.0, 4(N-1)]\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Densidad Relacional Relativa Neta (SDR) <span class="term-author">NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-7">
+                    <div class="term-title" id="term-title-7">Densidad Relacional Relativa Neta (SDR) <span class="term-author">NEXORD</span></div>
+                    <div class="term-body" id="term-body-7">
                         Tensión estructural neta del nodo calculada como la diferencia entre la suma neta de densidades emitidas y recibidas (\(SDA_i + SRC_i\)) dividida por el máximo teórico del grupo. Varía estrictamente en \([-1.0, +1.0]\). Valores positivos denotan integración armónica; negativos indican marginación acumulada.
                     </div>
                     <div class="term-formula">\(SDR_i = rac{SDA_i + SRC_i}{	ext{Máximo Teórico}} \in [-1.0, +1.0]\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Entropía Socio-Termodinámica (\(\mathcal{S}_i\)) <span class="term-author">NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-8">
+                    <div class="term-title" id="term-title-8">Entropía Socio-Termodinámica (\(\mathcal{S}_i\)) <span class="term-author">NEXORD</span></div>
+                    <div class="term-body" id="term-body-8">
                         Métrica de disipación de energía y fricción relacional producida por la presencia simultánea de vectores contrapuestos (ambivalencia de atracción y marginación cruzada).
                         Varía entre 0.0 (entropía nula, consenso armónico) y 1.0 (caos disipativo total, neutralización de vectores).
                     </div>
                     <div class="term-formula">\(\mathcal{S}_i = rac{BDR_i - |SDA_i + SRC_i|}{BDR_i} \in [0.0, 1.0]\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Ley de Conservación de Masa Relacional <span class="term-author">NEXORD Doctrinal</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-9">
+                    <div class="term-title" id="term-title-9">Ley de Conservación de Masa Relacional <span class="term-author">NEXORD Doctrinal</span></div>
+                    <div class="term-body" id="term-body-9">
                         Principio termodinámico demostrado empíricamente en diseños ordinales estandarizados: cuando dos grupos operan bajo idéntico protocolo de saturación ordinal, la densidad absoluta media (\( ar{BDR}\)) se conserva invariante (ej. \( ar{BDR} = 8.00\)), mientras que la densidad relativa (\( ar{SDR}\)) y la entropía (\(\mathcal{S}\)) reflejan las divergencias estructurales.
                     </div>
                     <div class="term-note">💡 Verificado empíricamente en estudios experimentales de validación (\(\bar{BDR}_{G1} = 8.00 = \bar{BDR}_{G2}\)).</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Cismogénesis Relacional <span class="term-author">G. Bateson / NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-10">
+                    <div class="term-title" id="term-title-10">Cismogénesis Relacional <span class="term-author">G. Bateson / NEXORD</span></div>
+                    <div class="term-body" id="term-body-10">
                         Proceso de fisura estructural y polarización en subgrupos o facciones disjuntas debido al incremento de la frustración sistémica y la ruptura de los lazos de sintonía diádica, observable mediante la reducción del segundo valor propio laplaciano (\(\lambda_2\), conectividad algebraica de Fiedler).
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Frustración Estructural de Heider (\(\lambda_1\)) <span class="term-author">F. Heider / NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-11">
+                    <div class="term-title" id="term-title-11">Frustración Estructural de Heider (\(\lambda_1\)) <span class="term-author">F. Heider / NEXORD</span></div>
+                    <div class="term-body" id="term-body-11">
                         Medida espectral de la disonancia cognitiva triádica basada en el primer autovalor del Laplaciano con signo (\(L_{	ext{signed}}\)). Cuantifica la desviación del colectivo respecto a la teoría del equilibrio estructural («el amigo de mi amigo es mi amigo; el enemigo de mi enemigo es mi amigo»).
                     </div>
                 </div>
@@ -722,33 +763,33 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
         <!-- SECCIÓN 4: TOPOLOGÍA Y TENSOR Q81 -->
         <section class="glossary-section" id="sec-topologia" data-category="topologia">
             <div class="section-header">
-                <h2>💎 Topología Relacional y Espacio Q81</h2>
-                <span class="sec-badge">Tensor Quatuor</span>
+                <h2 id="sec-topo-title">💎 Topología Relacional y Espacio Q81</h2>
+                <span class="sec-badge" id="sec-topo-badge">Tensor Quatuor</span>
             </div>
             <div class="term-grid">
-                <div class="term-card">
-                    <div class="term-title">Tensor de 81 Figuras (Q81) <span class="term-author">NEXORD Quatuor</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-12">
+                    <div class="term-title" id="term-title-12">Tensor de 81 Figuras (Q81) <span class="term-author">NEXORD Quatuor</span></div>
+                    <div class="term-body" id="term-body-12">
                         Matriz cartesiana tetradimensional \(3 	imes 3 	imes 3 	imes 3\) que agota formalmente las 81 combinaciones de interacción sociométrica posible para cada par diádico (\(S_i \leftrightarrow S_j\)). Cada figura describe la convergencia de la expectativa emitida, preferencia emitida, preferencia recibida y expectativa recibida.
                     </div>
                     <div class="term-formula">\(Q_{81} \in \{1, 2, \dots, 81\} \equiv \{-, 0, +\}^4\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Las 9 Macro-Zonas Afectivas <span class="term-author">NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-13">
+                    <div class="term-title" id="term-title-13">Las 9 Macro-Zonas Afectivas <span class="term-author">NEXORD</span></div>
+                    <div class="term-body" id="term-body-13">
                         Agrupación de las 81 especies en 9 cuadrantes diádicos según la preferencia emitida (\(A_2\)) y recibida (\(A_3\)):
                         <strong>Ee</strong> (Elección mutua), <strong>E?</strong> (Elección hacia indiferencia), <strong>Er</strong> (Oposición/conflicto), <strong>¿e</strong> (Indiferencia hacia elección), <strong>¿?</strong> (Indiferencia mutua), <strong>¿r</strong> (Indiferencia hacia rechazo), <strong>Re</strong> (Rechazo hacia elección), <strong>R?</strong> (Rechazo hacia indiferencia) y <strong>Rr</strong> (Rechazo mutuo).
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">SMIb frente a SMIa <span class="term-author">Arquitectura NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-14">
+                    <div class="term-title" id="term-title-14">SMIb frente a SMIa <span class="term-author">Arquitectura NEXORD</span></div>
+                    <div class="term-body" id="term-body-14">
                         La <strong>SMIb</strong> conserva el orden jerárquico fino (\(1^\circ, 2^\circ, 3^\circ\)) de elección/rechazo en formato textual tetragrámico (ej. <code>&lt;E1e2&gt;</code>). La <strong>SMIa</strong> es la abstracción categórica pura que prescinde de los números de orden para proyectar directamente la figura en \(Q_{81}\) (ej. <code>&lt;Ee&gt;</code>, Figura 81).
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Formato MORENO vs Formato BREVE <span class="term-author">NEXORD Metodología</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-15">
+                    <div class="term-title" id="term-title-15">Formato MORENO vs Formato BREVE <span class="term-author">NEXORD Metodología</span></div>
+                    <div class="term-body" id="term-body-15">
                         <strong>MORENO:</strong> Preguntas acotadas de nominación (\(k\) elecciones, \(m\) marginaciones) basadas en meta-percepción dual.
                         <strong>BREVE:</strong> Un único ítem de ordenamiento continuo completo de todo el grupo (\(1^\circ \dots N-1\)) sin citar marginaciones, preservando la ética del clima grupal mediante deducción matemática de colas inferiores.
                     </div>
@@ -759,27 +800,27 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
         <!-- SECCIÓN 5: GEOMETRÍA DE GRASSMANN -->
         <section class="glossary-section" id="sec-grassmann" data-category="grassmann">
             <div class="section-header">
-                <h2>📐 Geometría Diferencial de Grassmann Gr(k, N)</h2>
-                <span class="sec-badge">Hermann Grassmann (1844)</span>
+                <h2 id="sec-grass-title">📐 Geometría Diferencial de Grassmann Gr(k, N)</h2>
+                <span class="sec-badge" id="sec-grass-badge">Hermann Grassmann (1844)</span>
             </div>
             <div class="term-grid">
-                <div class="term-card">
-                    <div class="term-title">Variedad de Grassmann Gr(k, N) <span class="term-author">H. Grassmann (1844)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-16">
+                    <div class="term-title" id="term-title-16">Variedad de Grassmann Gr(k, N) <span class="term-author">H. Grassmann (1844)</span></div>
+                    <div class="term-body" id="term-body-16">
                         Espacio topológico suave en el que cada punto no es una coordenada escalar o vectorial, sino un <em>subespacio lineal completo de dimensión \(k\)</em> inmerso en \(\mathbb{R}^N\). En NEXORD, la estructura factorial de un colectivo (\(G_1\) o \(G_2\)) se modela como un plano bidimensional en \(Gr(2, 5)\).
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Distancia Geodésica de Grassmann (d<sub>G</sub>) <span class="term-author">Geometría Diferencial</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-17">
+                    <div class="term-title" id="term-title-17">Distancia Geodésica de Grassmann (d<sub>G</sub>) <span class="term-author">Geometría Diferencial</span></div>
+                    <div class="term-body" id="term-body-17">
                         Métrica invariante del ángulo geodésico mínimo entre dos subespacios relacionales:
                         \(d_G(U, V) = \sqrt{\sum_{i=1}^k \theta_i^2}\), donde \(\theta_i\) son los ángulos principales. En estudios de validación empírica, \(d_G = 1.455\text{ rad } (83.37^\circ)\), evidenciando la cuasi-ortogonalidad entre el plano armónico de G1 y el plano fracturado de G2.
                     </div>
                     <div class="term-formula">\(d_G(U, V) = \sqrt{\theta_1^2 + \theta_2^2} = 1.455\text{ rad } (83.37^\circ)\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Difracción Espectral <span class="term-author">NEXORD</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-18">
+                    <div class="term-title" id="term-title-18">Difracción Espectral <span class="term-author">NEXORD</span></div>
+                    <div class="term-body" id="term-body-18">
                         Descomposición del tensor sociométrico bruto al proyectarlo mediante el agrupamiento progresivo de las matrices Q81(9, 9) de densidad relacional, revelando la estructura de armónicos, la conectividad y las zonas de sombra vincular.
                     </div>
                 </div>
@@ -789,67 +830,67 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                 <!-- SECCIÓN 6: AGRUPAMIENTO PROGRESIVO DE MATRICES Q81(9, 9) E INDICADORES DE RED -->
         <section class="glossary-section" id="sec-agrupamiento" data-category="agrupamiento">
             <div class="section-header">
-                <h2>📐 Agrupamiento Progresivo de las Matrices Q81(9, 9) de Densidad Relacional</h2>
-                <span class="sec-badge">Reducción Multiescala</span>
+                <h2 id="sec-agrup-title">📐 Agrupamiento Progresivo de las Matrices Q81(9, 9) de Densidad Relacional</h2>
+                <span class="sec-badge" id="sec-agrup-badge">Reducción Multiescala</span>
             </div>
             <div class="term-grid">
-                <div class="term-card">
-                    <div class="term-title">Matriz Canónica Q81(9, 9) <span class="term-author">Estructura Tensorial</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-19">
+                    <div class="term-title" id="term-title-19">Matriz Canónica Q81(9, 9) <span class="term-author">Estructura Tensorial</span></div>
+                    <div class="term-body" id="term-body-19">
                         Estructura tensorial cuadrada de \(9 \times 9 = 81\) figuras diádicas generada por el producto de las 9 modalidades de emisión (filas) y las 9 de recepción (columnas). Integra expectativas socio-cognitivas y preferencias efectivas en un único movimiento organísmico-relacional indivisible.
                     </div>
                     <div class="term-formula">\(Q_{81}(i, j) = \mathbf{A_1 A_2 A_3 A_4} \in \mathcal{M}_{9 \times 9}\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Retículas Duales Q81a vs. Q81b <span class="term-author">Cambio Ortogonal de Base</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-20">
+                    <div class="term-title" id="term-title-20">Retículas Duales Q81a vs. Q81b <span class="term-author">Cambio Ortogonal de Base</span></div>
+                    <div class="term-body" id="term-body-20">
                         Dos factorizaciones según el índice rector: <strong>Q81a (Primacía Conductual)</strong> agrupa en macro por acción efectiva (\(E, ¿, R\)) y en micro por expectativa (\(&lt;, ¡, [\)). <strong>Q81b (Primacía Cognitiva)</strong> agrupa en macro por expectativa (\(&lt;, ¡, [\)) y en micro por acción (\(E, ¿, R\)).
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Reducción Micro 9 <span class="term-author">Modalidades de Acción DA</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-21">
+                    <div class="term-title" id="term-title-21">Reducción Micro 9 <span class="term-author">Modalidades de Acción DA</span></div>
+                    <div class="term-body" id="term-body-21">
                         Condensación de las 81 celdas en las 9 modalidades de acción diádica del emisor (\(\langle E, \text{¡}E, [E, \langle ¿, \text{¡}¿, [¿, \langle R, \text{¡}R, [R\)), conjugando la expectativa cognitiva (\(A_1\)) con la preferencia efectiva emitida (\(A_2\)). Preserva la masa de \(N(N-1)\) díadas.
                     </div>
                     <div class="term-formula">\(\mathbf{V}_9 = \big[ \text{Elección (+)} \mid \text{Indiferencia (0)} \mid \text{Rechazo (-)} \big] \in \mathbb{R}^9\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Descriptores Meso 6 (Q6a) <span class="term-author">Emisión y Recepción</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-22">
+                    <div class="term-title" id="term-title-22">Descriptores Meso 6 (Q6a) <span class="term-author">Emisión y Recepción</span></div>
+                    <div class="term-body" id="term-body-22">
                         Descriptores fundamentales de acción afectivo-efectiva divididos en 3 polos de emisión (\(A_2 = E, ¿, R\)) y 3 polos de recepción (\(A_3 = e, ?, r\)). Cada bloque conserva exactamente las \(N(N-1)\) díadas censadas del colectivo.
                     </div>
                     <div class="term-formula">\(\mathbf{V}_6 = \big[ E, ¿, R \mid e, ?, r \big] \in \mathbb{R}^6\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Cuencas Macro 3 <span class="term-author">Valencias Molares Triádicas</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-23">
+                    <div class="term-title" id="term-title-23">Cuencas Macro 3 <span class="term-author">Valencias Molares Triádicas</span></div>
+                    <div class="term-body" id="term-body-23">
                         Las 3 grandes cuencas polares gravitatorias del campo socio-afectivo: <strong>(+) Elección / Cohesión</strong> (\(\langle Ee \rangle\)), <strong>(0) Indiferencia / Neutralidad</strong> (\(\text{¡}¿?\text{!}\)) y <strong>(-) Rechazo / Fricción</strong> (\([Rr]\)). Constituyen el fundamento molar del saldo relacional \(SDR\).
                     </div>
                     <div class="term-formula">\(\mathbf{V}_3 = \big[ (+) \text{ Elección} \mid (0) \text{ Indiferencia} \mid (-) \text{ Rechazo} \big]\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Invarianza Baricéntrica de la Pirámide <span class="term-author">Teorema de Conservación</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-24">
+                    <div class="term-title" id="term-title-24">Invarianza Baricéntrica de la Pirámide <span class="term-author">Teorema de Conservación</span></div>
+                    <div class="term-body" id="term-body-24">
                         Principio según el cual la masa diádica total (\(N(N-1)\) vínculos) y los baricentros de potencial socio-térmico (\(BDR, SDR, BDA, BRC\)) permanecen estrictamente invariantes e idénticos a través de los 4 niveles de condensación (\(81 \to 9 \to 6 \to 3\)), garantizando diagnósticos libres de sesgo de escala.
                     </div>
                     <div class="term-formula">\(BDR(81) \equiv BDR(9) \equiv BDR(6) \equiv BDR(3) = \frac{1}{N(N-1)}\sum |W_{ij}|\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Marco Cuadrado Óptimo (Auto-Frame) <span class="term-author">Ergonomía Zero-Scroll</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-25">
+                    <div class="term-title" id="term-title-25">Marco Cuadrado Óptimo (Auto-Frame) <span class="term-author">Ergonomía Zero-Scroll</span></div>
+                    <div class="term-body" id="term-body-25">
                         Arquitectura de visualización que adapta automáticamente la sociomatriz a un marco cuadrado delimitado (\(\le 600\text{px}\)) cuando el grupo excede el umbral (\(N \ge 8\)) o en vista de 9 columnas, blindando siempre \(\ge 250\text{px}\) y paso \(\ge 45\text{px/estación}\) para el Pentagrama 10D inferior.
                     </div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Índice Bonacich de Estatus (K<sub>INF</sub>) <span class="term-author">P. Bonacich (1987)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-26">
+                    <div class="term-title" id="term-title-26">Índice Bonacich de Estatus (K<sub>INF</sub>) <span class="term-author">P. Bonacich (1987)</span></div>
+                    <div class="term-body" id="term-body-26">
                         Centralidad de autovector recursiva donde el prestigio de un nodo no depende sólo de la cantidad de elecciones recibidas, sino del estatus de quienes lo eligen («ser elegido por los elegidos»).
                     </div>
                     <div class="term-formula">\(c(\alpha, \beta) = \alpha (I - \beta A)^{-1} A \mathbf{1}\)</div>
                 </div>
-                <div class="term-card">
-                    <div class="term-title">Significación Binomial (SIG_B) <span class="term-author">U. Bronfenbrenner (1943)</span></div>
-                    <div class="term-body">
+                <div class="term-card" id="term-card-27">
+                    <div class="term-title" id="term-title-27">Significación Binomial (SIG_B) <span class="term-author">U. Bronfenbrenner (1943)</span></div>
+                    <div class="term-body" id="term-body-27">
                         Contraste probabilístico exacto basado en la distribución binomial/Poisson para verificar si la condición de «estrella sociométrica» o «sujeto rechazado» excede el azar (\(p < 0.05\)).
                     </div>
                 </div>
@@ -859,22 +900,22 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
         <!-- SECCIÓN 7: EJEMPLO DE DENSIDAD RELACIONAL (N=4) -->
         <section class="glossary-section" id="sec-caso" data-category="caso">
             <div class="section-header">
-                <h2>📊 Ejemplo de Densidad Relacional en un grupo de 4 miembros</h2>
-                <span class="sec-badge">Caso N=4</span>
+                <h2 id="sec-caso-title">📊 Ejemplo de Densidad Relacional en un grupo de 4 miembros</h2>
+                <span class="sec-badge" id="sec-caso-badge">Caso N=4</span>
             </div>
-            <p style="color:#CBD5E1; font-size:0.90rem; margin-bottom: 16px;">
+            <p style="color:#CBD5E1; font-size:0.90rem; margin-bottom: 16px;" id="caso-intro">
                 Para ilustrar la trazabilidad de NEXORD, consideremos una sociomatriz de 4 sujetos (S₁, S₂, S₃, S₄) con ponderaciones w(1º) = 1.0, w(2º) = 0.8:
             </p>
             <div class="caso-table-wrap">
                 <table class="caso-table">
                     <thead>
                         <tr>
-                            <th class="th-num" style="width: 95px;">Miembro (Sᵢ)</th>
-                            <th class="th-num" style="width: 115px;">SDAᵢ (A₁ + A₂)</th>
-                            <th class="th-num" style="width: 115px;">SRCᵢ (A₃ + A₄)</th>
-                            <th class="th-num" style="width: 150px;">SDRᵢ (Neta Normalizada)</th>
-                            <th class="th-num" style="width: 140px;">BDRᵢ (Densidad Absoluta)</th>
-                            <th class="th-diag">Diagnóstico de Campo</th>
+                            <th class="th-num" style="width: 95px;" id="th-member">Miembro (Sᵢ)</th>
+                            <th class="th-num" style="width: 115px;" id="th-sda">SDAᵢ (A₁ + A₂)</th>
+                            <th class="th-num" style="width: 115px;" id="th-src">SRCᵢ (A₃ + A₄)</th>
+                            <th class="th-num" style="width: 150px;" id="th-sdr">SDRᵢ (Neta Normalizada)</th>
+                            <th class="th-num" style="width: 140px;" id="th-bdr">BDRᵢ (Densidad Absoluta)</th>
+                            <th class="th-diag" id="th-diag">Diagnóstico de Campo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -884,7 +925,7 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                             <td class="cell-num">+2.80</td>
                             <td class="cell-num" style="color:#00FF87; font-weight:bold;">+0.53</td>
                             <td class="cell-num">6.40</td>
-                            <td class="cell-diag"><strong>Centroide Afectivo Integrador</strong> (Sinergia recíproca con S₂ y S₄).</td>
+                            <td class="cell-diag" id="caso-diag-0"><strong>Centroide Afectivo Integrador</strong> (Sinergia recíproca con S₂ y S₄).</td>
                         </tr>
                         <tr>
                             <td class="cell-member" style="color:#38BDF8;">S₂</td>
@@ -892,7 +933,7 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                             <td class="cell-num">+1.00</td>
                             <td class="cell-num" style="color:#38BDF8; font-weight:bold;">+0.08</td>
                             <td class="cell-num">4.60</td>
-                            <td class="cell-diag"><strong>Nodo Estable de Sostén</strong> (Posición neutral-positiva de moderación).</td>
+                            <td class="cell-diag" id="caso-diag-1"><strong>Nodo Estable de Sostén</strong> (Posición neutral-positiva de moderación).</td>
                         </tr>
                         <tr>
                             <td class="cell-member" style="color:#FF007F;">S₃</td>
@@ -900,7 +941,7 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                             <td class="cell-num">-1.80</td>
                             <td class="cell-num" style="color:#FF007F; font-weight:bold;">-0.28</td>
                             <td class="cell-num">5.60</td>
-                            <td class="cell-diag"><strong>Sujeto en Riesgo de Marginación</strong> (Rechazo mutuo activo con S₂).</td>
+                            <td class="cell-diag" id="caso-diag-2"><strong>Sujeto en Riesgo de Marginación</strong> (Rechazo mutuo activo con S₂).</td>
                         </tr>
                         <tr>
                             <td class="cell-member" style="color:#FFE600;">S₄</td>
@@ -908,7 +949,7 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
                             <td class="cell-num">+3.60</td>
                             <td class="cell-num" style="color:#FFE600; font-weight:bold;">+0.60</td>
                             <td class="cell-num">7.20</td>
-                            <td class="cell-diag"><strong>Líder Sociométrico de Campo</strong> (Máxima atracción e influencia en el grupo).</td>
+                            <td class="cell-diag" id="caso-diag-3"><strong>Líder Sociométrico de Campo</strong> (Máxima atracción e influencia en el grupo).</td>
                         </tr>
                     </tbody>
                 </table>
@@ -925,10 +966,10 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
 
     <!-- FOOTER INSTITUCIONAL -->
     <footer class="glossary-footer">
-        <div style="margin-bottom: 8px;">
+        <div style="margin-bottom: 8px;" id="footer-main">
             <strong>NEXORD & VISORD Platform</strong> &bull; Ecosistema de Diagnóstico Socio-Termodinámico y Sociometría Ordinal Computacional.
         </div>
-        <div>
+        <div id="footer-sub">
             Registro Científico CERN Zenodo DOI: <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank">10.5281/zenodo.18941691</a> &bull;
             Diseño homologado según Estándar 2026.
         </div>
@@ -936,6 +977,133 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
 
     <!-- SCRIPT DE BÚSQUEDA, FILTRADO INTERACTIVO Y RETORNO (ESC) -->
     <script>
+        const I18N_GLOSARIO = {"ui": {"es": {"page_title": "Glosario de Sociometría Ordinal • NEXORD & VISORD", "brand_main": "NEXORD <span>GLOSARIO</span>", "btn_esc": "<kbd class=\"kbd-esc\">ESC</kbd> <span>Volver a la llamada</span>", "btn_esc_title": "Volver a la llamada (o pulsa la tecla ESC)", "hero_title": "Glosario de Sociometría Ordinal", "hero_subtitle": "Compendio de Términos, Socio-Termodinámica, Matrices SMIb, Variedad de Grassmann y Formulación Canónica VISORD", "hero_desc": "Este repertorio define con rigor epistemológico y matemático los fundamentos del motor computacional <strong>NEXORD</strong> y el visualizador <strong>VISORD</strong>. CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\" style=\"color:#00FF87; text-decoration:none; font-family:'Roboto Mono';\">10.5281/zenodo.18941691</a>.", "search_ph": "Buscar término, sigla o concepto (ej. SDR, BDR, Q81, Grassmann, Entropía, Moreno, Lewin)...", "pill_all": "Todos los Términos", "pill_siglas": "📋 Siglas y Abreviaturas", "pill_fundamentos": "🧲 Moreno y Lewin", "pill_termodinamica": "🔥 Socio-Termodinámica", "pill_topologia": "💎 Topología y Q81", "pill_grassmann": "📐 Geometría Grassmann", "pill_agrupamiento": "📐 Agrupamiento Progresivo Q81(9,9) e Indicadores", "pill_caso": "📊 Ejemplo Densidad (N=4)", "rule5_title": "⚖️ Definición de las 4 Posiciones del Tetragrama SMIb (A1, A2, A3, A4) • Regla Metodológica 5", "rule5_intro": "Queda formalmente blindada la interpretación conceptual matemática de las cuatro componentes en cada celda \\((i, j)\\):", "rule5_a1": "La <strong>expectativa que el emisor (\\(S_i\\)) tiene de lo que hará el partner (\\(S_j\\))</strong>. Marcas angulares: <code>&lt;</code>, <code>¡</code>, <code>[</code>.", "rule5_a2": "La <strong>preferencia efectiva que el emisor (\\(S_i\\)) otorga al partner (\\(S_j\\))</strong>. Símbolos mayúsculas: <code>E</code>, <code>¿</code>, <code>R</code>.", "rule5_a3": "La <strong>preferencia efectiva que el partner (\\(S_j\\)) otorga al emisor (\\(S_i\\))</strong>. Símbolos minúsculas: <code>e</code>, <code>¿</code>, <code>r</code>.", "rule5_a4": "La <strong>expectativa que el partner (\\(S_j\\)) tiene de lo que hará el emisor (\\(S_i\\))</strong>. Marcas angulares de cierre: <code>&gt;</code>, <code>!</code>, <code>]</code>.", "sec_siglas_title": "📋 Tabla de Siglas y Abreviaturas Teóricas", "sec_siglas_badge": "NEXORD 2026", "th_sigla": "Sigla", "th_name": "Identificador Completo", "th_desc": "Definición Conceptual y Procedimental", "sec_fund_title": "🧲 Fundamentos de Sociometría y Teoría de Campo", "sec_fund_badge": "Moreno & Lewin", "sec_term_title": "🔥 Socio-Termodinámica Grupal (BDR, SDR, Entropía)", "sec_term_badge": "NEXORD Engine", "sec_topo_title": "💎 Topología Relacional y Espacio Q81", "sec_topo_badge": "Tensor Quatuor", "sec_grass_title": "📐 Geometría Diferencial de Grassmann Gr(k, N)", "sec_grass_badge": "Hermann Grassmann (1844)", "sec_agrup_title": "📐 Agrupamiento Progresivo de las Matrices Q81(9, 9) de Densidad Relacional", "sec_agrup_badge": "Reducción Multiescala", "sec_caso_title": "📊 Ejemplo de Densidad Relacional en un grupo de 4 miembros", "sec_caso_badge": "Caso N=4", "caso_intro": "Para ilustrar la trazabilidad de NEXORD, consideremos una sociomatriz de 4 sujetos (S₁, S₂, S₃, S₄) con ponderaciones w(1º) = 1.0, w(2º) = 0.8:", "th_member": "Miembro (Sᵢ)", "th_sda": "SDAᵢ (A₁ + A₂)", "th_src": "SRCᵢ (A₃ + A₄)", "th_sdr": "SDRᵢ (Neta Normalizada)", "th_bdr": "BDRᵢ (Densidad Absoluta)", "th_diag": "Diagnóstico de Campo", "dock_top": "Volver al inicio de la página", "dock_home": "Regresar a la Web Principal", "footer_main": "<strong>NEXORD & VISORD Platform</strong> &bull; Ecosistema de Diagnóstico Socio-Termodinámico y Sociometría Ordinal Computacional.", "footer_sub": "Registro Científico CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\">10.5281/zenodo.18941691</a> &bull; Diseño homologado según Estándar 2026."}, "en": {"page_title": "Glossary of Ordinal Sociometry • NEXORD & VISORD", "brand_main": "NEXORD <span>GLOSSARY</span>", "btn_esc": "<kbd class=\"kbd-esc\">ESC</kbd> <span>Return to caller</span>", "btn_esc_title": "Return to caller (or press ESC key)", "hero_title": "Glossary of Ordinal Sociometry", "hero_subtitle": "Compendium of Terms, Socio-Thermodynamics, SMIb Matrices, Grassmann Manifold, and Canonical VISORD Formulation", "hero_desc": "This compendium defines with epistemological and mathematical rigor the foundations of the <strong>NEXORD</strong> computational engine and the <strong>VISORD</strong> visualizer. CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\" style=\"color:#00FF87; text-decoration:none; font-family:'Roboto Mono';\">10.5281/zenodo.18941691</a>.", "search_ph": "Search term, acronym, or concept (e.g. SDR, BDR, Q81, Grassmann, Entropy, Moreno, Lewin)...", "pill_all": "All Terms", "pill_siglas": "📋 Acronyms & Abbreviations", "pill_fundamentos": "🧲 Moreno & Lewin", "pill_termodinamica": "🔥 Socio-Thermodynamics", "pill_topologia": "💎 Topology & Q81", "pill_grassmann": "📐 Grassmann Geometry", "pill_agrupamiento": "📐 Progressive Aggregation Q81(9,9) & Indicators", "pill_caso": "📊 Density Case (N=4)", "rule5_title": "⚖️ Canonical Definition of the 4 Tetragram Positions SMIb (A1, A2, A3, A4) • Methodological Rule 5", "rule5_intro": "The mathematical and conceptual interpretation of the four components in each cell \\((i, j)\\) is formally enshrined:", "rule5_a1": "The <strong>expectation the emitter (\\(S_i\\)) has of what the partner (\\(S_j\\)) will do</strong>. Angular markers: <code>&lt;</code>, <code>¡</code>, <code>[</code>.", "rule5_a2": "The <strong>effective preference the emitter (\\(S_i\\)) gives to the partner (\\(S_j\\))</strong>. Uppercase symbols: <code>E</code>, <code>¿</code>, <code>R</code>.", "rule5_a3": "The <strong>effective preference the partner (\\(S_j\\)) gives to the emitter (\\(S_i\\))</strong>. Lowercase symbols: <code>e</code>, <code>¿</code>, <code>r</code>.", "rule5_a4": "The <strong>expectation the partner (\\(S_j\\)) has of what the emitter (\\(S_i\\)) will do</strong>. Closing angular markers: <code>&gt;</code>, <code>!</code>, <code>]</code>.", "sec_siglas_title": "📋 Table of Acronyms & Theoretical Abbreviations", "sec_siglas_badge": "NEXORD 2026", "th_sigla": "Acronym", "th_name": "Full Identifier", "th_desc": "Conceptual & Procedural Definition", "sec_fund_title": "🧲 Foundations of Sociometry & Field Theory", "sec_fund_badge": "Moreno & Lewin", "sec_term_title": "🔥 Group Socio-Thermodynamics (BDR, SDR, Entropy)", "sec_term_badge": "NEXORD Engine", "sec_topo_title": "💎 Relational Topology & Q81 Space", "sec_topo_badge": "Tensor Quatuor", "sec_grass_title": "📐 Grassmann Differential Geometry Gr(k, N)", "sec_grass_badge": "Hermann Grassmann (1844)", "sec_agrup_title": "📐 Progressive Aggregation of Q81(9, 9) Relational Density Matrices", "sec_agrup_badge": "Multiscale Reduction", "sec_caso_title": "📊 Relational Density Example in a 4-Member Group", "sec_caso_badge": "Case N=4", "caso_intro": "To illustrate the traceability of NEXORD, consider a sociomatrix of 4 subjects (S₁, S₂, S₃, S₄) with weights w(1st) = 1.0, w(2nd) = 0.8:", "th_member": "Member (Sᵢ)", "th_sda": "SDAᵢ (A₁ + A₂)", "th_src": "SRCᵢ (A₃ + A₄)", "th_sdr": "SDRᵢ (Net Normalized)", "th_bdr": "BDRᵢ (Absolute Density)", "th_diag": "Field Diagnosis", "dock_top": "Back to top of page", "dock_home": "Return to Main Portal", "footer_main": "<strong>NEXORD & VISORD Platform</strong> &bull; Socio-Thermodynamic Diagnostic Ecosystem & Computational Ordinal Sociometry.", "footer_sub": "Scientific Registry CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\">10.5281/zenodo.18941691</a> &bull; Homologated design under 2026 Standard."}, "ru": {"page_title": "Глоссарий порядковой социометрии • NEXORD & VISORD", "brand_main": "NEXORD <span>ГЛОССАРИЙ</span>", "btn_esc": "<kbd class=\"kbd-esc\">ESC</kbd> <span>Вернуться к вызову</span>", "btn_esc_title": "Вернуться к вызову (или нажмите клавишу ESC)", "hero_title": "Глоссарий порядковой социометрии", "hero_subtitle": "Свод терминов, социотермодинамики, матриц SMIb, многообразия Грассмана и канонической формулировки VISORD", "hero_desc": "Данный компендиум формулирует с эпистемологической и математической строгостью основы вычислительного ядра <strong>NEXORD</strong> и визуализатора <strong>VISORD</strong>. CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\" style=\"color:#00FF87; text-decoration:none; font-family:'Roboto Mono';\">10.5281/zenodo.18941691</a>.", "search_ph": "Поиск термина, аббревиатуры или концепции (напр., SDR, BDR, Q81, Грассман, Энтропия, Морено, Левин)...", "pill_all": "Все термины", "pill_siglas": "📋 Аббревиатуры и сокращения", "pill_fundamentos": "🧲 Морено и Левин", "pill_termodinamica": "🔥 Социотермодинамика", "pill_topologia": "💎 Топология и Q81", "pill_grassmann": "📐 Геометрия Грассмана", "pill_agrupamiento": "📐 Прогрессивная агрегация Q81(9,9) и индикаторы", "pill_caso": "📊 Пример плотности (N=4)", "rule5_title": "⚖️ Каноническое определение 4 позиций тетраграммы SMIb (A1, A2, A3, A4) • Методологическое правило 5", "rule5_intro": "Математическая и концептуальная интерпретация четырех компонентов в каждой ячейке \\((i, j)\\) строго закреплена:", "rule5_a1": "<strong>Ожидание отправителя (\\(S_i\\)) о том, как поступит партнер (\\(S_j\\))</strong>. Угловые скобки: <code>&lt;</code>, <code>¡</code>, <code>[</code>.", "rule5_a2": "<strong>Фактическое предпочтение, оказываемое отправителем (\\(S_i\\)) партнеру (\\(S_j\\))</strong>. Заглавные символы: <code>E</code>, <code>¿</code>, <code>R</code>.", "rule5_a3": "<strong>Фактическое предпочтение, оказываемое партнером (\\(S_j\\)) отправителю (\\(S_i\\))</strong>. Строчные символы: <code>e</code>, <code>¿</code>, <code>r</code>.", "rule5_a4": "<strong>Ожидание партнера (\\(S_j\\)) о том, как поступит отправитель (\\(S_i\\))</strong>. Закрывающие угловые скобки: <code>&gt;</code>, <code>!</code>, <code>]</code>.", "sec_siglas_title": "📋 Таблица аббревиатур и теоретических сокращений", "sec_siglas_badge": "NEXORD 2026", "th_sigla": "Сокращение", "th_name": "Полное наименование", "th_desc": "Концептуальное и процедурное определение", "sec_fund_title": "🧲 Основы социометрии и теории поля", "sec_fund_badge": "Moreno & Lewin", "sec_term_title": "🔥 Групповая социотермодинамика (BDR, SDR, энтропия)", "sec_term_badge": "NEXORD Engine", "sec_topo_title": "💎 Реляционная топология и пространство Q81", "sec_topo_badge": "Tensor Quatuor", "sec_grass_title": "📐 Дифференциальная геометрия Грассмана Gr(k, N)", "sec_grass_badge": "Hermann Grassmann (1844)", "sec_agrup_title": "📐 Прогрессивная агрегация матриц реляционной плотности Q81(9, 9)", "sec_agrup_badge": "Многомасштабная редукция", "sec_caso_title": "📊 Пример реляционной плотности в группе из 4 участников", "sec_caso_badge": "Случай N=4", "caso_intro": "Для иллюстрации прозрачности расчетов NEXORD рассмотрим социоматрицу из 4 субъектов (S₁, S₂, S₃, S₄) с весами w(1º) = 1.0, w(2º) = 0.8:", "th_member": "Участник (Sᵢ)", "th_sda": "SDAᵢ (A₁ + A₂)", "th_src": "SRCᵢ (A₃ + A₄)", "th_sdr": "SDRᵢ (Чистая нормированная)", "th_bdr": "BDRᵢ (Абсолютная плотность)", "th_diag": "Полевой диагноз", "dock_top": "В начало страницы", "dock_home": "На главный портал", "footer_main": "<strong>Платформа NEXORD & VISORD</strong> &bull; Экосистема социотермодинамической диагностики и вычислительной порядковой социометрии.", "footer_sub": "Научная регистрация CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\">10.5281/zenodo.18941691</a> &bull; Стандарт 2026 года."}, "zh": {"page_title": "序数社会测量学术语表 • NEXORD & VISORD", "brand_main": "NEXORD <span>术语表</span>", "btn_esc": "<kbd class=\"kbd-esc\">ESC</kbd> <span>返回上一页</span>", "btn_esc_title": "返回上一页（或按 ESC 键）", "hero_title": "序数社会测量学术语表", "hero_subtitle": "术语汇编、群体社会热力学、SMIb 矩阵、格拉斯曼流形与 VISORD 规范体系", "hero_desc": "本词汇表以严谨的认识论和数学推导，阐明 <strong>NEXORD</strong> 计算引擎与 <strong>VISORD</strong> 空间可视化平台的核心理论与规范。CERN Zenodo DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\" style=\"color:#00FF87; text-decoration:none; font-family:'Roboto Mono';\">10.5281/zenodo.18941691</a>。", "search_ph": "搜索术语、缩写或概念（例如 SDR、BDR、Q81、Grassmann、熵、Moreno、Lewin）...", "pill_all": "全部术语", "pill_siglas": "📋 缩略语与符号表", "pill_fundamentos": "🧲 莫雷诺与勒温基础", "pill_termodinamica": "🔥 社会热力学", "pill_topologia": "💎 拓扑学与 Q81", "pill_grassmann": "📐 格拉斯曼几何", "pill_agrupamiento": "📐 Q81(9,9) 级联聚合与指标体系", "pill_caso": "📊 关系密度案例 (N=4)", "rule5_title": "⚖️ SMIb 四元组（A1, A2, A3, A4）规范定义 • 方法论准则 5", "rule5_intro": "每一互动单元格 \\((i, j)\\) 中四维要素的数学与概念内涵受到严格规范约束：", "rule5_a1": "<strong>发送者（\\(S_i\\)）对互动伙伴（\\(S_j\\)）行为的预期</strong>。角括号标记：<code>&lt;</code>, <code>¡</code>, <code>[</code>。", "rule5_a2": "<strong>发送者（\\(S_i\\)）对互动伙伴（\\(S_j\\)）的实际偏好</strong>。大写符号：<code>E</code>, <code>¿</code>, <code>R</code>。", "rule5_a3": "<strong>互动伙伴（\\(S_j\\)）对发送者（\\(S_i\\)）的实际偏好</strong>。小写符号：<code>e</code>, <code>¿</code>, <code>r</code>。", "rule5_a4": "<strong>互动伙伴（\\(S_j\\)）对发送者（\\(S_i\\)）行为的预期</strong>。闭合角括号标记：<code>&gt;</code>, <code>!</code>, <code>]</code>。", "sec_siglas_title": "📋 理论缩写与符号对照表", "sec_siglas_badge": "NEXORD 2026", "th_sigla": "缩写", "th_name": "完整名称", "th_desc": "概念与操作定义", "sec_fund_title": "🧲 社会测量学与场论基础", "sec_fund_badge": "Moreno & Lewin", "sec_term_title": "🔥 群体社会热力学（BDR, SDR, 熵）", "sec_term_badge": "NEXORD Engine", "sec_topo_title": "💎 关系拓扑与 Q81 构型空间", "sec_topo_badge": "Tensor Quatuor", "sec_grass_title": "📐 格拉斯曼微分几何 Gr(k, N)", "sec_grass_badge": "Hermann Grassmann (1844)", "sec_agrup_title": "📐 Q81(9, 9) 关系密度矩阵的级联聚合", "sec_agrup_badge": "多尺度降维", "sec_caso_title": "📊 4人微型群体的关系密度核算范例", "sec_caso_badge": "案例 N=4", "caso_intro": "为直观展现 NEXORD 的计算可追溯性，设定由 4 位成员（S₁、S₂、S₃、S₄）构成的微型矩阵，赋权参数为 w(1º) = 1.0, w(2º) = 0.8：", "th_member": "成员 (Sᵢ)", "th_sda": "SDAᵢ (A₁ + A₂)", "th_src": "SRCᵢ (A₃ + A₄)", "th_sdr": "SDRᵢ（归一化净密度）", "th_bdr": "BDRᵢ（绝对活性密度）", "th_diag": "场域诊断结论", "dock_top": "回到页面顶部", "dock_home": "返回主门户", "footer_main": "<strong>NEXORD & VISORD 平台</strong> &bull; 群体社会热力学诊断生态与计算序数社会测量学。", "footer_sub": "CERN Zenodo 科学档案登记 DOI: <a href=\"https://doi.org/10.5281/zenodo.18941691\" target=\"_blank\">10.5281/zenodo.18941691</a> &bull; 符合 2026 规范设计体系。"}}, "siglas": {"es": [{"name": "Técnicas de Análisis Grupal", "desc": "Conjunto integrado de instrumentos psicométricos, estadísticos y socio-espaciales de evaluación de dinámicas en colectivos humanos (Cornejo, 1988)."}, {"name": "Sociomatriz Integrada Abstraída / Ampliada", "desc": "Reflejo categórico sin ponderación de ranking de la matriz SMIb, donde cada vínculo se traduce en una de las 81 figuras relacionales del tensor \\(Q_{81}\\)."}, {"name": "Sociomatriz Integrada Bipolar (4 Vías)", "desc": "Estructura matricial \\(N \\times N\\) fundamental de NEXORD que reúne en cada casilla el orden de elección jerárquico y las 4 posiciones (\\(A_1, A_2, A_3, A_4\\))."}, {"name": "Densidad Relacional Absoluta (Inercia Total)", "desc": "Inercia o carga bruta de actividad consumida en el sistema: \\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\), en rango \\([0.0, 4(N-1)]\\)."}, {"name": "Densidad Relacional Relativa Neta", "desc": "Tensión estructural neta normalizada: \\(SDR_i = \\frac{SDA_i + SRC_i}{\\text{Máximo Teórico}} \\in [-1.0, +1.0]\\). Mide el saldo neto entre atracción y marginación."}, {"name": "Densidad Relacional Emitida (Dada)", "desc": "Volumen total de energía relacional relativa que el emisor destina al grupo: \\(SDA_i = \\sum_{j \\ne i} (A_1 + A_2)\\)."}, {"name": "Densidad Relacional Recibida", "desc": "Volumen total de energía relacional que el sujeto recibe del grupo: \\(SRC_i = \\sum_{j \\ne i} (A_3 + A_4)\\)."}, {"name": "Densidades Absolutas Emitida y Recibida", "desc": "Magnitudes escalares brutas de actividad emitida (\\(BDA = |A_1| + |A_2|\\)) y recibida (\\(BRC = |A_3| + |A_4|\\)) sin considerar signo afectivo."}, {"name": "Entropía Socio-Termodinámica", "desc": "Métrica de fricción y disipación por fuerzas cruzadas contra el equilibrio (disonancia de Heider, expectativas desalineadas)."}, {"name": "Índice de Energía Estructural", "desc": "Densidad relacional ponderada tensorial que combina el estatus sociométrico, la reciprocidad y la centralidad de red en el campo."}, {"name": "Catálogo de las 81 Figuras Diádicas", "desc": "Espacio producto cartesiano \\(3 \\times 3 \\times 3 \\times 3\\) de cruces entre expectativas y acciones en ambos polos de la díada."}, {"name": "Aceptación y Ostracismo Esperado", "desc": "Umbrales sintéticos de frontera en formato BREVE que fijan el horizonte de popularidad y exclusión previsto por el emisor."}, {"name": "Índice de Silencio e Invisibilidad", "desc": "Disonancia agencial y tasa de omisión/silencio sufrido: proporción de compañeros que no eligen ni rechazan al sujeto."}, {"name": "Inconsistencia Relacional", "desc": "Varianza poblacional de las nominaciones recibidas por un sujeto, revelando polarización o fragmentación del consenso grupal."}, {"name": "Variedad de Grassmann (Grassmannian)", "desc": "Variedad diferencial donde cada punto representa un subespacio \\(k\\)-dimensional en \\(\\mathbb{R}^N\\), formalizando la trayectoria del grupo de \\(N\\) miembros."}, {"name": "Distancia Geodésica de Grassmann", "desc": "Medida topológica del ángulo geodésico \\(\\theta = \\arccos(|\\det(U^T V)|)\\) entre subespacios de grupos o instantes temporales."}, {"name": "Análisis Factorial de Correspondencias / Componentes", "desc": "Métodos multivariantes de compresión espacial (Benzécri, 1973; Pearson, 1901) proyectando baricentros, tipologías y nubes espectrales."}, {"name": "Análisis de la Actividad Grupal", "desc": "Diferencial semántico de 16 adjetivos bipolares en 4 factores (TEMA, FUNC, COGN, AFEC) evaluados en escala par 1 a 8."}, {"name": "Variables Socio-Demográficas / Disposicionales", "desc": "10 variables canónicas de caracterización cualitativa/ordinal (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM) con 3 modalidades."}, {"name": "Observación Sistemática de Bales", "desc": "Sistemas clásicos de codificación del proceso interactivo (Bales, 1950, 1979) evaluando dominancia, simpatía y tarea/expresividad."}], "en": [{"name": "Group Analysis Techniques", "desc": "Integrated set of psychometric, statistical, and socio-spatial instruments for assessing dynamics in human collectives (Cornejo, 1988)."}, {"name": "Abstracted / Expanded Integrated Sociomatrix", "desc": "Categorical unweighted reflection of matrix SMIb, where each tie maps to one of the 81 relational figures of tensor \\(Q_{81}\\)."}, {"name": "Bipolar Integrated Sociomatrix (4-Way)", "desc": "Fundamental \\(N \\times N\\) matrix structure of NEXORD uniting hierarchical ranking order and the 4 positions (\\(A_1, A_2, A_3, A_4\\))."}, {"name": "Absolute Relational Density (Total Inertia)", "desc": "Gross kinetic inertia or activity load consumed in the system: \\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\), in range \\([0.0, 4(N-1)]\\)."}, {"name": "Net Relative Relational Density", "desc": "Normalized net structural tension: \\(SDR_i = \\frac{SDA_i + SRC_i}{\\text{Theoretical Max}} \\in [-1.0, +1.0]\\). Measures net balance between attraction and marginalization."}, {"name": "Emitted Relational Density (Given)", "desc": "Total volume of relative relational energy allocated by the emitter to the group: \\(SDA_i = \\sum_{j \\ne i} (A_1 + A_2)\\)."}, {"name": "Received Relational Density", "desc": "Total volume of relational energy that the subject receives from group peers: \\(SRC_i = \\sum_{j \\ne i} (A_3 + A_4)\\)."}, {"name": "Absolute Emitted and Received Densities", "desc": "Gross scalar magnitudes of emitted activity (\\(BDA = |A_1| + |A_2|\\)) and received activity (\\(BRC = |A_3| + |A_4|\\)) regardless of affective sign."}, {"name": "Socio-Thermodynamic Entropy", "desc": "Metric of friction and dissipation caused by crossed forces against equilibrium (Heider cognitive dissonance, misaligned expectations)."}, {"name": "Structural Energy Index", "desc": "Tensor-weighted relational density combining sociometric status, reciprocity, and network centrality in the field."}, {"name": "Catalog of 81 Dyadic Figures", "desc": "Cartesian product space \\(3 \\times 3 \\times 3 \\times 3\\) crossing expectations and actions across both poles of the dyad."}, {"name": "Expected Acceptance and Expected Ostracism", "desc": "Synthetic boundary thresholds in BREVE format establishing the horizon of popularity and exclusion foreseen by the emitter."}, {"name": "Silence and Invisibility Index", "desc": "Agency dissonance and rate of omission/silence suffered: proportion of peers who neither select nor reject the subject."}, {"name": "Relational Inconsistency", "desc": "Population variance of nominations received by a subject, revealing polarization or fragmented group consensus."}, {"name": "Grassmann Manifold (Grassmannian)", "desc": "Differential manifold where each point represents a \\(k\\)-dimensional subspace in \\(\\mathbb{R}^N\\), formalizing group trajectory across criteria."}, {"name": "Grassmann Geodesic Distance", "desc": "Topological measure of the geodesic angle \\(\\theta = \\arccos(|\\det(U^T V)|)\\) between group subspaces across criteria or time."}, {"name": "Factorial Analysis of Correspondences / Components", "desc": "Multivariate spatial compression methods (Benzécri, 1973; Pearson, 1901) projecting baricenters, typologies, and spectral clouds."}, {"name": "Group Activity Analysis", "desc": "Semantic differential of 16 bipolar adjectives across 4 factors (TEMA, FUNC, COGN, AFEC) evaluated on a discrete 1 to 8 scale."}, {"name": "Socio-Demographic / Dispositional Variables", "desc": "10 canonical qualitative/ordinal variables (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM) with 3 categories each."}, {"name": "Bales' Systematic Observation", "desc": "Classical interactive process coding systems (Bales, 1950, 1979) assessing dominance, friendliness, and task/expressiveness."}], "ru": [{"name": "Методы группового анализа", "desc": "Интегрированный комплекс психометрических, статистических и пространственно-социальных инструментов диагностики динамики малых групп (Корнехо, 1988)."}, {"name": "Абстрагированная / расширенная интегрированная социоматрица", "desc": "Категориальное отображение матрицы SMIb без учета ранговых весов, где каждая связь транслируется в одну из 81 фигуры тензора \\(Q_{81}\\)."}, {"name": "Биполярная интегрированная социоматрица (4-сторонняя)", "desc": "Базовая матричная структура \\(N \\times N\\) в NEXORD, объединяющая иерархический ранг выбора и 4 позиции (\\(A_1, A_2, A_3, A_4\\))."}, {"name": "Абсолютная реляционная плотность (полная инерция)", "desc": "Валовая кинетическая нагрузка или объем активности в системе: \\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\), в диапазоне \\([0.0, 4(N-1)]\\)."}, {"name": "Чистая относительная реляционная плотность", "desc": "Нормированное чистое структурное напряжение: \\(SDR_i = \\frac{SDA_i + SRC_i}{\\text{Теор. максимум}} \\in [-1.0, +1.0]\\). Измеряет баланс между притяжением и маргинализацией."}, {"name": "Эмиттированная (отданная) реляционная плотность", "desc": "Суммарный объем относительной энергии отношений, направляемый отправителем группе: \\(SDA_i = \\sum_{j \\ne i} (A_1 + A_2)\\)."}, {"name": "Полученная реляционная плотность", "desc": "Суммарный объем реляционной энергии, поступающий субъекту от участников группы: \\(SRC_i = \\sum_{j \\ne i} (A_3 + A_4)\\)."}, {"name": "Абсолютные эмиттированная и полученная плотности", "desc": "Валовые скалярные величины излучаемой (\\(BDA = |A_1| + |A_2|\\)) и принимаемой (\\(BRC = |A_3| + |A_4|\\)) активности независимо от знака валентности."}, {"name": "Социотермодинамическая энтропия", "desc": "Показатель трения и диссипации, вызванных разнонаправленными силами против равновесия (диссонанс Хайдера, рассогласование ожиданий)."}, {"name": "Индекс структурной энергии", "desc": "Тензорно-взвешенная реляционная плотность, объединяющая социометрический статус, взаимность и сетевую центральность в поле."}, {"name": "Каталог 81 диадической фигуры", "desc": "Пространство прямого декартова произведения \\(3 \\times 3 \\times 3 \\times 3\\) пересечений ожиданий и действий обоих полюсов диады."}, {"name": "Ожидаемое принятие и ожидаемый остракизм", "desc": "Синтетические пороговые границы в формате BREVE, задающие ожидаемый горизонт популярности и маргинализации."}, {"name": "Индекс молчания и невидимости", "desc": "Агентный диссонанс и доля перенесенного игнорирования: доля участников, которые ни выбирают, ни отвергают субъекта."}, {"name": "Реляционная несогласованность", "desc": "Популяционная дисперсия полученных номинаций, отражающая поляризацию или расщепление группового консенсуса."}, {"name": "Многообразие Грассмана (грассманиан)", "desc": "Дифференцируемое многообразие, где каждая точка представляет \\(k\\)-мерное подпространство в \\(\\mathbb{R}^N\\), формализующее структуру группы."}, {"name": "Геодезическое расстояние Грассмана", "desc": "Топологическая мера геодезического угла \\(\\theta = \\arccos(|\\det(U^T V)|)\\) между подпространствами групп по критериям или во времени."}, {"name": "Факторный анализ соответствий / главных компонент", "desc": "Многомерные методы сжатия пространства (Бензекри, 1973; Пирсон, 1901), проецирующие барицентры, типологии и спектральные облака."}, {"name": "Анализ групповой деятельности (AAG)", "desc": "Семантический дифференциал из 16 биполярных прилагательных по 4 факторам (TEMA, FUNC, COGN, AFEC) по четной шкале 1–8."}, {"name": "Социально-демографические и диспозиционные переменные", "desc": "10 канонических качественных/порядковых переменных (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM) по 3 модальности в каждой."}, {"name": "Систематическое наблюдение Бейлса", "desc": "Классические системы кодирования интерактивного процесса (Бейлс, 1950, 1979): доминирование, дружелюбие и инструментальность/экспрессия."}], "zh": [{"name": "群体分析技术", "desc": "用于评估人类集体动力学的心理测量、数理统计与社会空间分析的综合性工具体系（Cornejo, 1988）。"}, {"name": "抽象/扩展综合社会矩阵", "desc": "SMIb 矩阵的无等级加权分类映射，将各二元连接映射至 \\(Q_{81}\\) 张量的 81 种关系构型之一。"}, {"name": "双极四维综合社会矩阵", "desc": "NEXORD 的核心 \\(N \\times N\\) 矩阵结构，在各单元格中同时整合层级排序位序与四元位置要素（\\(A_1, A_2, A_3, A_4\\)）。"}, {"name": "绝对关系密度（系统总惯量）", "desc": "系统中所消耗的粗动能惯量或总交互活动负荷：\\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\)，取值区间为 \\([0.0, 4(N-1)]\\)。"}, {"name": "归一化净相对关系密度", "desc": "归一化的系统净结构张力：\\(SDR_i = \\frac{SDA_i + SRC_i}{\\text{理论极值}} \\in [-1.0, +1.0]\\)。精确衡量群体吸引引力与排斥边缘化之间的净差额。"}, {"name": "发送关系密度（给予）", "desc": "发送主体投向群体系统的相对关系能量总和：\\(SDA_i = \\sum_{j \\ne i} (A_1 + A_2)\\)。"}, {"name": "接收关系密度（接纳）", "desc": "主体从群体所有同伴处接收的关系能量总和：\\(SRC_i = \\sum_{j \\ne i} (A_3 + A_4)\\)。"}, {"name": "绝对发送与接收密度", "desc": "发送活动（\\(BDA = |A_1| + |A_2|\\)）与接收活动（\\(BRC = |A_3| + |A_4|\\)）的粗标量绝对强度，不依赖情感极性正负。"}, {"name": "社会热力学熵", "desc": "衡量由于对抗平衡的交叉冲突力所导致的摩擦损耗与能量耗散度（如海德结构失衡、偏好与预期错位）。"}, {"name": "结构能量指数", "desc": "结合二元张量权重的关系密度，综合表征主体在社会场域中的地位、互惠度与拓扑中心性。"}, {"name": "81 种二元构型全集", "desc": "由二元互动双方的预期与行为完全正交所生成的 \\(3 \\times 3 \\times 3 \\times 3\\) 笛卡尔积构型状态空间。"}, {"name": "预期接纳与预期排斥", "desc": "简要（BREVE）格式中的合成边界阈值，标定主体预期的群体接纳度与受排斥临界线。"}, {"name": "沉默与无形化指数", "desc": "主体所承受的被边缘忽视与行动缺位比率：既不被同伴选择亦未被排斥的中性冷漠互动占比。"}, {"name": "关系异质性与不一致度", "desc": "主体所获选择评价的统计方差，直观揭示群体共识的撕裂、高度极化或认知碎片化。"}, {"name": "格拉斯曼流形（Grassmannian）", "desc": "微分流形空间，其中每个点代表 \\(\\mathbb{R}^N\\) 中的一个 \\(k\\) 维子空间，用于严密形式化 \\(N\\) 名成员在多准则下的演化轨迹。"}, {"name": "格拉斯曼测地距离", "desc": "两个群体特征子空间之间的测地线夹角拓扑度量 \\(\\theta = \\arccos(|\\det(U^T V)|)\\)，精确量化不同准则或时间跨度下的群体拓扑分异。"}, {"name": "对应分析与主成分分析（AFC / PCA）", "desc": "多元统计空间降维投影方法（Benzécri, 1973; Pearson, 1901），投射重心轨迹、亚群构型与点彩谱云。"}, {"name": "群体活动语义评定（AAG）", "desc": "由 16 个双极形容词构成的语义差异量表，归属于 4 个核心维度（任务、功能、认知、情感），采用 1–8 偶数极化尺度。"}, {"name": "社会人口学与情境特质变量（VAR）", "desc": "包含 10 项辅助属性的规范量表（性别、年龄、来源、资历、导向、投入度、出勤、角色、绩效、沟通），各含 3 种离散模态。"}, {"name": "贝尔斯系统交互观察系统（IPA / SYMLOG）", "desc": "互动过程经典编码系统（Bales, 1950, 1979），测量支配—顺从、友好—对抗以及任务工具—情感表达三大维度。"}]}, "terms": {"es": [{"title": "Sociometría Clásica", "author": "J. L. Moreno (1934)", "body": "Investigación matemática de la evolución y estructura interna de los grupos humanos a través de la cuantificación de las fuerzas de atracción y repulsión afectiva. Moreno postuló que los grupos no son meros agregados de individuos, sino redes socioafectivas interdependientes estructuradas por corrientes de simpatía y rechazo."}, {"title": "Sociatría", "author": "J. L. Moreno (1934)", "body": "La vertiente terapéutica y reparadora de la sociometría («la medicina de la sociedad»). Mientras la sociometría mide y diagnostica el tejido social, la sociatría constituye la praxis clínica orientada a reorganizar, sanar y dinamizar los vínculos hacia estructuras más funcionales y satisfactorias."}, {"title": "Tele y Átomo Social", "author": "J. L. Moreno (1934)", "body": "El <strong>Tele</strong> es la unidad elemental de empatía y reciprocidad afectiva bidireccional (positiva o negativa) que une a dos personas. El <strong>Átomo Social</strong> es la constelación sociométrica mínima: el individuo junto con el núcleo de todas las personas significativas con quienes sostiene intercambios de tele."}, {"title": "Teoría del Campo", "author": "Kurt Lewin (1936, 1951)", "body": "Principio paradigmático que sostiene que la conducta (\\(C\\)) es función del campo dinámico total que opera en el instante presente: \\(C = f(P, A)\\), donde \\(P\\) es la persona y \\(A\\) es su ambiente psicológico. Todo comportamiento obedece a un equilibrio dinámico de vectores en tensión."}, {"title": "Espacio Vital y Locomoción", "author": "Kurt Lewin (1936)", "body": "El <strong>Espacio Vital</strong> es la totalidad de factores psicológicos, físicos y sociales que determinan la conducta en un momento dado. La <strong>Locomoción</strong> es el desplazamiento que efectúa el individuo o el grupo a través de las regiones de su espacio vital para acercarse a valencias positivas o huir de valencias negativas."}, {"title": "Equilibrio Cuasi-Estacionario", "author": "Kurt Lewin (1947)", "body": "Concepción de los hábitos y normas del grupo como un estado estacionario dinámico, comparable al flujo de un río donde las fuerzas impulsoras (atracción) y las fuerzas restrictivas (fricción, barreras) se cancelan mutuamente. La intervención requiere tres fases: <em>Descongelar</em>, <em>Mover</em> y <em>Recongelar</em>."}, {"title": "Densidad Relacional Absoluta (BDR)", "author": "NEXORD", "body": "Energía o masa escalar total invertida en el sistema relacional, sumando los módulos de todos los vectores sin considerar el signo:\n                        \\(BDR_i = \\sum_{j \ne i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\\).\n                        Constituye la inercia del nodo o del grupo, en rango teórico \\([0, 4(N-1)]\\)."}, {"title": "Densidad Relacional Relativa Neta (SDR)", "author": "NEXORD", "body": "Tensión estructural neta del nodo calculada como la diferencia entre la suma neta de densidades emitidas y recibidas (\\(SDA_i + SRC_i\\)) dividida por el máximo teórico del grupo. Varía estrictamente en \\([-1.0, +1.0]\\). Valores positivos denotan integración armónica; negativos indican marginación acumulada."}, {"title": "Entropía Socio-Termodinámica (\\(\\mathcal{S}_i\\))", "author": "NEXORD", "body": "Métrica de disipación de energía y fricción relacional producida por la presencia simultánea de vectores contrapuestos (ambivalencia de atracción y marginación cruzada).\n                        Varía entre 0.0 (entropía nula, consenso armónico) y 1.0 (caos disipativo total, neutralización de vectores)."}, {"title": "Ley de Conservación de Masa Relacional", "author": "NEXORD Doctrinal", "body": "Principio termodinámico demostrado empíricamente en diseños ordinales estandarizados: cuando dos grupos operan bajo idéntico protocolo de saturación ordinal, la densidad absoluta media (\\( ar{BDR}\\)) se conserva invariante (ej. \\( ar{BDR} = 8.00\\)), mientras que la densidad relativa (\\( ar{SDR}\\)) y la entropía (\\(\\mathcal{S}\\)) reflejan las divergencias estructurales."}, {"title": "Cismogénesis Relacional", "author": "G. Bateson / NEXORD", "body": "Proceso de fisura estructural y polarización en subgrupos o facciones disjuntas debido al incremento de la frustración sistémica y la ruptura de los lazos de sintonía diádica, observable mediante la reducción del segundo valor propio laplaciano (\\(\\lambda_2\\), conectividad algebraica de Fiedler)."}, {"title": "Frustración Estructural de Heider (\\(\\lambda_1\\))", "author": "F. Heider / NEXORD", "body": "Medida espectral de la disonancia cognitiva triádica basada en el primer autovalor del Laplaciano con signo (\\(L_{\text{signed}}\\)). Cuantifica la desviación del colectivo respecto a la teoría del equilibrio estructural («el amigo de mi amigo es mi amigo; el enemigo de mi enemigo es mi amigo»)."}, {"title": "Tensor de 81 Figuras (Q81)", "author": "NEXORD Quatuor", "body": "Matriz cartesiana tetradimensional \\(3 \times 3 \times 3 \times 3\\) que agota formalmente las 81 combinaciones de interacción sociométrica posible para cada par diádico (\\(S_i \\leftrightarrow S_j\\)). Cada figura describe la convergencia de la expectativa emitida, preferencia emitida, preferencia recibida y expectativa recibida."}, {"title": "Las 9 Macro-Zonas Afectivas", "author": "NEXORD", "body": "Agrupación de las 81 especies en 9 cuadrantes diádicos según la preferencia emitida (\\(A_2\\)) y recibida (\\(A_3\\)):\n                        <strong>Ee</strong> (Elección mutua), <strong>E?</strong> (Elección hacia indiferencia), <strong>Er</strong> (Oposición/conflicto), <strong>¿e</strong> (Indiferencia hacia elección), <strong>¿?</strong> (Indiferencia mutua), <strong>¿r</strong> (Indiferencia hacia rechazo), <strong>Re</strong> (Rechazo hacia elección), <strong>R?</strong> (Rechazo hacia indiferencia) y <strong>Rr</strong> (Rechazo mutuo)."}, {"title": "SMIb frente a SMIa", "author": "Arquitectura NEXORD", "body": "La <strong>SMIb</strong> conserva el orden jerárquico fino (\\(1^\\circ, 2^\\circ, 3^\\circ\\)) de elección/rechazo en formato textual tetragrámico (ej. <code>&lt;E1e2&gt;</code>). La <strong>SMIa</strong> es la abstracción categórica pura que prescinde de los números de orden para proyectar directamente la figura en \\(Q_{81}\\) (ej. <code>&lt;Ee&gt;</code>, Figura 81)."}, {"title": "Formato MORENO vs Formato BREVE", "author": "NEXORD Metodología", "body": "<strong>MORENO:</strong> Preguntas acotadas de nominación (\\(k\\) elecciones, \\(m\\) marginaciones) basadas en meta-percepción dual.\n                        <strong>BREVE:</strong> Un único ítem de ordenamiento continuo completo de todo el grupo (\\(1^\\circ \\dots N-1\\)) sin citar marginaciones, preservando la ética del clima grupal mediante deducción matemática de colas inferiores."}, {"title": "Variedad de Grassmann Gr(k, N)", "author": "H. Grassmann (1844)", "body": "Espacio topológico suave en el que cada punto no es una coordenada escalar o vectorial, sino un <em>subespacio lineal completo de dimensión \\(k\\)</em> inmerso en \\(\\mathbb{R}^N\\). En NEXORD, la estructura factorial de un colectivo (\\(G_1\\) o \\(G_2\\)) se modela como un plano bidimensional en \\(Gr(2, 5)\\)."}, {"title": "Distancia Geodésica de Grassmann (d<sub>G</sub>)", "author": "Geometría Diferencial", "body": "Métrica invariante del ángulo geodésico mínimo entre dos subespacios relacionales:\n                        \\(d_G(U, V) = \\sqrt{\\sum_{i=1}^k \\theta_i^2}\\), donde \\(\\theta_i\\) son los ángulos principales. En estudios de validación empírica, \\(d_G = 1.455\\text{ rad } (83.37^\\circ)\\), evidenciando la cuasi-ortogonalidad entre el plano armónico de G1 y el plano fracturado de G2."}, {"title": "Difracción Espectral", "author": "NEXORD", "body": "Descomposición del tensor sociométrico bruto al proyectarlo mediante el agrupamiento progresivo de las matrices Q81(9, 9) de densidad relacional, revelando la estructura de armónicos, la conectividad y las zonas de sombra vincular."}, {"title": "Matriz Canónica Q81(9, 9)", "author": "Estructura Tensorial", "body": "Estructura tensorial cuadrada de \\(9 \\times 9 = 81\\) figuras diádicas generada por el producto de las 9 modalidades de emisión (filas) y las 9 de recepción (columnas). Integra expectativas socio-cognitivas y preferencias efectivas en un único movimiento organísmico-relacional indivisible."}, {"title": "Retículas Duales Q81a vs. Q81b", "author": "Cambio Ortogonal de Base", "body": "Dos factorizaciones según el índice rector: <strong>Q81a (Primacía Conductual)</strong> agrupa en macro por acción efectiva (\\(E, ¿, R\\)) y en micro por expectativa (\\(&lt;, ¡, [\\)). <strong>Q81b (Primacía Cognitiva)</strong> agrupa en macro por expectativa (\\(&lt;, ¡, [\\)) y en micro por acción (\\(E, ¿, R\\))."}, {"title": "Reducción Micro 9", "author": "Modalidades de Acción DA", "body": "Condensación de las 81 celdas en las 9 modalidades de acción diádica del emisor (\\(\\langle E, \\text{¡}E, [E, \\langle ¿, \\text{¡}¿, [¿, \\langle R, \\text{¡}R, [R\\)), conjugando la expectativa cognitiva (\\(A_1\\)) con la preferencia efectiva emitida (\\(A_2\\)). Preserva la masa de \\(N(N-1)\\) díadas."}, {"title": "Descriptores Meso 6 (Q6a)", "author": "Emisión y Recepción", "body": "Descriptores fundamentales de acción afectivo-efectiva divididos en 3 polos de emisión (\\(A_2 = E, ¿, R\\)) y 3 polos de recepción (\\(A_3 = e, ?, r\\)). Cada bloque conserva exactamente las \\(N(N-1)\\) díadas censadas del colectivo."}, {"title": "Cuencas Macro 3", "author": "Valencias Molares Triádicas", "body": "Las 3 grandes cuencas polares gravitatorias del campo socio-afectivo: <strong>(+) Elección / Cohesión</strong> (\\(\\langle Ee \\rangle\\)), <strong>(0) Indiferencia / Neutralidad</strong> (\\(\\text{¡}¿?\\text{!}\\)) y <strong>(-) Rechazo / Fricción</strong> (\\([Rr]\\)). Constituyen el fundamento molar del saldo relacional \\(SDR\\)."}, {"title": "Invarianza Baricéntrica de la Pirámide", "author": "Teorema de Conservación", "body": "Principio según el cual la masa diádica total (\\(N(N-1)\\) vínculos) y los baricentros de potencial socio-térmico (\\(BDR, SDR, BDA, BRC\\)) permanecen estrictamente invariantes e idénticos a través de los 4 niveles de condensación (\\(81 \\to 9 \\to 6 \\to 3\\)), garantizando diagnósticos libres de sesgo de escala."}, {"title": "Marco Cuadrado Óptimo (Auto-Frame)", "author": "Ergonomía Zero-Scroll", "body": "Arquitectura de visualización que adapta automáticamente la sociomatriz a un marco cuadrado delimitado (\\(\\le 600\\text{px}\\)) cuando el grupo excede el umbral (\\(N \\ge 8\\)) o en vista de 9 columnas, blindando siempre \\(\\ge 250\\text{px}\\) y paso \\(\\ge 45\\text{px/estación}\\) para el Pentagrama 10D inferior."}, {"title": "Índice Bonacich de Estatus (K<sub>INF</sub>)", "author": "P. Bonacich (1987)", "body": "Centralidad de autovector recursiva donde el prestigio de un nodo no depende sólo de la cantidad de elecciones recibidas, sino del estatus de quienes lo eligen («ser elegido por los elegidos»)."}, {"title": "Significación Binomial (SIG_B)", "author": "U. Bronfenbrenner (1943)", "body": "Contraste probabilístico exacto basado en la distribución binomial/Poisson para verificar si la condición de «estrella sociométrica» o «sujeto rechazado» excede el azar (\\(p < 0.05\\))."}], "en": [{"title": "Classical Sociometry", "author": "J. L. Moreno (1934)", "body": "Mathematical investigation of the evolution and internal structure of human groups through the quantification of affective forces of attraction and repulsion. Moreno posited that groups are not mere aggregates of individuals, but interdependent socio-affective networks structured by currents of sympathy and rejection."}, {"title": "Sociatry", "author": "J. L. Moreno (1934)", "body": "The therapeutic and restorative branch of sociometry (\"the medicine of society\"). While sociometry measures and diagnoses the social fabric, sociatry constitutes the clinical practice aimed at reorganizing, healing, and revitalizing interpersonal bonds toward more functional and fulfilling structures."}, {"title": "Tele and Social Atom", "author": "J. L. Moreno (1934)", "body": "<strong>Tele</strong> is the elementary unit of bidirectional empathy and affective reciprocity (positive or negative) binding two people. The <strong>Social Atom</strong> is the minimal sociometric constellation: the individual together with the core of all significant persons with whom they maintain tele exchanges."}, {"title": "Field Theory", "author": "Kurt Lewin (1936, 1951)", "body": "Paradigmatic principle positing that behavior (\\(C\\)) is a function of the total dynamic field operating at the present moment: \\(C = f(P, E)\\), where \\(P\\) is the person and \\(E\\) is the psychological environment. NEXORD translates this principle into continuous group interaction in tensor space."}, {"title": "Life Space and Locomotion", "author": "Kurt Lewin (1936)", "body": "The <strong>Life Space</strong> is the totality of psychological, physical, and social factors determining behavior at a given moment. <strong>Locomotion</strong> describes the change of position in that space driven by vector forces (attraction/positive valence and repulsion/negative valence)."}, {"title": "Quasi-Stationary Equilibrium", "author": "Kurt Lewin (1947)", "body": "Conception of group habits and norms as a dynamic steady state, comparable to the flow of a river where driving forces and restraining forces counterbalance each other. Sociometric intervention shifts this equilibrium by restructuring the force field without unnecessarily escalating global tension."}, {"title": "Absolute Relational Density (BDR)", "author": "NEXORD", "body": "Total scalar energy or mass invested in the relational system, summing the absolute magnitudes of all vectors regardless of affective sign: \\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\). Measures the gross communicative inertia and psychosocial activity expenditure of the node in the group."}, {"title": "Net Relative Relational Density (SDR)", "author": "NEXORD", "body": "Net structural tension of the node calculated as the normalized sum of emitted and received densities (\\(SDA_i + SRC_i\\)) divided by the theoretical maximum of the system: \\(SDR_i \\in [-1.0, +1.0]\\). Discriminates between integrating attraction (\\(SDR > 0\\)) and marginalization or conflict (\\(SDR < 0\\))."}, {"title": "Socio-Thermodynamic Entropy (\\(\\mathcal{S}_i\\))", "author": "NEXORD", "body": "Metric of energy dissipation and relational friction produced by the simultaneous presence of conflicting vectors (affective opposition, Heider cognitive dissonance, or unreciprocated expectations). High entropy indicates structural instability and imminent risk of destructive group conflict."}, {"title": "Law of Conservation of Relational Mass", "author": "NEXORD Doctrinal", "body": "Thermodynamic principle empirically proven in standardized ordinal designs: when two groups operate under identical design constraints and ordinal scale, the total inertia (\\(\\sum BDR\\)) and the relative density spectrum (\\(SDR\\)) remain invariant, redistributing energy among nodes according to topology."}, {"title": "Relational Schismogenesis", "author": "G. Bateson / NEXORD", "body": "Process of structural fissure and polarization into disjoint subgroups or factions driven by escalating systemic frustration. In spectral terms, it manifests when the second eigenvalue of the Laplacian (\\(\\lambda_2\\), Fiedler vector) approaches zero, revealing imminent graph partitioning."}, {"title": "Heider Structural Frustration (\\(\\lambda_1\\))", "author": "F. Heider / NEXORD", "body": "Spectral measure of triadic cognitive dissonance based on the first eigenvalue of the signed Laplacian (\\(L_{\\text{signed}}\\)). Quantifies group deviation from the structural balance theorem (Cartwright & Harary): balanced triads yield \\(\\lambda_1 = 0\\), whereas \\(\\lambda_1 > 0\\) measures accumulated dissipative energy."}, {"title": "81-Figure Tensor (Q81)", "author": "NEXORD Quatuor", "body": "Four-dimensional Cartesian matrix \\(3 \\times 3 \\times 3 \\times 3\\) that formally exhausts all 81 combinations of dyadic interaction. Each figure unites the expectation (\\(A_1\\)) and effective preference (\\(A_2\\)) of the emitter with the preference (\\(A_3\\)) and expectation (\\(A_4\\)) of the receiver."}, {"title": "The 9 Macro-Affective Zones", "author": "NEXORD", "body": "Grouping of the 81 species into 9 dyadic quadrants according to emitted preference (\\(A_2\\)) and received preference (\\(A_3\\)):<br>&bull; <strong>Synergy / Mutual Choice:</strong> \\(\\langle Ee \\rangle\\)<br>&bull; <strong>Conflict / Affective Opposition:</strong> \\(\\langle Er ]\\), \\([ Re \\rangle\\)<br>&bull; <strong>Mutual Rejection:</strong> \\([ Rr ]\\)<br>&bull; <strong>Indifference / Neutrality Zones:</strong> marked by \\(\\dot{¿}\\) or \\(\\text{¡}\\)."}, {"title": "SMIb vs. SMIa", "author": "NEXORD Architecture", "body": "<strong>SMIb</strong> preserves the fine hierarchical order (\\(1^\\circ, 2^\\circ, 3^\\circ\\)) of choice/rejection in a weighted quantitative format, whereas <strong>SMIa</strong> synthesizes each cell into its canonical figure from the \\(Q_{81}\\) catalog, enabling morphological analysis without scale distortion."}, {"title": "MORENO Format vs. BREVE Format", "author": "NEXORD Methodology", "body": "<strong>MORENO:</strong> Bounded nomination queries (\\(k\\) choices, \\(m\\) rejections) based on direct meta-perception. <strong>BREVE:</strong> Full ordinal ranking (\\(1^\\circ \\dots N^\\circ\\)) with boundary thresholds (\\(aE, oE\\)), maximizing mathematical information without forcing subjects into arbitrary explicit rejections."}, {"title": "Grassmann Manifold Gr(k, N)", "author": "H. Grassmann (1844)", "body": "Smooth topological space in which each point is not a scalar or vector coordinate, but a <em>complete linear subspace</em> of dimension \\(k\\) embedded in \\(\\mathbb{R}^N\\). Allows comparing the global structure of groups of differing sizes and compositions independently of axis rotation."}, {"title": "Grassmann Geodesic Distance (d<sub>G</sub>)", "author": "Differential Geometry", "body": "Invariant metric of the minimal geodesic angle between two relational subspaces: \\(d_G(U, V) = \\sqrt{\\sum_{i=1}^k \\theta_i^2}\\), where \\(\\theta_i\\) are the canonical Jordan angles. Quantifies objective structural divergence between groups or across longitudinal waves."}, {"title": "Spectral Diffraction", "author": "NEXORD", "body": "Decomposition of the raw sociometric tensor through progressive aggregation of Q81(9, 9) matrices onto factorial planes, isolating dominant harmonics (group cohesion) from micro-perturbations (stochastic noise)."}, {"title": "Canonical Matrix Q81(9, 9)", "author": "Tensorial Structure", "body": "Square tensorial structure of \\(9 \\times 9 = 81\\) dyadic figures generated by the Cartesian product of the 9 emission modalities (rows) and the 9 reception modalities (columns). Integrates socio-cognitive expectations and effective preferences into a single indivisible organismic-relational movement."}, {"title": "Dual Lattices Q81a vs. Q81b", "author": "Orthogonal Change of Basis", "body": "Two factorizations according to the governing index: <strong>Q81a (Behavioral Primacy)</strong> groups macro-level by effective action (\\(E, ¿, R\\)) and micro-level by expectation (\\(\\langle, ¡, [\\)). <strong>Q81b (Cognitive Primacy)</strong> groups macro-level by expectation (\\(\\langle, ¡, [\\)) and micro-level by action (\\(E, ¿, R\\))."}, {"title": "Micro 9 Reduction", "author": "DA Action Modalities", "body": "Condensation of the 81 cells into the 9 dyadic action modalities of the emitter (\\(\\langle E, \\text{¡}E, [E, \\langle ¿, \\text{¡}¿, [¿, \\langle R, \\text{¡}R, [R\\)), combining cognitive expectation (\\(A_1\\)) with emitted effective preference (\\(A_2\\)). Preserves the mass of \\(N(N-1)\\) dyads."}, {"title": "Meso 6 Descriptors (Q6a)", "author": "Emission and Reception", "body": "Fundamental affective-effective action descriptors divided into 3 emission poles (\\(A_2 = E, ¿, R\\)) and 3 reception poles (\\(A_3 = e, ¿, r\\)). They model energy flow balances and reciprocity in a two-dimensional Cartesian projection."}, {"title": "Macro 3 Basins", "author": "Triadic Molar Valences", "body": "The 3 major polar gravitational basins of the socio-affective field: <strong>(+) Choice / Cohesion</strong> (\\(\\langle Ee \\rangle\\)), <strong>(-) Conflict / Rejection</strong> (\\([ Rr ]\\)), and <strong>(0) Neutrality / Indifference</strong> (\\(\\dot{¿}\\)). They constitute the macroscopic foundation of phase dynamics and group thermodynamics."}, {"title": "Barycentric Invariance of the Pyramid", "author": "Conservation Theorem", "body": "Principle establishing that total dyadic mass (\\(N(N-1)\\) ties) and socio-thermal potential barycenters (\\(BDR, SDR\\)) are geometrically conserved across every aggregation level (81 \\(\\to\\) 9 \\(\\to\\) 6 \\(\\to\\) 3 \\(\\to\\) 1). No heuristic reduction produces loss of structural energy."}, {"title": "Optimal Square Frame (Auto-Frame)", "author": "Zero-Scroll Ergonomics", "body": "Visualization architecture that automatically adapts the sociomatrix to a bounded square frame (\\(\\le 600\\text{px}\\)), ensuring the analyst can explore the entire network without scrolling while preserving the isomorphic reading of the 4 SMIb positions."}, {"title": "Bonacich Status Index (K<sub>INF</sub>)", "author": "P. Bonacich (1987)", "body": "Recursive eigenvector centrality where the prestige of a node depends not merely on the quantity of incoming choices, but on the position and sociometric weight of those choosing it: \\(C(\\alpha, \\beta) = \\alpha (I - \\beta A)^{-1} A \\mathbf{1}\\)."}, {"title": "Binomial Significance (SIG_B)", "author": "U. Bronfenbrenner (1943)", "body": "Exact probabilistic test based on binomial/Poisson distributions to verify whether the status of \"sociometric star\" or \"isolate\" exceeds statistical chance (\\(p < 0.05\\)) given group size \\(N\\)."}], "ru": [{"title": "Классическая социометрия", "author": "Дж. Л. Морено (1934)", "body": "Математическое исследование эволюции и внутренней структуры человеческих групп посредством количественной оценки аффективных сил притяжения и отталкивания. Морено постулировал, что группы представляют собой не просто совокупности индивидов, а взаимозависимые социально-эмоциональные сети, структурированные потоками симпатии и отторжения."}, {"title": "Социатрия", "author": "Дж. Л. Морено (1934)", "body": "Терапевтическое и восстановительное направление социометрии («медицина общества»). В то время как социометрия измеряет и диагностирует социальную ткань, социатрия представляет собой клиническую практику, направленную на реорганизацию, исцеление и динамизацию межличностных связей к более функциональным структурам."}, {"title": "Теле и социальный атом", "author": "Дж. Л. Морено (1934)", "body": "<strong>Теле</strong> — это элементарная единица эмпатии и двунаправленной аффективной взаимности (положительной или отрицательной), связывающая двух людей. <strong>Социальный атом</strong> — это минимальная социометрическая констелляция: индивид вместе с ядром всех значимых лиц, с которыми он поддерживает обмен теле."}, {"title": "Теория поля", "author": "Курт Левин (1936, 1951)", "body": "Парадигмальный принцип, утверждающий, что поведение (\\(C\\)) является функцией целостного динамического поля в данный момент: \\(C = f(P, E)\\), где \\(P\\) — личность, а \\(E\\) — психологическая среда. NEXORD переносит этот принцип на непрерывное групповое взаимодействие в тензорном пространстве."}, {"title": "Жизненное пространство и локомоция", "author": "Курт Левин (1936)", "body": "<strong>Жизненное пространство</strong> — это совокупность психологических, физических и социальных факторов, определяющих поведение в данный момент. <strong>Локомоция</strong> описывает изменение положения в этом пространстве под действием векторных сил (притяжения/положительной валентности и отталкивания/отрицательной валентности)."}, {"title": "Квазистационарное равновесие", "author": "Курт Левин (1947)", "body": "Представление о групповых привычках и нормах как о динамическом устойчивом состоянии, сравнимом с течением реки, где движущие и сдерживающие силы уравновешивают друг друга. Социометрическое вмешательство сдвигает это равновесие, перестраивая силовое поле без нагнетания общего напряжения."}, {"title": "Абсолютная реляционная плотность (BDR)", "author": "NEXORD", "body": "Полная скалярная энергия или масса, вложенная в реляционную систему, рассчитываемая как сумма модулей всех векторов без учета эмоционального знака: \\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\). Измеряет валовую коммуникативную инерцию и расход активности узла."}, {"title": "Чистая относительная реляционная плотность (SDR)", "author": "NEXORD", "body": "Чистое структурное напряжение узла, рассчитываемое как нормализованная сумма излучаемой и принимаемой плотностей (\\(SDA_i + SRC_i\\)), деленная на теоретический максимум системы: \\(SDR_i \\in [-1.0, +1.0]\\). Разграничивает интеграционное притяжение (\\(SDR > 0\\)) и маргинализацию или конфликт (\\(SDR < 0\\))."}, {"title": "Социотермодинамическая энтропия (\\(\\mathcal{S}_i\\))", "author": "NEXORD", "body": "Показатель рассеяния энергии и реляционного трения, возникающего при одновременном наличии разнонаправленных векторов (аффективная оппозиция, фрустрация Хайдера или безответные ожидания). Высокая энтропия свидетельствует о структурной нестабильности и риске деструктивного конфликта."}, {"title": "Закон сохранения реляционной массы", "author": "Доктрина NEXORD", "body": "Термодинамический принцип, эмпирически доказанный в стандартизированных порядковых схемах: когда две группы функционируют при одинаковых ограничениях дизайна и шкалы, полная инерция (\\(\\sum BDR\\)) и диапазон относительной плотности (\\(SDR\\)) сохраняются инвариантными, перераспределяясь между узлами согласно топологии."}, {"title": "Реляционный схизмогенез", "author": "Г. Бейтсон / NEXORD", "body": "Процесс структурного раскола и поляризации на непересекающиеся подгруппы или фракции вследствие нарастания системной фрустрации. В спектральных терминах проявляется, когда второе собственное значение лапласиана (\\(\\lambda_2\\), вектор Фидлера) стремится к нулю, обнажая раскол графа."}, {"title": "Структурная фрустрация Хайдера (\\(\\lambda_1\\))", "author": "Ф. Хайдер / NEXORD", "body": "Спектральная мера триадического когнитивного диссонанса на основе наименьшего собственного значения знакового лапласиана (\\(L_{\\text{signed}}\\)). Количественно оценивает отклонение от теоремы структурного баланса: сбалансированные триады дают \\(\\lambda_1 = 0\\), тогда как \\(\\lambda_1 > 0\\) измеряет накопленную энергию диссипации."}, {"title": "Тензор 81 фигуры (Q81)", "author": "NEXORD Quatuor", "body": "Четырехмерная декартова матрица \\(3 \\times 3 \\times 3 \\times 3\\), исчерпывающая все 81 комбинацию диадического взаимодействия. Каждая фигура объединяет ожидание (\\(A_1\\)) и фактическое предпочтение (\\(A_2\\)) отправителя с предпочтением (\\(A_3\\)) и ожиданием (\\(A_4\\)) получателя."}, {"title": "9 макроаффективных зон", "author": "NEXORD", "body": "Группировка 81 вида связей в 9 диадических квадрантов по излучаемому (\\(A_2\\)) и принимаемому (\\(A_3\\)) предпочтению:<br>&bull; <strong>Синергия / Взаимный выбор:</strong> \\(\\langle Ee \\rangle\\)<br>&bull; <strong>Конфликт / Аффективная оппозиция:</strong> \\(\\langle Er ]\\), \\([ Re \\rangle\\)<br>&bull; <strong>Взаимное отторжение:</strong> \\([ Rr ]\\)<br>&bull; <strong>Зоны безразличия / нейтральности:</strong> с участием \\(\\dot{¿}\\) или \\(\\text{¡}\\)."}, {"title": "SMIb против SMIa", "author": "Архитектура NEXORD", "body": "<strong>SMIb</strong> сохраняет точный иерархический порядок (\\(1^\\circ, 2^\\circ, 3^\\circ\\)) выбора/отторжения во взвешенном количественном формате, тогда как <strong>SMIa</strong> сводит каждую ячейку к ее канонической фигуре из каталога \\(Q_{81}\\), обеспечивая морфологический анализ без искажения масштаба."}, {"title": "Формат MORENO против формата BREVE", "author": "Методология NEXORD", "body": "<strong>MORENO:</strong> Ограниченные вопросы номинации (\\(k\\) выборов, \\(m\\) отторжений) на основе прямой метаперцепции. <strong>BREVE:</strong> Полное порядковое ранжирование (\\(1^\\circ \\dots N^\\circ\\)) с граничными порогами (\\(aE, oE\\)), что максимизирует объем математической информации без принудительного произвольного отвержения."}, {"title": "Многообразие Грассмана Gr(k, N)", "author": "Г. Грассман (1844)", "body": "Гладкое топологическое многообразие, в котором каждая точка является не скаляром или вектором, а <em>полным линейным подпространством</em> размерности \\(k\\), погруженным в \\(\\mathbb{R}^N\\). Позволяет сравнивать глобальную структуру групп различного размера без зависимости от поворота осей."}, {"title": "Геодезическое расстояние Грассмана (d<sub>G</sub>)", "author": "Дифференциальная геометрия", "body": "Инвариантная метрика минимального геодезического угла между двумя реляционными подпространствами: \\(d_G(U, V) = \\sqrt{\\sum_{i=1}^k \\theta_i^2}\\), где \\(\\theta_i\\) — канонические углы Жордана. Измеряет объективное структурное расхождение между группами или во времени."}, {"title": "Спектральная дифракция", "author": "NEXORD", "body": "Разложение исходного социометрического тензора при его проекции через прогрессивную агрегацию матриц Q81(9, 9) на факторные плоскости, разделяющее главные гармоники (сплоченность) и микровозмущения (стохастический шум)."}, {"title": "Каноническая матрица Q81(9, 9)", "author": "Тензорная структура", "body": "Квадратная тензорная структура из \\(9 \\times 9 = 81\\) диадической фигуры, образованная произведением 9 модальностей излучения (строки) и 9 модальностей приема (столбцы). Объединяет социально-когнитивные ожидания и фактические предпочтения в единое движение."}, {"title": "Дуальные решетки Q81a и Q81b", "author": "Ортогональная смена базиса", "body": "Две факторизации по ведущему индексу: <strong>Q81a (поведенческий приоритет)</strong> группирует на макроуровне по фактическому действию (\\(E, ¿, R\\)) и на микроуровне по ожиданию (\\(\\langle, ¡, [\\)). <strong>Q81b (когнитивный приоритет)</strong> группирует на макроуровне по ожиданию (\\(\\langle, ¡, [\\)) и на микроуровне по действию (\\(E, ¿, R\\))."}, {"title": "Микроредукция 9", "author": "Модальности действия DA", "body": "Конденсация 81 ячейки в 9 модальностей диадического действия отправителя (\\(\\langle E, \\text{¡}E, [E, \\langle ¿, \\text{¡}¿, [¿, \\langle R, \\text{¡}R, [R\\)), сопрягающих когнитивное ожидание (\\(A_1\\)) с излучаемым предпочтением (\\(A_2\\)). Сохраняет массу \\(N(N-1)\\) диад."}, {"title": "Мезодескрипторы 6 (Q6a)", "author": "Излучение и прием", "body": "Фундаментальные дескрипторы аффективно-действенного взаимодействия, разделенные на 3 полюса излучения (\\(A_2 = E, ¿, R\\)) и 3 полюса приема (\\(A_3 = e, ¿, r\\)). Позволяют моделировать баланс энергетических потоков и взаимность на двумерной плоскости."}, {"title": "Макробассейны 3", "author": "Триадические молярные валентности", "body": "3 основных полярных гравитационных бассейна социально-эмоционального поля: <strong>(+) Выбор / Сплоченность</strong> (\\(\\langle Ee \\rangle\\)), <strong>(-) Конфликт / Отторжение</strong> (\\([ Rr ]\\)) и <strong>(0) Нейтральность / Безразличие</strong> (\\(\\dot{¿}\\)). Составляют основу фазовой динамики и групповой термодинамики."}, {"title": "Барицентрическая инвариантность пирамиды", "author": "Теорема сохранения", "body": "Принцип, согласно которому полная диадическая масса (\\(N(N-1)\\) связей) и барицентры социотермического потенциала (\\(BDR, SDR\\)) геометрически сохраняются на каждом уровне агрегации (81 \\(\\to\\) 9 \\(\\to\\) 6 \\(\\to\\) 3 \\(\\to\\) 1). Никакая редукция не ведет к потере структурной энергии."}, {"title": "Оптимальная квадратная рамка (Auto-Frame)", "author": "Эргономика без прокрутки", "body": "Архитектура визуализации, автоматически адаптирующая социоматрицу к ограниченной квадратной рамке (\\(\\le 600\\text{px}\\)), позволяя аналитику исследовать всю сеть без прокрутки при сохранении изоморфного считывания 4 позиций SMIb."}, {"title": "Индекс статуса Боначича (K<sub>INF</sub>)", "author": "Ф. Боначич (1987)", "body": "Рекурсивная центральность собственного вектора, где престиж узла зависит не просто от числа полученных выборов, но от социометрического статуса тех, кто его выбирает: \\(C(\\alpha, \\beta) = \\alpha (I - \\beta A)^{-1} A \\mathbf{1}\\)."}, {"title": "Биномиальная значимость (SIG_B)", "author": "У. Бронфенбреннер (1943)", "body": "Точный вероятностный критерий на основе биномиального распределения/распределения Пуассона для проверки, превышает ли статус «социометрической звезды» или «изолята» порог случайности (\\(p < 0.05\\)) при размере группы \\(N\\)."}], "zh": [{"title": "经典社会测量学", "author": "J. L. Moreno (1934)", "body": "通过对情感吸引与排斥力的量化，数学化研究人类群体的演化和内部结构。莫雷诺指出，群体绝非个体的简单集合，而是由同理共鸣与排斥抗拒潮流构筑的、高度相互依存的社会情感网络。"}, {"title": "社会治疗学（Sociatry）", "author": "J. L. Moreno (1934)", "body": "社会测量学的治疗与修复分支（“社会病理之良药”）。社会测量学负责诊断与度量社会肌理，而社会治疗学则构成临床实践，旨在重塑、修复并激活人际联结，使群体向更具功能性和满意度的健康构型转化。"}, {"title": "遥感（Tele）与社会原子", "author": "J. L. Moreno (1934)", "body": "<strong>遥感（Tele）</strong>是连结两人的双向情感共情与相互感应的基本元单元（包含正向与负向极性）。<strong>社会原子</strong>则是最小的社会测量星座构型：个体及其与之维持活跃“遥感”交互的所有重要关系核心圈。"}, {"title": "场论（Field Theory）", "author": "Kurt Lewin (1936, 1951)", "body": "范式性理论，确立行为（\\(C\\)）是当前时刻运作的整体动力场之函数：\\(C = f(P, E)\\)，其中 \\(P\\) 为个体，\\(E\\) 为心理环境。NEXORD 将此动力场原理由个体心理学推进至张量空间中持续的群体拓扑交互。"}, {"title": "生活空间与心理移动（Locomotion）", "author": "Kurt Lewin (1936)", "body": "<strong>生活空间</strong>是特定时刻决定行为的心理、物理与社会因素的总和。<strong>心理移动</strong>描述主体在该拓扑空间中受向量引力与斥力驱动的位置变迁（正效价吸引与负效价排斥）。"}, {"title": "准平稳平衡（Quasi-Stationary Equilibrium）", "author": "Kurt Lewin (1947)", "body": "将群体惯性与规范视为一种动态的恒定状态，如同河流中的平衡流动：驱动变革的推动力与固守现状的阻抗力在此相互抵消。社会测量干预通过重塑动力场结构改变该平衡点，而非单向施压激化系统全局对抗张力。"}, {"title": "绝对关系密度（BDR）", "author": "NEXORD", "body": "在关系系统中所投入的标量总能量或交互质量，通过累加所有向量模长（不考虑情感极性正负）计算：\\(BDR_i = \\sum_{j \\ne i} (|A_1| + |A_2| + |A_3| + |A_4|)\\)。精确衡量主体在群体系统中所消耗的粗通信惯量与心理社会活跃负荷。"}, {"title": "归一化净相对关系密度（SDR）", "author": "NEXORD", "body": "主体的净结构张力指标，计算为发送密度与接收密度代数和（\\(SDA_i + SRC_i\\)）除以系统理论极值的归一化比率：\\(SDR_i \\in [-1.0, +1.0]\\)。清晰鉴别整合吸引性地位（\\(SDR > 0\\)）与受排斥/边缘化状态（\\(SDR < 0\\)）。"}, {"title": "社会热力学熵（\\(\\mathcal{S}_i\\)）", "author": "NEXORD", "body": "由冲突向量（情感对立、海德失衡或未获响应的预期）同时共存所引发的系统能量耗散与内部关系摩擦度量。高熵状态表明群体拓扑结构失稳，预示着破坏性内耗与冲突的高危潜伏。"}, {"title": "关系质量守恒定律", "author": "NEXORD 准则", "body": "在标准化序数设计中经实证严格验证的热力学守恒定律：当两个群体在相同设计约束与序数尺度下运作时，系统总惯量（\\(\\sum BDR\\)）与相对密度谱（\\(SDR\\)）保持整体守恒，能量根据网络拓扑在节点间发生动态重分配。"}, {"title": "关系分裂发生（Schismogenesis）", "author": "G. Bateson / NEXORD", "body": "由于系统性挫折与对立加剧，导致群体在拓扑结构上发生撕裂并极化为互不相容子派系的动态演化过程。在谱图论中，当拉普拉斯矩阵的第二特征值（\\(\\lambda_2\\)，菲德勒向量）趋近于零时，标志着图结构发生裂解。"}, {"title": "海德结构挫折度（\\(\\lambda_1\\)）", "author": "F. Heider / NEXORD", "body": "基于带符号拉普拉斯矩阵（\\(L_{\\text{signed}}\\)) 最小特征值的认知三元失衡谱测度。量化群体偏离结构平衡定理（Cartwright & Harary）的程度：平衡三元组对应 \\(\\lambda_1 = 0\\)，而 \\(\\lambda_1 > 0\\) 精确度量系统内部累积的冲突耗散能。"}, {"title": "81 种二元构型张量（Q81）", "author": "NEXORD Quatuor", "body": "四维笛卡尔状态张量矩阵 \\(3 \\times 3 \\times 3 \\times 3\\)，在形式上穷尽所有 81 种二元交互可能。每一种构型融合发送者的认知预期（\\(A_1\\)）与实际偏好（\\(A_2\\)），以及接收者的实际偏好（\\(A_3\\)）与认知预期（\\(A_4\\)）。"}, {"title": "9 大宏观情感分区", "author": "NEXORD", "body": "依据发出偏好（\\(A_2\\)）与接收偏好（\\(A_3\\)）将 81 种细分构型归并为 9 个二元象限：<br>&bull; <strong>协同 / 相互选择：</strong>\\(\\langle Ee \\rangle\\)<br>&bull; <strong>冲突 / 情感对立：</strong>\\(\\langle Er ]\\), \\([ Re \\rangle\\)<br>&bull; <strong>相互排斥：</strong>\\([ Rr ]\\)<br>&bull; <strong>冷漠 / 中性互动区：</strong>包含中立无反应状态 \\(\\dot{¿}\\) 或 \\(\\text{¡}\\)。"}, {"title": "SMIb 与 SMIa 架构对照", "author": "NEXORD 架构", "body": "<strong>SMIb</strong> 以加权量化格式保留选择/排斥的细微层级排序（\\(1^\\circ, 2^\\circ, 3^\\circ\\)），而 <strong>SMIa</strong> 则将每个单元格抽象为其在 \\(Q_{81}\\) 目录中的规范符号构型，支持免受尺度变形干扰的形态学分析。"}, {"title": "MORENO 格式与 BREVE 格式对照", "author": "NEXORD 方法论", "body": "<strong>MORENO：</strong>基于直接元感知的有限名额提名问卷（\\(k\\) 项选择，\\(m\\) 项排斥）。<strong>BREVE：</strong>全序数排序（\\(1^\\circ \\dots N^\\circ\\)）辅以主观边界阈值（\\(aE, oE\\)），在不强求被测者强行做出武断排斥表达的同时，实现数学信息捕获的最大化。"}, {"title": "格拉斯曼流形 Gr(k, N)", "author": "H. Grassmann (1844)", "body": "光滑拓扑微分流形，其中的每一个点并非标量或单一向量坐标，而是嵌入在 \\(\\mathbb{R}^N\\) 中的整个 \\(k\\) 维<em>线性子空间</em>。能够在不受坐标轴旋转依赖的前提下，精确比对不同规模与人员构成的群体全局几何构型。"}, {"title": "格拉斯曼测地距离（d<sub>G</sub>）", "author": "微分几何", "body": "衡量两关系子空间之间最小测地线夹角的内在不变度量：\\(d_G(U, V) = \\sqrt{\\sum_{i=1}^k \\theta_i^2}\\)，其中 \\(\\theta_i\\) 为若尔当正则主夹角。客观量化不同群体之间或纵向演化历程中的拓扑结构分歧度。"}, {"title": "谱衍射（Spectral Diffraction）", "author": "NEXORD", "body": "借助 Q81(9, 9) 关系矩阵的渐进级联聚合将原始社会测量张量投影至因子平面，实现主导谐波（系统凝聚力）与微观拓扑扰动（随机噪声）的精确分离。"}, {"title": "规范矩阵 Q81(9, 9)", "author": "张量结构", "body": "由 9 种发送模态（行）与 9 种接收模态（列）笛卡尔积生成的 \\(9 \\times 9 = 81\\) 种二元关系方阵张量结构。在统一且不可分割的有机交互动力中，紧密整合社会认知预期与实际选择偏好。"}, {"title": "对偶网格 Q81a 与 Q81b", "author": "正交基变换", "body": "依据主控索引的两种因子分解方式：<strong>Q81a（行为优先基）</strong>在宏观层面按实际行为聚合（\\(E, ¿, R\\)），微观层面按预期聚合（\\(\\langle, ¡, [\\)）。<strong>Q81b（认知优先基）</strong>在宏观层面按认知预期聚合（\\(\\langle, ¡, [\\)），微观层面按实际行为聚合（\\(E, ¿, R\\)）。"}, {"title": "微观 9 模态降维（Micro 9）", "author": "DA 行动模态", "body": "将 81 种全状态浓缩为主体发射端的 9 种二元行动模态（\\(\\langle E, \\text{¡}E, [E, \\langle ¿, \\text{¡}¿, [¿, \\langle R, \\text{¡}R, [R\\)），联合共轭认知预期（\\(A_1\\)）与实际发出偏好（\\(A_2\\)），严格守恒 \\(N(N-1)\\) 条二元关系链的系统质量。"}, {"title": "中观 6 维描述符（Q6a）", "author": "发送与接收", "body": "划分在 3 个发送极（\\(A_2 = E, ¿, R\\)）与 3 个接收极（\\(A_3 = e, ¿, r\\)）之下的核心情感—行为描述符。能够在二维笛卡尔直角投影中精准刻画能量流动平衡与互惠交互特征。"}, {"title": "宏观 3 大引力势阱（Macro 3）", "author": "三元摩尔价态", "body": "社会情感场域的 3 大极化引力势阱：<strong>(+) 吸引 / 凝聚</strong>（\\(\\langle Ee \\rangle\\)）、<strong>(-) 冲突 / 排斥</strong>（\\([ Rr ]\\)）与 <strong>(0) 中立 / 冷漠</strong>（\\(\\dot{¿}\\)）。它们构成了群体相变动力学与宏观热力学分析的核心基础。"}, {"title": "金字塔重心不变性定理", "author": "守恒定理", "body": "表明系统总二元质量（\\(N(N-1)\\) 条关系连接）与社会热能势能重心（\\(BDR, SDR\\)）在每一级聚合阶梯（81 \\(\\to\\) 9 \\(\\to\\) 6 \\(\\to\\) 3 \\(\\to\\) 1）中保持严格几何守恒的原理。降维过程杜绝任何结构能量损耗。"}, {"title": "最优正方形视野架构（Auto-Frame）", "author": "零滚动人机工效学", "body": "将社会矩阵自动等比例自适应嵌入限定正方形视窗（\\(\\le 600\\text{px}\\)）的视觉工程架构，确保分析师无需页面滚动即可纵览全景网络，同时严密保障 SMIb 四元组位置要素的同构几何阅读。"}, {"title": "博纳西奇地位指数（K<sub>INF</sub>）", "author": "P. Bonacich (1987)", "body": "递归特征向量中心性度量，节点的声望不仅取决于所获选择数量，更取决于做出选择者的地位与社会测量权重：\\(C(\\alpha, \\beta) = \\alpha (I - \\beta A)^{-1} A \\mathbf{1}\\)。"}, {"title": "二项式显著性检验（SIG_B）", "author": "U. Bronfenbrenner (1943)", "body": "基于二项式/泊松分布的精确概率统计检验，用于验证在给定群体规模 \\(N\\) 下，“社会测量之星”或“孤立节点”地位是否超越随机偶发临界阈值（\\(p < 0.05\\)）。"}]}, "caso": {"es": ["<strong>Centroide Afectivo Integrador</strong> (Sinergia recíproca con S₂ y S₄).", "<strong>Nodo Estable de Sostén</strong> (Posición neutral-positiva de moderación).", "<strong>Sujeto en Riesgo de Marginación</strong> (Rechazo mutuo activo con S₂).", "<strong>Líder Sociométrico de Campo</strong> (Máxima atracción e influencia en el grupo)."], "en": ["<strong>Affective Integrating Centroid</strong> (Reciprocal synergy with S₂ and S₄).", "<strong>Stable Support Node</strong> (Neutral-positive moderation position).", "<strong>Subject at Risk of Marginalization</strong> (Active mutual rejection with S₂).", "<strong>Sociometric Field Leader</strong> (Maximum attraction and influence in the group)."], "ru": ["<strong>Аффективный интегрирующий центроид</strong> (Взаимная синергия с S₂ и S₄).", "<strong>Стабильный опорный узел</strong> (Нейтрально-положительная позиция модерации).", "<strong>Субъект под риском маргинализации</strong> (Активное взаимное отторжение с S₂).", "<strong>Социометрический лидер поля</strong> (Максимальная привлекательность и влияние в группе)."], "zh": ["<strong>情感整合质心</strong>（与 S₂ 和 S₄ 形成双向协同支持）。", "<strong>稳定中枢支撑节点</strong>（中立温和的平衡缓冲角色）。", "<strong>边缘化风险主体</strong>（与 S₂ 存在显性相互排斥）。", "<strong>场域领袖主体</strong>（在群体中享有最高的引力偏好与中心影响力）。"]}};
+        let currentLang = 'es';
+
+        function setLanguage(lang) {
+            if (!I18N_GLOSARIO.ui[lang]) lang = 'es';
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            try {
+                localStorage.setItem('nexord_lang', lang);
+            } catch(e) {}
+
+            const ui = I18N_GLOSARIO.ui[lang];
+            if (document.title) document.title = ui.page_title;
+            const setHtml = (id, htmlContent) => { const el = document.getElementById(id); if (el) el.innerHTML = htmlContent; };
+            const setText = (id, txtContent) => { const el = document.getElementById(id); if (el) el.textContent = txtContent; };
+
+            setHtml('brand-title', ui.brand_main);
+            setHtml('btn-esc-return', ui.btn_esc);
+            const btnEsc = document.getElementById('btn-esc-return');
+            if (btnEsc) btnEsc.title = ui.btn_esc_title;
+
+            setText('hero-title', ui.hero_title);
+            setText('hero-subtitle', ui.hero_subtitle);
+            setHtml('hero-desc', ui.hero_desc);
+
+            const searchInput = document.getElementById('glossary-search');
+            if (searchInput) searchInput.placeholder = ui.search_ph;
+
+            setText('pill-all', ui.pill_all);
+            setText('pill-siglas', ui.pill_siglas);
+            setText('pill-fundamentos', ui.pill_fundamentos);
+            setText('pill-termodinamica', ui.pill_termodinamica);
+            setText('pill-topologia', ui.pill_topologia);
+            setText('pill-grassmann', ui.pill_grassmann);
+            setText('pill-agrupamiento', ui.pill_agrupamiento);
+            setText('pill-caso', ui.pill_caso);
+
+            setText('rule5-title', ui.rule5_title);
+            setHtml('rule5-intro', ui.rule5_intro);
+            setHtml('rule5-a1', ui.rule5_a1);
+            setHtml('rule5-a2', ui.rule5_a2);
+            setHtml('rule5-a3', ui.rule5_a3);
+            setHtml('rule5-a4', ui.rule5_a4);
+
+            setText('sec-siglas-title', ui.sec_siglas_title);
+            setText('sec-siglas-badge', ui.sec_siglas_badge);
+            setText('th-sigla', ui.th_sigla);
+            setText('th-name', ui.th_name);
+            setText('th-desc', ui.th_desc);
+
+            setText('sec-fund-title', ui.sec_fund_title);
+            setText('sec-fund-badge', ui.sec_fund_badge);
+            setText('sec-term-title', ui.sec_term_title);
+            setText('sec-term-badge', ui.sec_term_badge);
+            setText('sec-topo-title', ui.sec_topo_title);
+            setText('sec-topo-badge', ui.sec_topo_badge);
+            setText('sec-grass-title', ui.sec_grass_title);
+            setText('sec-grass-badge', ui.sec_grass_badge);
+            setText('sec-agrup-title', ui.sec_agrup_title);
+            setText('sec-agrup-badge', ui.sec_agrup_badge);
+
+            setText('sec-caso-title', ui.sec_caso_title);
+            setText('sec-caso-badge', ui.sec_caso_badge);
+            setText('caso-intro', ui.caso_intro);
+            setText('th-member', ui.th_member);
+            setText('th-sda', ui.th_sda);
+            setText('th-src', ui.th_src);
+            setText('th-sdr', ui.th_sdr);
+            setText('th-bdr', ui.th_bdr);
+            setText('th-diag', ui.th_diag);
+
+            setHtml('footer-main', ui.footer_main);
+            setHtml('footer-sub', ui.footer_sub);
+
+            const siglas = I18N_GLOSARIO.siglas[lang];
+            if (siglas) {
+                siglas.forEach((s, idx) => {
+                    setHtml('sigla-name-' + idx, s.name);
+                    setHtml('sigla-desc-' + idx, s.desc);
+                });
+            }
+
+            const terms = I18N_GLOSARIO.terms[lang];
+            if (terms) {
+                terms.forEach((t, idx) => {
+                    const authorSpan = t.author ? ' <span class="term-author">' + t.author + '</span>' : '';
+                    setHtml('term-title-' + idx, t.title + authorSpan);
+                    setHtml('term-body-' + idx, t.body);
+                });
+            }
+
+            const caso = I18N_GLOSARIO.caso[lang];
+            if (caso) {
+                caso.forEach((c, idx) => {
+                    setHtml('caso-diag-' + idx, c);
+                });
+            }
+
+            document.querySelectorAll('.hud-lang-btn').forEach(btn => {
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (window.renderMathInElement) {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '\\[', right: '\\]', display: true},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch(e) {
+                    console.warn('KaTeX re-render warning:', e);
+                }
+            }
+
+            if (typeof window.refreshGlossaryFilters === 'function') {
+                window.refreshGlossaryFilters();
+            }
+        }
+
         function volverALlamada() {
             if (window.history.length > 1) {
                 window.history.back();
@@ -965,6 +1133,10 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
             const tableRows = document.querySelectorAll('#table-siglas tbody tr');
 
             let activeCategory = 'all';
+            window.refreshGlossaryFilters = applyFilters;
+            const initLang = localStorage.getItem('nexord_lang') || 'es';
+            setLanguage(initLang);
+
 
             // Filtrado por categoría
             pillBtns.forEach(btn => {
@@ -982,7 +1154,7 @@ e i} (|A_{1,ij}| + |A_{2,ij}| + |A_{3,ij}| + |A_{4,ij}|)\).
             });
 
             function applyFilters() {
-                const query = searchInput.value.toLowerCase().trim();
+                const query = (searchInput && searchInput.value) ? searchInput.value.toLowerCase().trim() : "";
 
                 // 1. Filtrar filas de la tabla de siglas
                 tableRows.forEach(row => {

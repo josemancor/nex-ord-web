@@ -3810,14 +3810,29 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         }
     };
 
-    let currentLang = localStorage.getItem('visordp_lang') || 'es';
+    function detectInitialDemoLang() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pLang = urlParams.get('lang');
+            if (pLang && i18nDict[pLang]) return pLang;
+        } catch(e) {}
+        const saved = localStorage.getItem('nexord_lang') || localStorage.getItem('visordp_lang');
+        if (saved && i18nDict[saved]) return saved;
+        return 'es';
+    }
+
+    let currentLang = detectInitialDemoLang();
 
     function setLanguage(lang) {
+        if (!i18nDict[lang]) lang = 'es';
         currentLang = lang;
         window.diagLang = lang;
         if (typeof updateDiagFlag === 'function') updateDiagFlag();
         
-        localStorage.setItem('visordp_lang', lang);
+        try {
+            localStorage.setItem('nexord_lang', lang);
+            localStorage.setItem('visordp_lang', lang);
+        } catch(e) {}
         
         const dict = i18nDict[lang];
         if (!dict) return;
