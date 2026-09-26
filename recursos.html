@@ -169,6 +169,39 @@
             transform: translateY(-2px);
         }
 
+        /* SELECTOR DE IDIOMA HUD */
+        .hud-lang-picker {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(4, 7, 16, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 3px 6px;
+            gap: 3px;
+            margin-left: 6px;
+        }
+        .hud-lang-btn {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Roboto Mono', monospace;
+            transition: all 0.2s ease;
+        }
+        .hud-lang-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .hud-lang-btn.active {
+            background: #00FF87;
+            color: #03060F;
+            font-weight: 900;
+        }
+
         /* CONTENIDO PRINCIPAL: SE INICIA Y SE ACABA CON LA EXPERIENCIA VISORD */
         .recursos-main-container {
             flex: 1;
@@ -211,6 +244,61 @@
             max-width: 820px;
             margin: 0 auto;
             line-height: 1.6;
+        }
+
+        /* BOTÓN DE LOCUCIÓN DE AUDIO */
+        .experience-audio-wrap {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-transit-audio {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(56, 189, 248, 0.45);
+            color: #38BDF8;
+            font-size: 1.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        }
+        .btn-transit-audio:hover {
+            border-color: #00F0FF;
+            color: #FFFFFF;
+            background: rgba(56, 189, 248, 0.25);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.55);
+        }
+        .btn-transit-audio.playing {
+            border-color: #00FF87;
+            color: #00FF87;
+            box-shadow: 0 0 22px rgba(0, 255, 135, 0.6);
+            animation: audioPulse 1.8s infinite;
+        }
+        @keyframes audioPulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+            50% { transform: scale(1.08); box-shadow: 0 0 24px rgba(0, 255, 135, 0.75); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 135, 0.4); }
+        }
+        .audio-label {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.82rem;
+            color: #94A3B8;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+        .audio-label:hover {
+            color: #38BDF8;
         }
 
         /* CUADRÍCULA DE LAS 4 TARJETAS DE ENTORNOS INTERACTIVOS */
@@ -583,57 +671,64 @@
 <body>
 
     <!-- Enlace accesible de salto al contenido principal (WCAG AAA) -->
-    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <a href="#main-content" class="skip-link" data-i18n="skip_link">Saltar al contenido principal</a>
 
     <!-- CABECERA INSTITUCIONAL: INDEPENDIENTE DE FORMACIÓN -->
     <header class="recursos-top-bar" role="banner">
-        <a href="index.html?dial=open&sector=8" class="recursos-brand" title="Volver a la Rueda del Dial" aria-label="Volver a la Rueda del Dial NEXORD">
+        <a href="index.html?dial=open&sector=8" class="recursos-brand" id="brand-link" title="Volver a la Rueda del Dial" aria-label="Volver a la Rueda del Dial NEXORD">
             <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.src='assets/logo_nexord_base.png'" style="height: 36px;">
-            <div>NEXORD <span>RECURSOS</span></div>
+            <div>NEXORD <span data-i18n="header_brand_sub">RECURSOS</span></div>
         </a>
         <nav class="recursos-nav-links" role="navigation" aria-label="Enlaces rápidos de recursos">
-            <a href="visord_procesual.html" class="recursos-nav-btn btn-dial" title="◀ VISORD Anterior: VISORD_PROCESUAL" aria-label="VISORD Anterior: VISORD Procesual">
+            <a href="visord_procesual.html" class="recursos-nav-btn btn-dial" id="nav-btn-proc" title="◀ VISORD Anterior: VISORD_PROCESUAL" aria-label="VISORD Anterior: VISORD Procesual" data-i18n="nav_proc">
                 ◀ VISORD_PROCESUAL
             </a>
-            <a href="visord_demo.html" class="recursos-nav-btn btn-dial" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo">
+            <a href="visord_demo.html" class="recursos-nav-btn btn-dial" id="nav-btn-demo" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo" data-i18n="nav_demo">
                 VISORD_DEMO ▶
             </a>
-            <a href="index.html?dial=open&sector=8" class="recursos-nav-btn btn-dial" title="Volver al Dial (Rueda de Sectores)" aria-label="Volver al Dial interactivo">
+            <a href="index.html?dial=open&sector=8" class="recursos-nav-btn btn-dial" id="nav-btn-dial" title="Volver al Dial (Rueda de Sectores)" aria-label="Volver al Dial interactivo" data-i18n="nav_dial">
                 🎡 Volver a la Rueda
             </a>
-            <a href="index.html" class="recursos-nav-btn btn-home" title="Volver a la Portada Principal" aria-label="Volver a la Portada Principal">
+            <a href="index.html" class="recursos-nav-btn btn-home" id="nav-btn-home" title="Volver a la Portada Principal" aria-label="Volver a la Portada Principal" data-i18n="nav_home">
                 🏠 Portada
             </a>
+            <!-- SELECTOR DE IDIOMA HUD -->
+            <div class="hud-lang-picker" id="hud-lang-picker" role="radiogroup" aria-label="Selector de idioma">
+                <button class="hud-lang-btn active" data-lang="es" onclick="setLanguage('es')">ES</button>
+                <button class="hud-lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button class="hud-lang-btn" data-lang="ru" onclick="setLanguage('ru')">RU</button>
+                <button class="hud-lang-btn" data-lang="zh" onclick="setLanguage('zh')">ZH</button>
+            </div>
         </nav>
     </header>
 
     <!-- FLECHAS LATERALES FLOTANTES AL VISORD ANTERIOR Y SIGUIENTE -->
-    <a href="visord_procesual.html" class="floating-side-arrow arrow-left" title="◀ VISORD Anterior: VISORD_PROCESUAL (Laboratorio)" aria-label="VISORD Anterior: VISORD Procesual">
+    <a href="visord_procesual.html" class="floating-side-arrow arrow-left" id="floating-arrow-left" title="◀ VISORD Anterior: VISORD_PROCESUAL (Laboratorio)" aria-label="VISORD Anterior: VISORD Procesual">
         <span class="arrow-glyph" aria-hidden="true">‹</span>
-        <span class="arrow-label">VISORD_PROCESUAL</span>
+        <span class="arrow-label" data-i18n="arrow_left_label">VISORD_PROCESUAL</span>
     </a>
-    <a href="visord_demo.html" class="floating-side-arrow arrow-right" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo">
+    <a href="visord_demo.html" class="floating-side-arrow arrow-right" id="floating-arrow-right" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo">
         <span class="arrow-glyph" aria-hidden="true">›</span>
-        <span class="arrow-label">VISORD_DEMO</span>
+        <span class="arrow-label" data-i18n="arrow_right_label">VISORD_DEMO</span>
     </a>
 
     <!-- MANDO UNIVERSAL FLOTANTE EN FILA INDIA (CON ENLACES AL VISORD ANTERIOR / SIGUIENTE) -->
     <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
-        <a href="index.html?dial=open&sector=8" class="nav-pod-btn nav-pod-home" title="Volver a la Rueda (Dial) / Portada" aria-label="Volver a la Rueda de Sectores">
+        <a href="index.html?dial=open&sector=8" class="nav-pod-btn nav-pod-home" id="nav-pod-home" title="Volver a la Rueda (Dial) / Portada" aria-label="Volver a la Rueda de Sectores">
             <span aria-hidden="true">🎡</span>
         </a>
-        <a href="visord_procesual.html" class="nav-pod-btn" title="◀ VISORD Anterior: VISORD_PROCESUAL" aria-label="VISORD Anterior: VISORD Procesual">
+        <a href="visord_procesual.html" class="nav-pod-btn" id="nav-pod-proc" title="◀ VISORD Anterior: VISORD_PROCESUAL" aria-label="VISORD Anterior: VISORD Procesual">
             <span aria-hidden="true">◀</span>
         </a>
         <div class="nav-pod-page-group">
-            <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Subir al inicio" aria-label="Subir al inicio de la página">
+            <button class="nav-pod-btn nav-pod-prev-screen" id="nav-pod-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Subir al inicio" aria-label="Subir al inicio de la página">
                 <span aria-hidden="true">▲</span>
             </button>
-            <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})" title="Bajar al pie" aria-label="Bajar al pie de la página">
+            <button class="nav-pod-btn nav-pod-next-screen" id="nav-pod-bottom" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})" title="Bajar al pie" aria-label="Bajar al pie de la página">
                 <span aria-hidden="true">▼</span>
             </button>
         </div>
-        <a href="visord_demo.html" class="nav-pod-btn" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo">
+        <a href="visord_demo.html" class="nav-pod-btn" id="nav-pod-demo" title="VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶" aria-label="VISORD Siguiente: VISORD Demo">
             <span aria-hidden="true">▶</span>
         </a>
     </nav>
@@ -642,11 +737,17 @@
     <main class="recursos-main-container" id="main-content">
         
         <div class="experience-header">
-            <div class="experience-pretitle">ENTORNOS INTERACTIVOS</div>
-            <h1 class="experience-title">EXPERIENCIA VISORD</h1>
-            <p class="experience-subtitle">
+            <div class="experience-pretitle" data-i18n="exp_pretitle">ENTORNOS INTERACTIVOS</div>
+            <h1 class="experience-title" data-i18n="exp_title">EXPERIENCIA VISORD</h1>
+            <p class="experience-subtitle" data-i18n="exp_subtitle">
                 Los 4 entornos de exploración interactiva y proyección socio-termodinámica de la suite NEXORD:
             </p>
+            <div class="experience-audio-wrap">
+                <button id="btn-audio-caratula" class="btn-transit-audio" onclick="toggleCaratulaAudio()" title="Escuchar locución pausada de la Experiencia VISORD" aria-label="Audio de la Experiencia VISORD">
+                    <span id="audio-play-icon" aria-hidden="true">🔊</span>
+                </button>
+                <span id="audio-label" class="audio-label" data-i18n="btn_audio_narration" onclick="toggleCaratulaAudio()">Escuchar Presentación</span>
+            </div>
         </div>
 
         <div class="cards-grid">
@@ -657,12 +758,12 @@
                         <span class="card-badge">8</span>
                         <span class="card-icon">🌐</span>
                     </div>
-                    <h2 class="card-title">VISORD_DEMO (NIVEL 8)</h2>
-                    <p class="card-desc">
+                    <h2 class="card-title" data-i18n="card1_title">VISORD_DEMO (NIVEL 8)</h2>
+                    <p class="card-desc" data-i18n="card1_desc">
                         Simulador 3D/4D para colectivos de $N &lt; 51$: modela cambios de estado, matrices SMIb vivas y dinámica de fluidos sociales en tiempo real.
                     </p>
                 </div>
-                <a href="visord_demo.html" class="card-action-btn">
+                <a href="visord_demo.html" class="card-action-btn" data-i18n="card1_btn">
                     Explorar VISORD_demo 🌐
                 </a>
             </div>
@@ -674,12 +775,12 @@
                         <span class="card-badge">CULT</span>
                         <span class="card-icon">🎭</span>
                     </div>
-                    <h2 class="card-title">VISORD_CULTURAL</h2>
-                    <p class="card-desc">
+                    <h2 class="card-title" data-i18n="card2_title">VISORD_CULTURAL</h2>
+                    <p class="card-desc" data-i18n="card2_desc">
                         Sociometría de obras maestras (<em>12 Hombres sin Piedad</em>, <em>Bernarda Alba</em>, <em>El Señor de las Moscas</em>): radiografía de alianzas, poder y tensión dramática.
                     </p>
                 </div>
-                <a href="visord_cultural.html" class="card-action-btn">
+                <a href="visord_cultural.html" class="card-action-btn" data-i18n="card2_btn">
                     Explorar VISORD_cultural 🎭
                 </a>
             </div>
@@ -691,12 +792,12 @@
                         <span class="card-badge">RAD</span>
                         <span class="card-icon">🩻</span>
                     </div>
-                    <h2 class="card-title">VISORD_RADIOLÓGICO</h2>
-                    <p class="card-desc">
+                    <h2 class="card-title" data-i18n="card3_title">VISORD_RADIOLÓGICO</h2>
+                    <p class="card-desc" data-i18n="card3_desc">
                         Radiografías socio-termodinámicas (15-27-54): topología de Grassmann y espectro de polarización para diagnosticar el ostracismo invisible.
                     </p>
                 </div>
-                <a href="radiografias_relacionales.html" class="card-action-btn">
+                <a href="radiografias_relacionales.html" class="card-action-btn" data-i18n="card3_btn">
                     Explorar VISORD_radiológico 🩻
                 </a>
             </div>
@@ -708,12 +809,12 @@
                         <span class="card-badge">PROC</span>
                         <span class="card-icon">⚡</span>
                     </div>
-                    <h2 class="card-title">VISORD_PROCESUAL</h2>
-                    <p class="card-desc">
+                    <h2 class="card-title" data-i18n="card4_title">VISORD_PROCESUAL</h2>
+                    <p class="card-desc" data-i18n="card4_desc">
                         Laboratorio experimental de micro-procesos: Cuadrilátero interactivo, Moviola Bales IPA ⇄ SMIb ⇄ Dilema Moral de Bienes Comunes (N=5).
                     </p>
                 </div>
-                <a href="visord_procesual.html" class="card-action-btn">
+                <a href="visord_procesual.html" class="card-action-btn" data-i18n="card4_btn">
                     Acceder al Laboratorio ⚡
                 </a>
             </div>
@@ -721,10 +822,10 @@
 
         <!-- ACCIONES DE CIERRE: DE VUELTA A LA RUEDA O A LA PRINCIPAL -->
         <div class="exit-actions-bar">
-            <a href="index.html?dial=open&sector=8" class="exit-btn btn-to-dial" title="Volver a la Rueda del Menú">
+            <a href="index.html?dial=open&sector=8" class="exit-btn btn-to-dial" id="exit-btn-dial" title="Volver a la Rueda del Menú" data-i18n="exit_dial">
                 <span>🎡</span> Volver a la Rueda (Dial)
             </a>
-            <a href="index.html" class="exit-btn btn-to-home" title="Volver a la Portada Principal">
+            <a href="index.html" class="exit-btn btn-to-home" id="exit-btn-home" title="Volver a la Portada Principal" data-i18n="exit_home">
                 <span>🏠</span> Volver a la Portada Principal
             </a>
         </div>
@@ -733,11 +834,360 @@
 
     <!-- PIE DE PÁGINA -->
     <footer class="recursos-footer">
-        <p>NEXORD © 2026 · Sociometría Ordinal Computacional</p>
+        <p data-i18n="footer_copy">NEXORD © 2026 · Sociometría Ordinal Computacional</p>
         <p>
-            <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank">CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗</a>
+            <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" data-i18n="footer_doi">CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗</a>
         </p>
     </footer>
 
+    <!-- SCRIPT DE LOCALIZACIÓN REACTIVA Y LOCUCIÓN MULTILINGÜE -->
+    <script>
+    const I18N_DATA = {
+  "es": {
+    "page_title": "NEXORD · Recursos y Entornos Operativos (Nivel 8: Experiencia VISORD)",
+    "meta_desc": "NEXORD Recursos y Entornos Operativos (Nivel 8: Experiencia VISORD). Acceso a simuladores interactivos 3D/4D: VISORD_demo, VISORD_cultural, VISORD_radiológico y VISORD_procesual.",
+    "skip_link": "Saltar al contenido principal",
+    "header_brand_sub": "RECURSOS",
+    "nav_proc": "◀ VISORD_PROCESUAL",
+    "nav_proc_title": "◀ VISORD Anterior: VISORD_PROCESUAL",
+    "nav_demo": "VISORD_DEMO ▶",
+    "nav_demo_title": "VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶",
+    "nav_dial": "🎡 Volver a la Rueda",
+    "nav_dial_title": "Volver al Dial (Rueda de Sectores)",
+    "nav_home": "🏠 Portada",
+    "nav_home_title": "Volver a la Portada Principal",
+    "arrow_left_label": "VISORD_PROCESUAL",
+    "arrow_left_title": "◀ VISORD Anterior: VISORD_PROCESUAL (Laboratorio)",
+    "arrow_right_label": "VISORD_DEMO",
+    "arrow_right_title": "VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶",
+    "pod_home_title": "Volver a la Rueda (Dial) / Portada",
+    "pod_proc_title": "◀ VISORD Anterior: VISORD_PROCESUAL",
+    "pod_demo_title": "VISORD Siguiente: VISORD_DEMO (Nivel 8) ▶",
+    "pod_scroll_top": "Subir al inicio",
+    "pod_scroll_bottom": "Bajar al pie",
+    "exp_pretitle": "ENTORNOS INTERACTIVOS",
+    "exp_title": "EXPERIENCIA VISORD",
+    "exp_subtitle": "Los 4 entornos de exploración interactiva y proyección socio-termodinámica de la suite NEXORD:",
+    "btn_audio_narration": "Escuchar Presentación",
+    "btn_audio_title": "Escuchar locución pausada de la Experiencia VISORD",
+    "card1_title": "VISORD_DEMO (NIVEL 8)",
+    "card1_desc": "Simulador 3D/4D para colectivos de $N < 51$: modela cambios de estado, matrices SMIb vivas y dinámica de fluidos sociales en tiempo real.",
+    "card1_btn": "Explorar VISORD_demo 🌐",
+    "card2_title": "VISORD_CULTURAL",
+    "card2_desc": "Sociometría de obras maestras (<em>12 Hombres sin Piedad</em>, <em>Bernarda Alba</em>, <em>El Señor de las Moscas</em>): radiografía de alianzas, poder y tensión dramática.",
+    "card2_btn": "Explorar VISORD_cultural 🎭",
+    "card3_title": "VISORD_RADIOLÓGICO",
+    "card3_desc": "Radiografías socio-termodinámicas (15-27-54): topología de Grassmann y espectro de polarización para diagnosticar el ostracismo invisible.",
+    "card3_btn": "Explorar VISORD_radiológico 🩻",
+    "card4_title": "VISORD_PROCESUAL",
+    "card4_desc": "Laboratorio experimental de micro-procesos: Cuadrilátero interactivo, Moviola Bales IPA ⇄ SMIb ⇄ Dilema Moral de Bienes Comunes (N=5).",
+    "card4_btn": "Acceder al Laboratorio ⚡",
+    "exit_dial": "<span>🎡</span> Volver a la Rueda (Dial)",
+    "exit_dial_title": "Volver a la Rueda del Menú",
+    "exit_home": "<span>🏠</span> Volver a la Portada Principal",
+    "exit_home_title": "Volver a la Portada Principal",
+    "footer_copy": "NEXORD © 2026 · Sociometría Ordinal Computacional",
+    "footer_doi": "CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗",
+    "locucion": "Bienvenido a la Experiencia VISORD de NEXORD. En este centro de recursos interactivos puede acceder a cuatro entornos de exploración avanzada: el simulador VISORD Demo para colectivos en tres y cuatro dimensiones; VISORD Cultural para la sociometría de obras maestras dramáticas; VISORD Radiológico para el diagnóstico espectral en variedades de Grassmann; y VISORD Procesual, nuestro laboratorio experimental de microprocesos y dilemas morales."
+  },
+  "en": {
+    "page_title": "NEXORD · Resources & Operating Environments (Level 8: VISORD Experience)",
+    "meta_desc": "NEXORD Resources & Operating Environments (Level 8: VISORD Experience). Access interactive 3D/4D simulators: VISORD_demo, VISORD_cultural, VISORD_radiológico, and VISORD_procesual.",
+    "skip_link": "Skip to main content",
+    "header_brand_sub": "RESOURCES",
+    "nav_proc": "◀ VISORD_PROCESSUAL",
+    "nav_proc_title": "◀ Previous VISORD: VISORD_PROCESSUAL",
+    "nav_demo": "VISORD_DEMO ▶",
+    "nav_demo_title": "Next VISORD: VISORD_DEMO (Level 8) ▶",
+    "nav_dial": "🎡 Return to Wheel",
+    "nav_dial_title": "Return to Dial (Sector Wheel)",
+    "nav_home": "🏠 Home",
+    "nav_home_title": "Return to Main Home",
+    "arrow_left_label": "VISORD_PROCESSUAL",
+    "arrow_left_title": "◀ Previous VISORD: VISORD_PROCESSUAL (Laboratory)",
+    "arrow_right_label": "VISORD_DEMO",
+    "arrow_right_title": "Next VISORD: VISORD_DEMO (Level 8) ▶",
+    "pod_home_title": "Return to Wheel (Dial) / Home",
+    "pod_proc_title": "◀ Previous VISORD: VISORD_PROCESSUAL",
+    "pod_demo_title": "Next VISORD: VISORD_DEMO (Level 8) ▶",
+    "pod_scroll_top": "Scroll to top",
+    "pod_scroll_bottom": "Scroll to bottom",
+    "exp_pretitle": "INTERACTIVE ENVIRONMENTS",
+    "exp_title": "VISORD EXPERIENCE",
+    "exp_subtitle": "The 4 interactive exploration and socio-thermodynamic projection environments of the NEXORD suite:",
+    "btn_audio_narration": "Listen to Presentation",
+    "btn_audio_title": "Listen to speech introduction of the VISORD Experience",
+    "card1_title": "VISORD_DEMO (LEVEL 8)",
+    "card1_desc": "3D/4D simulator for collectives with $N < 51$: models state transitions, living SMIb matrices, and social fluid dynamics in real time.",
+    "card1_btn": "Explore VISORD_demo 🌐",
+    "card2_title": "VISORD_CULTURAL",
+    "card2_desc": "Sociometrics of literary masterpieces (<em>12 Angry Men</em>, <em>The House of Bernarda Alba</em>, <em>Lord of the Flies</em>): X-ray of alliances, power structures, and dramatic tension.",
+    "card2_btn": "Explore VISORD_cultural 🎭",
+    "card3_title": "VISORD_RADIOLOGICAL",
+    "card3_desc": "Socio-thermodynamic X-rays (15-27-54): Grassmann topology and polarization spectrum to diagnose invisible social ostracism.",
+    "card3_btn": "Explore VISORD_radiological 🩻",
+    "card4_title": "VISORD_PROCESSUAL",
+    "card4_desc": "Experimental micro-process laboratory: Interactive Quadrilateral, Moviola Bales IPA ⇄ SMIb ⇄ Commons Moral Dilemma (N=5).",
+    "card4_btn": "Access the Laboratory ⚡",
+    "exit_dial": "<span>🎡</span> Return to Wheel (Dial)",
+    "exit_dial_title": "Return to Menu Wheel",
+    "exit_home": "<span>🏠</span> Return to Main Home",
+    "exit_home_title": "Return to Main Home",
+    "footer_copy": "NEXORD © 2026 · Computational Ordinal Sociometrics",
+    "footer_doi": "CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗",
+    "locucion": "Welcome to the NEXORD VISORD Experience. In this interactive resource hub, you can access four advanced exploration environments: the VISORD Demo simulator for collectives in 3D and 4D; VISORD Cultural for the sociometrics of dramatic masterpieces; VISORD Radiological for spectral diagnostics on Grassmann manifolds; and VISORD Processual, our experimental laboratory for micro-processes and moral dilemmas."
+  },
+  "ru": {
+    "page_title": "NEXORD · Ресурсы и операционные среды (Уровень 8: VISORD Experience)",
+    "meta_desc": "Ресурсы и операционные среды NEXORD (Уровень 8: VISORD Experience). Доступ к интерактивным 3D/4D симуляторам: VISORD_demo, VISORD_cultural, VISORD_radiológico и VISORD_procesual.",
+    "skip_link": "Перейти к основному содержимому",
+    "header_brand_sub": "РЕСУРСЫ",
+    "nav_proc": "◀ VISORD_ПРОЦЕССУАЛЬНЫЙ",
+    "nav_proc_title": "◀ Предыдущий VISORD: VISORD_ПРОЦЕССУАЛЬНЫЙ",
+    "nav_demo": "VISORD_ДЕМО ▶",
+    "nav_demo_title": "Следующий VISORD: VISORD_ДЕМО (Уровень 8) ▶",
+    "nav_dial": "🎡 Вернуться к Колесу",
+    "nav_dial_title": "Вернуться к Диску (Колесу Секторов)",
+    "nav_home": "🏠 Главная",
+    "nav_home_title": "Вернуться на Главную Страницу",
+    "arrow_left_label": "VISORD_ПРОЦЕССУАЛЬНЫЙ",
+    "arrow_left_title": "◀ Предыдущий VISORD: VISORD_ПРОЦЕССУАЛЬНЫЙ (Лаборатория)",
+    "arrow_right_label": "VISORD_ДЕМО",
+    "arrow_right_title": "Следующий VISORD: VISORD_ДЕМО (Уровень 8) ▶",
+    "pod_home_title": "Вернуться к Колесу (Диску) / Главная",
+    "pod_proc_title": "◀ Предыдущий VISORD: VISORD_ПРОЦЕССУАЛЬНЫЙ",
+    "pod_demo_title": "Следующий VISORD: VISORD_ДЕМО (Уровень 8) ▶",
+    "pod_scroll_top": "Наверх",
+    "pod_scroll_bottom": "Вниз",
+    "exp_pretitle": "ИНТЕРАКТИВНЫЕ СРЕДЫ",
+    "exp_title": "VISORD EXPERIENCE",
+    "exp_subtitle": "4 интерактивные среды исследования и социально-термодинамического моделирования пакета NEXORD:",
+    "btn_audio_narration": "Прослушать презентацию",
+    "btn_audio_title": "Прослушать голосовое введение в VISORD Experience",
+    "card1_title": "VISORD_ДЕМО (УРОВЕНЬ 8)",
+    "card1_desc": "3D/4D симулятор для коллективов с $N < 51$: моделирует фазовые переходы, живые матрицы SMIb и гидродинамику социальных полей в реальном времени.",
+    "card1_btn": "Исследовать VISORD_демо 🌐",
+    "card2_title": "VISORD_КУЛЬТУРНЫЙ",
+    "card2_desc": "Социометрия классических шедевров (<em>12 разгневанных мужчин</em>, <em>Дом Бернарды Альбы</em>, <em>Повелитель мух</em>): рентген коалиций, власти и драматического напряжения.",
+    "card2_btn": "Исследовать VISORD_культурный 🎭",
+    "card3_title": "VISORD_РАДИОЛОГИЧЕСКИЙ",
+    "card3_desc": "Социально-термодинамический рентген (15-27-54): топология Грассмана и спектр поляризации для диагностики невидимого остракизма.",
+    "card3_btn": "Исследовать VISORD_радиологический 🩻",
+    "card4_title": "VISORD_ПРОЦЕССУАЛЬНЫЙ",
+    "card4_desc": "Экспериментальная лаборатория микропроцессов: интерактивный четырехугольник, мовиола Bales IPA ⇄ SMIb ⇄ моральная дилемма общественных благ (N=5).",
+    "card4_btn": "Войти в лабораторию ⚡",
+    "exit_dial": "<span>🎡</span> Вернуться к Колесу (Диску)",
+    "exit_dial_title": "Вернуться к Колесу Меню",
+    "exit_home": "<span>🏠</span> Вернуться на Главную Страницу",
+    "exit_home_title": "Вернуться на Главную Страницу",
+    "footer_copy": "NEXORD © 2026 · Вычислительная порядковая социометрия",
+    "footer_doi": "CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗",
+    "locucion": "Добро пожаловать в VISORD Experience платформы NEXORD. В этом интерактивном ресурсном центре вы можете получить доступ к четырем передовым средам исследования: симулятору VISORD Demo для коллективов в трехмерном и четырехмерном пространстве; VISORD Cultural для социометрии драматических шедевров; VISORD Radiological для спектральной диагностики на многообразиях Грассмана; и VISORD Processual — нашей экспериментальной лаборатории микропроцессов и моральных дилемм."
+  },
+  "zh": {
+    "page_title": "NEXORD · 资源与运行环境（第 8 级：VISORD 生态体验）",
+    "meta_desc": "NEXORD 资源与运行环境（第 8 级：VISORD 生态体验）。访问三维/四维交互仿真平台：VISORD_demo、VISORD_cultural、VISORD_radiológico 与 VISORD_procesual。",
+    "skip_link": "跳至主要内容",
+    "header_brand_sub": "资源中心",
+    "nav_proc": "◀ VISORD_过程仿真",
+    "nav_proc_title": "◀ 上一 VISORD 环境：VISORD_过程仿真",
+    "nav_demo": "VISORD_三维仿真 ▶",
+    "nav_demo_title": "下一 VISORD 环境：VISORD_三维仿真（第 8 级）▶",
+    "nav_dial": "🎡 返回罗盘主轮",
+    "nav_dial_title": "返回罗盘（扇区分区轮）",
+    "nav_home": "🏠 首页",
+    "nav_home_title": "返回平台主页",
+    "arrow_left_label": "VISORD_过程仿真",
+    "arrow_left_title": "◀ 上一 VISORD：VISORD_过程实验室",
+    "arrow_right_label": "VISORD_三维仿真",
+    "arrow_right_title": "下一 VISORD：VISORD_三维仿真（第 8 级）▶",
+    "pod_home_title": "返回罗盘主轮 / 首页",
+    "pod_proc_title": "◀ 上一 VISORD 环境：VISORD_过程仿真",
+    "pod_demo_title": "下一 VISORD 环境：VISORD_三维仿真（第 8 级）▶",
+    "pod_scroll_top": "返回顶部",
+    "pod_scroll_bottom": "滚动至底部",
+    "exp_pretitle": "交互式探索环境",
+    "exp_title": "VISORD 全景生态体验",
+    "exp_subtitle": "NEXORD 生态体系四大交互探索与社会热力学全息投影环境：",
+    "btn_audio_narration": "播放语音介绍",
+    "btn_audio_title": "收听 VISORD 生态体验的深度语音解说",
+    "card1_title": "VISORD_DEMO（第 8 级仿真）",
+    "card1_desc": "面向 $N < 51$ 群体的三维/四维全息仿真引擎：实时模拟相变、动态 SMIb 序数矩阵与社会流体动力学演变。",
+    "card1_btn": "探索 VISORD_demo 🌐",
+    "card2_title": "VISORD_文化名作",
+    "card2_desc": "世界经典文艺名作的序数社会测量（《十二怒汉》、《贝尔纳达·阿尔瓦之屋》、《蝇王》）：深度透视微观联盟、权力博弈与戏剧张力。",
+    "card2_btn": "探索 VISORD_cultural 🎭",
+    "card3_title": "VISORD_辐射透视",
+    "card3_desc": "社会热力学多维透视（15-27-54）：基于格拉斯曼流形拓扑与极化能谱，精准诊断隐性排斥与结构性孤立。",
+    "card3_btn": "探索 VISORD_radiológico 🩻",
+    "card4_title": "VISORD_过程仿真",
+    "card4_desc": "微观动态过程实验实验室：交互式四边形张力图、Bales IPA ⇄ SMIb ⇄ 公地悲剧道德困境连续回放录像机（N=5）。",
+    "card4_btn": "进入实验实验室 ⚡",
+    "exit_dial": "<span>🎡</span> 返回罗盘主轮",
+    "exit_dial_title": "返回菜单导航轮",
+    "exit_home": "<span>🏠</span> 返回平台主页",
+    "exit_home_title": "返回平台主页",
+    "footer_copy": "NEXORD © 2026 · 计算序数社会测量学",
+    "footer_doi": "CERN Zenodo DOI: 10.5281/zenodo.18941691 ↗",
+    "locucion": "欢迎体验 NEXORD VISORD 交互生态。在此交互资源中心，您可以访问四大高级探索环境：用于三维与四维群体建模的 VISORD Demo 仿真器；用于戏剧名作社会网络分析的 VISORD Cultural；用于格拉斯曼流形谱系诊断的 VISORD 辐射透视（Radiological）；以及用于微观动态过程与道德困境实验的 VISORD 过程实验室（Processual）。"
+  }
+};
+
+    let currentLang = 'es';
+
+    function setLanguage(lang) {
+      if (!I18N_DATA[lang]) lang = 'es';
+      currentLang = lang;
+      try { localStorage.setItem('nexord_lang', lang); } catch(e) {}
+      document.documentElement.setAttribute('lang', lang);
+
+      // Actualizar clase activa en botones de selector de idioma
+      document.querySelectorAll('.hud-lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      const dict = I18N_DATA[lang];
+      if (!dict) return;
+
+      // Actualizar todos los elementos con data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Título y metadatos dinámicos
+      if (dict.page_title) document.title = dict.page_title;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.meta_desc) metaDesc.setAttribute('content', dict.meta_desc);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc && dict.meta_desc) ogDesc.setAttribute('content', dict.meta_desc);
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc && dict.meta_desc) twDesc.setAttribute('content', dict.meta_desc);
+
+      // Tooltips y accesibilidad de navegación
+      const navProc = document.getElementById('nav-btn-proc');
+      if (navProc && dict.nav_proc_title) { navProc.title = dict.nav_proc_title; navProc.setAttribute('aria-label', dict.nav_proc_title); }
+      const navDemo = document.getElementById('nav-btn-demo');
+      if (navDemo && dict.nav_demo_title) { navDemo.title = dict.nav_demo_title; navDemo.setAttribute('aria-label', dict.nav_demo_title); }
+      const navDial = document.getElementById('nav-btn-dial');
+      if (navDial && dict.nav_dial_title) { navDial.title = dict.nav_dial_title; navDial.setAttribute('aria-label', dict.nav_dial_title); }
+      const navHome = document.getElementById('nav-btn-home');
+      if (navHome && dict.nav_home_title) { navHome.title = dict.nav_home_title; navHome.setAttribute('aria-label', dict.nav_home_title); }
+
+      const arrowL = document.getElementById('floating-arrow-left');
+      if (arrowL && dict.arrow_left_title) { arrowL.title = dict.arrow_left_title; arrowL.setAttribute('aria-label', dict.arrow_left_title); }
+      const arrowR = document.getElementById('floating-arrow-right');
+      if (arrowR && dict.arrow_right_title) { arrowR.title = dict.arrow_right_title; arrowR.setAttribute('aria-label', dict.arrow_right_title); }
+
+      const podHome = document.getElementById('nav-pod-home');
+      if (podHome && dict.pod_home_title) { podHome.title = dict.pod_home_title; podHome.setAttribute('aria-label', dict.pod_home_title); }
+      const podProc = document.getElementById('nav-pod-proc');
+      if (podProc && dict.pod_proc_title) { podProc.title = dict.pod_proc_title; podProc.setAttribute('aria-label', dict.pod_proc_title); }
+      const podDemo = document.getElementById('nav-pod-demo');
+      if (podDemo && dict.pod_demo_title) { podDemo.title = dict.pod_demo_title; podDemo.setAttribute('aria-label', dict.pod_demo_title); }
+      const podTop = document.getElementById('nav-pod-top');
+      if (podTop && dict.pod_scroll_top) { podTop.title = dict.pod_scroll_top; podTop.setAttribute('aria-label', dict.pod_scroll_top); }
+      const podBottom = document.getElementById('nav-pod-bottom');
+      if (podBottom && dict.pod_scroll_bottom) { podBottom.title = dict.pod_scroll_bottom; podBottom.setAttribute('aria-label', dict.pod_scroll_bottom); }
+
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      if (btnAudio && dict.btn_audio_title) { btnAudio.title = dict.btn_audio_title; btnAudio.setAttribute('aria-label', dict.btn_audio_title); }
+
+      const exitDial = document.getElementById('exit-btn-dial');
+      if (exitDial && dict.exit_dial_title) exitDial.title = dict.exit_dial_title;
+      const exitHome = document.getElementById('exit-btn-home');
+      if (exitHome && dict.exit_home_title) exitHome.title = dict.exit_home_title;
+
+      // Si el audio estaba sonando, reiniciarlo en el idioma seleccionado
+      if (isCaratulaAudioPlaying) {
+        playCaratulaAudio();
+      }
+    }
+
+    /* LOCUCIÓN DE AUDIO MULTILINGÜE */
+    let isCaratulaAudioPlaying = false;
+    let caratulaSpeechUtter = null;
+
+    function playCaratulaAudio() {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      const dict = I18N_DATA[currentLang] || I18N_DATA.es;
+      const textToSpeak = dict.locucion || I18N_DATA.es.locucion;
+
+      caratulaSpeechUtter = new SpeechSynthesisUtterance(textToSpeak);
+
+      const langMap = { 'es': 'es-ES', 'en': 'en-US', 'ru': 'ru-RU', 'zh': 'zh-CN' };
+      const targetLangCode = langMap[currentLang] || 'es-ES';
+      caratulaSpeechUtter.lang = targetLangCode;
+
+      const voices = window.speechSynthesis.getVoices();
+      const matchedVoice = voices.find(v => v.lang.startsWith(currentLang) && 
+                            (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google')))
+                       || voices.find(v => v.lang.startsWith(currentLang))
+                       || voices[0];
+      if (matchedVoice) caratulaSpeechUtter.voice = matchedVoice;
+
+      caratulaSpeechUtter.rate = (currentLang === 'zh') ? 0.85 : 0.80;
+      caratulaSpeechUtter.pitch = 0.95;
+      caratulaSpeechUtter.volume = 1.0;
+
+      const btnAudio = document.getElementById('btn-audio-caratula');
+      const playIcon = document.getElementById('audio-play-icon');
+
+      caratulaSpeechUtter.onstart = () => {
+        isCaratulaAudioPlaying = true;
+        if (btnAudio) btnAudio.classList.add('playing');
+        if (playIcon) playIcon.textContent = '⏹';
+      };
+
+      caratulaSpeechUtter.onend = () => {
+        isCaratulaAudioPlaying = false;
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      };
+
+      caratulaSpeechUtter.onerror = () => {
+        isCaratulaAudioPlaying = false;
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      };
+
+      window.speechSynthesis.speak(caratulaSpeechUtter);
+    }
+
+    function toggleCaratulaAudio() {
+      if (isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        isCaratulaAudioPlaying = false;
+        const btnAudio = document.getElementById('btn-audio-caratula');
+        const playIcon = document.getElementById('audio-play-icon');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+      } else {
+        playCaratulaAudio();
+      }
+    }
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      let savedLang = 'es';
+      try {
+        savedLang = localStorage.getItem('nexord_lang') || 'es';
+      } catch (e) {}
+      setLanguage(savedLang);
+
+      // Pre-cargar voces del navegador si es necesario
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+      }
+    });
+    </script>
 </body>
 </html>
