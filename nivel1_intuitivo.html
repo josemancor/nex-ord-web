@@ -5484,7 +5484,7 @@
     </div>
     
     <div class="hud-nav-cluster">
-      <button class="hud-arrow-btn disabled" id="hud-arrow-prev" onclick="hudNavigatePrev()" title="Inicio de plataforma" aria-label="Inicio de plataforma (primer nivel, bloqueado)" aria-disabled="true">--</button>
+      <button class="hud-arrow-btn" id="hud-arrow-prev" onclick="hudNavigatePrev()" title="Nivel anterior (Nivel 9: Fundamentos &amp; Cenit)" aria-label="Nivel anterior: Nivel 9 Fundamentos &amp; Cenit">◀</button>
       <div class="hud-letters-row" role="tablist" aria-label="Pantallas del Nivel 1">
         <button class="hud-letter-btn hud-part-btn active" onclick="scrollToScreen('pantalla-b')" data-screen="pantalla-b" title="1a · Génesis de un Grupo" aria-label="Sección 1a: Génesis de un Grupo">
           <span class="hud-letter-char">a</span>
@@ -5539,9 +5539,9 @@
     <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)" aria-label="Inicio: Portada Principal">
       <span aria-hidden="true">🏠</span>
     </a>
-    <span class="nav-pod-btn nav-pod-prev-lvl nav-pod-disabled" title="No hay nivel anterior" aria-label="No hay nivel anterior" aria-disabled="true">
+    <a href="fundamentos.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 9: Fundamentos &amp; Cenit)" aria-label="Nivel Anterior: Nivel 9 Fundamentos &amp; Cenit">
       <span aria-hidden="true">◀</span>
-    </span>
+    </a>
     <div class="nav-pod-page-group">
       <button class="nav-pod-btn nav-pod-prev-screen" onclick="navigateStep(-1)" title="Atrás (Pantalla Anterior)" aria-label="Atrás: Pantalla anterior">
         <span aria-hidden="true">▲</span>
@@ -15431,7 +15431,7 @@
         { id: 'pantalla-f', letter: 'e', word: 'MATRICES' }
       ],
       caratulaId: 'pantalla-a',
-      prevLevelUrl: null,
+      prevLevelUrl: 'fundamentos.html',
       nextLevelUrl: 'nivel2_basico.html'
     };
 
@@ -15475,19 +15475,11 @@
       const prevBtn = document.getElementById('hud-arrow-prev');
       const nextBtn = document.getElementById('hud-arrow-next');
 
-      // Flecha izquierda: '--' desactivada exclusivamente en 1a
-      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
-        if (prevBtn) {
-          prevBtn.textContent = '--';
-          prevBtn.classList.add('disabled');
-          prevBtn.title = 'Inicio de la plataforma';
-        }
-      } else {
-        if (prevBtn) {
-          prevBtn.textContent = '◀';
-          prevBtn.classList.remove('disabled');
-          prevBtn.title = (currentIdx === 0) ? 'Nivel anterior' : ('Pantalla anterior (' + HUD_CONFIG.screens[currentIdx - 1].letter + ')');
-        }
+      // Flecha izquierda: activa hacia Fundamentos & Cenit (Nivel 9) si está en 1a
+      if (prevBtn) {
+        prevBtn.textContent = '◀';
+        prevBtn.classList.remove('disabled');
+        prevBtn.title = (currentIdx === 0) ? 'Nivel anterior (Nivel 9: Fundamentos & Cenit)' : ('Pantalla anterior (' + HUD_CONFIG.screens[currentIdx - 1].letter + ')');
       }
 
       // Flecha derecha: '--' desactivada exclusivamente en 7e
@@ -15569,10 +15561,6 @@
           currentIdx = idx;
         }
       });
-
-      if (HUD_CONFIG.levelNum === 1 && currentIdx === 0) {
-        return; // 1a disabled '--'
-      }
 
       if (currentIdx > 0) {
         scrollToScreen(HUD_CONFIG.screens[currentIdx - 1].id);
