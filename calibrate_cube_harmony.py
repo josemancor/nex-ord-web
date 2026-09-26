@@ -351,7 +351,7 @@ def calibrate_cube(content):
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     visual_dir = os.path.join(base_dir, "VERSION_IMPACTO_VISUAL")
-    files = ["nivel1_intuitivo.html", "visord_intuitivo.html"]
+    files = ["nivel1_intuitivo.html"]
 
     for fn in files:
         target_path = os.path.join(visual_dir, fn)

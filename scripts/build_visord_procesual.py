@@ -408,9 +408,20 @@ HTML_CONTENT = """<!DOCTYPE html>
       color: var(--neon-cyan);
     }
     .tele-actor {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       font-weight: 800;
       padding: 1px 5px;
       border-radius: 3px;
+    }
+    .tele-actor-avatar {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid currentColor;
+      box-shadow: 0 0 4px rgba(0,0,0,0.4);
     }
     .tele-actor.emit {
       background: rgba(0, 255, 135, 0.2);
@@ -1918,11 +1929,11 @@ HTML_CONTENT = """<!DOCTYPE html>
         dividendLabel: 'RETORNO',
         resourceLabel: 'CARTERA',
         actors: [
-          { id: '1', name: '1A (Proponente)', role: 'Proponente Líder', bando: 'A', color: '#00FF87' },
-          { id: '2', name: '2A (Conciliador)', role: 'Moderador Aliado', bando: 'A', color: '#38BDF8' },
-          { id: '3', name: '3A (Escéptico)', role: 'Escéptico Cauto', bando: 'A', color: '#FCD34D' },
-          { id: '4', name: '4B (Pragmático)', role: 'Pragmático Dubitativo', bando: 'B', color: '#A855F7' },
-          { id: '5', name: '5B (Polizón)', role: 'Polizón Desertor', bando: 'B', color: '#FF007F' }
+          { id: '1A', name: '1A (Líder)', role: 'Líder Catalizador', bando: 'A', color: '#00FF87', img: 'assets/faces_dilema/1A.jpg' },
+          { id: '2A', name: '2A (Cooperador)', role: 'Cooperador Prosocial', bando: 'A', color: '#38BDF8', img: 'assets/faces_dilema/2A.jpg' },
+          { id: '3A', name: '3A (Auditor)', role: 'Auditor Normativo', bando: 'A', color: '#FCD34D', img: 'assets/faces_dilema/3A.jpg' },
+          { id: '4A', name: '4A (Cauteloso)', role: 'Prudente / Cauteloso', bando: 'A', color: '#A855F7', img: 'assets/faces_dilema/4A.jpg' },
+          { id: '5A', name: '5A (Polizón)', role: 'Polizón Desertor', bando: 'B', color: '#FF007F', img: 'assets/faces_dilema/5A.jpg' }
         ],
         turns: [
           { turn: 1, sender: 0, receiver: 1, flow: 'to_center', isPlenary: true, actType: 'iniciativa', recType: 'provocacion', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "Compañeros, la matemática del fondo común es irrefutable: si los cinco aportamos nuestras 10 fichas, el bote de 50 se multiplica por 1.8 y nos repartimos 18 fichas cada uno." },
@@ -2798,8 +2809,8 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
           rowEl.className = 'wing-row-left';
           rowEl.id = `wing_row_${i}`;
           rowEl.innerHTML = `
-            <div class="wing-cell wcell-id" id="id_subj_${i}" style="color:${a.color};">
-              <span class="subj-circle-badge" style="color:${a.color}; border-color:${a.color};">${a.id}</span>
+            <div class="wing-cell wcell-id" id="id_subj_${i}" style="color:${a.color}; display:flex; align-items:center; gap:5px;">
+              ${a.img ? `<img src="${a.img}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;border:1.5px solid ${a.color};flex-shrink:0;">` : `<span class="subj-circle-badge" style="color:${a.color}; border-color:${a.color};">${a.id}</span>`}
               <span class="subj-name-tag">${a.name}</span>
             </div>
             <div class="wing-cell wcell-rt" id="rt_subj_${i}">⚡ 0</div>
@@ -2828,8 +2839,8 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
           rowEl.className = 'wing-row-right';
           rowEl.id = `wing_row_${k}`;
           rowEl.innerHTML = `
-            <div class="wing-cell wcell-id" id="id_subj_${k}" style="color:${a.color};">
-              <span class="subj-circle-badge" style="color:${a.color}; border-color:${a.color};">${a.id}</span>
+            <div class="wing-cell wcell-id" id="id_subj_${k}" style="color:${a.color}; display:flex; align-items:center; gap:5px;">
+              ${a.img ? `<img src="${a.img}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;border:1.5px solid ${a.color};flex-shrink:0;">` : `<span class="subj-circle-badge" style="color:${a.color}; border-color:${a.color};">${a.id}</span>`}
               <span class="subj-name-tag">${a.name}</span>
             </div>
             <div class="wing-cell wcell-rt" id="rt_subj_${k}">⚡ 0</div>
@@ -3007,19 +3018,19 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         rElem.innerText = `🌪️ TORBELLINO (${activeCorpus.groupCenterName || 'CENTRO'})`;
         rElem.className = 'tele-actor center-hub';
       } else if (turn.flow === 'to_center') {
-        sElem.innerText = senderObj.id;
+        sElem.innerHTML = `${senderObj.img ? `<img src="${senderObj.img}" class="tele-actor-avatar" alt="${senderObj.id}">` : ''}${senderObj.id}`;
         sElem.className = 'tele-actor emit';
         rElem.innerText = `${activeCorpus.groupCenterName || 'CENTRO'} (PLENARIO)`;
         rElem.className = 'tele-actor center-hub';
       } else if (turn.flow === 'from_center') {
         sElem.innerText = `${activeCorpus.groupCenterName || 'CENTRO'} (PLENARIO)`;
         sElem.className = 'tele-actor center-hub';
-        rElem.innerText = recObj.id;
+        rElem.innerHTML = `${recObj.img ? `<img src="${recObj.img}" class="tele-actor-avatar" alt="${recObj.id}">` : ''}${recObj.id}`;
         rElem.className = 'tele-actor rec';
       } else {
-        sElem.innerText = senderObj.id;
+        sElem.innerHTML = `${senderObj.img ? `<img src="${senderObj.img}" class="tele-actor-avatar" alt="${senderObj.id}">` : ''}${senderObj.id}`;
         sElem.className = 'tele-actor emit';
-        rElem.innerText = recObj.id;
+        rElem.innerHTML = `${recObj.img ? `<img src="${recObj.img}" class="tele-actor-avatar" alt="${recObj.id}">` : ''}${recObj.id}`;
         rElem.className = 'tele-actor rec';
       }
 

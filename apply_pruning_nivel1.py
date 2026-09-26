@@ -122,7 +122,7 @@ def prune_content(content):
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     visual_dir = os.path.join(base_dir, "VERSION_IMPACTO_VISUAL")
-    files_to_update = ["nivel1_intuitivo.html", "visord_intuitivo.html"]
+    files_to_update = ["nivel1_intuitivo.html"]
 
     for fn in files_to_update:
         target_path = os.path.join(visual_dir, fn)

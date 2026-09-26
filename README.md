@@ -1,4 +1,4 @@
-# NEX_ORD & VISORD Engine — Sociometría Ordinal Computacional
+# NEXORD & VISORD Engine — Sociometría Ordinal Computacional
 
 Plataforma científica y ecosistema interactivo de diagnóstico socio-termodinámico, matrices relacionales SMIb, variedad de Grassmann $\operatorname{Gr}(k, N)$ y visualización tridimensional interactiva VISORD.
 
@@ -6,11 +6,12 @@ Plataforma científica y ecosistema interactivo de diagnóstico socio-termodiná
 
 ## 🌐 Enlaces Oficiales de la Plataforma
 
-1. 🌐 **VISORD_demo (Simulador Grupal $N < 51$)**: [v_demo.html](https://josemancor.github.io/nex-ord-web/v_demo.html)
-2. 🎭 **VISORD_cultural (Sociometría de Obras Maestras)**: [v_cultural.html](https://josemancor.github.io/nex-ord-web/v_cultural.html)
-3. 🔬 **Entorno Operativo — Plataforma de Investigación**: [v_plataforma.html](https://josemancor.github.io/nex-ord-web/v_plataforma.html)
-4. 🔐 **Portal del Participante (Retorno Ético Web)**: [retorno_participante.html](https://josemancor.github.io/nex-ord-web/retorno_participante.html)
-5. 📖 **Glosario Oficial de Términos**: [glosario.html](https://josemancor.github.io/nex-ord-web/glosario.html)
+1. 🌐 **VISORD Demo 3D (Simulador Grupal $N < 51$)**: [visord_demo.html](https://josemancor.github.io/nex-ord-web/visord_demo.html)
+2. 🎭 **VISORD Cultural (Sociometría de Obras Maestras)**: [visord_cultural.html](https://josemancor.github.io/nex-ord-web/visord_cultural.html)
+3. ⚡ **VISORD Procesual (Observador Universal de Textos)**: [visord_procesual.html](https://josemancor.github.io/nex-ord-web/visord_procesual.html)
+4. 🔬 **Entorno Operativo — Plataforma de Investigación**: [v_plataforma.html](https://josemancor.github.io/nex-ord-web/v_plataforma.html)
+5. 🔐 **Portal del Participante (Retorno Ético Web)**: [retorno_participante.html](https://josemancor.github.io/nex-ord-web/retorno_participante.html)
+6. 📖 **Glosario Oficial de Términos**: [glosario.html](https://josemancor.github.io/nex-ord-web/glosario.html)
 
 ---
 
