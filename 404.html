@@ -163,6 +163,7 @@
   background: #FFE600 !important;
   border-color: #FFE600 !important;
   color: #030308 !important;
+}
 .universal-nav-pod .nav-pod-disabled {
   opacity: 0.18 !important;
   cursor: default !important;
@@ -177,15 +178,53 @@
 <body>
 
     <div class="logo-container">
-        <!-- Usa absolute path /assets/ para que funcione desde cualquier subruta en GitHub Pages -->
         <img src="assets/logo_nexord_base.png" alt="NEXORD Logo" onerror="this.style.display='none'">
     </div>
 
     <h1 class="error-code">404</h1>
-    <h2 class="error-title">Anomalía de Entropía Detectada</h2>
-    <p class="error-desc">Parece que te has salido del ecosistema. Esta ruta no existe en el mapa sociométrico.</p>
+    <h2 class="error-title" id="err-title">Anomalía de Entropía Detectada</h2>
+    <p class="error-desc" id="err-desc">Parece que te has salido del ecosistema. Esta ruta no existe en el mapa sociométrico.</p>
     
-    <a href="index.html" class="back-link">Volver a la Base de Control</a>
+    <a href="index.html" class="back-link" id="err-link">Volver a la Base de Control</a>
+
+    <script>
+      (function() {
+        var userLang = (navigator.language || navigator.userLanguage || '').toLowerCase().split('-')[0];
+        try {
+          var saved = localStorage.getItem('nexord_lang');
+          if (saved) userLang = saved;
+        } catch(e) {}
+
+        var i18n404 = {
+          zh: {
+            title: "检测到系统熵异常 (404)",
+            desc: "您似乎已偏离了坐标生态。该路径在当前的社会计量流形地图中不存在。",
+            link: "返回控制台首页 ↗",
+            docTitle: "404 - 熵异常 | NEXORD"
+          },
+          ru: {
+            title: "Обнаружена аномалия энтропии (404)",
+            desc: "Похоже, вы вышли за пределы экосистемы. Этот путь отсутствует на социометрической карте.",
+            link: "Вернуться на главную панель ↗",
+            docTitle: "404 - Аномалия энтропии | NEXORD"
+          },
+          en: {
+            title: "Entropy Anomaly Detected (404)",
+            desc: "You seem to have drifted out of the ecosystem. This route does not exist on the sociometric map.",
+            link: "Return to Control Base ↗",
+            docTitle: "404 - Entropy Anomaly | NEXORD"
+          }
+        };
+
+        if (i18n404[userLang]) {
+          var d = i18n404[userLang];
+          document.getElementById('err-title').textContent = d.title;
+          document.getElementById('err-desc').textContent = d.desc;
+          document.getElementById('err-link').textContent = d.link;
+          document.title = d.docTitle;
+        }
+      })();
+    </script>
 
 
   <!-- MANDO UNIVERSAL NEXORD EN FILA INDIA (NAVEGACIÓN LATERAL PERMANENTE) -->
