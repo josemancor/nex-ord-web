@@ -5740,7 +5740,7 @@
         <!-- CONTROLES AL PIE Y NAVEGACIÓN DETALLE -->
         <div style="margin-top:4px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; flex-shrink:0;">
           <span style="font-family:'Roboto Mono', monospace; font-size:0.92rem; color:#94A3B8;">
-            ⌨ Navegación: <b>[1..6]</b> Cuadro Directo &nbsp;·&nbsp; <b>[← / →]</b> Cambiar Cuadro &nbsp;·&nbsp; <b>[ESC]</b> Volver a Carátula
+            ⌨ Navegación: <b>[1..6]</b> Cuadro Directo &nbsp;·&nbsp; <b>[▲ / ▼]</b> o <b>[← / →]</b> Cambiar Cuadro &nbsp;·&nbsp; <b>[ESC]</b> Volver a Carátula
           </span>
           <div style="display:flex; gap:10px;">
             <button class="flow-nav-btn" style="border-color:var(--neon-cyan); color:var(--neon-cyan); background:rgba(56,189,248,0.12);" onclick="showPantallaCCaratula()">▦ Ver los 6 Cuadros</button>
@@ -6427,6 +6427,53 @@
 
     function navigateStep(direction) {
       const currentIndex = getCurrentScreenIndex();
+      const currentScreenId = screenIds[currentIndex];
+
+      // CASO ESPECIAL EN 1b ('pantalla-c'):
+      // Las flechas laterales arriba-abajo deben asociarse a los 6 cuadros y no al 1c
+      if (currentScreenId === 'pantalla-c') {
+        const detailView = document.getElementById('pantalla-c-detail-view');
+        const isDetailOpen = detailView && detailView.style.display !== 'none';
+        const el = document.getElementById('pantalla-c');
+        if (el) {
+          window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+        }
+
+        if (direction > 0) {
+          // Flecha ABAJO (▼): avanza dentro de 1b entre los 6 cuadros
+          if (!isDetailOpen) {
+            // Desde la carátula, entra al primer cuadro (1b.1)
+            setPantallaCCuadro(0);
+          } else if (currentPantallaCCuadroIndex < 5) {
+            // Avanza al siguiente cuadro (1b.2 ... 1b.6)
+            setPantallaCCuadro(currentPantallaCCuadroIndex + 1);
+          } else {
+            // En el Cuadro 6: vuelve a la carátula de los 6 cuadros sin saltar al 1c
+            showPantallaCCaratula();
+          }
+          if (typeof syncNavPodNivel1UI === 'function') syncNavPodNivel1UI();
+          return;
+        } else {
+          // Flecha ARRIBA (▲): retrocede dentro de 1b
+          if (isDetailOpen) {
+            if (currentPantallaCCuadroIndex > 0) {
+              // Retrocede al cuadro anterior
+              setPantallaCCuadro(currentPantallaCCuadroIndex - 1);
+            } else {
+              // Desde el Cuadro 1b.1, vuelve a la carátula
+              showPantallaCCaratula();
+            }
+            if (typeof syncNavPodNivel1UI === 'function') syncNavPodNivel1UI();
+            return;
+          } else {
+            // Si ya está en la carátula de 1b, sube a 1a ('pantalla-b')
+            scrollToScreen('pantalla-b');
+            return;
+          }
+        }
+      }
+
+      // Resto de pantallas: avance/retroceso ordinario
       const nextIndex = Math.max(0, Math.min(screenIds.length - 1, currentIndex + direction));
       if (nextIndex !== currentIndex) {
         scrollToScreen(screenIds[nextIndex]);
@@ -8446,12 +8493,32 @@
     };
 
     function syncNavPodNivel1UI() {
+      const idx = typeof getCurrentScreenIndex === 'function' ? getCurrentScreenIndex() : 1;
+      const scrId = screenIds[idx] || 'pantalla-b';
+
+      const prevBtn = document.querySelector('.universal-nav-pod .nav-pod-prev-screen');
+      const nextBtn = document.querySelector('.universal-nav-pod .nav-pod-next-screen');
+      if (prevBtn && nextBtn) {
+        if (scrId === 'pantalla-c') {
+          const detailView = document.getElementById('pantalla-c-detail-view');
+          const isDetailOpen = detailView && detailView.style.display !== 'none';
+          if (isDetailOpen) {
+            prevBtn.title = (currentPantallaCCuadroIndex > 0) ? `Cuadro Anterior: 1b.${currentPantallaCCuadroIndex} [▲]` : `Volver a Carátula 1b [▲]`;
+            nextBtn.title = (currentPantallaCCuadroIndex < 5) ? `Cuadro Siguiente: 1b.${currentPantallaCCuadroIndex + 2} [▼]` : `Volver a Carátula 1b [▼]`;
+          } else {
+            prevBtn.title = `Subir a 1a Moviola [▲]`;
+            nextBtn.title = `Entrar al Cuadro 1b.1 [▼]`;
+          }
+        } else {
+          prevBtn.title = "Atrás (Pantalla Anterior) [▲]";
+          nextBtn.title = "Siguiente (Pantalla Siguiente) [▼]";
+        }
+      }
+
       const navBtn = document.getElementById('nav-pod-btn-play');
       const navIcon = document.getElementById('nav-pod-play-icon');
       if (!navBtn || !navIcon) return;
 
-      const idx = typeof getCurrentScreenIndex === 'function' ? getCurrentScreenIndex() : 1;
-      const scrId = screenIds[idx] || 'pantalla-b';
       let isPlaying = false;
       let label = "Reproducir Dinámica (Play/Pausa)";
 
@@ -13331,6 +13398,7 @@
           <h4>▦ 1b · Fundamentos (6 Cuadros)</h4>
           <ul>
             <li><code>1</code> .. <code>6</code>: Salto directo al Cuadro correspondiente.</li>
+            <li><code>▲</code> / <code>▼</code> (Flechas laterales o teclado): Navegar secuencialmente entre los 6 cuadros (sin saltar a 1c).</li>
             <li><code>←</code> / <code>→</code>: Cuadro anterior o siguiente.</li>
             <li><code>ESC</code>: Cerrar cuadro y volver a la carátula de los 6 cuadros.</li>
           </ul>
