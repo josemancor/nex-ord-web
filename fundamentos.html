@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD · FUNDAMENTOS | Cenit Epistemológico: Hacia una Física de lo Grupal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-space: #050811;
+      --bg-card: rgba(11, 19, 43, 0.78);
+      --border-card: rgba(56, 189, 248, 0.25);
+      --accent-cyan: #38BDF8;
+      --accent-green: #00FF87;
+      --accent-gold: #FFE600;
+      --accent-pink: #FF007F;
+      --accent-orange: #FF9F1C;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: var(--bg-space);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 18%, rgba(14, 28, 64, 0.55) 0%, #050811 75%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* =========================================================================
+       CABECERA INSTITUCIONAL SUPERIOR FIJA
+       ========================================================================= */
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      background: rgba(7, 11, 20, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #FFF;
+    }
+    .brand-logo {
+      height: 34px;
+      width: auto;
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #FFFFFF;
+      line-height: 1.1;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-btn:hover {
+      color: #FFF;
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .nav-btn.btn-home {
+      color: var(--accent-gold);
+      border-color: rgba(255, 230, 0, 0.35);
+      background: rgba(255, 230, 0, 0.08);
+    }
+    .nav-btn.btn-home:hover {
+      background: var(--accent-gold);
+      color: #030712;
+      box-shadow: 0 0 16px rgba(255, 230, 0, 0.5);
+    }
+
+    /* Selector de Idiomas */
+    .lang-picker {
+      position: relative;
+    }
+    .lang-picker-btn {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #F8FAFC;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .lang-picker-btn:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.15);
+    }
+    .lang-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #0B132B;
+      border: 1px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 160px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 1001;
+    }
+    .lang-dropdown.open {
+      display: flex;
+    }
+    .lang-opt {
+      background: transparent;
+      border: none;
+      color: #CBD5E1;
+      padding: 6px 10px;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .lang-opt:hover {
+      background: rgba(56, 189, 248, 0.18);
+      color: #FFF;
+    }
+    .lang-opt.active {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    /* =========================================================================
+       CANVAS PRINCIPAL (LOS 3 RECUADROS BREVES Y SINTÉTICOS)
+       ========================================================================= */
+    .main-canvas {
+      flex: 1;
+      padding-top: 86px;
+      padding-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .hero-header {
+      text-align: center;
+      margin-bottom: 2.2rem;
+      max-width: 860px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 2.2px;
+      color: var(--accent-green);
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.4);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #FFFFFF 30%, #38BDF8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: clamp(1.0rem, 1.6vw, 1.2rem);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* GRID DE LOS 3 RECUADROS SINTÉTICOS */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .card-pilar {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-card);
+      border-radius: 20px;
+      padding: 2.2rem 2.0rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(56, 189, 248, 0.04);
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-pilar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--card-accent, var(--accent-cyan));
+      opacity: 0.8;
+    }
+
+    .card-pilar:hover {
+      transform: translateY(-6px);
+      border-color: var(--card-accent, var(--accent-cyan));
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.8), 0 0 28px rgba(56, 189, 248, 0.3);
+    }
+
+    .card-pilar.pilar-termo {
+      --card-accent: #38BDF8;
+    }
+    .card-pilar.pilar-figuras {
+      --card-accent: #00FF87;
+    }
+    .card-pilar.pilar-rigor {
+      --card-accent: #FFE600;
+    }
+
+    .card-top {
+      margin-bottom: 1.4rem;
+    }
+
+    .card-icon-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
+    }
+    .card-tag {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--card-accent);
+      border: 1px solid var(--card-accent);
+    }
+
+    .card-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .card-summary {
+      color: #CBD5E1;
+      font-size: 0.98rem;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .card-quote {
+      background: rgba(0, 0, 0, 0.28);
+      border-left: 3px solid var(--card-accent);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .card-bottom {
+      margin-top: 1.8rem;
+    }
+
+    .btn-ampliar {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid var(--card-accent);
+      color: var(--card-accent);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.90rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.22s ease;
+    }
+    .btn-ampliar:hover {
+      background: var(--card-accent);
+      color: #030712;
+      box-shadow: 0 0 20px var(--card-accent);
+    }
+
+    /* Banner explicativo sutil */
+    .zen-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.86rem;
+      font-style: italic;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 6px 18px;
+      border-radius: 20px;
+    }
+
+    /* =========================================================================
+       MODALES DE PANTALLA COMPLETA (EXTENSIONES DE DESARROLLO)
+       ========================================================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 16, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-container {
+      background: #0B132B;
+      border: 1.5px solid var(--modal-border, var(--accent-cyan));
+      border-radius: 22px;
+      max-width: 940px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.25);
+      position: relative;
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(30px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(7, 11, 20, 0.95);
+      border-radius: 22px 22px 0 0;
+      flex-shrink: 0;
+    }
+
+    .modal-badge-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-badge {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 1.8px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--modal-border);
+      color: var(--modal-border);
+    }
+    .modal-title-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFF;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .modal-close-btn:hover {
+      background: rgba(255, 0, 127, 0.3);
+      border-color: var(--accent-pink);
+      color: #FFF;
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.5);
+    }
+
+    .modal-body {
+      padding: 28px 32px;
+      overflow-y: auto;
+      line-height: 1.85;
+      color: #E2E8F0;
+      font-size: 1.05rem;
+    }
+    .modal-body p {
+      margin-bottom: 1.4rem;
+    }
+    .modal-body strong {
+      color: #FFF;
+    }
+
+    .modal-highlight-box {
+      background: rgba(0, 162, 255, 0.07);
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin: 1.8rem 0;
+      text-align: center;
+    }
+    .modal-highlight-box h4 {
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .modal-list {
+      margin-left: 1.6rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-list li {
+      padding-left: 4px;
+    }
+
+    /* REGLA 5: DEFINICIÓN DEL TETRAGRAMA */
+    .tetragrama-box {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin: 1.8rem 0;
+    }
+    .tetragrama-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .tetragrama-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tetra-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 1.02rem;
+    }
+    .tetra-key {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      font-size: 1.05rem;
+      min-width: 130px;
+    }
+
+    .modal-footer {
+      padding: 16px 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 11, 20, 0.95);
+      border-radius: 0 0 22px 22px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    /* MANDO UNIVERSAL FLOTANTE */
+    .universal-nav-pod {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 12px 8px;
+      border-radius: 28px;
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+    .nav-pod-page-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+    }
+    .universal-nav-pod .nav-pod-prev-screen + .nav-pod-next-screen {
+      margin-top: -7px;
+    }
+    .nav-pod-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav-pod-btn:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--accent-cyan);
+      color: #00FF87;
+      transform: scale(1.12);
+    }
+    .nav-pod-home {
+      color: var(--accent-gold);
+      border-color: rgba(255, 230, 0, 0.4);
+    }
+    .nav-pod-home:hover {
+      background: var(--accent-gold);
+      color: #030308;
+      box-shadow: 0 0 14px rgba(255, 230, 0, 0.6);
+    }
+    .nav-pod-disabled {
+      opacity: 0.18 !important;
+      cursor: default !important;
+      pointer-events: none !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      color: #475569 !important;
+      filter: none !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Modal Zoom Quatuor a Toda Pantalla */
+    #quatuor-zoom-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.98);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 20000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(10px, 1.5vw, 20px);
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    #quatuor-zoom-modal.open {
+      display: flex;
+    }
+    .quatuor-zoom-bar {
+      width: 100%;
+      max-width: 1720px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(11, 19, 43, 0.92);
+      border: 1.5px solid rgba(0, 255, 135, 0.35);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .quatuor-zoom-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: clamp(0.85rem, 1vw, 1.05rem);
+      font-weight: 800;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quatuor-zoom-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .quatuor-tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #94A3B8;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .quatuor-tab-btn:hover {
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .quatuor-tab-btn.active {
+      background: rgba(0, 255, 135, 0.18);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(0, 255, 135, 0.35);
+    }
+    .quatuor-zoom-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quatuor-zoom-viewport {
+      width: 100%;
+      max-width: 1720px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #060914;
+      border: 1.5px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      padding: clamp(10px, 1.5vw, 20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.2);
+      box-sizing: border-box;
+      position: relative;
+    }
+    .quatuor-zoom-viewport img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 6px;
+      display: block;
+    }
+    .quatuor-zoom-caption {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      font-family: 'Roboto Mono', monospace;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .top-header {
+        height: auto;
+        min-height: 64px;
+        padding: 8px 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .header-nav {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .nav-btn {
+        padding: 5px 10px;
+        font-size: 0.78rem;
+      }
+      .cards-grid {
+        grid-template-columns: 1fr;
+        max-width: 540px;
+      }
+      .main-canvas {
+        padding-top: 100px;
+      }
+      .hero-header {
+        margin-bottom: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABECERA INSTITUCIONAL FIJA -->
+  <header class="top-header">
+    <a href="index.html" class="brand-link" title="Volver a Portada Principal (Rueda de Menús)">
+      <img src="assets/logo_nexord_base.png" alt="Logo NEXORD" class="brand-logo" onerror="this.style.display='none'">
+      <div class="brand-text">
+        <span class="brand-title">NEXORD</span>
+        <span class="brand-subtitle" id="hdr-subtitle">Hacia una Física de lo Grupal</span>
+      </div>
+    </a>
+
+    <nav class="header-nav">
+      <a href="index.html" class="nav-btn" style="color: var(--accent-gold);">PORTADA</a>
+      <a href="recursos.html" class="nav-btn" id="hdr-nav-recursos" style="color: var(--accent-cyan);">EXPERIENCIA VISORD</a>
+      <a href="glosario.html" class="nav-btn" id="hdr-nav-glosario">GLOSARIO</a>
+      <a href="v_plataforma.html" class="nav-btn" id="hdr-nav-plataforma" style="color: var(--accent-green);">PLATAFORMA</a>
+
+      <!-- Selector Internacional de Idioma (8 Idiomas) -->
+      <div class="lang-picker">
+        <button class="lang-picker-btn" id="lang-btn" type="button" onclick="toggleLangMenu()">
+          <span id="lang-flag">🇪🇸</span> <span id="lang-code">ES</span> ▾
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <button type="button" class="lang-opt active" onclick="setLanguage('es')">🇪🇸 Español (ES)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('en')">🇬🇧 English (EN)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('fr')">🇫🇷 Français (FR)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('it')">🇮🇹 Italiano (IT)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('de')">🇩🇪 Deutsch (DE)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('pt')">🇵🇹 Português (PT)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('ru')">🇷🇺 Русский (RU)</button>
+          <button type="button" class="lang-opt" onclick="setLanguage('zh')">🇨🇳 中文 (ZH)</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CANVAS PRINCIPAL: LOS 3 RECUADROS BREVES SINTÉTICOS -->
+  <main class="main-canvas">
+    
+    <header class="hero-header">
+      <div class="hero-badge">NIVEL 9 • CENIT EPISTEMOLÓGICO</div>
+      <h1 class="hero-title" id="page-title">FUNDAMENTOS</h1>
+      <p class="hero-subtitle" id="page-subtitle">
+        Hacia una Física de lo Grupal: los 3 pilares conceptuales que articulan el tejido social sin saturación de texto.
+      </p>
+    </header>
+
+    <!-- GRID DE 3 PILARES -->
+    <div class="cards-grid">
+      
+      <!-- RECUADRO 1: TERMODINÁMICA SOCIAL -->
+      <article class="card-pilar pilar-termo" onclick="openModal('termodinamica')">
+        <div class="card-top">
+          <div class="card-icon-tag">
+            <span class="card-icon">⚛️</span>
+            <span class="card-tag">PILAR 1</span>
+          </div>
+          <h2 class="card-title" id="c1-title">Termodinámica Social</h2>
+          <p class="card-summary" id="c1-desc">
+            Cuantificamos la entropía y la densidad relacional para definir el estado dinámico del colectivo: Caos, Gas, Líquido, Sólido o Plasma.
+          </p>
+          <div class="card-quote" id="c1-quote">
+            "La Densidad Relacional mide la fricción y la cohesión que deciden la estabilidad o el cambio de estado del grupo."
+          </div>
+        </div>
+        <div class="card-bottom">
+          <button class="btn-ampliar" type="button" onclick="event.stopPropagation(); openModal('termodinamica');">
+            <span>⛶</span> <span id="c1-btn">AMPLIAR</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- RECUADRO 2: FIGURAS SOCIOMÉTRICAS (Q81) -->
+      <article class="card-pilar pilar-figuras" onclick="openModal('figuras')">
+        <div class="card-top">
+          <div class="card-icon-tag">
+            <span class="card-icon">🧩</span>
+            <span class="card-tag">PILAR 2</span>
+          </div>
+          <h2 class="card-title" id="c2-title">Figuras Sociométricas</h2>
+          <p class="card-summary" id="c2-desc">
+            Unificamos en una sola unidad el DAR, el RECIBIR y sus expectativas mutuas en un espacio finito de 81 figuras sociométricas (Q81).
+          </p>
+          <div class="card-quote" id="c2-quote">
+            "Sustituimos el enredo de líneas del sociograma plano tradicional por mapas claros de relieve relacional."
+          </div>
+        </div>
+        <div class="card-bottom">
+          <button class="btn-ampliar" type="button" onclick="event.stopPropagation(); openModal('figuras');">
+            <span>⛶</span> <span id="c2-btn">AMPLIAR</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- RECUADRO 3: RIGOR CIENTÍFICO & ÉTICA -->
+      <article class="card-pilar pilar-rigor" onclick="openModal('rigor')">
+        <div class="card-top">
+          <div class="card-icon-tag">
+            <span class="card-icon">🏛️</span>
+            <span class="card-tag">PILAR 3</span>
+          </div>
+          <h2 class="card-title" id="c3-title">Rigor Científico &amp; Ética</h2>
+          <p class="card-summary" id="c3-desc">
+            Metodología auditada y registrada en el CERN (Zenodo): rigor matemático, protección individual y ciencia abierta.
+          </p>
+          <div class="card-quote" id="c3-quote">
+            "Protegemos con rigor la intimidad de las personas evaluadas: garantía de confidencialidad contra falsos positivos."
+          </div>
+        </div>
+        <div class="card-bottom">
+          <button class="btn-ampliar" type="button" onclick="event.stopPropagation(); openModal('rigor');">
+            <span>⛶</span> <span id="c3-btn">AMPLIAR</span>
+          </button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="zen_notice">
+      <span>💡 Pulsa en cualquiera de los 3 recuadros para desplegar su desarrollo completo en pantalla completa.</span>
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       MODAL 1: TERMODINÁMICA SOCIAL (PANTALLA COMPLETA)
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-termodinamica" onclick="closeModalOnBackdrop(event, 'termodinamica')">
+    <div class="modal-container" style="--modal-border: var(--accent-cyan);">
+      <header class="modal-header">
+        <div class="modal-badge-title">
+          <span class="modal-badge">PILAR 1</span>
+          <h3 class="modal-title-text">La Termodinámica Social</h3>
+        </div>
+        <button class="modal-close-btn" type="button" onclick="closeModal('termodinamica')">✕ CERRAR</button>
+      </header>
+      <div class="modal-body">
+        <p>
+          Los grupos humanos no son organigramas muertos ni líneas planas que conectan puntos: <strong>son redes activas y dinámicas que intercambian afectos y expectativas, modulan tensiones y evolucionan de estado</strong>.
+        </p>
+        <p>
+          NEXORD sustituye el sociograma plano tradicional por un modelo tridimensional basado en la <strong>Termodinámica de Sistemas Fuera del Equilibrio</strong> (Prigogine, Nobel 1977; Bailey, 1990).
+        </p>
+
+        <div class="modal-highlight-box">
+          <h4>"No dibujamos el organigrama oficial: cartografiamos los vectores de fuerza y la entropía que deciden si el grupo avanza o colapsa."</h4>
+        </div>
+
+        <h3 style="color: var(--accent-pink); font-size: 1.35rem; margin: 1.5rem 0 1rem 0; font-weight: 800;">Los Motores del Ecosistema: Densidad y Entropía</h3>
+        <p>En el motor de NEXORD, todo colectivo humano es auditado bajo parámetros termodinámicos rigurosos:</p>
+        
+        <ul class="modal-list">
+          <li>
+            <strong style="color: var(--accent-cyan);">Densidad Relacional (BDR / SDR):</strong>
+            Mide la fuerza gravitacional con la que los integrantes se eligen o rechazan, tanto en términos de Densidad Absoluta (BDR) como de Densidad Relativa (SDR).
+          </li>
+          <li>
+            <strong style="color: var(--accent-pink);">Entropía Grupal:</strong>
+            Mide la fricción interna y la energía disipada en expectativas rotas, asimetrías posicionales y desencuentros diádicos.
+          </li>
+          <li>
+            <strong style="color: var(--accent-green);">Homeostasis Grupal:</strong>
+            Mide la capacidad del colectivo para autorregular sus tensiones y sostener un equilibrio operativo saludable.
+          </li>
+        </ul>
+
+        <h3 style="color: var(--accent-cyan); font-size: 1.35rem; margin: 1.5rem 0 1rem 0; font-weight: 800;">Los 5 Estados de la Dinámica Grupal</h3>
+        <p>
+          A través del plano de densidad y entropía, identificamos la fase real del colectivo: 
+          <strong>Caos</strong> (ausencia de estructura), 
+          <strong>Gas</strong> (alta dispersión y baja adherencia), 
+          <strong>Líquido</strong> (flujo óptimo y adaptabilidad), 
+          <strong>Sólido</strong> (rigidez o enquistamiento) y 
+          <strong>Plasma</strong> (altísima energía polarizada).
+        </p>
+      </div>
+      <footer class="modal-footer">
+        <button class="modal-close-btn" type="button" onclick="closeModal('termodinamica')">← Volver a los 3 Pilares</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: FIGURAS SOCIOMÉTRICAS Q81 (PANTALLA COMPLETA)
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-figuras" onclick="closeModalOnBackdrop(event, 'figuras')">
+    <div class="modal-container" style="--modal-border: var(--accent-green);">
+      <header class="modal-header">
+        <div class="modal-badge-title">
+          <span class="modal-badge" style="border-color: var(--accent-green); color: var(--accent-green);">PILAR 2</span>
+          <h3 class="modal-title-text">Las 81 Figuras Sociométricas (Q81)</h3>
+        </div>
+        <button class="modal-close-btn" type="button" onclick="closeModal('figuras')">✕ CERRAR</button>
+      </header>
+      <div class="modal-body">
+        <p>
+          La unidad de análisis en NEXORD es el <strong>Tetragrama de 4 posiciones</strong> (<em>A</em><sub>1</sub>, <em>A</em><sub>2</sub>, <em>A</em><sub>3</sub>, <em>A</em><sub>4</sub>), que resuelve simultáneamente lo emitido, lo recibido y las expectativas mutuas:
+        </p>
+
+        <!-- REGLA 5: DEFINICIÓN DEL TETRAGRAMA -->
+        <div class="tetragrama-box">
+          <div class="tetragrama-title">Definición del Tetragrama SMIb</div>
+          <div class="tetragrama-grid">
+            <div class="tetra-row">
+              <span class="tetra-key" style="color: var(--accent-green);">A1 (p_DA):</span>
+              <span>La <strong>expectativa que el emisor tiene de lo que hará el partner</strong>.</span>
+            </div>
+            <div class="tetra-row">
+              <span class="tetra-key" style="color: var(--accent-cyan);">A2 (DA):</span>
+              <span>La <strong>preferencia efectiva que el emisor otorga al partner</strong>.</span>
+            </div>
+            <div class="tetra-row">
+              <span class="tetra-key" style="color: var(--accent-gold);">A3 (RECIBE):</span>
+              <span>La <strong>preferencia efectiva que el partner otorga al emisor</strong>.</span>
+            </div>
+            <div class="tetra-row">
+              <span class="tetra-key" style="color: var(--accent-orange);">A4 (p_RECIBE):</span>
+              <span>La <strong>expectativa que el partner tiene de lo que hará el emisor</strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Los 3 estados fundamentales (+, 0, −) en las 4 posiciones diádicas agotan un <strong>espacio finito de 3<sup>4</sup> = 81 figuras sociométricas</strong>: desde el rechazo mutuo y recíproco <code>1 [Rr]</code> hasta la preferencia y elección compartida plena <code>81 &lt;Ee&gt;</code>, pasando por la neutralidad o indiferencia <code>¡¿?!</code>.
+        </p>
+
+        <div class="modal-highlight-box" style="background: rgba(0, 255, 135, 0.06); border-color: rgba(0, 255, 135, 0.4);">
+          <h4 style="color: var(--accent-green);">"Condensamos la infinita variedad de vínculos humanos en un espacio topológico riguroso y cerrado de 81 figuras."</h4>
+        </div>
+
+        <!-- BOTÓN MAESTRO DE AMPLIACIÓN A PANTALLA COMPLETA -->
+        <div style="text-align: center; margin: 2rem 0 2.5rem 0;">
+          <button type="button" class="btn btn-primary" onclick="openQuatuorZoom('completa')" style="padding: 14px 28px; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 0 24px rgba(0,255,135,0.35); display: inline-flex; align-items: center; gap: 10px; cursor: pointer;">
+            <span>⛶</span>
+            <span>AMPLIAR MATRIZ Q81 Y TABLA SMIA A PANTALLA COMPLETA (ALTA DEFINICIÓN 3K)</span>
+          </button>
+        </div>
+
+        <!-- 1. TABLA EXPLICATIVA DE LA LECTURA DE SMIA (ESTRUCTURA DEL TETRAGRAMA) -->
+        <div style="margin: 2rem 0 2.8rem 0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="font-family: 'Roboto Mono', monospace; font-size: 0.95rem; font-weight: 800; color: var(--accent-cyan); letter-spacing: 0.8px; display: flex; align-items: center; gap: 8px;">
+              <span>📊</span>
+              <span>1. TABLA EXPLICATIVA DE LA LECTURA DE SMIa (COMPONENTES DE LA CELDA)</span>
+            </div>
+            <button type="button" onclick="openQuatuorZoom('smia')" style="background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); border-radius: 6px; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: 'Roboto Mono', monospace; transition: all 0.2s;" onmouseover="this.style.background='var(--accent-cyan)'; this.style.color='#030712';" onmouseout="this.style.background='rgba(56, 189, 248, 0.15)'; this.style.color='var(--accent-cyan)';">
+              ⛶ Ver SMIa a Pantalla Completa
+            </button>
+          </div>
+          <div style="width: 100%; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(56, 189, 248, 0.4); background: #060914; cursor: zoom-in; box-shadow: 0 8px 30px rgba(0,0,0,0.6);" onclick="openQuatuorZoom('smia')" title="Clic para ampliar a pantalla completa">
+            <img src="assets/Tabla_Explicativa_SMIa_Componentes.png" alt="Tabla Explicativa de la Lectura de SMIa" style="width: 100%; height: auto; display: block;">
+          </div>
+          <p style="color: var(--text-dim); font-size: 0.88rem; font-style: italic; margin-top: 10px; text-align: center;">
+            Sintaxis de la celda SMIa: Cuadrantes de preferencia real (DA, RECIBE) y metapercepción (p_DA, p_RECIBE), signos (+, 0, −) y delimitadores prototípicos (&lt; &gt;, ¡ !, [ ]).
+          </p>
+        </div>
+
+        <!-- 2. TABLA NUMERALIZADA Q81(9, 9) DE FIGURAS SOCIOMÉTRICAS -->
+        <div style="margin: 2.8rem 0 2rem 0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="font-family: 'Roboto Mono', monospace; font-size: 0.95rem; font-weight: 800; color: var(--accent-green); letter-spacing: 0.8px; display: flex; align-items: center; gap: 8px;">
+              <span>🔢</span>
+              <span>2. TABLA NUMERALIZADA Q81(9, 9) DE LAS 81 FIGURAS SOCIOMÉTRICAS</span>
+            </div>
+            <button type="button" onclick="openQuatuorZoom('q81')" style="background: rgba(0, 255, 135, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); border-radius: 6px; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: 'Roboto Mono', monospace; transition: all 0.2s;" onmouseover="this.style.background='var(--accent-green)'; this.style.color='#030712';" onmouseout="this.style.background='rgba(0, 255, 135, 0.15)'; this.style.color='var(--accent-green)';">
+              ⛶ Ver Q81 a Pantalla Completa
+            </button>
+          </div>
+          <div style="width: 100%; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(0, 255, 135, 0.4); background: #060914; cursor: zoom-in; box-shadow: 0 8px 30px rgba(0,0,0,0.6);" onclick="openQuatuorZoom('q81')" title="Clic para ampliar a pantalla completa">
+            <img src="assets/Tabla_Q81_9x9_Numeralizada.png" alt="Tabla Numeralizada Q81(9, 9)" style="width: 100%; height: auto; display: block;">
+          </div>
+          <p style="color: var(--text-dim); font-size: 0.88rem; font-style: italic; margin-top: 10px; text-align: center;">
+            Matriz Numeralizada Q81(9, 9): Espacio exhaustivo de las 81 figuras sociométricas ordenadas por valencia relacional (desde 81 &lt;Ee&gt; hasta 01 [Rr]).
+          </p>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <button class="modal-close-btn" type="button" onclick="closeModal('figuras')">← Volver a los 3 Pilares</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: RIGOR CIENTÍFICO & ÉTICA (PANTALLA COMPLETA)
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-rigor" onclick="closeModalOnBackdrop(event, 'rigor')">
+    <div class="modal-container" style="--modal-border: var(--accent-gold);">
+      <header class="modal-header">
+        <div class="modal-badge-title">
+          <span class="modal-badge" style="border-color: var(--accent-gold); color: var(--accent-gold);">PILAR 3</span>
+          <h3 class="modal-title-text">Rigor Científico &amp; Ética Deontológica</h3>
+        </div>
+        <button class="modal-close-btn" type="button" onclick="closeModal('rigor')">✕ CERRAR</button>
+      </header>
+      <div class="modal-body">
+        <p>
+          Un algoritmo mal calibrado o una interpretación ingenua pueden destruir la reputación de un miembro del grupo al etiquetarlo erróneamente como chivo expiatorio. El compromiso deontológico de NEXORD es: <strong>proteger al individuo contra falsos positivos</strong>.
+        </p>
+
+        <div class="modal-highlight-box" style="background: rgba(255, 230, 0, 0.06); border-color: rgba(255, 230, 0, 0.4);">
+          <h4 style="color: var(--accent-gold);">"No toleramos el ruido estadístico: separamos el azar de la tensión estructural real con rigor matemático demostrable."</h4>
+        </div>
+
+        <h3 style="color: var(--accent-green); font-size: 1.35rem; margin: 1.5rem 0 1rem 0; font-weight: 800;">Validación Abierta en el CERN Zenodo</h3>
+        <p>
+          NEXORD no es una caja negra: algoritmos, variedades de Grassmann Gr(k, N) y matrices SMIb forman un corpus científico abierto y auditado en el CERN (Zenodo) con identificador persistente DOI:
+        </p>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" style="display: inline-flex; align-items: center; gap: 12px; padding: 14px 26px; background: rgba(0, 255, 135, 0.12); border: 2px solid var(--accent-green); border-radius: 14px; color: var(--accent-green); text-decoration: none; font-family: 'Roboto Mono', monospace; font-size: 1.0rem; font-weight: 800; transition: all 0.25s ease;" onmouseover="this.style.background='var(--accent-green)'; this.style.color='#030712'; this.style.boxShadow='0 0 24px rgba(0,255,135,0.7)';" onmouseout="this.style.background='rgba(0, 255, 135, 0.12)'; this.style.color='var(--accent-green)'; this.style.boxShadow='none';">
+            <span>🏛️ CERN Zenodo DOI: 10.5281/zenodo.18941691</span> ↗
+          </a>
+        </div>
+
+        <h3 style="color: var(--accent-cyan); font-size: 1.35rem; margin: 1.5rem 0 1rem 0; font-weight: 800;">Anonimización Estricta por Diseño</h3>
+        <p>
+          Cumplimiento riguroso de protocolos de custodia ciega: las identidades permanecen protegidas y la devolución se efectúa bajo estricta deontología profesional y confidencialidad individual garantizada.
+        </p>
+      </div>
+      <footer class="modal-footer">
+        <button class="modal-close-btn" type="button" onclick="closeModal('rigor')">← Volver a los 3 Pilares</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       ZOOM QUATUOR FULLSCREEN (TABLA Q81 Y SMIA A TODA PANTALLA)
+       ========================================================================= -->
+  <div id="quatuor-zoom-modal" onclick="closeQuatuorZoomOnBackdrop(event)">
+    <div class="quatuor-zoom-bar" onclick="event.stopPropagation()">
+      <div class="quatuor-zoom-title">
+        <span>⛶</span>
+        <span>MATRIZ QUATUOR Q81(9, 9) &amp; CODIFICACIÓN SMIa</span>
+      </div>
+      <div class="quatuor-zoom-tabs">
+        <button type="button" class="quatuor-tab-btn active" id="tab-btn-completa" onclick="switchQuatuorView('completa')">
+          Lámina Completa Anexo I (3K)
+        </button>
+        <button type="button" class="quatuor-tab-btn" id="tab-btn-smia" onclick="switchQuatuorView('smia')">
+          1. Lectura SMIa
+        </button>
+        <button type="button" class="quatuor-tab-btn" id="tab-btn-q81" onclick="switchQuatuorView('q81')">
+          2. Matriz Q81(9, 9)
+        </button>
+      </div>
+      <div class="quatuor-zoom-actions">
+        <a id="quatuor-external-link" href="assets/Tabla_Anexo_I_Matriz_Q81.png" target="_blank" class="quatuor-tab-btn" style="color: var(--accent-cyan); border-color: var(--accent-cyan); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <span>↗</span>
+          <span>Abrir Original HD</span>
+        </a>
+        <button type="button" class="modal-close-btn" onclick="closeQuatuorZoom()" style="padding: 6px 14px; font-size: 0.85rem;">✕ CERRAR</button>
+      </div>
+    </div>
+
+    <div class="quatuor-zoom-viewport" onclick="event.stopPropagation()">
+      <img id="quatuor-zoom-img" src="assets/Tabla_Anexo_I_Matriz_Q81.png" alt="Tabla de Figuras Sociométricas Q81 a toda pantalla">
+      <div id="quatuor-zoom-caption" class="quatuor-zoom-caption">
+        Lámina Completa Oficial (CERN Zenodo Anexo I): Tabla Explicativa de Lectura SMIa (arriba) y Matriz Numeralizada Q81(9, 9) (abajo).
+      </div>
+    </div>
+  </div>
+
+  <!-- MANDO UNIVERSAL EN FILA INDIA -->
+  <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)">
+      <span>🏠</span>
+    </a>
+    <a href="visord_demo.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 8: VISORD_demo)"><span>◀</span></a>
+    <div class="nav-pod-page-group">
+      <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollBy({top: -window.innerHeight*0.8, behavior: 'smooth'})" title="Pantalla Anterior (Subir)"><span>▲</span></button>
+      <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollBy({top: window.innerHeight*0.8, behavior: 'smooth'})" title="Pantalla Siguiente (Bajar)"><span>▼</span></button>
+    </div>
+    <span class="nav-pod-btn nav-pod-next-lvl nav-pod-disabled" title="No hay nivel siguiente (Cenit Epistemológico)"><span>▶</span></span>
+  </nav>
+
+  <script>
+    // =========================================================================
+    // DICCIONARIOS MULTILINGÜES (8 IDIOMAS)
+    // =========================================================================
+    const I18N = {
+      es: {
+        flag: '🇪🇸', code: 'ES',
+        subtitle: 'Hacia una Física de lo Grupal',
+        nav_plataforma: 'PLATAFORMA',
+        nav_manual: 'MANUAL',
+        nav_glosario: 'GLOSARIO',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMUNIDAD',
+        page_title: 'FUNDAMENTOS',
+        page_subtitle: 'Hacia una Física de lo Grupal: los 3 pilares conceptuales que articulan el tejido social sin saturación de texto.',
+        c1_title: 'Termodinámica Social',
+        c1_desc: 'Cuantificamos la entropía y la densidad relacional para definir el estado dinámico del colectivo: Caos, Gas, Líquido, Sólido o Plasma.',
+        c1_quote: '"La Densidad Relacional mide la fricción y la cohesión que deciden la estabilidad o el cambio de estado del grupo."',
+        c1_btn: 'AMPLIAR',
+        c2_title: 'Figuras Sociométricas',
+        c2_desc: 'Unificamos en una sola unidad el DAR, el RECIBIR y sus expectativas mutuas en un espacio finito de 81 figuras sociométricas (Q81).',
+        c2_quote: '"Sustituimos el enredo de líneas del sociograma plano tradicional por mapas claros de relieve relacional."',
+        c2_btn: 'AMPLIAR',
+        c3_title: 'Rigor Científico & Ética',
+        c3_desc: 'Metodología auditada y registrada en el CERN (Zenodo): rigor matemático, protección individual y ciencia abierta.',
+        c3_quote: '"Protegemos con rigor la intimidad de las personas evaluadas: garantía de confidencialidad contra falsos positivos."',
+        c3_btn: 'AMPLIAR'
+      },
+      en: {
+        flag: '🇬🇧', code: 'EN',
+        subtitle: 'Toward a Physics of Groups',
+        nav_plataforma: 'PLATFORM',
+        nav_manual: 'MANUAL',
+        nav_glosario: 'GLOSSARY',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMMUNITY',
+        page_title: 'FOUNDATIONS',
+        page_subtitle: 'Toward a Physics of Groups: 3 conceptual pillars articulating social dynamics without text overload.',
+        c1_title: 'Social Thermodynamics',
+        c1_desc: 'We quantify entropy and relational density to define collective states: Chaos, Gas, Liquid, Solid, or Plasma.',
+        c1_quote: '"Relational Density gauges friction and cohesion deciding group phase changes."',
+        c1_btn: 'EXPAND',
+        c2_title: 'Sociometric Figures',
+        c2_desc: 'We unify GIVING, RECEIVING, and mutual expectations within a finite space of 81 sociometric figures (Q81).',
+        c2_quote: '"We replace messy line sociograms with clear maps of relational relief."',
+        c2_btn: 'EXPAND',
+        c3_title: 'Scientific Rigor & Ethics',
+        c3_desc: 'Audited and certified in CERN Zenodo: mathematical rigor, individual protection, and uncompromising open science.',
+        c3_quote: '"We rigorously protect individual privacy against statistical false positives."',
+        c3_btn: 'EXPAND'
+      },
+      fr: {
+        flag: '🇫🇷', code: 'FR',
+        subtitle: 'Vers une Physique des Groupes',
+        nav_plataforma: 'PLATEFORME',
+        nav_manual: 'MANUEL',
+        nav_glosario: 'GLOSSAIRE',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMMUNAUTÉ',
+        page_title: 'FONDEMENTS',
+        page_subtitle: 'Vers une Physique des Groupes: 3 piliers conceptuels sans saturation textuelle.',
+        c1_title: 'Thermodynamique Sociale',
+        c1_desc: 'Quantification de l’entropie et de la densité relationnelle pour déterminer les états collectifs.',
+        c1_quote: '"La Densité Relationnelle mesure la cohésion décidant du changement de phase du groupe."',
+        c1_btn: 'AMPLIFIER',
+        c2_title: 'Figures Sociométriques',
+        c2_desc: 'Unification du DONNER, RECEVOIR et des attentes au sein de 81 figures sociométriques.',
+        c2_quote: '"Nous remplaçons le sociogramme filaire par des cartes claires du relief relationnel."',
+        c2_btn: 'AMPLIFIER',
+        c3_title: 'Rigueur Scientifique & Éthique',
+        c3_desc: 'Méthodologie auditée au CERN (Zenodo): rigueur mathématique et science ouverte inviolable.',
+        c3_quote: '"Confidentialité absolue et protection de l’individu contre les faux positifs."',
+        c3_btn: 'AMPLIFIER'
+      },
+      it: {
+        flag: '🇮🇹', code: 'IT',
+        subtitle: 'Verso una Fisica dei Gruppi',
+        nav_plataforma: 'PIATTAFORMA',
+        nav_manual: 'MANUALE',
+        nav_glosario: 'GLOSSARIO',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMUNITÀ',
+        page_title: 'FONDAMENTI',
+        page_subtitle: 'Verso una Fisica dei Gruppi: i 3 pilastri concettuali senza saturazione di testo.',
+        c1_title: 'Termodinamica Sociale',
+        c1_desc: 'Quantificazione dell’entropia e della densità per definire gli stati collettivi.',
+        c1_quote: '"La Densidad Relacional misura l’attrito e la coesione del gruppo."',
+        c1_btn: 'AMPLIARE',
+        c2_title: 'Figure Sociometriche',
+        c2_desc: 'Unificazione di DARE, RICEVERE e aspettative nello spazio di 81 figure (Q81).',
+        c2_quote: '"Mappe chiare di rilievo relazionale al posto di sociogrammi caotici."',
+        c2_btn: 'AMPLIARE',
+        c3_title: 'Rigore Scientifico & Etica',
+        c3_desc: 'Metodologia certificata al CERN (Zenodo): rigore matematico e scienza aperta.',
+        c3_quote: '"Riservatezza assoluta contro i falsi positivi."',
+        c3_btn: 'AMPLIARE'
+      },
+      de: {
+        flag: '🇩🇪', code: 'DE',
+        subtitle: 'Hin zu einer Physik der Gruppen',
+        nav_plataforma: 'PLATTFORM',
+        nav_manual: 'HANDBUCH',
+        nav_glosario: 'GLOSSAR',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMMUNITY',
+        page_title: 'GRUNDLAGEN',
+        page_subtitle: 'Hin zu einer Physik der Gruppen: 3 konzeptionelle Säulen ohne Textüberflutung.',
+        c1_title: 'Soziale Thermodynamik',
+        c1_desc: 'Messung von Entropie und Beziehungsdichte zur Definition kollektiver Zustände.',
+        c1_quote: '"Beziehungsdichte bestimmt Phasenübergänge menschlicher Systeme."',
+        c1_btn: 'ERWEITERN',
+        c2_title: 'Soziometrische Figuren',
+        c2_desc: 'Synthese von GEBEN, NEHMEN und Erwartungen in 81 Figuren (Q81).',
+        c2_quote: '"Klare topologische Karten statt unübersichtlicher Netzwerke."',
+        c2_btn: 'ERWEITERN',
+        c3_title: 'Wissenschaftliche Strenge & Ethik',
+        c3_desc: 'Zertifiziert im CERN Zenodo: mathematische Exaktheit und Open Science.',
+        c3_quote: '"Strikte Vertraulichkeit und Schutz vor statistischen Fehlalarmen."',
+        c3_btn: 'ERWEITERN'
+      },
+      pt: {
+        flag: '🇵🇹', code: 'PT',
+        subtitle: 'Rumo a uma Física do Grupal',
+        nav_plataforma: 'PLATAFORMA',
+        nav_manual: 'MANUAL',
+        nav_glosario: 'GLOSSÁRIO',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'COMUNIDADE',
+        page_title: 'FUNDAMENTOS',
+        page_subtitle: 'Rumo a uma Física do Grupal: 3 pilares conceituais sem sobrecarga textual.',
+        c1_title: 'Termodinâmica Social',
+        c1_desc: 'Quantificação da entropia e densidade relacional definindo o estado do coletivo.',
+        c1_quote: '"A Densidade Relacional mede atrito e coesão decidindo a estabilidade."',
+        c1_btn: 'AMPLIAR',
+        c2_title: 'Figuras Sociométricas',
+        c2_desc: 'Unificação de DAR, RECEBER e expectativas em 81 figuras sociométricas (Q81).',
+        c2_quote: '"Mapas claros de relevo relacional substituindo sociogramas planos."',
+        c2_btn: 'AMPLIAR',
+        c3_title: 'Rigor Científico & Ética',
+        c3_desc: 'Metodologia registrada no CERN (Zenodo): rigor matemático e ciência abierta.',
+        c3_quote: '"Proteção individual estrita e confidencialidade absoluta."',
+        c3_btn: 'AMPLIAR'
+      },
+      ru: {
+        flag: '🇷🇺', code: 'RU',
+        subtitle: 'К Физике Групповых Процессов',
+        nav_plataforma: 'ПЛАТФОРМА',
+        nav_manual: 'РУКОВОДСТВО',
+        nav_glosario: 'ГЛОССАРИЙ',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: 'СООБЩЕСТВО',
+        page_title: 'ОСНОВЫ',
+        page_subtitle: 'К Физике Групп: 3 концептуальных столпа без информационной перегрузки.',
+        c1_title: 'Социальная Термодинамика',
+        c1_desc: 'Количественная оценка энтропии и реляционной плотности состояний группы.',
+        c1_quote: '"Плотность отношений определяет устойчивость и фазовые переходы группы."',
+        c1_btn: 'РАСШИРИТЬ',
+        c2_title: 'Социометрические Фигуры',
+        c2_desc: 'Синтез ОТДАЧИ, ПРИНЯТИЯ и ожиданий в 81 фигуре (Q81).',
+        c2_quote: '"Четкие карты рельефа отношений вместо путаницы линий."',
+        c2_btn: 'РАСШИРИТЬ',
+        c3_title: 'Научная Строгость и Этика',
+        c3_desc: 'Методология депонирована в CERN (Zenodo): математическая строгость и защита данных.',
+        c3_quote: '"Абсолютная защита участников от ложноположительных ярлыков."',
+        c3_btn: 'РАСШИРИТЬ'
+      },
+      zh: {
+        flag: '🇨🇳', code: 'ZH',
+        subtitle: '走向群体物理学',
+        nav_plataforma: '研究平台',
+        nav_manual: '使用手册',
+        nav_glosario: '术语词典',
+        nav_bsoc: 'BSOC',
+        nav_comunidad: '社区交流',
+        page_title: '理论基础',
+        page_subtitle: '走向群体物理学：三大核心支柱，绝无冗余文字负担。',
+        c1_title: '社会热力学',
+        c1_desc: '量化熵与关系密度，精确定义群体的动态相态变迁。',
+        c1_quote: '“关系密度衡量群体相变与稳定性的核心临界力。”',
+        c1_btn: '展开',
+        c2_title: '社会计量图式',
+        c2_desc: '在81种图式（Q81）空间中统一“给予”、“接收”与双向预期。',
+        c2_quote: '“以清晰的关系拓扑地形图替代杂乱的平面网络线。”',
+        c2_btn: '展开',
+        c3_title: '科学严谨性与伦理',
+        c3_desc: '在CERN（Zenodo）开放科学库验证：坚实数学基础与严格个人保护。',
+        c3_quote: '“严密守护被评估者隐私，坚决杜绝误判假阳性。”',
+        c3_btn: '展开'
+      }
+    };
+
+    // =========================================================================
+    // DETECCIÓN Y PERSISTENCIA DE IDIOMA (localStorage)
+    // =========================================================================
+    function detectInitialLanguage() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlLang = params.get('lang');
+        if (urlLang && I18N[urlLang]) return urlLang;
+      } catch (e) {}
+
+      try {
+        const saved = localStorage.getItem('nexord_lang');
+        if (saved && I18N[saved]) return saved;
+      } catch (e) {}
+
+      return 'es';
+    }
+
+    let currentLang = detectInitialLanguage();
+
+    function toggleLangMenu() {
+      document.getElementById('lang-dropdown').classList.toggle('open');
+    }
+
+    window.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-picker')) {
+        document.getElementById('lang-dropdown').classList.remove('open');
+      }
+    });
+
+    function setLanguage(lang) {
+      if (!I18N[lang]) return;
+      currentLang = lang;
+      try {
+        localStorage.setItem('nexord_lang', lang);
+      } catch (e) {}
+      document.documentElement.lang = lang;
+      const dict = I18N[lang];
+
+      document.getElementById('lang-flag').textContent = dict.flag;
+      document.getElementById('lang-code').textContent = dict.code;
+      document.getElementById('hdr-subtitle').textContent = dict.subtitle;
+      document.getElementById('page-title').textContent = dict.page_title;
+      document.getElementById('page-subtitle').textContent = dict.page_subtitle;
+
+      document.getElementById('c1-title').textContent = dict.c1_title;
+      document.getElementById('c1-desc').textContent = dict.c1_desc;
+      document.getElementById('c1-quote').textContent = dict.c1_quote;
+      document.getElementById('c1-btn').textContent = dict.c1_btn;
+
+      document.getElementById('c2-title').textContent = dict.c2_title;
+      document.getElementById('c2-desc').textContent = dict.c2_desc;
+      document.getElementById('c2-quote').textContent = dict.c2_quote;
+      document.getElementById('c2-btn').textContent = dict.c2_btn;
+
+      document.getElementById('c3-title').textContent = dict.c3_title;
+      document.getElementById('c3-desc').textContent = dict.c3_desc;
+      document.getElementById('c3-quote').textContent = dict.c3_quote;
+      document.getElementById('c3-btn').textContent = dict.c3_btn;
+
+      if (dict.nav_plataforma && document.getElementById('hdr-nav-plataforma')) document.getElementById('hdr-nav-plataforma').textContent = dict.nav_plataforma;
+      if (dict.nav_manual && document.getElementById('hdr-nav-manual')) document.getElementById('hdr-nav-manual').textContent = dict.nav_manual;
+      if (dict.nav_glosario && document.getElementById('hdr-nav-glosario')) document.getElementById('hdr-nav-glosario').textContent = dict.nav_glosario;
+      if (dict.nav_bsoc && document.getElementById('hdr-nav-bsoc')) document.getElementById('hdr-nav-bsoc').textContent = dict.nav_bsoc;
+      if (dict.nav_comunidad && document.getElementById('hdr-nav-comunidad')) document.getElementById('hdr-nav-comunidad').textContent = dict.nav_comunidad;
+
+      document.querySelectorAll('.lang-opt').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(dict.code));
+      });
+
+      document.getElementById('lang-dropdown').classList.remove('open');
+    }
+
+    // Inicializar idioma persistente
+    setLanguage(currentLang);
+
+    // =========================================================================
+    // GESTIÓN DE MODALES DE PANTALLA COMPLETA
+    // =========================================================================
+    function openModal(id) {
+      const modal = document.getElementById(`modal-${id}`);
+      if (!modal) return;
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(`modal-${id}`);
+      if (!modal) return;
+      modal.classList.remove('open');
+      document.body.classList.remove('modal-open');
+    }
+
+    function closeModalOnBackdrop(e, id) {
+      if (e.target.classList.contains('modal-overlay')) {
+        closeModal(id);
+      }
+    }
+
+    const QUATUOR_VIEWS = {
+      completa: {
+        src: 'assets/Tabla_Anexo_I_Matriz_Q81.png',
+        alt: 'Lámina Completa Oficial Anexo I: Explicación SMIa y Matriz Q81(9, 9)',
+        caption: 'Lámina Completa Oficial (CERN Zenodo Anexo I): Tabla Explicativa de Lectura SMIa (arriba) y Matriz Numeralizada Q81(9, 9) (abajo).'
+      },
+      smia: {
+        src: 'assets/Tabla_Explicativa_SMIa_Componentes.png',
+        alt: '1. Tabla Explicativa de la Lectura de SMIa (Estructura y Sintaxis del Tetragrama)',
+        caption: '1. Tabla Explicativa de la Lectura de SMIa: Componentes diádicos de preferencia real (DA, RECIBE) y metapercepción (p_DA, p_RECIBE).'
+      },
+      q81: {
+        src: 'assets/Tabla_Q81_9x9_Numeralizada.png',
+        alt: '2. Tabla Numeralizada Q81(9, 9) de las 81 Figuras Sociométricas',
+        caption: '2. Matriz Numeralizada Q81(9, 9): Catálogo de las 81 figuras sociométricas ordenadas por valencia (81 a 01).'
+      }
+    };
+
+    function switchQuatuorView(viewKey) {
+      const data = QUATUOR_VIEWS[viewKey] || QUATUOR_VIEWS.completa;
+      const img = document.getElementById('quatuor-zoom-img');
+      const caption = document.getElementById('quatuor-zoom-caption');
+      const extLink = document.getElementById('quatuor-external-link');
+
+      if (img) {
+        img.src = data.src;
+        img.alt = data.alt;
+      }
+      if (caption) {
+        caption.textContent = data.caption;
+      }
+      if (extLink) {
+        extLink.href = data.src;
+      }
+
+      ['completa', 'smia', 'q81'].forEach(k => {
+        const btn = document.getElementById(`tab-btn-${k}`);
+        if (btn) btn.classList.toggle('active', k === viewKey);
+      });
+    }
+
+    function openQuatuorZoom(initialView = 'completa') {
+      switchQuatuorView(initialView);
+      const modal = document.getElementById('quatuor-zoom-modal');
+      if (modal) modal.classList.add('open');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeQuatuorZoom() {
+      const modal = document.getElementById('quatuor-zoom-modal');
+      if (modal) modal.classList.remove('open');
+      const hasOtherOpenModal = document.querySelector('.modal-overlay.open');
+      if (!hasOtherOpenModal) {
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+    function closeQuatuorZoomOnBackdrop(e) {
+      if (e.target.id === 'quatuor-zoom-modal') {
+        closeQuatuorZoom();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const zoomModal = document.getElementById('quatuor-zoom-modal');
+        if (zoomModal && zoomModal.classList.contains('open')) {
+          closeQuatuorZoom();
+        } else {
+          ['termodinamica', 'figuras', 'rigor'].forEach(closeModal);
+        }
+      }
+    });
+
+    // Abrir automáticamente si la URL tiene hash correspondiente
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (hash.includes('termo')) openModal('termodinamica');
+      else if (hash.includes('figura')) openModal('figuras');
+      else if (hash.includes('rigor')) openModal('rigor');
+    });
+  </script>
+</body>
+</html>

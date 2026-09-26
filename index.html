@@ -902,7 +902,7 @@ const SECTORS_DATA = [
     color: "#00FF87",
     desc: "Cenit epistemológico de NEXORD. De la sociometría estática a la física de lo grupal: leyes de campo, átomo relacional y el principio DAR+RECIBIR.",
     concepts: ["Moreno & Lewin", "Física de Campos", "Topología Dinámica", "DAR+RECIBIR"],
-    link: "recursos.html#filosofia"
+    link: "fundamentos.html"
   },
   {
     id: 1,
@@ -985,20 +985,19 @@ const SECTORS_DATA = [
     id: 8,
     number: "8",
     titleKey: "RECURSOS",
-    badge: "NIVEL 8 • SIMULADOR VISORD_DEMO",
+    badge: "NIVEL 8 • RECURSOS & EXPERIENCIA VISORD",
     isTesla: false,
     color: "#00F0FF",
-    desc: "Visualización interactiva y simulación 3D/4D en tiempo real. Entorno VISORD_demo con esferas tensoriales, sociomatrices vivas, dinámicas de subgrafos y cinta interfacial.",
+    desc: "Entornos interactivos de exploración de la suite NEXORD: VISORD_demo (Nivel 8), VISORD_cultural, VISORD_radiológico y VISORD_procesual.",
     concepts: [
+      { label: "EXPERIENCIA VISORD", link: "recursos.html" },
       { label: "VISORD DEMO 3D", link: "visord_demo.html" },
       { label: "VISORD PROCESUAL", link: "visord_procesual.html" },
       { label: "VISORD CULTURAL", link: "visord_cultural.html" },
-      { label: "VISORD RADIOLÓGICO", link: "radiografias_relacionales.html" },
-      { label: "Banco BSOC", link: "recursos.html#bsoc" },
-      { label: "Manuales", link: "recursos.html#manual" }
+      { label: "VISORD RADIOLÓGICO", link: "radiografias_relacionales.html" }
     ],
-    link: "visord_demo.html",
-    btnText: "Acceder a VISORD_demo ↗"
+    link: "recursos.html",
+    btnText: "Acceder a Experiencia VISORD ↗"
   }
 ];
 
@@ -1350,6 +1349,18 @@ function setLanguage(lang) {
 
 // Inicialización de la interfaz con el idioma guardado en memoria (localStorage) o por defecto
 setLanguage(currentLang);
+
+// Detección de apertura directa del dial (por URL param ?dial=open o hash #dial)
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("dial") === "open" || urlParams.get("dial") === "true" || window.location.hash === "#dial") {
+    const secParam = urlParams.get("sector");
+    const secIdx = (secParam !== null && !isNaN(parseInt(secParam))) ? parseInt(secParam) : 8;
+    setTimeout(() => {
+      openDialAt(secIdx);
+    }, 60);
+  }
+} catch (e) {}
 </script>
 </body>
 </html>

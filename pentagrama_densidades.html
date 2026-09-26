@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VISORD • Pentagrama Socio-Termodinámico de Densidades Relacionales (10D)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        if (window.location.search.includes('embed=1') || window.self !== window.top) {
+            document.documentElement.classList.add('is-embedded');
+        }
+    </script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -15,6 +20,28 @@
             display: flex;
             justify-content: center;
         }
+
+        /* Modo Embebido para integración en Cuadros 1b.6 / Suites */
+        html.is-embedded, html.is-embedded body {
+            padding: 0 !important;
+            background: transparent !important;
+            min-height: auto !important;
+            overflow-x: hidden;
+        }
+        html.is-embedded .main-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 2px 4px 10px 4px !important;
+            box-shadow: none !important;
+        }
+        html.is-embedded .header,
+        html.is-embedded .universal-nav-pod {
+            display: none !important;
+        }
+
         .main-container {
             width: min(95%, 1400px);
             max-width: min(95%, 1400px);
@@ -1037,7 +1064,8 @@
 
         const isVert = (currentOrient === "vertical");
         const w = container.clientWidth || 1350;
-        const h = isVert ? 750 : 520;
+        const isEmb = document.documentElement.classList.contains("is-embedded");
+        const h = isVert ? 750 : (isEmb ? 470 : 520);
 
         const dpr = window.devicePixelRatio || 1;
         canvas.width = w * dpr;
@@ -2213,10 +2241,12 @@
        ========================================================================= -->
   <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
     <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)"><span>🏠</span></a>
-    <button class="nav-pod-btn nav-pod-prev-lvl" onclick="window.history.back()" title="Atrás (Página Anterior)"><span>◀</span></button>
-    <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollBy({top: -window.innerHeight*0.8, behavior: 'smooth'})" title="Subir"><span>▲</span></button>
-    <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollBy({top: window.innerHeight*0.8, behavior: 'smooth'})" title="Bajar"><span>▼</span></button>
-    <button class="nav-pod-btn nav-pod-next-lvl" onclick="window.history.forward()" title="Adelante"><span>▶</span></button>
+    <span class="nav-pod-btn nav-pod-prev-lvl nav-pod-disabled" title="No aplicable"><span>◀</span></span>
+    <div class="nav-pod-page-group">
+      <button class="nav-pod-btn nav-pod-prev-screen" onclick="window.scrollBy({top: -window.innerHeight*0.8, behavior: 'smooth'})" title="Subir"><span>▲</span></button>
+      <button class="nav-pod-btn nav-pod-next-screen" onclick="window.scrollBy({top: window.innerHeight*0.8, behavior: 'smooth'})" title="Bajar"><span>▼</span></button>
+    </div>
+    <span class="nav-pod-btn nav-pod-next-lvl nav-pod-disabled" title="No aplicable"><span>▶</span></span>
     <button onclick="toggleNavPodPlayPentagrama()" id="nav-pod-btn-play" class="nav-pod-btn nav-pod-play" title="Reproducir / Detener Secuencia de Presets (Play/Stop)">
       <span id="nav-pod-play-icon">▶</span>
     </button>
