@@ -4089,6 +4089,59 @@
       border-color: #94A3B8 !important;
       color: #FFFFFF !important;
     }
+    .densidad-workbench-layout {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      flex: 1 1 0;
+      box-sizing: border-box;
+    }
+    .densidad-workbench-sidebar {
+      width: clamp(310px, 24vw, 360px);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .densidad-workbench-sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .densidad-workbench-sidebar::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 4px;
+    }
+    .densidad-workbench-main {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 100%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: space-between;
+    }
+    @media (max-width: 980px) {
+      .densidad-workbench-layout {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+      }
+      .densidad-workbench-sidebar {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+      }
+      .densidad-workbench-main {
+        min-height: 480px !important;
+      }
+    }
 
     /* =========================================================================
        CARÁTULA DE PASO Y ESPERA CANÓNICA NEXORD (SOBRIEDAD MÁXIMA)
@@ -14551,10 +14604,12 @@
 
 
     // =========================================================================
+    // =========================================================================
     // WORKBENCH INTERACTIVO DINÁMICO: DE RECUENTOS A DENSIDADES (PANTALLA 1b.5)
     // =========================================================================
     const DENSIDAD_I18N = {
       es: {
+        sidebar_controls_title: "🎮 Controles & Escenarios",
         preset_title: "Escenarios Intuitivos:",
         preset_paradox: "⚡ Paradoja de Moreno (Saldo +2)",
         preset_paradox_hint: "Comprueba cómo Moreno da el MISMO saldo (+2) para dos realidades con un 400% de diferencia en energía y fricción.",
@@ -14565,182 +14620,213 @@
         preset_n8: "🔘 Canónico N=8 (1A)",
         btn_flow_pause: "⏸ Pausar Ondas",
         btn_flow_play: "▶ Ondas Vivas",
+        regime_lbl: "RÉGIMEN:",
+        regime_calm: "LAMINAR (CALMA)",
+        regime_turbulence: "SUPERCRÍTICO (TURBULENCIA)",
+        regime_cohesion: "RESONANCIA ARMÓNICA",
+        regime_conflict: "POLARIZADO (CONFLICTO)",
+        regime_n8: "CANÓNICO ESTABLE",
+        regime_custom: "PERSONALIZADO",
         btn_metafora: "🔍 Ver Metáfora (126 Kv/h) [ESC]",
         metafora_title: "METÁFORA CONCEPTUAL: INTERRUPTORES VS CONTADOR MODERNO",
         metafora_sub: "CONMUTACIÓN BINARIA (ON/OFF) FRENTE A DENSIDAD CONTINUA (126 Kv/h)",
         metafora_note: "Ilustra el salto paradigmático entre el recuento discreto de votos y el cálculo continuo de densidades con disipación de fricción térmica en NEXORD.",
-        col_moreno_title: "1. ENFOQUE DISCRETO (MORENO: RECUENTO Y CONMUTACIÓN)",
-        col_moreno_badge: "CONMUTACIÓN ON/OFF · ARITMÉTICA PLANA",
-        switches_title: "INTERRUPTORES DE VOTO (EMITIDOS HACIA 1A):",
+        col_moreno_title: "1. Enfoque Discreto (Moreno)",
+        col_moreno_badge: "CONMUTACIÓN ON/OFF",
+        switches_title: "Interruptores de Voto (hacia 1A):",
         sw_self: "Identidad",
         sw_choice: "+E",
         sw_neutral: "0",
         sw_rejection: "-R",
-        tally_title: "TABLERO DE CONTEO Y SALDO DISCRETO",
+        tally_title: "Tablero de Conteo y Saldo",
         tally_choices: "Elecciones (+E)",
         tally_rejections: "Rechazos (-R)",
-        tally_balance: "Saldo Lineal Moreno (E − R)",
-        moreno_critique: "Aritmética lineal de Moreno: Trata cada voto como un interruptor binario (+1 o -1). Es ciego a la intensidad ordinal, a la masa vincular y a la fricción interna disipada.",
-        col_nexord_title: "2. ENFOQUE CONTINUO (NEXORD: SOCIO-TERMODINÁMICA)",
-        col_nexord_badge: "CAMPO CONTINUO · TENSOR DE FLUJO Y MASA",
+        tally_balance: "Saldo Moreno (E − R)",
+        moreno_critique: "Moreno solo computa enteros discretos: ciego a la intensidad ordinal, a la masa vincular y a la fricción interna disipada.",
+        col_nexord_title: "2. Campo Socio-Termodinámico Continuo (NEXORD · VISORD)",
+        col_nexord_badge: "TENSOR DE FLUJO Y MASA · 60 FPS LIVE",
         canvas_title: "MEDIDOR DE FLUJO ENERGÉTICO Y ONDAS DE CAMPO",
         wave_attraction: "Flujo de Atracción (+E)",
         wave_tension: "Flujo de Tensión (-R)",
         wave_friction: "Fricción Térmica (Φ)",
         lbl_bdr: "BDR · Masa Relacional Total",
-        lbl_bdr_sub: "Voltaje y energía activa en el sistema",
-        lbl_sdr: "SDR · Cohesión Neta Resultante",
+        lbl_bdr_sub: "Voltaje y masa activa en el sistema",
+        lbl_sdr: "SDR · Saldo Continuo de Cohesión",
         lbl_sdr_sub: "Vector resultante de integración (+ / −)",
         lbl_phi: "Φ · Inercia y Fricción Disipada",
-        lbl_phi_sub: "Calor disipado por desacuerdo (BDR − |SDR|)",
-        diag_calm: "Régimen laminar de baja fricción: baja masa energética con nula disipación térmica (Φ ≈ 0). Clima pacífico pero de escaso dinamismo.",
+        lbl_phi_sub: "Calor disipado por fricción (BDR − |SDR|)",
+        diag_calm: "Régimen laminar de baja fricción: baja masa energética con nula disipación térmica (Φ ≈ 0). Clima pacífico pero de escaso dinamismo vincular.",
         diag_turbulence: "Régimen turbulento supercrítico: ¡Moreno da el mismo saldo (+2), pero aquí la masa (BDR) se dispara a 82.50 y la fricción interna (Φ=67.70) devora el 82% de la energía!",
         diag_cohesion: "Resonancia armónica plena: alta masa relacional canalizada íntegramente hacia cohesión colaborativa con nula disipación térmica.",
         diag_conflict: "Polarización máxima: choque frontal de atracciones y rechazos. El saldo se neutraliza engañosamente, mientras el sistema arde en fricción interna.",
         diag_n8: "Perfil canónico del Sujeto 1A (Líder hegemónico): alta masa gravitatoria (BDR=46.41), balance neto netamente cohesivo (SDR=+32.49) y fricción moderada (Φ=13.92).",
-        diag_custom: "Configuración interactiva personalizada: cálculo dinámico del tensor socio-termodinámico y disipación térmica en vivo.",
-        metafora_banner: "Metáfora: 4 Interruptores de pared (conmutación binaria ON/OFF) frente a un Contador Moderno (126 Kv/h: continuo, potencia y consumo). Haz clic para ampliar [ESC]."
+        diag_custom: "Configuración interactiva personalizada: cálculo dinámico del tensor socio-termodinámico y disipación térmica en tiempo real.",
+        metafora_banner: "Metáfora: 4 Interruptores de pared (conmutación ON/OFF) frente a Contador Moderno (126 Kv/h: continuo, potencia y consumo)."
       },
       en: {
-        preset_title: "Intuitive Scenarios:",
-        preset_paradox: "⚡ Moreno's Paradox (Balance +2)",
-        preset_paradox_hint: "Witness how Moreno yields the exact SAME net score (+2) for two realities with a 400% gap in relational energy and friction.",
+        sidebar_controls_title: "🎮 Controls & Presets",
+        preset_title: "Intuitive Presets:",
+        preset_paradox: "⚡ Moreno's Paradox (Net +2)",
+        preset_paradox_hint: "Notice how Moreno assigns the EXACT SAME score (+2) to two realities with a 400% gap in energy and friction.",
         case_a_btn: "Case A: 2E · 0R (Calm)",
         case_b_btn: "Case B: 7E · 5R (Turbulence)",
         preset_cohesion: "🟢 Pure Cohesion (+E)",
-        preset_conflict: "🔴 Turbulence & Conflict",
+        preset_conflict: "🔴 Turbulence & Friction",
         preset_n8: "🔘 Canonical N=8 (1A)",
         btn_flow_pause: "⏸ Pause Waves",
         btn_flow_play: "▶ Live Waves",
+        regime_lbl: "REGIME:",
+        regime_calm: "LAMINAR (CALM)",
+        regime_turbulence: "SUPERCRITICAL (TURBULENCE)",
+        regime_cohesion: "HARMONIC RESONANCE",
+        regime_conflict: "POLARIZED (CONFLICT)",
+        regime_n8: "CANONICAL STABLE",
+        regime_custom: "CUSTOM",
         btn_metafora: "🔍 View Metaphor (126 Kv/h) [ESC]",
-        metafora_title: "CONCEPTUAL METAPHOR: LIGHT SWITCHES VS SMART METER",
-        metafora_sub: "BINARY ON/OFF SWITCHING VS CONTINUOUS DENSITY (126 Kv/h)",
-        metafora_note: "Illustrates the paradigm leap from discrete vote tallies to continuous socio-thermodynamic densities with thermal friction dissipation in NEXORD.",
-        col_moreno_title: "1. DISCRETE APPROACH (MORENO: TALLIES & SWITCHING)",
-        col_moreno_badge: "ON/OFF SWITCHING · FLAT ARITHMETIC",
-        switches_title: "VOTE SWITCHES (EMITTED TOWARDS 1A):",
+        metafora_title: "CONCEPTUAL METAPHOR: SWITCHES VS MODERN POWER METER",
+        metafora_sub: "BINARY COMMUTATION (ON/OFF) VERSUS CONTINUOUS DENSITY (126 Kv/h)",
+        metafora_note: "Illustrates the paradigm leap from discrete tally counts to continuous density integrals with internal thermal friction in NEXORD.",
+        col_moreno_title: "1. Discrete Approach (Moreno)",
+        col_moreno_badge: "ON/OFF COMMUTATION",
+        switches_title: "Voting Switches (cast toward 1A):",
         sw_self: "Self",
         sw_choice: "+E",
         sw_neutral: "0",
         sw_rejection: "-R",
-        tally_title: "DISCRETE TALLY & BALANCE BOARD",
+        tally_title: "Tally Board & Discrete Balance",
         tally_choices: "Choices (+E)",
         tally_rejections: "Rejections (-R)",
-        tally_balance: "Moreno Linear Balance (E − R)",
-        moreno_critique: "Moreno's flat arithmetic: Treats each vote as a binary switch (+1 or -1). Blind to ordinal intensity, relational mass, and dissipated internal friction.",
-        col_nexord_title: "2. CONTINUOUS APPROACH (NEXORD: SOCIO-THERMODYNAMICS)",
-        col_nexord_badge: "CONTINUOUS FIELD · FLOW & MASS TENSOR",
-        canvas_title: "ENERGY FLOW METER & DYNAMIC FIELD WAVES",
+        tally_balance: "Moreno Net (E − R)",
+        moreno_critique: "Moreno only sums discrete integers: blind to ordinal intensity, relational mass, and dissipated thermal friction.",
+        col_nexord_title: "2. Continuous Socio-Thermodynamic Field (NEXORD · VISORD)",
+        col_nexord_badge: "FLOW & MASS TENSOR · 60 FPS LIVE",
+        canvas_title: "ENERGY FLOW METER & FIELD WAVES",
         wave_attraction: "Attraction Flow (+E)",
         wave_tension: "Tension Flow (-R)",
         wave_friction: "Thermal Friction (Φ)",
-        lbl_bdr: "BDR · Gross Relational Mass",
-        lbl_bdr_sub: "Total active voltage and mobilized energy",
-        lbl_sdr: "SDR · Net Resulting Cohesion",
-        lbl_sdr_sub: "Resulting directional integration vector (+ / −)",
+        lbl_bdr: "BDR · Total Relational Mass",
+        lbl_bdr_sub: "Active voltage and bond energy",
+        lbl_sdr: "SDR · Net Cohesion Balance",
+        lbl_sdr_sub: "Resulting integration vector (+ / −)",
         lbl_phi: "Φ · Inertia & Dissipated Friction",
         lbl_phi_sub: "Internal heat lost to discord (BDR − |SDR|)",
-        diag_calm: "Laminar low-friction regime: low energetic mass with near-zero heat loss (Φ ≈ 0). Peaceful climate but sluggish relational drive.",
-        diag_turbulence: "Supercritical turbulent regime: Moreno yields the exact same balance (+2), yet energetic mass (BDR) surges to 82.50 and friction (Φ=67.70) devours 82% of energy!",
-        diag_cohesion: "Full harmonic resonance: strong relational mass fully channeled into cohesive synergy with zero internal friction dissipation.",
-        diag_conflict: "Maximum polarization: head-on collision of attraction and rejection vectors. Net balance deceptively hovers near zero while friction boils.",
-        diag_n8: "Canonical profile for Subject 1A (Hegemonic Leader): high gravitational mass (BDR=46.41), robust net cohesion (SDR=+32.49), and moderate friction (Φ=13.92).",
-        diag_custom: "Custom interactive configuration: real-time computation of the continuous relational field and its thermal friction.",
-        metafora_banner: "Metaphor: 4 Light switches (binary ON/OFF switching) vs Modern Smart Meter (126 Kv/h: continuous power, flow and consumption). Click to expand [ESC]."
+        diag_calm: "Laminar low-friction regime: low energetic mass with zero heat dissipation (Φ ≈ 0). Peaceful but sluggish relational dynamics.",
+        diag_turbulence: "Supercritical turbulent regime: Moreno gives the identical +2 score, yet mass (BDR) soars to 82.50 and internal friction (Φ=67.70) devours 82% of group energy!",
+        diag_cohesion: "Full harmonic resonance: strong relational mass channeled wholly into collaborative synergy with zero dissipation.",
+        diag_conflict: "Extreme polarization: head-on collision of attractions and rejections. The flat balance deceptively cancels out while the system burns with internal friction.",
+        diag_n8: "Canonical profile of Subject 1A (Hegemonic Leader): high gravitational mass (BDR=46.41), net positive cohesion (SDR=+32.49), and moderate friction (Φ=13.92).",
+        diag_custom: "Custom interactive setting: real-time computation of socio-thermodynamic tensor and thermal dissipation.",
+        metafora_banner: "Metaphor: 4 wall switches (ON/OFF binary) versus modern power meter (126 Kv/h: continuous power and consumption)."
       },
       ru: {
-        preset_title: "Интуитивные сценарии:",
+        sidebar_controls_title: "🎮 Управление и Сценарии",
+        preset_title: "Наглядные сценарии:",
         preset_paradox: "⚡ Парадокс Морено (Баланс +2)",
-        preset_paradox_hint: "Убедитесь, как Морено дает ОДИНАКОВЫЙ баланс (+2) для двух ситуаций с разницей в 400% по энергии и трению.",
-        case_a_btn: "Случай A: 2E · 0R (Штиль)",
+        preset_paradox_hint: "Обратите внимание: Морено дает ТОЧНО ТАКОЙ ЖЕ результат (+2) для двух состояний с разницей в 400% по энергии и трению.",
+        case_a_btn: "Случай A: 2E · 0R (Покой)",
         case_b_btn: "Случай B: 7E · 5R (Турбулентность)",
         preset_cohesion: "🟢 Чистая сплоченность (+E)",
-        preset_conflict: "🔴 Турбулентность и конфликт",
+        preset_conflict: "🔴 Турбулентность и трение",
         preset_n8: "🔘 Канонический N=8 (1A)",
         btn_flow_pause: "⏸ Пауза волн",
         btn_flow_play: "▶ Живые волны",
-        btn_metafora: "🔍 Метафора (126 кВт/ч) [ESC]",
+        regime_lbl: "РЕЖИМ:",
+        regime_calm: "ЛАМИНАРНЫЙ (ПОКОЙ)",
+        regime_turbulence: "СВЕРХКРИТИЧЕСКИЙ (ТУРБУЛЕНТНОСТЬ)",
+        regime_cohesion: "ГАРМОНИЧЕСКИЙ РЕЗОНАНС",
+        regime_conflict: "ПОЛЯРИЗОВАННЫЙ (КОНФЛИКТ)",
+        regime_n8: "КАНОНИЧЕСКИЙ СТАБИЛЬНЫЙ",
+        regime_custom: "ПОЛЬЗОВАТЕЛЬСКИЙ",
+        btn_metafora: "🔍 Метафора (126 кВт·ч) [ESC]",
         metafora_title: "КОНЦЕПТУАЛЬНАЯ МЕТАФОРА: ВЫКЛЮЧАТЕЛИ И СОВРЕМЕННЫЙ СЧЕТЧИК",
-        metafora_sub: "БИНАРНОЕ ВКЛ/ВЫКЛ И НЕПРЕРЫВНАЯ ПЛОТНОСТЬ (126 кВт/ч)",
-        metafora_note: "Иллюстрирует парадигмальный скачок от дискретного подсчета голосов к непрерывным социально-термодинамическим плотностям с тепловым трением в NEXORD.",
-        col_moreno_title: "1. ДИСКРЕТНЫЙ ПОДХОД (МОРЕНО: ПОДСЧЕТ И КОММУТАЦИЯ)",
-        col_moreno_badge: "КОММУТАЦИЯ ВКЛ/ВЫКЛ · ПЛОСКАЯ АРИФМЕТИКА",
-        switches_title: "ПЕРЕКЛЮЧАТЕЛИ ГОЛОСОВ (ПО ОТНОШЕНИЮ К 1A):",
+        metafora_sub: "БИНАРНАЯ КОММУТАЦИЯ (ВКЛ/ВЫКЛ) ПРОТИВ НЕПРЕРЫВНОЙ ПЛОТНОСТИ (126 кВт·ч)",
+        metafora_note: "Иллюстрирует методологический скачок от дискретного подсчета меток к непрерывным интегралам плотностей с диссипацией тепла в NEXORD.",
+        col_moreno_title: "1. Дискретный подход (Морено)",
+        col_moreno_badge: "КОММУТАЦИЯ ВКЛ/ВЫКЛ",
+        switches_title: "Переключатели голосов (к 1A):",
         sw_self: "Я",
         sw_choice: "+E",
         sw_neutral: "0",
         sw_rejection: "-R",
-        tally_title: "ДИСКРЕТНЫЙ ПОДСЧЕТ И БАЛАНС",
+        tally_title: "Табло подсчета и дискретный баланс",
         tally_choices: "Выборы (+E)",
         tally_rejections: "Отклонения (-R)",
-        tally_balance: "Линейный баланс Морено (E − R)",
-        moreno_critique: "Плоская арифметика: каждый голос считается как +1 или -1. Не видит порядковой градации, реляционной массы и рассеянного трения.",
-        col_nexord_title: "2. НЕПРЕРЫВНЫЙ ПОДХОД (NEXORD: СОЦИАЛЬНАЯ ТЕРМОДИНАМИКА)",
-        col_nexord_badge: "НЕПРЕРЫВНОЕ ПОЛЕ · ТЕНЗОР ПОТОКА И МАССЫ",
+        tally_balance: "Баланс Морено (E − R)",
+        moreno_critique: "Морено складывает лишь целые числа: слеп к порядковой интенсивности, массе связей и рассеянному тепловому трению.",
+        col_nexord_title: "2. Непрерывное социально-термодинамическое поле (NEXORD · VISORD)",
+        col_nexord_badge: "ТЕНЗОР ПОТОКА И МАССЫ · 60 FPS LIVE",
         canvas_title: "ИЗМЕРИТЕЛЬ ЭНЕРГИИ И ПОЛЕВЫЕ ВОЛНЫ",
         wave_attraction: "Поток притяжения (+E)",
         wave_tension: "Поток напряжения (-R)",
         wave_friction: "Тепловое трение (Φ)",
         lbl_bdr: "BDR · Общая реляционная масса",
-        lbl_bdr_sub: "Совокупный вольтаж и активная энергия",
-        lbl_sdr: "SDR · Результирующая сплоченность",
-        lbl_sdr_sub: "Вектор интеграции (+ / −)",
+        lbl_bdr_sub: "Активное напряжение и энергия связей",
+        lbl_sdr: "SDR · Чистый баланс сплоченности",
+        lbl_sdr_sub: "Результирующий вектор интеграции (+ / −)",
         lbl_phi: "Φ · Инерция и рассеянное трение",
-        lbl_phi_sub: "Тепловые потери от разногласий (BDR − |SDR|)",
-        diag_calm: "Ламинарный режим низкого трения: малая энергия при околонулевых потерях (Φ ≈ 0). Спокойно, но мало активности.",
-        diag_turbulence: "Сверхкритическая турбулентность: Морено дает тот же баланс (+2), но реляционная масса (BDR) взлетает до 82.50, а трение (Φ=67.70) поглощает 82% энергии!",
-        diag_cohesion: "Гармонический резонанс: мощная масса целиком идет в конструктивную синергию без диссипации трения.",
-        diag_conflict: "Максимальная поляризация: лобовое столкновение выборов и отвержений. Баланс обманчиво близок к нулю, пока система пылает от трения.",
-        diag_n8: "Канонический профиль субъекта 1A (Лидер): высокая масса (BDR=46.41), высокий чистый баланс (SDR=+32.49) и умеренное трение (Φ=13.92).",
-        diag_custom: "Пользовательская конфигурация: расчет непрерывного поля и теплового трения в реальном времени.",
-        metafora_banner: "Метафора: 4 настенных выключателя (бинарное ВКЛ/ВЫКЛ) против современного счетчика (126 кВт/ч: поток, мощность и расход). Нажмите для увеличения [ESC]."
+        lbl_phi_sub: "Тепло, потерянное на трение (BDR − |SDR|)",
+        diag_calm: "Ламинарный режим низкого трения: малая энергетическая масса при нулевой диссипации (Φ ≈ 0). Спокойный, но пассивный климат.",
+        diag_turbulence: "Сверхкритический турбулентный режим: Морено дает тот же баланс (+2), но масса (BDR) взлетает до 82.50, а трение (Φ=67.70) сжигает 82% энергии!",
+        diag_cohesion: "Полный гармонический резонанс: высокая масса направлена целиком на сотрудничество без теплопотерь.",
+        diag_conflict: "Максимальная поляризация: лобовое столкновение выборов и отклонений. Баланс обнуляется, пока система кипит от трения.",
+        diag_n8: "Канонический профиль Участника 1A (Гегемон): высокая гравитационная масса (BDR=46.41), высокий баланс (SDR=+32.49) и умеренное трение (Φ=13.92).",
+        diag_custom: "Пользовательская конфигурация: динамический расчет социально-термодинамического тензора в реальном времени.",
+        metafora_banner: "Метафора: 4 выключателя (бинарные ВКЛ/ВЫКЛ) против современного счетчика (126 кВт·ч: непрерывность и мощность)."
       },
       zh: {
-        preset_title: "直观对比情境：",
-        preset_paradox: "⚡ 莫雷诺净分悖论 (+2)",
-        preset_paradox_hint: "见证莫雷诺如何对两组能量与内部摩擦相差400%的群体得出完全相同的净得票 (+2)。",
-        case_a_btn: "情境 A: 2选 · 0拒 (平静)",
-        case_b_btn: "情境 B: 7选 · 5拒 (剧烈动荡)",
-        preset_cohesion: "🟢 纯粹凝聚 (+E)",
-        preset_conflict: "🔴 动荡与冲突",
-        preset_n8: "🔘 规范 N=8 (1A)",
+        sidebar_controls_title: "🎮 控制与预设场景",
+        preset_title: "直观预设场景：",
+        preset_paradox: "⚡ 莫雷诺差值悖论 (净差 +2)",
+        preset_paradox_hint: "请观察：两种能量与摩擦相差400%的现实状态，莫雷诺经典算法却得出完全相同的离散得分 (+2)。",
+        case_a_btn: "情境 A：2E · 0R (平静相态)",
+        case_b_btn: "情境 B：7E · 5R (极度湍流)",
+        preset_cohesion: "🟢 纯简谐凝聚 (+E)",
+        preset_conflict: "🔴 湍流与对抗摩擦",
+        preset_n8: "🔘 规范基准 N=8 (1A)",
         btn_flow_pause: "⏸ 暂停波动",
-        btn_flow_play: "▶ 动态波动",
-        btn_metafora: "🔍 查看比喻 (126 Kv/h) [ESC]",
-        metafora_title: "概念比喻：墙壁开关与现代智能电表",
-        metafora_sub: "二元通断 (ON/OFF) 对比 连续能流与功耗 (126 Kv/h)",
-        metafora_note: "直观呈现从莫雷诺离散打勾到 NEXORD 连续热力学密度与热耗散摩擦的范式飞跃。",
-        col_moreno_title: "1. 离散计数范式 (莫雷诺：频次与通断)",
-        col_moreno_badge: "二元开关 · 扁平线性算术",
-        switches_title: "投票开关 (投向 1A 的选票)：",
-        sw_self: "自身",
+        btn_flow_play: "▶ 波动运转",
+        regime_lbl: "热力学相态：",
+        regime_calm: "层流稳态 (平静)",
+        regime_turbulence: "超临界相态 (极度湍流)",
+        regime_cohesion: "完全简谐共振 (高度凝聚)",
+        regime_conflict: "极化对抗 (剧烈内耗)",
+        regime_n8: "规范平衡态",
+        regime_custom: "自定义交互态",
+        btn_metafora: "🔍 查看热力学隐喻 (126 Kv/h) [ESC]",
+        metafora_title: "概念隐喻：离散开关与现代化多功能数字电表",
+        metafora_sub: "二元通断 (开/关) 与 连续微积分密度场 (126 Kv/h) 的范式跃迁",
+        metafora_note: "深刻揭示了经典离散打勾计数与 NEXORD 连续社会热力学流体积分、能量耗散摩擦之间的本质飞跃。",
+        col_moreno_title: "1. 离散计数法 (莫雷诺 · 1934)",
+        col_moreno_badge: "二元通断 · 扁平算术",
+        switches_title: "对 1A 投出的表决开关：",
+        sw_self: "本体",
         sw_choice: "+E",
         sw_neutral: "0",
         sw_rejection: "-R",
-        tally_title: "正字打勾与扁平净分看板",
-        tally_choices: "选择票 (+E)",
-        tally_rejections: "排斥票 (-R)",
-        tally_balance: "莫雷诺线性净分 (E − R)",
-        moreno_critique: "莫雷诺扁平算术的盲区：将每票简单视为二元通断 (+1 或 -1)，无视位阶强度、系统质量及内部耗散摩擦。",
-        col_nexord_title: "2. 连续场论范式 (NEXORD：社会热力学)",
-        col_nexord_badge: "连续流能场 · 动能与质量张量",
-        canvas_title: "连续能量流速计与动力学波形",
-        wave_attraction: "吸引流能 (+E)",
-        wave_tension: "排斥流能 (-R)",
-        wave_friction: "耗散摩擦 (Φ)",
-        lbl_bdr: "BDR · 总体关系质量",
-        lbl_bdr_sub: "系统动能与活跃总电压",
-        lbl_sdr: "SDR · 净合力凝聚度",
-        lbl_sdr_sub: "合力方向矢量 (+ / −)",
-        lbl_phi: "Φ · 结构惯性与耗散内耗",
-        lbl_phi_sub: "对抗所消耗的热量 (BDR − |SDR|)",
-        diag_calm: "层流低耗散状态：低能量质量，几乎无内耗摩擦 (Φ ≈ 0)。平稳但缺乏系统活力。",
-        diag_turbulence: "超临界剧烈湍流：莫雷诺给出完全相同的净得分 (+2)，但此处总能质量暴增至 82.50，内部摩擦 (Φ=67.70) 消耗了82%的有效能量！",
-        diag_cohesion: "完美谐振共鸣：极高的关系质量全部转化为同向协作，内部损耗归零。",
-        diag_conflict: "极致极化对抗：正负能量剧烈对撞，净分虽呈现虚假的中立，系统内部却在剧烈摩擦中沸腾。",
-        diag_n8: "规范领袖 1A 真实测度：高引力质量 (BDR=46.41)，净凝聚力稳固 (+32.49)，摩擦损耗处于良性范围 (Φ=13.92)。",
-        diag_custom: "自定义交互情境：实时计算连续社会关系场能与热力学耗散摩擦。",
-        metafora_banner: "概念比喻：4个墙壁电灯开关 (二元通断) 对比 现代智能电表 (126 Kv/h：连续流、功率与耗散)。点击放大 [ESC]。"
+        tally_title: "记数划线看板与扁平净差",
+        tally_choices: "选择赞成 (+E)",
+        tally_rejections: "排斥反对 (-R)",
+        tally_balance: "莫雷诺线性代数和 (E − R)",
+        moreno_critique: "经典莫雷诺仅简单相加离散整数：对序数排位权重、活跃关系总能及系统内部热力学耗散摩擦完全盲目。",
+        col_nexord_title: "2. 连续社会热力学动力场 (NEXORD · VISORD 2026)",
+        col_nexord_badge: "流场与质量张量 · 60 FPS 实时动力学",
+        canvas_title: "能量流速计与场波动示波器",
+        wave_attraction: "吸引凝聚流 (+E)",
+        wave_tension: "排斥张力流 (-R)",
+        wave_friction: "耗散内耗摩擦 (Φ)",
+        lbl_bdr: "BDR · 活跃关系总质量",
+        lbl_bdr_sub: "系统活跃引力与能量电压",
+        lbl_sdr: "SDR · 连续净凝聚力",
+        lbl_sdr_sub: "最终整合合力矢量 (+ / −)",
+        lbl_phi: "Φ · 结构惯性与耗散摩擦",
+        lbl_phi_sub: "因对抗消耗的热量 (BDR − |SDR|)",
+        diag_calm: "层流低摩擦稳态：总能量极低，无内部热力学耗散 (Φ ≈ 0)。平静但缺乏动力。",
+        diag_turbulence: "超临界剧烈湍流相态：莫雷诺算出相同的 +2 分，然而真实能量 (BDR) 飙升至 82.50，内部内耗摩擦 (Φ=67.70) 吞噬了全团 82% 的能量！",
+        diag_cohesion: "完全简谐共振：充沛的关系能量全额转化为建设性合力，零耗散摩擦。",
+        diag_conflict: "极化白热化状态：吸引与排斥迎面猛烈冲撞。扁平差值相互抵消显现虚假平衡，集体正陷于内部内耗中。",
+        diag_n8: "核心成员 1A 的规范拓扑特征 (主导核心)：超高引力质量 (BDR=46.41)，净凝聚力极其显著 (SDR=+32.49)，内耗温和受控 (Φ=13.92)。",
+        diag_custom: "自定义交互测算：实时计算微积分动力学张量与连续热力学耗散摩擦。",
+        metafora_banner: "概念隐喻：4只机械通断开关 (离散二元) 对比 现代化多功能电表 (126 Kv/h：连续流、功率与耗散)。"
       }
     };
 
@@ -14751,16 +14837,16 @@
       switches: {
         '1A': 0,
         '2A': 1,
-        '3A': -1,
+        '3A': 0,
         '4A': 1,
         '5A': -1,
         '6A': 1,
-        '7A': -1,
-        '8A': 1
+        '7A': 0,
+        '8A': -1
       },
       particles: [],
-      animId: null,
-      t: 0
+      t: 0,
+      animId: null
     };
 
     function renderDensidadWorkbench(containerId, options = {}) {
@@ -14778,6 +14864,7 @@
       let SDR_val = 0;
       let Phi_val = 0;
       let diagText = "";
+      let regimeName = "";
 
       if (state.activePreset === 'paradox') {
         if (state.paradoxSubcase === 'A') {
@@ -14787,6 +14874,7 @@
           SDR_val = 16.20;
           Phi_val = 0.00;
           diagText = dict.diag_calm;
+          regimeName = dict.regime_calm;
         } else {
           E_val = 7;
           R_val = 5;
@@ -14794,6 +14882,7 @@
           SDR_val = 14.80;
           Phi_val = 67.70;
           diagText = dict.diag_turbulence;
+          regimeName = dict.regime_turbulence;
         }
       } else if (state.activePreset === 'cohesion') {
         E_val = 7;
@@ -14802,6 +14891,7 @@
         SDR_val = 74.00;
         Phi_val = 0.00;
         diagText = dict.diag_cohesion;
+        regimeName = dict.regime_cohesion;
       } else if (state.activePreset === 'conflict') {
         E_val = 3;
         R_val = 4;
@@ -14809,6 +14899,7 @@
         SDR_val = -18.40;
         Phi_val = 58.40;
         diagText = dict.diag_conflict;
+        regimeName = dict.regime_conflict;
       } else if (state.activePreset === 'n8') {
         E_val = 4;
         R_val = 2;
@@ -14816,6 +14907,7 @@
         SDR_val = 32.49;
         Phi_val = 13.92;
         diagText = dict.diag_n8;
+        regimeName = dict.regime_n8;
       } else {
         // Modo interactivo personalizado
         E_val = 0;
@@ -14834,6 +14926,7 @@
         SDR_val = Math.min(95, Math.max(-95, Math.round((weightedPos - weightedNeg) * 11.5 * 100) / 100));
         Phi_val = Math.max(0, Math.round((BDR_val - Math.abs(SDR_val)) * 100) / 100);
         diagText = dict.diag_custom;
+        regimeName = dict.regime_custom;
       }
 
       const Saldo_val = E_val - R_val;
@@ -14851,196 +14944,234 @@
       const tallyE = formatTally(E_val);
       const tallyR = formatTally(R_val);
 
-      // Renderizado del DOM
+      // Renderizado del DOM con Barra Lateral Izquierda (Controles/Explicaciones/Moreno) y Gráfica Principal a lo Grande
       let html = `
-        <div style="display:flex; flex-direction:column; gap:8px; width:100%; height:100%; box-sizing:border-box;">
+        <div class="densidad-workbench-layout">
           
-          <!-- BARRA SUPERIOR DE PRESETS Y CONTROLES -->
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.14); padding:6px 12px; border-radius:10px; flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span style="font-family:'Roboto Mono', monospace; font-size:0.80rem; color:#94A3B8; font-weight:700; text-transform:uppercase;">${dict.preset_title}</span>
-              <button class="btn-workbench-toggle ${state.activePreset === 'paradox' ? 'active-amber' : ''}" id="${containerId}-preset-paradox" title="${dict.preset_paradox_hint}">
-                ${dict.preset_paradox}
-              </button>
-              <button class="btn-workbench-toggle ${state.activePreset === 'cohesion' ? 'active' : ''}" id="${containerId}-preset-cohesion">
-                ${dict.preset_cohesion}
-              </button>
-              <button class="btn-workbench-toggle ${state.activePreset === 'conflict' ? 'active-magenta' : ''}" id="${containerId}-preset-conflict">
-                ${dict.preset_conflict}
-              </button>
-              <button class="btn-workbench-toggle ${state.activePreset === 'n8' ? 'active-cyan' : ''}" id="${containerId}-preset-n8">
-                ${dict.preset_n8}
-              </button>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:6px;">
-              <button class="btn-workbench-toggle" id="${containerId}-btn-toggle-anim" style="font-weight:800; border-color:${state.isAnimating ? '#00FF87' : '#94A3B8'}; color:${state.isAnimating ? '#00FF87' : '#94A3B8'};">
-                ${state.isAnimating ? dict.btn_flow_pause : dict.btn_flow_play}
-              </button>
-              <button class="btn-workbench-toggle" id="${containerId}-btn-open-metafora" style="border-color:#38BDF8; color:#38BDF8; font-weight:800;" title="Abrir Metáfora Oficial HD [ESC]">
-                ${dict.btn_metafora}
-              </button>
-            </div>
-          </div>
-
-          ${state.activePreset === 'paradox' ? `
-            <!-- SUB-SELECTOR DE LA PARADOJA DE MORENO: CASO A VS CASO B -->
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:rgba(245,158,11,0.12); border:1.5px solid #F59E0B; border-radius:8px; padding:6px 14px; flex-shrink:0;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-family:'Roboto Mono'; font-weight:900; color:#F59E0B; font-size:0.86rem;">⚡ PARADOJA DEL SALDO:</span>
-                <button class="densidad-sw-btn ${state.paradoxSubcase === 'A' ? 'pos-active' : ''}" id="${containerId}-subcase-a" style="padding:4px 12px; font-size:0.82rem;">
-                  ${dict.case_a_btn}
-                </button>
-                <button class="densidad-sw-btn ${state.paradoxSubcase === 'B' ? 'neg-active' : ''}" id="${containerId}-subcase-b" style="padding:4px 12px; font-size:0.82rem;">
-                  ${dict.case_b_btn}
-                </button>
-              </div>
-              <div style="font-family:'Roboto Mono'; font-size:0.80rem; color:#CBD5E1;">
-                ${state.paradoxSubcase === 'A' 
-                  ? 'Caso A: 2E · 0R ➔ Saldo = <b style="color:#38BDF8;">+2</b> | BDR = <b style="color:#00FF87;">16.20</b> | Fricción Φ = <b style="color:#FFE600;">0.00</b> (Calma absoluta)'
-                  : 'Caso B: 7E · 5R ➔ Saldo = <b style="color:#38BDF8;">+2</b> | BDR = <b style="color:#00FF87;">82.50</b> | Fricción Φ = <b style="color:#FF007F;">67.70</b> (¡Reactor en ebullición!)'}
-              </div>
-            </div>
-          ` : ''}
-
-          <!-- ESCENARIO DUAL PRINCIPAL (MORENO DISCRETO VS NEXORD CONTINUO) -->
-          <div style="display:grid; grid-template-columns:1fr 1.35fr; gap:12px; flex:1 1 0; min-height:0; width:100%;">
+          <!-- =========================================================================
+               COLUMNA LATERAL IZQUIERDA: EXPLICACIONES, CONTROLES Y ENFOQUE DISCRETO
+               ========================================================================= -->
+          <div class="densidad-workbench-sidebar">
             
-            <!-- PANEL IZQUIERDO: 1. ENFOQUE DISCRETO (MORENO) -->
-            <div style="background:rgba(15,23,42,0.88); border:1.8px solid rgba(56,189,248,0.45); border-radius:12px; padding:8px 12px; display:flex; flex-direction:column; justify-content:space-between; gap:6px; box-shadow:0 4px 20px rgba(0,0,0,0.5); min-height:0; overflow-y:auto;">
-              <div style="flex-shrink:0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(56,189,248,0.25); padding-bottom:4px; margin-bottom:6px;">
-                  <b style="color:#38BDF8; font-size:clamp(0.85rem, 0.95vw, 1.02rem); font-family:'Roboto Mono', monospace;">${dict.col_moreno_title}</b>
-                  <span style="font-size:0.72rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:2px 6px; border-radius:4px; font-weight:800; font-family:'Roboto Mono', monospace;">${dict.col_moreno_badge}</span>
-                </div>
+            <!-- 1. CAPSULA DE ESCENARIOS Y PRESETS DIDÁCTICOS -->
+            <div style="background:rgba(15,23,42,0.92); border:1.5px solid rgba(56,189,248,0.4); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(56,189,248,0.25); padding-bottom:4px;">
+                <b style="color:#38BDF8; font-size:0.80rem; font-family:'Roboto Mono', monospace; text-transform:uppercase; letter-spacing:0.8px;">
+                  ${dict.sidebar_controls_title}
+                </b>
+                <button class="densidad-sw-btn" id="${containerId}-btn-toggle-anim" style="padding:2px 7px; font-size:0.72rem; border-color:${state.isAnimating ? '#00FF87' : '#F59E0B'}; color:${state.isAnimating ? '#00FF87' : '#F59E0B'};">
+                  ${state.isAnimating ? dict.btn_flow_pause : dict.btn_flow_play}
+                </button>
+              </div>
+
+              <!-- BOTONES DE PRESET VERTICALES -->
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <!-- PRESET 1: PARADOJA -->
+                <button class="btn-workbench-toggle ${state.activePreset === 'paradox' ? 'active-amber' : ''}" id="${containerId}-preset-paradox" style="width:100%; text-align:left; justify-content:flex-start; padding:5px 8px; font-size:0.78rem;">
+                  ${dict.preset_paradox}
+                </button>
                 
-                <!-- BATERÍA DE INTERRUPTORES (8 SUJETOS) -->
-                <div style="font-size:0.76rem; color:#94A3B8; font-family:'Roboto Mono', monospace; font-weight:800; text-transform:uppercase; margin-bottom:4px;">
-                  ${dict.switches_title}
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:5px; margin-bottom:6px;">
-                  ${subjects.map((s, idx) => {
-                    if (idx === 0) {
-                      return `
-                        <div style="background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.3); border-radius:6px; padding:3px 4px; text-align:center;">
-                          <div style="font-weight:900; color:#38BDF8; font-size:0.80rem;">${s}</div>
-                          <span style="font-size:0.70rem; color:#94A3B8;">${dict.sw_self}</span>
-                        </div>
-                      `;
-                    }
-                    const curVal = state.switches[s] || 0;
+                ${state.activePreset === 'paradox' ? `
+                  <div style="background:rgba(245,158,11,0.08); border-left:3px solid #F59E0B; border-radius:4px; padding:5px 6px; margin:2px 0; display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; gap:4px;">
+                      <button class="densidad-sw-btn ${state.paradoxSubcase === 'A' ? 'pos-active' : ''}" id="${containerId}-subcase-a" style="flex:1; padding:3px 4px; font-size:0.72rem;">
+                        ${dict.case_a_btn}
+                      </button>
+                      <button class="densidad-sw-btn ${state.paradoxSubcase === 'B' ? 'neg-active' : ''}" id="${containerId}-subcase-b" style="flex:1; padding:3px 4px; font-size:0.72rem;">
+                        ${dict.case_b_btn}
+                      </button>
+                    </div>
+                    <div style="font-family:'Roboto Mono', monospace; font-size:0.72rem; color:#CBD5E1; line-height:1.25;">
+                      ${state.paradoxSubcase === 'A'
+                        ? '<b>Caso A (Calma):</b> Saldo=<b style="color:#38BDF8;">+2</b> · BDR=<b style="color:#00FF87;">16.20</b> · Φ=<b style="color:#FFE600;">0.00</b> (Calma serena)'
+                        : '<b>Caso B (Turbulencia):</b> Saldo=<b style="color:#38BDF8;">+2</b> · BDR=<b style="color:#00FF87;">82.50</b> · Φ=<b style="color:#FF007F;">67.70</b> (¡82% calor disipado!)'}
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- PRESET 2: COHESIÓN PURA -->
+                <button class="btn-workbench-toggle ${state.activePreset === 'cohesion' ? 'active-green' : ''}" id="${containerId}-preset-cohesion" style="width:100%; text-align:left; justify-content:flex-start; padding:5px 8px; font-size:0.78rem;">
+                  ${dict.preset_cohesion}
+                </button>
+
+                <!-- PRESET 3: CONFLICTO -->
+                <button class="btn-workbench-toggle ${state.activePreset === 'conflict' ? 'active-magenta' : ''}" id="${containerId}-preset-conflict" style="width:100%; text-align:left; justify-content:flex-start; padding:5px 8px; font-size:0.78rem;">
+                  ${dict.preset_conflict}
+                </button>
+
+                <!-- PRESET 4: CANÓNICO N=8 -->
+                <button class="btn-workbench-toggle ${state.activePreset === 'n8' ? 'active-cyan' : ''}" id="${containerId}-preset-n8" style="width:100%; text-align:left; justify-content:flex-start; padding:5px 8px; font-size:0.78rem;">
+                  ${dict.preset_n8}
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. CAPSULA DE ENFOQUE DISCRETO (MORENO: INTERRUPTORES Y PALOTES) -->
+            <div style="background:rgba(15,23,42,0.92); border:1.5px solid rgba(56,189,248,0.4); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(56,189,248,0.25); padding-bottom:4px;">
+                <b style="color:#38BDF8; font-size:0.80rem; font-family:'Roboto Mono', monospace;">
+                  ${dict.col_moreno_title}
+                </b>
+                <span style="font-size:0.68rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:2px 5px; border-radius:4px; font-weight:800; font-family:'Roboto Mono', monospace;">
+                  ${dict.col_moreno_badge}
+                </span>
+              </div>
+
+              <!-- BATERÍA DE INTERRUPTORES (8 SUJETOS) -->
+              <div style="font-size:0.72rem; color:#94A3B8; font-family:'Roboto Mono', monospace; font-weight:800; text-transform:uppercase;">
+                ${dict.switches_title}
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px;">
+                ${subjects.map((s, idx) => {
+                  if (idx === 0) {
                     return `
-                      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:3px 4px; text-align:center; display:flex; flex-direction:column; gap:2px;">
-                        <div style="font-weight:900; color:#FFFFFF; font-size:0.78rem;">${s}</div>
-                        <div style="display:flex; justify-content:center; gap:2px;">
-                          <button class="densidad-sw-btn ${curVal === 1 ? 'pos-active' : ''}" data-node="${s}" data-val="1" title="Elección (+E)">+</button>
-                          <button class="densidad-sw-btn ${curVal === 0 ? 'neu-active' : ''}" data-node="${s}" data-val="0" title="Neutro (0)">0</button>
-                          <button class="densidad-sw-btn ${curVal === -1 ? 'neg-active' : ''}" data-node="${s}" data-val="-1" title="Rechazo (-R)">-</button>
-                        </div>
+                      <div style="background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.3); border-radius:5px; padding:2px 3px; text-align:center;">
+                        <div style="font-weight:900; color:#38BDF8; font-size:0.75rem;">${s}</div>
+                        <span style="font-size:0.65rem; color:#94A3B8;">${dict.sw_self}</span>
                       </div>
                     `;
-                  }).join('')}
-                </div>
+                  }
+                  const curVal = state.switches[s] || 0;
+                  return `
+                    <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:5px; padding:2px 3px; text-align:center; display:flex; flex-direction:column; gap:2px;">
+                      <div style="font-weight:900; color:#FFFFFF; font-size:0.75rem;">${s}</div>
+                      <div style="display:flex; justify-content:center; gap:2px;">
+                        <button class="densidad-sw-btn ${curVal === 1 ? 'pos-active' : ''}" data-node="${s}" data-val="1" style="padding:2px 4px; font-size:0.70rem;" title="Elección (+E)">+</button>
+                        <button class="densidad-sw-btn ${curVal === 0 ? 'neu-active' : ''}" data-node="${s}" data-val="0" style="padding:2px 4px; font-size:0.70rem;" title="Neutro (0)">0</button>
+                        <button class="densidad-sw-btn ${curVal === -1 ? 'neg-active' : ''}" data-node="${s}" data-val="-1" style="padding:2px 4px; font-size:0.70rem;" title="Rechazo (-R)">-</button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
               </div>
 
               <!-- TABLERO DE CONTEO Y ARITMÉTICA DE VOTOS -->
-              <div style="background:#080E1E; border:1px solid rgba(56,189,248,0.35); border-radius:8px; padding:6px 10px; display:flex; flex-direction:column; gap:4px; flex-shrink:0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; color:#94A3B8; font-family:'Roboto Mono'; font-weight:800; text-transform:uppercase;">
+              <div style="background:#080E1E; border:1px solid rgba(56,189,248,0.35); border-radius:6px; padding:5px 8px; display:flex; flex-direction:column; gap:3px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono'; font-weight:800; text-transform:uppercase;">
                   <span>${dict.tally_title}</span>
                   <span style="color:#F59E0B;">Marcas de palotes</span>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1.1fr; gap:6px; align-items:center; text-align:center;">
-                  <div style="background:rgba(0,255,135,0.08); border:1px solid rgba(0,255,135,0.3); border-radius:6px; padding:4px;">
-                    <div style="font-size:0.70rem; color:#94A3B8;">${dict.tally_choices}</div>
-                    <div style="font-size:1.15rem; font-weight:900; color:#00FF87; font-family:'Roboto Mono';">${E_val}</div>
-                    <div style="font-size:0.74rem; color:#00FF87; letter-spacing:1px; font-family:'Roboto Mono'; font-weight:900;">${tallyE}</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1.15fr; gap:4px; align-items:center; text-align:center;">
+                  <div style="background:rgba(0,255,135,0.08); border:1px solid rgba(0,255,135,0.3); border-radius:5px; padding:3px;">
+                    <div style="font-size:0.65rem; color:#94A3B8;">${dict.tally_choices}</div>
+                    <div style="font-size:1.05rem; font-weight:900; color:#00FF87; font-family:'Roboto Mono';">${E_val}</div>
+                    <div style="font-size:0.68rem; color:#00FF87; letter-spacing:1px; font-family:'Roboto Mono'; font-weight:900;">${tallyE}</div>
                   </div>
-                  <div style="background:rgba(255,0,127,0.08); border:1px solid rgba(255,0,127,0.3); border-radius:6px; padding:4px;">
-                    <div style="font-size:0.70rem; color:#94A3B8;">${dict.tally_rejections}</div>
-                    <div style="font-size:1.15rem; font-weight:900; color:#FF007F; font-family:'Roboto Mono';">${R_val}</div>
-                    <div style="font-size:0.74rem; color:#FF007F; letter-spacing:1px; font-family:'Roboto Mono'; font-weight:900;">${tallyR}</div>
+                  <div style="background:rgba(255,0,127,0.08); border:1px solid rgba(255,0,127,0.3); border-radius:5px; padding:3px;">
+                    <div style="font-size:0.65rem; color:#94A3B8;">${dict.tally_rejections}</div>
+                    <div style="font-size:1.05rem; font-weight:900; color:#FF007F; font-family:'Roboto Mono';">${R_val}</div>
+                    <div style="font-size:0.68rem; color:#FF007F; letter-spacing:1px; font-family:'Roboto Mono'; font-weight:900;">${tallyR}</div>
                   </div>
-                  <div style="background:rgba(56,189,248,0.12); border:1.5px solid #38BDF8; border-radius:6px; padding:4px;">
-                    <div style="font-size:0.70rem; color:#94A3B8;">${dict.tally_balance}</div>
-                    <div style="font-size:1.25rem; font-weight:900; color:#38BDF8; font-family:'Roboto Mono';">${Saldo_val > 0 ? '+' : ''}${Saldo_val}</div>
-                    <div style="font-size:0.72rem; color:#CBD5E1; font-family:'Roboto Mono'; font-weight:700;">(${E_val} − ${R_val})</div>
+                  <div style="background:rgba(56,189,248,0.12); border:1.5px solid #38BDF8; border-radius:5px; padding:3px;">
+                    <div style="font-size:0.65rem; color:#94A3B8;">${dict.tally_balance}</div>
+                    <div style="font-size:1.15rem; font-weight:900; color:#38BDF8; font-family:'Roboto Mono';">${Saldo_val > 0 ? '+' : ''}${Saldo_val}</div>
+                    <div style="font-size:0.68rem; color:#CBD5E1; font-family:'Roboto Mono'; font-weight:700;">(${E_val} − ${R_val})</div>
                   </div>
                 </div>
               </div>
 
               <!-- NOTA CRÍTICA SOBRE EL CONTEO PLANO -->
-              <div style="background:rgba(0,0,0,0.3); border-left:3px solid #38BDF8; border-radius:4px; padding:5px 8px; font-size:0.74rem; color:#CBD5E1; line-height:1.3; flex-shrink:0;">
+              <div style="background:rgba(0,0,0,0.3); border-left:3px solid #38BDF8; border-radius:4px; padding:4px 6px; font-size:0.70rem; color:#CBD5E1; line-height:1.25;">
                 ${dict.moreno_critique}
               </div>
             </div>
 
-            <!-- PANEL DERECHO: 2. ENFOQUE CONTINUO (NEXORD SOCIO-TERMODINÁMICA) -->
-            <div style="background:rgba(15,23,42,0.88); border:1.8px solid rgba(0,255,135,0.45); border-radius:12px; padding:8px 12px; display:flex; flex-direction:column; justify-content:space-between; gap:6px; box-shadow:0 4px 20px rgba(0,0,0,0.5); min-height:0; overflow:hidden;">
-              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,255,135,0.25); padding-bottom:4px; margin-bottom:4px; flex-shrink:0;">
-                <b style="color:#00FF87; font-size:clamp(0.85rem, 0.95vw, 1.02rem); font-family:'Roboto Mono', monospace;">${dict.col_nexord_title}</b>
-                <span style="font-size:0.72rem; background:rgba(0,255,135,0.15); color:#00FF87; padding:2px 6px; border-radius:4px; font-weight:800; font-family:'Roboto Mono', monospace;">${dict.col_nexord_badge}</span>
-              </div>
-
-              <!-- LIENZO CANVAS DE ONDAS Y DIAL INTEGRADO (60 FPS) -->
-              <div style="position:relative; width:100%; flex:1 1 0; min-height:140px; max-height:220px; border-radius:8px; overflow:hidden; border:1px solid rgba(0,255,135,0.3); background:#080E1E; display:flex; align-items:center; justify-content:center;">
-                <canvas id="${containerId}-canvas" style="width:100%; height:100%; display:block;"></canvas>
-                <!-- HUD FLOTANTE SUPERIOR DENTRO DEL CANVAS -->
-                <div style="position:absolute; top:6px; left:8px; display:flex; gap:10px; font-family:'Roboto Mono'; font-size:0.72rem; pointer-events:none; background:rgba(8,14,30,0.7); padding:2px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.1);">
-                  <span style="color:#00FF87; font-weight:800;">● ${dict.wave_attraction}</span>
-                  <span style="color:#FF007F; font-weight:800;">● ${dict.wave_tension}</span>
-                  ${Phi_val > 2 ? `<span style="color:#FFE600; font-weight:900;">⚡ ${dict.wave_friction} (${Phi_val})</span>` : ''}
+            <!-- 3. CAPSULA DE METÁFORA CONCEPTUAL (INTERRUPTORES VS CONTADOR 126 Kv/h) -->
+            <div id="${containerId}-banner-metafora" style="background:rgba(11,19,43,0.92); border:1.2px solid rgba(56,189,248,0.35); border-radius:8px; padding:5px 8px; display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; flex-shrink:0; transition:all 0.2s;" onmouseover="this.style.borderColor='#38BDF8'; this.style.boxShadow='0 0 10px rgba(56,189,248,0.25)';" onmouseout="this.style.borderColor='rgba(56,189,248,0.35)'; this.style.boxShadow='none';">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <img src="assets/interruptores_vs_cuadro_consumo.jpg" alt="4 Interruptores vs Contador Moderno 126 Kv/h" style="height:34px; width:auto; border-radius:4px; border:1px solid rgba(56,189,248,0.4);" />
+                <div style="font-family:'Roboto Mono', monospace; font-size:0.70rem; color:#CBD5E1; line-height:1.2;">
+                  <strong style="color:#F59E0B;">4 Interruptores</strong> vs <strong style="color:#38BDF8;">126 Kv/h</strong><br>
+                  <span style="color:#94A3B8; font-size:0.66rem;">Metáfora de consumo</span>
                 </div>
               </div>
-
-              <!-- TELEMETRÍA SOCIO-TERMODINÁMICA (3 BARRAS DE PROGRESO) -->
-              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; flex-shrink:0;">
-                <!-- BDR -->
-                <div style="background:#080E1E; border:1px solid rgba(0,255,135,0.3); border-radius:6px; padding:4px 6px; text-align:center;">
-                  <div style="font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono';">${dict.lbl_bdr}</div>
-                  <div style="font-size:1.15rem; font-weight:900; color:#00FF87; font-family:'Roboto Mono'; margin:1px 0;">${BDR_val.toFixed(2)}</div>
-                  <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
-                    <div style="width:${Math.min(100, BDR_val)}%; height:100%; background:#00FF87; box-shadow:0 0 8px #00FF87;"></div>
-                  </div>
-                </div>
-
-                <!-- SDR -->
-                <div style="background:#080E1E; border:1px solid rgba(56,189,248,0.3); border-radius:6px; padding:4px 6px; text-align:center;">
-                  <div style="font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono';">${dict.lbl_sdr}</div>
-                  <div style="font-size:1.15rem; font-weight:900; color:${SDR_val >= 0 ? '#38BDF8' : '#FF007F'}; font-family:'Roboto Mono'; margin:1px 0;">${SDR_val >= 0 ? '+' : ''}${SDR_val.toFixed(2)}</div>
-                  <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; position:relative; overflow:hidden;">
-                    <div style="position:absolute; ${SDR_val >= 0 ? 'left:50%; width:' + (Math.min(50, Math.abs(SDR_val)/2)) + '%; background:#38BDF8;' : 'right:50%; width:' + (Math.min(50, Math.abs(SDR_val)/2)) + '%; background:#FF007F;'} height:100%;"></div>
-                  </div>
-                </div>
-
-                <!-- PHI / FRICCIÓN -->
-                <div style="background:#080E1E; border:1px solid rgba(255,0,127,0.3); border-radius:6px; padding:4px 6px; text-align:center;">
-                  <div style="font-size:0.70rem; color:#94A3B8; font-family:'Roboto Mono';">${dict.lbl_phi}</div>
-                  <div style="font-size:1.15rem; font-weight:900; color:#FF007F; font-family:'Roboto Mono'; margin:1px 0;">${Phi_val.toFixed(2)}</div>
-                  <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
-                    <div style="width:${Math.min(100, Phi_val)}%; height:100%; background:linear-gradient(90deg, #F59E0B, #FF007F); box-shadow:0 0 8px #FF007F;"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- DIAGNÓSTICO TERMODINÁMICO DINÁMICO -->
-              <div style="background:rgba(0,0,0,0.35); border-left:3px solid #00FF87; border-radius:4px; padding:5px 8px; font-size:0.74rem; color:#E2E8F0; line-height:1.3; font-family:'Roboto Mono'; flex-shrink:0;">
-                ${diagText}
-              </div>
+              <button type="button" class="densidad-sw-btn" id="${containerId}-btn-open-metafora" style="border-color:#38BDF8; color:#38BDF8; padding:2px 7px; font-size:0.70rem;">
+                🔍 HD
+              </button>
             </div>
 
           </div>
 
-          <!-- FRANJA INFERIOR: METÁFORA OFICIAL (INTERRUPTORES VS CONTADOR 126 Kv/h) -->
-          <div id="${containerId}-banner-metafora" style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:linear-gradient(90deg, rgba(11,19,43,0.95), rgba(15,23,42,0.95)); border:1.2px solid rgba(56,189,248,0.35); border-radius:8px; padding:5px 12px; cursor:pointer; flex-shrink:0; transition:all 0.2s;" onmouseover="this.style.borderColor='#38BDF8'; this.style.boxShadow='0 0 14px rgba(56,189,248,0.25)';" onmouseout="this.style.borderColor='rgba(56,189,248,0.35)'; this.style.boxShadow='none';">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <img src="assets/interruptores_vs_cuadro_consumo.jpg" alt="4 Interruptores vs Contador Moderno 126 Kv/h" style="height:38px; width:auto; border-radius:4px; border:1px solid rgba(56,189,248,0.4);" />
-              <div style="font-family:'Roboto Mono'; font-size:0.76rem; color:#CBD5E1;">
-                <strong style="color:#F59E0B;">4 Interruptores (ON/OFF)</strong> frente a <strong style="color:#38BDF8;">Contador Moderno (126 Kv/h)</strong> · ${dict.metafora_banner}
+          <!-- =========================================================================
+               COLUMNA DERECHA: LA GRÁFICA EN PRIMER PLANO A LO GRANDE (NEXORD VISORD)
+               ========================================================================= -->
+          <div class="densidad-workbench-main">
+            
+            <!-- CABECERA DE CAMPO CONTINUO -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(15,23,42,0.85); border:1px solid rgba(0,255,135,0.3); border-radius:8px; padding:6px 12px; flex-shrink:0;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <b style="color:#00FF87; font-size:clamp(0.88rem, 1.0vw, 1.05rem); font-family:'Roboto Mono', monospace;">
+                  ${dict.col_nexord_title}
+                </b>
+                <span style="font-size:0.72rem; background:rgba(0,255,135,0.15); color:#00FF87; padding:2px 8px; border-radius:4px; font-weight:800; font-family:'Roboto Mono', monospace;">
+                  ${dict.col_nexord_badge}
+                </span>
+              </div>
+              <div style="font-family:'Roboto Mono', monospace; font-size:0.75rem; color:#94A3B8; display:flex; align-items:center; gap:6px;">
+                <span>${dict.regime_lbl || 'RÉGIMEN:'}</span>
+                <span style="font-weight:900; color:${state.activePreset === 'paradox' ? (state.paradoxSubcase === 'A' ? '#00FF87' : '#FF007F') : (state.activePreset === 'cohesion' ? '#00FF87' : (state.activePreset === 'conflict' ? '#FF007F' : '#38BDF8'))};">
+                  ${regimeName}
+                </span>
               </div>
             </div>
-            <button type="button" class="densidad-sw-btn" style="border-color:#38BDF8; color:#38BDF8; padding:3px 10px; font-size:0.74rem;">
-              🔍 HD [ESC]
-            </button>
+
+            <!-- LIENZO CANVAS DE ONDAS Y DIAL INTEGRADO A LO GRANDE (60 FPS) -->
+            <div style="position:relative; width:100%; flex:1 1 0; min-height:280px; max-height:480px; border-radius:12px; overflow:hidden; border:1.8px solid rgba(0,255,135,0.45); background:#080E1E; box-shadow:0 4px 24px rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center;">
+              <canvas id="${containerId}-canvas" style="width:100%; height:100%; display:block;"></canvas>
+              
+              <!-- HUD FLOTANTE SUPERIOR IZQUIERDO DENTRO DEL CANVAS -->
+              <div style="position:absolute; top:8px; left:10px; display:flex; gap:12px; font-family:'Roboto Mono', monospace; font-size:0.74rem; pointer-events:none; background:rgba(8,14,30,0.85); padding:3px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 2px 10px rgba(0,0,0,0.4);">
+                <span style="color:#00FF87; font-weight:800;">● ${dict.wave_attraction}</span>
+                <span style="color:#FF007F; font-weight:800;">● ${dict.wave_tension}</span>
+                <span style="color:#FFE600; font-weight:900;">⚡ ${dict.wave_friction} (Φ = ${Phi_val.toFixed(2)})</span>
+              </div>
+
+              <!-- HUD FLOTANTE SUPERIOR DERECHO (SOBRE LOS DIALES) -->
+              <div style="position:absolute; top:8px; right:10px; display:flex; gap:8px; font-family:'Roboto Mono', monospace; font-size:0.70rem; pointer-events:none; background:rgba(8,14,30,0.85); padding:3px 8px; border-radius:6px; border:1px solid rgba(56,189,248,0.3); color:#94A3B8;">
+                <span style="color:#38BDF8; font-weight:800;">COLUMNA BDR</span>
+                <span>·</span>
+                <span style="color:#00FF87; font-weight:800;">MANÓMETRO SDR</span>
+              </div>
+            </div>
+
+            <!-- TELEMETRÍA SOCIO-TERMODINÁMICA (3 MONITORES EN HORIZONTAL) -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; flex-shrink:0;">
+              <!-- BDR -->
+              <div style="background:#080E1E; border:1.2px solid rgba(0,255,135,0.35); border-radius:8px; padding:6px 10px; text-align:center;">
+                <div style="font-size:0.72rem; color:#94A3B8; font-family:'Roboto Mono', monospace; font-weight:700;">${dict.lbl_bdr}</div>
+                <div style="font-size:1.35rem; font-weight:900; color:#00FF87; font-family:'Roboto Mono', monospace; margin:2px 0;">${BDR_val.toFixed(2)}</div>
+                <div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;">
+                  <div style="width:${Math.min(100, BDR_val)}%; height:100%; background:#00FF87; box-shadow:0 0 10px #00FF87;"></div>
+                </div>
+                <div style="font-size:0.68rem; color:#94A3B8; margin-top:3px; font-family:'Roboto Mono';">${dict.lbl_bdr_sub}</div>
+              </div>
+
+              <!-- SDR -->
+              <div style="background:#080E1E; border:1.2px solid rgba(56,189,248,0.35); border-radius:8px; padding:6px 10px; text-align:center;">
+                <div style="font-size:0.72rem; color:#94A3B8; font-family:'Roboto Mono', monospace; font-weight:700;">${dict.lbl_sdr}</div>
+                <div style="font-size:1.35rem; font-weight:900; color:${SDR_val >= 0 ? '#38BDF8' : '#FF007F'}; font-family:'Roboto Mono', monospace; margin:2px 0;">${SDR_val >= 0 ? '+' : ''}${SDR_val.toFixed(2)}</div>
+                <div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:3px; position:relative; overflow:hidden;">
+                  <div style="position:absolute; ${SDR_val >= 0 ? 'left:50%; width:' + (Math.min(50, Math.abs(SDR_val)/2)) + '%; background:#38BDF8;' : 'right:50%; width:' + (Math.min(50, Math.abs(SDR_val)/2)) + '%; background:#FF007F;'} height:100%;"></div>
+                </div>
+                <div style="font-size:0.68rem; color:#94A3B8; margin-top:3px; font-family:'Roboto Mono';">${dict.lbl_sdr_sub}</div>
+              </div>
+
+              <!-- PHI / FRICCIÓN -->
+              <div style="background:#080E1E; border:1.2px solid rgba(255,0,127,0.35); border-radius:8px; padding:6px 10px; text-align:center;">
+                <div style="font-size:0.72rem; color:#94A3B8; font-family:'Roboto Mono', monospace; font-weight:700;">${dict.lbl_phi}</div>
+                <div style="font-size:1.35rem; font-weight:900; color:#FF007F; font-family:'Roboto Mono', monospace; margin:2px 0;">${Phi_val.toFixed(2)}</div>
+                <div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;">
+                  <div style="width:${Math.min(100, Phi_val)}%; height:100%; background:linear-gradient(90deg, #F59E0B, #FF007F); box-shadow:0 0 10px #FF007F;"></div>
+                </div>
+                <div style="font-size:0.68rem; color:#94A3B8; margin-top:3px; font-family:'Roboto Mono';">${dict.lbl_phi_sub}</div>
+              </div>
+            </div>
+
+            <!-- DIAGNÓSTICO TERMODINÁMICO DINÁMICO -->
+            <div style="background:rgba(0,0,0,0.4); border-left:3.5px solid #00FF87; border-radius:6px; padding:6px 10px; font-size:0.78rem; color:#E2E8F0; line-height:1.35; font-family:'Roboto Mono', monospace; flex-shrink:0;">
+              ${diagText}
+            </div>
+
           </div>
 
         </div>
@@ -15145,14 +15276,14 @@
 
         const ctx = canvas.getContext('2d');
         let particles = [];
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
           particles.push({
-            x: Math.random() * 200,
-            y: Math.random() * 100,
-            vy: 0.5 + Math.random() * 1.2,
-            vx: (Math.random() - 0.5) * 0.8,
+            x: Math.random() * 300,
+            y: Math.random() * 120,
+            vy: 0.6 + Math.random() * 1.4,
+            vx: (Math.random() - 0.5) * 0.9,
             alpha: Math.random(),
-            size: 1 + Math.random() * 2.5
+            size: 1.2 + Math.random() * 2.8
           });
         }
 
@@ -15178,43 +15309,53 @@
           ctx.fillRect(0, 0, W, H);
 
           // Cuadrícula y línea de cero
+          const waveLimitX = Math.max(100, W - 175);
+
           ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
           ctx.lineWidth = 1;
-          for (let gx = 30; gx < W - 110; gx += 35) {
+          for (let gx = 35; gx < waveLimitX; gx += 45) {
             ctx.beginPath();
             ctx.moveTo(gx, 0);
             ctx.lineTo(gx, H);
             ctx.stroke();
           }
 
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+          // Línea de cero (Equilibrio neutro)
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
           ctx.moveTo(0, H / 2);
-          ctx.lineTo(W - 115, H / 2);
+          ctx.lineTo(waveLimitX, H / 2);
           ctx.stroke();
           ctx.setLineDash([]);
+
+          // Etiquetas de eje Y en el extremo izquierdo
+          ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
+          ctx.font = '800 9px "Roboto Mono", monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText('+E (Atracción)', 8, 16);
+          ctx.fillText('0 (Neutro)', 8, H / 2 - 4);
+          ctx.fillText('-R (Tensión)', 8, H - 8);
 
           if (state.isAnimating) {
             state.t += 0.032;
           }
           const t = state.t;
 
-          // Parámetros de onda reactivos
-          const ampE = Math.min(H * 0.36, Math.max(6, E_val * 5.8));
-          const ampR = Math.min(H * 0.36, Math.max(6, R_val * 5.8));
-          const waveLimitX = W - 115;
+          // Parámetros de onda reactivos según altura del canvas
+          const ampE = Math.min(H * 0.38, Math.max(8, E_val * (H * 0.045)));
+          const ampR = Math.min(H * 0.38, Math.max(8, R_val * (H * 0.045)));
 
           // ONDA DE ATRACCIÓN (+E) VERDE NEÓN
           if (E_val > 0) {
             ctx.save();
             ctx.strokeStyle = '#00FF87';
-            ctx.lineWidth = 2.2;
+            ctx.lineWidth = 2.4;
             ctx.shadowColor = '#00FF87';
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 12;
             ctx.beginPath();
             for (let x = 0; x <= waveLimitX; x += 3) {
-              const y = (H / 2) - ampE * Math.sin(0.022 * x - t * 1.8) * Math.cos(0.005 * x);
+              const y = (H / 2) - ampE * Math.sin(0.018 * x - t * 2.0) * Math.cos(0.003 * x);
               if (x === 0) ctx.moveTo(x, y);
               else ctx.lineTo(x, y);
             }
@@ -15224,7 +15365,7 @@
             ctx.lineTo(waveLimitX, H / 2);
             ctx.lineTo(0, H / 2);
             ctx.closePath();
-            ctx.fillStyle = 'rgba(0, 255, 135, 0.06)';
+            ctx.fillStyle = 'rgba(0, 255, 135, 0.08)';
             ctx.fill();
             ctx.restore();
           }
@@ -15233,12 +15374,12 @@
           if (R_val > 0) {
             ctx.save();
             ctx.strokeStyle = '#FF007F';
-            ctx.lineWidth = 2.2;
+            ctx.lineWidth = 2.4;
             ctx.shadowColor = '#FF007F';
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 12;
             ctx.beginPath();
             for (let x = 0; x <= waveLimitX; x += 3) {
-              const y = (H / 2) + ampR * Math.sin(0.026 * x + t * 1.5 + 1.2) * Math.cos(0.007 * x);
+              const y = (H / 2) + ampR * Math.sin(0.022 * x + t * 1.6 + 1.2) * Math.cos(0.004 * x);
               if (x === 0) ctx.moveTo(x, y);
               else ctx.lineTo(x, y);
             }
@@ -15248,34 +15389,34 @@
             ctx.lineTo(waveLimitX, H / 2);
             ctx.lineTo(0, H / 2);
             ctx.closePath();
-            ctx.fillStyle = 'rgba(255, 0, 127, 0.06)';
+            ctx.fillStyle = 'rgba(255, 0, 127, 0.08)';
             ctx.fill();
             ctx.restore();
           }
 
           // ZONA DE FRICCIÓN TÉRMICA Y PARTÍCULAS (Φ)
-          if (Phi_val > 2) {
-            const collisionCenterX = waveLimitX * 0.5;
-            const collisionWidth = waveLimitX * 0.4;
-            const activeParticleCount = Math.min(30, Math.round(Phi_val * 0.4));
+          if (Phi_val > 1.5) {
+            const collisionCenterX = waveLimitX * 0.52;
+            const collisionWidth = waveLimitX * 0.42;
+            const activeParticleCount = Math.min(40, Math.max(8, Math.round(Phi_val * 0.45)));
 
             for (let i = 0; i < activeParticleCount; i++) {
               let p = particles[i];
               if (state.isAnimating) {
                 p.y -= p.vy;
                 p.x += p.vx;
-                p.alpha -= 0.018;
-                if (p.alpha <= 0 || p.y < 10) {
+                p.alpha -= 0.016;
+                if (p.alpha <= 0 || p.y < 12) {
                   p.x = (collisionCenterX - collisionWidth / 2) + Math.random() * collisionWidth;
-                  p.y = (H / 2) + (Math.random() - 0.5) * (ampE + ampR) * 0.7;
-                  p.alpha = 0.7 + Math.random() * 0.3;
+                  p.y = (H / 2) + (Math.random() - 0.5) * (ampE + ampR) * 0.75;
+                  p.alpha = 0.75 + Math.random() * 0.25;
                 }
               }
 
               ctx.save();
               ctx.fillStyle = `rgba(255, 230, 0, ${p.alpha})`;
               ctx.shadowColor = '#FF9F1C';
-              ctx.shadowBlur = 6;
+              ctx.shadowBlur = 8;
               ctx.beginPath();
               ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
               ctx.fill();
@@ -15283,10 +15424,67 @@
             }
           }
 
-          // DIAL ANALÓGICO-DIGITAL INTEGRADO EN EL LATERAL DERECHO
-          const dialCenterX = W - 58;
+          // =========================================================================
+          // SEPARADOR Y MEDIDORES INTEGRADOS EN EL LATERAL DERECHO DEL CANVAS
+          // =========================================================================
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(waveLimitX, 10);
+          ctx.lineTo(waveLimitX, H - 10);
+          ctx.stroke();
+
+          // 1. COLUMNA VERTICAL DE BDR (MASA RELACIONAL TOTAL)
+          const colX = W - 145;
+          const colW = 16;
+          const colH = Math.min(180, H * 0.68);
+          const colY = (H - colH) / 2;
+
+          // Tubo de vidrio base
+          ctx.save();
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(colX, colY, colW, colH, 8);
+          ctx.fill();
+          ctx.stroke();
+
+          // Nivel de líquido BDR
+          const bdrRatio = Math.min(1, Math.max(0, BDR_val / 100));
+          const fluidH = colH * bdrRatio;
+          if (fluidH > 2) {
+            const fluidY = colY + colH - fluidH;
+            const fluidGrad = ctx.createLinearGradient(colX, fluidY, colX, colY + colH);
+            fluidGrad.addColorStop(0, '#00FF87');
+            fluidGrad.addColorStop(1, '#38BDF8');
+            ctx.fillStyle = fluidGrad;
+            ctx.beginPath();
+            ctx.roundRect(colX + 1.5, fluidY, colW - 3, fluidH - 1.5, [fluidH > 6 ? 4 : 2, fluidH > 6 ? 4 : 2, 6, 6]);
+            ctx.fill();
+
+            // Menisco luminoso
+            ctx.fillStyle = '#FFFFFF';
+            ctx.shadowColor = '#00FF87';
+            ctx.shadowBlur = 6;
+            ctx.fillRect(colX + 2, fluidY, colW - 4, 1.8);
+          }
+
+          // Etiquetas de la columna BDR
+          ctx.fillStyle = '#38BDF8';
+          ctx.font = '900 9px "Roboto Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('BDR', colX + colW / 2, colY - 6);
+
+          ctx.fillStyle = '#00FF87';
+          ctx.font = '900 10px "Roboto Mono", monospace';
+          ctx.fillText(BDR_val.toFixed(0), colX + colW / 2, colY + colH + 14);
+          ctx.restore();
+
+          // 2. DIAL ANALÓGICO-DIGITAL (SDR · SALDO CONTINUO)
+          const dialCenterX = W - 68;
           const dialCenterY = H / 2;
-          const dialRadius = Math.min(44, (H / 2) - 8);
+          const dialRadius = Math.min(52, (H / 2) - 12);
 
           // Arco base del manómetro
           ctx.save();
@@ -15296,7 +15494,7 @@
           ctx.arc(dialCenterX, dialCenterY, dialRadius, Math.PI * 0.75, Math.PI * 2.25);
           ctx.stroke();
 
-          // Arco coloreado
+          // Arco coloreado tricolor (Magenta -> Ámbar -> Verde Neón)
           const grad = ctx.createLinearGradient(dialCenterX - dialRadius, dialCenterY, dialCenterX + dialRadius, dialCenterY);
           grad.addColorStop(0, '#FF007F');
           grad.addColorStop(0.5, '#F59E0B');
@@ -15307,6 +15505,19 @@
           ctx.arc(dialCenterX, dialCenterY, dialRadius, Math.PI * 0.75, Math.PI * 2.25);
           ctx.stroke();
 
+          // Marcas graduadas en el arco
+          [-100, -50, 0, 50, 100].forEach(val => {
+            const angle = Math.PI * 1.5 + (val / 100) * (Math.PI * 0.65);
+            const innerR = dialRadius - 5;
+            const outerR = dialRadius + 2;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(dialCenterX + Math.cos(angle) * innerR, dialCenterY + Math.sin(angle) * innerR);
+            ctx.lineTo(dialCenterX + Math.cos(angle) * outerR, dialCenterY + Math.sin(angle) * outerR);
+            ctx.stroke();
+          });
+
           // Aguja medidora orientada a SDR
           const sdrNormalized = Math.min(100, Math.max(-100, SDR_val));
           const needleAngle = Math.PI * 1.5 + (sdrNormalized / 100) * (Math.PI * 0.65);
@@ -15314,7 +15525,7 @@
 
           ctx.strokeStyle = SDR_val >= 0 ? '#00FF87' : '#FF007F';
           ctx.shadowColor = ctx.strokeStyle;
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 10;
           ctx.lineWidth = 2.5;
           ctx.beginPath();
           ctx.moveTo(dialCenterX, dialCenterY);
@@ -15329,13 +15540,13 @@
 
           // Lectura digital central
           ctx.fillStyle = '#E2E8F0';
-          ctx.font = '900 10px "Roboto Mono", monospace';
+          ctx.font = '900 9px "Roboto Mono", monospace';
           ctx.textAlign = 'center';
-          ctx.fillText('SDR', dialCenterX, dialCenterY - 14);
+          ctx.fillText('SDR', dialCenterX, dialCenterY - 12);
 
           ctx.fillStyle = SDR_val >= 0 ? '#38BDF8' : '#FF007F';
           ctx.font = '900 11px "Roboto Mono", monospace';
-          ctx.fillText(`${SDR_val >= 0 ? '+' : ''}${SDR_val.toFixed(1)}`, dialCenterX, dialCenterY + 22);
+          ctx.fillText(`${SDR_val >= 0 ? '+' : ''}${SDR_val.toFixed(1)}`, dialCenterX, dialCenterY + 20);
 
           ctx.restore();
 
