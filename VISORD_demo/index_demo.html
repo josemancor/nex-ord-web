@@ -2224,9 +2224,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             <a href="../index.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; background:rgba(0,162,255,0.18); color:#00E5FF; border:1px solid rgba(0,229,255,0.45); padding:4px 10px; border-radius:6px; font-family:'Courier New', monospace; font-size:11px; font-weight:700; transition:all 0.2s;" onmouseover="this.style.background='rgba(0,162,255,0.35)'" onmouseout="this.style.background='rgba(0,162,255,0.18)'">🏠 ← Portal</a>
             <div style="font-family: sans-serif; font-size: 22px; font-weight: 900; letter-spacing: 4px; color: #fff; text-shadow: 0 0 15px rgba(0,162,255,0.8), 0 0 30px rgba(0,162,255,0.4);">VISORD <span style="font-size: 11px; background: rgba(0, 255, 157, 0.2); color: #00FF9D; padding: 2px 6px; border-radius: 4px; border: 1px solid #00FF9D; vertical-align: middle;">CLASSIC CLOUD</span></div>
             <a href="index_omni.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg, rgba(255,0,127,0.25), rgba(112,0,255,0.25)); color:#FF77CC; border:1px solid rgba(255,119,204,0.5); padding:4px 10px; border-radius:6px; font-family:'Courier New', monospace; font-size:11px; font-weight:700; transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(255,0,127,0.45), rgba(112,0,255,0.45))'" onmouseout="this.style.background='linear-gradient(135deg, rgba(255,0,127,0.25), rgba(112,0,255,0.25))'">✨ Omni-Visor 3D</a>
-            <button id="btn-demo-audio-top" class="audio-demo-btn" onclick="toggleVisordDemoAudio()" title="Locución Institucional: Fases del Grupo y Manual de Operaciones">
+            <button id="btn-demo-audio-top" class="audio-demo-btn" onclick="toggleVisordDemoAudio()" title="Narración 3D Moviola (Cadencia sosegada estilo 1a)">
                 <span id="demo-top-audio-icon">🔊</span>
-                <span id="demo-top-audio-text">Audio Guía: Fases &amp; Manual</span>
+                <span id="demo-top-audio-text">Narración 3D Moviola</span>
                 <span class="demo-audio-wave" id="demo-top-audio-wave">
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
@@ -2363,12 +2363,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     <!-- AUDIO GUÍA INSTITUCIONAL VISORD_DEMO -->
     <div id="panel-audio-guide-box" style="background: linear-gradient(135deg, rgba(0, 162, 255, 0.12), rgba(0, 255, 157, 0.12)); border: 1px solid rgba(0, 255, 157, 0.4); border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; box-shadow: 0 0 15px rgba(0, 255, 157, 0.15);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 10px; font-weight: 800; color: #00FF9D; letter-spacing: 1px; text-transform: uppercase;">AUDIO GUÍA EXPERTA</span>
-            <span style="font-size: 9px; color: #38BDF8; font-family: monospace; background: rgba(0, 162, 255, 0.2); padding: 1px 5px; border-radius: 3px;">NEXORD AI</span>
+            <span style="font-size: 10px; font-weight: 800; color: #00FF9D; letter-spacing: 1px; text-transform: uppercase;">NARRACIÓN 3D MOVIOLA</span>
+            <span style="font-size: 9px; color: #38BDF8; font-family: monospace; background: rgba(0, 162, 255, 0.2); padding: 1px 5px; border-radius: 3px;">AUDIO 1a</span>
         </div>
-        <button id="btn-demo-audio-panel" class="audio-demo-btn" onclick="toggleVisordDemoAudio()" style="width: 100%; box-sizing: border-box;" title="Escuchar locución de Fases del Grupo y Manual de Operaciones">
+        <button id="btn-demo-audio-panel" class="audio-demo-btn" onclick="toggleVisordDemoAudio()" style="width: 100%; box-sizing: border-box;" title="Escuchar narración de la dinámica 3D socio-termodinámica">
             <span id="demo-panel-audio-icon" style="font-size: 13px;">🔊</span>
-            <span id="demo-panel-audio-text">Escuchar Fases &amp; Manual</span>
+            <span id="demo-panel-audio-text">Escuchar Dinámica 3D</span>
             <span class="demo-audio-wave" id="demo-panel-audio-wave">
                 <span class="wave-bar"></span>
                 <span class="wave-bar"></span>
@@ -3862,6 +3862,17 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 el.style.position = 'relative';
             }
         });
+
+        // Actualizar UI del reproductor de audio o reiniciar locución en el nuevo idioma si está reproduciendo
+        if (typeof isVisordDemoAudioPlaying !== 'undefined' && isVisordDemoAudioPlaying) {
+            window.speechSynthesis.cancel();
+            isVisordDemoAudioPlaying = false;
+            if (typeof toggleVisordDemoAudio === 'function') {
+                toggleVisordDemoAudio();
+            }
+        } else if (typeof syncVisordDemoAudioUI === 'function') {
+            syncVisordDemoAudioUI(false);
+        }
     }
 
     // Initialize language on load
@@ -12257,31 +12268,106 @@ function openLightbox(src) {
 
 <script>
 // =========================================================================
-// REPRODUCTOR DE AUDIO / LOCUCIÓN OFICIAL INSTITUCIONAL VISORD_DEMO (NEXORD)
-// Presenta las Fases de Formación del Grupo y el Manual de Operaciones
+// =========================================================================
+// REPRODUCTOR DE AUDIO / LOCUCIÓN CANÓNICA 1a EN VISORD_DEMO (NEXORD)
+// Narración sosegada (rate=0.80, pitch=0.90) de la dinámica 3D Moviola
 // =========================================================================
 let isVisordDemoAudioPlaying = false;
-let visordDemoSpeechUtter = null;
+window._visordDemoUtterance = null;
 
-function getOptimalSpanishVoice() {
+const VISORD_DEMO_AUDIO_TEXTS = {
+    es: {
+        text: "Bienvenido a la plataforma NEXORD y al motor interactivo VISORD. Formación y evolución de una estructura grupal en tiempo real. Observe cómo los participantes, partiendo de una dispersión estocástica inicial, evolucionan gradualmente guiados por sus afinidades, expectativas y tensiones relacionales. Las cuencas gravitatorias reorganizan continuamente el espacio social: los vectores verdes revelan la atracción mutua y la reciprocidad; las trayectorias magentas marcan las zonas de fricción y conflicto; mientras los destellos dorados reflejan la neutralidad latente. A medida que avanza la dinámica cinemática, los subgrupos autoorganizan sus enlaces hasta alcanzar su cristalización y equilibrio socio-termodinámico definitivo.",
+        btn_top_idle: "Narración 3D Moviola",
+        btn_top_play: "Pausar Narración",
+        btn_panel_idle: "Escuchar Dinámica 3D",
+        btn_panel_play: "Pausar Dinámica",
+        title_idle: "Narración 3D Moviola (Cadencia sosegada estilo 1a)",
+        title_play: "Pausar narración de audio"
+    },
+    en: {
+        text: "Welcome to the NEXORD platform and the VISORD interactive engine. Real-time formation and evolution of a group structure. Observe how the participants, starting from an initial stochastic dispersion, gradually evolve guided by their mutual affinities, expectations, and relational tensions. Gravitational basins continuously reshape the social space: green vectors reveal mutual attraction and reciprocity; magenta trajectories mark zones of friction and conflict; while golden hues reflect latent neutrality. As the kinematic dynamic unfolds, subgroups self-organize their ties until reaching collective crystallization and definitive socio-thermodynamic equilibrium.",
+        btn_top_idle: "3D Moviola Narration",
+        btn_top_play: "Pause Narration",
+        btn_panel_idle: "Listen 3D Dynamic",
+        btn_panel_play: "Pause Dynamic",
+        title_idle: "3D Moviola Audio Guide (Calm 1a style)",
+        title_play: "Pause audio narration"
+    },
+    ru: {
+        text: "Добро пожаловать на платформу NEXORD и в интерактивный модуль VISORD. Формирование и эволюция групповой структуры в реальном времени. Наблюдайте, как участники, начиная с исходной стохастической дисперсии, взаимодействуют на основе взаимных симпатий, ожиданий и напряжений. Гравитационные бассейны непрерывно реорганизуют социальное пространство: зелёные векторы отражают взаимное притяжение и взаимность; пурпурные траектории обозначают зоны трения; а золотистые оттенки указывают на скрытое безразличие. По мере развития динамики подгруппы самоорганизуются, достигая окончательного социально-термодинамического равновесия.",
+        btn_top_idle: "3D Аудиогид Мовиолы",
+        btn_top_play: "Пауза",
+        btn_panel_idle: "Слушать 3D Динамику",
+        btn_panel_play: "Пауза",
+        title_idle: "Аудиогид 3D Мовиолы",
+        title_play: "Приостановить воспроизведение"
+    },
+    zh: {
+        text: "欢迎体验 NEXORD 平台的 VISORD 交互式仿真系统。群体结构的实时形成与演化。请观察各位成员如何从初始的随机离散状态出发，在亲和力、互惠预期与人际张力的引导下展开互动。引力盆地持续重塑社会空间：绿色连线展现彼此的吸引与互惠；洋红轨迹标示摩擦与冲突区域；金色微光显现潜在的中立平衡。随着动力学的持续演进，各子群自组织编织网络连结，直至在相空间中达成晶化定型与终极社会热力学平衡。",
+        btn_top_idle: "3D 动力学解说",
+        btn_top_play: "暂停解说",
+        btn_panel_idle: "聆听 3D 动力学",
+        btn_panel_play: "暂停播放",
+        title_idle: "3D 动力学语音导览（1a 沉稳风格）",
+        title_play: "暂停语音导览"
+    },
+    fr: {
+        text: "Bienvenue sur la plateforme NEXORD et le moteur interactif VISORD. Formation et évolution d'une structure de groupe en temps réel. Observez comment les participants évoluent guidés par leurs affinités, attentes et tensions relationnelles. Les bassins gravitationnels réorganisent l'espace social jusqu'à atteindre l'équilibre socio-thermodynamique final.",
+        btn_top_idle: "Narration 3D Moviola",
+        btn_top_play: "Pause",
+        btn_panel_idle: "Écouter Dynamique 3D",
+        btn_panel_play: "Pause",
+        title_idle: "Narration 3D Moviola",
+        title_play: "Pause"
+    },
+    it: {
+        text: "Benvenuti nella piattaforma NEXORD e nel motore interattivo VISORD. Formazione ed evoluzione di una struttura di gruppo in tempo reale. I bacini gravitazionali riorganizzano lo spazio sociale fino a raggiungere la cristallizzazione e il perfetto equilibrio socio-termodinamico.",
+        btn_top_idle: "Narrazione 3D Moviola",
+        btn_top_play: "Pausa",
+        btn_panel_idle: "Ascolta Dinamica 3D",
+        btn_panel_play: "Pausa",
+        title_idle: "Narrazione 3D Moviola",
+        title_play: "Pausa"
+    },
+    pt: {
+        text: "Bem-vindo à plataforma NEXORD e ao motor interativo VISORD. Formação e evolução de uma estrutura grupal em tempo real. Observe como os participantes evoluem reorganizando o espaço social até alcançar o equilíbrio sócio-termodinâmico definitivo.",
+        btn_top_idle: "Narração 3D Moviola",
+        btn_top_play: "Pausar",
+        btn_panel_idle: "Ouvir Dinâmica 3D",
+        btn_panel_play: "Pausar",
+        title_idle: "Narração 3D Moviola",
+        title_play: "Pausar"
+    },
+    de: {
+        text: "Willkommen auf der NEXORD-Plattform und der interaktiven VISORD-Engine. Echtzeit-Entwicklung einer Gruppenstruktur bis zur Kristallisation und dem sozio-thermodynamischen Gleichgewicht.",
+        btn_top_idle: "3D-Moviola-Erzählung",
+        btn_top_play: "Pause",
+        btn_panel_idle: "3D-Dynamik anhören",
+        btn_panel_play: "Pause",
+        title_idle: "3D-Moviola-Erzählung",
+        title_play: "Pause"
+    }
+};
+
+function getOptimalVoiceForLang(langCode) {
     if (!('speechSynthesis' in window)) return null;
     const voices = window.speechSynthesis.getVoices();
     if (!voices || voices.length === 0) return null;
-    
-    // Priorizamos voces neuronales y naturales premium en español (más sosegadas, cálidas y humanas)
-    const relaxedKeywords = ['Natural', 'Neural', 'Enhanced', 'Premium', 'Alvaro', 'Elvira', 'Jorge', 'Monica', 'Mónica', 'Helena', 'Lucia', 'Lucía', 'Paloma', 'Google'];
-    for (const kw of relaxedKeywords) {
-        const found = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && v.name.includes(kw));
+
+    const p = (langCode || 'es').substring(0, 2).toLowerCase();
+    const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith(p));
+    if (langVoices.length === 0) return voices[0];
+
+    const keywords = ['Natural', 'Neural', 'Enhanced', 'Premium', 'Google', 'Alvaro', 'Jorge', 'Monica', 'Mónica', 'Helena', 'Laura', 'Diego', 'Guy', 'Jenny', 'Arthur', 'Aria', 'Milena', 'Dmitry', 'Xiaoxiao', 'Yunxi'];
+    for (const kw of keywords) {
+        const found = langVoices.find(v => v.name.includes(kw));
         if (found) return found;
     }
-    
-    // Cualquier voz en español de España o general
-    return voices.find(v => v.lang === 'es-ES' || v.lang.startsWith('es-ES'))
-        || voices.find(v => v.lang.startsWith('es'))
-        || voices[0];
+    return langVoices[0];
 }
 
-// Pre-cargar voces y desbloquear síntesis en la primera interacción
+// Pre-cargar voces y desbloquear síntesis
 if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     window.speechSynthesis.onvoiceschanged = () => {
         try { window.speechSynthesis.getVoices(); } catch(e){}
@@ -12324,6 +12410,9 @@ function playVisordAudioChime() {
 }
 
 function syncVisordDemoAudioUI(isPlaying) {
+    const lang = (window.diagLang || window.currentLang || 'es').substring(0, 2).toLowerCase();
+    const d = VISORD_DEMO_AUDIO_TEXTS[lang] || VISORD_DEMO_AUDIO_TEXTS.es;
+
     // Botón en la cabecera superior
     const btnTop = document.getElementById("btn-demo-audio-top");
     const iconTop = document.getElementById("demo-top-audio-icon");
@@ -12338,17 +12427,23 @@ function syncVisordDemoAudioUI(isPlaying) {
     const navBtn = document.getElementById("nav-pod-btn-play");
     const navIcon = document.getElementById("nav-pod-play-icon");
 
-    if (btnTop) btnTop.classList.toggle("playing", isPlaying);
+    if (btnTop) {
+        btnTop.classList.toggle("playing", isPlaying);
+        btnTop.title = isPlaying ? d.title_play : d.title_idle;
+    }
     if (iconTop) iconTop.textContent = isPlaying ? "❚❚" : "🔊";
-    if (textTop) textTop.textContent = isPlaying ? "Pausar Audio Guía" : "Audio Guía: Fases & Manual";
+    if (textTop) textTop.textContent = isPlaying ? d.btn_top_play : d.btn_top_idle;
 
-    if (btnPanel) btnPanel.classList.toggle("playing", isPlaying);
+    if (btnPanel) {
+        btnPanel.classList.toggle("playing", isPlaying);
+        btnPanel.title = isPlaying ? d.title_play : d.title_idle;
+    }
     if (iconPanel) iconPanel.textContent = isPlaying ? "❚❚" : "🔊";
-    if (textPanel) textPanel.textContent = isPlaying ? "Pausar Audio Guía" : "Escuchar Fases & Manual";
+    if (textPanel) textPanel.textContent = isPlaying ? d.btn_panel_play : d.btn_panel_idle;
 
     if (navBtn) {
         navBtn.classList.toggle("playing", isPlaying);
-        navBtn.title = isPlaying ? "Pausar Audio Guía (Play/Stop)" : "Reproducir Audio Guía (Play/Stop)";
+        navBtn.title = isPlaying ? d.title_play : d.title_idle;
     }
     if (navIcon) navIcon.textContent = isPlaying ? "⏸" : "⏯";
 }
@@ -12371,45 +12466,20 @@ window.toggleVisordDemoAudio = function() {
 
     window.speechSynthesis.cancel();
 
-    const locucionTexto = 
-        "Bienvenido al simulador interactivo de VISORD... el motor de Sociometría Ordinal Computacional y Dinámica Socio-Termodinámica para colectivos humanos. " +
-        "A continuación, presentamos la evolución del grupo simulado en sus diferentes fases de formación... así como las principales opciones del Manual de Operaciones. " +
+    const lang = (window.diagLang || window.currentLang || 'es').substring(0, 2).toLowerCase();
+    const d = VISORD_DEMO_AUDIO_TEXTS[lang] || VISORD_DEMO_AUDIO_TEXTS.es;
 
-        "Primera parte... Fases de formación del grupo simulado. " +
-        "Fase uno: Exploración y Deshielo. El colectivo comienza en un estado de alta entropía y dispersión relacional. Predominan los vínculos neutros de indiferencia... sin polarizaciones estructurales fijas. " +
-        "Fase dos: Tormenta y Diferenciación. Emergen las primeras elecciones y rechazos, activando la fricción social. Esta tensión relacional pone a prueba las afinidades diádicas... y da lugar a los primeros liderazgos espontáneos. " +
-        "Fase tres: Normalización y Cohesión. El sistema relacional autoorganiza sus enlaces recurrentes. Al consolidarse reciprocidades y elecciones mutuas, desciende la entropía global... y cristalizan subgrupos estables y armónicos. " +
-        "Fase cuatro: Cristalización. El colectivo alcanza su equilibrio termodinámico macroscópico... adoptando uno de los cinco estados de la materia social: " +
-        "Estado Líquido, adaptable, plástico y saludable... " +
-        "Estado Sólido, altamente estructurado, rígido y normativo... " +
-        "Estado Plasma, sobresaturado e hiperactivo... " +
-        "Estado Gas, desestructurado, disperso y con anomia... " +
-        "o Estado Caos, caracterizado por un conflicto crítico y fractura destructiva. " +
-
-        "Segunda parte... Principales opciones del Manual de Operaciones, accesible mediante el botón Manual. " +
-        "Opción uno: Configuración del Pincel Tetragrámico. Permite modelar la celda diádica en sus cuatro posiciones canónicas: " +
-        "Posición A1: la expectativa que el emisor tiene de lo que hará el partner... " +
-        "Posición A2: la preferencia efectiva que el emisor otorga al partner... " +
-        "Posición A3: la preferencia efectiva que el partner otorga al emisor... " +
-        "Y Posición A4: la expectativa que el partner tiene de lo que hará el emisor... " +
-        "pudiendo asignar valores positivo, neutro o negativo. " +
-
-        "Opción dos: Auto-Sincronización Diádica Reflectiva. Al pintar una celda emisor-receptor, el motor proyecta de forma inmediata su simetría reflectiva en la celda recíproca... garantizando consistencia y previniendo duplicados. " +
-
-        "Opción tres: Generación Asistida por Porcentajes. Permite autogenerar sociomatrices completas modulando las proporciones de doble elección, elección simple, doble rechazo y disonancia relacional... " +
-
-        "Y opción cuatro: Controles de Dinámica y Salida. Ajuste en tiempo real de sinergia, fricción e indiferencia, forzado de nodos aislados, evolución directa al horizonte objetivo, exportación en formato CSV y captura gráfica en alta resolución.";
-
-    const utter = new SpeechSynthesisUtterance(locucionTexto);
+    const utter = new SpeechSynthesisUtterance(d.text);
     window._visordDemoUtterance = utter; // Anchor to avoid Chrome GC cleanup
-    utter.lang = "es-ES";
+    utter.lang = lang === 'en' ? 'en-US' : (lang === 'ru' ? 'ru-RU' : (lang === 'zh' ? 'zh-CN' : 'es-ES'));
 
-    const esVoice = getOptimalSpanishVoice();
-    if (esVoice) utter.voice = esVoice;
+    const voice = getOptimalVoiceForLang(lang);
+    if (voice) utter.voice = voice;
 
-    utter.rate = 0.84; // Cadencia sosegada, relajada y fluida
-    utter.pitch = 0.92; // Tono cálido, sereno y reflexivo
-    utter.volume = 0.95; // Volumen suave y confortable
+    // Parámetros canónicos de narración sosegada tipo 1a (Regla 15)
+    utter.rate = 0.80;  // Cadencia sosegada, reflexiva y persuasiva
+    utter.pitch = 0.90; // Tono cálido, sereno y reflexivo
+    utter.volume = 1.0;  // Volumen pleno y confortable
 
     utter.onstart = () => {
         isVisordDemoAudioPlaying = true;
@@ -12434,13 +12504,14 @@ window.toggleVisordDemoAudio = function() {
 
     setTimeout(() => {
         window.speechSynthesis.speak(utter);
-    }, 120);
+    }, 100);
 };
 
 // Cancelar locución si el usuario navega o cierra pestaña
 window.addEventListener('beforeunload', () => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 });
+
 </script>
 </body>
 </html>
