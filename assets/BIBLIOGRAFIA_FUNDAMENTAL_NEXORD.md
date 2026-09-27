@@ -33,12 +33,13 @@ Bases para definir la aceptación, el marginación, el ostracismo y la agencia e
 ## 3. Investigaciones Específicas sobre Ostracismo y Medición
 Aportaciones sugeridas por Antigravity para reforzar la medición técnica del "silencio social" y el significado léxico.
 
+*   **Terry, R. (2000).** *Recent advances in measurement theory and the use of sociometric techniques.* En A. H. N. Cillessen & W. M. Bukowski (Eds.), Recent advances in the measurement of acceptance and rejection in the peer system (New Directions for Child Development, No. 88, pp. 27–48). Jossey-Bass. https://doi.org/10.1002/cd.23220008804 (Modelización psicométrica del perceptor frente al receptor, crítica a la pérdida de información en cuotas discretas y fundamentación de la medición ordinal en sociometría).
 *   **Williams, K. D. (2007).** *Ostracism.* Annual Review of Psychology, 58, 425-452. (Referencia fundamental sobre la psicología del ostracismo).
 *   **Williams, K. D. (2001).** *Ostracism: The power of silence.* Guilford Press. (Analiza cómo el silencio anula la agencia).
 *   **Osgood, C. E., Suci, G. J., & Tannenbaum, P. H. (1957).** *The measurement of meaning.* University of Illinois Press. (Fundamento de los Factores AAG y el Diferencial Semántico).
 *   **Pentland, A. (2014).** *Social Physics: How Good Ideas Spread—The Lessons from a New Science.* Penguin Press. (Fundamento de la "Física de lo Social" computable).
 *   **Watts, D. J., & Strogatz, S. H. (1998).** *Collective dynamics of ‘small-world’ networks.* Nature, 393(6684), 440-442. (Base para la topografía relacional y los 'conglomerados').
 
-## 4. Documentación Técnica NEX_ORD (Documentos Internos)
-*   **Proyecto NEX_ORD. (2026).** *Informe de Sociometría Ordinal Académico: Hacia una Sociometría Computacional de Tercera Generación.* [Documento interno de investigación].
-*   **Moreno, J. L., & Proyecto NEX_ORD. (2025).** *Evolución de la Matriz de Distancias Ordinales y el Índice de Saturación del Vacío (ISV).* Informe de Microcirugía Relacional.
+## 4. Documentación Técnica NEXORD (Documentos Internos)
+*   **Proyecto NEXORD. (2026).** *Informe de Sociometría Ordinal Académico: Hacia una Sociometría Computacional de Tercera Generación.* [Documento interno de investigación].
+*   **Moreno, J. L., & Proyecto NEXORD. (2025).** *Evolución de la Matriz de Distancias Ordinales y el Índice de Saturación del Vacío (ISV).* Informe de Microcirugía Relacional.
