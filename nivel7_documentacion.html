@@ -2127,6 +2127,82 @@
       flex-direction: column;
       gap: 4px;
     }
+    
+    /* CONTROLES DE MOVIMIENTO SIN FIN (7e · LA CARTE DU TENDRE) */
+    .tendre-motion-pod {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(11, 19, 43, 0.85);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      padding: 2px 4px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .tendre-nav-arrow {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-white);
+      border-radius: 4px;
+      width: 25px;
+      height: 25px;
+      font-size: 0.76rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    .tendre-nav-arrow:hover {
+      background: rgba(0, 255, 135, 0.2);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      transform: scale(1.08);
+    }
+    .tendre-nav-pause {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      border-radius: 4px;
+      width: 22px;
+      height: 25px;
+      font-size: 0.70rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    .tendre-nav-pause:hover, .tendre-nav-pause.motion-running {
+      background: rgba(255, 230, 0, 0.18);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+    }
+    .tendre-nav-arrow.motion-active-down {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.6);
+      animation: pulseMotionGreen 1.5s infinite ease-in-out;
+    }
+    .tendre-nav-arrow.motion-active-up {
+      background: rgba(255, 230, 0, 0.25);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 10px rgba(255, 230, 0, 0.6);
+      animation: pulseMotionGold 1.5s infinite ease-in-out;
+    }
+    @keyframes pulseMotionGreen {
+      0%, 100% { box-shadow: 0 0 6px rgba(0, 255, 135, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 14px rgba(0, 255, 135, 0.9); transform: scale(1.1); }
+    }
+    @keyframes pulseMotionGold {
+      0%, 100% { box-shadow: 0 0 6px rgba(255, 230, 0, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 14px rgba(255, 230, 0, 0.9); transform: scale(1.1); }
+    }
+
     .tendre-sidebar-header {
       display: flex;
       align-items: center;
@@ -3680,14 +3756,23 @@
         <!-- BANDA IZQUIERDA: SELECTOR VERTICAL DE VERSIONES HISTÓRICAS & TRIBUTOS -->
         <aside class="tendre-sidebar">
           <div class="tendre-sidebar-header">
-            <span class="tendre-sidebar-title" data-i18n="p7e_sidebar_title">🗺️ Cartografía</span>
-            <span class="tendre-sidebar-count">8</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="tendre-sidebar-title" data-i18n="p7e_sidebar_title">🗺️ Cartografía</span>
+              <span class="tendre-sidebar-count">8</span>
+            </div>
+
+            <!-- MANDO DE MOVIMIENTO SIN FIN (▲ ⏸ ▼) -->
+            <div class="tendre-motion-pod" title="Movimiento sin fin de opciones (▲ / ▼)">
+              <button class="tendre-nav-arrow" id="tendre-motion-up" onclick="toggleTendreContinuousMotion(-1)" title="Subir opciones sin fin (▲)">▲</button>
+              <button class="tendre-nav-pause" id="tendre-motion-pause" onclick="stopTendreMotion()" title="Pausar movimiento continuo (⏸)">⏸</button>
+              <button class="tendre-nav-arrow" id="tendre-motion-down" onclick="toggleTendreContinuousMotion(1)" title="Bajar opciones sin fin (▼)">▼</button>
+            </div>
           </div>
 
           <div class="tendre-sidebar-scroll">
             <div class="tendre-group-label" data-i18n="p7e_group_evolution">Evolución</div>
             
-            <button class="tendre-vtab-btn active" onclick="switchTendreVersion(0)" id="tendre-tab-0">
+            <button class="tendre-vtab-btn active" onclick="onManualTabClick(0)" id="tendre-tab-0">
               <span class="vtab-left">
                 <span class="vtab-icon">📜</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v1">Chauveau</span>
@@ -3695,7 +3780,7 @@
               <span class="vtab-year">1654</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(1)" id="tendre-tab-1">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(1)" id="tendre-tab-1">
               <span class="vtab-left">
                 <span class="vtab-icon">🏛️</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v2">Urbano</span>
@@ -3703,7 +3788,7 @@
               <span class="vtab-year">1739</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(2)" id="tendre-tab-2">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(2)" id="tendre-tab-2">
               <span class="vtab-left">
                 <span class="vtab-icon">🖋️</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v3">Larousse</span>
@@ -3711,7 +3796,7 @@
               <span class="vtab-year">1932</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(3)" id="tendre-tab-3">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(3)" id="tendre-tab-3">
               <span class="vtab-left">
                 <span class="vtab-icon">🚇</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v4">Metro</span>
@@ -3719,7 +3804,7 @@
               <span class="vtab-year">1975</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(4)" id="tendre-tab-4">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(4)" id="tendre-tab-4">
               <span class="vtab-left">
                 <span class="vtab-icon">🌟</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v5">Data-Vis</span>
@@ -3727,7 +3812,7 @@
               <span class="vtab-year">2010</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(5)" id="tendre-tab-5">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(5)" id="tendre-tab-5">
               <span class="vtab-left">
                 <span class="vtab-icon">🔬</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v6">NEXORD</span>
@@ -3737,7 +3822,7 @@
 
             <div class="tendre-group-label" style="margin-top:6px; color:var(--neon-gold);" data-i18n="p7e_group_tributes">Patriarcas</div>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(6)" id="tendre-tab-6">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(6)" id="tendre-tab-6">
               <span class="vtab-left">
                 <span class="vtab-icon">🎭</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v7">Moreno</span>
@@ -3745,7 +3830,7 @@
               <span class="vtab-year">1934</span>
             </button>
 
-            <button class="tendre-vtab-btn" onclick="switchTendreVersion(7)" id="tendre-tab-7">
+            <button class="tendre-vtab-btn" onclick="onManualTabClick(7)" id="tendre-tab-7">
               <span class="vtab-left">
                 <span class="vtab-icon">⚡</span>
                 <span class="vtab-title" data-i18n="p7e_tab_v8">Lewin</span>
@@ -4503,7 +4588,92 @@
       }
     }
 
-    /* 4. VISOR INTERACTIVO Y MODAL DE 'LA CARTE DU TENDRE' (7e) */
+    /* 4. VISOR INTERACTIVO Y MOVIMIENTO SIN FIN DE 'LA CARTE DU TENDRE' (7e) */
+    let tendreMotionInterval = null;
+    let tendreMotionDirection = 0; // 0: stopped, 1: down, -1: up
+
+    function onManualTabClick(idx) {
+      stopTendreMotion();
+      switchTendreVersion(idx);
+    }
+
+    function stepTendre(direction, autoScroll = true) {
+      const tendreList = (I18N_DATA[currentLang] && I18N_DATA[currentLang].tendre) ? I18N_DATA[currentLang].tendre : I18N_DATA.es.tendre;
+      if (!tendreList || tendreList.length === 0) return;
+
+      // Movimiento sin fin: del último al primero y del primero al último
+      let nextIdx = (currentTendreIdx + direction + tendreList.length) % tendreList.length;
+      switchTendreVersion(nextIdx);
+
+      if (autoScroll) {
+        const activeTab = document.getElementById(`tendre-tab-${nextIdx}`);
+        if (activeTab) {
+          activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function toggleTendreContinuousMotion(direction) {
+      // Si ya está corriendo en la misma dirección, pausar
+      if (tendreMotionInterval && tendreMotionDirection === direction) {
+        stopTendreMotion();
+        return;
+      }
+
+      // Avanzar inmediatamente un paso
+      stepTendre(direction);
+
+      // Iniciar el movimiento continuo sin fin (sin necesidad de más pulsos)
+      startTendreMotion(direction);
+    }
+
+    function startTendreMotion(direction) {
+      stopTendreMotion(false);
+      tendreMotionDirection = direction;
+
+      const upBtn = document.getElementById('tendre-motion-up');
+      const downBtn = document.getElementById('tendre-motion-down');
+      const pauseBtn = document.getElementById('tendre-motion-pause');
+
+      if (direction === 1) {
+        if (downBtn) downBtn.classList.add('motion-active-down');
+        if (upBtn) upBtn.classList.remove('motion-active-up');
+      } else if (direction === -1) {
+        if (upBtn) upBtn.classList.add('motion-active-up');
+        if (downBtn) downBtn.classList.remove('motion-active-down');
+      }
+      if (pauseBtn) pauseBtn.classList.add('motion-running');
+
+      tendreMotionInterval = setInterval(() => {
+        stepTendre(tendreMotionDirection);
+      }, 3300); // 3.3s por opción: ritmo suave y contemplativo
+    }
+
+    function stopTendreMotion(resetButtons = true) {
+      if (tendreMotionInterval) {
+        clearInterval(tendreMotionInterval);
+        tendreMotionInterval = null;
+      }
+      tendreMotionDirection = 0;
+
+      if (resetButtons) {
+        const upBtn = document.getElementById('tendre-motion-up');
+        const downBtn = document.getElementById('tendre-motion-down');
+        const pauseBtn = document.getElementById('tendre-motion-pause');
+        if (upBtn) upBtn.classList.remove('motion-active-up');
+        if (downBtn) downBtn.classList.remove('motion-active-down');
+        if (pauseBtn) pauseBtn.classList.remove('motion-running');
+      }
+    }
+
+    function toggleTendrePlayPause() {
+      if (tendreMotionInterval) {
+        stopTendreMotion();
+      } else {
+        startTendreMotion(1);
+      }
+    }
+
     function switchTendreVersion(idx) {
       const tendreList = (I18N_DATA[currentLang] && I18N_DATA[currentLang].tendre) ? I18N_DATA[currentLang].tendre : I18N_DATA.es.tendre;
       if (idx < 0 || idx >= tendreList.length) return;
@@ -4602,7 +4772,34 @@
           return;
         }
       }
-      if (e.key === 'Escape') closeModal();
+      // Control de teclado para La Carte du Tendre (7e)
+      const p7e = document.getElementById('pantalla-7e');
+      if (p7e) {
+        const rect = p7e.getBoundingClientRect();
+        const isIn7e = (rect.top <= window.innerHeight * 0.6 && rect.bottom >= window.innerHeight * 0.3);
+        if (isIn7e) {
+          if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            toggleTendreContinuousMotion(-1);
+            return;
+          }
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            toggleTendreContinuousMotion(1);
+            return;
+          }
+          if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
+            e.preventDefault();
+            toggleTendrePlayPause();
+            return;
+          }
+        }
+      }
+
+      if (e.key === 'Escape') {
+        stopTendreMotion();
+        closeModal();
+      }
     });
 
     /* 5. TOP FLOATING HUD & MANDO UNIVERSAL (REGLA 15 CANÓNICA) */
