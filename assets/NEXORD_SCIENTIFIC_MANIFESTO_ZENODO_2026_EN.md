@@ -1,7 +1,9 @@
-![NEXORD Institutional Logo](logo_nexord_base.png)
+![NEXORD Institutional Logo](LOGO_NEXORD_OFICIAL.png)
 
-# COMPUTATIONAL ORDINAL SOCIOMETRY AND GROUP DYNAMICS DIAGNOSTICS (NEXORD PLATFORM)
-## Scientific Manifesto, Theoretical-Methodological Framework, and Open Science Governance Guidelines (Canonical Edition 2026)
+# COMPUTATIONAL ORDINAL SOCIOMETRY AND SOCIO-THERMODYNAMIC DIAGNOSTICS (NEXORD PLATFORM)
+## Scientific Manifesto, Theoretical-Methodological Framework, and Institutional Governance Guidelines
+### *«Towards a Physics of the Collective (Hacia una Física de lo Grupal_JMC)»*
+#### Canonical Certified Version v8.0 (2026)
 
 **Author:** Dr. José Manuel Cornejo Álvarez  
 *Full Professor of Social Psychology*  
@@ -10,10 +12,9 @@
 **ORCID:** `0000-0002-1234-5678`  
 **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
 **Homologated Edition DOI:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)  
-**Canonical Certified Version:** v8.0 (2026)  
-**Master Ecosystem:** VISORD (Visual Ordinal Sociometry & Group Dynamics Diagnostics)  
+**Master Brand / Ecosystem:** VISORD 3D/4D (Visual Ordinal Sociometry & Socio-Thermodynamic Diagnostics)  
 **Official Web Platform:** [https://josemancor.github.io/soc-ord-web/](https://josemancor.github.io/soc-ord-web/)  
-**Open Source Repository:** [https://github.com/josemancor/soc-ord-web](https://github.com/josemancor/soc-ord-web)  
+**Open Source Repository and Code (GitHub):** [https://github.com/josemancor/soc-ord-web](https://github.com/josemancor/soc-ord-web)  
 
 ---
 

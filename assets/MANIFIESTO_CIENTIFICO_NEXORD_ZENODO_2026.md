@@ -1,17 +1,18 @@
-# SOCIOMETRÍA ORDINAL COMPUTACIONAL Y DIAGNÓSTICO DE LA DINÁMICA GRUPAL (PLATAFORMA NEXORD)
-## Manifiesto Científico, Fundamentación Teórico-Metodológica y Guía de Gobernanza en Ciencia Abierta
-### Edición Canónica Homologada v8.0 (2026)
+# SOCIOMETRÍA ORDINAL COMPUTACIONAL Y DIAGNÓSTICO SOCIO-TERMODINÁMICO (PLATAFORMA NEXORD)
+## Manifiesto Científico, Fundamentación Teórico-Metodológica y Propuesta de Gobernanza en Ciencia Abierta
+### *«Hacia una Física de lo Grupal_JMC»*
+#### Edición Canónica Homologada v8.0 (2026)
 
-![Logo Institucional NEXORD](logo_nexord_base.png)
+![Logo Institucional NEXORD](LOGO_NEXORD_OFICIAL.png)
 
 **Autor:** Dr. José Manuel Cornejo Álvarez  
 **Filiación Académica:** Psicología Social. Facultat de Psicologia, Universitat de Barcelona (UB)  
-**Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor del Banco Sociométrico (BSOC)  
+**Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico de la iniciativa del Banco Sociométrico (BSOC)  
 **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
 **DOI de Edición Homologada:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)  
 **Repositorio Oficial y Documentación:** [https://josemancor.github.io/soc-ord-web/](https://josemancor.github.io/soc-ord-web/)  
-**Ecosistema:** VISORD (Visualizador Sociométrico Ordinal)  
-**Idiomas de la Plataforma:** Español (ES), English (EN), Français (FR), Deutsch (DE), Italiano (IT), Português (PT), Русский (RU), 中文 (ZH).  
+**Ecosistema Maestro:** VISORD 3D/4D (Visualizador Sociométrico Ordinal)  
+**Idiomas Soportados por la Plataforma NEXORD:** Español (ES), English (EN), Français (FR), Deutsch (DE), Italiano (IT), Português (PT), Русский (RU), 中文 (ZH).  
 
 ---
 
