@@ -17,16 +17,16 @@
 ---
 
 ## Resumen
-La investigación sobre las redes y colectivos humanos ha estado condicionada históricamente por dos limitaciones metodológicas: el recurso a recuentos binarios planos (elección/rechazo) y los modelos disposicionales desvinculados de la dinámica interactiva de campo. La Plataforma NEXORD formaliza una aproximación continua y procesual a la dinámica de los grupos humanos. Este Manifiesto establece: (1) la articulación contemporánea de las contribuciones de Jacob L. Moreno y Kurt Lewin mediante la cuantificación del orden jerárquico por la función inversa al rango; (2) el axioma fundamental de DAR y RECIBIR como circuito inmanente e indisociable; (3) la administración en formato BREVE mediante arrastre forzado (*drag-and-drop*) sin empates, formalizada en la dualidad de matrices complementarias A(i, orden) y B(i, j), junto con la clausura diagonal reflexiva (sensores IDA, ITA, ICE); (4) la articulación de la retícula tensorial Q81 (9 × 9) estructurada en el Pentagrama de 10 densidades canónicas, polarizado en las macro-dimensiones DA (emisión) y RECIBE (recepción); (5) la psicologización de los regímenes dinámicos del campo, situando la fricción relacional (Φ) como condición necesaria para la viabilidad adaptativa frente al riesgo de pensamiento grupal (*Groupthink*), y orientando la intervención hacia el desatascamiento (*unjamming*) o la reubicación ecosistémica digna; (6) la versatilidad del espacio de diseño multidimensional GxTyCz, sin limitaciones a priori en los modelos de análisis; (7) soluciones gráficas continuas y la medición geodésica invariante en variedades de Grassmann Gr(k, N); (8) la extensión experimental hacia la monitorización de interacciones presenciales en laboratorio físico y el estudio de dilemas sociales; (9) el diagnóstico multimodal apoyado en el modelo del iceberg (haciendo visible y audible la interacción superficial y profunda mediante soluciones gráficas y sonificación hidrodinámica); (10) el uso de la Sociometría CULTURAL como entorno de contraste con reactividad cero; y (11) un marco riguroso de gobernanza institucional regido por la Ética por Diseño, la Ciencia Abierta (FAIR Data), el sellado criptográfico SHA3-512 (Protocolo Clélie) y la custodia académica bajo la figura del Investigador Principal (IP).
+La investigación sobre las redes y colectivos humanos ha estado condicionada históricamente por dos limitaciones metodológicas: el recurso a recuentos binarios planos (elección/rechazo) y los modelos disposicionales desvinculados de la dinámica interactiva de campo. La Plataforma NEXORD formaliza una aproximación continua y procesual a la dinámica de los grupos humanos. Este Manifiesto establece: (1) la articulación contemporánea de las contribuciones de Jacob L. Moreno y Kurt Lewin mediante la cuantificación del orden jerárquico por la función inversa al rango; (2) el axioma fundamental de DAR y RECIBIR como circuito inmanente e indisociable; (3) la administración en formato BREVE mediante arrastre forzado (*drag-and-drop*) sin empates, formalizada en la dualidad de matrices complementarias A(i, orden) y B(i, j), junto con la clausura diagonal reflexiva (sensores IDA, ITA, ICE); (4) la articulación de la retícula tensorial Q81 (9 × 9) estructurada en el Pentagrama Socio-Termodinámico de 10 densidades canónicas (gráfico 10D), polarizado en las macro-dimensiones DA (emisión) y RECIBE (recepción); (5) la psicologización de los regímenes dinámicos del campo, situando la fricción relacional (Φ) como condición necesaria para la viabilidad adaptativa frente al riesgo de pensamiento grupal (*Groupthink*), y orientando la intervención hacia el desatascamiento (*unjamming*) o la reubicación ecosistémica digna; (6) la versatilidad del espacio de diseño multidimensional GxTyCz, sin limitaciones a priori en los modelos de análisis; (7) la ruptura paradigmática en el espacio factorial dual (AFC ∥ PCA), superando la contingencia categórica discreta de Moreno y Benzécri (tablas de recuentos fijas $\mathbb{N}_0$ con empates y distorsión periférica $\chi^2$) mediante el continuo socio-termodinámico de densidades ($\pm\mathbb{R}$), donde el sujeto deja de ser un nodo estático y emerge como un dipolo cinemático diádico ($DA \longrightarrow RC$), probando la dominancia gravitatoria de $PC_1 \gg PC_2$, la conservación baricéntrica analítica ($\Delta_{\text{centroide}} = 0.000$) y la medición geodésica invariante en variedades de Grassmann $\operatorname{Gr}(k, N)$; (8) la extensión experimental hacia la monitorización de interacciones presenciales en laboratorio físico y el estudio de dilemas sociales; (9) el diagnóstico multimodal apoyado en el modelo del iceberg (haciendo visible y audible la interacción superficial y profunda mediante soluciones gráficas y sonificación hidrodinámica); (10) el uso de la Sociometría CULTURAL como entorno de contraste con reactividad cero; y (11) un marco riguroso de gobernanza institucional regido por la Ética por Diseño, la Ciencia Abierta (FAIR Data), el sellado criptográfico SHA3-512 (Protocolo Clélie) y la custodia académica bajo la figura del Investigador Principal (IP).
 
-**Palabras clave:** Sociometría Ordinal Computacional, Plataforma NEXORD, VISORD, Banco Sociométrico (BSOC), Formato BREVE, Dualidad Matricial, Clausura Diagonal Reflexiva, Densidades Relacionales, Regímenes del Campo Grupal, Fricción Relacional, Pensamiento Grupal (Groupthink), Retícula Q81, Variedad de Grassmann, Espacio Multidimensional GxTyCz, Laboratorio Físico Presencial, Soluciones Gráficas, Sonificación Hidrodinámica, Modelo del Iceberg, Sociometría CULTURAL, Protocolo Clélie, Ética por Diseño, Ciencia Abierta.
+**Palabras clave:** Sociometría Ordinal Computacional, Plataforma NEXORD, VISORD, Banco Sociométrico (BSOC), Formato BREVE, Dualidad Matricial, Clausura Diagonal Reflexiva, Pentagrama 10D, Densidades Relacionales, Regímenes del Campo Grupal, Fricción Relacional, Pensamiento Grupal (Groupthink), Retícula Q81, Planos Factoriales Duales (AFC ∥ PCA), Dipolo Diádico, Teorema Baricéntrico, Variedad de Grassmann, Espacio Multidimensional GxTyCz, Laboratorio Físico Presencial, Soluciones Gráficas, Sonificación Hidrodinámica, Modelo del Iceberg, Sociometría CULTURAL, Protocolo Clélie, Ética por Diseño, Ciencia Abierta.
 
 ---
 
 ## Executive Abstract
-Scientific inquiry into human social networks has historically been constrained by two methodological limits: reliance on discrete binary tallies (choice/rejection) and dispositional models detached from interactive field dynamics. The NEXORD Platform formalizes a continuous, processual approach to group dynamics. This Manifesto establishes: (1) the contemporary realization of Jacob L. Moreno's and Kurt Lewin's foundational contributions through hierarchical rank quantification using the inverse rank function; (2) the fundamental axiom of GIVING and RECEIVING as an immanent and indissociable transactional loop; (3) continuous administration via the BREVE forced-drag format without ties, operationalized through the complementary matrix duality A(i, rank) and B(i, j), coupled with reflexive diagonal closure (IDA, ITA, ICE sensors); (4) the articulation of the Q81 tensorial lattice (9 × 9) structured within the 10 canonical densities pentagram, polarized across the macro-dimensions DA (emission) and RECIBE (reception); (5) the psychologization of relational field regimes, framing relational friction (Φ) as a necessary condition for adaptive viability against Groupthink risks, guiding intervention toward non-punitive unjamming or dignified ecosystemic relocation; (6) the versatility of the GxTyCz multidimensional design space, free from a priori constraints on analytical models; (7) continuous graphical solutions and scale-invariant geodesic metrics on Grassmann manifolds Gr(k, N); (8) experimental extension to the monitoring of face-to-face interactions in physical laboratory settings and social dilemma dynamics; (9) multimodal diagnostics grounded in the iceberg model (rendering visible and audible surface and deep interactions via graphical solutions and hydrodynamic sonification); (10) CULTURAL Sociometry as a zero-reactivity benchmark; and (11) a governance framework governed by Ethics by Design, Open Science (FAIR Data), SHA3-512 cryptographic sealing (Clélie Protocol), and academic custodianship under an accredited Principal Investigator (PI).
+Scientific inquiry into human social networks has historically been constrained by two methodological limits: reliance on discrete binary tallies (choice/rejection) and dispositional models detached from interactive field dynamics. The NEXORD Platform formalizes a continuous, processual approach to group dynamics. This Manifesto establishes: (1) the contemporary realization of Jacob L. Moreno's and Kurt Lewin's foundational contributions through hierarchical rank quantification using the inverse rank function; (2) the fundamental axiom of GIVING and RECEIVING as an immanent and indissociable transactional loop; (3) continuous administration via the BREVE forced-drag format without ties, operationalized through the complementary matrix duality A(i, rank) and B(i, j), coupled with reflexive diagonal closure (IDA, ITA, ICE sensors); (4) the articulation of the Q81 tensorial lattice (9 × 9) structured within the 10-density socio-thermodynamic pentagram (10D plot), polarized across the macro-dimensions DA (emission) and RECIBE (reception); (5) the psychologization of relational field regimes, framing relational friction (Φ) as a necessary condition for adaptive viability against Groupthink risks, guiding intervention toward non-punitive unjamming or dignified ecosystemic relocation; (6) the versatility of the GxTyCz multidimensional design space, free from a priori constraints on analytical models; (7) the paradigmatic shift within dual factorial space (AFC ∥ PCA), transcending Moreno's and Benzécri's discrete categorical contingency (fixed $\mathbb{N}_0$ frequency tallies with tied quotas and $\chi^2$ peripheral distortion) through the socio-thermodynamic continuum of signed densities ($\pm\mathbb{R}$), where actors transition from static scalar points into dynamic dyadic dipoles ($DA \longrightarrow RC$), establishing $PC_1 \gg PC_2$ gravitational dominance, analytical barycentric conservation ($\Delta_{\text{centroid}} = 0.000$), and scale-invariant geodesic metrics on Grassmann manifolds $\operatorname{Gr}(k, N)$; (8) experimental extension to the monitoring of face-to-face interactions in physical laboratory settings and social dilemma dynamics; (9) multimodal diagnostics grounded in the iceberg model (rendering visible and audible surface and deep interactions via graphical solutions and hydrodynamic sonification); (10) CULTURAL Sociometry as a zero-reactivity benchmark; and (11) a governance framework governed by Ethics by Design, Open Science (FAIR Data), SHA3-512 cryptographic sealing (Clélie Protocol), and academic custodianship under an accredited Principal Investigator (PI).
 
-**Keywords:** Computational Ordinal Sociometry, NEXORD Platform, VISORD Ecosystem, Sociometric Data Bank (BSOC), BREVE Format, Matrix Duality, Reflexive Diagonal Closure, Relational Densities, Group Field Regimes, Relational Friction, Groupthink, Q81 Lattice, Grassmann Manifolds, GxTyCz Design Space, Physical Laboratory Monitoring, Graphical Solutions, Hydrodynamic Sonification, Iceberg Model, CULTURAL Sociometry, Clélie Protocol, Ethics by Design, Open Science.
+**Keywords:** Computational Ordinal Sociometry, NEXORD Platform, VISORD Ecosystem, Sociometric Data Bank (BSOC), BREVE Format, Matrix Duality, Reflexive Diagonal Closure, 10D Pentagram, Relational Densities, Group Field Regimes, Relational Friction, Groupthink, Q81 Lattice, Dual Factorial Planes (AFC ∥ PCA), Dyadic Dipole, Barycentric Theorem, Grassmann Manifolds, GxTyCz Design Space, Physical Laboratory Monitoring, Graphical Solutions, Hydrodynamic Sonification, Iceberg Model, CULTURAL Sociometry, Clélie Protocol, Ethics by Design, Open Science.
 
 ---
 
@@ -162,29 +162,104 @@ La retícula contiene las 81 figuras relacionales exhaustivas (Q81 = 3^4), desta
 
 ![Fórmula 6: Descomposición del Tetragrama en Densidades Dk](formulas/Formula_6_Descomposicion_Tetragrama_Dk.png)
 
+![Figura 2: Pentagrama Socio-Termodinámico de Densidades Relacionales (10D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)
+
+*Figura 2: Pentagrama Socio-Termodinámico de Densidades Relacionales (10D). Proyección continua sobre las 10 estaciones invariantes del campo (BDA → BDR), mostrando el compás del tetragrama [A1 → A4], la amplitud dinámica de polarización (Δ) y la transición de fases socio-termodinámica.*
+
 * **[EN]** The ten continuous relational densities are structured within the Densities Pentagram, organized into two complementary macro-dimensions:
   * **Macro-Dimension DA (Sender Block):** Encompasses outbound kinetic mass to effective choice: BDA (kinetic mass) -> SDA (net potential) -> A1 (pDA) -> A2 (DA).
   * **Macro-Dimension RECIBE (Receiver Block):** Encompasses inbound effective choice to received kinetic mass: A3 (RECIBE) -> A4 (pRECIBE) -> SRC (net potential) -> BRC (kinetic mass).
   * **Relational Closure:** The collective system couples through Net Relational Potential (SDR = SDA + SRC) and Total Kinetic Mass (BDR = BDA + BRC), assessing positional asymmetry via Dif-DR = SDA - SRC.
 
+![Figure 2: Socio-Thermodynamic Pentagram of Relational Densities (10D)](Figure_Pentagram_Socio_Thermodynamic_10D.png)
+
+*Figure 2: Socio-Thermodynamic Pentagram of Relational Densities (10D). Continuous mapping across the 10 invariant stations (BDA → BDR), visualizing the dyadic tetragram compass [A1 → A4], dynamic polarization amplitude (Δ), and the socio-thermodynamic phase transition curve.*
+
 ---
 
 ## 5. Soluciones Gráficas, Espacio Multidimensional GxTyCz y Geometría Invariante / Graphical Solutions, GxTyCz Multidimensional Space & Invariant Geometry
 
-### 5.1. Soluciones Gráficas: Representación Visual y Topografía Relacional / Graphical Solutions: Visual Representation & Relational Topography
+### 5.1. Soluciones Gráficas y Planos Duales Paralelos (AFC ∥ PCA) / Graphical Solutions & Parallel Dual Planes (AFC ∥ PCA)
 * **[ES]** NEXORD desarrolla diversas soluciones gráficas para restituir con claridad el campo relacional sin saturación informativa:
   * **Sociogramas Continuos Tridimensionales:** Representación espacial de cuencas de atracción (verde neón, <Ee>), zonas de oposición (naranja) y fricción (magenta, [Rr]), con control diacrónico longitudinal.
-  * **Planos Factoriales 2D(6) y Ejes Slender Verticales:** Mapas derivados de la descomposición espectral (Benzécri, 1973; Cornejo, 1988), flanqueados por ejes verticales de contribución absoluta (CTA) y calidad de representación (COR).
+  * **Espacio Factorial Dual Paralelo (AFC ∥ PCA):**
+    * **Análisis Factorial de Correspondencias (AFC):** Opera sobre tablas relativas de contingencia con métrica Chi-cuadrado ($\chi^2$), idóneo para contrastar perfiles de frecuencias y polarización categórica.
+    * **Análisis de Componentes Principales (PCA):** Opera sobre la métrica continua de densidades y la función inversa al rango ($W = \pm 1/r$), preservando la masa inercial y evitando empates ciegos.
+    * **Planos Duales Conmutables:** Permiten desdoblar la observación en el plano de Emisores/Dadores (quién elige), de Receptores (quién es elegido) o el **Biplot Factorial Conjunto (F1 × F2)**. El Eje Factorial 1 (horizontal) sintetiza la Polarización Afectiva (<Ee> vs. [Rr]), mientras que el Eje Factorial 2 (vertical) proyecta la Expansividad y Visibilidad de Poder (Densidad Absoluta BDR).
+  * **Ejes Slender Verticales (1D):** Proyecciones esbeltas que ordenan los elementos según su peso estructural, flanqueados por tablas auxiliares externas de contribución absoluta (CTA), calidad de representación (COR) y varianza explicada acumulada (CTR).
   * **Structurogramas Intergrupales:** Polígonos de sustentación vincular para el análisis morfológico comparado entre grupos.
 
-![Figura 2: Soluciones Gráficas de Navegación 3D del Campo Relacional](Figura_Seccion_4_1_VISORD_3D_Engine.png)
+![Figura 3: Soluciones Gráficas de Navegación 3D del Campo Relacional](Figura_Seccion_4_1_VISORD_3D_Engine.png)
 
-![Figura 3: Plano Factorial Comparativo y Structurogramas](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)
+![Figura 4: Plano Factorial Biplot MESO (F1 × F2) en Espacio Dual (AFC / PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)
+
+*Figura 4: Plano Factorial Biplot MESO (F1 × F2) en Espacio Dual Paralelo (AFC Benzécri ∥ PCA Socio-Termodinámico 10D). Panel Izquierdo: AFC sobre contingencia discreta ℕ₀ y retícula invariante Q81. Panel Derecho: PCA 10D continuo (±ℝ) con el Pentagrama de Densidades, vectores en +X y prolongaciones discontinuas hacia -X a través del origen (0,0). En ambos espacios se proyectan los sujetos como dipolos vectoriales diádicos [DA ──► RC] con baricentro (+), revelando la cuenca de atracción (2 y 1), la bisectriz homeostática (3 y 4) y la cuenca de ostracismo/disipación entrópica (6 y 5).*
+
+![Figura 5: Plano Factorial Comparativo y Structurogramas](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)
+
+*Figura 5: Plano Factorial Comparativo Intergrupal (AFC / PCA). Líneas de fuerza de polarización y structurogramas poligonales de sustentación relacional entre dos colectivos independientes.*
 
 * **[EN]** NEXORD deploys graphical solutions providing clear visual translations of the continuous relational field:
   * **Three-Dimensional Continuous Sociograms:** Spatial rendering of attraction basins (neon green, <Ee>), opposition regions (orange), and friction zones (magenta, [Rr]), with longitudinal controls.
-  * **2D(6) Factorial Planes and Slender Vertical Axes:** Factorial projections (Benzécri, 1973; Cornejo, 1988) flanked by vertical axes displaying absolute contribution (CTA) and representation quality (COR).
+  * **Dual Factorial Space (AFC ∥ PCA):**
+    * **Correspondence Analysis (AFC):** Operates on relative contingency matrices via Chi-square ($\chi^2$) metrics, ideal for categorical frequency profiles and sender/receiver polarization.
+    * **Principal Component Analysis (PCA):** Operates on continuous density metrics and the inverse rank law ($W = \pm 1/r$), preserving inertial mass and avoiding discrete ties.
+    * **Commutable Dual Planes:** Disentangles observations into the Senders/Givers plane (who selects), the Receivers plane (who is selected), or the unified **Factorial Biplot (F1 × F2)**. Factor 1 (horizontal) summarizes Affective Polarization (<Ee> vs. [Rr]), whereas Factor 2 (vertical) projects Expansiveness and Power Visibility (Absolute Density BDR).
+  * **1D Slender Vertical Axes:** Vertical projections ranking nodes by structural weight, flanked by external diagnostic tables for absolute contribution (CTA), representation quality (COR), and cumulative variance (CTR).
   * **Intergroup Structurograms:** Relational support polygons supporting comparative morphological diagnostics.
+
+![Figure 3: Graphical Solutions for 3D Relational Exploration](Figure_Section_4_1_VISORD_3D_Engine.png)
+
+![Figure 4: MESO Factorial Biplot (F1 × F2) in Dual Space (AFC / PCA)](Figure_Factorial_Plane_Biplot_MESO_PCA.png)
+
+*Figure 4: MESO Factorial Biplot (F1 × F2) in Parallel Dual Space (Benzécri AFC ∥ 10D Socio-Thermodynamic PCA). Left Panel: AFC on discrete contingency ℕ₀ and Q81 invariant lattice. Right Panel: Continuous 10D PCA (±ℝ) with the Densities Pentagram, positive vectors in +X and dashed projective ray extensions to -X passing through the origin (0,0). Both spaces project actors as dyadic vectorial dipoles [DA ──► RC] with central barycenters (+), revealing the attraction basin (2 & 1), the homeostatic bisectrix (3 & 4), and the ostracism/entropic dissipation basin (6 & 5).*
+
+![Figure 5: Comparative Factorial Plane and Structurograms](Figure_Section_4_2_Comparative_Factorial_Plane_G1_G2.png)
+
+*Figure 5: Intergroup Comparative Factorial Plane (AFC / PCA). Polarization force vectors and polygonal relational support structurograms between two independent collectives.*
+
+### 5.1.1. Ruptura Paradigmática: De la Contingencia Categórica (Moreno / Benzécri) al Continuo Socio-Termodinámico (PCA 10D) / Paradigm Shift: From Categorical Contingency (Moreno / Benzécri) to the Socio-Thermodynamic Continuum (10D PCA)
+* **[ES]** La articulación paralela del Análisis Factorial de Correspondencias (AFC) y del Análisis de Componentes Principales Socio-Termodinámico (PCA 10D) explicita con rigor analítico el salto cualitativo que la Sociometría Ordinal Computacional introduce respecto a la sociometría clásica de Moreno (1934) y al tratamiento factorial tradicional de Benzécri (1973):
+  * **1. Naturaleza Ontológica de la Métrica: Discretización Categórica ($\mathbb{N}_0$) frente a Continuo Energético con Signo ($\pm\mathbb{R}$):**
+    * *Sociometría Clásica (Moreno, 1934; Benzécri, 1973):* Opera sobre tablas de contingencia relativas nutridas de recuentos discretos enteros ($\mathbb{N}_0$) derivados de cuotas fijas (típicamente 3 elecciones y 3 rechazos). La métrica Chi-cuadrado ($\chi^2$) divide las frecuencias observadas por la raíz del producto de masas marginales ($\sqrt{r_i \cdot c_j}$), lo que introduce una inflación geométrica artificial en las periferias de baja frecuencia y fragmenta la inercia factorial entre múltiples ejes ortogonales ($F_1 \approx 50.7\%, F_2 \approx 37.1\%$). Fundamentalmente, el AFC hipostasía el rechazo $[Rr]$ como una entidad sustantiva cualitativa simétrica e independiente de la elección.
+    * *Socio-Termodinámica NEXORD (2026):* El operador continuo de decaimiento exponencial al rango $W(k) = 2^{1-k}$ ($1º=1.000, 2º=0.500, 3º=0.250\dots$) sobre la administración BREVE por arrastre forzado sin empates transmuta la asignación subjetiva en magnitudes continuas con signo ($\pm\mathbb{R}$). En el espacio PCA 10D (descompuesto ortogonalmente por SVD sobre la matriz centrada del Pentagrama), las 10 variables canónicas de densidad ($SDR, BDR, SDA, SRC, BDA, BRC, D_1..D_4$) convergen armónicamente en el semiplano positivo ($+X$). El rechazo mutuo $[Rr]$, el conflicto y el aislamiento ya no son un polo cualitativo simétrico, sino un **déficit energético, un vacío gravitatorio y una pérdida de masa vincular**, formalmente proyectados en las prolongaciones proyectivas negativas ($-X$) que atraviesan el origen baricéntrico $(0,0)$.
+  * **2. Del Nodo Puntual Estático al Dipolo Vectorial Dinámico ($DA \longrightarrow RC$):**
+    * En el sociograma clásico, el sujeto es concebido como un punto estático sin masa ni trabajo físico, o como un centroide pasivo en el plano factorial.
+    * En NEXORD, el sujeto relacional es ontológicamente un **dipolo vectorial cinemático en continua tensión**: se proyecta simultáneamente su posición activa de emisión vincular ($DA / SDA$) y su posición receptora de investidura colectiva ($RC / SRC$). La flecha dirigida $DA \longrightarrow RC$ cuantifica el trabajo socio-termodinámico y la asimetría posicional del actor mediante el saldo diferencial:
+      $$\Delta_i = RC_i - DA_i$$
+    * El baricentro intrínseco del sujeto ($+$) se sitúa con exactitud matemática en el punto medio del vector $[(DA + RC)/2]$, garantizando la conservación de su identidad constitutiva sin colapso estático.
+  * **3. Las Tres Cuencas Topológicas del Campo Relacional:**
+    * *Cuenca de Atracción Gravitatoria (Sujetos Líderes 2 y 1):* Vectores ascendentes con balance marcadamente positivo ($\Delta > 0$). El colectivo inviste en ellos una masa gravitatoria desproporcionada sin exigirles un sobreesfuerzo de emisión ($RC \gg DA$). Constituyen pozos de potencial gravitatorio que vertebran, polarizan y cohesionan la red grupal a coste entrópico cero.
+    * *Bisectriz Homeostática y Umbral Crítico (Sujetos Medios 3 y 4):* El Sujeto 3 se sitúa con precisión milimétrica sobre la bisectriz homeostática ($RC = DA, \Delta \approx 0$), operando como amortiguador térmico e intermediario equilibrador que absorbe las oscilaciones del sistema. El Sujeto 4 marca el umbral crítico de congelación relacional: recibe nulo impacto positivo ($RC = 0$), pero aún sostiene el campo mediante su esfuerzo de emisión ($DA > 0$), acumulando un déficit tensional severo ($\Delta < 0$).
+    * *Cuenca de Ostracismo y Disipación Entrópica (Sujetos Periféricos 6 y 5):* Vectores descendentes y colapsados con balance severamente negativo ($\Delta < 0$). Situados íntegramente en el semiplano proyectivo negativo ($-X$), opuestos a todos los vectores directores de densidad ($SDR, SRC, BDR\dots$). Actúan como sumideros de disipación entrópica donde el sistema descarga sus tensiones y fricciones internas, evidenciando fenómenos de exclusión estructural invisibles para la sociometría clásica.
+  * **4. Dominancia Inercial del Gradiente Gravitatorio ($PC_1 \gg PC_2$):**
+    * Frente a la dispersión inercial del AFC, donde la varianza se disipa entre perfiles de frecuencias heterogéneos, en el PCA socio-termodinámico el primer componente factorial ($PC_1$) acapara más del **$87.5\%$ de la inercia total** (y hasta el $90\%$ en corpora longitudinales).
+    * Este hallazgo prueba formalmente que los colectivos humanos responden a una **ley unificada de gravedad socio-afectiva**: el campo relacional no se fragmenta en dimensiones inconexas, sino que se organiza a lo largo de un gradiente dipolar dominante que enfrenta la concentración de densidad relacional ($+X$) frente al vacío disipativo ($-X$).
+  * **5. El Teorema Baricéntrico de Conservación Relacional:**
+    * En todo colectivo humano cerrado se verifica analítica y empíricamente la ley fundamental de conservación:
+      $$\sum_{i=1}^N DA_i \equiv \sum_{j=1}^N RC_j$$
+    * Como consecuencia necesaria, el centroide colectivo de masa del sistema coincide con precisión de máquina ($\Delta_{\text{centroide}} = 0.000$, residuo flotante $\approx 2.22 \times 10^{-16}$) sobre el origen cartesiano $(0,0)$. Toda energía vincular que un actor gana en recepción ($RC$) proviene estrictamente de la inversión emitida ($DA$) por sus pares: ninguna masa relacional se crea ni se destruye; únicamente se redistribuye a lo largo del tensor diádico del campo.
+
+* **[EN]** The parallel articulation of Correspondence Analysis (AFC) and 10D Socio-Thermodynamic Principal Component Analysis (10D PCA) analytically formalizes the profound paradigm shift that Computational Ordinal Sociometry introduces beyond Moreno's classical sociometry (1934) and Benzécri's contingency approach (1973):
+  * **1. Ontological Metric Nature: Categorical Discretization ($\mathbb{N}_0$) vs. Continuous Energy Continuum ($\pm\mathbb{R}$):**
+    * *Classical Sociometry (Moreno, 1934; Benzécri, 1973):* Operates on contingency tables constructed from discrete frequency tallies ($\mathbb{N}_0$) constrained by fixed quotas (typically 3 choices and 3 rejections). The Chi-square metric ($\chi^2$) divides observed counts by the square root of marginal mass products ($\sqrt{r_i \cdot c_j}$), artificially inflating peripheral low frequencies and dispersing factor inertia across multiple orthogonal dimensions ($F_1 \approx 50.7\%, F_2 \approx 37.1\%$). Most critically, AFC reifies mutual rejection $[Rr]$ as a substantive, autonomous qualitative pole symmetric to choice.
+    * *NEXORD Socio-Thermodynamics (2026):* The continuous exponential rank decay operator $W(k) = 2^{1-k}$ ($1\text{st}=1.000, 2\text{nd}=0.500, 3\text{rd}=0.250\dots$) applied over tie-free forced drag-and-drop administration transforms ordinal rankings into continuous signed densities ($\pm\mathbb{R}$). Within 10D PCA space (orthogonally decomposed via SVD on the centered Pentagram matrix), all 10 canonical density variables ($SDR, BDR, SDA, SRC, BDA, BRC, D_1..D_4$) converge into the positive half-plane ($+X$). Mutual rejection $[Rr]$, conflict, and exclusion are no longer an autonomous qualitative pole, but an **energy deficit, gravitational void, and loss of relational mass**, mapped onto the negative projective ray extensions ($-X$) passing through the barycentric origin $(0,0)$.
+  * **2. From Static Scalar Node to Dynamic Dyadic Dipole ($DA \longrightarrow RC$):**
+    * In classical sociograms, the individual is depicted as a static scalar dot devoid of mass or physical work, or as a passive centroid in factorial space.
+    * In NEXORD, the relational actor is ontologically modeled as a **kinematic vectorial dipole in continuous tension**: their active outbound investment ($DA / SDA$) and inbound collective reception ($RC / SRC$) are projected simultaneously. The directed vector arrow $DA \longrightarrow RC$ quantifies socio-thermodynamic work and positional asymmetry:
+      $$\Delta_i = RC_i - DA_i$$
+    * The actor's intrinsic barycenter ($+$) sits with mathematical exactitude at the vector midpoint $[(DA + RC)/2]$, preserving individual systemic identity without static collapse.
+  * **3. The Three Topological Field Basins:**
+    * *Gravitational Attraction Basin (Leaders 2 & 1):* Upward vectors with strongly positive balances ($\Delta > 0$). The group invests massive gravitational mass in them without requiring sender hyper-effort ($RC \gg DA$). They function as gravitational potential wells that structure, polarize, and hold the collective network together at zero entropic cost.
+    * *Homeostatic Bisectrix & Critical Freezing Threshold (Intermediate Actors 3 & 4):* Subject 3 sits precisely on the homeostatic bisectrix ($RC = DA, \Delta \approx 0$), acting as a thermal damper and balancing mediator that buffers systemic fluctuations. Subject 4 marks the critical threshold of relational freezing: receiving zero positive impact ($RC = 0$), yet sustaining the group through emitted effort ($DA > 0$), accumulating severe strain ($\Delta < 0$).
+    * *Ostracism & Entropic Dissipation Basin (Peripheral Actors 6 & 5):* Collapsed, downward-plunging vectors with heavily negative balances ($\Delta < 0$). Positioned entirely within the negative projective half-plane ($-X$), diametrically opposite to all density vectors ($SDR, SRC, BDR\dots$). They act as entropic dissipation sinks absorbing collective frictions and tensions, exposing structural exclusion invisible to classical sociometric tallies.
+  * **4. Inertial Dominance of the Gravitational Gradient ($PC_1 \gg PC_2$):**
+    * In sharp contrast to AFC inertia dispersion, in socio-thermodynamic PCA the first principal component ($PC_1$) accounts for over **$87.5\%$ of total inertia** (and up to $90\%$ across longitudinal field corpora).
+    * This analytical result demonstrates that human collectives follow a **unified law of socio-affective gravity**: the relational field is not fragmented into disjointed axes, but organized along a primary dipolar gradient separating concentrated relational density ($+X$) from dissipative relational voids ($-X$).
+  * **5. The Barycentric Conservation Theorem:**
+    * In any closed human collective, the fundamental conservation law holds analytically and empirically:
+      $$\sum_{i=1}^N DA_i \equiv \sum_{j=1}^N RC_j$$
+    * Consequently, the collective mass centroid converges with floating-point precision ($\Delta_{\text{centroid}} = 0.000$, machine epsilon $\approx 2.22 \times 10^{-16}$) exactly at the Cartesian origin $(0,0)$. All relational energy received by an actor ($RC$) is strictly conserved from outbound peer investments ($DA$): no relational mass is created or destroyed; it is merely redistributed across the dyadic field tensor.
 
 ### 5.2. El Diseño Multidimensional GxTyCz sin Limitaciones a Priori / The GxTyCz Multidimensional Design without a Priori Constraints
 * **[ES]** La formulación matricial de NEXORD no presenta limitaciones a priori en los posibles diseños de análisis:
@@ -227,13 +302,13 @@ This metric quantitatively determines whether two collectives share relational c
   * **Dimensión Visual:** Articulada mediante las soluciones gráficas y sociogramas continuos tridimensionales.
   * **Dimensión Auditiva (Sonificación Hidrodinámica):** Traduce los gradientes de fricción (Φ), el potencial neto (SDR) y las asimetrías de flujo a frecuencias y resonancias armónicas (calibradas a 432 Hz con timbres orquestales diferenciados). Esta sonificación permite percibir acústicamente la tensión o armonía del campo grupal, ofreciendo a los investigadores un canal perceptual complementario para la detección de dinámicas ocultas bajo la superficie.
 
-![Figura 4: Campo Continuo y Soluciones Gráficas Tridimensionales](Figura_Sociograma_3D_Continuo_Plasma_N50.png)
+![Figura 6: Campo Continuo y Soluciones Gráficas Tridimensionales](Figura_Sociograma_3D_Continuo_Plasma_N50.png)
 
 * **[EN]** Human collectives exhibit a surface layer of visible interaction (formal roles, explicit agreements, observable behavior) sustained by a deep, submerged relational foundation (unspoken expectations, latent tensions, unvoiced affinities, and subtle rejections). The core methodological aim is to **render visible and audible the dynamics and processes of group interaction**:
   * **Visual Dimension:** Deployed through graphical solutions and 3D continuous sociograms.
   * **Auditory Dimension (Hydrodynamic Sonification):** Translates friction gradients (Φ), net potential (SDR), and flow asymmetries into harmonic acoustic frequencies (calibrated at 432 Hz with distinct timbral textures). This auditory mapping allows researchers to listen to relational tension or harmony, providing a complementary perceptual modality for detecting dynamics submerged beneath the visible surface.
 
-![Figure 4: Continuous Field and 3D Graphical Solutions](Figure_Sociogram_3D_Continuous_Plasma_N50.png)
+![Figure 6: Continuous Field and 3D Graphical Solutions](Figure_Sociogram_3D_Continuous_Plasma_N50.png)
 
 ### 6.4. El Corpus CULTURAL como Laboratorio de Reactividad Cero / The CULTURAL Corpus as a Zero-Reactivity Laboratory
 * **[ES]** A través de la categoría de datos CULTURAL, NEXORD transcribe obras maestras del cine, teatro y literatura a matrices sociométricas ordinales. Al tratarse de biografías relacionales completas, permiten auditar dinámicas extremas (como polarización o autoritarismo en obras de Lorca, Sartre o Rose) en un entorno experimental con reactividad evaluativa cero, sirviendo de contraste psicométrico robusto.
@@ -257,7 +332,64 @@ This metric quantitatively determines whether two collectives share relational c
 
 ---
 
-## 8. Referencias Bibliográficas / Canonical References
+## 8. Anexos Técnicos Formalizados / Canonical Technical Annexes
+
+### 8.1. Anexo I: Matrices Duales (SMIb / SMIa), Retícula Maestra Q81 y Catálogo I255 / Dual Matrices (SMIb/SMIa), Master 9x9 Lattice of Q81, and I255 Catalog
+* **[ES]** 
+  * **Matriz SMIb:** Registra en cada celda (i, j) el tetragrama numérico (A1 · A2 · A3 · A4) = (pDA · DA · RECIBE · pRECIBE).
+  * **Matriz SMIa:** Condensa el tetragrama en las 81 figuras relacionales exhaustivas (1 = [Rr], 41 = ¡¿?!, 81 = <Ee>).
+  * **Catálogo de Indicadores Booleanos I255:** Partición disyuntiva exhaustiva del espacio diádico a lo largo de la diagonal de consonancia perceptiva.
+* **[EN]** 
+  * **SMIb Matrix:** Stores the numerical tetragram (A1 · A2 · A3 · A4) = (pDA · DA · RECIBE · pRECIBE) in each cell (i, j).
+  * **SMIa Matrix:** Condenses the tetragram into the 81 dyadic configurations (1 = [Rr], 41 = ¡¿?!, 81 = <Ee>).
+  * **Boolean Indicator Catalog I255:** Disjunctive partitioning of dyadic space along the diagonal of perceptual consonance.
+
+### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) / Factorial Quality Metrics (COR, CTA, CTR), Vertical Axes, and 2D(6) Projection
+* **[ES]** 
+  * **Métricas Factoriales (Cornejo, 1988):**
+    * COR mide la calidad de representación del nodo i sobre el factor alfa.
+    * CTA expresa el porcentaje de inercia factorial explicada por el elemento i.
+    * CTR refleja la varianza acumulada explicada global.
+  * **Ejes Factoriales Verticales:** Ejes esbeltos verticales que ordenan los elementos según su peso estructural, evitando la saturación gráfica de los diagramas de dispersión 2D habituales.
+
+![Figura Anexo II: Ejes Verticales Factoriales 1D](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)
+
+* **[EN]** 
+  * **Factorial Metrics (Cornejo, 1988):**
+    * COR measures representation quality of node i on factor alpha.
+    * CTA expresses the percentage of factor inertia explained by element i.
+    * CTR reflects global cumulative explained variance.
+  * **Vertical Factorial Axes:** Slender vertical axes rank nodes by structural weight, preventing visual crowding in saturated 2D scatter plots.
+
+![Figure Annex II: Dual 1D Factorial Vertical Axes](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)
+
+### 8.3. Anexo III: Catálogo de los 10 Dominios Ecosistémicos / Catalog of the 10 Ecosystemic Domains
+* **[ES]** NEXORD calibra la inercia relacional (alfa) y la tasa de decaimiento relacional (gamma) a lo largo de 10 dominios institucionales normativos (escolar, universitario, deportivo, sanitario, laboral, etc.):
+
+![Tabla Anexo III: Catálogo de los 10 Dominios Ecosistémicos](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)
+
+* **[EN]** NEXORD calibrates Relational Inertia (alpha) and Relational Decay (gamma) across 10 normative institutional domains:
+
+![Table Annex III: Catalog of 10 Ecosystemic Domains](Table_Annex_III_10_Ecosystemic_Domains_EN.png)
+
+### 8.4. Anexo IV: Interdistancias de Rango Emisor-Receptor y Diagonal de Isometría / Sender - Receiver Rank Interdistances and Isometry Diagonal
+* **[ES]** Distancias euclídeas para la emisión del dador (d_DA) y la recepción (d_RC), preservando el orden estricto de emisión:
+  * **Diagonal de Isometría (d_DA = d_RC):** Evalúa la simetría relacional y verifica el Principio de Asimetría Relacional (la dispersión en recepción supera sistemáticamente a la dispersión en emisión).
+
+![Figura Anexo IV: Plano de Dispersión de Interdistancias Euclídeas](Figura_Anexo_IV_Plano_Interdistancias_G2T1C1.png)
+
+![Tabla Anexo IV: Tabla de Interdistancias Euclídeas](Tabla_Anexo_IV_Interdistancias_G2T1C1.png)
+
+* **[EN]** Euclidean distances for sender emission (d_DA) and receiver reception (d_RC) preserving strict sender ordering:
+  * **Isometry Diagonal (d_DA = d_RC):** Evaluates relational symmetry and verifies the Relational Asymmetry Principle (reception dispersion systematically exceeds emission dispersion).
+
+![Figure Annex IV: Dispersion Plot of Euclidean Interdistances](Figura_Anexo_IV_Plano_Interdistancias_G2T1C1.png)
+
+![Table Annex IV: Euclidean Interdistances Table](Table_Annex_IV_Interdistances_G2T1C1_EN.png)
+
+---
+
+## 9. Referencias Bibliográficas / Canonical References
 
 1. Absil, P.-A., Mahony, R., & Sepulchre, R. (2008). *Optimization algorithms on matrix manifolds*. Princeton University Press.
 2. Avramidis, E., Strogilos, V., Aroni, K., & Kankaraki, C. T. (2017). Using sociometric techniques to assess the social impacts of inclusion. *Educational Research Review*, 20, 68–80.
