@@ -5939,16 +5939,41 @@
           const fx = axisCenter.x + col.x * scaleX;
           const fy = axisCenter.y - col.y * scaleY;
 
-          // Prolongación proyectiva negativa (recta discontinua al semieje opuesto que pasa por 0,0)
+          // Prolongación axial discreta de todos los componentes al semieje opuesto (-X)
           if (!isAFC) {
+            const norm = Math.hypot(col.x, col.y) || 1.0;
+            const ux = col.x / norm;
+            const uy = col.y / norm;
+
+            // Longitudes radiales escalonadas para evitar colisiones de etiquetas
+            const negLens = {
+              'SDR': 1.15, 'BDR': 0.98,
+              'SDA': 1.14, 'D1': 1.25, 'D2': 1.04, 'BRC': 0.96,
+              'SRC': 1.14, 'D4': 1.25, 'D3': 1.04, 'BDA': 0.96
+            };
+            const L_neg = (negLens[col.id] || 1.08);
+            const negX = axisCenter.x - ux * L_neg * scaleX;
+            const negY = axisCenter.y + uy * L_neg * scaleY;
+
             ctx.save();
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
-            ctx.setLineDash([3, 4]);
-            ctx.lineWidth = 1.0;
+            // Trazo axial discreto con el color temático de cada componente
+            ctx.strokeStyle = col.color;
+            ctx.globalAlpha = 0.40;
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.moveTo(axisCenter.x, axisCenter.y);
-            ctx.lineTo(axisCenter.x - col.x * scaleX, axisCenter.y + col.y * scaleY);
+            ctx.lineTo(negX, negY);
             ctx.stroke();
+
+            // Etiqueta discreta en el extremo de la prolongación axial
+            ctx.globalAlpha = 0.78;
+            ctx.fillStyle = col.color;
+            ctx.font = "bold 9.5px 'JetBrains Mono', monospace";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            const shortTag = col.id === 'D1' ? 'D₁' : col.id === 'D2' ? 'D₂' : col.id === 'D3' ? 'D₃' : col.id === 'D4' ? 'D₄' : col.tag;
+            ctx.fillText(`−${shortTag}`, negX - 5, negY);
             ctx.restore();
           }
 
