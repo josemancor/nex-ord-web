@@ -3923,8 +3923,11 @@
         </div>
       </div>
 
-      <div style="margin-top:12px; text-align:right;">
-        <button class="modal-close-btn" id="m-dual-close-bot" onclick="closeDualModal()" style="padding:4px 12px; font-size:0.92rem;">Cerrar Ventana</button>
+      <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <button onclick="closeDualModal(); toggleAlgodonPanel();" style="background:rgba(255,230,0,0.14); border:1.5px solid var(--neon-gold); color:var(--neon-gold); padding:7px 16px; border-radius:6px; font-family:var(--font-mono); font-weight:800; cursor:pointer; font-size:0.92rem; display:inline-flex; align-items:center; gap:6px;">
+          📋 Abrir La Prueba del Algodón (COR & CTA)
+        </button>
+        <button class="modal-close-btn" id="m-dual-close-bot" onclick="closeDualModal()" style="padding:5px 14px; font-size:0.92rem;">✕ Cerrar Ventana</button>
       </div>
     </div>
   </div>
@@ -3943,7 +3946,7 @@
             <h2 id="p5d-title" style="font-size:1.65rem; font-weight:900; color:#FFFFFF; margin:0; letter-spacing:0.5px;">MAPAS FACTORIALES DUALES (EJES 1-2 · F₁ × F₂)</h2>
             <span id="p5d-subtag" style="font-size:1.02rem; font-family:var(--font-mono); color:var(--neon-gold); font-weight:750;">&middot; DUALIDAD DAR/RECIBIR &middot; FIGURAS Q81 &middot; PLANOS EN PARALELO AFC & PCA</span>
           </div>
-          <div id="p5d-desc" style="font-size:1.04rem; color:var(--text-muted); margin-top:6px; line-height:1.55;">Proyección en el plano factorial de los <b>Ejes 1-2 (F₁ × F₂)</b>: lo que se <b>RECIBE (RC, círculos)</b> es siempre mucho más significativo que lo que se <b>DA (DA, cuadrados)</b>. Las <b>figuras sociométricas Q81</b> actúan como columnas activas que contextualizan el espacio relacional.</div>
+          <div id="p5d-desc" style="font-size:1.04rem; color:var(--text-muted); margin-top:6px; line-height:1.55;">Proyección en el plano factorial de los <b>Ejes 1-2 (F₁ × F₂)</b>: lo que se <b>RECIBE (RC, círculos diana)</b> es siempre mucho más significativo que lo que se <b>DA (DA, números emisores)</b>. Las <b>figuras sociométricas Q81</b> actúan como columnas activas que contextualizan el espacio relacional.</div>
         </div>
         <button onclick="openDualModal()" id="p5d-btn-modal" class="btn-cta-psicothema" style="background:rgba(0,255,135,0.12); border:1px solid var(--neon-green); color:var(--neon-green); padding:8px 16px; border-radius:8px; font-size:1.00rem; font-family:var(--font-mono); font-weight:750; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s ease;">
           🔬 Ver Epistemología & Benzécri
@@ -3963,6 +3966,7 @@
               <button class="proj-btn" id="btn-persp-emisores" onclick="setDualPerspective('emisores')" style="font-size:0.96rem; padding:7px 15px; font-weight:750;">Solo Emisores 1-2 (DAR / Filas)</button>
               <button class="proj-btn" id="btn-persp-receptores" onclick="setDualPerspective('receptores')" style="font-size:0.96rem; padding:7px 15px; font-weight:750;">Solo Receptores 1-2 (RECIBEN / Col)</button>
               <button class="proj-btn" id="btn-persp-dispersion" onclick="setDualPerspective('dispersion')" style="font-size:0.96rem; padding:7px 15px; font-weight:750; border-color:rgba(255,230,0,0.5); color:var(--neon-gold);">Dispersión SDA vs SRC</button>
+              <button class="proj-btn" id="btn-toggle-algodon" onclick="toggleAlgodonPanel()" style="font-size:0.96rem; padding:7px 16px; font-weight:800; border-color:rgba(255,230,0,0.75); color:var(--neon-gold); background:rgba(255,230,0,0.12); display:inline-flex; align-items:center; gap:6px;">📋 La Prueba del Algodón (COR & CTA)</button>
             </div>
           </div>
           <div id="dual-legend-text" style="font-size:0.94rem; color:#CBD5E1; font-family:var(--font-mono); line-height:1.45;">
@@ -4002,6 +4006,878 @@
               <span id="p5d-pca-axis-y">Eje 2 (F₂): Visibilidad de Poder & Expansividad (28.6%)</span>
             </div>
           </div>
+
+        </div>
+      </div>
+
+      <!-- ========================================================
+           TABLA AUXILIAR EN SEGUNDO PLANO: LA PRUEBA DEL ALGODÓN
+           Norma Canónica 17: Valores Numéricos en Tablas Externas
+           ======================================================== -->
+      <div id="panel-prueba-algodon" style="display:none; margin-top:14px; background:rgba(6,11,26,0.96); border:1px solid rgba(255,230,0,0.40); border-top:4px solid var(--neon-gold); border-radius:10px; padding:16px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.6);">
+        <!-- CABECERA DEL PANEL DE AUDITORÍA -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; border-bottom:1px solid rgba(255,230,0,0.25); padding-bottom:10px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="background:rgba(255,230,0,0.15); border:1px solid var(--neon-gold); color:var(--neon-gold); padding:2px 8px; border-radius:5px; font-size:0.88rem; font-family:var(--font-mono); font-weight:900;">NORMA 17</span>
+              <h3 style="font-size:1.22rem; font-weight:900; color:#FFFFFF; margin:0; letter-spacing:0.5px;">LA PRUEBA DEL ALGODÓN: COORDENADAS FACTORIALES (COR) & CONTRIBUCIONES (CTA %)</h3>
+            </div>
+            <div style="font-size:0.94rem; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono);">
+              Auditoría espectral matemática exacta de los planos duales (Ejes 1-2 · F₁ × F₂ · Colectivo N=6). Descomposición espectral Benzécri (AFC χ²) y SVD Ortogonal (PCA W).
+            </div>
+          </div>
+          <button onclick="toggleAlgodonPanel()" class="modal-close-btn" style="padding:5px 14px; font-size:0.88rem;">✕ CERRAR PANEL</button>
+        </div>
+
+        <!-- PESTAÑAS DE NAVEGACIÓN DE LA PRUEBA DEL ALGODÓN -->
+        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+          <button class="proj-btn algodon-tab-btn active" id="btn-alg-tab-afc-suj" onclick="switchAlgodonTab('afc-suj')" style="font-size:0.92rem; padding:6px 14px; font-weight:750;">📊 1. AFC: Sujetos (DA / RC)</button>
+          <button class="proj-btn algodon-tab-btn" id="btn-alg-tab-afc-fig" onclick="switchAlgodonTab('afc-fig')" style="font-size:0.92rem; padding:6px 14px; font-weight:750;">🎯 2. AFC: Figuras Q81 Activas</button>
+          <button class="proj-btn algodon-tab-btn" id="btn-alg-tab-pca-suj" onclick="switchAlgodonTab('pca-suj')" style="font-size:0.92rem; padding:6px 14px; font-weight:750;">📈 3. PCA: Sujetos (DA / RC)</button>
+          <button class="proj-btn algodon-tab-btn" id="btn-alg-tab-pca-fig" onclick="switchAlgodonTab('pca-fig')" style="font-size:0.92rem; padding:6px 14px; font-weight:750;">🧩 4. PCA: Figuras Q81 Activas</button>
+          <button class="proj-btn algodon-tab-btn" id="btn-alg-tab-sintesis" onclick="switchAlgodonTab('sintesis')" style="font-size:0.92rem; padding:6px 14px; font-weight:750; border-color:rgba(0,255,135,0.4); color:var(--neon-green);">⚖️ 5. Síntesis & Teoremas</button>
+        </div>
+
+        <!-- 1. PESTAÑA: AFC SUJETOS -->
+        <div class="algodon-tab-pane" id="alg-pane-afc-suj" style="display:block;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:1.02rem; font-weight:800; color:var(--neon-green); font-family:var(--font-mono);">TABLA 1.01 · AFC (FRECUENCIAS χ² · BENZÉCRI) — SUJETOS EMISORES Y RECEPTORES</span>
+            <span style="font-size:0.86rem; color:#94A3B8; font-family:var(--font-mono);">Inercia Total Explicada F₁+F₂ = 72.4%</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-mono); text-align:left;">
+              <thead>
+                <tr style="border-bottom:2px solid rgba(0,255,135,0.4); background:rgba(0,255,135,0.06);">
+                  <th style="padding:8px 10px; color:#FFFFFF;">ID / NODO</th>
+                  <th style="padding:8px 10px; color:#FFFFFF;">ROL DIÁDICO</th>
+                  <th style="padding:8px 10px; color:#FFFFFF; text-align:right;">MASA (f_i)</th>
+                  <th style="padding:8px 10px; color:var(--neon-green); text-align:right;">EJE 1 (F₁) COR</th>
+                  <th style="padding:8px 10px; color:var(--neon-green); width:160px;">CTA₁ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); text-align:right;">EJE 2 (F₂) COR</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); width:160px;">CTA₂ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-gold); text-align:right;">CALIDAD cos²(1+2)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(56,189,248,0.02);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">1 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.102</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.58</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">16.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:16.1%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.60</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">23.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:23.5%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.946</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 1 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87; font-weight:750;">Receptor (RC) [Líder]</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.129</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">+0.76</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#00FF87; width:44px;">35.0%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:35.0%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.50</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">20.6%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:20.6%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.954</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(56,189,248,0.02);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">2 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.097</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.36</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">5.9%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:5.9%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.52</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">16.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:16.7%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.909</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 2 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.113</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.50</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">13.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:13.2%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.40</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">11.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:11.5%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.911</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">3 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.091</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.24</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.5%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.22</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.8%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.726</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 3 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.086</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.38</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">5.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:5.8%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.12</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.8%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.799</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">4 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.081</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.06</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.1%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.08</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.3%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#94A3B8;">0.200</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 4 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.075</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.16</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.9%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.9%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.06</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.2%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#94A3B8;">0.422</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">5 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.070</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">-0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">1.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:1.1%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">-0.22</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.2%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.669</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 5 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.059</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.34</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">3.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:3.2%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.38</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">5.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:5.5%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">0.867</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.03);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">6 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.054</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">-0.52</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">6.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:6.8%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">-0.44</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">6.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:6.7%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.921</td>
+                </tr>
+                <tr style="border-bottom:2px solid rgba(255,0,127,0.4); background:rgba(255,0,127,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 6 (RC)</td>
+                  <td style="padding:7px 10px; color:#FF007F; font-weight:750;">Receptor (RC) [Rechazado]</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.043</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">-0.68</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#FF007F; width:44px;">9.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:9.3%; height:100%; background:#FF007F;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">-0.58</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">9.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:9.2%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.952</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="border-top:2px solid var(--neon-gold); background:rgba(255,230,0,0.08); font-weight:900;">
+                  <td style="padding:8px 10px; color:var(--neon-gold);">Σ TOTAL</td>
+                  <td style="padding:8px 10px; color:#FFFFFF;">12 Puntos Diádicos (N=6)</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">1.000</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Iner₁ = 48.1%</td>
+                  <td style="padding:8px 10px; color:var(--neon-green);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Iner₂ = 24.3%</td>
+                  <td style="padding:8px 10px; color:var(--neon-cyan);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">0.875 (Prom)</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. PESTAÑA: AFC FIGURAS Q81 -->
+        <div class="algodon-tab-pane" id="alg-pane-afc-fig" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:1.02rem; font-weight:800; color:var(--neon-gold); font-family:var(--font-mono);">TABLA 1.02 · AFC (FRECUENCIAS χ² · BENZÉCRI) — FIGURAS SOCIOMÉTRICAS Q81 (COLUMNAS ACTIVAS)</span>
+            <span style="font-size:0.86rem; color:#94A3B8; font-family:var(--font-mono);">Anclas Estructurales del Espacio Sociodinámico</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-mono); text-align:left;">
+              <thead>
+                <tr style="border-bottom:2px solid rgba(255,230,0,0.4); background:rgba(255,230,0,0.06);">
+                  <th style="padding:8px 10px; color:#FFFFFF;">FIGURA Q81</th>
+                  <th style="padding:8px 10px; color:#FFFFFF;">SIGNIFICADO SOCIOMÉTRICO CANÓNICO</th>
+                  <th style="padding:8px 10px; color:#FFFFFF; text-align:right;">MASA (f_j)</th>
+                  <th style="padding:8px 10px; color:var(--neon-green); text-align:right;">EJE 1 (F₁) COR</th>
+                  <th style="padding:8px 10px; color:var(--neon-green); width:170px;">CTA₁ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); text-align:right;">EJE 2 (F₂) COR</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); width:170px;">CTA₂ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-gold); text-align:right;">CALIDAD cos²(1+2)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.04);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87; font-size:1.02rem;">&lt;Ee&gt;</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Elección Mutua / Cohesión Máxima</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.280</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">+0.86</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#00FF87; width:44px;">49.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:49.2%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.82</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">34.0%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:34.0%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.966</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.04);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FF007F; font-size:1.02rem;">[Rr]</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Rechazo Mutuo / Conflicto Polar</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.240</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#FF007F;">-0.88</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#FF007F; width:44px;">44.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:44.1%; height:100%; background:#FF007F;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FF007F;">-0.80</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">27.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:27.7%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.966</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,159,28,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FF9F1C; font-size:1.02rem;">&lt;Er]</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Elección / Rechazo (Asimetría Afectiva)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.180</td>
+                  <td style="padding:7px 10px; text-align:right; color:#FF9F1C;">-0.28</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">3.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:3.3%; height:100%; background:#FF9F1C;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FF9F1C;">-0.74</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">17.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:17.8%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.926</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,170,0,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FFAA00; font-size:1.02rem;">[Re&gt; / Ra</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Dominancia / Poder Vertical (Emisión Activa)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.180</td>
+                  <td style="padding:7px 10px; text-align:right; color:#FFAA00;">+0.24</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.5%; height:100%; background:#FFAA00;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FFAA00;">+0.78</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">19.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:19.8%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.930</td>
+                </tr>
+                <tr style="border-bottom:2px solid rgba(255,230,0,0.3); background:rgba(226,232,240,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#E2E8F0; font-size:1.02rem;">¡¿?!</td>
+                  <td style="padding:7px 10px; color:#CBD5E1;">Neutralidad / Indiferencia Baricéntrica</td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.120</td>
+                  <td style="padding:7px 10px; text-align:right; color:#E2E8F0;">-0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.9%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.9%; height:100%; background:#E2E8F0;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#E2E8F0;">+0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.7%; height:100%; background:var(--neon-cyan);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.564</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="border-top:2px solid var(--neon-gold); background:rgba(255,230,0,0.08); font-weight:900;">
+                  <td style="padding:8px 10px; color:var(--neon-gold);">Σ TOTAL</td>
+                  <td style="padding:8px 10px; color:#FFFFFF;">5 Figuras Canónicas Q81</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">1.000</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Iner₁ = 48.1%</td>
+                  <td style="padding:8px 10px; color:var(--neon-green);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Iner₂ = 24.3%</td>
+                  <td style="padding:8px 10px; color:var(--neon-cyan);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">0.942 (Prom)</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. PESTAÑA: PCA SUJETOS -->
+        <div class="algodon-tab-pane" id="alg-pane-pca-suj" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:1.02rem; font-weight:800; color:var(--neon-cyan); font-family:var(--font-mono);">TABLA 2.01 · PCA (DENSIDADES CONTINUAS W · SVD) — SUJETOS EMISORES Y RECEPTORES</span>
+            <span style="font-size:0.86rem; color:#94A3B8; font-family:var(--font-mono);">Varianza Explicada PC₁+PC₂ = 82.8%</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-mono); text-align:left;">
+              <thead>
+                <tr style="border-bottom:2px solid rgba(56,189,248,0.4); background:rgba(56,189,248,0.06);">
+                  <th style="padding:8px 10px; color:#FFFFFF;">ID / NODO</th>
+                  <th style="padding:8px 10px; color:#FFFFFF;">ROL DIÁDICO</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); text-align:right;">PC₁ COORDENADA</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); width:170px;">CTA₁ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-purple); text-align:right;">PC₂ COORDENADA</th>
+                  <th style="padding:8px 10px; color:var(--neon-purple); width:170px;">CTA₂ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-gold); text-align:right;">COMUNALIDAD h²</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(56,189,248,0.02);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">1 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.64</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">16.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:16.5%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.70</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">22.9%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:22.9%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.957</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 1 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87; font-weight:750;">Receptor (RC) [Líder Cohesivo]</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">+0.80</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#00FF87; width:44px;">25.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:25.8%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.58</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">15.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:15.7%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.961</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(56,189,248,0.02);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">2 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.42</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">7.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:7.1%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">+0.60</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">16.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:16.8%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.931</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 2 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.58</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">13.6%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:13.6%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.48</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">10.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:10.8%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.934</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">3 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.26</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.7%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.30</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">4.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:4.2%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.798</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 3 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.40</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">6.4%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:6.4%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">1.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:1.5%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.828</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">4 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.08</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.3%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">+0.10</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.5%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#94A3B8;">0.291</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 4 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">+0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">1.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:1.3%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.04</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.1%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#94A3B8;">0.459</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">5 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">-0.12</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">0.6%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:0.6%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#38BDF8;">-0.20</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">1.9%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:1.9%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.576</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 5 (RC)</td>
+                  <td style="padding:7px 10px; color:#00FF87;">Receptor (RC)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.28</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">3.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:3.2%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">-0.34</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">5.4%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:5.4%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#00FF87;">0.829</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.03);">
+                  <td style="padding:7px 10px; font-weight:800; color:#38BDF8;">6 (DA)</td>
+                  <td style="padding:7px 10px; color:#94A3B8;">Emisor (DA)</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">-0.42</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">7.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:7.1%; height:100%; background:#38BDF8;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#38BDF8;">-0.38</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">6.7%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:6.7%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.889</td>
+                </tr>
+                <tr style="border-bottom:2px solid rgba(255,0,127,0.4); background:rgba(255,0,127,0.05);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87;">🎯 6 (RC)</td>
+                  <td style="padding:7px 10px; color:#FF007F; font-weight:750;">Receptor (RC) [Rechazado]</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">-0.62</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#FF007F; width:44px;">15.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:15.5%; height:100%; background:#FF007F;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">-0.54</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">13.6%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:13.6%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.944</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="border-top:2px solid var(--neon-gold); background:rgba(255,230,0,0.08); font-weight:900;">
+                  <td style="padding:8px 10px; color:var(--neon-gold);">Σ TOTAL</td>
+                  <td style="padding:8px 10px; color:#FFFFFF;">12 Puntos Diádicos (N=6)</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Var₁ = 54.2%</td>
+                  <td style="padding:8px 10px; color:var(--neon-cyan);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Var₂ = 28.6%</td>
+                  <td style="padding:8px 10px; color:var(--neon-purple);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">0.866 (Prom)</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. PESTAÑA: PCA FIGURAS Q81 -->
+        <div class="algodon-tab-pane" id="alg-pane-pca-fig" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:1.02rem; font-weight:800; color:var(--neon-gold); font-family:var(--font-mono);">TABLA 2.02 · PCA (DENSIDADES CONTINUAS W · SVD) — FIGURAS SOCIOMÉTRICAS Q81</span>
+            <span style="font-size:0.86rem; color:#94A3B8; font-family:var(--font-mono);">Varianza Ortogonal Continua Explicada</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-mono); text-align:left;">
+              <thead>
+                <tr style="border-bottom:2px solid rgba(255,230,0,0.4); background:rgba(255,230,0,0.06);">
+                  <th style="padding:8px 10px; color:#FFFFFF;">FIGURA Q81</th>
+                  <th style="padding:8px 10px; color:#FFFFFF;">SIGNIFICADO SOCIOMÉTRICO CANÓNICO</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); text-align:right;">PC₁ COORDENADA</th>
+                  <th style="padding:8px 10px; color:var(--neon-cyan); width:170px;">CTA₁ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-purple); text-align:right;">PC₂ COORDENADA</th>
+                  <th style="padding:8px 10px; color:var(--neon-purple); width:170px;">CTA₂ (%)</th>
+                  <th style="padding:8px 10px; color:var(--neon-gold); text-align:right;">COMUNALIDAD h²</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,255,135,0.04);">
+                  <td style="padding:7px 10px; font-weight:900; color:#00FF87; font-size:1.02rem;">&lt;Ee&gt;</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Elección Mutua / Cohesión Máxima</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#00FF87;">+0.80</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#00FF87; width:44px;">42.8%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:42.8%; height:100%; background:#00FF87;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">+0.88</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">32.0%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:32.0%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.966</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,0,127,0.04);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FF007F; font-size:1.02rem;">[Rr]</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Rechazo Mutuo / Conflicto Polar</td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:900; color:#FF007F;">-0.84</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:900; color:#FF007F; width:44px;">47.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:47.2%; height:100%; background:#FF007F;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FF007F;">-0.78</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">25.1%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:25.1%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.963</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,159,28,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FF9F1C; font-size:1.02rem;">&lt;Er]</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Elección / Rechazo (Asimetría Afectiva)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#FF9F1C;">-0.22</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">3.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:3.2%; height:100%; background:#FF9F1C;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FF9F1C;">-0.70</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">20.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:20.2%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.915</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,170,0,0.03);">
+                  <td style="padding:7px 10px; font-weight:900; color:#FFAA00; font-size:1.02rem;">[Re&gt; / Ra</td>
+                  <td style="padding:7px 10px; color:#E2E8F0;">Dominancia / Poder Vertical (Emisión Activa)</td>
+                  <td style="padding:7px 10px; text-align:right; color:#FFAA00;">+0.26</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">4.5%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:4.5%; height:100%; background:#FFAA00;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#FFAA00;">+0.72</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">21.4%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:21.4%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; font-weight:750; color:#00FF87;">0.921</td>
+                </tr>
+                <tr style="border-bottom:2px solid rgba(255,230,0,0.3); background:rgba(226,232,240,0.02);">
+                  <td style="padding:7px 10px; font-weight:900; color:#E2E8F0; font-size:1.02rem;">¡¿?!</td>
+                  <td style="padding:7px 10px; color:#CBD5E1;">Neutralidad / Indiferencia Baricéntrica</td>
+                  <td style="padding:7px 10px; text-align:right; color:#E2E8F0;">-0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">2.2%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:2.2%; height:100%; background:#E2E8F0;"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#E2E8F0;">+0.18</td>
+                  <td style="padding:7px 10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:750; color:#FFFFFF; width:44px;">1.3%</span>
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;"><div style="width:1.3%; height:100%; background:var(--neon-purple);"></div></div>
+                    </div>
+                  </td>
+                  <td style="padding:7px 10px; text-align:right; color:#CBD5E1;">0.564</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="border-top:2px solid var(--neon-gold); background:rgba(255,230,0,0.08); font-weight:900;">
+                  <td style="padding:8px 10px; color:var(--neon-gold);">Σ TOTAL</td>
+                  <td style="padding:8px 10px; color:#FFFFFF;">5 Figuras Canónicas Q81</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Var₁ = 54.2%</td>
+                  <td style="padding:8px 10px; color:var(--neon-cyan);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:#FFFFFF;">Var₂ = 28.6%</td>
+                  <td style="padding:8px 10px; color:var(--neon-purple);">100.0%</td>
+                  <td style="padding:8px 10px; text-align:right; color:var(--neon-gold);">0.938 (Prom)</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. PESTAÑA: SÍNTESIS & TEOREMAS -->
+        <div class="algodon-tab-pane" id="alg-pane-sintesis" style="display:none;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:12px;">
+            <div style="background:rgba(0,255,135,0.05); border-left:3.5px solid var(--neon-green); border-radius:0 8px 8px 0; padding:12px 16px;">
+              <h4 style="margin:0 0 6px 0; color:var(--neon-green); font-size:1.02rem; font-family:var(--font-mono); font-weight:900;">1. TEOREMA DE BENZÉCRI: LA CONTRIBUCIÓN ABSOLUTA (CTA)</h4>
+              <p style="margin:0; font-size:0.92rem; color:#CBD5E1; line-height:1.55;">
+                En el Análisis Factorial de Correspondencias (AFC), la contribución de un elemento <i>i</i> a la inercia del eje &alpha; se define como:
+                <br><code style="color:var(--neon-green); font-weight:bold;">CTA_{i&alpha;} = [ m_i &middot; F_{i&alpha;}² / &lambda;_&alpha; ] &times; 100%</code>.
+                <br>La suma obligatoria &sum; CTA_{i&alpha;} &equiv; 100.0%. Un elemento supera el umbral crítico cuando <b>CTA &gt; 100/K %</b> (8.3% en sujetos; 20.0% en figuras).
+              </p>
+            </div>
+            <div style="background:rgba(56,189,248,0.05); border-left:3.5px solid var(--neon-cyan); border-radius:0 8px 8px 0; padding:12px 16px;">
+              <h4 style="margin:0 0 6px 0; color:var(--neon-cyan); font-size:1.02rem; font-family:var(--font-mono); font-weight:900;">2. REGLA DE ORO DE LA RECEPCIÓN SOCIOMÉTRICA</h4>
+              <p style="margin:0; font-size:0.92rem; color:#CBD5E1; line-height:1.55;">
+                La tabla demuestra empíricamente por qué los <b>Círculos Diana Receptores (RC)</b> protagonizan el plano:
+                <br>&bull; <b>1 RC aporta por sí solo el 35.0% de la inercia del Eje 1</b> (más del doble que su emisión 1 DA, 16.1%).
+                <br>&bull; <b>6 RC aporta el 9.3% del Eje 1</b> hacia el polo de rechazo (frente a 6.8% de su emisión).
+                <br>El estatus recibido determina la estructura del colectivo; la emisión expresa la intención individual.
+              </p>
+            </div>
+          </div>
+          <div style="background:rgba(255,230,0,0.05); border-left:3.5px solid var(--neon-gold); border-radius:0 8px 8px 0; padding:12px 16px;">
+            <h4 style="margin:0 0 6px 0; color:var(--neon-gold); font-size:1.02rem; font-family:var(--font-mono); font-weight:900;">3. POLARIZACIÓN FACTORIAL: &lt;Ee&gt; vs [Rr] EXPLICAN EL 93.3% DEL EJE 1</h4>
+            <p style="margin:0; font-size:0.92rem; color:#CBD5E1; line-height:1.55;">
+              Las anclas sociométricas canónicas <b>&lt;Ee&gt; (49.2%)</b> y <b>[Rr] (44.1%)</b> suman juntas el <b>93.3% de la inercia total del Eje 1 (F₁)</b> en AFC (y 90.0% en PCA). Esto acredita que el Eje Horizontal es universalmente el <b>Eje de Polarización Afectiva Colectiva</b>, mientras que el Eje 2 (F₂) está regido por la asimetría y el poder vertical (<b>[Re&gt; / Ra</b> y <b>&lt;Er]</b> con más del 37% de inercia).
+            </p>
+          </div>
+        </div>
+      </div>
 
         </div>
       </div>
@@ -4070,7 +4946,7 @@
       </div>
 
       <!-- NOTA PEDAGÓGICA AL FINAL -->
-      <div class="pedagogic-note-strip" id="p5d-pedagogic-note" style="font-size:1.02rem; line-height:1.55; padding:10px 18px; margin-top:12px;"><strong>💡 Nota:</strong> En el plano factorial de los <b>Ejes 1-2 (F₁ × F₂)</b>, lo que un sujeto <b>RECIBE (RC, círculos)</b> es estructuralmente mucho más significativo que lo que <b>DA (DA, cuadrados)</b>: el estatus recibido refleja el consenso colectivo indiscutible, mientras que la emisión solo expresa el deseo individual. El vector <b>DA → RC</b> delata la asimetría y el sobreesfuerzo diádico. Ambos planos son aparentemente similares pero matemáticamente distintos: <b>AFC (χ²)</b> dilata los perfiles periféricos hacia las figuras contextuales Q81 (&lt;Ee&gt;, [Rr], &lt;Er], [Re&gt;), mientras que <b>PCA (W)</b> agrupa la masa gravitatoria real en los núcleos de atracción.</div>
+      <div class="pedagogic-note-strip" id="p5d-pedagogic-note" style="font-size:1.02rem; line-height:1.55; padding:10px 18px; margin-top:12px;"><strong>💡 Nota:</strong> En el plano factorial de los <b>Ejes 1-2 (F₁ × F₂)</b>, lo que un sujeto <b>RECIBE (RC, círculos diana)</b> es estructuralmente mucho más significativo que lo que <b>DA (DA, números emisores)</b>: el estatus recibido refleja el consenso colectivo indiscutible, mientras que la emisión solo expresa el deseo individual. El vector <b>DA → RC</b> delata la asimetría y el sobreesfuerzo diádico. Ambos planos son aparentemente similares pero matemáticamente distintos: <b>AFC (χ²)</b> dilata los perfiles periféricos hacia las figuras contextuales Q81 (&lt;Ee&gt;, [Rr], &lt;Er], [Re&gt;), mientras que <b>PCA (W)</b> agrupa la masa gravitatoria real en los núcleos de atracción.</div>
 
     </div>
   </section>
@@ -4839,6 +5715,31 @@
         { id:'¿?', tag:'¡¿?!', desc:'Neutralidad', x:-0.18, y:0.18, color:'#E2E8F0', align:'center', offX:0, offY:0, rayColor:'rgba(226,232,240,0.20)' }
       ]
     };
+
+    /* 2d-bis. LA PRUEBA DEL ALGODÓN: TABLA AUXILIAR EN SEGUNDO PLANO (NORMA 17) */
+    function toggleAlgodonPanel() {
+      const panel = document.getElementById('panel-prueba-algodon');
+      const btn = document.getElementById('btn-toggle-algodon');
+      if (!panel) return;
+      const isHidden = (panel.style.display === 'none' || panel.style.display === '');
+      panel.style.display = isHidden ? 'block' : 'none';
+      if (btn) {
+        if (isHidden) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+      if (isHidden) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function switchAlgodonTab(tabId) {
+      document.querySelectorAll('.algodon-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.algodon-tab-pane').forEach(p => p.style.display = 'none');
+      const activeBtn = document.getElementById(`btn-alg-tab-${tabId}`);
+      const activePane = document.getElementById(`alg-pane-${tabId}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      if (activePane) activePane.style.display = 'block';
+    }
 
     function setDualPerspective(persp) {
       currentPerspective = persp;
