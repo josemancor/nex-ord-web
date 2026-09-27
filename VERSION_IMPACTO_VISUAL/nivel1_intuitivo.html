@@ -14698,7 +14698,7 @@
 
               <!-- MODO SELECTOR -->
               <div style="display:flex; align-items:center; gap:6px;">
-                <span style="font-family:'Roboto Mono', monospace; font-size:0.82rem; color:#94A3B8; font-weight:700; text-transform:uppercase;">Matriz A(i,j):</span>
+                <span style="font-family:'Roboto Mono', monospace; font-size:0.82rem; color:#94A3B8; font-weight:700; text-transform:uppercase;">Matriz B(i, j):</span>
                 <button class="btn-workbench-toggle ${currentMode === 'ordinal' ? 'active-cyan' : ''}" id="${containerId}-btn-mode-ord" title="Ver puestos ordinales 1 a N">
                   Rangos (1..N)
                 </button>
@@ -14727,7 +14727,7 @@
             <!-- HUD RIBBON DE CORRELACIÓN BIUNÍVOCA EN TIEMPO REAL -->
             <div id="${containerId}-hud-ribbon" style="width:100%; min-height:42px; background:rgba(11,19,43,0.95); border:1.5px solid rgba(56,189,248,0.4); border-radius:8px; padding:5px 14px; display:flex; justify-content:center; align-items:center; gap:12px; box-sizing:border-box; box-shadow:0 0 14px rgba(56,189,248,0.12); transition:all 0.15s ease;">
               <span style="color:#CBD5E1; font-family:'Roboto Mono', monospace; font-size:0.86rem;">
-                💡 <strong>Correlación Biunívoca en Directo:</strong> Pasa el ratón o pulsa sobre cualquier celda de <strong>BREVE</strong> o de la <strong>Matriz A(i, j)</strong> para iluminar su par correlativo.
+                💡 <strong>Correlación Biunívoca en Directo:</strong> Pasa el ratón o pulsa sobre cualquier celda de la matriz <strong>A(i, orden) BREVE</strong> o de la matriz <strong>B(i, j) DISTRIBUCIÓN</strong> para iluminar su par correlativo.
               </span>
             </div>
 
@@ -14740,12 +14740,12 @@
                   <thead>
                     <tr>
                       <th colspan="${n + 1}" style="background:#EAA882; color:#3B1808; font-weight:900; font-size:clamp(0.92rem, 1.05vw, 1.05rem); padding:7px 4px; border-bottom:2px solid #000000; letter-spacing:0.5px;">
-                        BREVE (Rankings 1º..Nº)
+                        MATRIZ A(i, orden) · BREVE (Rankings 1º..Nº)
                       </th>
                     </tr>
                     <tr>
                       <th style="background:#F1F5F9; color:#0F172A; font-weight:900; width:46px; border-right:1.5px solid #000000; font-size:0.84rem;">
-                        Emisor
+                        i (Emisor)
                       </th>
                       ${Array.from({length: n}, (_, k) => `
                         <th id="${containerId}-breve-col-${k + 1}" style="background:#FFE899; color:#000000; font-weight:900; width:calc((100% - 46px) / ${n}); font-size:0.84rem;">
@@ -14780,7 +14780,7 @@
                   </tbody>
                 </table>
                 <div style="font-size:0.76rem; color:#94A3B8; font-family:'Roboto Mono'; margin-top:4px; text-align:center;">
-                  Protocolo BREVE: cada fila expresa las preferencias de <strong>i</strong> ordenadas del 1º al ${n}º.
+                  Matriz A(i, orden): cada fila expresa las preferencias del emisor <strong>i</strong> ordenadas del 1º al ${n}º.
                 </div>
               </div>
 
@@ -14790,7 +14790,7 @@
                   <thead>
                     <tr>
                       <th colspan="${n + 1}" style="background:#38BDF8; color:#0B132B; font-weight:900; font-size:clamp(0.92rem, 1.05vw, 1.05rem); padding:7px 4px; border-bottom:2px solid #000000; letter-spacing:0.5px;">
-                        MATRIZ A(i, j) · ${currentMode === 'smib' ? 'PREFIGURACIÓN SMIb' : 'DISTRIBUCIÓN ORDINAL'}
+                        MATRIZ B(i, j) · ${currentMode === 'smib' ? 'PREFIGURACIÓN SMIb' : 'DISTRIBUCIÓN DEL ORDEN'}
                       </th>
                     </tr>
                     <tr>
@@ -14842,7 +14842,7 @@
                   </tbody>
                 </table>
                 <div style="font-size:0.76rem; color:#94A3B8; font-family:'Roboto Mono'; margin-top:4px; text-align:center;">
-                  Matriz A(i, j): el orden emitido por <strong>i</strong> distribuido en las columnas de cada receptor <strong>j</strong>.
+                  Matriz B(i, j): el orden emitido por <strong>i</strong> distribuido en las columnas de cada receptor <strong>j</strong>.
                 </div>
               </div>
 
@@ -14897,11 +14897,11 @@
               </span>
               <span style="color:#94A3B8; margin:0 2px;">|</span>
               <span style="color:#FFFFFF; font-weight:700;">
-                BREVE Columna <strong>${rank}º</strong> = <strong>${receptor}</strong>
+                Matriz A(${emisor}, ${rank}º) = <strong>${receptor}</strong>
               </span>
               <span style="color:#38BDF8; font-weight:900;">⟷</span>
               <span style="color:#FFFFFF; font-weight:700;">
-                Matriz A(${emisor}, ${receptor}) = <strong>${currentMode === 'smib' ? smib.symbol + ' (' + smib.desc + ')' : rank}</strong>
+                Matriz B(${emisor}, ${receptor}) = <strong>${currentMode === 'smib' ? smib.symbol + ' (' + smib.desc + ')' : rank}</strong>
               </span>
               ${isLocked ? `
                 <span style="background:rgba(255,230,0,0.2); border:1px solid #FFE600; color:#FFE600; padding:1px 6px; border-radius:4px; font-size:0.75rem; font-weight:800;">
@@ -14927,7 +14927,7 @@
           ribbon.style.boxShadow = '0 0 14px rgba(56,189,248,0.12)';
           ribbon.innerHTML = `
             <span style="color:#CBD5E1; font-family:'Roboto Mono', monospace; font-size:0.86rem;">
-              💡 <strong>Correlación Biunívoca en Directo:</strong> Pasa el ratón o pulsa sobre cualquier celda de <strong>BREVE</strong> o de la <strong>Matriz A(i, j)</strong> para iluminar su par correlativo.
+              💡 <strong>Correlación Biunívoca en Directo:</strong> Pasa el ratón o pulsa sobre cualquier celda de la matriz <strong>A(i, orden) BREVE</strong> o de la matriz <strong>B(i, j) DISTRIBUCIÓN</strong> para iluminar su par correlativo.
             </span>
           `;
         }
@@ -15017,12 +15017,12 @@
       inner.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-shrink:0;">
           <h3 class="modal-h3" style="margin:0; font-size:1.35rem; color:#FFFFFF; font-weight:900; letter-spacing:0.4px;">
-            📋 PROTOCOLO OFICIAL BREVE &amp; MATRIZ DISTRIBUIDA A(i, j)
+            📋 MATRIZ A(i, orden) BREVE &amp; MATRIZ B(i, j) DISTRIBUCIÓN DEL ORDEN
           </h3>
           <button class="flow-nav-btn" style="border-color:var(--neon-green); color:var(--neon-green); padding:4px 14px; font-size:0.85rem;" onclick="closeModal()">✕ Cerrar [ESC]</button>
         </div>
         <div class="modal-sub" style="margin-bottom:6px; font-size:0.88rem; color:#94A3B8; flex-shrink:0;">
-          Mesa Interactiva de Correlación Biunívoca · Registros Ordinales Oficiales en Excel y Prefiguración SMIb
+          Mesa Interactiva de Correlación Biunívoca · Dos Matrices Complementarias y Prefiguración SMIb
         </div>
         <div style="width:100%; height:2px; background:linear-gradient(90deg, rgba(56,189,248,0.75) 0%, rgba(0,255,135,0.75) 35%, rgba(56,189,248,0.45) 75%, transparent 100%); margin:4px 0 8px 0; border-radius:2px; flex-shrink:0;"></div>
         <div id="modal-breve-workbench-container" style="width:100%; overflow-y:auto; flex:1 1 auto; padding:4px 0;"></div>
@@ -16506,7 +16506,7 @@
       "title": "1b.2 BREVE / Una Sola Pregunta",
       "sub": "Simplificación Metodológica Radical · Una Única Pregunta Ordinal para Todo el Colectivo",
       "visual": "\n          <div style=\"width:100%; max-width:1540px; margin:0 auto; display:flex; flex-direction:column; flex:1 1 0; min-height:0; height:100%; justify-content:space-between; gap:clamp(4px, 0.8vh, 8px);\">\n            <!-- LISTA DEL GRUPO -->\n            <div style=\"display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin:0 auto; font-family:'Roboto Mono', monospace; flex-shrink:0;\">\n              <span style=\"color:#38BDF8; font-size:clamp(0.88rem, 1.0vw, 1.05rem); font-weight:900; text-transform:uppercase; letter-spacing:1px;\">Lista del grupo:</span>\n              <div style=\"display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap;\">\n                <span style=\"background:rgba(56,189,248,0.2); border:1.8px solid #38BDF8; color:#38BDF8; padding:4px 12px; border-radius:7px; font-weight:900; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">1A (Tú)</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">2A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">3A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">4A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">5A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">6A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">7A</span>\n                <span style=\"background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.25); color:#E2E8F0; padding:4px 12px; border-radius:7px; font-weight:800; font-size:clamp(0.86rem, 0.95vw, 1.0rem);\">8A</span>\n              </div>\n            </div>\n            <div style=\"width:100%; border-bottom:1px solid rgba(255,255,255,0.12); margin:0 auto; flex-shrink:0;\"></div>\n\n            <!-- CRITERIO DE ORDENACIÓN CENTRADO Y DESTACADO -->\n            <div style=\"text-align:center; margin:0 auto; width:100%; padding:clamp(6px, 0.9vh, 10px) 16px; background:rgba(255, 230, 0, 0.05); border:1.5px solid rgba(255, 230, 0, 0.4); border-radius:10px; box-shadow:0 0 16px rgba(255, 230, 0, 0.08); box-sizing:border-box; flex-shrink:0;\">\n              <span style=\"font-family:'Roboto Mono', monospace; font-weight:900; color:#FFE600; letter-spacing:1px; font-size:clamp(0.92rem, 1.05vw, 1.12rem);\">CRITERIO DE ORDENACIÓN:</span>\n              <span style=\"font-style:italic; color:#F8FAFC; font-size:clamp(0.98rem, 1.15vw, 1.25rem); font-weight:700; margin-left:10px;\">\"Ordena, de mayor a menor preferencia para colaborar, a los miembros del colectivo, incluso tú (1º, 2º, 3º...)\"</span>\n            </div>\n\n            <!-- MESA INTERACTIVA DUAL: TABLA OFICIAL BREVE & MATRIZ A(i, j) -->\n            <div id=\"pantalla-c-breve-workbench-container\" style=\"width:100%; flex:1 1 0; min-height:0; display:flex; flex-direction:column; justify-content:center; align-items:center;\"></div>\n          </div>\n                ",
-      "note": "\n          <div style=\"background:rgba(11,19,43,0.92); border:1.5px solid rgba(0,255,135,0.45); border-radius:10px; padding:7px 16px; font-size:0.88rem; color:#CBD5E1; text-align:center; max-width:1540px; margin:0 auto; box-sizing:border-box;\">\n            <strong style=\"color:#00FF87; font-weight:900;\">💡 Clave Metodológica BREVE:</strong> Cada fila representa un sujeto <strong>emisor</strong> que ordena al colectivo. En la <strong>Matriz A(i, j)</strong>, ese orden se distribuye en las columnas de cada receptor j (el valor de la celda es el puesto recibido), prefigurando directamente la matriz canónica <strong>SMIb(i, j)</strong>.\n          </div>\n                "
+      "note": "\n          <div style=\"background:rgba(11,19,43,0.92); border:1.5px solid rgba(0,255,135,0.45); border-radius:10px; padding:7px 16px; font-size:0.88rem; color:#CBD5E1; text-align:center; max-width:1540px; margin:0 auto; box-sizing:border-box;\">\n            <strong style=\"color:#00FF87; font-weight:900;\">💡 Clave Metodológica (Dos Matrices Complementarias):</strong> En la <strong>Matriz A(i, orden) BREVE</strong>, cada fila contiene las preferencias del emisor i ordenadas del 1º al 8º (el valor de la celda es el receptor elegido). En la <strong>Matriz B(i, j) DISTRIBUCIÓN DEL ORDEN</strong>, ese orden se distribuye en las columnas de cada receptor j (el valor es el puesto asignado), prefigurando directamente la matriz canónica <strong>SMIb(i, j)</strong>.\n          </div>\n                "
     },
     "tetragrama": {
       "title": "1b.3 El TETRAGRAMA y la TABLA Q81(9, 9)",
