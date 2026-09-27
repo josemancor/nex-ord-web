@@ -40,6 +40,14 @@ Aportaciones sugeridas por Antigravity para reforzar la medición técnica del "
 *   **Pentland, A. (2014).** *Social Physics: How Good Ideas Spread—The Lessons from a New Science.* Penguin Press. (Fundamento de la "Física de lo Social" computable).
 *   **Watts, D. J., & Strogatz, S. H. (1998).** *Collective dynamics of ‘small-world’ networks.* Nature, 393(6684), 440-442. (Base para la topografía relacional y los 'conglomerados').
 
-## 4. Documentación Técnica NEXORD (Documentos Internos)
+## 4. Modelado Estadístico de Redes Ordinales, Grafos Firmados y Equilibrio Estructural (2017–2026)
+Contribuciones metodológicas y matemáticas que fundamentan el tratamiento de rankings relacionales y redes con valencia afectiva contrapuesta.
+
+*   **Aref, S., & Wilson, M. C. (2021).** *The frustration index is a key measure for analysing signed networks.* Journal of Complex Networks, 7(2), cnz006. https://doi.org/10.1093/comnet/cnz006 (Formulación matemática rigurosa del cálculo del índice de frustración para cuantificar la tensión estructural en redes con lazos positivos y negativos).
+*   **Cucuringu, M., Mantzaris, A. V., & Roberts, J. (2023).** *The Bradley-Terry stochastic block model for directed ranking networks.* Journal of Complex Networks, 11(4), cnad025. https://doi.org/10.1093/comnet/cnad025 (Modelización de comunidades y jerarquías relacionales en grafos dirigidos a partir de comparaciones de preferencias ordinales).
+*   **Diaz-Diaz, F., & Estrada, E. (2025).** *Signed graphs in data sciences via communicability geometry.* Information Sciences, 680, 121110. https://doi.org/10.1016/j.ins.2024.121110 (Desarrollo de la geometría de comunicabilidad sobre grafos firmados, aportando soporte algebraico a los operadores de difusión y afinidad en redes con atracción y rechazo).
+*   **Krivitsky, P. N., & Butts, C. T. (2017).** *Exponential-family random graph models for rank-order relational data.* Sociological Methodology, 47(1), 68–112. https://doi.org/10.1111/socm.12038 (Fundamentación de modelos de la familia exponencial para datos relacionales de orden de rango, demostrando la necesidad de preservar la jerarquía ordinal frente a cortes dicotómicos).
+
+## 5. Documentación Técnica NEXORD (Documentos Internos)
 *   **Proyecto NEXORD. (2026).** *Informe de Sociometría Ordinal Académico: Hacia una Sociometría Computacional de Tercera Generación.* [Documento interno de investigación].
 *   **Moreno, J. L., & Proyecto NEXORD. (2025).** *Evolución de la Matriz de Distancias Ordinales y el Índice de Saturación del Vacío (ISV).* Informe de Microcirugía Relacional.

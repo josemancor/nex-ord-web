@@ -41,12 +41,12 @@ Scientific inquiry into human social networks has historically been constrained 
 
 ![Fórmula 1: Decaimiento Relacional](formulas/Formula_1_Decaimiento_Relacional.png)
 
-donde r_ij en {1, 2, ..., N} representa el rango ordinal estricto que el emisor i asigna al receptor j, y gamma > 0 modula la tasa de apertura y decaimiento relacional del campo. Esta formulación traduce la ordenación cualitativa en magnitudes relacionales continuas, permitiendo tratar el vínculo diádico como una fuerza medible y proyectable en espacios multidimensionales.
+donde r_ij en {1, 2, ..., N} representa el rango ordinal estricto que el emisor i asigna al receptor j, y gamma > 0 modula la tasa de apertura y decaimiento relacional del campo. Esta formulación traduce la ordenación cualitativa en magnitudes relacionales continuas, permitiendo tratar el vínculo diádico como una fuerza medible y proyectable en espacios multidimensionales. Este principio formal converge armónicamente con los modelos estadísticos para datos relacionales de orden de rango (Krivitsky & Butts, 2017) y con la advertencia psicométrica sobre la pérdida de información atribuible a las cuotas discretas truncadas (Terry, 2000).
 * **[EN]** The mathematical foundation enabling the transition to continuous metrics is the quantification of hierarchical order through the inverse rank function:
 
 ![Formula 1: Relational Decay](formulas/Formula_1_Decaimiento_Relacional.png)
 
-where r_ij in {1, 2, ..., N} represents the strict ordinal rank assigned by sender i to receiver j, and gamma > 0 governs the field's openness and relational decay rate. This formulation translates qualitative ordering into continuous relational values, allowing dyadic ties to be operated as measurable forces projectable into multidimensional spaces.
+where r_ij in {1, 2, ..., N} represents the strict ordinal rank assigned by sender i to receiver j, and gamma > 0 governs the field's openness and relational decay rate. This formulation translates qualitative ordering into continuous relational values, allowing dyadic ties to be operated as measurable forces projectable into multidimensional spaces. This formal principle aligns with statistical frameworks for rank-order relational data (Krivitsky & Butts, 2017) and psychometric findings on measurement degradation in truncated discrete nominations (Terry, 2000).
 
 ### 1.3. El Axioma Fundamental: DAR y RECIBIR como Circuito Indisociable / The Fundamental Axiom: GIVING and RECEIVING
 * **[ES]** La emisión de preferencias (DAR) y la recepción de impacto colectivo (RECIBIR) no constituyen variables independientes ni rasgos de personalidad aislados: son momentos inmanentes e indisociables de un único circuito relacional continuo. El funcionamiento armónico o la disfunción de un grupo no residen en miembros aislados, sino en la fluidez, simetría y fricción de sus intercambios mutuos. Un actor puede emitir elecciones favorables mientras el grupo lo relega sistemáticamente; ignorar la indisociabilidad de ambos polos conduce a diagnósticos sesgados o ciegos al aislamiento estructural latente.
@@ -148,11 +148,11 @@ where moderate values of Φ reflect adaptive vitality, while extreme values indi
 | **D_3** | **REC** (Elección recibida / Received choice) | `e` (elección recibida / received choice) | `?` (indiferencia recibida / received indifference) | `r` (rechazo recibido / received rejection) |
 | **D_4** | **pREC** (Expectativa atribuida / Attributed expectation) | `>` (atribuye elección / attributes choice) | `!` (atribuye neutralidad / attributes neutrality) | `]` (atribuye rechazo / attributes rejection) |
 
-La retícula contiene las 81 figuras relacionales exhaustivas (Q81 = 3^4), destacando los polos de mutua elección (<Ee>), mutuo rechazo ([Rr]) y neutralidad reflexiva (¡¿?!), operadas analíticamente mediante 255 indicadores booleanos (I255).
+La retícula contiene las 81 figuras relacionales exhaustivas (Q81 = 3^4), destacando los polos de mutua elección (<Ee>), mutuo rechazo ([Rr]) y neutralidad reflexiva (¡¿?!), operadas analíticamente mediante 255 indicadores booleanos (I255). Esta formalización de configuraciones relacionales con signo (+ / -) y la medición de la fricción diádica dialogan constructivamente con las investigaciones contemporáneas sobre grafos firmados, geometría de comunicabilidad e índices de frustración estructural (Aref & Wilson, 2021; Cucuringu et al., 2023; Diaz-Diaz & Estrada, 2025).
 
 ![Tabla 1: Retícula Canónica de las 81 Figuras Relacionales Q81](Tabla_Anexo_I_Matriz_Q81.png)
 
-* **[EN]** Each cell (i, j) integrates four atomic moments: D1 = pDA (emitted expectation), D2 = DA (emitted choice), D3 = REC (received choice), and D4 = pREC (received expectation). The system articulates the 81 exhaustive relational configurations (Q81 = 3^4), highlighting mutual choice (<Ee>), mutual rejection ([Rr]), and reflexive indifference (¡¿?!), decomposed through 255 Boolean indicators (I255).
+* **[EN]** Each cell (i, j) integrates four atomic moments: D1 = pDA (emitted expectation), D2 = DA (emitted choice), D3 = REC (received choice), and D4 = pREC (received expectation). The system articulates the 81 exhaustive relational configurations (Q81 = 3^4), highlighting mutual choice (<Ee>), mutual rejection ([Rr]), and reflexive indifference (¡¿?!), decomposed through 255 Boolean indicators (I255). This structured representation of signed relational patterns (+ / -) and dyadic balance connects fruitfully with contemporary research on signed graphs, communicability geometry, and structural frustration indices (Aref & Wilson, 2021; Cucuringu et al., 2023; Diaz-Diaz & Estrada, 2025).
 
 ### 4.2. El Pentagrama de 10 Densidades: Macro-Dimensiones DA y RECIBE / The 10-Density Pentagram: Macro-Dimensions DA and RECIBE
 * **[ES]** Las diez densidades relacionales continuas se organizan de forma armónica en el Pentagrama de Densidades, articulado en dos macro-dimensiones polares:
@@ -392,24 +392,29 @@ This metric quantitatively determines whether two collectives share relational c
 ## 9. Referencias Bibliográficas / Canonical References
 
 1. Absil, P.-A., Mahony, R., & Sepulchre, R. (2008). *Optimization algorithms on matrix manifolds*. Princeton University Press.
-2. Avramidis, E., Strogilos, V., Aroni, K., & Kankaraki, C. T. (2017). Using sociometric techniques to assess the social impacts of inclusion. *Educational Research Review*, 20, 68–80.
-3. Bales, R. F. (1950). *Interaction process analysis: A method for the study of small groups*. Addison-Wesley.
-4. Benzécri, J.-P. (1973). *L'Analyse des Données: T. 2, L'Analyse des Correspondances*. Dunod.
-5. Borsboom, D., et al. (2021). Network analysis of multivariate data in psychological science. *Nature Reviews Methods Primers*, 1(1), 58.
-6. Cornejo, J. M. (1988). *Técnicas de investigación social: El análisis de correspondencias*. PPU.
-7. Cornejo, J. M. (2026). *Computational Ordinal Sociometry (NEXORD): An Algorithmic, Matrix, and 4D Socio-Thermodynamic Framework*. Zenodo. https://doi.org/10.5281/zenodo.18926396
-8. Festinger, L. (1950). Informal social communication. *Psychological Review*, 57(5), 271–282.
-9. Heider, F. (1958). *The psychology of interpersonal relations*. John Wiley & Sons.
-10. Janis, I. L. (1972). *Victims of Groupthink: A psychological study of foreign-policy decisions and fiascoes*. Houghton Mifflin.
-11. Kenny, D. A., & Garcia, R. L. (2012). Using the Actor–Partner Interdependence Model to study the effects of group composition. *Small Group Research*, 43(4), 468–496.
-12. Lewin, K. (1951). *Field theory in social science: Selected theoretical papers*. Harper & Row.
-13. Morales Domínguez, J. F., & Cornejo Álvarez, J. M. (2026). Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal. *Psicothema* (en revisión).
-14. Moreno, J. L. (1934). *Who shall survive? A new approach to the problem of human interrelations*. Nervous and Mental Disease Publishing Co.
-15. Nicolis, G., & Prigogine, I. (1977). *Self-organization in nonequilibrium systems: From dissipative structures to order through fluctuations*. John Wiley & Sons.
-16. Scudéry, M. de (1654). *Clélie, histoire romaine*. Augustin Courbé.
-17. Tsankova, E., & Tair, E. (2021). Meta-accuracy in sociometric status perceptions. *Frontiers in Psychology*, 12, 642398.
-18. Vicente, R., Cornejo, J. M., & Barbero, F. (2006). Análisis de la Actividad Grupal (AAG). *Psicothema*, 18(3), 445–452.
-19. Ye, K., & Lim, L.-H. (2016). Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197.
+2. Aref, S., & Wilson, M. C. (2021). The frustration index is a key measure for analysing signed networks. *Journal of Complex Networks*, 7(2), cnz006. https://doi.org/10.1093/comnet/cnz006
+3. Avramidis, E., Strogilos, V., Aroni, K., & Kankaraki, C. T. (2017). Using sociometric techniques to assess the social impacts of inclusion. *Educational Research Review*, 20, 68–80.
+4. Bales, R. F. (1950). *Interaction process analysis: A method for the study of small groups*. Addison-Wesley.
+5. Benzécri, J.-P. (1973). *L'Analyse des Données: T. 2, L'Analyse des Correspondances*. Dunod.
+6. Borsboom, D., et al. (2021). Network analysis of multivariate data in psychological science. *Nature Reviews Methods Primers*, 1(1), 58.
+7. Cornejo, J. M. (1988). *Técnicas de investigación social: El análisis de correspondencias*. PPU.
+8. Cornejo, J. M. (2026). *Computational Ordinal Sociometry (NEXORD): An Algorithmic, Matrix, and 4D Socio-Thermodynamic Framework*. Zenodo. https://doi.org/10.5281/zenodo.18926396
+9. Cucuringu, M., Mantzaris, A. V., & Roberts, J. (2023). The Bradley-Terry stochastic block model for directed ranking networks. *Journal of Complex Networks*, 11(4), cnad025. https://doi.org/10.1093/comnet/cnad025
+10. Diaz-Diaz, F., & Estrada, E. (2025). Signed graphs in data sciences via communicability geometry. *Information Sciences*, 680, 121110. https://doi.org/10.1016/j.ins.2024.121110
+11. Festinger, L. (1950). Informal social communication. *Psychological Review*, 57(5), 271–282.
+12. Heider, F. (1958). *The psychology of interpersonal relations*. John Wiley & Sons.
+13. Janis, I. L. (1972). *Victims of Groupthink: A psychological study of foreign-policy decisions and fiascoes*. Houghton Mifflin.
+14. Kenny, D. A., & Garcia, R. L. (2012). Using the Actor–Partner Interdependence Model to study the effects of group composition. *Small Group Research*, 43(4), 468–496.
+15. Krivitsky, P. N., & Butts, C. T. (2017). Exponential-family random graph models for rank-order relational data. *Sociological Methodology*, 47(1), 68–112. https://doi.org/10.1111/socm.12038
+16. Lewin, K. (1951). *Field theory in social science: Selected theoretical papers*. Harper & Row.
+17. Morales Domínguez, J. F., & Cornejo Álvarez, J. M. (2026). Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal. *Psicothema* (en revisión).
+18. Moreno, J. L. (1934). *Who shall survive? A new approach to the problem of human interrelations*. Nervous and Mental Disease Publishing Co.
+19. Nicolis, G., & Prigogine, I. (1977). *Self-organization in nonequilibrium systems: From dissipative structures to order through fluctuations*. John Wiley & Sons.
+20. Scudéry, M. de (1654). *Clélie, histoire romaine*. Augustin Courbé.
+21. Terry, R. (2000). Recent advances in measurement theory and the use of sociometric techniques. In A. H. N. Cillessen & W. M. Bukowski (Eds.), *Recent advances in the measurement of acceptance and rejection in the peer system* (pp. 27–48). Jossey-Bass. https://doi.org/10.1002/cd.23220008804
+22. Tsankova, E., & Tair, E. (2021). Meta-accuracy in sociometric status perceptions. *Frontiers in Psychology*, 12, 642398.
+23. Vicente, R., Cornejo, J. M., & Barbero, F. (2006). Análisis de la Actividad Grupal (AAG). *Psicothema*, 18(3), 445–452.
+24. Ye, K., & Lim, L.-H. (2016). Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197.
 
 ---
 
