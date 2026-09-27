@@ -368,22 +368,77 @@ body.dial-active .active-dial-container {
 }
 .dial-quote-top {
   font-family: 'Inter', sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.90rem;
   font-style: italic;
-  color: #38BDF8;
-  text-shadow: 0 0 12px rgba(56, 189, 248, 0.35), 0 2px 8px rgba(0, 0, 0, 0.85);
+  color: #F8FAFC;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.90);
   text-align: center;
   padding: 6px 22px;
-  background: rgba(11, 19, 43, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(11, 19, 43, 0.82);
+  border: 1px solid rgba(0, 255, 135, 0.35);
   border-radius: 20px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  max-width: 860px;
+  max-width: 880px;
   width: auto;
   margin: 0 auto;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.25px;
   line-height: 1.4;
+  transition: opacity 0.35s ease-in-out, border-color 0.4s ease, box-shadow 0.4s ease;
+  cursor: default;
+}
+.quote-text {
+  color: #F1F5F9;
+  font-style: italic;
+}
+.quote-author {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.84rem;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+  white-space: nowrap;
+  transition: color 0.4s ease;
+}
+.dial-quote-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.quote-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.quote-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+.quote-dot:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: scale(1.3);
+}
+.quote-dot.active {
+  width: 20px;
+  border-radius: 4px;
+  background: var(--active-quote-color, #00FF87);
+  box-shadow: 0 0 10px var(--active-quote-color, #00FF87);
+  border-color: transparent;
+}
+.dial-subbar-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.4);
 }
 .dial-zenodo-doi {
   display: flex;
@@ -845,9 +900,18 @@ svg#dial-svg {
     gap: 4px;
   }
   .dial-quote-top {
-    font-size: 0.82rem;
+    font-size: 0.80rem;
     padding: 5px 14px;
     width: 95%;
+    line-height: 1.35;
+  }
+  .quote-author {
+    font-size: 0.76rem;
+    margin-left: 6px;
+    display: inline-block;
+  }
+  .dial-quote-subbar {
+    gap: 8px;
   }
   .zenodo-doi-link {
     font-size: 0.68rem;
@@ -1043,17 +1107,26 @@ body.dial-active .seo-crawlable-footer {
          ===================================================================== -->
     <div class="active-dial-container" id="active-dial">
       
-      <!-- Cabecera Activa del Dial: Cita Tesla + DOI Zenodo Discreto -->
+      <!-- Cabecera Activa del Dial: Cita Rotatoria Tríada Epistémica (Moreno, Lewin, Tesla) + DOI Zenodo -->
       <div class="dial-header-zone">
-        <div class="dial-quote-top" id="active-dial-quote">
-          «Si deseas entender lo grupal, piensa en energía, frecuencia y resonancia tensorial.»
+        <div class="dial-quote-top" id="active-dial-quote" role="region" aria-live="polite">
+          <span class="quote-text" id="quote-text">«Bajo la superficie de lo social fluyen corrientes invisibles de atracción y rechazo.»</span>
+          <span class="quote-author" id="quote-author" style="color: #00FF87;">(J. L. Moreno, 1934)</span>
         </div>
-        <div class="dial-zenodo-doi">
-          <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" rel="noopener noreferrer" class="zenodo-doi-link" title="Registro Oficial de la Colección Científica en CERN Zenodo">
-            <span class="doi-pill">DOI</span>
-            <span class="doi-text">10.5281/zenodo.18941691</span>
-            <span class="doi-icon">↗</span>
-          </a>
+        <div class="dial-quote-subbar">
+          <div class="quote-dots" id="quote-dots" aria-label="Selector de citas epistemológicas">
+            <button class="quote-dot active" onclick="setQuoteIndex(0)" title="1. Jacob Levy Moreno (1934): Corrientes de atracción y rechazo" aria-label="Cita Moreno"></button>
+            <button class="quote-dot" onclick="setQuoteIndex(1)" title="2. Kurt Lewin (1951): Campo dinámico de fuerzas" aria-label="Cita Lewin"></button>
+            <button class="quote-dot" onclick="setQuoteIndex(2)" title="3. JMC, Homenaje a N. Tesla: Energía, frecuencia y resonancia tensorial" aria-label="Cita Tesla"></button>
+          </div>
+          <span class="dial-subbar-sep"></span>
+          <div class="dial-zenodo-doi">
+            <a href="https://doi.org/10.5281/zenodo.18941691" target="_blank" rel="noopener noreferrer" class="zenodo-doi-link" title="Registro Oficial de la Colección Científica en CERN Zenodo">
+              <span class="doi-pill">DOI</span>
+              <span class="doi-text">10.5281/zenodo.18941691</span>
+              <span class="doi-icon">↗</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -1146,6 +1219,11 @@ const I18N = {
     meta_desc: 'NEXORD | Plataforma Científica de Sociometría Ordinal y Diagnóstico Socio-Termodinámico. Modelado matemático de redes humanas mediante matrices SMIb y variedades de Grassmann.',
     subtitle: 'Hacia una Física de lo Grupal',
     quote: '«Si deseas entender lo grupal, piensa en energía, frecuencia y resonancia tensorial.»',
+    quotes: [
+      { text: '«Bajo la superficie de lo social fluyen corrientes invisibles de atracción y rechazo.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«El grupo no es la suma de sus partes, sino un campo dinámico de fuerzas interdependientes.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«Si deseas entender lo grupal, piensa en energía, frecuencia y resonancia tensorial.»', author: '(JMC, Homenaje a N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'CLIC EN EL NÚCLEO PARA EXPLORAR EL DIAL (3·6·9) ↗',
     btn_access: 'Acceder a',
     titles: ['FUNDAMENTOS', 'INTUITIVO', 'BÁSICO', 'ESQUEMA', 'APLICACIONES', 'MATEMÁTICO', 'INFORMES', 'DOC', 'RECURSOS'],
@@ -1162,6 +1240,11 @@ const I18N = {
     meta_desc: 'NEXORD | Computational Ordinal Sociometry & Socio-Thermodynamic Diagnosis Platform. Mathematical modeling of human networks via SMIb matrices and Grassmann manifolds.',
     subtitle: 'Toward a Physics of Groups',
     quote: '«If you want to understand groups, think of energy, frequency and tensor resonance.»',
+    quotes: [
+      { text: '«Beneath the surface of social life flow invisible currents of attraction and repulsion.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«A group is not the sum of its parts, but a dynamic field of interdependent forces.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«If you want to understand groups, think of energy, frequency and tensor resonance.»', author: '(JMC, Homage to N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'CLICK ON THE CORE TO EXPLORE THE DIAL (3·6·9) ↗',
     btn_access: 'Access',
     titles: ['FOUNDATIONS', 'INTUITIVE', 'BASIC', 'SCHEMA', 'APPLICATIONS', 'MATHEMATICS', 'REPORTS', 'DOCS', 'RESOURCES'],
@@ -1178,6 +1261,11 @@ const I18N = {
     meta_desc: 'NEXORD | Plateforme Scientifique de Sociométrie Ordinale et Diagnostic Socio-Thermodynamique. Modélisation mathématique de réseaux humains par matrices SMIb et variétés de Grassmann.',
     subtitle: 'Vers une Physique du Groupe',
     quote: '«Si vous voulez comprendre le groupe, pensez en termes d’énergie, de fréquence et de résonance tensorielle.»',
+    quotes: [
+      { text: '«Sous la surface du social circulent des courants invisibles d\'attraction et de rejet.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«Le grupo n\'est pas la somme de ses parties, mais un champ dynamique de forces interdépendantes.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«Si vous voulez comprendre le groupe, pensez en termes d’énergie, de fréquence et de résonance tensorielle.»', author: '(JMC, Hommage à N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'CLIQUEZ SUR LE NOYAU POUR EXPLORER LE CADRAN (3·6·9) ↗',
     btn_access: 'Accéder à',
     titles: ['FONDEMENTS', 'INTUITIF', 'BASE', 'SCHÉMA', 'APPLICATIONS', 'MATHÉMATIQUE', 'RAPPORTS', 'DOCS', 'RESSOURCES'],
@@ -1191,9 +1279,14 @@ const I18N = {
   it: {
     flag: '🇮🇹', code: 'IT',
     page_title: 'NEXORD | La Fisica del Gruppo • Quadrante Orbitale Tesla 3-6-9',
-    meta_desc: 'NEXORD | Piattaforma Scientifica di Sociometria Ordinale e Diagnosi Socio-Termodinamica. Modellazione matematica di reti umane tramite matrici SMIb e varietà di Grassmann.',
+    meta_desc: 'NEXORD | Piattaforma Scientifica di Sociometria Ordinale e Diagnosi Socio-Termodinamica. Modellazione matematica di reti umane tramite matrici SMIb e variedad di Grassmann.',
     subtitle: 'Verso una Fisica del Gruppo',
     quote: '«Se vuoi comprendere il gruppo, pensa in termini di energia, frequenza e risonanza tensoriale.»',
+    quotes: [
+      { text: '«Sotto la superficie del sociale scorrono correnti invisibili di attrazione e rifiuto.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«Il gruppo non è la somma delle sue parti, ma un campo dinamico di forze interdipendenti.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«Se vuoi comprendere il gruppo, pensa in termini di energia, frequenza e risonanza tensoriale.»', author: '(JMC, Omaggio a N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'CLICCA SUL NUCLEO PER ESPLORARE IL QUADRANTE (3·6·9) ↗',
     btn_access: 'Accedi a',
     titles: ['FONDAMENTI', 'INTUITIVO', 'BASE', 'SCHEMA', 'APPLICAZIONI', 'MATEMATICA', 'REPORT', 'DOC', 'RISORSE'],
@@ -1210,6 +1303,11 @@ const I18N = {
     meta_desc: 'NEXORD | Plataforma Científica de Sociometria Ordinal e Diagnóstico Sócio-Termodinâmico. Modelação matemática de redes humanas através de matrizes SMIb e variedades de Grassmann.',
     subtitle: 'Rumo a uma Física do Grupo',
     quote: '«Se você quer entender o grupo, pense em energia, frequência e ressonância tensorial.»',
+    quotes: [
+      { text: '«Sob a superfície do social fluem correntes invisíveis de atração e rejeição.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«O grupo não é a soma de suas partes, mas um campo dinâmico de forças interdependentes.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«Se você quer entender o grupo, pense em energia, frequência e ressonância tensorial.»', author: '(JMC, Homenagem a N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'CLIQUE NO NÚCLEO PARA EXPLORAR O MOSTRADOR (3·6·9) ↗',
     btn_access: 'Aceder a',
     titles: ['FUNDAMENTOS', 'INTUITIVO', 'BÁSICO', 'ESQUEMA', 'APLICAÇÕES', 'MATEMÁTICA', 'RELATÓRIOS', 'DOC', 'RECURSOS'],
@@ -1217,7 +1315,7 @@ const I18N = {
     core_val: 'DAR+RECEBER',
     core_hint: '✕ FECHAR',
     core_title: 'Clique para fechar o mostrador e voltar ao repouso',
-    tooltip_explore: 'Clique em qualquer lugar para explorar o mostrador',
+    tooltip_explore: 'Clique em cualquier lugar para explorar o mostrador',
     concepts_header: 'Conceitos-Chave & Acessos Diretos'
   },
   de: {
@@ -1226,6 +1324,11 @@ const I18N = {
     meta_desc: 'NEXORD | Wissenschaftliche Plattform für ordinale Soziometrie und sozio-thermodynamische Diagnostik. Mathematische Modellierung menschlicher Netzwerke über SMIb-Matrizen und Grassmann-Mannigfaltigkeiten.',
     subtitle: 'Hin zu einer Gruppenphysik',
     quote: '«Wenn Sie Gruppen verstehen wollen, denken Sie an Energie, Frequenz und Tensor-Resonanz.»',
+    quotes: [
+      { text: '«Unter der Oberfläche des Sozialen fließen unsichtbare Ströme von Anziehung und Ablehnung.»', author: '(J. L. Moreno, 1934)', color: '#00FF87' },
+      { text: '«Die Gruppe ist nicht die Summe ihrer Teile, sondern ein dynamisches Feld interdependenter Kräfte.»', author: '(Kurt Lewin, 1951)', color: '#38BDF8' },
+      { text: '«Wenn Sie Gruppen verstehen wollen, denken Sie an Energie, Frequenz und Tensor-Resonanz.»', author: '(JMC, Hommage an N. Tesla)', color: '#FFE600' }
+    ],
     btn_explore: 'AUF DEN KERN KLICKEN, UM DAS ZIFFERBLATT (3·6·9) ZU ERKUNDEN ↗',
     btn_access: 'Zugang zu',
     titles: ['GRUNDLAGEN', 'INTUITIV', 'BASIS', 'SCHEMA', 'ANWENDUNGEN', 'MATHEMATIK', 'BERICHTE', 'DOKU', 'RESSOURCEN'],
@@ -1242,6 +1345,11 @@ const I18N = {
     meta_desc: 'NEXORD | Научная платформа порядковой социометрии и социо-термодинамической диагностики. Моделирование сетей через матрицы SMIb и многообразия Грассмана.',
     subtitle: 'К физике групп',
     quote: '«Если вы хотите понять группу, думайте об энергии, частоте и тензорном резонансе.»',
+    quotes: [
+      { text: '«Под поверхностью социального текут невидимые токи притяжения и отталкивания.»', author: '(Дж. Л. Морено, 1934)', color: '#00FF87' },
+      { text: '«Группа — это не сумма её частей, а динамическое поле взаимозависимых сил.»', author: '(Курт Левин, 1951)', color: '#38BDF8' },
+      { text: '«Если вы хотите понять группу, думайте об энергии, частоте и тензорном резонансе.»', author: '(JMC, в дань уважения Н. Тесле)', color: '#FFE600' }
+    ],
     btn_explore: 'НАЖМИТЕ НА ЯДРО ДЛЯ ОБЗОРА ЦИФЕРБЛАТА (3·6·9) ↗',
     btn_access: 'Перейти в',
     titles: ['ОСНОВЫ', 'ИНТУИЦИЯ', 'БАЗИС', 'СХЕМА', 'ПРИМЕНЕНИЕ', 'МАТЕМАТИКА', 'ОТЧЕТЫ', 'ДОКУМЕНТАЦИЯ', 'РЕСУРСЫ'],
@@ -1258,6 +1366,11 @@ const I18N = {
     meta_desc: 'NEXORD | 计算序数社会计量学与社会热力学诊断科学平台。基于 SMIb 矩阵与格拉斯曼流形的人类关系网络公理化数学建模。',
     subtitle: '走向群体物理学',
     quote: '«如果你想理解群体，请从能量、频率和张量共振的角度思考。»',
+    quotes: [
+      { text: '«在社会表象之下，流淌着吸引与排斥的无形暗流。»', author: '(J. L. 莫雷诺, 1934)', color: '#00FF87' },
+      { text: '«群体不是个体的简单相加，而是相互依存力量的动态场。»', author: '(库尔特·勒温, 1951)', color: '#38BDF8' },
+      { text: '«如果你想理解群体，请从能量、频率和张量共振的角度思考。»', author: '(JMC, 致敬 N. 特斯拉)', color: '#FFE600' }
+    ],
     btn_explore: '点击核心以探索刻度盘 (3·6·9) ↗',
     btn_access: '进入',
     titles: ['基本原理', '直观', '基元', '图式', '应用', '数理', '报告', '规范', '资源'],
@@ -2003,6 +2116,94 @@ window.addEventListener("click", (e) => {
   }
 });
 
+// =============================================================================
+// ROTADOR DINÁMICO DE LA TRÍADA EPISTÉMICA (Moreno, Lewin, Tesla)
+// =============================================================================
+let currentQuoteIdx = 0;
+let quoteRotatorTimer = null;
+let isQuotePaused = false;
+
+function renderActiveQuote(idx, animated = false) {
+  const dict = I18N[currentLang] || I18N.es;
+  const quotesList = dict.quotes || (I18N.es && I18N.es.quotes) || [];
+  if (quotesList.length === 0) return;
+
+  currentQuoteIdx = ((idx % quotesList.length) + quotesList.length) % quotesList.length;
+  const q = quotesList[currentQuoteIdx];
+
+  const quoteEl = document.getElementById("active-dial-quote");
+  const textEl = document.getElementById("quote-text");
+  const authorEl = document.getElementById("quote-author");
+  const dots = document.querySelectorAll(".quote-dot");
+
+  const applyContent = () => {
+    if (textEl) textEl.textContent = q.text;
+    if (authorEl) {
+      authorEl.textContent = q.author;
+      authorEl.style.color = q.color;
+    }
+    if (quoteEl) {
+      quoteEl.style.borderColor = q.color + "55";
+      quoteEl.style.boxShadow = `0 0 16px ${q.color}22`;
+      quoteEl.style.setProperty("--active-quote-color", q.color);
+    }
+    dots.forEach((dot, dIdx) => {
+      if (dIdx === currentQuoteIdx) {
+        dot.classList.add("active");
+        dot.style.setProperty("--active-quote-color", q.color);
+      } else {
+        dot.classList.remove("active");
+        dot.style.removeProperty("--active-quote-color");
+      }
+    });
+  };
+
+  if (animated && quoteEl) {
+    quoteEl.style.opacity = "0";
+    setTimeout(() => {
+      applyContent();
+      quoteEl.style.opacity = "1";
+    }, 220);
+  } else {
+    applyContent();
+    if (quoteEl) quoteEl.style.opacity = "1";
+  }
+}
+
+function nextQuote() {
+  if (isQuotePaused) return;
+  renderActiveQuote(currentQuoteIdx + 1, true);
+}
+
+function setQuoteIndex(idx) {
+  renderActiveQuote(idx, true);
+  restartQuoteTimer();
+}
+
+function startQuoteRotator() {
+  if (quoteRotatorTimer) clearInterval(quoteRotatorTimer);
+  quoteRotatorTimer = setInterval(nextQuote, 6800);
+}
+
+function restartQuoteTimer() {
+  if (quoteRotatorTimer) clearInterval(quoteRotatorTimer);
+  quoteRotatorTimer = setInterval(nextQuote, 6800);
+}
+
+function initQuoteRotator() {
+  const quoteEl = document.getElementById("active-dial-quote");
+  const subbarEl = document.querySelector(".dial-quote-subbar");
+
+  [quoteEl, subbarEl].forEach(el => {
+    if (!el) return;
+    el.addEventListener("mouseenter", () => { isQuotePaused = true; });
+    el.addEventListener("mouseleave", () => { isQuotePaused = false; });
+  });
+
+  renderActiveQuote(0, false);
+  startQuoteRotator();
+}
+
 function setLanguage(lang) {
   if (!I18N[lang]) return;
   currentLang = lang;
@@ -2034,8 +2235,7 @@ function setLanguage(lang) {
   }
 
   // Actualizar Cita de la 2ª Página (Cabecera Activa del Dial)
-  const activeDialQuoteEl = document.getElementById("active-dial-quote");
-  if (activeDialQuoteEl && dict.quote) activeDialQuoteEl.textContent = dict.quote;
+  renderActiveQuote(currentQuoteIdx, false);
   const passiveQuoteEl = document.getElementById("passive-quote");
   if (passiveQuoteEl && dict.quote) passiveQuoteEl.textContent = dict.quote;
 
@@ -2079,6 +2279,7 @@ function setLanguage(lang) {
 
 // Inicialización de la interfaz con el idioma guardado en memoria (localStorage) o por defecto
 setLanguage(currentLang);
+initQuoteRotator();
 
 // Detección de apertura directa del dial (por URL param ?dial=open o hash #dial)
 try {
