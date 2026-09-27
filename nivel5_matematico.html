@@ -5694,9 +5694,9 @@
 
     const P5D_LEGENDS = {
       biplot: '<b>Modo:</b> Biplot Dual 1-2 &middot; <span style="color:#38BDF8; font-weight:900; font-size:1.05rem;">1, 2…</span> = Números Emisores (DA) &middot; <span style="color:#00FF87; font-weight:900;">🎯 Círculos Diana</span> = Receptores (RC) &middot; <span style="color:var(--neon-gold); font-weight:bold;">+</span> = Baricentro Diádico &middot; Flechas DA &rarr; RC &middot; Rayos Discontinuos = Prolongaciones Negativas (−X)',
-      emisores: '<b>Modo Gestalt:</b> Solo Emisores 1-2 (DAR / Filas) &middot; <span style="color:#38BDF8; font-weight:900; font-size:1.05rem;">1, 2, 3, 4, 5, 6</span> = Posicionamiento puro de emisión relacional en el plano cartesiano &middot; Limpio de adornos (Gestalt)',
-      receptores: '<b>Modo Gestalt:</b> Solo Receptores 1-2 (RECIBIR / Columnas) &middot; <span style="color:#00FF87; font-weight:900; font-size:1.05rem;">1, 2, 3, 4, 5, 6</span> = Posicionamiento puro de recepción relacional en el plano cartesiano &middot; Limpio de adornos (Gestalt)',
-      dispersion: '<b>Modo Dispersión:</b> Expansividad (SDA) vs. Estatus (SRC) &middot; Diagonal Amarilla = Reciprocidad Perfecta (SDA = SRC) &middot; Isolíneas Azules = Masa Relacional Constante'
+      emisores: '<b>Modo:</b> Solo Emisores 1-2 (DAR / Filas) &middot; <span style="color:#38BDF8; font-weight:900;">🎯 Círculos Diana (DA)</span> en Cian Neón identifican las intenciones volitivas individuales &middot; Figuras Q81 y Variables contextuales',
+      receptores: '<b>Modo:</b> Solo Receptores 1-2 (RECIBEN / Col) &middot; <span style="color:#00FF87; font-weight:900;">🎯 Círculos Diana (RC)</span> en Verde Neón revelan el consenso colectivo (&iexcl;lo que se RECIBE es lo sociol&oacute;gicamente determinante!)',
+      dispersion: '<b>Modo Dispersión:</b> Expansividad (SDA) vs. Estatus (SRC) &middot; Diagonal Amarilla = Reciprocidad Perfecta (SDA = SRC) &middot; Isol&iacute;neas Azules = Masa Relacional Constante'
     };
 
     function setDualPerspective(persp) {
@@ -5954,12 +5954,11 @@
         ctx.fillText(`▼ −${isAFC ? 'F₂' : 'PC₂'}`, axisCenter.x + 12, h - 16);
         ctx.restore();
 
-        // 3. PROYECCIÓN DE COLUMNAS ACTIVAS Y PROLONGACIONES AXIALES (SOLO EN MODO BIPLOT DUAL)
+        // 3. PROYECCIÓN DE COLUMNAS ACTIVAS Y PROLONGACIONES AXIALES
         // AFC: Figuras Sociométricas Diádicas Q81 (<Ee>, [Rr], <Er], [Re>, ¡¿?!)
         // PCA: 10 Variables del Pentagrama Canónico (SDR, BDR, SDA, SRC, BDA, BRC, D₁..D₄)
-        if (currentPerspective === 'biplot') {
-          const colList = isAFC ? projData.q81_afc : (projData.pentagram_10d || projData.meso_pca);
-          colList.forEach(col => {
+        const colList = isAFC ? projData.q81_afc : (projData.pentagram_10d || projData.meso_pca);
+        colList.forEach(col => {
             const fx = axisCenter.x + col.x * scaleX;
             const fy = axisCenter.y - col.y * scaleY;
 
@@ -6040,7 +6039,6 @@
             ctx.fillText(col.desc, fx + labelOffX, fy + labelOffY + 11);
             ctx.restore();
           });
-        }
 
         // 4. PROYECCIÓN DE SUJETOS: DA (Número) vs RC (Círculo Diana Protagonista)
         // REGLA FUNDAMENTAL: «lo que se RECIBE es siempre mucho más significativo que lo que se DA»
@@ -6147,51 +6145,107 @@
             ctx.restore();
 
           } else if (currentPerspective === 'emisores') {
-            // MODO GESTALT PURO: Solo Emisores 1-2 (DAR / Filas)
-            // Punto limpio y escueto número 1..6 sin aditamentos, sufijos ni recuadros
+            // Solo Emisores: Círculos Diana Protagonistas en Cian Neón con Rótulo ID (DA)
+            // Idéntico en estilo y presencia visual a RECIBE (bien)
             ctx.save();
+            const radDA = radRC; // 8.5px
+
+            // 1. Halo radar exterior cian sutil
             ctx.beginPath();
-            ctx.arc(cx_da, cy_da, 5.5, 0, Math.PI * 2);
-            ctx.fillStyle = colDA;
-            ctx.shadowColor = colDA;
-            ctx.shadowBlur = 8;
+            ctx.arc(cx_da, cy_da, 22, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(56, 189, 248, 0.16)";
             ctx.fill();
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 1.6;
+
+            // 2. Anillo radar exterior cian
+            ctx.beginPath();
+            ctx.arc(cx_da, cy_da, radDA + 4.5, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+            ctx.lineWidth = 1.2;
             ctx.stroke();
 
-            ctx.shadowBlur = 0;
-            ctx.font = "bold 14px 'JetBrains Mono', monospace";
+            // 3. Disco diana principal cian neón con halo de sombra
+            ctx.beginPath();
+            ctx.arc(cx_da, cy_da, radDA + 1.0, 0, Math.PI * 2);
+            ctx.fillStyle = colDA;
+            ctx.shadowColor = colDA;
+            ctx.shadowBlur = 14;
+            ctx.fill();
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 2.2;
+            ctx.stroke();
+
+            // 4. Anillo concéntrico interior blanco nítido
+            ctx.beginPath();
+            ctx.arc(cx_da, cy_da, 5.0, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.90)";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // 5. Centroide blanco (bullseye)
+            ctx.beginPath();
+            ctx.arc(cx_da, cy_da, 2.0, 0, Math.PI * 2);
             ctx.fillStyle = "#FFFFFF";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
+            ctx.fill();
+
+            // Rótulo del emisor (arriba de la diana)
+            ctx.font = "bold 13px 'JetBrains Mono', monospace";
+            ctx.fillStyle = "#FFFFFF";
             ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
             ctx.shadowBlur = 6;
-            ctx.fillText(n.id, cx_da, cy_da - 8);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            ctx.fillText(n.id + " (DA)", cx_da, cy_da - radDA - 6);
             ctx.restore();
 
           } else if (currentPerspective === 'receptores') {
-            // MODO GESTALT PURO: Solo Receptores 1-2 (RECIBIR / Columnas)
-            // Punto limpio y escueto número 1..6 sin aditamentos, sufijos ni recuadros
+            // Solo Receptores: Círculos Diana Protagonistas en Verde Neón con Rótulo ID (RC)
+            // Estándar de Referencia Canónico (bien)
             ctx.save();
+            // 1. Halo radar exterior verde sutil
             ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 5.5, 0, Math.PI * 2);
-            ctx.fillStyle = colRC;
-            ctx.shadowColor = colRC;
-            ctx.shadowBlur = 8;
+            ctx.arc(cx_rc, cy_rc, 22, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(0, 255, 135, 0.16)";
             ctx.fill();
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 1.6;
+
+            // 2. Anillo radar exterior verde
+            ctx.beginPath();
+            ctx.arc(cx_rc, cy_rc, radRC + 4.5, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(0, 255, 135, 0.45)";
+            ctx.lineWidth = 1.2;
             ctx.stroke();
 
-            ctx.shadowBlur = 0;
-            ctx.font = "bold 14px 'JetBrains Mono', monospace";
+            // 3. Disco diana principal verde neón con halo de sombra
+            ctx.beginPath();
+            ctx.arc(cx_rc, cy_rc, radRC + 1.0, 0, Math.PI * 2);
+            ctx.fillStyle = colRC;
+            ctx.shadowColor = colRC;
+            ctx.shadowBlur = 14;
+            ctx.fill();
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 2.2;
+            ctx.stroke();
+
+            // 4. Anillo concéntrico interior blanco nítido
+            ctx.beginPath();
+            ctx.arc(cx_rc, cy_rc, 5.0, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.90)";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // 5. Centroide blanco (bullseye)
+            ctx.beginPath();
+            ctx.arc(cx_rc, cy_rc, 2.0, 0, Math.PI * 2);
             ctx.fillStyle = "#FFFFFF";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
+            ctx.fill();
+
+            // Rótulo del receptor (arriba de la diana)
+            ctx.font = "bold 13px 'JetBrains Mono', monospace";
+            ctx.fillStyle = "#FFFFFF";
             ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
             ctx.shadowBlur = 6;
-            ctx.fillText(n.id, cx_rc, cy_rc - 8);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            ctx.fillText(n.id + " (RC)", cx_rc, cy_rc - radRC - 6);
             ctx.restore();
           }
         });
