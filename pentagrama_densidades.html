@@ -1465,7 +1465,7 @@
             // ==========================================
             const padLeft = 85;
             const padRight = 50;
-            const padTop = 45;
+            const padTop = 58;
             const padBottom = 130;
 
             const staveH = h - padTop - padBottom;
@@ -1863,9 +1863,9 @@
                 });
             }
 
-            // Leyenda de series
+            // Leyenda de series (Fila superior Y=16)
             const curLegX = padLeft;
-            const legY = padTop - 18;
+            const legY = 16;
             ctx.font = '600 11px "Inter", sans-serif';
             let accX = curLegX;
             activeSeries.forEach(tc => {
@@ -1876,6 +1876,109 @@
                 ctx.fillText(tc.label, accX + 20, legY - 3);
                 accX += ctx.measureText(tc.label).width + 35;
             });
+
+            // =================================================================
+            // 🌟 LÍNEAS MACRO-DIMENSIONALES SUPERIORES: DA (BDA ➔ A2) & RECIBE (A3 ➔ BRC)
+            // =================================================================
+            const macroY = 37;
+
+            // 1. LÍNEA MACRO: DA (de BDA hasta A2 / D2)
+            const xDaStart = stationCoords[0].x;
+            const xDaEnd = stationCoords[3].x;
+            const xDaMid = (xDaStart + xDaEnd) / 2;
+            const daBadgeW = 38;
+            const daBadgeH = 17;
+
+            ctx.save();
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+            ctx.lineWidth = 1.3;
+            ctx.shadowColor = "#38BDF8";
+            ctx.shadowBlur = 6;
+
+            // Trazado de línea horizontal con corchetes en los extremos
+            ctx.beginPath();
+            ctx.moveTo(xDaStart, macroY + 6);
+            ctx.lineTo(xDaStart, macroY);
+            ctx.lineTo(xDaMid - daBadgeW / 2 - 3, macroY);
+            ctx.moveTo(xDaMid + daBadgeW / 2 + 3, macroY);
+            ctx.lineTo(xDaEnd, macroY);
+            ctx.lineTo(xDaEnd, macroY + 6);
+            ctx.stroke();
+
+            // Guías tenues verticales hacia la primera línea del pentagrama
+            ctx.setLineDash([2, 3]);
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+            ctx.lineWidth = 0.8;
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.moveTo(xDaStart, macroY + 6); ctx.lineTo(xDaStart, padTop);
+            ctx.moveTo(xDaEnd, macroY + 6); ctx.lineTo(xDaEnd, padTop);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Píldora central 'DA'
+            ctx.fillStyle = "#0B132B";
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.9)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.roundRect(xDaMid - daBadgeW / 2, macroY - daBadgeH / 2, daBadgeW, daBadgeH, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '800 10.5px "Roboto Mono", monospace';
+            ctx.fillStyle = "#38BDF8";
+            ctx.textAlign = "center";
+            ctx.fillText("DA", xDaMid, macroY + 3.5);
+            ctx.restore();
+
+            // 2. LÍNEA MACRO: RECIBE (de A3 / D3 hasta BRC)
+            const xRecStart = stationCoords[4].x;
+            const xRecEnd = stationCoords[7].x;
+            const xRecMid = (xRecStart + xRecEnd) / 2;
+            const recBadgeW = 58;
+            const recBadgeH = 17;
+
+            ctx.save();
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.75)";
+            ctx.lineWidth = 1.3;
+            ctx.shadowColor = "#C084FC";
+            ctx.shadowBlur = 6;
+
+            // Trazado de línea horizontal con corchetes en los extremos
+            ctx.beginPath();
+            ctx.moveTo(xRecStart, macroY + 6);
+            ctx.lineTo(xRecStart, macroY);
+            ctx.lineTo(xRecMid - recBadgeW / 2 - 3, macroY);
+            ctx.moveTo(xRecMid + recBadgeW / 2 + 3, macroY);
+            ctx.lineTo(xRecEnd, macroY);
+            ctx.lineTo(xRecEnd, macroY + 6);
+            ctx.stroke();
+
+            // Guías tenues verticales hacia la primera línea del pentagrama
+            ctx.setLineDash([2, 3]);
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.25)";
+            ctx.lineWidth = 0.8;
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.moveTo(xRecStart, macroY + 6); ctx.lineTo(xRecStart, padTop);
+            ctx.moveTo(xRecEnd, macroY + 6); ctx.lineTo(xRecEnd, padTop);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Píldora central 'RECIBE'
+            ctx.fillStyle = "#0B132B";
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.9)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.roundRect(xRecMid - recBadgeW / 2, macroY - recBadgeH / 2, recBadgeW, recBadgeH, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '800 10.5px "Roboto Mono", monospace';
+            ctx.fillStyle = "#C084FC";
+            ctx.textAlign = "center";
+            ctx.fillText("RECIBE", xRecMid, macroY + 3.5);
+            ctx.restore();
 
         } else {
             // ==========================================
@@ -2280,6 +2383,63 @@
             ctx.fillStyle = "#00FF87";
             ctx.textAlign = "center";
             ctx.fillText("COMPÁS TETRAGRAMA (1 ➔ 4)", 0, 0);
+            ctx.restore();
+
+            // =================================================================
+            // 🌟 LÍNEAS MACRO-DIMENSIONALES VERTICALES: DA & RECIBE
+            // =================================================================
+            const yDaStart = stationCoords[0].y;
+            const yDaEnd = stationCoords[3].y;
+            const yRecStart = stationCoords[4].y;
+            const yRecEnd = stationCoords[7].y;
+            const bX = padLeft - 118;
+
+            // Bracket DA (BDA -> A2)
+            ctx.save();
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.7)";
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.moveTo(bX + 8, yDaStart); ctx.lineTo(bX, yDaStart);
+            ctx.lineTo(bX, (yDaStart + yDaEnd) / 2 - 14);
+            ctx.moveTo(bX, (yDaStart + yDaEnd) / 2 + 14);
+            ctx.lineTo(bX, yDaEnd); ctx.lineTo(bX + 8, yDaEnd);
+            ctx.stroke();
+
+            ctx.fillStyle = "#0B132B";
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.9)";
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.roundRect(bX - 14, (yDaStart + yDaEnd) / 2 - 11, 28, 22, 4);
+            ctx.fill(); ctx.stroke();
+            ctx.font = '800 9.5px "Roboto Mono", monospace';
+            ctx.fillStyle = "#38BDF8";
+            ctx.textAlign = "center";
+            ctx.fillText("DA", bX, (yDaStart + yDaEnd) / 2 + 3.5);
+
+            // Bracket RECIBE (A3 -> BRC)
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.7)";
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.moveTo(bX + 8, yRecStart); ctx.lineTo(bX, yRecStart);
+            ctx.lineTo(bX, (yRecStart + yRecEnd) / 2 - 24);
+            ctx.moveTo(bX, (yRecStart + yRecEnd) / 2 + 24);
+            ctx.lineTo(bX, yRecEnd); ctx.lineTo(bX + 8, yRecEnd);
+            ctx.stroke();
+
+            ctx.save();
+            ctx.translate(bX, (yRecStart + yRecEnd) / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = "#0B132B";
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.9)";
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.roundRect(-24, -11, 48, 22, 4);
+            ctx.fill(); ctx.stroke();
+            ctx.font = '800 9px "Roboto Mono", monospace';
+            ctx.fillStyle = "#C084FC";
+            ctx.textAlign = "center";
+            ctx.fillText("RECIBE", 0, 3.5);
+            ctx.restore();
             ctx.restore();
         }
 
