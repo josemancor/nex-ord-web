@@ -3759,7 +3759,7 @@
         <div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="background:rgba(0,255,135,0.15); border:1px solid var(--neon-green); color:var(--neon-green); padding:2px 8px; border-radius:4px; font-size:0.88rem; font-family:var(--font-mono); font-weight:800;">5d</span>
-            <h2 style="font-size:1.45rem; font-weight:900; color:#FFFFFF; margin:0; letter-spacing:0.5px;">MAPAS FACTORIALES DUALES</h2>
+            <h2 style="font-size:1.45rem; font-weight:900; color:#FFFFFF; margin:0; letter-spacing:0.5px;">MAPAS FACTORIALES DUALES (EJES 1-2 · F₁ × F₂)</h2>
             <span style="font-size:0.95rem; font-family:var(--font-mono); color:var(--neon-gold); font-weight:700;">&middot; DUALIDAD DAR/RECIBIR &middot; FRECUENCIAS vs. DENSIDADES &middot; PLANOS EN PARALELO AFC & PCA</span>
           </div>
           <div style="font-size:0.92rem; color:var(--text-muted); margin-top:4px; line-height:1.45;">
@@ -3842,14 +3842,14 @@
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="font-size:0.88rem; font-family:var(--font-mono); font-weight:800; color:var(--neon-purple);">3. PLANOS FACTORIALES EN PARALELO (AFC &parallel; PCA):</span>
             <div style="display:flex; gap:6px;">
-              <button class="proj-btn active" id="btn-persp-biplot" onclick="setDualPerspective('biplot')" style="font-size:0.95rem; padding:4px 10px;">Dual Biplot (DAR + RECIBIR)</button>
-              <button class="proj-btn" id="btn-persp-emisores" onclick="setDualPerspective('emisores')" style="font-size:0.95rem; padding:4px 10px;">Solo Emisores (DAR / Filas)</button>
-              <button class="proj-btn" id="btn-persp-receptores" onclick="setDualPerspective('receptores')" style="font-size:0.95rem; padding:4px 10px;">Solo Receptores (RECIBEN / Col)</button>
+              <button class="proj-btn active" id="btn-persp-biplot" onclick="setDualPerspective('biplot')" style="font-size:0.95rem; padding:4px 10px;">Dual Biplot 1-2 (DAR + RECIBIR)</button>
+              <button class="proj-btn" id="btn-persp-emisores" onclick="setDualPerspective('emisores')" style="font-size:0.95rem; padding:4px 10px;">Solo Emisores 1-2 (DAR / Filas)</button>
+              <button class="proj-btn" id="btn-persp-receptores" onclick="setDualPerspective('receptores')" style="font-size:0.95rem; padding:4px 10px;">Solo Receptores 1-2 (RECIBEN / Col)</button>
               <button class="proj-btn" id="btn-persp-dispersion" onclick="setDualPerspective('dispersion')" style="font-size:0.95rem; padding:4px 10px; border-color:rgba(255,230,0,0.4); color:var(--neon-gold);">Dispersión SDA vs SRC</button>
             </div>
           </div>
           <div id="dual-legend-text" style="font-size:0.95rem; color:var(--text-muted); font-family:var(--font-mono);">
-            <b>Modo:</b> Biplot Dual Simétrico &middot; Círculos = Emisores (DA) &middot; Anillos = Receptores (REC) &middot; Trazos = Tensión diádica
+            <b>Modo:</b> Biplot Dual 1-2 &middot; <span style="color:#38BDF8;">●</span> Círculos = Emisores (DA) &middot; <span style="color:#00FF87; font-weight:900;">■</span> Cuadrados = Receptores (RC) [¡Máxima Relevancia Estructural!] &middot; <span style="color:#FFE600;">◆</span> Rombos = Figuras Q81 &middot; Flechas DA → RC
           </div>
         </div>
 
@@ -4646,34 +4646,64 @@
     /* 4. CANVAS DE PROYECCIONES DUALES EN PARALELO (AFC & PCA) (PANTALLA 5d) */
     let currentPerspective = 'biplot';
 
+    function drawArrowHead(ctx, x, y, angle, length, color) {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-length, -length * 0.42);
+      ctx.lineTo(-length * 0.65, 0);
+      ctx.lineTo(-length, length * 0.42);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
     const projData = {
       pca: [
-        { id:'1A', grp:'A', x_da:0.75, y_da:0.80, x_rc:0.82, y_rc:0.75, sda:2.88, src:3.45 },
-        { id:'2A', grp:'A', x_da:0.65, y_da:0.60, x_rc:0.60, y_rc:0.65, sda:2.75, src:2.90 },
-        { id:'3A', grp:'A', x_da:0.45, y_da:0.35, x_rc:0.40, y_rc:0.30, sda:2.50, src:2.10 },
-        { id:'4A', grp:'A', x_da:0.30, y_da:0.10, x_rc:0.25, y_rc:0.05, sda:2.00, src:1.85 },
-        { id:'5A', grp:'A', x_da:0.15, y_da:-0.30, x_rc:0.10, y_rc:-0.40, sda:1.80, src:0.95 },
-        { id:'6A', grp:'A', x_da:-0.40, y_da:-0.60, x_rc:-0.50, y_rc:-0.70, sda:1.20, src:0.60 },
-        { id:'1B', grp:'B', x_da:0.70, y_da:-0.40, x_rc:0.75, y_rc:-0.35, sda:2.90, src:3.10 },
-        { id:'2B', grp:'B', x_da:0.55, y_da:-0.55, x_rc:0.50, y_rc:-0.60, sda:2.40, src:2.60 },
-        { id:'3B', grp:'B', x_da:0.40, y_da:-0.20, x_rc:0.35, y_rc:-0.15, sda:2.10, src:2.20 },
-        { id:'4B', grp:'B', x_da:0.25, y_da:0.20, x_rc:0.20, y_rc:0.15, sda:1.90, src:1.70 },
-        { id:'5B', grp:'B', x_da:-0.10, y_da:0.45, x_rc:-0.15, y_rc:0.40, sda:1.60, src:1.10 },
-        { id:'6B', grp:'B', x_da:-0.65, y_da:-0.50, x_rc:-0.70, y_rc:-0.55, sda:1.10, src:0.50 }
+        { id:'1A', grp:'A', x_da:0.74, y_da:0.72, x_rc:0.84, y_rc:0.68, sda:2.88, src:3.45 },
+        { id:'2A', grp:'A', x_da:0.60, y_da:0.54, x_rc:0.66, y_rc:0.58, sda:2.75, src:2.90 },
+        { id:'3A', grp:'A', x_da:0.42, y_da:0.30, x_rc:0.38, y_rc:0.26, sda:2.50, src:2.10 },
+        { id:'4A', grp:'A', x_da:0.26, y_da:0.10, x_rc:0.22, y_rc:0.04, sda:2.00, src:1.85 },
+        { id:'5A', grp:'A', x_da:0.10, y_da:-0.30, x_rc:0.06, y_rc:-0.40, sda:1.80, src:0.95 },
+        { id:'6A', grp:'A', x_da:-0.40, y_da:-0.54, x_rc:-0.50, y_rc:-0.64, sda:1.20, src:0.60 },
+        { id:'1B', grp:'B', x_da:0.72, y_da:-0.36, x_rc:0.78, y_rc:-0.30, sda:2.90, src:3.10 },
+        { id:'2B', grp:'B', x_da:0.54, y_da:-0.50, x_rc:0.50, y_rc:-0.56, sda:2.40, src:2.60 },
+        { id:'3B', grp:'B', x_da:0.36, y_da:-0.20, x_rc:0.32, y_rc:-0.14, sda:2.10, src:2.20 },
+        { id:'4B', grp:'B', x_da:0.20, y_da:0.16, x_rc:0.16, y_rc:0.10, sda:1.90, src:1.70 },
+        { id:'5B', grp:'B', x_da:-0.10, y_da:0.40, x_rc:-0.14, y_rc:0.36, sda:1.60, src:1.10 },
+        { id:'6B', grp:'B', x_da:-0.56, y_da:-0.46, x_rc:-0.62, y_rc:-0.52, sda:1.10, src:0.50 }
       ],
       afc: [
-        { id:'1A', grp:'A', x_da:0.85, y_da:0.70, x_rc:0.88, y_rc:0.65, sda:2.88, src:3.45 },
-        { id:'2A', grp:'A', x_da:0.70, y_da:0.45, x_rc:0.65, y_rc:0.50, sda:2.75, src:2.90 },
-        { id:'3A', grp:'A', x_da:0.50, y_da:0.20, x_rc:0.45, y_rc:0.15, sda:2.50, src:2.10 },
-        { id:'4A', grp:'A', x_da:0.10, y_da:0.00, x_rc:0.15, y_rc:-0.05, sda:2.00, src:1.85 },
-        { id:'5A', grp:'A', x_da:-0.20, y_da:-0.40, x_rc:-0.25, y_rc:-0.45, sda:1.80, src:0.95 },
-        { id:'6A', grp:'A', x_da:-0.75, y_da:-0.70, x_rc:-0.80, y_rc:-0.75, sda:1.20, src:0.60 },
-        { id:'1B', grp:'B', x_da:0.80, y_da:-0.60, x_rc:0.85, y_rc:-0.55, sda:2.90, src:3.10 },
-        { id:'2B', grp:'B', x_da:0.60, y_da:-0.40, x_rc:0.55, y_rc:-0.45, sda:2.40, src:2.60 },
-        { id:'3B', grp:'B', x_da:0.35, y_da:-0.15, x_rc:0.30, y_rc:-0.10, sda:2.10, src:2.20 },
-        { id:'4B', grp:'B', x_da:0.15, y_da:0.10, x_rc:0.10, y_rc:0.15, sda:1.90, src:1.70 },
-        { id:'5B', grp:'B', x_da:-0.30, y_da:0.30, x_rc:-0.35, y_rc:0.25, sda:1.60, src:1.10 },
-        { id:'6B', grp:'B', x_da:-0.80, y_da:-0.30, x_rc:-0.85, y_rc:-0.35, sda:1.10, src:0.50 }
+        { id:'1A', grp:'A', x_da:0.68, y_da:0.56, x_rc:0.78, y_rc:0.52, sda:2.88, src:3.45 },
+        { id:'2A', grp:'A', x_da:0.52, y_da:0.36, x_rc:0.60, y_rc:0.40, sda:2.75, src:2.90 },
+        { id:'3A', grp:'A', x_da:0.36, y_da:0.14, x_rc:0.42, y_rc:0.10, sda:2.50, src:2.10 },
+        { id:'4A', grp:'A', x_da:0.08, y_da:-0.04, x_rc:0.14, y_rc:-0.10, sda:2.00, src:1.85 },
+        { id:'5A', grp:'A', x_da:-0.24, y_da:-0.42, x_rc:-0.30, y_rc:-0.50, sda:1.80, src:0.95 },
+        { id:'6A', grp:'A', x_da:-0.74, y_da:-0.66, x_rc:-0.80, y_rc:-0.72, sda:1.20, src:0.60 },
+        { id:'1B', grp:'B', x_da:0.66, y_da:-0.52, x_rc:0.76, y_rc:-0.46, sda:2.90, src:3.10 },
+        { id:'2B', grp:'B', x_da:0.46, y_da:-0.36, x_rc:0.52, y_rc:-0.40, sda:2.40, src:2.60 },
+        { id:'3B', grp:'B', x_da:0.26, y_da:-0.14, x_rc:0.30, y_rc:-0.10, sda:2.10, src:2.20 },
+        { id:'4B', grp:'B', x_da:0.12, y_da:0.06, x_rc:0.10, y_rc:0.12, sda:1.90, src:1.70 },
+        { id:'5B', grp:'B', x_da:-0.30, y_da:0.32, x_rc:-0.36, y_rc:0.26, sda:1.60, src:1.10 },
+        { id:'6B', grp:'B', x_da:-0.78, y_da:-0.28, x_rc:-0.84, y_rc:-0.34, sda:1.10, src:0.50 }
+      ],
+      q81_afc: [
+        { id:'Ee', tag:'◆ <Ee>', desc:'Elección Mutua', x:0.86, y:0.68, color:'#00FF87', align:'left', offX:10, offY:-8, rayColor:'rgba(0,255,135,0.30)' },
+        { id:'Rr', tag:'◆ [Rr]', desc:'Rechazo Mutuo', x:-0.86, y:-0.70, color:'#FF007F', align:'right', offX:-10, offY:-8, rayColor:'rgba(255,0,127,0.30)' },
+        { id:'Er', tag:'◆ <Er]', desc:'Elec./Rechazo', x:-0.28, y:-0.74, color:'#FF9F1C', align:'center', offX:0, offY:18, rayColor:'rgba(255,159,28,0.25)' },
+        { id:'Re', tag:'◆ [Re> / Ra', desc:'Dominancia (Poder)', x:0.24, y:0.78, color:'#FFAA00', align:'center', offX:0, offY:-16, rayColor:'rgba(255,170,0,0.25)' },
+        { id:'¿?', tag:'◆ ¡¿?!', desc:'Neutralidad', x:-0.08, y:0.08, color:'#E2E8F0', align:'right', offX:-8, offY:-8, rayColor:'rgba(226,232,240,0.20)' }
+      ],
+      q81_pca: [
+        { id:'Ee', tag:'◆ <Ee>', desc:'Elección Mutua', x:0.78, y:0.80, color:'#00FF87', align:'left', offX:10, offY:-8, rayColor:'rgba(0,255,135,0.30)' },
+        { id:'Rr', tag:'◆ [Rr]', desc:'Rechazo Mutuo', x:-0.76, y:-0.66, color:'#FF007F', align:'right', offX:-10, offY:-8, rayColor:'rgba(255,0,127,0.30)' },
+        { id:'Er', tag:'◆ <Er]', desc:'Elec./Rechazo', x:-0.20, y:-0.64, color:'#FF9F1C', align:'center', offX:0, offY:18, rayColor:'rgba(255,159,28,0.25)' },
+        { id:'Re', tag:'◆ [Re> / Ra', desc:'Dominancia (Poder)', x:0.26, y:0.66, color:'#FFAA00', align:'center', offX:0, offY:-16, rayColor:'rgba(255,170,0,0.25)' },
+        { id:'¿?', tag:'◆ ¡¿?!', desc:'Neutralidad', x:-0.08, y:0.08, color:'#E2E8F0', align:'right', offX:-8, offY:-8, rayColor:'rgba(226,232,240,0.20)' }
       ]
     };
 
@@ -4685,15 +4715,8 @@
 
       const legendText = document.getElementById('dual-legend-text');
       if (legendText) {
-        if (persp === 'biplot') {
-          legendText.innerHTML = '<b>Modo:</b> Biplot Dual Simétrico &middot; Círculos = Emisores (DA) &middot; Anillos = Receptores (REC) &middot; Trazos = Tensión diádica';
-        } else if (persp === 'emisores') {
-          legendText.innerHTML = '<b>Modo:</b> Solo Emisores (DAR / Filas) &middot; Proximidad indica criterios de elección y sesgos análogos';
-        } else if (persp === 'receptores') {
-          legendText.innerHTML = '<b>Modo:</b> Solo Receptores (RECIBEN / Col) &middot; Proximidad indica reconocimiento y estatus colectivo compartido';
-        } else {
-          legendText.innerHTML = '<b>Modo:</b> Dispersión Diádica Directa &middot; Recta de Reciprocidad Perfecta (SDA = SRC) e Isolíneas de Masa';
-        }
+        const lMap = I18N_NIVEL5[currentLang]?.p5d_legends || I18N_NIVEL5['es'].p5d_legends;
+        legendText.innerHTML = lMap[persp] || '';
       }
 
       drawProjection();
@@ -4709,19 +4732,19 @@
       const h = cvs.height;
       ctx.clearRect(0, 0, w, h);
 
-      // Fondo cartesiano abisal
+      // Fondo cartesiano abisal canónico
       ctx.fillStyle = "#0B132B";
       ctx.fillRect(0, 0, w, h);
 
       if (currentPerspective === 'dispersion') {
         // MODO DISPERSIÓN SDA vs SRC
-        const padX = 36;
-        const padY = 16;
-        const plotW = w - padX - 16;
-        const plotH = h - padY - 22;
+        const padX = 46;
+        const padY = 24;
+        const plotW = w - padX - 20;
+        const plotH = h - padY - 30;
         const maxVal = 4.0;
         const toX = (val) => padX + (val / maxVal) * plotW;
-        const toY = (val) => (h - 20) - (val / maxVal) * plotH;
+        const toY = (val) => (h - 26) - (val / maxVal) * plotH;
 
         // Rejilla sutil
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
@@ -4739,18 +4762,18 @@
           ctx.lineTo(toX(maxVal), y);
           ctx.stroke();
 
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-          ctx.font = "8px 'JetBrains Mono'";
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.50)';
+          ctx.font = "11px 'JetBrains Mono', monospace";
           ctx.textAlign = 'center';
           ctx.fillText(v.toFixed(0), x, h - 8);
           ctx.textAlign = 'right';
-          ctx.fillText(v.toFixed(0), padX - 4, y + 3);
+          ctx.fillText(v.toFixed(0), padX - 6, y + 4);
         }
 
         // Isolíneas de suma constante
         [2.0, 4.0, 6.0].forEach(sum => {
           ctx.save();
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
           ctx.setLineDash([3, 3]);
           ctx.beginPath();
           const xStart = Math.max(0, sum - maxVal);
@@ -4765,9 +4788,9 @@
 
         // Diagonal de reciprocidad perfecta (SDA = SRC)
         ctx.save();
-        ctx.strokeStyle = 'rgba(255, 230, 0, 0.7)';
+        ctx.strokeStyle = 'rgba(255, 230, 0, 0.75)';
         ctx.setLineDash([4, 3]);
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = 1.6;
         ctx.beginPath();
         ctx.moveTo(toX(0), toY(0));
         ctx.lineTo(toX(maxVal), toY(maxVal));
@@ -4782,138 +4805,312 @@
           const color = isA ? '#38BDF8' : '#FFE600';
 
           ctx.beginPath();
-          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.arc(px, py, 5.5, 0, Math.PI * 2);
           ctx.fillStyle = color;
           ctx.fill();
           ctx.strokeStyle = '#FFFFFF';
-          ctx.lineWidth = 0.8;
+          ctx.lineWidth = 1.0;
           ctx.stroke();
 
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = "bold 8px 'JetBrains Mono'";
+          ctx.font = "bold 12px 'JetBrains Mono', monospace";
           ctx.textAlign = 'left';
-          ctx.fillText(s.id, px + 5, py - 2);
+          ctx.fillText(s.id, px + 8, py - 3);
         });
 
-        ctx.fillStyle = 'rgba(255, 230, 0, 0.85)';
-        ctx.font = "8px 'JetBrains Mono'";
+        const i18nTexts = I18N_NIVEL5[currentLang] || I18N_NIVEL5['es'];
+        ctx.fillStyle = 'rgba(255, 230, 0, 0.90)';
+        ctx.font = "12px 'JetBrains Mono', monospace";
         ctx.textAlign = 'center';
-        ctx.fillText(modeTheme === 'afc' ? 'Afinidad de Perfil χ²' : 'Reciprocidad Perfecta (SDA=SRC)', padX + plotW / 2, toY(2.2));
+        ctx.fillText(modeTheme === 'afc' ? i18nTexts.canvas_affinity_chi2 : i18nTexts.canvas_recip_perfect, padX + plotW / 2, toY(2.2));
 
       } else {
-        // MODO PLANO FACTORIAL (BIPLOT, EMISORES O RECEPTORES)
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+        // MODO PLANO FACTORIAL 1-2 (F₁ × F₂)
+        const axisCenter = { x: w / 2, y: h / 2 };
+        const scaleX = w * 0.40;
+        const scaleY = h * 0.38;
+
+        // 1. Cuadrícula de referencia sutil
+        ctx.save();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
         ctx.lineWidth = 1;
-        ctx.setLineDash([3, 3]);
+        [-0.8, -0.4, 0.4, 0.8].forEach(val => {
+          const gx = axisCenter.x + val * scaleX;
+          ctx.beginPath();
+          ctx.moveTo(gx, 30);
+          ctx.lineTo(gx, h - 30);
+          ctx.stroke();
+        });
+        [-0.8, -0.4, 0.4, 0.8].forEach(val => {
+          const gy = axisCenter.y - val * scaleY;
+          ctx.beginPath();
+          ctx.moveTo(30, gy);
+          ctx.lineTo(w - 30, gy);
+          ctx.stroke();
+        });
+        ctx.restore();
 
-        // Eje Y vertical
+        // 2. EJES CARTESIANOS 1 Y 2 NÍTIDOS, CONTRASTADOS Y VISIBLES (REGLA FUNDAMENTAL)
+        ctx.save();
+        const axisColor = "rgba(148, 163, 184, 0.50)";
+        ctx.strokeStyle = axisColor;
+        ctx.lineWidth = 1.6;
+
+        // EJE X (Eje 1 / F1)
         ctx.beginPath();
-        ctx.moveTo(w / 2, 12);
-        ctx.lineTo(w / 2, h - 12);
+        ctx.moveTo(26, axisCenter.y);
+        ctx.lineTo(w - 26, axisCenter.y);
         ctx.stroke();
+        drawArrowHead(ctx, w - 26, axisCenter.y, 0, 8, axisColor);
+        drawArrowHead(ctx, 26, axisCenter.y, Math.PI, 8, axisColor);
 
-        // Eje X horizontal
+        // EJE Y (Eje 2 / F2)
         ctx.beginPath();
-        ctx.moveTo(12, h / 2);
-        ctx.lineTo(w - 12, h / 2);
+        ctx.moveTo(axisCenter.x, h - 26);
+        ctx.lineTo(axisCenter.x, 26);
         ctx.stroke();
-        ctx.setLineDash([]);
+        drawArrowHead(ctx, axisCenter.x, 26, -Math.PI / 2, 8, axisColor);
+        drawArrowHead(ctx, axisCenter.x, h - 26, Math.PI / 2, 8, axisColor);
 
-        // Labels de orientación en ejes
-        ctx.fillStyle = modeTheme === 'afc' ? "rgba(0, 255, 135, 0.7)" : "rgba(56, 189, 248, 0.7)";
-        ctx.font = "8px 'JetBrains Mono'";
+        // Ticks de escala numéricos
+        ctx.font = "10px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(148, 163, 184, 0.75)";
+        ctx.textAlign = "center";
+        [-0.5, 0.5].forEach(val => {
+          const tx = axisCenter.x + val * scaleX;
+          ctx.beginPath();
+          ctx.moveTo(tx, axisCenter.y - 4);
+          ctx.lineTo(tx, axisCenter.y + 4);
+          ctx.stroke();
+          ctx.fillText((val > 0 ? "+" : "") + val.toFixed(1), tx, axisCenter.y + 15);
+        });
+        [-0.5, 0.5].forEach(val => {
+          const ty = axisCenter.y - val * scaleY;
+          ctx.beginPath();
+          ctx.moveTo(axisCenter.x - 4, ty);
+          ctx.lineTo(axisCenter.x + 4, ty);
+          ctx.stroke();
+          ctx.textAlign = "right";
+          ctx.fillText((val > 0 ? "+" : "") + val.toFixed(1), axisCenter.x - 7, ty + 3);
+        });
+
+        // Origen (0, 0)
+        ctx.beginPath();
+        ctx.arc(axisCenter.x, axisCenter.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fill();
+        ctx.textAlign = "right";
+        ctx.font = "9.5px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.70)";
+        ctx.fillText("(0,0)", axisCenter.x - 6, axisCenter.y - 6);
+
+        // Rótulos de los Ejes 1 y 2
+        const isAFC = modeTheme === 'afc';
+        const inerF1 = isAFC ? "Iner₁=48.1%" : "Var₁=54.2%";
+        const inerF2 = isAFC ? "Iner₂=24.3%" : "Var₂=28.6%";
+        const descF1 = isAFC ? "Polarización Categórica (χ²)" : "Masa Gravitatoria Continua (W)";
+        const descF2 = isAFC ? "Dilatación Pseudobaricéntrica (1/√λ)" : "Visibilidad de Poder / Expansividad";
+
+        // Eje 1 (Horizontal)
+        ctx.fillStyle = isAFC ? "#00FF87" : "#38BDF8";
+        ctx.font = "bold 11px 'JetBrains Mono', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(`EJE 1 (F₁) · ${inerF1} →`, w - 34, axisCenter.y - 8);
+        ctx.font = "9.5px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(203, 213, 225, 0.70)";
+        ctx.fillText(descF1, w - 34, axisCenter.y + 15);
+
+        // Eje 2 (Vertical)
+        ctx.fillStyle = isAFC ? "#00FF87" : "#38BDF8";
+        ctx.font = "bold 11px 'JetBrains Mono', monospace";
         ctx.textAlign = "left";
-        ctx.fillText(modeTheme === 'afc' ? "EJE 1 (POLARIZACIÓN χ²) →" : "EJE 1 (MASA CONTINUA W) →", w / 2 + 8, h / 2 - 5);
-        ctx.fillText(modeTheme === 'afc' ? "↑ EJE 2 (DILATACIÓN)" : "↑ EJE 2 (PODER / SDA)", w / 2 + 8, 20);
+        ctx.fillText(`↑ EJE 2 (F₂) · ${inerF2}`, axisCenter.x + 10, 20);
+        ctx.font = "9.5px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(203, 213, 225, 0.70)";
+        ctx.fillText(descF2, axisCenter.x + 10, 34);
+        ctx.restore();
 
+        // 3. PROYECCIÓN DE COLUMNAS ACTIVAS / FIGURAS SOCIOMÉTRICAS Q81 (CONTEXTO)
+        const q81List = isAFC ? projData.q81_afc : projData.q81_pca;
+        q81List.forEach(fig => {
+          const fx = axisCenter.x + fig.x * scaleX;
+          const fy = axisCenter.y - fig.y * scaleY;
+
+          // Rayo vectorial sutil desde el origen (0,0) hacia la figura Q81
+          if (fig.id !== '¿?') {
+            ctx.save();
+            ctx.strokeStyle = fig.rayColor || "rgba(255, 255, 255, 0.22)";
+            ctx.setLineDash([2, 3]);
+            ctx.lineWidth = 1.0;
+            ctx.beginPath();
+            ctx.moveTo(axisCenter.x, axisCenter.y);
+            ctx.lineTo(fx, fy);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Marcador Rombo / Diamante para Figuras Q81
+          const sz = 8;
+          ctx.save();
+          ctx.translate(fx, fy);
+          ctx.rotate(Math.PI / 4);
+          ctx.beginPath();
+          ctx.rect(-sz, -sz, sz * 2, sz * 2);
+          ctx.fillStyle = fig.color;
+          ctx.shadowColor = fig.color;
+          ctx.shadowBlur = 12;
+          ctx.fill();
+          ctx.strokeStyle = "#FFFFFF";
+          ctx.lineWidth = 1.8;
+          ctx.stroke();
+          ctx.restore();
+
+          // Etiqueta semántica de la figura Q81
+          ctx.save();
+          ctx.font = "bold 11px 'JetBrains Mono', monospace";
+          ctx.fillStyle = fig.color;
+          ctx.textAlign = fig.align || "center";
+          ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
+          ctx.shadowBlur = 6;
+          const labelOffX = fig.offX !== undefined ? fig.offX : 0;
+          const labelOffY = fig.offY !== undefined ? fig.offY : (fig.y >= 0 ? -14 : 20);
+          ctx.fillText(fig.tag, fx + labelOffX, fy + labelOffY);
+
+          // Subtítulo descriptivo breve
+          ctx.font = "9px 'Inter', sans-serif";
+          ctx.fillStyle = "rgba(226, 232, 240, 0.80)";
+          const subOffY = labelOffY > 0 ? (labelOffY + 12) : (labelOffY - 12);
+          ctx.fillText(fig.desc, fx + labelOffX, fy + subOffY);
+          ctx.restore();
+        });
+
+        // 4. PROYECCIÓN DE SUJETOS: DA (Círculo) vs RC (Cuadrado Protagonista)
+        // REGLA FUNDAMENTAL: «lo que se RECIBE es siempre mucho más significativo que lo que se DA»
         dataset.forEach(n => {
           const isA = n.grp === 'A';
-          const cx_da = w / 2 + n.x_da * (w * 0.42);
-          const cy_da = h / 2 - n.y_da * (h * 0.40);
-          const cx_rc = w / 2 + n.x_rc * (w * 0.42);
-          const cy_rc = h / 2 - n.y_rc * (h * 0.40);
+          const cx_da = axisCenter.x + n.x_da * scaleX;
+          const cy_da = axisCenter.y - n.y_da * scaleY;
+          const cx_rc = axisCenter.x + n.x_rc * scaleX;
+          const cy_rc = axisCenter.y - n.y_rc * scaleY;
 
+          // DA (Emisor): Cian para A, Amarillo para B
           const colDA = isA ? "#38BDF8" : "#FFE600";
-          const colRC = isA ? "#00FF87" : "#FF9F1C";
+          // RC (Receptor): Verde Neón para A, Rosa Neón para B
+          const colRC = isA ? "#00FF87" : "#FF007F";
 
           if (currentPerspective === 'biplot') {
-            // Línea de unión emisor ↔ receptor
-            ctx.beginPath();
-            ctx.moveTo(cx_da, cy_da);
-            ctx.lineTo(cx_rc, cy_rc);
-            ctx.strokeStyle = modeTheme === 'afc' ? "rgba(0, 255, 135, 0.28)" : "rgba(56, 189, 248, 0.28)";
-            ctx.setLineDash([2, 2]);
-            ctx.lineWidth = 0.9;
-            ctx.stroke();
-            ctx.setLineDash([]);
+            // A) Vector de desplazamiento diádico: DA ────► RC
+            const dx = cx_rc - cx_da;
+            const dy = cy_rc - cy_da;
+            const dist = Math.hypot(dx, dy);
 
-            // Emisor DA (círculo sólido)
+            if (dist > 3) {
+              ctx.save();
+              const vecColor = isA ? "rgba(56, 189, 248, 0.70)" : "rgba(255, 230, 0, 0.70)";
+              ctx.strokeStyle = vecColor;
+              ctx.lineWidth = 1.8;
+              ctx.beginPath();
+              ctx.moveTo(cx_da, cy_da);
+              ctx.lineTo(cx_rc, cy_rc);
+              ctx.stroke();
+
+              // Flecha orientada hacia RC (indicando que RC es la realidad / consenso)
+              const angle = Math.atan2(dy, dx);
+              const stopOffset = 8;
+              const ax = cx_rc - Math.cos(angle) * stopOffset;
+              const ay = cy_rc - Math.sin(angle) * stopOffset;
+              drawArrowHead(ctx, ax, ay, angle, 7, vecColor);
+              ctx.restore();
+            }
+
+            // B) EMISOR (DA): Círculo más pequeño (radio 5.5px) · Intención individual
+            ctx.save();
             ctx.beginPath();
-            ctx.arc(cx_da, cy_da, 4.5, 0, Math.PI * 2);
+            ctx.arc(cx_da, cy_da, 5.5, 0, Math.PI * 2);
             ctx.fillStyle = colDA;
             ctx.fill();
             ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 1.0;
             ctx.stroke();
 
-            // Receptor RC (anillo)
-            ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 5.5, 0, Math.PI * 2);
-            ctx.strokeStyle = colRC;
-            ctx.lineWidth = 1.4;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 2, 0, Math.PI * 2);
-            ctx.fillStyle = colRC;
-            ctx.fill();
-
-            // Etiqueta
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bold 8px 'JetBrains Mono'";
+            // Rótulo discreto del emisor
+            ctx.font = "9.5px 'JetBrains Mono', monospace";
+            ctx.fillStyle = "rgba(226, 232, 240, 0.75)";
             ctx.textAlign = "center";
-            ctx.fillText(n.id, cx_da, cy_da - 7);
+            ctx.fillText(n.id + "d", cx_da, cy_da - 8);
+            ctx.restore();
+
+            // C) RECEPTOR (RC) [¡PROTAGÓNICO!]: Cuadrado sólido 14x14px con halo neón
+            // «lo que se RECIBE es siempre mucho más significativo que lo que se DA»
+            ctx.save();
+            const sqSize = 13;
+            ctx.fillStyle = colRC;
+            ctx.shadowColor = colRC;
+            ctx.shadowBlur = 10;
+            ctx.fillRect(cx_rc - sqSize / 2, cy_rc - sqSize / 2, sqSize, sqSize);
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 2.0;
+            ctx.strokeRect(cx_rc - sqSize / 2, cy_rc - sqSize / 2, sqSize, sqSize);
+
+            // Centroide interior
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(cx_rc - 1.5, cy_rc - 1.5, 3, 3);
+
+            // Etiqueta destacada en negrita sobre RC
+            ctx.shadowBlur = 0;
+            ctx.font = "bold 12px 'JetBrains Mono', monospace";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.textAlign = "center";
+            const textY = (cy_rc >= cy_da) ? (cy_rc + sqSize / 2 + 13) : (cy_rc - sqSize / 2 - 5);
+            ctx.fillText(n.id, cx_rc, textY);
+            ctx.restore();
 
           } else if (currentPerspective === 'emisores') {
-            // Solo Emisores (DAR / Filas)
+            // Solo Emisores: Círculos
+            ctx.save();
             ctx.beginPath();
-            ctx.arc(cx_da, cy_da, 9, 0, Math.PI * 2);
-            ctx.fillStyle = isA ? "rgba(56, 189, 248, 0.15)" : "rgba(255, 230, 0, 0.15)";
+            ctx.arc(cx_da, cy_da, 14, 0, Math.PI * 2);
+            ctx.fillStyle = isA ? "rgba(56, 189, 248, 0.18)" : "rgba(255, 230, 0, 0.18)";
             ctx.fill();
 
             ctx.beginPath();
-            ctx.arc(cx_da, cy_da, 5, 0, Math.PI * 2);
+            ctx.arc(cx_da, cy_da, 7.5, 0, Math.PI * 2);
             ctx.fillStyle = colDA;
             ctx.fill();
             ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 1.4;
             ctx.stroke();
 
             ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bold 8px 'JetBrains Mono'";
+            ctx.font = "bold 12px 'JetBrains Mono', monospace";
             ctx.textAlign = "center";
-            ctx.fillText(n.id + " (DA)", cx_da, cy_da - 8);
+            ctx.fillText(n.id + " (DA)", cx_da, cy_da - 12);
+            ctx.restore();
 
           } else if (currentPerspective === 'receptores') {
-            // Solo Receptores (RECIBEN / Columnas)
-            ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 10, 0, Math.PI * 2);
-            ctx.fillStyle = isA ? "rgba(0, 255, 135, 0.15)" : "rgba(255, 159, 28, 0.15)";
-            ctx.fill();
+            // Solo Receptores: Cuadrados Protagonistas
+            ctx.save();
+            const sqSize = 16;
+            ctx.fillStyle = isA ? "rgba(0, 255, 135, 0.18)" : "rgba(255, 0, 127, 0.18)";
+            ctx.fillRect(cx_rc - 18, cy_rc - 18, 36, 36);
 
-            ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 5.5, 0, Math.PI * 2);
-            ctx.strokeStyle = colRC;
-            ctx.lineWidth = 1.6;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(cx_rc, cy_rc, 2, 0, Math.PI * 2);
             ctx.fillStyle = colRC;
-            ctx.fill();
+            ctx.shadowColor = colRC;
+            ctx.shadowBlur = 12;
+            ctx.fillRect(cx_rc - sqSize / 2, cy_rc - sqSize / 2, sqSize, sqSize);
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 2.2;
+            ctx.strokeRect(cx_rc - sqSize / 2, cy_rc - sqSize / 2, sqSize, sqSize);
 
             ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bold 8px 'JetBrains Mono'";
+            ctx.fillRect(cx_rc - 2, cy_rc - 2, 4, 4);
+
+            ctx.shadowBlur = 0;
+            ctx.font = "bold 13px 'JetBrains Mono', monospace";
+            ctx.fillStyle = "#FFFFFF";
             ctx.textAlign = "center";
-            ctx.fillText(n.id + " (RC)", cx_rc, cy_rc - 8);
+            ctx.fillText(n.id + " (RC)", cx_rc, cy_rc - 14);
+            ctx.restore();
           }
         });
       }
