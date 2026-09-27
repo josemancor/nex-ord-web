@@ -3814,21 +3814,131 @@
     }
 
     /* =========================================================================
-       SUB-HUD NAVEGACIÓN MODAL 6 CUADROS (1b. Cuadros: <- 1 2 3 4 5 6 -> 🏠)
+       SUB-HUD NAVEGACIÓN MODAL 6 CUADROS & MOTOR DE ZOOM CONDENSADO
        ========================================================================= */
+    :root {
+      --cuadro-zoom: 1;
+    }
+    #pantalla-c-cuadro-body-wrap,
+    #pantalla-c-caratula-view {
+      zoom: var(--cuadro-zoom, 1);
+    }
     .modal-cuadros-nav-bar {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 8px;
       margin: 0;
       padding: 3px 10px;
       background: rgba(7, 14, 30, 0.94);
       border: 1.2px solid rgba(56, 189, 248, 0.45);
       border-radius: 10px;
-      width: fit-content;
+      width: 100%;
+      max-width: 1540px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55), 0 0 15px rgba(56, 189, 248, 0.15);
       backdrop-filter: blur(12px);
+      box-sizing: border-box;
+    }
+    .modal-cuadros-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .cuadro-zoom-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(14, 23, 42, 0.95);
+      border: 1.2px solid rgba(56, 189, 248, 0.4);
+      border-radius: 8px;
+      padding: 2px 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+    .zoom-widget-label {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 2px;
+      user-select: none;
+    }
+    .btn-zoom-step {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      font-size: 0.78rem;
+      width: 28px;
+      height: 26px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-zoom-step:hover {
+      background: rgba(56, 189, 248, 0.28);
+      color: #FFFFFF;
+      border-color: #38BDF8;
+      transform: scale(1.05);
+    }
+    .btn-zoom-step:active {
+      transform: scale(0.95);
+    }
+    .btn-zoom-reset {
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.4);
+      color: #00FF87;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 900;
+      font-size: 0.74rem;
+      min-width: 44px;
+      height: 26px;
+      padding: 0 4px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-zoom-reset:hover {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: #00FF87;
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.4);
+    }
+    .btn-zoom-reset.is-compact {
+      color: #FFE600;
+      border-color: #FFE600;
+      background: rgba(255, 230, 0, 0.15);
+      box-shadow: 0 0 8px rgba(255, 230, 0, 0.35);
+    }
+    .cuadro-table-scroll-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 4px 0;
+      border-radius: 6px;
+    }
+    .cuadro-table-scroll-wrap::-webkit-scrollbar {
+      height: 5px;
+    }
+    .cuadro-table-scroll-wrap::-webkit-scrollbar-track {
+      background: rgba(11, 19, 43, 0.6);
+      border-radius: 3px;
+    }
+    .cuadro-table-scroll-wrap::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.4);
+      border-radius: 3px;
     }
     .modal-cuadros-nav-title {
       font-family: 'Roboto Mono', monospace;
@@ -5280,20 +5390,63 @@
         font-size: 0.85rem !important;
       }
 
-      /* 7. PANTALLA-C (1B: FUNDAMENTOS / 6 CUADROS) */
+      /* 7. PANTALLA-C (1B: FUNDAMENTOS / 6 CUADROS) OPTIMIZADO PARA MÓVILES */
       .modal-cuadros-nav-bar {
-        overflow-x: auto !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-start !important;
         padding: 4px 6px !important;
         width: 100% !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        gap: 5px !important;
+      }
+      .modal-cuadros-nav-left {
+        gap: 3px !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
+        max-width: calc(100% - 104px) !important;
       }
-      .modal-cuadro-nav-btn {
-        flex-shrink: 0 !important;
+      .modal-cuadros-nav-title {
         font-size: 0.76rem !important;
-        padding: 4px 8px !important;
+        padding: 2px 6px !important;
+        letter-spacing: 0.2px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
+      .modal-nav-caratula-btn {
+        padding: 0 6px !important;
+        height: 28px !important;
+        font-size: 0.76rem !important;
+      }
+      .modal-nav-caratula-btn #pantalla-c-btn-caratula-text {
+        display: none !important;
+      }
+      .modal-nav-arrow,
+      .modal-nav-num,
+      .modal-nav-home {
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        font-size: 0.80rem !important;
+      }
+      .cuadro-zoom-widget {
+        padding: 1px 4px !important;
+        gap: 2px !important;
+      }
+      .zoom-widget-label {
+        display: none !important;
+      }
+      .btn-zoom-step {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.70rem !important;
+      }
+      .btn-zoom-reset {
+        min-width: 36px !important;
+        height: 24px !important;
+        font-size: 0.68rem !important;
+        padding: 0 2px !important;
+      }
+
       .grid-6-cards {
         grid-template-columns: 1fr !important;
         width: 100% !important;
@@ -5313,6 +5466,145 @@
         max-height: none !important;
         min-height: auto !important;
         height: auto !important;
+      }
+
+      /* DETALLE INDIVIDUAL DE LOS 6 CUADROS EN MÓVIL */
+      #pantalla-c-detail-view {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #pantalla-c-cuadro-header {
+        margin: 2px auto !important;
+        gap: 8px !important;
+      }
+      #pantalla-c-cuadro-title {
+        font-size: 1.05rem !important;
+        line-height: 1.25 !important;
+      }
+      #btn-audio-pantalla-c {
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        font-size: 0.85rem !important;
+      }
+      #pantalla-c-cuadro-sub {
+        font-size: 0.76rem !important;
+        margin-bottom: 3px !important;
+        line-height: 1.3 !important;
+      }
+      #pantalla-c-cuadro-body-wrap {
+        padding: 2px 2px 14px 2px !important;
+        gap: 8px !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+      }
+      #pantalla-c-cuadro-note {
+        padding: 6px 10px !important;
+        font-size: 0.76rem !important;
+        line-height: 1.35 !important;
+      }
+      #p-c-detail-hint {
+        display: none !important;
+      }
+
+      /* REGLAS RESPONSIVAS ESPECÍFICAS PARA CADA UNO DE LOS 6 CUADROS */
+      /* 1b.1 MORENO: Formato vertical de preguntas sin desbordamiento */
+      .cuadro-moreno-card,
+      #pantalla-c-cuadro-visual div[style*="border-radius:14px"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 8px 10px !important;
+        gap: 6px !important;
+      }
+      .cuadro-moreno-card > div:first-child,
+      #pantalla-c-cuadro-visual div[style*="border-radius:14px"] > div:first-child {
+        gap: 10px !important;
+      }
+      .cuadro-moreno-card > div:last-child,
+      #pantalla-c-cuadro-visual div[style*="border-radius:14px"] > div:last-child {
+        justify-content: flex-end !important;
+        width: 100% !important;
+        margin-top: 2px !important;
+      }
+      #pantalla-c-cuadro-visual div[style*="¿A quiénes"],
+      #pantalla-c-cuadro-visual div[style*="¿Quiénes"] {
+        font-size: 0.95rem !important;
+        line-height: 1.25 !important;
+      }
+      #pantalla-c-cuadro-visual div[style*="Preferencia de colaboración"],
+      #pantalla-c-cuadro-visual div[style*="Descarte o reserva"],
+      #pantalla-c-cuadro-visual div[style*="Expectativa de simpatía"],
+      #pantalla-c-cuadro-visual div[style*="Expectativa de tensión"] {
+        font-size: 0.72rem !important;
+        margin-top: 2px !important;
+      }
+
+      /* 1b.2 BREVE: Tablas en ancho completo apiladas verticalmente */
+      #pantalla-c-breve-workbench-container div[style*="flex:1 1 380px"],
+      #modal-content-inner div[style*="flex:1 1 380px"] {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      .breve-table {
+        min-width: 290px !important;
+        width: 100% !important;
+      }
+      .breve-table th, .breve-table td {
+        padding: 3px 2px !important;
+        font-size: 0.72rem !important;
+      }
+
+      /* 1b.3 TETRAGRAMA: Bloques A1..A4 en 2x2 y tablas apiladas */
+      .cuadro-tetra-4grid,
+      #pantalla-c-cuadro-visual div[style*="grid-template-columns:repeat(4, 1fr)"],
+      #pantalla-c-cuadro-visual div[style*="grid-template-columns: repeat(4, 1fr)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+      }
+      .cuadro-tetra-2grid,
+      #pantalla-c-cuadro-visual div[style*="grid-template-columns:1fr 1fr"],
+      #pantalla-c-cuadro-visual div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+
+      /* 1b.4 SMIb y SMIa: Paneles apilados e imágenes calibradas */
+      .cuadro-smib-smia-duo,
+      #pantalla-c-cuadro-visual div[style*="PAR EN PARALELO"] + div,
+      #pantalla-c-cuadro-visual div[style*="PAR EN PARALELO SIMÉTRICO"] + div {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      #pantalla-c-cuadro-visual img[src*="matriz_smib_excel"],
+      #pantalla-c-cuadro-visual img[src*="matriz_smia_excel"] {
+        max-height: 190px !important;
+        width: auto !important;
+        max-width: 100% !important;
+      }
+
+      /* 1b.5 DENSIDADES: Layout vertical en móvil */
+      .densidad-workbench-layout {
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+      .densidad-workbench-sidebar {
+        width: 100% !important;
+        max-height: none !important;
+      }
+      .densidad-workbench-main {
+        min-height: 380px !important;
+        width: 100% !important;
+      }
+
+      /* 1b.6 PENTAGRAMA: Altura de iframe adaptativa */
+      #penta-densidades-frame,
+      .cuadro-pentagrama-frame {
+        height: clamp(480px, 65vh, 600px) !important;
+        border-radius: 10px !important;
       }
 
       /* 8. PANTALLA-D (1C: PARADIGMA / PROYECCIÓN DUAL) */
@@ -6051,24 +6343,34 @@
     <!-- SUB-HUD NAVEGACIÓN 1b CUADROS (DESCENTRADO AL PRINCIPIO DE LÍNEA) -->
     <div style="display:flex; justify-content:flex-start; align-items:center; width:100%; max-width:1540px; margin:2px auto 4px auto; z-index:10; flex-shrink:0;">
       <div class="modal-cuadros-nav-bar" id="pantalla-c-nav-bar" aria-label="Navegación directa de los 6 Cuadros">
-        <span class="modal-cuadros-nav-title" id="pantalla-c-nav-title" style="color: #00FF87; font-weight: 900; background: rgba(0,255,135,0.15); border: 1.5px solid #00FF87; padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; font-size: 0.84rem;">🎮 SELECCIÓN DE CUADRO (PULSE 1 AL 6 PARA CARGAR):</span>
-        <button class="modal-nav-caratula-btn active" id="pantalla-c-btn-caratula" onclick="showPantallaCCaratula()" title="Ver la Carátula de los 6 Cuadros">
-          <span>▦</span> <span id="pantalla-c-btn-caratula-text">Carátula</span>
-        </button>
-        <span style="color:rgba(56,189,248,0.35); font-size:1.1rem; margin:0 3px;">|</span>
-        <button class="modal-nav-arrow" onclick="navigatePantallaCCuadro(-1)" title="Cuadro anterior [←]">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-        <button class="modal-nav-num" id="pantalla-c-btn-1" onclick="setPantallaCCuadro(0)" title="Ir al Cuadro 1b.1 (MORENO)">1</button>
-        <button class="modal-nav-num" id="pantalla-c-btn-2" onclick="setPantallaCCuadro(1)" title="Ir al Cuadro 1b.2 (BREVE)">2</button>
-        <button class="modal-nav-num" id="pantalla-c-btn-3" onclick="setPantallaCCuadro(2)" title="Ir al Cuadro 1b.3 (TETRAGRAMA y Q81)">3</button>
-        <button class="modal-nav-num" id="pantalla-c-btn-4" onclick="setPantallaCCuadro(3)" title="Ir al Cuadro 1b.4 (SMIb y SMIa)">4</button>
-        <button class="modal-nav-num" id="pantalla-c-btn-5" onclick="setPantallaCCuadro(4)" title="Ir al Cuadro 1b.5 (DE RECUENTOS A DENSIDADES)">5</button>
-        <button class="modal-nav-num" id="pantalla-c-btn-6" onclick="setPantallaCCuadro(5)" title="Ir al Cuadro 1b.6 (PENTAGRAMA INTERACTIVO)">6</button>
-        <button class="modal-nav-arrow" onclick="navigatePantallaCCuadro(1)" title="Cuadro siguiente [→]">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-        <button class="modal-nav-home" onclick="showPantallaCCaratula()" title="Volver a la Carátula de los 6 Cuadros">🏠</button>
+        <div class="modal-cuadros-nav-left">
+          <span class="modal-cuadros-nav-title" id="pantalla-c-nav-title" style="color: #00FF87; font-weight: 900; background: rgba(0,255,135,0.15); border: 1.5px solid #00FF87; padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; font-size: 0.84rem;">🎮 SELECCIÓN DE CUADRO (PULSE 1 AL 6 PARA CARGAR):</span>
+          <button class="modal-nav-caratula-btn active" id="pantalla-c-btn-caratula" onclick="showPantallaCCaratula()" title="Ver la Carátula de los 6 Cuadros">
+            <span>▦</span> <span id="pantalla-c-btn-caratula-text">Carátula</span>
+          </button>
+          <span class="nav-pipe-sep" style="color:rgba(56,189,248,0.35); font-size:1.1rem; margin:0 3px;">|</span>
+          <button class="modal-nav-arrow" onclick="navigatePantallaCCuadro(-1)" title="Cuadro anterior [←]">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="modal-nav-num" id="pantalla-c-btn-1" onclick="setPantallaCCuadro(0)" title="Ir al Cuadro 1b.1 (MORENO)">1</button>
+          <button class="modal-nav-num" id="pantalla-c-btn-2" onclick="setPantallaCCuadro(1)" title="Ir al Cuadro 1b.2 (BREVE)">2</button>
+          <button class="modal-nav-num" id="pantalla-c-btn-3" onclick="setPantallaCCuadro(2)" title="Ir al Cuadro 1b.3 (TETRAGRAMA y Q81)">3</button>
+          <button class="modal-nav-num" id="pantalla-c-btn-4" onclick="setPantallaCCuadro(3)" title="Ir al Cuadro 1b.4 (SMIb y SMIa)">4</button>
+          <button class="modal-nav-num" id="pantalla-c-btn-5" onclick="setPantallaCCuadro(4)" title="Ir al Cuadro 1b.5 (DE RECUENTOS A DENSIDADES)">5</button>
+          <button class="modal-nav-num" id="pantalla-c-btn-6" onclick="setPantallaCCuadro(5)" title="Ir al Cuadro 1b.6 (PENTAGRAMA INTERACTIVO)">6</button>
+          <button class="modal-nav-arrow" onclick="navigatePantallaCCuadro(1)" title="Cuadro siguiente [→]">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="modal-nav-home" onclick="showPantallaCCaratula()" title="Volver a la Carátula de los 6 Cuadros">🏠</button>
+        </div>
+
+        <!-- CONTROL INTELIGENTE DE ZOOM PARA CONDENSAR TEXTO EN MÓVILES -->
+        <div class="cuadro-zoom-widget" id="pantalla-c-zoom-widget" aria-label="Control de zoom para reducir extensión de texto">
+          <span class="zoom-widget-label">Zoom:</span>
+          <button type="button" class="btn-zoom-step btn-zoom-minus" onclick="adjustCuadroZoom(-0.08)" title="Reducir tamaño del texto (Zoom −)">A−</button>
+          <button type="button" class="btn-zoom-reset" id="pantalla-c-zoom-badge" onclick="resetCuadroZoom()" title="Restablecer tamaño normal / Alternar modo compacto">100%</button>
+          <button type="button" class="btn-zoom-step btn-zoom-plus" onclick="adjustCuadroZoom(0.08)" title="Aumentar tamaño del texto (Zoom +)">A+</button>
+        </div>
       </div>
     </div>
 
@@ -13240,7 +13542,130 @@
       currentConceptIndex = currentPantallaCCuadroIndex;
       setPantallaCCuadro(currentPantallaCCuadroIndex);
     }
-    window.navigatePantallaCCuadro = navigatePantallaCCuadro;
+    // =========================================================================
+    // MOTOR DE ZOOM Y ADAPTACIÓN CONDENSADA DE LOS 6 CUADROS (1b)
+    // =========================================================================
+    let currentCuadroZoom = 1.0;
+
+    function initCuadroZoom() {
+      const isMobile = window.innerWidth <= 768;
+      const saved = localStorage.getItem('visord_1b_zoom');
+      if (saved) {
+        currentCuadroZoom = parseFloat(saved);
+      } else if (isMobile) {
+        currentCuadroZoom = 0.82; // Zoom compacto automático en móvil para condensar texto
+      } else {
+        currentCuadroZoom = 1.0;
+      }
+      applyCuadroZoom(currentCuadroZoom, false);
+      updateCuadroNavTitleResponsive();
+    }
+    window.initCuadroZoom = initCuadroZoom;
+
+    function applyCuadroZoom(zoomLevel, save = true) {
+      currentCuadroZoom = Math.min(Math.max(Math.round(zoomLevel * 100) / 100, 0.60), 1.25);
+      if (save) {
+        try { localStorage.setItem('visord_1b_zoom', currentCuadroZoom); } catch(e) {}
+      }
+
+      const badge = document.getElementById('pantalla-c-zoom-badge');
+      if (badge) {
+        badge.textContent = Math.round(currentCuadroZoom * 100) + '%';
+        badge.classList.toggle('is-compact', currentCuadroZoom < 0.95);
+      }
+
+      const bodyWrap = document.getElementById('pantalla-c-cuadro-body-wrap');
+      if (bodyWrap) {
+        bodyWrap.style.setProperty('--cuadro-zoom', currentCuadroZoom);
+        bodyWrap.style.zoom = currentCuadroZoom;
+      }
+
+      const caratulaView = document.getElementById('pantalla-c-caratula-view');
+      if (caratulaView && window.innerWidth <= 768) {
+        caratulaView.style.zoom = currentCuadroZoom;
+      }
+
+      const modalInner = document.getElementById('modal-content-inner');
+      if (modalInner) {
+        modalInner.style.zoom = currentCuadroZoom;
+      }
+    }
+    window.applyCuadroZoom = applyCuadroZoom;
+
+    function adjustCuadroZoom(delta) {
+      applyCuadroZoom(currentCuadroZoom + delta, true);
+    }
+    window.adjustCuadroZoom = adjustCuadroZoom;
+
+    function resetCuadroZoom() {
+      if (window.innerWidth <= 768) {
+        if (Math.abs(currentCuadroZoom - 0.82) < 0.05) {
+          applyCuadroZoom(1.0, true);
+        } else {
+          applyCuadroZoom(0.82, true);
+        }
+      } else {
+        applyCuadroZoom(1.0, true);
+      }
+    }
+    window.resetCuadroZoom = resetCuadroZoom;
+
+    function updateCuadroNavTitleResponsive() {
+      const pcNavTitle = document.getElementById('pantalla-c-nav-title');
+      if (!pcNavTitle) return;
+      const dict = (typeof I18N !== 'undefined' && I18N[currentLang]) ? I18N[currentLang] : null;
+      const fullTitle = dict ? dict.p_c_nav_title : '🎮 SELECCIÓN DE CUADRO (PULSE 1 AL 6 PARA CARGAR):';
+      if (window.innerWidth <= 768) {
+        pcNavTitle.textContent = '🎮 1b:';
+        pcNavTitle.title = fullTitle;
+      } else {
+        pcNavTitle.textContent = fullTitle;
+      }
+    }
+    window.updateCuadroNavTitleResponsive = updateCuadroNavTitleResponsive;
+
+    function enhanceCuadroMobileLayout(key, visualEl) {
+      if (!visualEl) return;
+
+      // 1. Envolver tablas no protegidas en contenedores con scroll horizontal táctil
+      const tables = visualEl.querySelectorAll('table');
+      tables.forEach(tbl => {
+        if (!tbl.parentElement.classList.contains('cuadro-table-scroll-wrap') &&
+            !tbl.parentElement.classList.contains('breve-table-scroll-wrap')) {
+          const wrap = document.createElement('div');
+          wrap.className = 'cuadro-table-scroll-wrap';
+          tbl.parentNode.insertBefore(wrap, tbl);
+          wrap.appendChild(tbl);
+        }
+      });
+
+      // 2. Identificar tarjetas de 1b.1 MORENO
+      if (key === 'moreno') {
+        const qCards = visualEl.querySelectorAll('div[style*="border-radius:14px"]');
+        qCards.forEach(c => c.classList.add('cuadro-moreno-card'));
+      }
+
+      // 3. Identificar cuadrículas de 1b.3 TETRAGRAMA
+      if (key === 'tetragrama') {
+        const fourGrids = visualEl.querySelectorAll('div[style*="grid-template-columns:repeat(4"]');
+        fourGrids.forEach(g => g.classList.add('cuadro-tetra-4grid'));
+        const duoGrids = visualEl.querySelectorAll('div[style*="grid-template-columns:1fr 1fr"]');
+        duoGrids.forEach(g => g.classList.add('cuadro-tetra-2grid'));
+      }
+
+      // 4. Identificar paneles dobles de 1b.4 SMIb
+      if (key === 'smib') {
+        const duoGrids = visualEl.querySelectorAll('div[style*="grid-template-columns:1fr 1fr"]');
+        duoGrids.forEach(g => g.classList.add('cuadro-smib-smia-duo'));
+      }
+
+      // 5. Identificar iframe de 1b.6 PENTAGRAMA
+      if (key === 'grafico_densidades') {
+        const iframe = visualEl.querySelector('iframe');
+        if (iframe) iframe.classList.add('cuadro-pentagrama-frame');
+      }
+    }
+    window.enhanceCuadroMobileLayout = enhanceCuadroMobileLayout;
 
     function renderPantallaCCuadro() {
       const key = conceptKeys[currentPantallaCCuadroIndex];
@@ -13272,6 +13697,13 @@
       if (visualEl) visualEl.innerHTML = data.visual;
       const noteEl = document.getElementById('pantalla-c-cuadro-note');
       if (noteEl) noteEl.innerHTML = data.note;
+
+      if (visualEl && typeof enhanceCuadroMobileLayout === 'function') {
+        enhanceCuadroMobileLayout(key, visualEl);
+      }
+      if (typeof applyCuadroZoom === 'function') {
+        applyCuadroZoom(currentCuadroZoom, false);
+      }
 
       if (key === 'grafico_densidades') {
         setTimeout(() => {
@@ -13369,6 +13801,13 @@
           <button class="flow-nav-btn" style="border-color:var(--neon-cyan); color:var(--neon-cyan); padding:6px 16px; font-size:0.88rem;" onclick="closeModal()">Cerrar y Volver a 1b [ESC]</button>
         </div>
       `;
+
+      if (typeof enhanceCuadroMobileLayout === 'function') {
+        enhanceCuadroMobileLayout(key, inner);
+      }
+      if (typeof applyCuadroZoom === 'function') {
+        inner.style.zoom = currentCuadroZoom;
+      }
 
       document.getElementById('fullscreen-modal').classList.add('active');
       if (key === 'grafico_densidades') {
@@ -16572,8 +17011,12 @@
       if (btnContB) btnContB.textContent = dict.btn_continuar;
 
       // 6. Pantalla C (6 Cuadros)
-      const pcNavTitle = document.getElementById('pantalla-c-nav-title');
-      if (pcNavTitle) pcNavTitle.textContent = dict.p_c_nav_title;
+      if (typeof updateCuadroNavTitleResponsive === 'function') {
+        updateCuadroNavTitleResponsive();
+      } else {
+        const pcNavTitle = document.getElementById('pantalla-c-nav-title');
+        if (pcNavTitle) pcNavTitle.textContent = dict.p_c_nav_title;
+      }
       const pcCaratBtn = document.getElementById('pantalla-c-btn-caratula-text');
       if (pcCaratBtn) pcCaratBtn.textContent = dict.p_c_caratula_btn;
       const pcH2 = document.getElementById('p-c-h2');
@@ -17014,10 +17457,14 @@
       updateUnifiedHud();
       if (typeof syncNavPodNivel1UI === 'function') syncNavPodNivel1UI();
     });
-    window.addEventListener('resize', updateUnifiedHud);
+    window.addEventListener('resize', () => {
+      updateUnifiedHud();
+      if (typeof updateCuadroNavTitleResponsive === 'function') updateCuadroNavTitleResponsive();
+    });
     window.addEventListener('DOMContentLoaded', () => {
       updateUnifiedHud();
       if (typeof syncNavPodNivel1UI === 'function') syncNavPodNivel1UI();
+      if (typeof initCuadroZoom === 'function') initCuadroZoom();
       const snapCont = document.getElementById('main-snap-container');
       if (snapCont) snapCont.addEventListener('scroll', updateUnifiedHud);
     });
