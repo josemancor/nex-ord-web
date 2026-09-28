@@ -285,7 +285,7 @@
                 clusters: [
                     { name: "Clúster 1: Núcleo de Duda Razonable y Conciencia Cívica", color: "#00FF87", members: ["Jurado 8 (Davis)", "Jurado 9 (McArdle)", "Jurado 11 (Relojero)"], desc: "Liderazgo ético transformador, valentía moral y respeto por las instituciones deliberativas." },
                     { name: "Clúster 2: Racionalidad Factual y Saber Empírico", color: "#38BDF8", members: ["Jurado 4 (Corredor)", "Jurado 5 (Suburbio)", "Jurado 2 (El Tímido)", "Jurado 6 (El Pintor)"], desc: "Transición lógica fundamentada en pruebas materiales (la navaja, el tren, la visión y las gafas)." },
-                    { name: "Clúster 3: Periferia Inestable e Inercia Procesual", color: "#FFE600", members: ["Jurado 1 (Presidente)", "Jurado 7 (Vendedor beisbolero)", "Jurado 12 (Publicista)"], desc: "Conductas gregarias, desidia pragmática o superficialidad que ceden ante el peso mayoritario." },
+                    { name: "Clúster 3: Periferia Inestable e Inercia Dialéctica", color: "#FFE600", members: ["Jurado 1 (Presidente)", "Jurado 7 (Vendedor beisbolero)", "Jurado 12 (Publicista)"], desc: "Conductas gregarias, desidia pragmática o superficialidad que ceden ante el peso mayoritario." },
                     { name: "Clúster 4: Polo de Hostilidad y Ostracismo Punitivo", color: "#FF007F", members: ["Jurado 3 (Empresario colérico)", "Jurado 10 (El Racista)"], desc: "Resistencia emocional irreductible: rencor filial proyectado y fanatismo segregacionista neutralizados por el colectivo." }
                 ],
                 branches: [
