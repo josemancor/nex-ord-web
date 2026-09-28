@@ -12352,7 +12352,7 @@ function playVisordAudioChime() {
         if (!AudioCtx) return;
         const ctx = new AudioCtx();
         if (ctx.state === "suspended") {
-            ctx.resume();
+            ctx.resume().catch(() => {});
         }
         const now = ctx.currentTime;
         const osc = ctx.createOscillator();
@@ -12472,6 +12472,67 @@ window.toggleVisordDemoAudio = function() {
 window.addEventListener('beforeunload', () => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 });
+
+// =========================================================================
+// INICIO AUTOMÁTICO DEL AUDIO AL ABRIR VISORD_DEMO
+// =========================================================================
+let hasAutoplayStarted = false;
+
+function startVisordDemoAudioAuto() {
+    if (hasAutoplayStarted || isVisordDemoAudioPlaying) return;
+    hasAutoplayStarted = true;
+
+    try {
+        if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        }
+        if (typeof toggleVisordDemoAudio === 'function') {
+            toggleVisordDemoAudio();
+        }
+    } catch(e) {
+        console.warn("Autoplay de audio diferido por política del navegador:", e);
+    }
+}
+
+// 1. Intentar inicio automático al cargar la página (con retardo para que carguen voces y escena 3D)
+window.addEventListener('load', () => {
+    setTimeout(startVisordDemoAudioAuto, 800);
+});
+
+// En caso de que el documento ya esté completamente cargado
+if (document.readyState === 'complete') {
+    setTimeout(startVisordDemoAudioAuto, 600);
+}
+
+// Si onvoiceschanged se ejecuta después del load, asegurar el inicio
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    const existingVoicesChanged = window.speechSynthesis.onvoiceschanged;
+    window.speechSynthesis.onvoiceschanged = () => {
+        if (typeof existingVoicesChanged === 'function') existingVoicesChanged();
+        if (!hasAutoplayStarted && !isVisordDemoAudioPlaying) {
+            setTimeout(startVisordDemoAudioAuto, 400);
+        }
+    };
+}
+
+// 2. Respaldo por política estricta de Autoplay de navegadores (Chrome/Safari/Firefox/iOS):
+// Si el navegador bloquea la reproducción sin interacción previa en el documento,
+// el primer gesto de usuario (clic, toque, scroll, tecla) iniciará inmediatamente la locución.
+const triggerAudioOnFirstInteraction = () => {
+    if (!hasAutoplayStarted && !isVisordDemoAudioPlaying) {
+        startVisordDemoAudioAuto();
+    }
+    window.removeEventListener('pointerdown', triggerAudioOnFirstInteraction);
+    window.removeEventListener('click', triggerAudioOnFirstInteraction);
+    window.removeEventListener('touchstart', triggerAudioOnFirstInteraction);
+    window.removeEventListener('keydown', triggerAudioOnFirstInteraction);
+    window.removeEventListener('scroll', triggerAudioOnFirstInteraction);
+};
+window.addEventListener('pointerdown', triggerAudioOnFirstInteraction, { passive: true, once: true });
+window.addEventListener('click', triggerAudioOnFirstInteraction, { passive: true, once: true });
+window.addEventListener('touchstart', triggerAudioOnFirstInteraction, { passive: true, once: true });
+window.addEventListener('keydown', triggerAudioOnFirstInteraction, { passive: true, once: true });
+window.addEventListener('scroll', triggerAudioOnFirstInteraction, { passive: true, once: true });
 
 </script>
 </body>
