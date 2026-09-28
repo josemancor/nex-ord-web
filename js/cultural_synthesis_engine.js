@@ -279,6 +279,28 @@
                 "1g4t2c": { tc: "1g4t2c", t: 4, c: 2, bdr: 4.40, sdr: -0.32, bda: 4.40, sda: -0.32, brc: 4.40, src: -0.32, h: 3.80, iir: 8.90, isv: 0.52, g: 9.40, label: "Ostracismo del Racismo" },
                 "1g5t1c": { tc: "1g5t1c", t: 5, c: 1, bdr: 4.55, sdr: 0.92, bda: 4.55, sda: 0.92, brc: 4.55, src: 0.92, h: 5.10, iir: 7.40, isv: 0.15, g: 11.20, label: "Consenso Unánime (0-12)" },
                 "1g5t2c": { tc: "1g5t2c", t: 5, c: 2, bdr: 4.55, sdr: 0.00, bda: 4.55, sda: 0.00, brc: 4.55, src: 0.00, h: 5.25, iir: 6.80, isv: 0.05, g: 11.50, label: "Entropía Cero / Reconciliación" }
+            },
+            dendrograma: {
+                threshold: 1.65,
+                clusters: [
+                    { name: "Clúster 1: Núcleo de Duda Razonable y Conciencia Cívica", color: "#00FF87", members: ["Jurado 8 (Davis)", "Jurado 9 (McArdle)", "Jurado 11 (Relojero)"], desc: "Liderazgo ético transformador, valentía moral y respeto por las instituciones deliberativas." },
+                    { name: "Clúster 2: Racionalidad Factual y Saber Empírico", color: "#38BDF8", members: ["Jurado 4 (Corredor)", "Jurado 5 (Suburbio)", "Jurado 2 (El Tímido)", "Jurado 6 (El Pintor)"], desc: "Transición lógica fundamentada en pruebas materiales (la navaja, el tren, la visión y las gafas)." },
+                    { name: "Clúster 3: Periferia Inestable e Inercia Procesual", color: "#FFE600", members: ["Jurado 1 (Presidente)", "Jurado 7 (Vendedor beisbolero)", "Jurado 12 (Publicista)"], desc: "Conductas gregarias, desidia pragmática o superficialidad que ceden ante el peso mayoritario." },
+                    { name: "Clúster 4: Polo de Hostilidad y Ostracismo Punitivo", color: "#FF007F", members: ["Jurado 3 (Empresario colérico)", "Jurado 10 (El Racista)"], desc: "Resistencia emocional irreductible: rencor filial proyectado y fanatismo segregacionista neutralizados por el colectivo." }
+                ],
+                branches: [
+                    { id1: "J8", id2: "J9", dist: 0.45 },
+                    { id1: "J8", id2: "J11", dist: 0.75 },
+                    { id1: "J4", id2: "J5", dist: 0.88 },
+                    { id1: "J2", id2: "J6", dist: 0.95 },
+                    { id1: "J4", id2: "J2", dist: 1.20 },
+                    { id1: "J1", id2: "J12", dist: 1.15 },
+                    { id1: "J7", id2: "J1", dist: 1.35 },
+                    { id1: "J3", id2: "J10", dist: 0.85 },
+                    { id1: "J8", id2: "J4", dist: 1.45 },
+                    { id1: "J4", id2: "J1", dist: 1.85 },
+                    { id1: "J1", id2: "J3", dist: 2.65 }
+                ]
             }
         },
 
@@ -322,6 +344,24 @@
                 "1g2t2c": { tc: "1g2t2c", t: 2, c: 2, bdr: 3.30, sdr: -0.53, bda: 3.30, sda: -0.53, brc: 3.30, src: -0.53, h: 3.90, iir: 9.45, isv: 0.62, g: 9.00, label: "Acto II: Celos y Linchamiento" },
                 "1g3t1c": { tc: "1g3t1c", t: 3, c: 1, bdr: 3.80, sdr: 0.70, bda: 3.80, sda: 0.70, brc: 3.80, src: 0.70, h: 4.40, iir: 8.10, isv: 0.34, g: 10.50, label: "Acto III: Víspera Trágica" },
                 "1g3t2c": { tc: "1g3t2c", t: 3, c: 2, bdr: 3.55, sdr: -0.71, bda: 3.55, sda: -0.71, brc: 3.55, src: -0.71, h: 4.10, iir: 9.85, isv: 0.70, g: 8.80, label: "Acto III: Catástrofe y Suicidio" }
+            },
+            dendrograma: {
+                threshold: 1.65,
+                clusters: [
+                    { name: "Clúster 1: Rebeldía y Deseo Vital", color: "#00FF87", members: ["Adela (L6)", "María Josefa (L8)"], desc: "Anhelo incontenible de libertad, fecundidad y desacato del luto matriarcal." },
+                    { name: "Clúster 2: Represión Tiránica y Vigilancia Punitiva", color: "#DC2626", members: ["Bernarda (L1)", "Martirio (L5)"], desc: "Eje del orden autoritario, la delación rencorosa y el bastón de mando." },
+                    { name: "Clúster 3: Resignación Sumisa y Resquemor", color: "#94A3B8", members: ["Angustias (L2)", "Magdalena (L3)", "Amelia (L4)"], desc: "Sometimiento al destino femenino tradicional y confinamiento doméstico." },
+                    { name: "Clúster 4: Realismo Pragmático y Mediación", color: "#F59E0B", members: ["La Poncia (L7)"], desc: "Voz de alerta popular; conocedora lúcida de las fuerzas soterradas." }
+                ],
+                branches: [
+                    { id1: "L6", id2: "L8", dist: 0.65 },
+                    { id1: "L1", id2: "L5", dist: 0.70 },
+                    { id1: "L3", id2: "L4", dist: 0.55 },
+                    { id1: "L2", id2: "L3", dist: 0.90 },
+                    { id1: "L7", id2: "L2", dist: 1.20 },
+                    { id1: "L6", id2: "L7", dist: 1.55 },
+                    { id1: "L1", id2: "L6", dist: 2.45 }
+                ]
             }
         },
 
@@ -367,6 +407,23 @@
                 "1g3t2c": { tc: "1g3t2c", t: 3, c: 2, bdr: 4.10, sdr: 0.66, bda: 4.10, sda: 0.66, brc: 4.10, src: 0.66, h: 4.30, iir: 9.90, isv: 0.65, g: 9.10, label: "Fase 3: Asesinato Ritual de Simon" },
                 "1g4t1c": { tc: "1g4t1c", t: 4, c: 1, bdr: 4.80, sdr: -0.20, bda: 4.80, sda: -0.20, brc: 4.80, src: -0.20, h: 4.20, iir: 9.10, isv: 0.55, g: 10.80, label: "Fase 4: Lealtad en el Abismo" },
                 "1g4t2c": { tc: "1g4t2c", t: 4, c: 2, bdr: 4.45, sdr: 0.84, bda: 4.45, sda: 0.84, brc: 4.45, src: 0.84, h: 4.00, iir: 10.20, isv: 0.72, g: 8.90, label: "Fase 4: Caída de Piggy y Caza" }
+            },
+            dendrograma: {
+                threshold: 1.65,
+                clusters: [
+                    { name: "Clúster 1: Razón Democrática y Civilización", color: "#38BDF8", members: ["Ralph (M1)", "Piggy (M3)", "Simon (M4)"], desc: "Defensa de la caracola, las reglas, la hoguera y la verdad ética." },
+                    { name: "Clúster 2: Atavismo Tribal y Barbarie Punitiva", color: "#EF4444", members: ["Jack (M2)", "Roger (M5)", "Maurice (M7)"], desc: "Regresión al poder de la fuerza bruta, la caza totémica y la crueldad desatada." },
+                    { name: "Clúster 3: Periferia Coaccionada y Temor", color: "#F59E0B", members: ["Samneric (M6)", "Littluns (M8)"], desc: "Vulnerabilidad infantil y lealtades quebradas por la intimidación." }
+                ],
+                branches: [
+                    { id1: "M1", id2: "M3", dist: 0.55 },
+                    { id1: "M1", id2: "M4", dist: 0.80 },
+                    { id1: "M2", id2: "M5", dist: 0.60 },
+                    { id1: "M2", id2: "M7", dist: 0.85 },
+                    { id1: "M6", id2: "M8", dist: 0.95 },
+                    { id1: "M1", id2: "M6", dist: 1.35 },
+                    { id1: "M1", id2: "M2", dist: 2.50 }
+                ]
             }
         },
 
@@ -409,6 +466,24 @@
                 "1g2t2c": { tc: "1g2t2c", t: 2, c: 2, bdr: 3.74, sdr: -0.47, bda: 3.74, sda: -0.47, brc: 3.74, src: -0.47, h: 3.90, iir: 9.40, isv: 0.55, g: 9.50, label: "Ola 2: Acoso a Disidentes" },
                 "1g3t1c": { tc: "1g3t1c", t: 3, c: 1, bdr: 4.42, sdr: 0.84, bda: 4.42, sda: 0.84, brc: 4.42, src: 0.84, h: 4.60, iir: 7.80, isv: 0.20, g: 10.90, label: "Ola 3: Clímax en el Auditorio" },
                 "1g3t2c": { tc: "1g3t2c", t: 3, c: 2, bdr: 4.12, sdr: -0.69, bda: 4.12, sda: -0.69, brc: 4.12, src: -0.69, h: 4.25, iir: 9.90, isv: 0.68, g: 9.10, label: "Ola 3: Disparo y Desolación" }
+            },
+            dendrograma: {
+                threshold: 1.65,
+                clusters: [
+                    { name: "Clúster 1: Fanatismo y Dependencia Autocrática", color: "#EF4444", members: ["Tim (O5)", "Dennis (O3)"], desc: "Entrega total al colectivo para compensar carencias identitarias." },
+                    { name: "Clúster 2: Resistencia Crítica y Autonomía", color: "#FF007F", members: ["Karo (O2)"], desc: "Defensa intransigente del pensamiento libre frente a la manipulación masiva." },
+                    { name: "Clúster 3: Conformismo Gregario", color: "#818CF8", members: ["Marco (O4)", "Lisa (O7)", "Sinan (O6)"], desc: "Atracción por la pertenencia y el espíritu de cuerpo juvenil." },
+                    { name: "Clúster 4: Vértigo del Poder Pedagógico", color: "#38BDF8", members: ["Rainer Wenger (O1)"], desc: "Líder carismático desbordado por las fuerzas que él mismo ha convocado." }
+                ],
+                branches: [
+                    { id1: "O5", id2: "O3", dist: 0.60 },
+                    { id1: "O4", id2: "O7", dist: 0.70 },
+                    { id1: "O4", id2: "O6", dist: 0.85 },
+                    { id1: "O1", id2: "O5", dist: 1.10 },
+                    { id1: "O1", id2: "O4", dist: 1.30 },
+                    { id1: "O2", id2: "O4", dist: 1.75 },
+                    { id1: "O2", id2: "O1", dist: 2.40 }
+                ]
             }
         }
     };
@@ -1241,17 +1316,18 @@
         const leaves = sData.characters;
         const nLeaves = leaves.length;
         const w = container.clientWidth || 700;
-        const h = 380;
-        const padX = 140;
+        const h = Math.max(380, nLeaves * 34 + 50);
+        const padX = 180;
         const padY = 30;
 
         let svg = `<svg width="${w}" height="${h}" style="background:#0B132B; border-radius:8px; display:block;">`;
 
         // Línea de Umbral de Corte Fenotípico
-        const threshX = padX + (1.65 / 3.0) * (w - padX - 40);
+        const threshDist = dData.threshold || 1.65;
+        const threshX = padX + (threshDist / 3.0) * (w - padX - 40);
         svg += `
             <line x1="${threshX}" y1="${padY - 10}" x2="${threshX}" y2="${h - padY + 10}" stroke="#FF007F" stroke-dasharray="4,4" stroke-width="1.5" />
-            <text x="${threshX + 6}" y="${padY}" fill="#FF007F" font-size="10" font-family="'Roboto Mono'">Umbral Fenotípico d=${dData.threshold}</text>
+            <text x="${threshX + 6}" y="${padY}" fill="#FF007F" font-size="10" font-family="'Roboto Mono'">Umbral Fenotípico d=${threshDist}</text>
         `;
 
         // Renderizado simplificado y elegante de árbol jerárquico horizontal
@@ -1263,14 +1339,14 @@
 
             // Nodo terminal (Hoja)
             svg += `
-                <circle cx="28" cy="${y}" r="6" fill="${c.color}" />
-                <text x="42" y="${y + 4}" fill="#FFFFFF" font-size="11" font-weight="bold" font-family="'Roboto Mono'">${c.name} (${c.id})</text>
-                <line x1="120" y1="${y}" x2="${padX}" y2="${y}" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+                <circle cx="20" cy="${y}" r="6" fill="${c.color}" />
+                <text x="32" y="${y + 4}" fill="#FFFFFF" font-size="11" font-weight="bold" font-family="'Roboto Mono'">${c.name} (${c.id})</text>
+                <line x1="${padX - 25}" y1="${y}" x2="${padX}" y2="${y}" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
             `;
         });
 
         // Dibujo de ramas de unión clúster
-        const branches = [
+        const branches = dData.branches || [
             { id1: "P2", id2: "P6", dist: 0.62 },
             { id1: "P3", id2: "P9", dist: 0.85 },
             { id1: "P4", id2: "P7", dist: 1.25 },
@@ -1296,7 +1372,7 @@
         const cListDiv = document.getElementById('dendro-clusters-summary');
         if (cListDiv && dData.clusters) {
             cListDiv.innerHTML = dData.clusters.map(c => `
-                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-left:4px solid ${c.color}; padding:10px 14px; border-radius:6px;">
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-left:4px solid ${c.color}; padding:10px 14px; border-radius:6px; margin-bottom:8px;">
                     <div style="font-weight:bold; color:${c.color}; font-size:0.82rem;">${c.name}</div>
                     <div style="color:#CBD5E1; font-size:0.72rem; margin-top:2px;">Miembros: <strong>${c.members.join(', ')}</strong></div>
                     <div style="color:#94A3B8; font-size:0.68rem; margin-top:4px;">${c.desc}</div>
