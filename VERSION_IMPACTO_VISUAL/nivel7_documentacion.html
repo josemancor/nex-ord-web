@@ -4047,7 +4047,7 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px;">
-          <a id="modal-download-link" href="assets/carte_tendre/carte_tendre_1654_chauveau.jpg" target="_blank" download style="color:var(--neon-cyan); font-size:0.80rem; font-family:var(--font-mono); text-decoration:none; padding:4px 10px; border:1px solid var(--neon-cyan); border-radius:4px; display:inline-flex; align-items:center; gap:5px; background:rgba(56,189,248,0.08);">
+          <a id="modal-download-link" href="assets/carte_tendre/carte_tendre_1654_chauveau.jpg" onclick="downloadModalImage(event)" target="_blank" style="color:var(--neon-cyan); font-size:0.80rem; font-family:var(--font-mono); text-decoration:none; padding:4px 10px; border:1px solid var(--neon-cyan); border-radius:4px; display:inline-flex; align-items:center; gap:5px; background:rgba(56,189,248,0.08);">
             <span data-i18n="modal_btn_download">Descargar Archivo Original ↗</span>
           </a>
           <button class="modal-close-btn" onclick="closeModal()" style="background:rgba(255,0,127,0.15); border:1px solid var(--neon-pink); color:#FFF; padding:4px 12px; border-radius:4px; cursor:pointer; font-weight:700; font-size:0.82rem;" title="Cerrar modal (ESC)" data-i18n="modal_btn_close">✕ CERRAR [ESC]</button>
@@ -4860,6 +4860,34 @@
         modal.classList.add('active');
         updateModalTendreView();
       }
+    }
+
+    function downloadModalImage(e) {
+      if (e) e.preventDefault();
+      const downloadLink = document.getElementById('modal-download-link');
+      const href = downloadLink ? downloadLink.getAttribute('href') : '';
+      if (!href) return;
+      const filename = href.substring(href.lastIndexOf('/') + 1);
+
+      // Descarga forzada limpia para evitar que macOS intente abrirlo con máquinas virtuales de Windows
+      fetch(href)
+        .then(resp => resp.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          }, 1000);
+        })
+        .catch(() => {
+          window.open(href, '_blank');
+        });
     }
 
     function updateModalTendreView() {
