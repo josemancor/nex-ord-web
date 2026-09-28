@@ -2445,6 +2445,93 @@
     .fullscreen-modal.active {
       display: flex;
     }
+    
+    /* NAVEGACIÓN CINEMÁTICA EN MODAL PANTALLA COMPLETA (CARTE DU TENDRE) */
+    .modal-float-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 80px;
+      background: rgba(6, 10, 22, 0.72);
+      border: 1.5px solid rgba(0, 255, 135, 0.50);
+      color: var(--neon-green);
+      font-size: 2.1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 25;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
+      user-select: none;
+    }
+    .modal-arrow-left {
+      left: 20px;
+    }
+    .modal-arrow-right {
+      right: 20px;
+    }
+    .modal-float-arrow:hover {
+      background: rgba(0, 255, 135, 0.32);
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+      box-shadow: 0 0 32px rgba(0, 255, 135, 0.85);
+      transform: translateY(-50%) scale(1.10);
+    }
+    .modal-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .modal-nav-step-btn {
+      background: transparent;
+      border: none;
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+    .modal-nav-step-btn:hover {
+      color: #FFF;
+      transform: scale(1.25);
+    }
+    .modal-autoplay-toggle {
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      color: var(--neon-green);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .modal-autoplay-toggle:hover {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: #FFF;
+    }
+    .modal-autoplay-toggle.running {
+      background: rgba(255, 230, 0, 0.22);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 12px rgba(255, 230, 0, 0.55);
+    }
+
     .modal-content-box {
       position: relative;
       width: 96vw;
@@ -3937,20 +4024,51 @@
   <!-- MODAL DE PANTALLA COMPLETA PARA LA CARTE DU TENDRE -->
   <div id="fullscreen-modal" class="fullscreen-modal" onclick="if(event.target === this) closeModal()">
     <div class="modal-content-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 16px; border-bottom:1px solid rgba(255,255,255,0.1); background:rgba(6,10,22,0.85); flex-shrink:0;">
+      <!-- CABECERA DEL MODAL CON CONTROLES DE NAVEGACIÓN DIRECTA -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 16px; border-bottom:1px solid rgba(255,255,255,0.1); background:rgba(6,10,22,0.92); flex-shrink:0; gap:12px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-family:var(--font-mono); font-size:0.85rem; color:var(--neon-green); font-weight:800;" data-i18n="modal_badge_hd">ALTA RESOLUCIÓN</span>
-          <span id="modal-tendre-title" style="font-size:0.95rem; font-weight:700; color:#FFFFFF;">La Carte du Tendre</span>
+          <span style="font-family:var(--font-mono); font-size:0.80rem; color:var(--neon-green); font-weight:800; background:rgba(0,255,135,0.1); border:1px solid rgba(0,255,135,0.3); padding:2px 8px; border-radius:4px;" data-i18n="modal_badge_hd">ALTA RESOLUCIÓN</span>
+          <span id="modal-tendre-tag" class="tendre-caption-tag">BARROCO 1654</span>
+          <span id="modal-tendre-title" style="font-size:0.95rem; font-weight:800; color:#FFFFFF;">La Carte du Tendre</span>
         </div>
+
+        <!-- MANDO CENTRAL: CONTADOR Y NAVEGACIÓN DIRECTA EN FULLSCREEN -->
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="modal-nav-pill">
+            <button class="modal-nav-step-btn" onclick="navigateModalTendre(-1)" title="Anterior obra (← / ▲)">❮</button>
+            <span id="modal-tendre-counter" style="font-family:var(--font-mono); font-size:0.82rem; font-weight:800; color:var(--neon-gold); min-width:38px; text-align:center;">1 / 8</span>
+            <button class="modal-nav-step-btn" onclick="navigateModalTendre(1)" title="Siguiente obra (→ / ▼)">❯</button>
+          </div>
+
+          <button id="modal-motion-play" class="modal-autoplay-toggle" onclick="toggleModalAutoplay()" title="Pase automático sin fin en pantalla completa">
+            <span id="modal-motion-play-icon">▶</span>
+            <span>BUCLE AUTO</span>
+          </button>
+        </div>
+
         <div style="display:flex; align-items:center; gap:10px;">
-          <a id="modal-download-link" href="assets/carte_tendre/carte_tendre_1654_chauveau.jpg" target="_blank" download style="color:var(--neon-cyan); font-size:0.82rem; font-family:var(--font-mono); text-decoration:none; padding:4px 10px; border:1px solid var(--neon-cyan); border-radius:4px; display:inline-flex; align-items:center; gap:5px; background:rgba(56,189,248,0.08);">
+          <a id="modal-download-link" href="assets/carte_tendre/carte_tendre_1654_chauveau.jpg" target="_blank" download style="color:var(--neon-cyan); font-size:0.80rem; font-family:var(--font-mono); text-decoration:none; padding:4px 10px; border:1px solid var(--neon-cyan); border-radius:4px; display:inline-flex; align-items:center; gap:5px; background:rgba(56,189,248,0.08);">
             <span data-i18n="modal_btn_download">Descargar Archivo Original ↗</span>
           </a>
-          <button class="modal-close-btn" onclick="closeModal()" style="background:rgba(255,0,127,0.15); border:1px solid var(--neon-pink); color:#FFF; padding:4px 12px; border-radius:4px; cursor:pointer; font-weight:700; font-size:0.85rem;" title="Cerrar modal (ESC)" data-i18n="modal_btn_close">✕ CERRAR [ESC]</button>
+          <button class="modal-close-btn" onclick="closeModal()" style="background:rgba(255,0,127,0.15); border:1px solid var(--neon-pink); color:#FFF; padding:4px 12px; border-radius:4px; cursor:pointer; font-weight:700; font-size:0.82rem;" title="Cerrar modal (ESC)" data-i18n="modal_btn_close">✕ CERRAR [ESC]</button>
         </div>
       </div>
-      <div id="modal-content-inner" style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; overflow:auto; padding:12px; background:#03060F;">
-        <img id="modal-tendre-img" src="" alt="Carte du Tendre HD" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:4px; box-shadow:0 8px 32px rgba(0,0,0,0.8);" />
+
+      <!-- ÁREA DE VISUALIZACIÓN HD CON FLECHAS FLOTANTES LATERALES -->
+      <div id="modal-content-inner" style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:12px; background:#03060F; position:relative;">
+        
+        <!-- FLECHA FLOTANTE IZQUIERDA (ANTERIOR EN FULLSCREEN) -->
+        <button class="modal-float-arrow modal-arrow-left" onclick="navigateModalTendre(-1)" title="Anterior obra (← / ▲)">
+          <span>❮</span>
+        </button>
+
+        <img id="modal-tendre-img" src="" alt="Carte du Tendre HD" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:4px; box-shadow:0 8px 36px rgba(0,0,0,0.85); transition:opacity 0.18s ease-in-out;" />
+
+        <!-- FLECHA FLOTANTE DERECHA (SIGUIENTE EN FULLSCREEN) -->
+        <button class="modal-float-arrow modal-arrow-right" onclick="navigateModalTendre(1)" title="Siguiente obra (→ / ▼)">
+          <span>❯</span>
+        </button>
+
       </div>
     </div>
   </div>
@@ -4292,7 +4410,15 @@
 
     window.addEventListener('wheel', (e) => {
       const modal = document.getElementById('fullscreen-modal');
-      if (modal && modal.style.display === 'flex') return;
+      if (modal && modal.style.display === 'flex') {
+        // Rueda del ratón en pantalla completa: navegar al anterior o siguiente
+        if (!isDiscreteNavigating && Math.abs(e.deltaY) >= 45) {
+          isDiscreteNavigating = true;
+          navigateModalTendre(e.deltaY > 0 ? 1 : -1);
+          setTimeout(() => { isDiscreteNavigating = false; }, 400);
+        }
+        return;
+      }
       const spModal = document.getElementById('glossary-spotlight-modal');
       if (spModal && spModal.classList.contains('active')) return;
 
@@ -4728,23 +4854,91 @@
     }
 
     function openTendreFullscreen() {
-      const tendreList = (I18N_DATA[currentLang] && I18N_DATA[currentLang].tendre) ? I18N_DATA[currentLang].tendre : I18N_DATA.es.tendre;
-      const data = tendreList[currentTendreIdx];
       const modal = document.getElementById('fullscreen-modal');
-      const modalImg = document.getElementById('modal-tendre-img');
-      const modalTitle = document.getElementById('modal-tendre-title');
-      const downloadLink = document.getElementById('modal-download-link');
-
-      if (modal && modalImg) {
-        modalImg.src = data.fullSrc || data.src;
-        if (modalTitle) modalTitle.innerText = data.title;
-        if (downloadLink) downloadLink.href = data.fullSrc || data.src;
+      if (modal) {
         modal.style.display = 'flex';
         modal.classList.add('active');
+        updateModalTendreView();
+      }
+    }
+
+    function updateModalTendreView() {
+      const tendreList = (I18N_DATA[currentLang] && I18N_DATA[currentLang].tendre) ? I18N_DATA[currentLang].tendre : I18N_DATA.es.tendre;
+      if (!tendreList || tendreList.length === 0) return;
+      const data = tendreList[currentTendreIdx];
+      if (!data) return;
+
+      const modalImg = document.getElementById('modal-tendre-img');
+      const modalTitle = document.getElementById('modal-tendre-title');
+      const modalTag = document.getElementById('modal-tendre-tag');
+      const modalCounter = document.getElementById('modal-tendre-counter');
+      const downloadLink = document.getElementById('modal-download-link');
+
+      if (modalImg) {
+        modalImg.style.opacity = '0';
+        setTimeout(() => {
+          modalImg.src = data.fullSrc || data.src;
+          modalImg.style.opacity = '1';
+        }, 120);
+      }
+      if (modalTitle) {
+        modalTitle.innerText = data.title;
+        modalTitle.style.color = data.color;
+      }
+      if (modalTag && data.tag) {
+        modalTag.innerText = data.tag;
+        modalTag.style.color = data.color;
+        modalTag.style.borderColor = data.color;
+      }
+      if (modalCounter) {
+        modalCounter.innerText = `${currentTendreIdx + 1} / ${tendreList.length}`;
+      }
+      if (downloadLink) {
+        downloadLink.href = data.fullSrc || data.src;
+      }
+
+      // Sincronizar en vivo la selección del menú lateral de fondo
+      switchTendreVersion(currentTendreIdx);
+    }
+
+    function navigateModalTendre(direction) {
+      const tendreList = (I18N_DATA[currentLang] && I18N_DATA[currentLang].tendre) ? I18N_DATA[currentLang].tendre : I18N_DATA.es.tendre;
+      if (!tendreList || tendreList.length === 0) return;
+      
+      // Ciclo infinito: del último al primero, y del primero al último
+      currentTendreIdx = (currentTendreIdx + direction + tendreList.length) % tendreList.length;
+      updateModalTendreView();
+    }
+
+    let modalAutoplayInterval = null;
+    function toggleModalAutoplay() {
+      const playBtn = document.getElementById('modal-motion-play');
+      const playIcon = document.getElementById('modal-motion-play-icon');
+
+      if (modalAutoplayInterval) {
+        clearInterval(modalAutoplayInterval);
+        modalAutoplayInterval = null;
+        if (playBtn) playBtn.classList.remove('running');
+        if (playIcon) playIcon.innerText = '▶';
+      } else {
+        if (playBtn) playBtn.classList.add('running');
+        if (playIcon) playIcon.innerText = '⏸';
+        navigateModalTendre(1);
+        modalAutoplayInterval = setInterval(() => {
+          navigateModalTendre(1);
+        }, 3600); // 3.6s por obra en modo cine HD
       }
     }
 
     function closeModal() {
+      if (modalAutoplayInterval) {
+        clearInterval(modalAutoplayInterval);
+        modalAutoplayInterval = null;
+        const playBtn = document.getElementById('modal-motion-play');
+        const playIcon = document.getElementById('modal-motion-play-icon');
+        if (playBtn) playBtn.classList.remove('running');
+        if (playIcon) playIcon.innerText = '▶';
+      }
       const modal = document.getElementById('fullscreen-modal');
       if (modal) {
         modal.style.display = 'none';
@@ -4772,7 +4966,31 @@
           return;
         }
       }
-      // Control de teclado para La Carte du Tendre (7e)
+      // 1. Navegación directa en Modal Pantalla Completa de La Carte du Tendre (Puro disfrute HD)
+      const fModal = document.getElementById('fullscreen-modal');
+      if (fModal && fModal.style.display === 'flex') {
+        if (e.key === 'Escape') {
+          closeModal();
+          return;
+        }
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          navigateModalTendre(1);
+          return;
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          navigateModalTendre(-1);
+          return;
+        }
+        if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
+          e.preventDefault();
+          toggleModalAutoplay();
+          return;
+        }
+      }
+
+      // 2. Control de teclado para La Carte du Tendre en página (7e)
       const p7e = document.getElementById('pantalla-7e');
       if (p7e) {
         const rect = p7e.getBoundingClientRect();
