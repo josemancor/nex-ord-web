@@ -6936,11 +6936,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             redProfiles.forEach(rp => activeSeries.push(rp));
         }
 
+        let profSubj = null;
         if (agileMatrixState.subjectMode === '1') {
             let targetSubj = (agileMatrixState.selectedSubjects && agileMatrixState.selectedSubjects.size > 0)
                 ? Array.from(agileMatrixState.selectedSubjects)[0] : (agileMatrixState.lastSelectedSubject || 0);
             let code = (n <= 10) ? (targetSubj < 5 ? (targetSubj + 1) + 'A' : (targetSubj - 4) + 'B') : (targetSubj + 1).toString();
-            let profSubj = computeSubjectProfile(targetSubj, analiticas, n, 'Sujeto ' + code, code, '#00E5FF', code, 'subj_' + targetSubj);
+            profSubj = computeSubjectProfile(targetSubj, analiticas, n, 'Sujeto ' + code, code, '#00E5FF', code, 'subj_' + targetSubj);
             activeSeries.push(profSubj);
         } else if (agileMatrixState.subjectMode === 'V' && agileMatrixState.selectedSubjects && agileMatrixState.selectedSubjects.size > 0) {
             const SUBJ_PALETTE = ['#00E5FF', '#FFB703', '#FB8500', '#2EC4B6', '#E71D36', '#9D4EDD', '#7209B7', '#4CC9F0'];
@@ -6951,6 +6952,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 let p = computeSubjectProfile(sIdx, analiticas, n, 'Sujeto ' + code, code, col, code, 'subj_' + sIdx);
                 activeSeries.push(p);
             });
+            if (activeSeries.length > 1) {
+                profSubj = activeSeries[1];
+            }
         }
 
         // Extremes calculation
@@ -7153,7 +7157,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             });
 
             // 3. Si hay sujeto activo, trazarlo destacado al frente
-            if (profSubj) {
+            if (agileMatrixState.subjectMode === 'V' && activeSeries.length > (1 + redProfiles.length)) {
+                let startIdx = 1 + redProfiles.length;
+                for (let k = startIdx; k < activeSeries.length; k++) {
+                    plotSeries(activeSeries[k], true);
+                }
+            } else if (profSubj) {
                 plotSeries(profSubj, true);
             }
 
@@ -7191,20 +7200,34 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 }
             }
         } else {
-            if (profSubj) {
+            if (agileMatrixState.subjectMode === 'V' && activeSeries.length > 1) {
+                plotSeries(profMu, false);
+                for (let k = 1; k < activeSeries.length; k++) {
+                    plotSeries(activeSeries[k], true);
+                }
+                const legendTag = document.getElementById('q3-legend-tag');
+                if (legendTag) {
+                    let tags = `<span style="color:#00FF87; font-size:10px; opacity:0.85;">-- μ Grupal</span>`;
+                    for (let k = 1; k < activeSeries.length; k++) {
+                        let s = activeSeries[k];
+                        tags += `<span style="color:${s.color}; font-weight:800; font-size:10.5px; margin-left:6px;">● ${s.id}</span>`;
+                    }
+                    legendTag.innerHTML = tags;
+                }
+            } else if (profSubj) {
                 plotSeries(profMu, false);
                 plotSeries(profSubj, true);
-            } else {
-                plotSeries(profMu, true);
-            }
-            const legendTag = document.getElementById('q3-legend-tag');
-            if (legendTag) {
-                if (profSubj) {
+                const legendTag = document.getElementById('q3-legend-tag');
+                if (legendTag) {
                     legendTag.innerHTML = `
                         <span style="color:#00FF87; font-size:10px; opacity:0.85;">-- μ Grupal</span>
-                        <span style="color:#00E5FF; font-weight:800; font-size:11px;">● ${profSubj.label} (${profSubj.id})</span>
+                        <span style="color:#00E5FF; font-weight:800; font-size:11px; margin-left:6px;">● ${profSubj.label} (${profSubj.id})</span>
                     `;
-                } else {
+                }
+            } else {
+                plotSeries(profMu, true);
+                const legendTag = document.getElementById('q3-legend-tag');
+                if (legendTag) {
                     legendTag.innerHTML = `
                         <span style="color:#00FF87; font-weight:800; font-size:11px;">● μ Media Grupal (Red Global)</span>
                     `;
@@ -7216,9 +7239,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     function updateCockpitPentaHUD() {
         let n = n_nodes || (currentMatrix ? currentMatrix.length : 10);
         if (!analiticas || !analiticas.BDA) {
-            analiticas = engine.extraer_matrices_analiticas(currentMatrix);
+            analiticas = (typeof extraer_matrices_analiticas === 'function' ? extraer_matrices_analiticas(currentMatrix) : (typeof engine !== 'undefined' && engine.extraer_matrices_analiticas ? engine.extraer_matrices_analiticas(currentMatrix) : null));
         }
 
+        let profMu = computeGroupProfile(analiticas, n, 'Media Grupal (μ)', `Total Red (N=${n})`, '#00FF87', 'μ', 'group_mu');
         let activeProfile = profMu;
 
         if (agileMatrixState.subjectMode === '1' || (agileMatrixState.subjectMode === 'V' && agileMatrixState.selectedSubjects && agileMatrixState.selectedSubjects.size > 0)) {
