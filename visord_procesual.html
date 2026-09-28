@@ -331,10 +331,10 @@
 
     /* BARRA DE MANDOS Y TELEPROMPTER DE ACCIÓN (INMEDIATAMENTE TRAS EL LIENZO) */
     .teleprompter-line {
-      background: rgba(5, 9, 22, 0.95);
-      border: 1.5px solid rgba(56, 189, 248, 0.35);
-      border-radius: 10px;
-      padding: 6px 14px;
+      background: rgba(5, 9, 22, 0.96);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      border-radius: 8px;
+      padding: 5px 12px;
       font-family: var(--font-mono);
       font-size: 9.5px;
       display: flex;
@@ -343,9 +343,10 @@
       overflow-x: auto;
       white-space: nowrap;
       position: relative;
-      z-index: 10;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(56, 189, 248, 0.15);
-      margin: 4px 0 8px 0;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 12px rgba(56, 189, 248, 0.15);
+      margin: 2px 0 6px 0;
+      flex-shrink: 0;
     }
     .tele-inner {
       display: flex;
@@ -477,13 +478,20 @@
       border-radius: 3px;
     }
     .tele-text {
-      color: #F1F5F9;
+      color: #F8FAFC;
       font-family: var(--font-sans);
-      font-size: 10px;
-      font-style: italic;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.35;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 600px;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 180px;
+      background: rgba(14, 25, 52, 0.7);
+      border-left: 2.5px solid var(--neon-cyan);
+      padding: 3px 8px;
+      border-radius: 4px;
     }
     .tele-dot {
       color: #475569;
@@ -492,13 +500,18 @@
     /* CONTENEDOR PRINCIPAL */
     .stage-container {
       flex: 1;
-      padding: 8px 14px 40px;
+      padding: 6px 14px 24px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       max-width: 1920px;
       margin: 0 auto;
       width: 100%;
+      box-sizing: border-box;
+    }
+
+    .stage-bar-blue, .stage-bar-green {
+      display: none;
     }
 
     /* GRID DEL ESCENARIO */
@@ -506,7 +519,7 @@
       display: grid;
       gap: 8px;
       transition: all 0.3s ease;
-      min-height: 600px;
+      min-height: 380px;
       flex: 1;
     }
 
@@ -520,8 +533,9 @@
       display: none;
     }
     .stage-grid.mode-interaccion-focus .stage-center-arena {
-      min-height: 680px;
-      height: calc(100vh - 160px);
+      height: calc(100vh - 170px);
+      min-height: 380px;
+      max-height: calc(100vh - 170px);
     }
 
     /* MODO SPLIT: Espacio de Interacción a un lado + Gran Tabla al otro */
@@ -532,8 +546,11 @@
     .stage-grid.mode-split .stage-wing-right {
       display: none;
     }
-    .stage-grid.mode-split .stage-center-arena {
-      min-height: 580px;
+    .stage-grid.mode-split .stage-center-arena,
+    .stage-grid.mode-split .stage-live-table-panel {
+      height: calc(100vh - 170px);
+      min-height: 380px;
+      max-height: calc(100vh - 170px);
     }
 
     /* MODO TABLAS EN 1º PLANO */
@@ -545,13 +562,24 @@
     .stage-grid.mode-tables-focus .stage-wing-right {
       display: none;
     }
+    .stage-grid.mode-tables-focus .stage-live-table-panel {
+      height: calc(100vh - 170px);
+      min-height: 380px;
+    }
 
     /* MODO CON CONTADORES DE INTERACCIÓN */
     .stage-grid.mode-counters {
-      grid-template-columns: 480px 1fr 480px;
+      grid-template-columns: 460px 1fr 460px;
     }
     .stage-grid.mode-counters .stage-live-table-panel {
       display: none;
+    }
+    .stage-grid.mode-counters .stage-center-arena,
+    .stage-grid.mode-counters .stage-wing-left,
+    .stage-grid.mode-counters .stage-wing-right {
+      height: calc(100vh - 170px);
+      min-height: 380px;
+      max-height: calc(100vh - 170px);
     }
 
     /* MODO MATRICIAL 3X3 */
@@ -560,6 +588,10 @@
     }
     .stage-grid.mode-matrix .stage-live-table-panel {
       display: none;
+    }
+    .stage-grid.mode-matrix .stage-center-arena {
+      height: calc(100vh - 170px);
+      min-height: 380px;
     }
 
     /* ESCENARIO CENTRAL: ESPACIO DE INTERACCIÓN (ARENA RELACIONAL) */
@@ -1715,7 +1747,7 @@
       <div class="tele-inner">
         <!-- 1. PLAY / PAUSA (PRIMER CONTROL) -->
         <div class="tele-ctrl-group">
-          <button class="tele-btn-action" id="btnTeleStart" onclick="togglePlay()" title="Iniciar / Pausar Acción Procesual" style="background:#00FF87; color:#0B132B; border:1.5px solid #00FF87; font-weight:900; box-shadow:0 0 10px rgba(0,255,135,0.4);">
+          <button class="tele-btn-action" id="btnTeleStart" onclick="togglePlay()" title="Iniciar / Pausar Acción Procesual" style="background:rgba(0,255,135,0.22); color:#00FF87; border:1.5px solid #00FF87; font-weight:900; box-shadow:0 0 10px rgba(0,255,135,0.4);">
             <span id="telePlayIcon">⏸</span> <span id="telePlayLabel" data-i18n="tele_pause">PAUSAR</span>
           </button>
           <button class="tele-btn-sub" onclick="stepPrev()" title="Turno Anterior">⏮</button>
@@ -2415,6 +2447,7 @@
       else if (currentN === 12) document.getElementById('hdrBtnN12')?.classList.add('active');
 
       buildGrid(currentN);
+      syncCanvasDimensions();
       renderTurn(0);
       drawVectors(TURNS[0]);
 
@@ -2794,6 +2827,7 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         if (tablePanel) tablePanel.style.display = 'flex';
       }
 
+      syncCanvasDimensions();
       drawVectors(TURNS[currentTurnIndex]);
     }
 
@@ -3157,6 +3191,12 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     }
 
     function changeN(n) {
+      document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
+      if (n === 5) document.getElementById('hdrBtnN5')?.classList.add('active');
+      else if (n === 8) document.getElementById('hdrBtnN8')?.classList.add('active');
+      else if (n === 12) document.getElementById('hdrBtnN12')?.classList.add('active');
+      else if (n === 9) document.getElementById('hdrBtnNQ81')?.classList.add('active');
+
       if (activeCorpus.actors.length === n) {
         buildGrid(n);
         return;
@@ -3720,8 +3760,8 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     function getRadarGeometry(W, H, N) {
       const cx = W / 2;
       const cy = H / 2;
-      // El radio ocupa el espacio óptimo dejando margen para las etiquetas exteriores
-      const R = Math.min(cx - 75, cy - 45);
+      // El radio ocupa el espacio óptimo dejando margen generoso para las etiquetas satélite exteriores
+      const R = Math.max(85, Math.min(cx - 105, cy - 42));
       const nLeft = Math.ceil(N / 2);
       const nRight = N - nLeft;
       const spanRad = 135 * (Math.PI / 180); // 135 grados de apertura para cada grada
@@ -4005,17 +4045,32 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     }
 
     /* MOTOR MAESTRO: RADAR RELACIONAL, NÚCLEO GRUPAL Y RAYOS TÁCTICOS */
+    let cachedCanvasWidth = 0;
+    let cachedCanvasHeight = 0;
+
+    function syncCanvasDimensions() {
+      const arena = document.getElementById('stageCenterArena');
+      const cvs = document.getElementById('cuadVectorCanvas');
+      if (!arena || !cvs) return;
+      const rect = arena.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const w = Math.floor(rect.width);
+        const h = Math.floor(rect.height);
+        if (cvs.width !== w || cvs.height !== h) {
+          cvs.width = w;
+          cvs.height = h;
+          cachedCanvasWidth = w;
+          cachedCanvasHeight = h;
+        }
+      }
+    }
+
     function drawVectors(turn) {
       const cvs = document.getElementById('cuadVectorCanvas');
       if (!cvs) return;
       const ctx = cvs.getContext('2d');
-      const arena = document.getElementById('stageCenterArena');
-      if (!arena) return;
-
-      const rect = arena.getBoundingClientRect();
-      if (cvs.width !== rect.width || cvs.height !== rect.height) {
-        cvs.width = rect.width;
-        cvs.height = rect.height;
+      if (cvs.width === 0 || cvs.height === 0) {
+        syncCanvasDimensions();
       }
       ctx.clearRect(0, 0, cvs.width, cvs.height);
 
@@ -4490,6 +4545,7 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     }
 
     window.addEventListener('resize', () => {
+      syncCanvasDimensions();
       drawVectors(TURNS[currentTurnIndex]);
     });
 
@@ -4503,13 +4559,17 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         if (playing) {
           tIcon.innerText = '⏸';
           tLabel.innerText = 'PAUSAR';
+          tBtn.style.background = 'rgba(0, 255, 135, 0.22)';
           tBtn.style.color = '#00FF87';
-          tBtn.style.borderColor = 'rgba(0, 255, 135, 0.4)';
+          tBtn.style.border = '1.5px solid #00FF87';
+          tBtn.style.boxShadow = '0 0 10px rgba(0, 255, 135, 0.4)';
         } else {
           tIcon.innerText = '▶';
           tLabel.innerText = 'INICIAR';
+          tBtn.style.background = 'rgba(255, 230, 0, 0.22)';
           tBtn.style.color = '#FFE600';
-          tBtn.style.borderColor = 'rgba(255, 230, 0, 0.5)';
+          tBtn.style.border = '1.5px solid #FFE600';
+          tBtn.style.boxShadow = '0 0 10px rgba(255, 230, 0, 0.4)';
         }
       }
 
@@ -4648,6 +4708,7 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     function startProcesualAuto() {
       setLayoutMode('interaccion-focus');
       loadCorpus(CANONICAL_CORPORA['dawes_orbell_5']);
+      syncCanvasDimensions();
       startRadarAnimation();
       setTimeout(() => {
         if (!isPlaying) {
@@ -4657,6 +4718,7 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     }
     window.addEventListener('DOMContentLoaded', startProcesualAuto);
     window.addEventListener('load', () => {
+      syncCanvasDimensions();
       setTimeout(() => {
         if (!isPlaying) {
           play();
