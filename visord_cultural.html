@@ -2396,7 +2396,15 @@
             <span style="font-size: 10px; color: #38BDF8; font-family: monospace; font-weight: 700;">VISORD CULTURAL 3D</span>
         </div>
         <div class="tc-controls-row">
-            <!-- Selector de Tiempos / Votaciones -->
+            <!-- 1. Moviola PLAY (PRIMER CONTROL TRAS EL LIENZO) -->
+            <div class="tc-group" style="align-items: center;">
+                <button class="btn-moviola" id="btn-moviola-play" title="Reproducir / Pausar evolución de votaciones paso a paso" style="padding: 6px 14px; font-weight: 900; font-size: 11px; border-radius: 8px; background: #00FF87; color: #0B132B; border: 1.5px solid #00FF87; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(0,255,135,0.4);">
+                    <span id="moviola-play-icon">▶</span> <span id="moviola-play-text">PLAY Moviola</span>
+                </button>
+                <span class="tc-active-badge" id="active-tc-pill">TC: 1g1t1c</span>
+            </div>
+
+            <!-- 2. Selector de Tiempos / Votaciones -->
             <div class="tc-group">
                 <span class="tc-label" data-i18n="lbl_vote">VOTACIÓN (T):</span>
                 <div class="act-pills" id="time-pills">
@@ -2404,7 +2412,7 @@
                 </div>
             </div>
 
-            <!-- Selector de Criterios -->
+            <!-- 3. Selector de Criterios -->
             <div class="tc-group">
                 <span class="tc-label" data-i18n="lbl_crit">CRITERIO (C):</span>
                 <div class="crit-pills" id="crit-pills">
@@ -2413,7 +2421,7 @@
                 </div>
             </div>
 
-            <!-- Filtro de Vínculos 3D -->
+            <!-- 4. Filtro de Vínculos 3D -->
             <div class="tc-group">
                 <span class="tc-label" data-i18n="lbl_links">VÍNCULOS:</span>
                 <div class="edge-pills">
@@ -2422,12 +2430,6 @@
                     <button class="btn-edge-filter" data-filter="R" title="Mostrar solo fricciones y rechazos">-R</button>
                     <button class="btn-edge-filter" data-filter="mutual" title="Mostrar solo díadas mutuas recíprocas" data-i18n="edge_mut">⭐ Mutuas</button>
                 </div>
-            </div>
-
-            <!-- Píldora de Celda TC y Moviola -->
-            <div class="tc-group">
-                <span class="tc-active-badge" id="active-tc-pill">TC: 1g1t1c</span>
-                <button class="btn-moviola" id="btn-moviola-play" title="Reproducir evolución de votaciones paso a paso">▶ Moviola</button>
             </div>
         </div>
 
@@ -3739,10 +3741,15 @@
             if (reqWork && WORKS_CONFIG[reqWork]) {
                 openWorkFromHub(reqWork);
             } else {
-                // Cargar obra base en segundo plano y mostrar Menú Inicial
-                loadWork('hombres12');
-                showHubMenu();
+                openWorkFromHub('hombres12');
             }
+
+            // Iniciar acción principal automáticamente sin esperar clics (Moviola 3D)
+            setTimeout(() => {
+                if (typeof startMoviola === 'function' && !isMoviolaPlaying) {
+                    startMoviola();
+                }
+            }, 600);
 
             if (reqView && window.CulturalSynthesisEngine) {
                 window.CulturalSynthesisEngine.setView(reqView);
@@ -5616,8 +5623,13 @@
         function startMoviola() {
             isMoviolaPlaying = true;
             const btn = document.getElementById('btn-moviola-play');
-            btn.textContent = '⏸ Pausar';
-            btn.classList.add('playing');
+            if (btn) {
+                btn.innerHTML = '<span id="moviola-play-icon">⏸</span> <span id="moviola-play-text">Pausar</span>';
+                btn.classList.add('playing');
+                btn.style.background = '#FF9F1C';
+                btn.style.color = '#0B132B';
+                btn.style.borderColor = '#FF9F1C';
+            }
 
             const wConf = WORKS_CONFIG[activeWorkKey];
             const maxT = wConf.times.length;
@@ -5637,8 +5649,11 @@
             moviolaTimer = null;
             const btn = document.getElementById('btn-moviola-play');
             if (btn) {
-                btn.textContent = '▶ Moviola';
+                btn.innerHTML = '<span id="moviola-play-icon">▶</span> <span id="moviola-play-text">PLAY Moviola</span>';
                 btn.classList.remove('playing');
+                btn.style.background = '#00FF87';
+                btn.style.color = '#0B132B';
+                btn.style.borderColor = '#00FF87';
             }
         }
 

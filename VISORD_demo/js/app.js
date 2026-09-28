@@ -212,6 +212,10 @@ class VisordApp {
                     setTimeout(() => { loader.style.display = 'none'; }, 500);
                 }
             });
+            // Auto-inicio de acción principal sin esperar clics
+            setTimeout(() => {
+                btnEnterVisor.click();
+            }, 300);
         }
 
         // Listener para Tour Guiado

@@ -329,21 +329,23 @@
       box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
     }
 
-    /* LÍNEA SUPERIOR DE TELEPROMPTER */
+    /* BARRA DE MANDOS Y TELEPROMPTER DE ACCIÓN (INMEDIATAMENTE TRAS EL LIENZO) */
     .teleprompter-line {
       background: rgba(5, 9, 22, 0.95);
-      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
-      padding: 4px 14px;
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: 10px;
+      padding: 6px 14px;
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 9.5px;
       display: flex;
       align-items: center;
       gap: 10px;
       overflow-x: auto;
       white-space: nowrap;
-      position: sticky;
-      top: 42px;
-      z-index: 990;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(56, 189, 248, 0.15);
+      margin: 4px 0 8px 0;
     }
     .tele-inner {
       display: flex;
@@ -1555,42 +1557,7 @@
     </div>
   </header>
 
-  <!-- LÍNEA SUPERIOR DE TELEPROMPTER -->
-  <div class="teleprompter-line" id="teleprompterLine">
-    <div class="tele-inner">
-      <div class="tele-ctrl-group">
-        <button class="tele-btn-action" id="btnTeleStart" onclick="togglePlay()" title="Iniciar / Pausar">
-          <span id="telePlayIcon">⏸</span> <span id="telePlayLabel" data-i18n="tele_pause">PAUSAR</span>
-        </button>
-        <button class="tele-btn-sub" onclick="stepPrev()" title="Turno Anterior">⏮</button>
-        <button class="tele-btn-sub" onclick="stepNext()" title="Turno Siguiente">⏭</button>
-        <button class="tele-btn-sub" onclick="resetDebate()" title="Reiniciar">🔄</button>
-      </div>
-
-      <span class="tele-dot">|</span>
-      <span class="tele-turn" id="teleTurn">TURNO 01 / 18</span>
-      <span class="tele-dot">·</span>
-      <span class="tele-actor emit" id="teleSender">1</span>
-      <span class="tele-role-badge inic" id="teleSenderRole" title="El sujeto toma la iniciativa de hablar por sí mismo">⚡ DA INICIATIVA</span>
-      <span class="tele-dot">➔</span>
-      <span class="tele-actor rec" id="teleReceiver">GRUPO (CENTRO)</span>
-      <span class="tele-role-badge prov" id="teleReceiverRole" title="El receptor recibe una interpelación o reto directo">🛡️ RC INTERPEL</span>
-      <span class="tele-dot">·</span>
-      <span class="tele-q81" id="teleQ81" style="color:#00FF87; background:rgba(0,255,135,0.15);">&lt;Ee&gt;</span>
-      <span class="tele-dot">·</span>
-      <span class="tele-text" id="teleText">"Compañeros, la matemática del fondo común es irrefutable: si los cinco aportamos nuestras 10 fichas, el bote de 50 se multiplica por 1.8 y nos repartimos 18 fichas cada uno."</span>
-
-      <div style="margin-left:auto; display:flex; align-items:center; gap:6px; flex-shrink:0;">
-        <input type="range" id="scrubberSlider" min="1" max="18" value="1" style="width:65px; accent-color:#00FF87; height:3px; cursor:pointer;" oninput="seekToTurn(this.value)">
-        <span id="scrubberLabel" style="font-size:7.5px; color:#00FF87; font-family:var(--font-mono); font-weight:700;">01/18</span>
-        <button class="tele-btn-sub" id="btnSpeedTele" onclick="toggleSpeed(this)">1.0x</button>
-        <button class="tele-btn-sub active" id="btnSfxTele" onclick="toggleSFX()">🔊 SFX</button>
-        <button class="tele-btn-sub" id="btnVoiceTele" onclick="toggleVoice()">🎙️ VOZ</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTENEDOR PRINCIPAL DEL ESCENARIO -->
+  <!-- CONTENEDOR PRINCIPAL DEL ESCENARIO (LIENZO PRINCIPAL) -->
   <main class="stage-container" id="mainContainer">
 
     <!-- 1. BARRA SUPERIOR AZUL (DAN) -->
@@ -1742,6 +1709,42 @@
 
     <!-- 3. BARRA INFERIOR VERDE (BIENES COMUNES) -->
     <div class="stage-bar-green" id="stageBarGreen"></div>
+
+    <!-- 🎛️ BARRA DE MANDOS Y TELEPROMPTER DE ACCIÓN (INMEDIATAMENTE TRAS EL LIENZO - REGLA 19) -->
+    <div class="teleprompter-line" id="teleprompterLine">
+      <div class="tele-inner">
+        <!-- 1. PLAY / PAUSA (PRIMER CONTROL) -->
+        <div class="tele-ctrl-group">
+          <button class="tele-btn-action" id="btnTeleStart" onclick="togglePlay()" title="Iniciar / Pausar Acción Procesual" style="background:#00FF87; color:#0B132B; border:1.5px solid #00FF87; font-weight:900; box-shadow:0 0 10px rgba(0,255,135,0.4);">
+            <span id="telePlayIcon">⏸</span> <span id="telePlayLabel" data-i18n="tele_pause">PAUSAR</span>
+          </button>
+          <button class="tele-btn-sub" onclick="stepPrev()" title="Turno Anterior">⏮</button>
+          <button class="tele-btn-sub" onclick="stepNext()" title="Turno Siguiente">⏭</button>
+          <button class="tele-btn-sub" onclick="resetDebate()" title="Reiniciar">🔄</button>
+        </div>
+
+        <span class="tele-dot">|</span>
+        <span class="tele-turn" id="teleTurn">TURNO 01 / 18</span>
+        <span class="tele-dot">·</span>
+        <span class="tele-actor emit" id="teleSender">1</span>
+        <span class="tele-role-badge inic" id="teleSenderRole" title="El sujeto toma la iniciativa de hablar por sí mismo">⚡ DA INICIATIVA</span>
+        <span class="tele-dot">➔</span>
+        <span class="tele-actor rec" id="teleReceiver">GRUPO (CENTRO)</span>
+        <span class="tele-role-badge prov" id="teleReceiverRole" title="El receptor recibe una interpelación o reto directo">🛡️ RC INTERPEL</span>
+        <span class="tele-dot">·</span>
+        <span class="tele-q81" id="teleQ81" style="color:#00FF87; background:rgba(0,255,135,0.15);">&lt;Ee&gt;</span>
+        <span class="tele-dot">·</span>
+        <span class="tele-text" id="teleText">"Compañeros, la matemática del fondo común es irrefutable: si los cinco aportamos nuestras 10 fichas, el bote de 50 se multiplica por 1.8 y nos repartimos 18 fichas cada uno."</span>
+
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+          <input type="range" id="scrubberSlider" min="1" max="18" value="1" style="width:65px; accent-color:#00FF87; height:3px; cursor:pointer;" oninput="seekToTurn(this.value)">
+          <span id="scrubberLabel" style="font-size:7.5px; color:#00FF87; font-family:var(--font-mono); font-weight:700;">01/18</span>
+          <button class="tele-btn-sub" id="btnSpeedTele" onclick="toggleSpeed(this)">1.0x</button>
+          <button class="tele-btn-sub active" id="btnSfxTele" onclick="toggleSFX()">🔊 SFX</button>
+          <button class="tele-btn-sub" id="btnVoiceTele" onclick="toggleVoice()">🎙️ VOZ</button>
+        </div>
+      </div>
+    </div>
 
     <!-- NOTA EXPLICATIVA PEDAGÓGICA (REGLA 10 DE AGENTS.MD) -->
     <div class="visord-pedagogical-note">
@@ -4642,12 +4645,22 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     }, { once: false });
 
     // INICIALIZACIÓN: MODO FOCO INTERACCIÓN (TABLAS EN SEGUNDO PLANO) POR DEFECTO
-    window.addEventListener('DOMContentLoaded', () => {
+    function startProcesualAuto() {
       setLayoutMode('interaccion-focus');
       loadCorpus(CANONICAL_CORPORA['dawes_orbell_5']);
       startRadarAnimation();
       setTimeout(() => {
-        play();
+        if (!isPlaying) {
+          play();
+        }
+      }, 350);
+    }
+    window.addEventListener('DOMContentLoaded', startProcesualAuto);
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (!isPlaying) {
+          play();
+        }
       }, 500);
     });
   

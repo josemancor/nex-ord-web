@@ -1358,7 +1358,15 @@
 
     <!-- 🎛️ 2. BARRA DE CONTROL 3D MULTIDIMENSIONAL INFERIOR -->
     <div id="bottom-control-bar">
-        <!-- Selector Dinámico de Grupos -->
+        <!-- 1. Moviola PLAY (PRIMER CONTROL TRAS EL LIENZO) -->
+        <div class="tc-group" style="align-items:center;">
+            <button class="btn-moviola" id="btn-moviola-play" title="Reproducir / Pausar evolución longitudinal cíclica" style="padding: 6px 14px; font-weight: 900; font-size: 11px; border-radius: 8px; background: #00FF87; color: #0B132B; border: 1.5px solid #00FF87; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(0,255,135,0.4);">
+                <span id="moviola-play-icon">▶</span> <span id="moviola-play-text">PLAY Moviola</span>
+            </button>
+            <span class="tc-active-badge" id="active-tc-pill">1g1t1c</span>
+        </div>
+
+        <!-- 2. Selector Dinámico de Grupos -->
         <div class="tc-group" id="container-groups">
             <span class="tc-label">GRUPO:</span>
             <div class="pills-container" id="group-pills">
@@ -1366,7 +1374,7 @@
             </div>
         </div>
 
-        <!-- Selector Dinámico de Tiempos -->
+        <!-- 3. Selector Dinámico de Tiempos -->
         <div class="tc-group" id="container-times">
             <span class="tc-label">TIEMPO:</span>
             <div class="pills-container" id="time-pills">
@@ -1374,7 +1382,7 @@
             </div>
         </div>
 
-        <!-- Selector Dinámico de Criterios -->
+        <!-- 4. Selector Dinámico de Criterios -->
         <div class="tc-group" id="container-crits">
             <span class="tc-label">CRITERIO:</span>
             <div class="pills-container" id="crit-pills">
@@ -1382,7 +1390,7 @@
             </div>
         </div>
 
-        <!-- Filtro de Vínculos 3D -->
+        <!-- 5. Filtro de Vínculos 3D -->
         <div class="tc-group">
             <span class="tc-label">VÍNCULOS:</span>
             <div class="pills-container">
@@ -1392,12 +1400,6 @@
                 <button class="btn-edge-filter" data-filter="mutual" title="Mostrar solo díadas mutuas recíprocas">⭐ Mutuas</button>
                 <button class="btn-edge-filter filter-os" data-filter="OS" title="Mostrar Oposición de Sentimientos (<Er] / [Re>)">⚡ OS</button>
             </div>
-        </div>
-
-        <!-- Píldora de Celda Activa y Moviola -->
-        <div class="tc-group">
-            <span class="tc-active-badge" id="active-tc-pill">1g1t1c</span>
-            <button class="btn-moviola" id="btn-moviola-play" title="Reproducir evolución longitudinal cíclica">▶ Moviola</button>
         </div>
 
         <!-- Botones de Tablas y Cámara -->
@@ -2523,11 +2525,17 @@
                     clearInterval(moviolaTimer);
                     isMoviolaPlaying = false;
                     btnMoviola.classList.remove('playing');
-                    btnMoviola.textContent = '▶ Moviola';
+                    btnMoviola.innerHTML = '<span id="moviola-play-icon">▶</span> <span id="moviola-play-text">PLAY Moviola</span>';
+                    btnMoviola.style.background = '#00FF87';
+                    btnMoviola.style.color = '#0B132B';
+                    btnMoviola.style.borderColor = '#00FF87';
                 } else {
                     isMoviolaPlaying = true;
                     btnMoviola.classList.add('playing');
-                    btnMoviola.textContent = '⏸ Pausa';
+                    btnMoviola.innerHTML = '<span id="moviola-play-icon">⏸</span> <span id="moviola-play-text">Pausar</span>';
+                    btnMoviola.style.background = '#FF9F1C';
+                    btnMoviola.style.color = '#0B132B';
+                    btnMoviola.style.borderColor = '#FF9F1C';
                     let tIdx = availableT.indexOf(currentT);
                     moviolaTimer = setInterval(() => {
                         tIdx = (tIdx + 1) % availableT.length;
@@ -2661,6 +2669,12 @@
         window.addEventListener('load', () => {
             initScene();
             animate();
+            setTimeout(() => {
+                const btnMoviola = document.getElementById('btn-moviola-play');
+                if (btnMoviola && !isMoviolaPlaying) {
+                    btnMoviola.click();
+                }
+            }, 600);
         });
     
 
