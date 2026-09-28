@@ -1,6 +1,6 @@
 # Bibliografía Fundamental NEX_ORD
 
-Esta selección bibliográfica fundamenta las bases históricas, teóricas y técnicas del sistema **NEX_ORD (Sociometría Ordinal)**, uniendo la tradición moreniana con la vanguardia de la Psicología Social contemporánea y la computación avanzada.
+Esta selección bibliográfica fundamenta las bases históricas, teóricas y técnicas del sistema **NEXORD (Sociometría Ordinal)**, uniendo la tradición moreniana con la vanguardia de la Psicología Social contemporánea y la computación avanzada.
 
 ## 0. Obra de Referencia y Autoría del Sistema
 Marco conceptual y técnico desarrollado para la versión Canónica 2026.
