@@ -11,7 +11,8 @@
 **ORCID:** `0000-0002-1234-5678`  
 **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
 **Homologated Edition DOI:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)  
-**Official Repository and Documentation:** [https://josemancor.github.io/soc-ord-web/](https://josemancor.github.io/soc-ord-web/)  
+**Official Web Platform & Interactive Ecosystem:** [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/)  
+**Official Repository & Source Code:** [https://github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web)  
 **Master Brand / Ecosystem:** VISORD 3D/4D (Visual Ordinal Sociometry & Socio-Thermodynamic Diagnostics)  
 **Platform Supported Languages:** Spanish (ES), English (EN), French (FR), German (DE), Italian (IT), Portuguese (PT), Russian (RU), Chinese (ZH).  
 
@@ -207,7 +208,7 @@ Through the CULTURAL data category, NEXORD transcribes dramatic, cinematic, and 
 The platform embeds ethical safeguards directly into technical algorithms (*Ethics by Design*). The system explicitly prohibits punitive deployments, negative selection, or elimination rankings. Analysis on empirical field datasets (REAL category) requires authentication and formal accountability by an accredited Principal Investigator (PI).
 
 ### 7.2. Open Science, Clélie Protocol & Institutional Custodianship (BSOC)
-In accordance with Open Science and FAIR Data principles, NEXORD's mathematical and methodological formulations are publicly accessible. To protect participant confidentiality, empirical field datasets undergo canonical anonymization (1A1a..5A1a) and cryptographic hash sealing (SHA3-512, Clélie Protocol), under the academic custodianship of the Sociometric Data Bank (BSOC / University of Barcelona).
+In accordance with Open Science and FAIR Data principles, NEXORD's mathematical, methodological, and computational formulations are publicly accessible. The complete interactive web platform, computational engines, and 3D VISORD visualizers are openly accessible at the official web portal: [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/). To protect participant confidentiality, empirical field datasets undergo canonical anonymization (1A1a..5A1a) and cryptographic hash sealing (SHA3-512, Clélie Protocol), under the academic custodianship of the Sociometric Data Bank (BSOC / University of Barcelona).
 
 ### 7.3. Participant Rights & Constructive Feedback
 Participants receive individual codes to audit data processing fidelity without accessing peer records. Node re-identification is strictly restricted to the responsible PI within guidance or supportive group mediation. All feedback is constructive, non-stigmatizing, and dedicated to promoting collective health.
