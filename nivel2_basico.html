@@ -4071,7 +4071,7 @@
       <div class="smib-excel-stage" style="display: flex; gap: 14px; width: 100%; max-width: 1680px; align-items: stretch; justify-content: center; box-sizing: border-box; flex: 1 1 auto; min-height: 0;">
         
         <!-- Columna Izquierda: Codificación Conjunta + Base Matemática Fundamental (Abreviada) -->
-        <div style="flex: 1 1 34%; max-width: 480px; display: flex; flex-direction: column; gap: 6px;">
+        <div style="flex: 1 1 24%; max-width: 360px; display: flex; flex-direction: column; gap: 6px;">
           
           <!-- 1) CODIFICACIÓN CONJUNTA: TETRAGRAMA Y ORDEN PREFERENCIAL -->
           <div style="background: rgba(11, 19, 43, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.40); border-radius: 8px; padding: 7px 11px; box-shadow: 0 4px 16px rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 4px;">
@@ -4117,52 +4117,6 @@
               </div>
             </div>
           </div>
-
-        <!-- Columna Izquierda: Decodificador Ágil de la Celda SMIb (24% ancho) -->
-        <div style="flex: 1 1 24%; max-width: 340px; display: flex; flex-direction: column; justify-content: flex-start; gap: 8px;">
-          
-          <div style="background: rgba(11, 19, 43, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.40); border-radius: 8px; padding: 10px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(56, 189, 248, 0.25); padding-bottom: 4px;">
-              <span style="font-family: 'Roboto Mono', monospace; font-size: 0.88rem; font-weight: 900; color: var(--neon-cyan); letter-spacing: 0.5px;">
-                4 BYTES / CELDA (i, j)
-              </span>
-              <span style="background: rgba(56, 189, 248, 0.18); color: #38BDF8; padding: 1px 6px; border-radius: 3px; border: 1px solid rgba(56, 189, 248, 0.45); font-family: 'Roboto Mono', monospace; font-weight: 900; font-size: 0.84rem;">
-                [ A1 A2 | A3 A4 ]
-              </span>
-            </div>
-
-            <div style="font-size: 0.86rem; line-height: 1.40; color: #CBD5E1; display: flex; flex-direction: column; gap: 6px;">
-              <div>
-                <b style="color: #FFE600;">• Flancos Cognitivos:</b><br/>
-                <span style="color:#FFE600; font-weight:700;">A1</span> expectativa emisor · <span style="color:#FFE600; font-weight:700;">A4</span> expectativa partner.
-              </div>
-
-              <div>
-                <b style="color: #00FF87;">• Núcleo Fáctico:</b><br/>
-                <span style="color:#00FF87; font-weight:700;">A2 (DA)</span> emitida · <span style="color:#00F0FF; font-weight:700;">A3 (REC)</span> recibida.
-              </div>
-
-              <div>
-                <b style="color: #38BDF8;">• Escala Ordinal Continua:</b>
-                <div style="display: flex; flex-direction: column; gap: 3px; margin-top: 4px;">
-                  <span style="background: rgba(0, 255, 135, 0.14); border: 1px solid rgba(0, 255, 135, 0.35); border-radius: 3px; padding: 2px 6px; font-size:0.84rem; color: #00FF87; font-family: 'Roboto Mono', monospace;">
-                    <b>MAYÚSCULAS:</b> A=1º, B=2º... (Elección)
-                  </span>
-                  <span style="background: rgba(255, 230, 0, 0.14); border: 1px solid rgba(255, 230, 0, 0.35); border-radius: 3px; padding: 2px 6px; font-size:0.84rem; color: #FFE600; font-family: 'Roboto Mono', monospace;">
-                    <b>0:</b> Neutro
-                  </span>
-                  <span style="background: rgba(255, 0, 127, 0.14); border: 1px solid rgba(255, 0, 127, 0.35); border-radius: 3px; padding: 2px 6px; font-size:0.84rem; color: #FF007F; font-family: 'Roboto Mono', monospace;">
-                    <b>MINÚSCULAS:</b> a=1º, b=2º... (Rechazo)
-                  </span>
-                </div>
-              </div>
-
-              <div style="background: rgba(5, 8, 17, 0.85); padding: 6px 8px; border-radius: 4px; border-left: 3px solid #00FF87; font-size: 0.84rem; line-height: 1.35; color: #CBD5E1; margin-top: 2px;">
-                <b style="color:#FFF;">Ejemplo <code style="color:#00FF87; font-weight:800;">[ 0BB0 ]</code>:</b> Atracción mutua en 2º orden con expectativas neutras.
-              </div>
-            </div>
-          </div>
-
         </div>
 
         <!-- Columna Derecha: Tabla oficial excel Ampliada y Dominante (76% ancho) -->
@@ -5483,18 +5437,26 @@
     }
   }, { passive: true });
 
-  function scrollToScreen(screenId) {
+  function scrollToScreen(screenId, isInstant = false) {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     window.isCaratulaAudioPlaying = false;
-      syncNavPodAudioUI(false);
+    syncNavPodAudioUI(false);
     const el = document.getElementById(screenId);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
       const snapCont = document.getElementById('main-snap-container');
       if (snapCont) {
-        snapCont.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+        const elRect = el.getBoundingClientRect();
+        const snapRect = snapCont.getBoundingClientRect();
+        const targetScrollTop = snapCont.scrollTop + (elRect.top - snapRect.top);
+        if (isInstant) {
+          snapCont.scrollTop = targetScrollTop;
+        } else {
+          snapCont.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        }
+      } else {
+        el.scrollIntoView({ behavior: isInstant ? 'auto' : 'smooth' });
       }
-      setTimeout(updateUnifiedHud, 350);
+      setTimeout(updateUnifiedHud, isInstant ? 50 : 350);
     }
   }
 
@@ -5629,6 +5591,16 @@
     updateUnifiedHud();
     const snapCont = document.getElementById('main-snap-container');
     if (snapCont) snapCont.addEventListener('scroll', updateUnifiedHud);
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      scrollToScreen(targetId, true);
+    }
+  });
+  window.addEventListener('load', () => {
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      scrollToScreen(targetId, true);
+    }
   });
 
     function toggleCaratulaLangMenu(e) {
