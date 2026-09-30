@@ -4146,17 +4146,17 @@
     let currentLang = localStorage.getItem('nexord_lang') || 'es';
 
     function setLanguage(lang) {
-      document.querySelectorAll('.lang-flag').forEach(el => el.textContent = data.flag);
-      document.querySelectorAll('.lang-code').forEach(el => el.textContent = data.code);
-      document.querySelectorAll('.lang-opt').forEach(opt => opt.classList.toggle('active', opt.getAttribute('onclick')?.includes(`'${lang}'`)));
-      const cdd = document.getElementById('caratula-lang-dropdown'); if (cdd) cdd.classList.remove('open');
-      const cbtn = document.getElementById('caratula-lang-btn'); if (cbtn) cbtn.setAttribute('aria-expanded', 'false');
       if (!I18N_NIVEL6[lang]) return;
       currentLang = lang;
       localStorage.setItem('nexord_lang', lang);
       document.documentElement.lang = lang;
 
       const data = I18N_NIVEL6[lang];
+      document.querySelectorAll('.lang-flag').forEach(el => el.textContent = data.flag);
+      document.querySelectorAll('.lang-code').forEach(el => el.textContent = data.code);
+      document.querySelectorAll('.lang-opt').forEach(opt => opt.classList.toggle('active', opt.getAttribute('onclick')?.includes(`'${lang}'`)));
+      const cdd = document.getElementById('caratula-lang-dropdown'); if (cdd) cdd.classList.remove('open');
+      const cbtn = document.getElementById('caratula-lang-btn'); if (cbtn) cbtn.setAttribute('aria-expanded', 'false');
 
       // 1. Meta Tags & Título
       document.title = data.page_title;
@@ -4260,7 +4260,8 @@
       };
 
       for (const [key, val] of Object.entries(data)) {
-        if (['page_title', 'meta_desc', 'meta_keywords', 'hud_words', 'caratula_items', 'speech_text'].includes(key)) continue;
+        if (['page_title', 'meta_desc', 'meta_keywords', 'hud_words', 'caratula_items', 'speech_text', 'flag', 'code', 'name'].includes(key)) continue;
+        if (key.startsWith('nav_pod_') || key.startsWith('hud_')) continue;
 
         const targetId = customMap[key] || key.replace(/_/g, '-');
         const el = document.getElementById(targetId);
