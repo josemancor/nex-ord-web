@@ -4849,7 +4849,8 @@
     };
 
     function setLanguage(lang) {
-      if (!I18N_DATA[lang]) lang = 'es';
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
       try { localStorage.setItem('nexord_lang', lang); } catch(e) {}
       document.documentElement.setAttribute('lang', lang);
@@ -4873,14 +4874,13 @@
 
       // Actualizar clase activa en botones de idioma
       document.querySelectorAll('.hud-lang-btn').forEach(btn => {
-        if (btn.getAttribute('data-lang') === lang) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
 
-      const dict = I18N_DATA[lang];
+      const baseDict = I18N_DATA[contentLang] || I18N_DATA['en'] || I18N_DATA['es'];
+      const currentDict = I18N_DATA[lang] || {};
+      const dict = Object.assign({}, baseDict, currentDict);
+      dict.ui = Object.assign({}, baseDict.ui || {}, currentDict.ui || {});
       if (!dict) return;
 
       // Traducir todos los elementos con data-i18n

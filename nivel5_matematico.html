@@ -7288,17 +7288,20 @@
        SISTEMA REACTIVO DE TRADUCCIÓN CANÓNICA (ES, EN, RU, ZH)
        ========================================================================= */
     function setLanguage(lang) {
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
+      currentLang = lang;
+      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
+      document.documentElement.lang = lang;
+      const baseDict = I18N_NIVEL5[contentLang] || I18N_NIVEL5['en'] || I18N_NIVEL5['es'];
+      const currentDict = I18N_NIVEL5[lang] || {};
+      const data = Object.assign({}, baseDict, currentDict);
+
       document.querySelectorAll('.lang-flag').forEach(el => el.textContent = data.flag);
       document.querySelectorAll('.lang-code').forEach(el => el.textContent = data.code);
       document.querySelectorAll('.lang-opt').forEach(opt => opt.classList.toggle('active', opt.getAttribute('onclick')?.includes(`'${lang}'`)));
       const cdd = document.getElementById('caratula-lang-dropdown'); if (cdd) cdd.classList.remove('open');
       const cbtn = document.getElementById('caratula-lang-btn'); if (cbtn) cbtn.setAttribute('aria-expanded', 'false');
-      if (!I18N_NIVEL5[lang]) return;
-      currentLang = lang;
-      localStorage.setItem('nexord_lang', lang);
-      document.documentElement.lang = lang;
-
-      const data = I18N_NIVEL5[lang];
 
       // 1. Meta Tags & Título
       document.title = data.page_title;

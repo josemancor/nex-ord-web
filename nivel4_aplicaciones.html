@@ -7820,12 +7820,14 @@
     });
 
     function setLanguage(lang) {
-      if (!I18N[lang]) return;
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
-      localStorage.setItem('nexord_lang', lang);
+      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
       document.documentElement.lang = lang;
-
-      const data = I18N[lang];
+      const baseDict = I18N[contentLang] || I18N['en'] || I18N['es'];
+      const currentDict = I18N[lang] || {};
+      const data = Object.assign({}, baseDict, currentDict);
 
       // 1. Meta Tags
       document.title = data.meta.title;

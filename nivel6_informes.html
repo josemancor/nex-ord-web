@@ -4711,12 +4711,14 @@
     let currentLang = localStorage.getItem('nexord_lang') || 'es';
 
     function setLanguage(lang) {
-      if (!I18N_NIVEL6[lang]) return;
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
-      localStorage.setItem('nexord_lang', lang);
+      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
       document.documentElement.lang = lang;
-
-      const data = I18N_NIVEL6[lang];
+      const baseDict = I18N_NIVEL6[contentLang] || I18N_NIVEL6['en'] || I18N_NIVEL6['es'];
+      const currentDict = I18N_NIVEL6[lang] || {};
+      const data = Object.assign({}, baseDict, currentDict);
       document.querySelectorAll('.lang-flag').forEach(el => el.textContent = data.flag);
       document.querySelectorAll('.lang-code').forEach(el => el.textContent = data.code);
       document.querySelectorAll('.lang-opt').forEach(opt => opt.classList.toggle('active', opt.getAttribute('onclick')?.includes(`'${lang}'`)));

@@ -2112,8 +2112,8 @@ const SECTORS_I18N = {
     {
       badge: "第 9 级 • 认识论顶点",
       title: "基本原理",
-      desc: "NEXORD 的认识论基石。从静态社会计量学跨越至群体动力物理学：场论定律、关系原子与“施予+接受”守恒原理。",
-      concepts: ["莫雷诺与勒温", "社会场论", "动态拓扑学", "施予+接受"],
+      desc: "NEXORD 的认识论基石。走向群体动力物理学：生命织锦、施予+接受守恒向量、稳态平衡、计算机 in silico 原位合成社会计量学、VISORD 数学放大镜与研究伦理。",
+      concepts: ["莫雷诺与勒温", "生命织锦与凝聚", "稳态平衡", "合成社会计量学", "数学放大镜", "主要研究者德性"],
       btnText: "进入基本原理 ↗"
     },
     {
@@ -2183,8 +2183,8 @@ const SECTORS_I18N = {
     {
       badge: "УРОВЕНЬ 9 • ЭПИСТЕМОЛОГИЧЕСКИЙ ЗЕНИТ",
       title: "ОСНОВЫ",
-      desc: "Эпистемологический зенит NEXORD. От статической социометрии к физике групп: законы поля, реляционный атом и принцип ОТДАЧА+ПРИНЯТИЕ.",
-      concepts: ["Морено и Левин", "Теория поля", "Динамическая топология", "ОТДАВАТЬ+ПОЛУЧАТЬ"],
+      desc: "Эпистемологический зенит NEXORD. К физике групп: жизненная ткань, векторы ОТДАВАТЬ+ПОЛУЧАТЬ, гомеостатическое равновесие, синтетическая социометрия in silico, математическая лупа VISORD и этическая ответственность.",
+      concepts: ["Морено и Левин", "Ткань и сплоченность", "Гомеостатическое равновесие", "Синтетическая социометрия", "Математическая лупа", "Деонтология IP"],
       btnText: "Перейти к Основам ↗"
     },
     {
@@ -2254,8 +2254,8 @@ const SECTORS_I18N = {
     {
       badge: "LEVEL 9 • EPISTEMOLOGICAL ZENITH",
       title: "FOUNDATIONS",
-      desc: "NEXORD's epistemological zenith. From static sociometry to group physics: field laws, relational atom and the GIVE+RECEIVE principle.",
-      concepts: ["Moreno & Lewin", "Field Physics", "Dynamic Topology", "GIVE+RECEIVE"],
+      desc: "NEXORD's epistemological zenith. Toward a physics of groups: vital web, GIVE+RECEIVE vectors, homeostatic balance, Synthetic Sociometry in silico, VISORD's mathematical magnifier, and ethical responsibility.",
+      concepts: ["Moreno & Lewin", "Vital Web & Cohesion", "Homeostatic Balance", "Synthetic Sociometry", "Mathematical Magnifier", "PI Deontology"],
       btnText: "Explore Foundations ↗"
     },
     {
@@ -2562,13 +2562,17 @@ function updatePanel(data) {
   
   updatePanelTimer = setTimeout(() => {
     const locDict = I18N[currentLang] || I18N.es;
-    const locSector = (typeof SECTORS_I18N !== 'undefined' && SECTORS_I18N[currentLang] && SECTORS_I18N[currentLang][data.id]) || null;
+    // Las 4 lenguas completas son ES, EN, RU, ZH. Para cualquier otra lengua (FR, IT, PT, DE),
+    // el contenido profundo (descripción y conceptos) se resuelve en EN con interfaces en el idioma señalado.
+    const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+    const contentLang = FULL_LANGS.includes(currentLang) ? currentLang : 'en';
+    const locSector = (typeof SECTORS_I18N !== 'undefined' && SECTORS_I18N[contentLang] && SECTORS_I18N[contentLang][data.id]) || null;
 
     const badgeText = locSector ? locSector.badge : data.badge;
-    const titleText = locSector ? locSector.title : getSectorLocalizedTitle(data.id);
+    const titleText = getSectorLocalizedTitle(data.id);
     const descText = locSector ? locSector.desc : data.desc;
     const conceptsList = locSector ? locSector.concepts : data.concepts;
-    const btnLabel = locSector ? locSector.btnText : ((data.id === 8) ? `${locDict.btn_access} VISORD_demo ↗` : (data.btnText || `${locDict.btn_access} ${titleText} ↗`));
+    const btnLabel = (data.id === 8) ? `${locDict.btn_access} VISORD_demo ↗` : `${locDict.btn_access} ${titleText} ↗`;
 
     panelBadge.textContent = badgeText;
     panelBadge.style.color = data.color;

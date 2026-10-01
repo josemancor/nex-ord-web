@@ -76,12 +76,14 @@
     });
 
     function setLanguage(lang) {
-      if (!I18N[lang]) lang = 'es';
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
-      localStorage.setItem('nexord_lang', lang);
+      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
       document.documentElement.lang = lang;
-
-      const dict = I18N[lang];
+      const baseDict = I18N[contentLang] || I18N['en'] || I18N['es'];
+      const currentDict = I18N[lang] || {};
+      const dict = Object.assign({}, baseDict, currentDict);
 
       // Actualizar botón del selector
       document.querySelectorAll('.lang-flag').forEach(el => el.textContent = dict.flag);

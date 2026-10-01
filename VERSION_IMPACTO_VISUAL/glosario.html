@@ -1680,17 +1680,19 @@
     }
 
     function setLanguage(lang) {
-      if (!['es', 'en', 'ru', 'zh'].includes(lang)) return;
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
+      try { localStorage.setItem('nexord_lang', lang); } catch(e) {}
 
       // Update lang buttons
       document.querySelectorAll('.hud-lang-btn').forEach(b => {
-        b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+        b.classList.toggle('active', b.getAttribute('data-lang') === contentLang);
       });
 
       // Update UI texts
-      const ui = uiTranslations[lang] || uiTranslations.es;
-      const pills = catPillLabels[lang] || catPillLabels.es;
+      const ui = uiTranslations[contentLang] || uiTranslations.en || uiTranslations.es;
+      const pills = catPillLabels[contentLang] || catPillLabels.en || catPillLabels.es;
 
       document.title = ui.page_title;
       const bTitle = document.getElementById('brand-title');

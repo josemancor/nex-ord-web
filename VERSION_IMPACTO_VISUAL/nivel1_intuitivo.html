@@ -17436,13 +17436,16 @@
     });
 
     function setLanguage(lang) {
-      if (!I18N[lang]) return;
+      const FULL_LANGS = ['es', 'en', 'ru', 'zh'];
+      const contentLang = FULL_LANGS.includes(lang) ? lang : 'en';
       currentLang = lang;
       try {
         localStorage.setItem('nexord_lang', lang);
       } catch (e) {}
       document.documentElement.lang = lang;
-      const dict = I18N[lang];
+      const baseDict = I18N[contentLang] || I18N['en'] || I18N['es'];
+      const currentDict = I18N[lang] || {};
+      const dict = Object.assign({}, baseDict, currentDict);
 
       // 1. Metadatos dinámicos
       if (document.getElementById('page-title')) document.getElementById('page-title').textContent = dict.page_title;
