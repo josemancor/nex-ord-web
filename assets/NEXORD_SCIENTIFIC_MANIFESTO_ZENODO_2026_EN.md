@@ -232,10 +232,17 @@ The parallel articulation of Correspondence Analysis (AFC) and 10D Socio-Thermod
 
 ### 5.2. The GxTyCz Multidimensional Design Space without a Priori Constraints
 The mathematical formulation of NEXORD imposes no a priori limitations or restrictions on research and diagnostic designs:
-* **Groups (G):** Accommodates any number of independent collectives, organizational departments, working teams, or experimental cohorts.
+* **Groups (G):** Accommodates any number of independent collectives, organizational departments, working teams, or experimental groups.
 * **Temporal Waves (T):** Enables continuous longitudinal tracking across T timepoints (T1, T2, ..., Tn), monitoring the diachronic evolution of cohesion and latent structural rifts.
 * **Multiplex Criteria (C):** Models multiple functional and affective criteria simultaneously (C1 task competence, C2 social bonding, C3 crisis leadership), capturing topological shifts across evaluative lenses.
 * **Contextual Variables (Z):** Seamlessly integrates demographic profile attributes (age, gender, tenure) and group activity scales (AAG; Vicente, Cornejo & Barbero, 2006).
+
+Alongside core ordinal rankings, the system's formal architecture articulates two complementary psychometric modules:
+* **Native Triadic Metaperceptions ($aE$ and $oE$):** To complete the actor's socio-cognitive field without inflating administrative burden, NEXORD natively captures triangulated expectations projected onto the boundary poles of the relational constellation:
+  * **$aE$ (Expectations on the Closest Peer):** Who does the sender expect their closest peer (1st choice) will prefer to choose?
+  * **$oE$ (Expectations on the Most Distant Peer):** Who does the sender expect their most distant or rejected peer will prefer to choose?
+  This triadic attribution operationalizes socio-cognitive closure (following Heider and Festinger), assessing perceived transitivity, cognitive balance, and structural coherence within the group.
+* **Modular Reference Batteries ($V_{10}$ and $A_{16}$):** To ensure cross-group metric standardization within the Sociometric Data Bank (BSOC), the platform specifies by default a decadic sociodemographic battery ($V_{10,3}$, ten key attributes with three modalities) and the Group Adjective Attribution inventory ($A_{16,4}$, 16 canonical adjectives structured across four factors: Thematic, Functional, Cognitive, and Affective, utilizing 1-8 forced even scales). Nonetheless, both batteries remain modular, optional reference baselines: they can be modified, replaced, or tailored under the Principal Investigator's (PI) criteria according to specific substantive requirements.
 
 ### 5.3. Multigroup PCA & Geodesic Distance on Grassmann Manifolds Gr(k, N)
 To compare formally independent collectives without enforcing artificial cross-group links, each group is modeled as a k-dimensional subspace in R^N. From canonical Jordan angles cos(theta_m) = sigma_m(U_1^T U_2), scale-invariant geodesic distance is calculated:
@@ -246,13 +253,13 @@ This metric quantitatively determines whether two collectives share structural m
 
 ---
 
-## 6. Experimental Research: Physical Lab, Processual Sociometry, and Multimodal Diagnostics
+## 6. Experimental Research: Physical Lab, Dialectical Sociometry, and Multimodal Diagnostics
 
 ### 6.1. Monitoring Experimental Designs in the Physical Laboratory
 The platform supports the systematic monitoring of face-to-face experimental designs within physical social psychology laboratories. In controlled observation rooms, working seminars, and team behavioral laboratories, NEXORD captures interpersonal dynamics in real time, tracking the emergence of informal leadership structures, reciprocity, and network centrality during collaborative tasks.
 
-### 6.2. Processual Sociometry and Social Dilemma Resolution
-Moving beyond static cross-sectional sociometry, Processual Sociometry records continuous communicative sequences. By delineating an **interaction space** and tracking **interaction counters** (speaking turns, intervention frequency, listening ratios), the platform models social dilemma resolution. It quantifies behaviors of cooperation, caution, skepticism, and free-riding (polizón), enabling experimental studies on trust building and social capital formation under strict anonymization.
+### 6.2. Dialectical Sociometry and Social Dilemmas
+Conceived as an **emerging experimental research track currently in active development**, Dialectical Sociometry investigates the real-time recording of continuous interaction sequences. Through the controlled delimitation of an **interaction space** and calibrated **interaction counters** (speaking turn frequencies, conversational pacing, and mutual listening balances), this modeling framework observes interactional dynamics in social dilemmas and collaborative tasks, monitoring the emergence of trust, gradual reciprocity, or free-riding under strict anonymization protocols.
 
 ### 6.3. Multimodal Perception: The Iceberg Model & Hydrodynamic Sonification
 In all human groups, a visible surface layer (formal roles, explicit agreements, observable behavior) is sustained by a deep, submerged relational foundation (unspoken expectations, latent tensions, unvoiced affinities, and subtle rejections). The fundamental methodological objective of the platform is to **render visible and audible the dynamics and processes of group interaction**:
