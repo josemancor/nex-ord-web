@@ -7782,6 +7782,7 @@
     let currentGalleryIdx = 0;
 
     function selectGalleryItem(idx, btn) {
+      if (!btn) btn = document.getElementById(`g-item-${idx}`);
       document.querySelectorAll('.g-item-btn').forEach(b => {
         b.classList.remove('active');
         b.style.background = 'transparent';
@@ -7814,17 +7815,28 @@
 
       const imgEl = document.getElementById('g-view-img');
       if (imgEl) {
+        imgEl.style.opacity = '0.7';
         imgEl.src = item.img;
         imgEl.alt = item.title;
+        imgEl.onload = () => { imgEl.style.opacity = '1'; };
+        imgEl.onerror = () => { imgEl.style.opacity = '1'; };
       }
     }
 
     function openCurrentGalleryLightbox() {
       const item = galleryItems[currentGalleryIdx];
       if (item && typeof openGalleryLightbox === 'function') {
-        openGalleryLightbox(item.img, item.title, item.sub);
+        openGalleryLightbox(item.img, item.title, item.sub + ' · ' + item.interp);
       }
     }
+
+    // Precarga anticipada de las 9 familias gráficas para respuesta inmediata
+    window.addEventListener('DOMContentLoaded', () => {
+      galleryItems.forEach(it => {
+        const pImg = new Image();
+        pImg.src = it.img;
+      });
+    });
 
     function filterGallery(lvl, btn) {
       document.querySelectorAll('.g-filter-btn').forEach(b => {
