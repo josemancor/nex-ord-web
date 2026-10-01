@@ -124,17 +124,67 @@ The lattice contains the 81 exhaustive relational configurations (Q81 = 3^4), hi
 
 ![Table 1: Canonical 9x9 Lattice of Q81 Relational Figures](Table_Annex_I_Matrix_Q81_EN.png)
 
-### 4.2. The 10-Density Pentagram: Macro-Dimensions DA (Sender) and RECIBE (Receiver)
-The ten continuous relational densities are structured within the Densities Pentagram, organized into two complementary macro-dimensions:
-* **Macro-Dimension DA (Sender Block):** Encompasses outbound kinetic mass to effective choice: BDA (kinetic mass) -> SDA (net potential) -> A1 (pDA) -> A2 (DA).
-* **Macro-Dimension RECIBE (Receiver Block):** Encompasses inbound effective choice to received kinetic mass: A3 (RECIBE) -> A4 (pRECIBE) -> SRC (net potential) -> BRC (kinetic mass).
-* **Relational System Closure:** The collective system couples through Net Relational Potential (SDR = SDA + SRC) and Total Kinetic Mass (BDR = BDA + BRC), assessing positional asymmetry via Dif-DR = SDA - SRC.
+### 4.2. The Canonical Doctrine of the 18 Relational Densities (18D) and the 3 Dual Prisms
+Micro-interactional dyadic analysis transitions from discrete rank tallies to the socio-thermodynamic continuum through the **exponential relational decay law** $W(k) = 2^{1-k}$ ($1st=1.000, 2nd=0.500, 3rd=0.250\dots$). To distinguish ordinal ranks from continuous physical magnitudes, the four components of the dyadic tetragram adopt the differential prefix **`d`**: $\{dDP, dDA, dRA, dRP\} \equiv \{\mathbf{1}, \mathbf{2}, \mathbf{3}, \mathbf{4}\}$. The continuous space operates under the universal prefix convention **$S$** (Signed Net Balance, $\pm\mathbb{R}$, quantifying potentials and directional flux) and **$B$** (Unsigned Gross Mass, $|\cdot| \ge 0$, quantifying total kinetic investment and metabolic energy).
 
-![Formula 6: Tetragram Decomposition into Densities Dk](formulas/Formula_6_Descomposicion_Tetragrama_Dk.png)
+The elemental quartet partitions into exactly **3 invariant dual prisms ($\binom{4}{2}/2 = 3$)**, providing exhaustive structural refractions of dyadic reality:
 
-![Figure 2: Socio-Thermodynamic Pentagram of Relational Densities (10D)](Figure_Pentagram_Socio_Thermodynamic_10D.png)
+```
+                            THE DENSITY TETRAGRAM
+                         [ dDP    dDA  │  dRA    dRP ]
+                                       │
+        ┌──────────────────────────────┼──────────────────────────────┐
+        ▼                              ▼                              ▼
+   PRISM 1: OPERATIONAL           PRISM 2: ONTOLOGICAL          PRISM 3: DIALECTICAL
+   [ 12  │  34 ]                  [ 14  │  23 ]                 [ 13  │  24 ]
+   Sender vs. Receiver            Mind vs. Facts                Cross-Attunement
+   S12, B12  │  S34, B34          S14, B14  │  S23, B23         S13, B13  │  S24, B24
+```
 
-*Figure 2: Socio-Thermodynamic Pentagram of Relational Densities (10D). Continuous mapping across the 10 invariant stations (BDA → BDR), visualizing the dyadic tetragram compass [A1 → A4], dynamic polarization amplitude (Δ), and the socio-thermodynamic phase transition curve.*
+1. **Prism 1: Operational Axis (Sender vs. Receiver) $\rightarrow [12 \mid 34]$:**  
+   Disentangles outbound expansiveness from inbound impact.
+   * Sender Side (Outbound): Sender Balance $S_{12} = dDP + dDA$ (SDA: net expansiveness) and Sender Mass $B_{12} = |dDP| + |dDA|$ (BDA: total emitted investment).
+   * Receiver Side (Inbound): Receiver Balance $S_{34} = dRA + dRP$ (SRC: induced status) and Receiver Mass $B_{34} = |dRA| + |dRP|$ (BRC: convergent relational pressure).
+   * *Diagnostics:* Uncovers power asymmetries, nurturing leaders, passive sinks, and structural ostracism.
+
+2. **Prism 2: Ontological Axis (Mind vs. Facts) $\rightarrow [14 \mid 23]$:**  
+   Contrasts subjective expectations against objective interpersonal choices.
+   * Mental World (Crossed Expectations): Perception Balance $S_{14} = dDP + dRP$ and Perception Mass $B_{14} = |dDP| + |dRP|$.
+   * Factual World (Effective Choices): Action Balance $S_{23} = dDA + dRA$ and Action Mass $B_{23} = |dDA| + |dRA|$.
+   * *Diagnostics:* If $B_{14} \gg B_{23}$, diagnoses **Collective Neurosis / Group Rumination** (energy dissipated on unfounded fears and cognitive fantasies); if $B_{23} \gg B_{14}$, diagnoses **Blind Impulsivity / Reflexive Anomie** (action devoid of empathy and mutual mentalization).
+
+3. **Prism 3: Dialectical Axis (Cross-Attunement & Realism) $\rightarrow [13 \mid 24]$:**  
+   Crosses sender expectation with receiver action, auditing alignment and disappointment.
+   * Sender Realism (Sender Expectation + Peer Action): $S_{13} = dDP + dRA$ and $B_{13} = |dDP| + |dRA|$.
+   * Receiver Response (Sender Action + Peer Expectation): $S_{24} = dDA + dRP$ and $B_{24} = |dDA| + |dRP|$.
+   * *Diagnostics:* Measures **latent relational friction and sociometric disillusionment** ($S_{13} \ll 0$ when $dDP > 0$).
+
+Global system closure is established through Net Relational Potential ($SDR = SDA + SRC$), Total Kinetic Mass ($BDR = BDA + BRC$), and Positional Asymmetry ($Dif-DR = SDA - SRC$), constituting the **18 continuous relational densities (18D space)**.
+
+![Figure 2: Socio-Thermodynamic Pentagram of Relational Densities (18D)](Figure_Pentagram_Socio_Thermodynamic_10D.png)
+
+### 4.3. Continuous Quantification of the Individual Synthetic Relational Figure
+Historically, aggregating an individual's collective standing through direct arithmetic averaging of discrete figures produced cancellation artifacts (blending high attractions and rejections yielded a false illusion of indifference). NEXORD resolves this by formalizing the **Individual Synthetic Relational Figure** via continuous vector decomposition:
+* **Marginal Emission Density ($\bar{d}_{i\cdot}$):** Mean outbound relational investment toward the network: $\bar{d}_{i\cdot} = \frac{1}{N-1}\sum_{j \neq i} d_{ij}$ (mean expansiveness).
+* **Marginal Reception Density ($\bar{d}_{\cdot i}$):** Mean inbound social attraction converging upon the actor: $\bar{d}_{\cdot i} = \frac{1}{N-1}\sum_{j \neq i} d_{ji}$ (mean status/in-centrality).
+* **Integrated Global Density ($D_i$):** Canonical semi-sum of marginal densities:
+  $$D_i = \frac{\bar{d}_{i\cdot} + \bar{d}_{\cdot i}}{2}$$
+  This index guarantees relational mass conservation ($\frac{1}{N}\sum_i D_i = \Delta$), scaling the physical volume, radius, and envelope of the node glyph within 3D space.
+* **Relational Differential Bias ($\delta_i$):** Normalized giving/receiving asymmetry:
+  $$\delta_i = \frac{\bar{d}_{i\cdot} - \bar{d}_{\cdot i}}{\bar{d}_{i\cdot} + \bar{d}_{\cdot i}} \in [-1, +1]$$
+  where $\delta_i > 0$ denotes expansive bias, $\delta_i < 0$ denotes receptive bias, and $\delta_i \approx 0$ marks symmetric reciprocity.
+* **Flow Vector Angle ($\theta_i$):** Directional angle on the $(In, Out)$ plane: $\theta_i = \arctan\left(\frac{\bar{d}_{\cdot i}}{\bar{d}_{i\cdot}}\right)$ ($45^\circ$ = balanced reciprocity).
+
+### 4.4. The VISORD Aquarium Paradigm & Relational Hydrostatics
+The **VISORD Aquarium** paradigm translates the static 2D sociogram into a continuous 3D fluid volume. Actors float and interact according to socio-thermodynamic laws:
+* **X Axis:** Emission / Expansiveness ($SDA$).
+* **Z Axis:** Reception / Status ($SRC$).
+* **Y Axis:** Hydrostatic Depth / Buoyancy ($Z_i = D_i \times \text{scale}$).
+* **Three Hydrostatic Strata:**
+  1. **Open Sky (Atmosphere):** Upper stratum for hyper-investing nodes exceeding water level ($Z_i > Z_{\text{sea}}$).
+  2. **Water Surface ($Z_{\text{sea}}$):** Homeostatic group equilibrium plane.
+  3. **Seabed / Benthos (Abyssal):** Basin of deficit buoyancy and severe ostracism ($Z_i \to 0$ or $BDF/BDC < 0.5$).
+* **The Canonical VISORD Laboratories:** The platform deploys four specialized exploration suites: **`VISORD_demo`** (phase transitions and 3D/4D dynamics), **`VISORD_cultural`** (literary masterpieces with zero reactivity), **`VISORD_radiológico`** (Grassmann topological screenings), and **`VISORD_dialéctico`** (micro-interactions, social dilemmas, and IPA-SMIb Moviola), unified within the continuous volumetric hydrostatics of **`VISORD_acuario`**.
 
 ---
 
@@ -222,6 +272,7 @@ Through the CULTURAL data category, NEXORD transcribes dramatic, cinematic, and 
 
 ### 7.1. Ethics by Design & Non-Punitive Interdiction
 The platform embeds ethical safeguards directly into technical algorithms (*Ethics by Design*). The system explicitly prohibits punitive deployments, negative selection, or elimination rankings. Analysis on empirical field datasets (REAL category) requires authentication and formal accountability by an accredited Principal Investigator (PI).
+* **Explicit Deontological Mandate of the Principal Investigator (PI):** It is strictly prohibited to attribute strictly group socio-thermodynamic phenomena and field positions to intrinsic individual personality traits or personal merit/demerit. All sociometric diagnostics and interventions must safeguard the personal self-esteem and social reputation of participants, steering intervention toward environmental recalibration, role clarification, and collective wellbeing.
 
 ### 7.2. Open Science, Clélie Protocol & Institutional Custodianship (BSOC)
 In accordance with Open Science and FAIR Data principles, NEXORD's mathematical, methodological, and computational formulations are publicly accessible. The complete interactive web platform, computational engines, and 3D VISORD visualizers are openly accessible at the official web portal: [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/). To protect participant confidentiality, empirical field datasets undergo canonical anonymization (1A1a..5A1a) and cryptographic hash sealing (SHA3-512, Clélie Protocol), under the academic custodianship of the Sociometric Data Bank (BSOC / University of Barcelona).
