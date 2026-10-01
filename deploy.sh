@@ -10,7 +10,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 WEB_DIR="/Users/jmcor/Desktop/SOC_ORD_WEB"
 
 echo "📦 Sincronizando 05_Web_Promocional hacia SOC_ORD_WEB..."
-rsync -av --delete --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' "$SCRIPT_DIR/" "$WEB_DIR/"
+rsync -av --delete --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude='.chrome_tmp' "$SCRIPT_DIR/" "$WEB_DIR/"
 
 cd "$WEB_DIR"
 
