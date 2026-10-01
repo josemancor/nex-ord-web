@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD • Acuario Socio-Termodinámico 3D & Ecosistema D18</title>
+  
+  <!-- Tailwind CSS & Tipografías Institucionales -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=Roboto+Mono:wght@500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Three.js y OrbitControls (local con fallback CDN) -->
+  <script src="lib/three.min.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-ocean-deep: #030712;
+      --bg-card: rgba(11, 19, 43, 0.92);
+      --border-cyan: rgba(0, 245, 212, 0.35);
+      --accent-cyan: #00F5D4;
+      --accent-blue: #00E5FF;
+      --accent-green: #00FF87;
+      --accent-magenta: #FF007F;
+      --accent-amber: #FF9F1C;
+      --accent-gold: #FFE600;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-ocean-deep);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(0, 245, 212, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(255, 0, 127, 0.05) 0%, transparent 40%);
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .outfit { font-family: 'Outfit', sans-serif; }
+
+    /* Scrollbar personalizada fina */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(3, 7, 18, 0.8);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 245, 212, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 245, 212, 0.6);
+    }
+
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid var(--border-cyan);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-panel-sub {
+      background: rgba(6, 12, 28, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    /* Recuadro de Contención del Acuario 3D */
+    .containment-frame {
+      border: 2px solid rgba(0, 245, 212, 0.5);
+      border-radius: 20px;
+      box-shadow: 0 0 35px rgba(0, 245, 212, 0.15), inset 0 0 25px rgba(0, 229, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 25%, #071E3D 0%, #030A16 80%, #01040A 100%);
+    }
+
+    /* Botones de acción y selectores */
+    .action-btn {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .action-btn:hover {
+      transform: translateY(-1.5px);
+    }
+    .action-btn:active {
+      transform: translateY(0.5px);
+    }
+
+    .btn-scenario.active {
+      background: rgba(0, 245, 212, 0.25);
+      border-color: #00F5D4;
+      color: #00F5D4;
+      box-shadow: 0 0 14px rgba(0, 245, 212, 0.4);
+    }
+
+    .btn-mode.active {
+      background: rgba(0, 229, 255, 0.25);
+      border-color: #00E5FF;
+      color: #00E5FF;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+    }
+
+    .btn-fig.active {
+      box-shadow: 0 0 12px currentColor;
+      filter: brightness(1.2);
+    }
+
+    /* Mando Universal Nav Pod en Fila India */
+    .universal-nav-pod {
+      position: fixed;
+      right: 18px;
+      bottom: 20px;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 10px 6px;
+      border-radius: 24px;
+      border: 1.5px solid rgba(0, 245, 212, 0.45);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 18px rgba(0, 245, 212, 0.25);
+    }
+    .nav-pod-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(16, 25, 53, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      color: #00F5D4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      line-height: 1;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    .nav-pod-btn:hover {
+      background: #00F5D4;
+      color: #030712;
+      border-color: #00F5D4;
+      transform: scale(1.15);
+      box-shadow: 0 0 16px rgba(0, 245, 212, 0.85);
+    }
+    .nav-pod-home {
+      color: #FFE600;
+    }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030308 !important;
+      box-shadow: 0 0 16px rgba(255, 230, 0, 0.85) !important;
+    }
+
+    /* Slider de Cota Marina */
+    input[type=range] {
+      accent-color: #00F5D4;
+    }
+
+    /* Tarjeta HUD Flotante dentro del Canvas */
+    .hud-float {
+      background: rgba(4, 10, 24, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 245, 212, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body class="p-2 md:p-3 pb-24">
+
+  <!-- CABECERA INSTITUCIONAL CANÓNICA -->
+  <header class="w-full max-w-[1720px] mx-auto mb-3">
+    <div class="glass-panel rounded-2xl px-3 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Marca y Título -->
+      <div class="flex items-center gap-3">
+        <a href="recursos.html" class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 text-slate-950 font-black text-lg transition hover:scale-105" title="Regresar a Recursos">
+          🌊
+        </a>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="outfit text-base md:text-lg font-black tracking-wide text-white">NEXORD <span class="text-teal-300">VISORD ACUARIO</span></span>
+            <span class="mono text-[10px] bg-teal-950/80 border border-teal-500/50 text-teal-300 px-2 py-0.5 rounded-full font-bold">ECOSISTEMA D18</span>
+            <span class="mono text-[10px] bg-sky-950/80 border border-sky-500/40 text-sky-300 px-2 py-0.5 rounded-full font-bold">3D HIDRODINÁMICO</span>
+            <span class="mono text-[10px] bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded-full font-bold">Δ = 0.000000</span>
+          </div>
+          <p class="text-[11px] text-slate-300 mono mt-0.5">Espacio Volumétrico Continuo • Estratos Hidrostáticos • Anatomía Bi-Capa (Núcleo Fáctico vs Halo Cognitivo)</p>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos de Cabecera -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <button id="btn-audio-toggle" onclick="toggleAudio()" class="action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-teal-950/80 text-teal-300 border border-teal-500/40 hover:bg-teal-900/60" title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal">
+          <span id="audio-icon">🔇</span> <span id="audio-label">AUDIO: OFF</span>
+        </button>
+        <button onclick="togglePedagogicModal()" class="action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-sky-950/80 text-sky-300 border border-sky-500/40 hover:bg-sky-900/60" title="Consultar Guía Pedagógica del Acuario">
+          <span>💡</span> <span>GUÍA PEDAGÓGICA</span>
+        </button>
+        <button onclick="openSmibEditorModal()" class="action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-indigo-950/80 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-900/60" title="Inspeccionar y editar la matriz SMIb">
+          <span>🎛️</span> <span>EDITOR SMIb</span>
+        </button>
+        <a href="recursos.html" class="action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-slate-900 text-slate-300 border border-slate-700 hover:text-white" title="Volver a Recursos">
+          <span>◀</span> <span>RECURSOS</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL: BANDA IZQUIERDA + PROYECCIÓN CENTRAL 3D -->
+  <main class="w-full max-w-[1720px] mx-auto flex-1 flex flex-col lg:flex-row gap-3 items-stretch">
+    
+    <!-- =========================================================================
+         BANDA IZQUIERDA: CONTROLES DE EJECUCIÓN BIEN CARACTERIZADOS (380px)
+         ========================================================================= -->
+    <aside class="w-full lg:w-[380px] flex-shrink-0 flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-100px)] pr-1">
+
+      <!-- MÓDULO 1: SELECTOR DE ESCENARIOS (N x N) -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-teal-900/50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🎯</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-teal-300 outfit">1. ESCENARIOS MULTIESCALA (N×N)</h2>
+          </div>
+          <span class="mono text-[10px] text-slate-400 font-bold" id="badge-current-n">N = 5</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1.5">
+          <!-- 3x3 -->
+          <button onclick="loadScenario('3x3')" id="btn-scen-3x3" class="btn-scenario action-btn flex flex-col items-center justify-center p-2 rounded-xl border border-teal-500/30 bg-teal-950/40 text-slate-200 hover:border-teal-400">
+            <span class="outfit font-black text-sm text-teal-300">3×3</span>
+            <span class="text-[9px] mono text-slate-400 mt-0.5">Tríada Micro</span>
+          </button>
+          <!-- 5x5 Canónico -->
+          <button onclick="loadScenario('5x5')" id="btn-scen-5x5" class="btn-scenario active action-btn flex flex-col items-center justify-center p-2 rounded-xl border border-teal-500/50 bg-teal-950/60 text-slate-100 hover:border-teal-400">
+            <span class="outfit font-black text-sm text-teal-300">5×5</span>
+            <span class="text-[9px] mono text-emerald-400 mt-0.5">5 Arquetipos</span>
+          </button>
+          <!-- 9x9 -->
+          <button onclick="loadScenario('9x9')" id="btn-scen-9x9" class="btn-scenario action-btn flex flex-col items-center justify-center p-2 rounded-xl border border-teal-500/30 bg-teal-950/40 text-slate-200 hover:border-teal-400">
+            <span class="outfit font-black text-sm text-teal-300">9×9</span>
+            <span class="text-[9px] mono text-slate-400 mt-0.5">Red Meso</span>
+          </button>
+        </div>
+
+        <p class="text-[10px] text-slate-400 leading-tight" id="scenario-description">
+          <strong class="text-teal-300">Grupo Canónico 5×5:</strong> Muestra los 5 arquetipos: S1 Integrador, S2 Emisor altruista, S3 Atractor pasivo, S4 Foco polarizado con asfixia por halo (BDF/BDC=0.35) y S5 Aislado neutro sumergido.
+        </p>
+      </section>
+
+      <!-- MÓDULO 2: PROYECCIÓN 1 A 1 (PASO A PASO) & MODOS DA / RC -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-sky-900/50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">👁️</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-sky-300 outfit">2. PROYECCIÓN 1 A 1 & MODOS DA / RC</h2>
+          </div>
+          <span class="mono text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800" id="badge-step-status">TODOS</span>
+        </div>
+
+        <!-- Selector de Perspectiva Relacional: DUAL, DA, RC -->
+        <div class="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-sky-900/40 text-[10px] mono">
+          <button onclick="setPerspectiveMode('DUAL')" id="btn-persp-dual" class="btn-mode active flex-1 py-1 rounded font-bold border border-transparent text-center transition" title="Ver tanto lo que el sujeto da como lo que recibe">
+            DUAL (DA+RC)
+          </button>
+          <button onclick="setPerspectiveMode('DA')" id="btn-persp-da" class="btn-mode flex-1 py-1 rounded font-bold border border-transparent text-center transition text-amber-300" title="Ver solo lo que el sujeto emite / da (lazos salientes)">
+            EMISIÓN (DA)
+          </button>
+          <button onclick="setPerspectiveMode('RC')" id="btn-persp-rc" class="btn-mode flex-1 py-1 rounded font-bold border border-transparent text-center transition text-cyan-300" title="Ver solo lo que el sujeto recibe del colectivo (lazos entrantes)">
+            RECEPCIÓN (RC)
+          </button>
+        </div>
+
+        <!-- Mando de Reproducción Paso a Paso 1 a 1 -->
+        <div class="flex items-center justify-between gap-1.5 bg-slate-950/90 p-1.5 rounded-xl border border-slate-800">
+          <button onclick="stepFirst()" class="action-btn p-1.5 rounded bg-slate-900 text-slate-300 hover:text-white" title="Primer sujeto (Inicio)">⏮</button>
+          <button onclick="stepPrev()" class="action-btn px-2 py-1 rounded bg-slate-900 text-slate-200 hover:text-white text-xs font-bold" title="Sujeto anterior">◀ Anterior</button>
+          <button onclick="toggleStepAutoPlay()" id="btn-step-play" class="action-btn px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 border border-teal-500/50 hover:bg-teal-500/30 text-xs font-bold flex items-center gap-1" title="Reproducir proceso sujeto a sujeto automáticamente">
+            <span id="play-step-icon">⏯</span> <span id="play-step-label">Auto Proceso</span>
+          </button>
+          <button onclick="stepNext()" class="action-btn px-2 py-1 rounded bg-slate-900 text-slate-200 hover:text-white text-xs font-bold" title="Siguiente sujeto">Siguiente ▶</button>
+          <button onclick="stepAll()" class="action-btn px-2 py-1 rounded bg-sky-950/80 text-sky-300 border border-sky-700/60 hover:bg-sky-900 text-xs font-bold" title="Ver todos a la vez">Todos</button>
+        </div>
+
+        <!-- Píldoras de Selección Directa de Sujetos -->
+        <div class="flex items-center gap-1 flex-wrap" id="subject-selector-pills">
+          <!-- Generado dinámicamente -->
+        </div>
+      </section>
+
+      <!-- MÓDULO 3: FILTRO DE FIGURAS RELACIONALES (TETRAGRAMAS) -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-indigo-900/50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🧬</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-indigo-300 outfit">3. FIGURAS RELACIONALES</h2>
+          </div>
+          <span class="mono text-[10px] text-slate-400" id="badge-current-fig">TODAS</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5 text-[10px] mono">
+          <button onclick="filterFigure('ALL')" id="btn-fig-all" class="btn-fig active p-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-200 text-left flex items-center justify-between">
+            <span>🌐 Todas las Figuras</span>
+            <span class="font-bold text-slate-400" id="cnt-fig-all">--</span>
+          </button>
+          <button onclick="filterFigure('MUTUAL_CHOICE')" id="btn-fig-ee" class="btn-fig p-1.5 rounded-lg border border-emerald-500/40 bg-emerald-950/30 text-emerald-300 text-left flex items-center justify-between">
+            <span>🟢 Elección Mútua &lt;Ee&gt;</span>
+            <span class="font-bold" id="cnt-fig-ee">--</span>
+          </button>
+          <button onclick="filterFigure('MUTUAL_REJECT')" id="btn-fig-rr" class="btn-fig p-1.5 rounded-lg border border-rose-500/40 bg-rose-950/30 text-rose-300 text-left flex items-center justify-between">
+            <span>🔴 Rechazo Mútuo [Rr]</span>
+            <span class="font-bold" id="cnt-fig-rr">--</span>
+          </button>
+          <button onclick="filterFigure('OPPOSITION')" id="btn-fig-opp" class="btn-fig p-1.5 rounded-lg border border-amber-500/40 bg-amber-950/30 text-amber-300 text-left flex items-center justify-between">
+            <span>🟠 Oposición &lt;Er] / [Re&gt;</span>
+            <span class="font-bold" id="cnt-fig-opp">--</span>
+          </button>
+          <button onclick="filterFigure('HALO_EXPECT')" id="btn-fig-halo" class="btn-fig p-1.5 rounded-lg border border-cyan-500/40 bg-cyan-950/30 text-cyan-300 text-left flex items-center justify-between">
+            <span>🔵 Conjeturas (pDA/pRC)</span>
+            <span class="font-bold" id="cnt-fig-halo">--</span>
+          </button>
+          <button onclick="filterFigure('NEUTRAL')" id="btn-fig-neu" class="btn-fig p-1.5 rounded-lg border border-slate-700/60 bg-slate-900/50 text-slate-400 text-left flex items-center justify-between">
+            <span>⚪ Neutral / Cero [0000]</span>
+            <span class="font-bold" id="cnt-fig-neu">--</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- MÓDULO 4: DESGLOSE DE LAS 18 DENSIDADES (D18) -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-teal-900/50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">📊</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-teal-300 outfit">4. LAS 18 DENSIDADES (D18)</h2>
+          </div>
+          <span class="mono text-[10px] text-emerald-400 font-bold" id="badge-prism-delta">Δ = 0.000000</span>
+        </div>
+
+        <!-- Pestañas de subfamilias D18 -->
+        <div class="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-teal-900/40 text-[9px] mono">
+          <button onclick="showD18Tab('elem')" id="tab-d18-elem" class="flex-1 py-0.5 rounded text-teal-300 font-bold bg-teal-950 border border-teal-500/40">4 Elem</button>
+          <button onclick="showD18Tab('agente')" id="tab-d18-agente" class="flex-1 py-0.5 rounded text-slate-400 hover:text-slate-200">4 Agente</button>
+          <button onclick="showD18Tab('onto')" id="tab-d18-onto" class="flex-1 py-0.5 rounded text-slate-400 hover:text-slate-200">4 Onto</button>
+          <button onclick="showD18Tab('tot')" id="tab-d18-tot" class="flex-1 py-0.5 rounded text-slate-400 hover:text-slate-200">2 Tot</button>
+          <button onclick="showD18Tab('prism')" id="tab-d18-prism" class="flex-1 py-0.5 rounded text-slate-400 hover:text-slate-200">3 Prism</button>
+        </div>
+
+        <!-- Contenedor dinámico de datos D18 -->
+        <div id="d18-content-display" class="bg-slate-950/90 rounded-xl p-2 border border-slate-800 text-[11px] mono">
+          <!-- Rellenado por JS -->
+        </div>
+
+        <!-- Medidor de Brecha Ontológica y Alerta de Asfixia por Halo -->
+        <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-[10px] mono">
+            <span class="text-slate-400">BRECHA ONTOLÓGICA (BDF / BDC):</span>
+            <span class="font-bold text-teal-300" id="hud-gap-ratio">1.00</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden flex">
+            <div id="bar-gap-fill" class="h-full bg-gradient-to-r from-teal-400 to-emerald-400" style="width: 50%;"></div>
+          </div>
+          <div id="asphyxia-warning" class="text-[9px] mono text-slate-400 hidden">
+            ⚠️ <span class="text-rose-400 font-bold">ASFIXIA POR HALO:</span> La conjetura y la fantasía colectiva aplastan al hecho fáctico consumado.
+          </div>
+        </div>
+      </section>
+
+      <!-- MÓDULO 5: DINÁMICA HIDROSTÁTICA & NIVEL DEL MAR (Z_mar) -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-teal-900/50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🌊</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-teal-300 outfit">5. LÁMINA DE AGUA (Z_mar)</h2>
+          </div>
+          <span class="mono text-[10px] text-teal-300 font-bold" id="sea-level-val">Z = 0.00</span>
+        </div>
+
+        <!-- Slider de Nivel del Mar -->
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] mono text-slate-400">-1.0</span>
+          <input type="range" id="slider-sea-level" min="-1.0" max="1.0" step="0.05" value="0.00" oninput="updateSeaLevel(this.value)" class="w-full cursor-pointer">
+          <span class="text-[10px] mono text-slate-400">+1.0</span>
+        </div>
+
+        <!-- Censo de Estratos en Tiempo Real -->
+        <div class="grid grid-cols-3 gap-1 text-[9px] mono text-center">
+          <div class="p-1 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">
+            <div>CIELO ABIERTO</div>
+            <div class="text-xs font-black" id="count-open-sky">0</div>
+          </div>
+          <div class="p-1 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">
+            <div>LÁMINA AGUA</div>
+            <div class="text-xs font-black" id="count-water-surface">0</div>
+          </div>
+          <div class="p-1 rounded bg-rose-950/60 border border-rose-500/40 text-rose-300">
+            <div>FONDO SUMERGIDO</div>
+            <div class="text-xs font-black" id="count-submerged">0</div>
+          </div>
+        </div>
+
+        <!-- Filtro de Capas Visuales -->
+        <div class="flex items-center gap-1 text-[9px] mono mt-1">
+          <button onclick="setLayerVisibility('ALL')" id="layer-btn-all" class="flex-1 py-1 rounded bg-teal-950 text-teal-300 border border-teal-500/40 font-bold">Todo</button>
+          <button onclick="setLayerVisibility('CORE')" id="layer-btn-core" class="flex-1 py-1 rounded bg-slate-900 text-slate-400 hover:text-white">Solo Núcleos</button>
+          <button onclick="setLayerVisibility('HALO')" id="layer-btn-halo" class="flex-1 py-1 rounded bg-slate-900 text-slate-400 hover:text-white">Solo Halos</button>
+          <button onclick="setLayerVisibility('FLOW')" id="layer-btn-flow" class="flex-1 py-1 rounded bg-slate-900 text-slate-400 hover:text-white">Solo Flujos</button>
+        </div>
+      </section>
+
+      <!-- MÓDULO 6: CONTROLES DE CÁMARA 3D -->
+      <section class="glass-panel rounded-2xl p-3 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🎥</span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300 outfit">6. CÁMARA 360º & VISTAS</h2>
+          </div>
+          <button onclick="toggleAutoRotate()" id="btn-autorotate" class="action-btn px-2 py-0.5 rounded text-[10px] mono font-bold bg-teal-950 text-teal-300 border border-teal-500/40">
+            🔄 Auto 360º: ON
+          </button>
+        </div>
+
+        <div class="grid grid-cols-4 gap-1 text-[10px] mono">
+          <button onclick="resetCamera3D()" class="action-btn p-1.5 rounded bg-slate-900 text-slate-200 border border-slate-700 hover:border-teal-400 text-center">
+            Libre 3D
+          </button>
+          <button onclick="setCameraView('top')" class="action-btn p-1.5 rounded bg-slate-900 text-slate-200 border border-slate-700 hover:border-teal-400 text-center">
+            Cenital
+          </button>
+          <button onclick="setCameraView('front')" class="action-btn p-1.5 rounded bg-slate-900 text-slate-200 border border-slate-700 hover:border-teal-400 text-center">
+            Frontal
+          </button>
+          <button onclick="setCameraView('side')" class="action-btn p-1.5 rounded bg-slate-900 text-slate-200 border border-slate-700 hover:border-teal-400 text-center">
+            Lateral
+          </button>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- =========================================================================
+         ESPACIO DE PROYECCIÓN CENTRAL / DERECHO: RECUADRO DE CONTENCIÓN DEL ACUARIO 3D
+         ========================================================================= -->
+    <div class="flex-1 flex flex-col gap-2 min-w-0">
+      
+      <!-- RECUADRO DE CONTENCIÓN DEL ACUARIO 3D -->
+      <div class="containment-frame flex-1 min-h-[580px] lg:min-h-[640px] flex flex-col relative select-none">
+        
+        <!-- Canvas de Three.js -->
+        <div id="three-viewport" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+        <!-- HUD SUPERIOR EN ESCENA: Identificación del Régimen -->
+        <div class="absolute top-3 left-3 flex items-center gap-2 pointer-events-none z-10">
+          <div class="hud-float px-3 py-1.5 rounded-xl border border-teal-500/40 text-xs mono">
+            <span class="text-slate-400">RÉGIMEN:</span>
+            <span class="font-extrabold text-teal-300 ml-1" id="scene-regime-label">GRUPO CANÓNICO (N=5)</span>
+          </div>
+          <div class="hud-float px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs mono text-slate-300">
+            <span id="scene-active-subject-badge">TODOS LOS SUJETOS</span>
+          </div>
+        </div>
+
+        <!-- SONDA TETRAGRAMÁTICA DIÁDICA (TARJETA HUD FLOTANTE SUPERIOR DERECHA) -->
+        <div id="dyadic-probe-card" class="hud-float absolute top-3 right-3 max-w-[310px] w-full p-2.5 rounded-2xl text-[10px] mono z-10 transition-all duration-300">
+          <div class="flex items-center justify-between border-b border-teal-900/50 pb-1 mb-1.5">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_8px_#00F5D4]" id="probe-dot"></span>
+              <span class="font-bold text-xs text-white" id="probe-title">SONDA DIÁDICA</span>
+            </div>
+            <span class="text-slate-400" id="probe-stratum-badge">CIELO ABIERTO</span>
+          </div>
+
+          <div class="flex flex-col gap-1 text-slate-300" id="probe-body">
+            <div class="flex justify-between"><span class="text-slate-400">Coordenadas (X,Y,Z):</span> <span class="font-bold text-teal-300" id="probe-coords">(0.00, 0.00, 0.00)</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Masa Integrada (Di):</span> <span class="font-bold" id="probe-mass">0.00</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Sesgo Flujo (δi):</span> <span class="font-bold" id="probe-bias">0.00</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Brecha (BDF/BDC):</span> <span class="font-bold" id="probe-gap">1.00</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Ambivalencia Cognitiva:</span> <span class="font-bold" id="probe-amb">0.00</span></div>
+          </div>
+
+          <div class="mt-2 pt-1 border-t border-slate-800 text-[9px] text-slate-400" id="probe-hint">
+            💡 Haz clic en cualquier nodo para fijar su micro-tetragrama diádico.
+          </div>
+        </div>
+
+        <!-- LEYENDA HUD FLOTANTE INFERIOR DERECHA -->
+        <div class="absolute bottom-3 left-3 hud-float px-3 py-1.5 rounded-xl border border-slate-800 text-[9px] mono text-slate-300 z-10 pointer-events-none flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>Núcleo Fáctico (DA+REC)</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full border border-cyan-400 bg-cyan-400/20"></span> <span>Halo Cognitivo (pDA+pREC)</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-300"></span> <span>Atracción &lt;Ee&gt;</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> <span>Rechazo [Rr]</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> <span>Lámina de Agua (Z_mar)</span></div>
+        </div>
+
+        <!-- CONTROLES RÁPIDOS INFERIORES EN CANVAS -->
+        <div class="absolute bottom-3 right-3 flex items-center gap-1.5 z-10">
+          <button onclick="zoomInCamera()" class="hud-float w-8 h-8 rounded-lg flex items-center justify-center text-teal-300 hover:text-white font-bold" title="Acercar Zoom">+</button>
+          <button onclick="zoomOutCamera()" class="hud-float w-8 h-8 rounded-lg flex items-center justify-center text-teal-300 hover:text-white font-bold" title="Alejar Zoom">-</button>
+          <button onclick="resetCamera3D()" class="hud-float px-2 h-8 rounded-lg flex items-center justify-center text-[10px] mono text-teal-300 hover:text-white font-bold" title="Reset Cámara">Centrar</button>
+        </div>
+
+      </div>
+
+      <!-- GUÍA PEDAGÓGICA INFERIOR: EXPLICACIÓN CONCISA DE ELEMENTOS -->
+      <section class="glass-panel rounded-2xl p-3 text-xs leading-relaxed text-slate-300 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-teal-900/40 pb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-teal-300 font-bold">💡 GUÍA CONCISA DEL ESCENARIO:</span>
+            <span class="text-slate-400">¿Qué representa cada elemento en el Acuario 3D?</span>
+          </div>
+          <span class="mono text-[10px] text-teal-400 font-bold">CANON SOCIO-TERMODINÁMICO</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-[11px]">
+          <!-- Elemento 1: Plano Base & Flotabilidad -->
+          <div class="glass-panel-sub p-2 rounded-xl flex flex-col gap-1">
+            <h3 class="font-extrabold text-teal-300 outfit flex items-center gap-1.5">
+              <span>🧭</span> 1. PLANO BASE (X, Y) Y FLOTABILIDAD (Z)
+            </h3>
+            <p class="text-slate-300 text-[10.5px]">
+              El fondo horizontal es el plano de intercambio relacional: <strong>Eje X = Dador / Emisión (&mu;<sub>Out</sub>)</strong> y <strong>Eje Y = Receptor / Estatus (&mu;<sub>In</sub>)</strong>. El <strong>Eje vertical Z</strong> mide la flotabilidad o Saldo Socio-Termodinámico (<strong>SDR<sub>i</sub></strong>).
+            </p>
+          </div>
+
+          <!-- Elemento 2: Los 3 Estratos Hidrostáticos -->
+          <div class="glass-panel-sub p-2 rounded-xl flex flex-col gap-1">
+            <h3 class="font-extrabold text-sky-300 outfit flex items-center gap-1.5">
+              <span>🌊</span> 2. LOS 3 ESTRATOS HIDROSTÁTICOS
+            </h3>
+            <p class="text-slate-300 text-[10.5px]">
+              <strong>Fondo Sumergido (Z &lt; Z<sub>mar</sub>):</strong> lo latente, represión u ostracismo invisible. 
+              <strong>Lámina de Agua (Z &approx; Z<sub>mar</sub>):</strong> umbral crítico fenoménico de visibilidad grupal. 
+              <strong>Cielo Abierto (Z &gt; Z<sub>mar</sub>):</strong> lo manifiesto, liderazgo expansivo y cohesión reconocida.
+            </p>
+          </div>
+
+          <!-- Elemento 3: Anatomía Bi-Capa & Asfixia -->
+          <div class="glass-panel-sub p-2 rounded-xl flex flex-col gap-1">
+            <h3 class="font-extrabold text-rose-300 outfit flex items-center gap-1.5">
+              <span>🧬</span> 3. NÚCLEO FÁCTICO VS HALO COGNITIVO
+            </h3>
+            <p class="text-slate-300 text-[10.5px]">
+              <strong>Núcleo Fáctico (sólido):</strong> hechos consumados (DA + REC). 
+              <strong>Halo Cognitivo (pulsante):</strong> conjeturas y expectativas (pDA + pREC). Si <strong>BDF/BDC &lt; 0.5</strong> ocurre <em>asfixia por halo</em>: la fantasía colectiva aplasta a la realidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       MODAL PEDAGÓGICO COMPLETO
+       ========================================================================= -->
+  <div id="modal-pedagogic" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[99999] hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-3xl p-5 max-w-2xl w-full max-h-[85vh] overflow-y-auto border border-teal-500/50 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center justify-between border-b border-teal-900/60 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌊</span>
+          <h2 class="outfit font-black text-lg text-white">GUÍA MAESTRA • VISORD ACUARIO 3D</h2>
+        </div>
+        <button onclick="togglePedagogicModal()" class="w-8 h-8 rounded-full bg-slate-900 hover:bg-rose-900/60 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <div class="text-xs text-slate-300 leading-relaxed flex flex-col gap-3">
+        <div>
+          <h3 class="font-extrabold text-teal-300 outfit text-sm mb-1">1. ¿Qué es el VISORD Acuario?</h3>
+          <p>
+            Es el entorno de representación hidrodinámica tridimensional de NEXORD. Transforma el sociograma tradicional plano en un fluido vivo donde los actores sociométricos flotan e interactúan suspendidos según sus balances de masa, tensión y energía relacional.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-extrabold text-sky-300 outfit text-sm mb-1">2. La Resolución de la «Figura Sintética» sin Cancelaciones</h3>
+          <p>
+            Para sintetizar las relaciones de cada individuo con el grupo sin recurrir a promedios lineales planos (que cancelan atracciones y rechazos creando falsas neutralidades), el Acuario descompone la posición en:
+          </p>
+          <ul class="list-disc pl-5 mt-1 space-y-1">
+            <li><strong>Masa Relacional Integrada (Di):</strong> La semisuma marginal (D_emisión + D_recepción) / 2, que preserva la conservación de masa global del sistema.</li>
+            <li><strong>Sesgo de Flujo (&delta;i):</strong> El diferencial relativo que distingue si la masa procede del dar (surtidor expansivo &delta; &gt; 0) o del recibir (atractor pasivo &delta; &lt; 0).</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-extrabold text-indigo-300 outfit text-sm mb-1">3. Los 18 Descriptores de Densidad (D18) y la Invarianza Baricéntrica</h3>
+          <p>
+            A partir de las 4 densidades elementales del tetragrama (D1 pDA, D2 DA, D3 REC, D4 pREC), el sistema calcula las 4 de agente (SDA, SRC, BDA, BRC), las 4 ontológicas (SDF fáctico, SDC cognitivo, BDF, BDC) y las 2 totales (SDR, BDR). 
+            Los 3 prismas duales (Emisor/Receptor, Cognitivo/Fáctico, Cruzado) verifican de manera exacta el teorema baricéntrico con <strong>invariancia &Delta; = 0.000000</strong>.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-extrabold text-rose-300 outfit text-sm mb-1">4. La Asfixia por Halo (Ratio BDF / BDC)</h3>
+          <p>
+            En grupos con alta susceptibilidad, cuando los hechos efectivos son escasos pero los rumores y sospechas están hipertrofiados (BDF/BDC &lt; 0.50, como en el arquetipo S4 con 0.35), el halo conjetural exterior se expande, vibra con intensidad y asfixia al núcleo fáctico central.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="togglePedagogicModal()" class="action-btn px-4 py-1.5 rounded-xl bg-teal-500/20 text-teal-300 border border-teal-500/50 hover:bg-teal-500/30 font-bold text-xs">
+          Entendido, Volver al Acuario
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL DEL EDITOR INTERACTIVO DE SOCIOMATRIZ SMIb
+       ========================================================================= -->
+  <div id="modal-smib-editor" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[99999] hidden flex items-center justify-center p-3">
+    <div class="glass-panel rounded-3xl p-5 max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-indigo-500/50 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center justify-between border-b border-indigo-900/60 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🎛️</span>
+          <div>
+            <h2 class="outfit font-black text-lg text-white">EDITOR INTERACTIVO DE SOCIOMATRIZ SMIb</h2>
+            <p class="text-[10px] text-slate-400 mono">Cada celda contiene 4 posiciones (A1: p_DA, A2: DA, A3: REC, A4: p_REC). Haz clic para editar.</p>
+          </div>
+        </div>
+        <button onclick="closeSmibEditorModal()" class="w-8 h-8 rounded-full bg-slate-900 hover:bg-rose-900/60 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Cuadrícula de Celdas SMIb -->
+      <div class="overflow-x-auto bg-slate-950/90 rounded-2xl p-2 border border-slate-800">
+        <div id="smib-matrix-table-container"></div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <div class="flex items-center gap-1.5 text-[10px] mono text-slate-400">
+          <span>Leyenda:</span>
+          <span class="text-emerald-400 font-bold">+ (Positivo)</span>
+          <span class="text-slate-400 font-bold">0 (Neutro)</span>
+          <span class="text-rose-400 font-bold">- (Negativo)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="resetScenarioToDefault()" class="action-btn px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-slate-500 font-bold text-xs">
+            Restablecer Preset
+          </button>
+          <button onclick="closeSmibEditorModal()" class="action-btn px-4 py-1.5 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/50 hover:bg-indigo-500/30 font-bold text-xs">
+            Aplicar y Recalcular
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MANDO UNIVERSAL FLOTANTE EN FILA INDIA (CANON REGLA 15)
+       ========================================================================= -->
+  <nav class="universal-nav-pod" aria-label="Mando de Navegación Universal">
+    <a href="index.html" class="nav-pod-btn nav-pod-home" title="Ir a la Portada Principal" aria-label="Inicio">
+      <span>🏠</span>
+    </a>
+    <a href="recursos.html" class="nav-pod-btn" title="Volver a Recursos" aria-label="Recursos">
+      <span>◀</span>
+    </a>
+    <button class="nav-pod-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Subir al inicio de página" aria-label="Subir">
+      <span>▲</span>
+    </button>
+    <button class="nav-pod-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})" title="Bajar al pie" aria-label="Bajar">
+      <span>▼</span>
+    </button>
+    <a href="visord_demo.html" class="nav-pod-btn" title="Ir a VISORD Demo" aria-label="Siguiente VISORD">
+      <span>▶</span>
+    </a>
+  </nav>
+
+  <!-- =========================================================================
+       MOTOR JAVASCRIPT DEL ACUARIO 3D, CÁLCULO D18 Y PROYECCIÓN 1 A 1
+       ========================================================================= -->
+  <script>
+    /* =========================================================================
+       1. DEFINICIÓN DE PRESETS CANÓNICOS DE SOCIOMATRICES SMIb
+       ========================================================================= */
+    const PRESETS = {
+      // 3x3: Tríada Micro-Dialéctica
+      '3x3': {
+        name: 'Tríada Micro-Dialéctica (N=3)',
+        desc: 'Tríada dialéctica canónica: 1A Alfa/Integrador que sostiene al grupo a cielo abierto, 2A Opositor polarizado en tensión crítica en la lámina, y 3A Dependiente receptor pasivo.',
+        subjects: ['1A', '2A', '3A'],
+        matrix: [
+          // 1A: da positivo a todos, recibe correspondencia
+          ['0000', '++++', '++++'],
+          // 2A: opositor en tensión (A1 y A4 negativos de sospecha)
+          ['+-+-', '0000', '+-+-'],
+          // 3A: atractor dependiente (da poco, recibe mucho)
+          ['00++', '000+', '0000']
+        ]
+      },
+
+      // 5x5: Grupo Canónico de los 5 Arquetipos
+      '5x5': {
+        name: 'Grupo Canónico de los 5 Arquetipos (N=5)',
+        desc: 'Grupo paradigmático: 1A Integrador (Cielo Abierto), 2A Emisor altruista (Lámina), 3A Atractor pasivo (Lámina), 4A Foco polarizado con asfixia por halo (BDF/BDC=0.35) y 5A Aislado neutro (Fondo sumergido).',
+        subjects: ['1A', '2A', '3A', '4A', '5A'],
+        matrix: [
+          // 1A (Integrador global)
+          ['0000', '++++', '++++', '++++', '++0+'],
+          // 2A (Emisor altruista: da mucho, recibe poco)
+          ['++++', '0000', '+000', '+000', '+000'],
+          // 3A (Atractor pasivo: recibe mucho, da poco)
+          ['++++', '00++', '0000', '00++', '+0++'],
+          // 4A (Foco polarizado con ASFIXIA POR HALO: hechos nulos, conjeturas hipertrofiadas BDF/BDC = 0.35)
+          ['+00-', '+00-', '-00+', '0000', '+00-'],
+          // 5A (Aislado neutro sumergido)
+          ['0000', '0000', '0000', '0000', '0000']
+        ]
+      },
+
+      // 9x9: Red Meso-Grupal con 2 Facciones y Puente Intergrupal
+      '9x9': {
+        name: 'Red Meso-Grupal Interfacciones (N=9)',
+        desc: 'Estructura meso-sistémica: Facción A (1A..4A), Nodo Puente/Embajador mediador (5A) y Facción B (6A..9A). Muestra la emergencia de dos cuencas de atracción separadas conectadas por el vector de 5A.',
+        subjects: ['1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A'],
+        matrix: [
+          // Facción A (1A..4A): Cohesión interna +, rechazo hacia Facción B
+          ['0000', '++++', '++++', '++++', '++++', '+-+-', '+-+-', '+-+-', '+-+-'],
+          ['++++', '0000', '++++', '++++', '++00', '+-+-', '+-+-', '+-+-', '+-+-'],
+          ['++++', '++++', '0000', '++++', '++00', '+-+-', '+-+-', '+-+-', '+-+-'],
+          ['++++', '++++', '++++', '0000', '++00', '+-+-', '+-+-', '+-+-', '+-+-'],
+          // Nodo Puente (5A): Lazos con ambas facciones pero alta ambivalencia
+          ['++++', '++00', '++00', '++00', '0000', '++00', '++00', '++00', '++++'],
+          // Facción B (6A..9A): Cohesión interna +, rechazo hacia Facción A
+          ['+-+-', '+-+-', '+-+-', '+-+-', '++00', '0000', '++++', '++++', '++++'],
+          ['+-+-', '+-+-', '+-+-', '+-+-', '++00', '++++', '0000', '++++', '++++'],
+          ['+-+-', '+-+-', '+-+-', '+-+-', '++00', '++++', '++++', '0000', '++++'],
+          ['+-+-', '+-+-', '+-+-', '+-+-', '++++', '++++', '++++', '++++', '0000']
+        ]
+      }
+    };
+
+    /* =========================================================================
+       2. ESTADO GLOBAL DE LA APLICACIÓN
+       ========================================================================= */
+    let currentScenarioKey = '5x5';
+    let currentMatrix = JSON.parse(JSON.stringify(PRESETS['5x5'].matrix));
+    let currentSubjects = [...PRESETS['5x5'].subjects];
+    let N = currentSubjects.length;
+
+    // Perspectiva relacional: 'DUAL', 'DA', 'RC'
+    let currentPerspective = 'DUAL';
+
+    // Selección paso a paso: null (todos), o índice 0..N-1
+    let activeSubjectIndex = null;
+    let autoStepTimer = null;
+
+    // Filtro de figura relacional
+    let activeFigureFilter = 'ALL';
+
+    // Cota de Lámina de Agua (Z_mar)
+    let currentSeaLevel = 0.00;
+
+    // Visibilidad de capas
+    let activeLayerVisibility = 'ALL'; // 'ALL', 'CORE', 'HALO', 'FLOW'
+
+    // Pestaña D18 activa
+    let activeD18Tab = 'elem';
+
+    // Cálculos de Densidades D18
+    let d18State = null;
+
+    /* =========================================================================
+       3. MATEMÁTICA Y CÁLCULO DE LAS 18 DENSIDADES (D18)
+       ========================================================================= */
+    const VAL_MAP = { '+': 1.0, '0': 0.0, '-': -1.0 };
+
+    function parseSmibCell(cellStr) {
+      if (!cellStr || cellStr.length < 4) return [0, 0, 0, 0];
+      return [
+        VAL_MAP[cellStr[0]] !== undefined ? VAL_MAP[cellStr[0]] : 0,
+        VAL_MAP[cellStr[1]] !== undefined ? VAL_MAP[cellStr[1]] : 0,
+        VAL_MAP[cellStr[2]] !== undefined ? VAL_MAP[cellStr[2]] : 0,
+        VAL_MAP[cellStr[3]] !== undefined ? VAL_MAP[cellStr[3]] : 0
+      ];
+    }
+
+    function computeD18() {
+      const numSuj = currentSubjects.length;
+      const parsed = [];
+      for (let i = 0; i < numSuj; i++) {
+        parsed[i] = [];
+        for (let j = 0; j < numSuj; j++) {
+          parsed[i][j] = parseSmibCell(currentMatrix[i][j]);
+        }
+      }
+
+      // Marginales por sujeto (j != i)
+      const dMarg = [];
+      const bMarg = [];
+      const nodeStats = [];
+
+      for (let i = 0; i < numSuj; i++) {
+        let sumD = [0, 0, 0, 0];
+        let sumB = [0, 0, 0, 0];
+        let count = 0;
+        for (let j = 0; j < numSuj; j++) {
+          if (i === j) continue;
+          count++;
+          for (let k = 0; k < 4; k++) {
+            sumD[k] += parsed[i][j][k];
+            sumB[k] += Math.abs(parsed[i][j][k]);
+          }
+        }
+        const divisor = count > 0 ? count : 1;
+        const d_i = sumD.map(v => v / divisor);
+        const b_i = sumB.map(v => v / divisor);
+        dMarg.push(d_i);
+        bMarg.push(b_i);
+
+        // Ontológicas individuales
+        const sdf_i = d_i[1] + d_i[2]; // Fáctico: DA + REC
+        const sdc_i = d_i[0] + d_i[3]; // Cognitivo: pDA + pREC
+        const bdf_i = b_i[1] + b_i[2]; // Masa fáctica
+        const bdc_i = b_i[0] + b_i[3]; // Masa cognitiva
+        const gap_i = bdf_i / Math.max(0.01, bdc_i);
+        const amb_i = bdc_i - Math.abs(sdc_i);
+
+        // Totales individuales
+        const sdr_i = (sdf_i + sdc_i) / 2;
+        const bdr_i = (bdf_i + bdc_i) / 2;
+        const mass_i = (b_i[1] + b_i[2]) / 2;
+        const bias_i = (d_i[1] - d_i[2]) / Math.max(0.01, Math.abs(d_i[1]) + Math.abs(d_i[2]));
+
+        // Coordenadas 3D (X: Emisor DA, Y: Receptor REC, Z: Flotabilidad SDR)
+        const posX = d_i[1];
+        const posY = d_i[2];
+        const posZ = sdr_i;
+
+        nodeStats.push({
+          code: currentSubjects[i],
+          index: i,
+          d: d_i,
+          b: b_i,
+          SDA: d_i[1],
+          SRC: d_i[2],
+          BDA: b_i[1],
+          BRC: b_i[2],
+          SDF: sdf_i,
+          SDC: sdc_i,
+          BDF: bdf_i,
+          BDC: bdc_i,
+          gapRatio: gap_i,
+          ambiguity: amb_i,
+          SDR: sdr_i,
+          BDR: bdr_i,
+          massDi: mass_i,
+          biasDelta: bias_i,
+          x: posX,
+          y: posY,
+          z: posZ
+        });
+      }
+
+      // Densidades Globales del Colectivo
+      let D1 = 0, D2 = 0, D3 = 0, D4 = 0;
+      let BDA_tot = 0, BRC_tot = 0, B1_tot = 0, B4_tot = 0;
+      for (let i = 0; i < numSuj; i++) {
+        D1 += dMarg[i][0];
+        D2 += dMarg[i][1];
+        D3 += dMarg[i][2];
+        D4 += dMarg[i][3];
+        B1_tot += bMarg[i][0];
+        BDA_tot += bMarg[i][1];
+        BRC_tot += bMarg[i][2];
+        B4_tot += bMarg[i][3];
+      }
+      D1 /= numSuj; D2 /= numSuj; D3 /= numSuj; D4 /= numSuj;
+      const SDA_glob = D2;
+      const SRC_glob = D3;
+      const BDA_glob = BDA_tot / numSuj;
+      const BRC_glob = BRC_tot / numSuj;
+
+      // 4 Ontológicas globales
+      const SDF_glob = D2 + D3;
+      const SDC_glob = D1 + D4;
+      const BDF_glob = BDA_glob + BRC_glob;
+      const BDC_glob = (B1_tot + B4_tot) / numSuj;
+      const gapGlob = BDF_glob / Math.max(0.01, BDC_glob);
+      const ambGlob = BDC_glob - Math.abs(SDC_glob);
+
+      // 2 Totales globales
+      const SDR_glob = (SDF_glob + SDC_glob) / 2;
+      const BDR_glob = (BDF_glob + BDC_glob) / 2;
+
+      // 3 Prismas Duales
+      const S12 = D1 + D2;
+      const S34 = D3 + D4;
+      const B1 = (S12 + S34) / 2;
+
+      const S14 = D1 + D4; // SDC
+      const S23 = D2 + D3; // SDF
+      const B2 = (S14 + S23) / 2;
+
+      const S13 = D1 + D3;
+      const S24 = D2 + D4;
+      const B3 = (S13 + S24) / 2;
+
+      const prismDelta = Math.max(Math.abs(B1 - B2), Math.abs(B1 - B3), Math.abs(B2 - B3));
+
+      d18State = {
+        elemental: { D1, D2, D3, D4 },
+        agente: { SDA: SDA_glob, SRC: SRC_glob, BDA: BDA_glob, BRC: BRC_glob },
+        ontologicas: { SDF: SDF_glob, SDC: SDC_glob, BDF: BDF_glob, BDC: BDC_glob, gap: gapGlob, amb: ambGlob },
+        totales: { SDR: SDR_glob, BDR: BDR_glob },
+        prismas: {
+          p1: { name: 'Emisor vs Receptor', S_a: S12, S_b: S34, baricentro: B1 },
+          p2: { name: 'Cognitivo vs Fáctico', S_a: S14, S_b: S23, baricentro: B2 },
+          p3: { name: 'Diagonal Cruzada', S_a: S13, S_b: S24, baricentro: B3 },
+          delta: prismDelta
+        },
+        nodes: nodeStats
+      };
+
+      return d18State;
+    }
+
+    /* =========================================================================
+       4. CONSTRUCCIÓN Y GESTIÓN DE LA ESCENA THREE.JS
+       ========================================================================= */
+    let scene, camera, renderer, controls;
+    let nodeMeshes = [];
+    let haloMeshes = [];
+    let flowLines = [];
+    let seaPlaneMesh = null;
+    let seabedMesh = null;
+    let axisGroup = null;
+    let isAutoRotating = true;
+    let raycaster, mouse;
+
+    const CONTAINER_ID = 'three-viewport';
+
+    function initThreeScene() {
+      const container = document.getElementById(CONTAINER_ID);
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 600;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x020712);
+      scene.fog = new THREE.FogExp2(0x030A16, 0.045);
+
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.set(7.5, 6.0, 9.5);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.8;
+      controls.maxDistance = 24;
+      controls.minDistance = 3;
+
+      // Iluminación
+      const ambientLight = new THREE.AmbientLight(0x0a2540, 1.8);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0x00F5D4, 1.4);
+      sunLight.position.set(5, 12, 5);
+      scene.add(sunLight);
+
+      const fillLight = new THREE.DirectionalLight(0x38BDF8, 0.9);
+      fillLight.position.set(-6, -4, -6);
+      scene.add(fillLight);
+
+      const magentaAccent = new THREE.PointLight(0xFF007F, 1.2, 18);
+      magentaAccent.position.set(0, -3, 0);
+      scene.add(magentaAccent);
+
+      // Elementos Estructurales del Acuario
+      createSeabed();
+      createSeaSurface();
+      createCoordinateAxes();
+
+      // Interacción / Raycasting
+      raycaster = new THREE.Raycaster();
+      mouse = new THREE.Vector2();
+
+      container.addEventListener('pointerdown', onCanvasPointerDown);
+      container.addEventListener('pointermove', onCanvasPointerMove);
+      window.addEventListener('resize', onWindowResize);
+
+      // Loop de renderizado
+      animateThree();
+    }
+
+    // Lecho Abisal / Fondo Marino
+    function createSeabed() {
+      const gridHelper = new THREE.GridHelper(12, 16, 0x00F5D4, 0x082F49);
+      gridHelper.position.y = -3.2;
+      scene.add(gridHelper);
+
+      // Partículas abisales
+      const particleCount = 200;
+      const geom = new THREE.BufferGeometry();
+      const pos = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        pos[i] = (Math.random() - 0.5) * 12;
+        pos[i + 1] = -3.2 + Math.random() * 2.0;
+        pos[i + 2] = (Math.random() - 0.5) * 12;
+      }
+      geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({ color: 0x00F5D4, size: 0.06, transparent: true, opacity: 0.45 });
+      const particles = new THREE.Points(geom, mat);
+      scene.add(particles);
+    }
+
+    // Lámina de Agua (Superficie Libre a Z_mar)
+    function createSeaSurface() {
+      const geom = new THREE.PlaneGeometry(12, 12, 24, 24);
+      geom.rotateX(-Math.PI / 2);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x00E5FF,
+        transparent: true,
+        opacity: 0.28,
+        roughness: 0.2,
+        metalness: 0.7,
+        wireframe: false,
+        side: THREE.DoubleSide
+      });
+      seaPlaneMesh = new THREE.Mesh(geom, mat);
+      seaPlaneMesh.position.y = currentSeaLevel * 2.8;
+      scene.add(seaPlaneMesh);
+    }
+
+    // Ejes Cartesianos 3D con Etiquetas
+    function createCoordinateAxes() {
+      axisGroup = new THREE.Group();
+
+      // Eje X (Naranja): Emisión / Dador
+      const xGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-4, 0, 0), new THREE.Vector3(4, 0, 0)]);
+      const xMat = new THREE.LineBasicMaterial({ color: 0xFF9F1C, transparent: true, opacity: 0.65 });
+      axisGroup.add(new THREE.Line(xGeom, xMat));
+
+      // Eje Y (Azul): Recepción / Receptor (en Z de Three.js para plano horizontal X-Z)
+      const yGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -4), new THREE.Vector3(0, 0, 4)]);
+      const yMat = new THREE.LineBasicMaterial({ color: 0x38BDF8, transparent: true, opacity: 0.65 });
+      axisGroup.add(new THREE.Line(yGeom, yMat));
+
+      // Eje Z (Verde/Cian): Flotabilidad SDR (en Y de Three.js vertical)
+      const zGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -3.2, 0), new THREE.Vector3(0, 3.2, 0)]);
+      const zMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.85 });
+      axisGroup.add(new THREE.Line(zGeom, zMat));
+
+      scene.add(axisGroup);
+    }
+
+    /* =========================================================================
+       5. RENDERIZADO DE SUJETOS BI-CAPA & CORRIENTES DE FLUJO
+       ========================================================================= */
+    function clearSceneObjects() {
+      nodeMeshes.forEach(m => scene.remove(m));
+      haloMeshes.forEach(m => scene.remove(m));
+      flowLines.forEach(l => scene.remove(l));
+      nodeMeshes = [];
+      haloMeshes = [];
+      flowLines = [];
+    }
+
+    function createTextSprite(text, colorHex = '#FFFFFF') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.roundRect ? ctx.roundRect(4, 8, 120, 48, 12) : ctx.rect(4, 8, 120, 48);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = colorHex;
+      ctx.stroke();
+
+      ctx.font = 'bold 24px "Roboto Mono", monospace';
+      ctx.fillStyle = colorHex;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 64, 32);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(1.1, 0.55, 1);
+      return sprite;
+    }
+
+    function renderAquariumState() {
+      clearSceneObjects();
+      computeD18();
+
+      const stats = d18State.nodes;
+      const numSuj = stats.length;
+      const SCALE_XY = 3.2;
+      const SCALE_Z = 2.8;
+
+      // 1. Renderizar Nodos Bi-Capa (Núcleo + Halo)
+      stats.forEach((st, idx) => {
+        const isHighlighted = (activeSubjectIndex === null || activeSubjectIndex === idx);
+        const opacityMult = isHighlighted ? 1.0 : 0.15;
+
+        // Posición tridimensional: X = DA, Y = Flotabilidad Z, Z = REC
+        const pX = st.x * SCALE_XY;
+        const pY = st.z * SCALE_Z;
+        const pZ = st.y * SCALE_XY;
+
+        // A. NÚCLEO FÁCTICO (Esfera interior densa)
+        const coreRadius = Math.max(0.18, 0.18 + st.BDF * 0.18);
+        const coreGeom = new THREE.SphereGeometry(coreRadius, 24, 24);
+
+        // Color según signo del Saldo Fáctico (SDF)
+        let coreColor = 0xFFE600;
+        if (st.SDF > 0.15) coreColor = 0x00FF87; // Verde expansión
+        else if (st.SDF < -0.15) coreColor = 0xFF007F; // Magenta rechazo
+
+        const coreMat = new THREE.MeshStandardMaterial({
+          color: coreColor,
+          roughness: 0.25,
+          metalness: 0.85,
+          emissive: coreColor,
+          emissiveIntensity: isHighlighted ? 0.35 : 0.05,
+          transparent: true,
+          opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.95) * opacityMult
+        });
+
+        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+        coreMesh.position.set(pX, pY, pZ);
+        coreMesh.userData = { subjectIndex: idx, type: 'core', data: st };
+        scene.add(coreMesh);
+        nodeMeshes.push(coreMesh);
+
+        // Etiqueta Sprite
+        const sprite = createTextSprite(st.code, coreColor === 0x00FF87 ? '#00FF87' : (coreColor === 0xFF007F ? '#FF007F' : '#FFE600'));
+        sprite.position.set(pX, pY + coreRadius + 0.35, pZ);
+        sprite.material.opacity = opacityMult;
+        scene.add(sprite);
+        nodeMeshes.push(sprite);
+
+        // B. HALO COGNITIVO (Esfera exterior translúcida pulsante)
+        const isAsphyxiated = st.gapRatio < 0.50;
+        const haloRadius = coreRadius + Math.max(0.22, st.BDC * 0.38) * (isAsphyxiated ? 1.4 : 1.0);
+        const haloGeom = new THREE.SphereGeometry(haloRadius, 20, 20);
+
+        let haloColor = 0x00E5FF;
+        if (isAsphyxiated) haloColor = 0xA855F7; // Violáceo asfixia
+        else if (st.SDC < -0.15) haloColor = 0xFB7185;
+
+        const haloMat = new THREE.MeshStandardMaterial({
+          color: haloColor,
+          wireframe: false,
+          transparent: true,
+          opacity: (activeLayerVisibility === 'CORE' ? 0.02 : (isAsphyxiated ? 0.40 : 0.22)) * opacityMult,
+          roughness: 0.4,
+          metalness: 0.3
+        });
+
+        const haloMesh = new THREE.Mesh(haloGeom, haloMat);
+        haloMesh.position.set(pX, pY, pZ);
+        haloMesh.userData = { 
+          subjectIndex: idx, 
+          type: 'halo', 
+          baseRadius: haloRadius, 
+          ambiguity: st.ambiguity,
+          isAsphyxiated: isAsphyxiated 
+        };
+        scene.add(haloMesh);
+        haloMeshes.push(haloMesh);
+      });
+
+      // 2. Renderizar Corrientes de Flujo Diádicas
+      if (activeLayerVisibility !== 'CORE' && activeLayerVisibility !== 'HALO') {
+        renderDyadicFlows(SCALE_XY, SCALE_Z);
+      }
+
+      // Actualizar contadores y HUD
+      updateHudAndCounters();
+      updateD18Display();
+    }
+
+    function renderDyadicFlows(scaleXY, scaleZ) {
+      const stats = d18State.nodes;
+      const numSuj = stats.length;
+
+      let cntEE = 0, cntRR = 0, cntOPP = 0, cntHALO = 0, cntNEU = 0, cntALL = 0;
+
+      for (let i = 0; i < numSuj; i++) {
+        for (let j = i + 1; j < numSuj; j++) {
+          cntALL++;
+          const cell_ij = currentMatrix[i][j];
+          const cell_ji = currentMatrix[j][i];
+          const c1 = parseSmibCell(cell_ij);
+          const c2 = parseSmibCell(cell_ji);
+
+          const da_ij = c1[1]; // lo que i da a j
+          const da_ji = c2[1]; // lo que j da a i
+          const pda_ij = c1[0];
+          const pda_ji = c2[0];
+
+          // Clasificación de la figura relacional
+          let figType = 'NEUTRAL';
+          if (da_ij > 0 && da_ji > 0) { figType = 'MUTUAL_CHOICE'; cntEE++; }
+          else if (da_ij < 0 && da_ji < 0) { figType = 'MUTUAL_REJECT'; cntRR++; }
+          else if ((da_ij > 0 && da_ji < 0) || (da_ij < 0 && da_ji > 0)) { figType = 'OPPOSITION'; cntOPP++; }
+          else if (Math.abs(pda_ij) > 0 || Math.abs(pda_ji) > 0) { figType = 'HALO_EXPECT'; cntHALO++; }
+          else { cntNEU++; }
+
+          // Filtro activo de figuras
+          if (activeFigureFilter !== 'ALL' && activeFigureFilter !== figType) continue;
+
+          // Filtro 1 a 1: Si hay un sujeto activo seleccionado, solo dibujar diadas que lo involucren
+          if (activeSubjectIndex !== null && activeSubjectIndex !== i && activeSubjectIndex !== j) continue;
+
+          // Filtro Perspectiva DA vs RC
+          if (activeSubjectIndex !== null) {
+            if (currentPerspective === 'DA' && activeSubjectIndex === i && da_ij === 0) continue;
+            if (currentPerspective === 'DA' && activeSubjectIndex === j && da_ji === 0) continue;
+            if (currentPerspective === 'RC' && activeSubjectIndex === i && da_ji === 0) continue;
+            if (currentPerspective === 'RC' && activeSubjectIndex === j && da_ij === 0) continue;
+          }
+
+          // Coordenadas origen y destino
+          const posA = new THREE.Vector3(stats[i].x * scaleXY, stats[i].z * scaleZ, stats[i].y * scaleXY);
+          const posB = new THREE.Vector3(stats[j].x * scaleXY, stats[j].z * scaleZ, stats[j].y * scaleXY);
+
+          // Curva Bezier 3D
+          const midPoint = new THREE.Vector3().addVectors(posA, posB).multiplyScalar(0.5);
+          midPoint.y += 0.35 + Math.sin(i * 3 + j) * 0.2; // Arco hidrodinámico suave
+
+          const curve = new THREE.QuadraticBezierCurve3(posA, midPoint, posB);
+          const points = curve.getPoints(20);
+          const geom = new THREE.BufferGeometry().setFromPoints(points);
+
+          let lineColor = 0x64748B;
+          let lineWidth = 1;
+          if (figType === 'MUTUAL_CHOICE') { lineColor = 0x00FF87; }
+          else if (figType === 'MUTUAL_REJECT') { lineColor = 0xFF007F; }
+          else if (figType === 'OPPOSITION') { lineColor = 0xFF9F1C; }
+          else if (figType === 'HALO_EXPECT') { lineColor = 0x00E5FF; }
+
+          const mat = new THREE.LineBasicMaterial({
+            color: lineColor,
+            transparent: true,
+            opacity: activeSubjectIndex !== null ? 0.95 : 0.55
+          });
+
+          const line = new THREE.Line(geom, mat);
+          line.userData = { from: i, to: j, fig: figType };
+          scene.add(line);
+          flowLines.push(line);
+        }
+      }
+
+      // Actualizar contadores de figuras
+      document.getElementById('cnt-fig-all').textContent = cntALL;
+      document.getElementById('cnt-fig-ee').textContent = cntEE;
+      document.getElementById('cnt-fig-rr').textContent = cntRR;
+      document.getElementById('cnt-fig-opp').textContent = cntOPP;
+      document.getElementById('cnt-fig-halo').textContent = cntHALO;
+      document.getElementById('cnt-fig-neu').textContent = cntNEU;
+    }
+
+    /* =========================================================================
+       6. INTERACCIÓN, HUD Y DINÁMICA DE ESTRATOS
+       ========================================================================= */
+    function updateSeaLevel(val) {
+      currentSeaLevel = parseFloat(val);
+      document.getElementById('sea-level-val').textContent = `Z = ${currentSeaLevel >= 0 ? '+' : ''}${currentSeaLevel.toFixed(2)}`;
+      if (seaPlaneMesh) {
+        seaPlaneMesh.position.y = currentSeaLevel * 2.8;
+      }
+      updateHudAndCounters();
+    }
+
+    function updateHudAndCounters() {
+      if (!d18State) return;
+      const stats = d18State.nodes;
+
+      let openSky = 0;
+      let waterSurface = 0;
+      let submerged = 0;
+
+      stats.forEach(st => {
+        const diff = st.z - currentSeaLevel;
+        if (diff > 0.15) openSky++;
+        else if (Math.abs(diff) <= 0.15) waterSurface++;
+        else submerged++;
+      });
+
+      document.getElementById('count-open-sky').textContent = openSky;
+      document.getElementById('count-water-surface').textContent = waterSurface;
+      document.getElementById('count-submerged').textContent = submerged;
+
+      // Brecha ontológica global
+      const gap = d18State.ontologicas.gap;
+      document.getElementById('hud-gap-ratio').textContent = gap.toFixed(2);
+      const barFill = Math.min(100, Math.max(0, gap * 50));
+      document.getElementById('bar-gap-fill').style.width = `${barFill}%`;
+
+      const asphyxiaWarn = document.getElementById('asphyxia-warning');
+      if (gap < 0.50) {
+        asphyxiaWarn.classList.remove('hidden');
+      } else {
+        asphyxiaWarn.classList.add('hidden');
+      }
+
+      // Sonda Diádica
+      updateDyadicProbe();
+    }
+
+    function updateDyadicProbe() {
+      const probeTitle = document.getElementById('probe-title');
+      const probeStratum = document.getElementById('probe-stratum-badge');
+      const probeCoords = document.getElementById('probe-coords');
+      const probeMass = document.getElementById('probe-mass');
+      const probeBias = document.getElementById('probe-bias');
+      const probeGap = document.getElementById('probe-gap');
+      const probeAmb = document.getElementById('probe-amb');
+      const probeDot = document.getElementById('probe-dot');
+
+      if (activeSubjectIndex === null) {
+        probeTitle.textContent = 'PROMEDIO COLECTIVO';
+        probeStratum.textContent = 'COHESIÓN TOTAL';
+        probeCoords.textContent = `(${d18State.agente.SDA.toFixed(2)}, ${d18State.agente.SRC.toFixed(2)}, ${d18State.totales.SDR.toFixed(2)})`;
+        probeMass.textContent = d18State.totales.BDR.toFixed(2);
+        probeBias.textContent = (d18State.agente.SDA - d18State.agente.SRC).toFixed(2);
+        probeGap.textContent = d18State.ontologicas.gap.toFixed(2);
+        probeAmb.textContent = d18State.ontologicas.amb.toFixed(2);
+        probeDot.style.background = '#00F5D4';
+        return;
+      }
+
+      const st = d18State.nodes[activeSubjectIndex];
+      probeTitle.textContent = `SUJETO ${st.code} (${st.index + 1}/${N})`;
+
+      const diff = st.z - currentSeaLevel;
+      if (diff > 0.15) {
+        probeStratum.textContent = 'CIELO ABIERTO (MANIFIESTO)';
+        probeStratum.className = 'text-emerald-400 font-bold';
+        probeDot.style.background = '#00FF87';
+      } else if (Math.abs(diff) <= 0.15) {
+        probeStratum.textContent = 'LÁMINA DE AGUA (VISIBILIDAD)';
+        probeStratum.className = 'text-amber-400 font-bold';
+        probeDot.style.background = '#FFE600';
+      } else {
+        probeStratum.textContent = 'FONDO SUMERGIDO (LATENTE)';
+        probeStratum.className = 'text-rose-400 font-bold';
+        probeDot.style.background = '#FF007F';
+      }
+
+      probeCoords.textContent = `(DA: ${st.x.toFixed(2)}, REC: ${st.y.toFixed(2)}, Z: ${st.z.toFixed(2)})`;
+      probeMass.textContent = st.massDi.toFixed(2);
+      probeBias.textContent = `${st.biasDelta >= 0 ? '+' : ''}${st.biasDelta.toFixed(2)} (${st.biasDelta > 0.1 ? 'Emisor' : (st.biasDelta < -0.1 ? 'Receptor' : 'Equilibrio')})`;
+      probeGap.textContent = `${st.gapRatio.toFixed(2)} ${st.gapRatio < 0.5 ? '⚠️ Asfixia' : 'Equilibrado'}`;
+      probeAmb.textContent = st.ambiguity.toFixed(2);
+    }
+
+    /* =========================================================================
+       7. GESTIÓN DE PESTAÑAS DEL DESGLOSE D18
+       ========================================================================= */
+    function showD18Tab(tab) {
+      activeD18Tab = tab;
+      const tabs = ['elem', 'agente', 'onto', 'tot', 'prism'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-d18-${t}`);
+        if (t === tab) {
+          btn.className = 'flex-1 py-0.5 rounded text-teal-300 font-bold bg-teal-950 border border-teal-500/40';
+        } else {
+          btn.className = 'flex-1 py-0.5 rounded text-slate-400 hover:text-slate-200';
+        }
+      });
+      updateD18Display();
+    }
+
+    function updateD18Display() {
+      const container = document.getElementById('d18-content-display');
+      if (!d18State) return;
+
+      let html = '';
+      if (activeD18Tab === 'elem') {
+        const e = d18State.elemental;
+        html = `
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">D1 (p_DA):</span> <span class="font-bold text-cyan-300">${e.D1.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">D2 (DA):</span> <span class="font-bold text-teal-300">${e.D2.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">D3 (REC):</span> <span class="font-bold text-teal-300">${e.D3.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">D4 (p_REC):</span> <span class="font-bold text-cyan-300">${e.D4.toFixed(3)}</span></div>
+          </div>
+          <div class="mt-1.5 text-[9px] text-slate-400">D1=Expectativa emisor, D2=Preferencia emisor, D3=Preferencia partner, D4=Expectativa partner.</div>
+        `;
+      } else if (activeD18Tab === 'agente') {
+        const a = d18State.agente;
+        html = `
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">SDA (Saldo DA):</span> <span class="font-bold text-amber-300">${a.SDA.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">SRC (Saldo REC):</span> <span class="font-bold text-sky-300">${a.SRC.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">BDA (Masa DA):</span> <span class="font-bold text-slate-200">${a.BDA.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">BRC (Masa REC):</span> <span class="font-bold text-slate-200">${a.BRC.toFixed(3)}</span></div>
+          </div>
+        `;
+      } else if (activeD18Tab === 'onto') {
+        const o = d18State.ontologicas;
+        html = `
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="p-1 rounded bg-emerald-950/40 border border-emerald-500/30"><span class="text-slate-400">SDF (Fáctico):</span> <span class="font-bold text-emerald-300">${o.SDF.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-cyan-950/40 border border-cyan-500/30"><span class="text-slate-400">SDC (Cognitivo):</span> <span class="font-bold text-cyan-300">${o.SDC.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">BDF (Masa Fáct):</span> <span class="font-bold text-slate-200">${o.BDF.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800"><span class="text-slate-400">BDC (Masa Cogn):</span> <span class="font-bold text-slate-200">${o.BDC.toFixed(3)}</span></div>
+          </div>
+          <div class="mt-1.5 flex justify-between text-[10px]">
+            <span>Ratio BDF/BDC: <strong class="text-teal-300">${o.gap.toFixed(2)}</strong></span>
+            <span>Ambivalencia: <strong class="text-amber-300">${o.amb.toFixed(2)}</strong></span>
+          </div>
+        `;
+      } else if (activeD18Tab === 'tot') {
+        const t = d18State.totales;
+        html = `
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="p-1 rounded bg-teal-950/40 border border-teal-500/30"><span class="text-slate-400">SDR (Saldo Relativo):</span> <span class="font-bold text-teal-300">${t.SDR.toFixed(3)}</span></div>
+            <div class="p-1 rounded bg-indigo-950/40 border border-indigo-500/30"><span class="text-slate-400">BDR (Masa Absoluta):</span> <span class="font-bold text-indigo-300">${t.BDR.toFixed(3)}</span></div>
+          </div>
+          <div class="mt-1.5 text-[9px] text-slate-400">SDR modula la cota vertical de flotabilidad Z en el acuario.</div>
+        `;
+      } else if (activeD18Tab === 'prism') {
+        const p = d18State.prismas;
+        html = `
+          <div class="flex flex-col gap-1 text-[10px]">
+            <div class="p-1 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Prisma 1 (12 vs 34):</span> <span>${p.p1.S_a.toFixed(2)} / ${p.p1.S_b.toFixed(2)} &rarr; <strong>${p.p1.baricentro.toFixed(4)}</strong></span>
+            </div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Prisma 2 (14 vs 23):</span> <span>${p.p2.S_a.toFixed(2)} / ${p.p2.S_b.toFixed(2)} &rarr; <strong>${p.p2.baricentro.toFixed(4)}</strong></span>
+            </div>
+            <div class="p-1 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Prisma 3 (13 vs 24):</span> <span>${p.p3.S_a.toFixed(2)} / ${p.p3.S_b.toFixed(2)} &rarr; <strong>${p.p3.baricentro.toFixed(4)}</strong></span>
+            </div>
+            <div class="p-1 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 flex justify-between font-bold">
+              <span>Invarianza Baricéntrica:</span> <span>&Delta; = ${p.delta.toFixed(6)}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    /* =========================================================================
+       8. PROYECCIÓN 1 A 1, SELECTOR DE PASOS Y MODOS DA / RC
+       ========================================================================= */
+    function renderSubjectPills() {
+      const pillContainer = document.getElementById('subject-selector-pills');
+      pillContainer.innerHTML = '';
+
+      currentSubjects.forEach((code, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `pill-subj-${idx}`;
+        const isActive = (activeSubjectIndex === idx);
+        btn.className = `action-btn px-2 py-0.5 rounded text-[10px] mono font-bold border transition ${
+          isActive 
+            ? 'bg-teal-500 text-slate-950 border-teal-300 shadow-[0_0_10px_#00F5D4]' 
+            : 'bg-slate-900/80 text-slate-300 border-slate-700 hover:border-teal-400'
+        }`;
+        btn.textContent = code;
+        btn.onclick = () => selectSubjectIndex(idx);
+        pillContainer.appendChild(btn);
+      });
+    }
+
+    function selectSubjectIndex(idx) {
+      if (activeSubjectIndex === idx) {
+        activeSubjectIndex = null; // deseleccionar
+      } else {
+        activeSubjectIndex = idx;
+      }
+      onActiveSubjectChanged();
+    }
+
+    function stepFirst() {
+      activeSubjectIndex = 0;
+      onActiveSubjectChanged();
+    }
+
+    function stepPrev() {
+      if (activeSubjectIndex === null) activeSubjectIndex = 0;
+      else activeSubjectIndex = (activeSubjectIndex - 1 + N) % N;
+      onActiveSubjectChanged();
+    }
+
+    function stepNext() {
+      if (activeSubjectIndex === null) activeSubjectIndex = 0;
+      else activeSubjectIndex = (activeSubjectIndex + 1) % N;
+      onActiveSubjectChanged();
+    }
+
+    function stepAll() {
+      activeSubjectIndex = null;
+      if (autoStepTimer) toggleStepAutoPlay();
+      onActiveSubjectChanged();
+    }
+
+    function toggleStepAutoPlay() {
+      const btn = document.getElementById('btn-step-play');
+      const icon = document.getElementById('play-step-icon');
+      const label = document.getElementById('play-step-label');
+
+      if (autoStepTimer) {
+        clearInterval(autoStepTimer);
+        autoStepTimer = null;
+        btn.className = 'action-btn px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 border border-teal-500/50 hover:bg-teal-500/30 text-xs font-bold flex items-center gap-1';
+        icon.textContent = '⏯';
+        label.textContent = 'Auto Proceso';
+      } else {
+        if (activeSubjectIndex === null) activeSubjectIndex = 0;
+        onActiveSubjectChanged();
+        btn.className = 'action-btn px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30 text-xs font-bold flex items-center gap-1';
+        icon.textContent = '⏹';
+        label.textContent = 'Pausar';
+
+        autoStepTimer = setInterval(() => {
+          activeSubjectIndex = (activeSubjectIndex + 1) % N;
+          onActiveSubjectChanged();
+        }, 2400);
+      }
+    }
+
+    function onActiveSubjectChanged() {
+      const badge = document.getElementById('badge-step-status');
+      const sceneBadge = document.getElementById('scene-active-subject-badge');
+
+      if (activeSubjectIndex === null) {
+        badge.textContent = 'TODOS';
+        badge.className = 'mono text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800';
+        sceneBadge.textContent = 'TODOS LOS SUJETOS';
+      } else {
+        const code = currentSubjects[activeSubjectIndex];
+        badge.textContent = `${code} (${activeSubjectIndex + 1}/${N})`;
+        badge.className = 'mono text-[10px] px-2 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-500 shadow-[0_0_8px_rgba(0,245,212,0.4)] font-bold';
+        sceneBadge.textContent = `PROYECCIÓN 1 A 1: ${code}`;
+      }
+
+      renderSubjectPills();
+      renderAquariumState();
+    }
+
+    function setPerspectiveMode(mode) {
+      currentPerspective = mode;
+      document.getElementById('btn-persp-dual').className = mode === 'DUAL' ? 'btn-mode active flex-1 py-1 rounded font-bold border border-transparent text-center transition' : 'btn-mode flex-1 py-1 rounded font-bold border border-transparent text-center transition text-slate-400';
+      document.getElementById('btn-persp-da').className = mode === 'DA' ? 'btn-mode active flex-1 py-1 rounded font-bold border border-transparent text-center transition text-amber-300' : 'btn-mode flex-1 py-1 rounded font-bold border border-transparent text-center transition text-slate-400';
+      document.getElementById('btn-persp-rc').className = mode === 'RC' ? 'btn-mode active flex-1 py-1 rounded font-bold border border-transparent text-center transition text-cyan-300' : 'btn-mode flex-1 py-1 rounded font-bold border border-transparent text-center transition text-slate-400';
+      renderAquariumState();
+    }
+
+    function filterFigure(fig) {
+      activeFigureFilter = fig;
+      const map = {
+        'ALL': 'btn-fig-all',
+        'MUTUAL_CHOICE': 'btn-fig-ee',
+        'MUTUAL_REJECT': 'btn-fig-rr',
+        'OPPOSITION': 'btn-fig-opp',
+        'HALO_EXPECT': 'btn-fig-halo',
+        'NEUTRAL': 'btn-fig-neu'
+      };
+      Object.keys(map).forEach(k => {
+        const el = document.getElementById(map[k]);
+        if (k === fig) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+      document.getElementById('badge-current-fig').textContent = fig;
+      renderAquariumState();
+    }
+
+    function setLayerVisibility(layer) {
+      activeLayerVisibility = layer;
+      const ids = ['layer-btn-all', 'layer-btn-core', 'layer-btn-halo', 'layer-btn-flow'];
+      const map = { 'ALL': 0, 'CORE': 1, 'HALO': 2, 'FLOW': 3 };
+      ids.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (idx === map[layer]) {
+          el.className = 'flex-1 py-1 rounded bg-teal-950 text-teal-300 border border-teal-500/40 font-bold';
+        } else {
+          el.className = 'flex-1 py-1 rounded bg-slate-900 text-slate-400 hover:text-white';
+        }
+      });
+      renderAquariumState();
+    }
+
+    /* =========================================================================
+       9. GESTIÓN DE ESCENARIOS
+       ========================================================================= */
+    function loadScenario(key) {
+      if (!PRESETS[key]) return;
+      currentScenarioKey = key;
+      currentMatrix = JSON.parse(JSON.stringify(PRESETS[key].matrix));
+      currentSubjects = [...PRESETS[key].subjects];
+      N = currentSubjects.length;
+      activeSubjectIndex = null;
+
+      // Actualizar botones
+      ['3x3', '5x5', '9x9'].forEach(k => {
+        const btn = document.getElementById(`btn-scen-${k}`);
+        if (k === key) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      document.getElementById('badge-current-n').textContent = `N = ${N}`;
+      document.getElementById('scenario-description').innerHTML = `<strong class="text-teal-300">${PRESETS[key].name}:</strong> ${PRESETS[key].desc}`;
+      document.getElementById('scene-regime-label').textContent = PRESETS[key].name.toUpperCase();
+
+      renderSubjectPills();
+      renderAquariumState();
+    }
+
+    function resetScenarioToDefault() {
+      loadScenario(currentScenarioKey);
+      populateSmibTable();
+    }
+
+    /* =========================================================================
+       10. EDITOR INTERACTIVO DE SOCIOMATRIZ SMIb
+       ========================================================================= */
+    function openSmibEditorModal() {
+      populateSmibTable();
+      document.getElementById('modal-smib-editor').classList.remove('hidden');
+    }
+
+    function closeSmibEditorModal() {
+      document.getElementById('modal-smib-editor').classList.add('hidden');
+      renderAquariumState();
+    }
+
+    function populateSmibTable() {
+      const container = document.getElementById('smib-matrix-table-container');
+      let html = '<table class="w-full text-center text-[10px] mono border-collapse">';
+      
+      // Header
+      html += '<thead><tr class="border-b border-slate-800 text-slate-400"><th class="p-1 text-left">Sujeto</th>';
+      currentSubjects.forEach(s => {
+        html += `<th class="p-1 font-bold text-teal-300">${s}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      // Rows
+      for (let i = 0; i < N; i++) {
+        html += `<tr class="border-b border-slate-900/60 hover:bg-slate-900/40"><td class="p-1 font-bold text-teal-300 text-left">${currentSubjects[i]}</td>`;
+        for (let j = 0; j < N; j++) {
+          const val = currentMatrix[i][j];
+          const isDiag = (i === j);
+          html += `
+            <td class="p-1">
+              <input type="text" maxlength="4" value="${val}" 
+                class="w-14 text-center px-1 py-0.5 rounded border ${isDiag ? 'bg-slate-900 text-slate-500 border-slate-800' : 'bg-slate-950 text-slate-100 border-teal-900/60 hover:border-teal-400 focus:border-teal-300'} font-bold focus:outline-none"
+                onchange="onSmibCellChange(${i}, ${j}, this.value)" ${isDiag ? 'readonly' : ''}>
+            </td>
+          `;
+        }
+        html += '</tr>';
+      }
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function onSmibCellChange(i, j, newVal) {
+      let cleaned = (newVal || '0000').toUpperCase();
+      cleaned = cleaned.replace(/[^+\-0]/g, '0');
+      while (cleaned.length < 4) cleaned += '0';
+      cleaned = cleaned.substring(0, 4);
+      currentMatrix[i][j] = cleaned;
+    }
+
+    function togglePedagogicModal() {
+      const el = document.getElementById('modal-pedagogic');
+      el.classList.toggle('hidden');
+    }
+
+    /* =========================================================================
+       11. CONTROL DE CÁMARA THREE.JS
+       ========================================================================= */
+    function toggleAutoRotate() {
+      isAutoRotating = !isAutoRotating;
+      controls.autoRotate = isAutoRotating;
+      const btn = document.getElementById('btn-autorotate');
+      btn.textContent = `🔄 Auto 360º: ${isAutoRotating ? 'ON' : 'OFF'}`;
+      btn.className = `action-btn px-2 py-0.5 rounded text-[10px] mono font-bold ${
+        isAutoRotating 
+          ? 'bg-teal-950 text-teal-300 border border-teal-500/40' 
+          : 'bg-slate-900 text-slate-400 border border-slate-700'
+      }`;
+    }
+
+    function resetCamera3D() {
+      controls.autoRotate = isAutoRotating;
+      camera.position.set(7.5, 6.0, 9.5);
+      controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    function setCameraView(view) {
+      controls.autoRotate = false;
+      if (view === 'top') {
+        camera.position.set(0, 14, 0.01);
+      } else if (view === 'front') {
+        camera.position.set(0, 0, 14);
+      } else if (view === 'side') {
+        camera.position.set(14, 0, 0);
+      }
+      controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    function zoomInCamera() {
+      camera.position.multiplyScalar(0.85);
+      controls.update();
+    }
+
+    function zoomOutCamera() {
+      camera.position.multiplyScalar(1.15);
+      controls.update();
+    }
+
+    /* =========================================================================
+       12. INTERACCIÓN POR RATÓN / RAYCASTING
+       ========================================================================= */
+    function onCanvasPointerDown(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(nodeMeshes.filter(m => m.type === 'Mesh'));
+
+      if (intersects.length > 0) {
+        const hit = intersects[0].object;
+        if (hit.userData && hit.userData.subjectIndex !== undefined) {
+          selectSubjectIndex(hit.userData.subjectIndex);
+        }
+      }
+    }
+
+    function onCanvasPointerMove(event) {
+      // Hover interactivo
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById(CONTAINER_ID);
+      if (!container || !renderer || !camera) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    /* =========================================================================
+       13. SÍNTESIS HIDROACÚSTICA (AUDIO CLIMA GRUPAL)
+       ========================================================================= */
+    let audioCtx = null;
+    let isAudioPlaying = false;
+    let droneOsc1 = null, droneOsc2 = null, droneGain = null;
+
+    function toggleAudio() {
+      const btn = document.getElementById('btn-audio-toggle');
+      const icon = document.getElementById('audio-icon');
+      const label = document.getElementById('audio-label');
+
+      if (!isAudioPlaying) {
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          droneGain = audioCtx.createGain();
+          droneGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+
+          droneOsc1 = audioCtx.createOscillator();
+          droneOsc1.type = 'sine';
+          droneOsc1.frequency.setValueAtTime(110.0, audioCtx.currentTime); // Nota La 110Hz
+
+          droneOsc2 = audioCtx.createOscillator();
+          droneOsc2.type = 'triangle';
+          droneOsc2.frequency.setValueAtTime(164.81, audioCtx.currentTime); // Mi 164Hz
+
+          // Filtro de lecho marino
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(340, audioCtx.currentTime);
+
+          droneOsc1.connect(filter);
+          droneOsc2.connect(filter);
+          filter.connect(droneGain);
+          droneGain.connect(audioCtx.destination);
+
+          droneOsc1.start();
+          droneOsc2.start();
+
+          isAudioPlaying = true;
+          icon.textContent = '🔊';
+          label.textContent = 'AUDIO: ON';
+          btn.className = 'action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-teal-500/20 text-teal-300 border border-teal-500/60 shadow-[0_0_12px_rgba(0,245,212,0.3)]';
+        } catch (e) {
+          console.warn('Audio no disponible:', e);
+        }
+      } else {
+        if (droneOsc1) droneOsc1.stop();
+        if (droneOsc2) droneOsc2.stop();
+        if (audioCtx) audioCtx.close();
+        isAudioPlaying = false;
+        icon.textContent = '🔇';
+        label.textContent = 'AUDIO: OFF';
+        btn.className = 'action-btn px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-teal-950/80 text-teal-300 border border-teal-500/40 hover:bg-teal-900/60';
+      }
+    }
+
+    /* =========================================================================
+       14. BUCLE DE ANIMACIÓN THREE.JS
+       ========================================================================= */
+    let clock = new THREE.Clock();
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+      const elapsedTime = clock.getElapsedTime();
+
+      // Pulsación hidrodinámica del halo conjetural
+      haloMeshes.forEach(mesh => {
+        if (mesh.userData && mesh.userData.baseRadius) {
+          const amb = mesh.userData.ambiguity || 0.1;
+          const freq = mesh.userData.isAsphyxiated ? 4.5 : 2.0;
+          const scale = 1.0 + Math.sin(elapsedTime * freq) * (0.05 + amb * 0.08);
+          mesh.scale.set(scale, scale, scale);
+        }
+      });
+
+      // Ondulación de la lámina de agua
+      if (seaPlaneMesh && seaPlaneMesh.geometry) {
+        const pos = seaPlaneMesh.geometry.attributes.position;
+        if (pos) {
+          for (let i = 0; i < pos.count; i++) {
+            const u = pos.getX(i);
+            const v = pos.getY(i);
+            const wave = Math.sin(u * 1.5 + elapsedTime * 1.8) * Math.cos(v * 1.5 + elapsedTime * 1.2) * 0.04;
+            pos.setZ(i, wave);
+          }
+          pos.needsUpdate = true;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    /* =========================================================================
+       15. INICIALIZACIÓN AL CARGAR LA PÁGINA
+       ========================================================================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      initThreeScene();
+      loadScenario('5x5');
+      showD18Tab('elem');
+    });
+  </script>
+</body>
+</html>
