@@ -5455,13 +5455,23 @@
     }
 
     /* 1. NAVEGACIÓN ENTRE PANTALLAS (CON COMPATIBILIDAD SNAP-CONTAINER) */
-    function scrollToScreen(id, isInstant) {
+    function scrollToScreen(id, isInstant = false) {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       isCaratulaAudioPlaying = false;
       syncNavPodAudioUI(false);
       const el = document.getElementById(id);
+      const snapCont = document.getElementById('main-snap-container');
       if (el) {
+        if (snapCont) {
+          snapCont.scrollTo({
+            top: el.offsetTop,
+            behavior: isInstant ? 'instant' : 'smooth'
+          });
+        }
         el.scrollIntoView({ behavior: isInstant ? 'instant' : 'smooth', block: 'start' });
+        try {
+          history.replaceState(null, '', '#' + id);
+        } catch (e) {}
         if (isInstant) updateUnifiedHud();
         else setTimeout(updateUnifiedHud, 350);
       }
@@ -5477,13 +5487,14 @@
     };
 
     function getCurrentScreenIndex() {
+      const snapCont = document.getElementById('main-snap-container');
+      const scrollTop = snapCont ? snapCont.scrollTop : (window.pageYOffset || document.documentElement.scrollTop || 0);
       let bestIdx = 0;
       let minDiff = Infinity;
       screens.forEach((id, idx) => {
         const el = document.getElementById(id);
         if (el) {
-          const rect = el.getBoundingClientRect();
-          const diff = Math.abs(rect.top);
+          const diff = Math.abs(el.offsetTop - scrollTop);
           if (diff < minDiff) {
             minDiff = diff;
             bestIdx = idx;
@@ -5809,7 +5820,7 @@
     }
 
     /* 3. MANIFIESTOS DOCTRINALES CLÉLIE (PANTALLA 7a) - CANON 18D & ARQUITECTURA UNIVERSAL */
-    let currentClelieIdx = 4; // Por defecto M4 (Doctrina 18D)
+    currentClelieIdx = 4; // Por defecto M4 (Doctrina 18D)
     let currentPrismView = 1; // 1: Operativo, 2: Ontológico, 3: Dialéctico, 4: Invariantes/VISORD 3D
     let sim18D = { a1: 0.70, a2: 0.50, a3: 0.60, a4: 0.40 };
 
@@ -6238,7 +6249,7 @@
 
     /* 4. VISOR INTERACTIVO Y MOVIMIENTO SIN FIN DE 'LA CARTE DU TENDRE' (7e) */
     let tendreCurrentMode = 'works'; // 'works' | 'zones'
-    let currentTendreIdx = 0;
+    currentTendreIdx = 0;
     let currentTendreZoneIdx = 0;
     let tendreMotionInterval = null;
     let tendreMotionDirection = 0; // 0: stopped, 1: down, -1: up
