@@ -6,7 +6,7 @@
 ![Logo Institucional NEXORD](LOGO_NEXORD_OFICIAL.png)
 
 **Autor:** Dr. José Manuel Cornejo Álvarez  
-**Filiación Académica:** Psicología Social. Facultat de Psicologia, Universitat de Barcelona (UB)  
+**Filiación Académica:** Titular de Psicología Social (Jubilado) · Facultat de Psicologia, Universitat de Barcelona (UB)  
 **Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico de la iniciativa del Banco Sociométrico (BSOC)  
 **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
 **DOI de Edición Homologada:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)  

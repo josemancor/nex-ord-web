@@ -6,7 +6,7 @@
 ![NEXORD Institutional Logo](LOGO_NEXORD_OFICIAL.png)
 
 **Author:** Dr. José Manuel Cornejo Álvarez  
-**Academic Affiliation:** Social Psychology. Faculty of Psychology, University of Barcelona (UB)  
+**Academic Affiliation:** Titular / Associate Professor of Social Psychology (Retired) · Facultat de Psicologia, Universitat de Barcelona (UB)  
 **Role in the Initiative:** Creator of the NEXORD Platform and Scientific Promotor of the Sociometric Data Bank (BSOC)  
 **ORCID:** `0000-0002-1234-5678`  
 **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
