@@ -61,10 +61,56 @@ Emitting choices (GIVING) and receiving collective evaluations (RECEIVING) do no
 
 ### 2.1. Forced Drag without Ties & Matrix Duality: A(i, rank) vs. B(i, j)
 In the BREVE Format, participants view a randomized peer list to eliminate order biases. Through a forced drag-and-drop task, they rank all group members between maximum preference and rejection poles. The zero-ties rule (r_ij != r_ik) eliminates acquiescence bias and ensures complete ranking. This capture is mathematically formalized into two complementary matrices:
-* **Matrix A(i, rank) BREVE:** Represents direct ordinal sequences emitted by each participant. Rows represent senders i, columns represent ordinal ranks k in {1st, ..., Nth}, and cell contents record the peer placed at that rank: A(i, k) = j.
-* **Matrix B(i, j) RANK DISTRIBUTION:** Square sociomatrix (N × N) where rows represent senders i, columns represent receivers j, and cell values record the assigned numerical rank: B(i, j) = k if and only if A(i, k) = j.
+* **Matrix A(i, rank) BREVE:** Represents direct ordinal sequences emitted by each participant. Rows represent senders $i$, columns represent ordinal ranks $k \in \{1st, \dots, Nth\}$, and cell contents record the peer placed at that rank: $A(i, k) = j$.
+* **Matrix B(i, j) RANK DISTRIBUTION:** Square sociomatrix ($N \times N$) where rows represent senders $i$, columns represent receivers $j$, and cell values record the assigned numerical rank: $B(i, j) = k \iff A(i, k) = j$.
+
+#### Table 1A: Factual Formalization of Group A ($G_1$, $N = 6$, Bipolar $3+3$) — BREVE Format, Classical Moreno, and Metaperceptions
+
+| Node ID | 1st | 2nd | 3rd | 4th | 5th | 6th | Choices (E) | Rejections (R) | Expected Choices (pE) | Expected Rejections (pR) | $\alpha E$ (Closest) | $\omega E$ (Distant) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **1A** | 2A | 1A | 3A | 5A | 4A | 6A | 2A, 3A | 4A, 6A | 2A, 3A | 4A, 6A | 2A | 2A $\to$ 1A |
+| **2A** | 1A | 2A | 3A | 4A | 6A | 5A | 1A, 3A | 5A, 6A | 1A, 3A | 5A, 6A | 1A | 1A $\to$ 2A |
+| **3A** | 1A | 2A | 3A | 6A | 5A | 4A | 1A, 2A | 4A, 5A | 1A, 2A | 4A, 5A | 1A | 1A $\to$ 2A |
+| **4A** | 5A | 4A | 6A | 2A | 1A | 3A | 5A, 6A | 1A, 3A | 5A, 6A | 1A, 3A | 5A | 5A $\to$ 4A |
+| **5A** | 4A | 5A | 6A | 1A | 3A | 2A | 4A, 6A | 2A, 3A | 4A, 6A | 2A, 3A | 4A | 4A $\to$ 5A |
+| **6A** | 4A | 5A | 6A | 3A | 2A | 1A | 4A, 5A | 1A, 2A | 4A, 5A | 1A, 2A | 4A | 4A $\to$ 5A |
+
+#### Table 1B: Instrumental SMIb Sociomatrix of Group A ($G_1$, $N = 6$) — Dyadic Tetragram $(A_1 A_2 A_3 A_4 = pDA \cdot DA \cdot RECIBE \cdot pRECIBE)$
+
+| $G_1$ | 1A | 2A | 3A | 4A | 5A | 6A |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **1A** | `0AA0` | `ABBA` | `ABBA` | `0ab0` | `0ab0` | `0ab0` |
+| **2A** | `BAAB` | `0AA0` | `ABBA` | `0ab0` | `0ab0` | `0ab0` |
+| **3A** | `BAAB` | `BAAB` | `0AA0` | `0ab0` | `0ab0` | `0ab0` |
+| **4A** | `0ba0` | `0ba0` | `0ba0` | `0AA0` | `ABBA` | `ABBA` |
+| **5A** | `0ba0` | `0ba0` | `0ba0` | `BAAB` | `0AA0` | `ABBA` |
+| **6A** | `0ba0` | `0ba0` | `0ba0` | `BAAB` | `BAAB` | `0AA0` |
+
+#### Table 1C: Integrated SMIa Sociomatrix of Group A ($G_1$, $N = 6$) — Canonical Q81 Lattice
+
+| $G_1$ | 1A | 2A | 3A | 4A | 5A | 6A | Subgroup Diagnostic |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **1A** | `¡¿?!` | `<Ee>` | `<Ee>` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesion $\{1A, 2A, 3A\}$ / Opposition $\{4A, 5A, 6A\}$ |
+| **2A** | `<Ee>` | `¡¿?!` | `<Ee>` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesion $\{1A, 2A, 3A\}$ / Opposition $\{4A, 5A, 6A\}$ |
+| **3A** | `<Ee>` | `<Ee>` | `¡¿?!` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesion $\{1A, 2A, 3A\}$ / Opposition $\{4A, 5A, 6A\}$ |
+| **4A** | `[Rr]` | `[Rr]` | `[Rr]` | `¡¿?!` | `<Ee>` | `<Ee>` | Cohesion $\{4A, 5A, 6A\}$ / Opposition $\{1A, 2A, 3A\}$ |
+| **5A** | `[Rr]` | `[Rr]` | `[Rr]` | `<Ee>` | `¡¿?!` | `<Ee>` | Cohesion $\{4A, 5A, 6A\}$ / Opposition $\{1A, 2A, 3A\}$ |
+| **6A** | `[Rr]` | `[Rr]` | `[Rr]` | `<Ee>` | `<Ee>` | `¡¿?!` | Cohesion $\{4A, 5A, 6A\}$ / Opposition $\{1A, 2A, 3A\}$ |
+
+#### Table 1D: Factual Formalization of Group B ($G_2$, $N = 6$, Systematic Ostracism of 6B) — BREVE Format and Inbound Status ($SRC$)
+
+| ID | 1st | 2nd | 3rd | 4th | 5th | 6th (Rejection) | Node 6B in SMIa | Inbound Status ($SRC$) | Structural Diagnosis |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **1B** | 2B | 1B | 3B | 4B | 5B | **6B** | $1B \to 6B$: `[Rr]` | $+0.875$ | Cohesive Attractor Leader |
+| **2B** | 1B | 2B | 3B | 5B | 4B | **6B** | $2B \to 6B$: `[Rr]` | $+1.250$ | Primary Attractor Leader |
+| **3B** | 1B | 2B | 3B | 4B | 5B | **6B** | $3B \to 6B$: `[Rr]` | $+0.625$ | Cohesive Core |
+| **4B** | 3B | 4B | 1B | 2B | 5B | **6B** | $4B \to 6B$: `[Rr]` | $+0.125$ | Integrated Neutral |
+| **5B** | 2B | 3B | 5B | 1B | 4B | **6B** | $5B \to 6B$: `[Rr]` | $+0.125$ | Integrated Neutral |
+| **6B** | 1B | 2B | 6B | 3B | 4B | 5B | $6B \to \text{Group}$: `<Er]` | **$-1.500$** | **Unanimous Ostracism (Relational Asphyxia)** |
 
 ![Figure 1: BREVE Data Capture and Transformation Architecture](Figure_Section_2_1_Input_Data_BREVE.png)
+
+*Figure 1: BREVE Input Architecture and Derived SMIb / SMIa Matrices (Canonical N = 6 Scenario, Bipolar Group G1). Left Panel: Forced ranking Matrix A(i, rank) 1st to 6th, bijective Moreno transcription (E, R, pE, pR), and triangulated metaperceptions (αE, ωE). Center Panel: Instrumental SMIb sociomatrix of dyadic tetragrams (A1·A2·A3·A4). Right Panel: Integrated SMIa sociomatrix in Q81 lattice.*
 
 ### 2.2. Reflexive Diagonal Closure & Core Sensors
 NEXORD resolves the classical sociometric diagonal omission (traditionally empty, r_ii = empty) by requiring participants to self-anchor within the ranking (r_ii in {1, ..., N}). This reflexive closure equips the system with three analytical sensors:
