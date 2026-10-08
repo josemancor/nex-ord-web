@@ -231,6 +231,16 @@ class VisordHubEngine {
             }
             if (countBdr) countBdr.innerText = bdrVal;
             if (countSdr) countSdr.innerText = sdrVal;
+            
+            const bNum = parseFloat(bdrVal) || 0;
+            const sNum = parseFloat(sdrVal) || 0;
+            const iDesgaste = Math.max(0, bNum - sNum).toFixed(3);
+            const fRate = bNum > 0 ? (((bNum - sNum) / bNum) * 100).toFixed(1) + '%' : '0.0%';
+            
+            const countIdesgaste = document.getElementById('count-idesgaste');
+            if (countIdesgaste) countIdesgaste.innerText = iDesgaste;
+            const countFrictionRate = document.getElementById('count-friction-rate');
+            if (countFrictionRate) countFrictionRate.innerText = fRate;
         }
     }
     

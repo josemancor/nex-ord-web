@@ -2071,6 +2071,7 @@
 
 </style>
   <link rel="stylesheet" href="mobile_responsive_engine.css">
+  <script src="data/canonical_therapy_docs.js"></script>
 </head>
 <body>
 
@@ -2087,14 +2088,26 @@
     <!-- SELECTOR DE ESCENARIO / CORPUS TEXTUAL UNIVERSAL -->
     <div class="corpus-selector-group">
       <span class="corpus-lbl" data-i18n="lbl_script">📖 GUION:</span>
-      <select id="selCorpusPreset" class="corpus-select" onchange="onSelectCorpusPreset(this.value)">
-        <option value="dawes_orbell_5">🪙 Dilema Bien Común (Dawes & Orbell, N=5)</option>
-        <option value="12_angry_men_8">⚖️ Jurado Deliberante / 12 Hombres en Pugna (N=8)</option>
-        <option value="labor_mediation_6">🤝 Mediación Laboral / Negociación Bipartita (N=6)</option>
-        <option value="socrates_trial_5">🏛️ Juicio a Sócrates / Litigio Clásico (N=5)</option>
+      <select id="selCorpusPreset" class="corpus-select" onchange="onSelectCorpusPreset(this.value)" style="border:1.5px solid #00FF87;">
+        <option value="clara_therapy_8" selected>🌿 Simulación Clínica: Grupo Terapéutico de Clara (N=8)</option>
+        <option value="dawes_orbell_5">📚 Ejercicio 1: Dilema del Bien Común (Dawes & Orbell, N=5)</option>
+        <option value="12_angry_men_8">📚 Ejercicio 2: Jurado Deliberante & Tensión Dialéctica (N=8)</option>
+        <option value="labor_mediation_6">📚 Ejercicio 3: Mediación Laboral & Negociación (N=6)</option>
+        <option value="socrates_trial_5">🏛️ Litigio Clásico: Juicio a Sócrates (N=5)</option>
       </select>
+      <!-- BOTÓN ESPECIAL DISCRETO (SIN LEYENDA, PIDE CLAVE PARA CARGA LOCAL) -->
+      <button onclick="triggerSpecialLoadDialectico()" id="btn-special-load-dialectico" style="background: transparent; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); width: 26px; height: 26px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; opacity: 0.35; transition: all 0.2s;" onmouseover="this.style.opacity='0.85'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="if(!this.classList.contains('unlocked')){this.style.opacity='0.35'; this.style.borderColor='rgba(255,255,255,0.08)';}">
+        <span id="icon-dialectico-load" style="font-size:11px;">🔒</span>
+      </button>
+      <input type="file" id="input-dialectico-smib" accept=".json,.csv,.smib,.txt" style="display:none;" onchange="handleSmibDialecticoUpload(event)">
       <button class="corpus-ingest-btn" onclick="openScriptIngestorModal()" title="Cargar, pegar o editar cualquier texto o guion dialéctico" data-i18n="btn_ingest">
-        📂 CARGAR GUION DIALÉCTICO
+        📂 CARGAR GUION
+      </button>
+      <button class="corpus-ingest-btn" onclick="openTherapyDocModal('dialogos')" title="Ver transcripción clínica íntegra y análisis del Grupo Terapéutico de Clara" style="background: rgba(0, 255, 135, 0.18); border: 1.5px solid #00FF87; color: #FFF; font-weight: bold; margin-left: 6px; display:inline-flex; align-items:center; gap:5px;">
+        📜 DIÁLOGOS CLÍNICOS &amp; ANÁLISIS
+      </button>
+      <button class="corpus-ingest-btn" onclick="downloadCurrentTherapyDoc()" title="Descargar documentación clínica (.txt)" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #94A3B8; margin-left: 4px; padding: 4px 7px;">
+        💾
       </button>
     </div>
 
@@ -2338,7 +2351,7 @@
           <span id="scrubberLabel" style="font-size:7.5px; color:#00FF87; font-family:var(--font-mono); font-weight:700;">01/18</span>
           <button class="tele-btn-sub" id="btnSpeedTele" onclick="toggleSpeed(this)">1.0x</button>
           <button class="tele-btn-sub active" id="btnSfxTele" onclick="toggleSFX()">🔊 SFX</button>
-          <button class="tele-btn-sub" id="btnVoiceTele" onclick="toggleVoice()">🎙️ VOZ</button>
+          <button class="tele-btn-sub active" id="btnVoiceTele" onclick="toggleVoice()" style="border:1.5px solid #00FF87; color:#FFF; background:rgba(0,255,135,0.2);"><span id="ledVoice" style="width:7px; height:7px; border-radius:50%; background:#00FF87; box-shadow:0 0 8px #00FF87; display:inline-block; margin-right:4px;"></span>🎙️ VOZ</button>
         </div>
       </div>
     </div>
@@ -2714,6 +2727,47 @@
 
     /* 1. BIBLIOTECA CANÓNICA DE ESCENARIOS DIALÉCTICOS */
     const CANONICAL_CORPORA = {
+      'clara_therapy_8': {
+        id: 'clara_therapy_8',
+        code: 'CULTURAL-AA-G1-T4-C2-V09-A16-ES-9',
+        title: 'Grupo Terapéutico de Clara (Simulación Clínica)',
+        subtitle: 'T-Group & Psicoterapia Dialéctica · Desarticulación de Triangulaciones, Vulnerabilidad y Resonancia Mutua',
+        groupCenterName: 'CÍRCULO TERAPÉUTICO (GRP)',
+        unitSymbol: '🌿',
+        unitName: 'resonancias',
+        investmentLabel: 'APERTURA',
+        dividendLabel: 'EMPATÍA',
+        resourceLabel: 'TELE',
+        actors: [
+          { id: 'T', name: 'Elena (Terapeuta)', role: 'Facilitadora / Terapeuta', bando: 'A', color: '#00FF87', img: 'assets/faces_dilema/1A.jpg' },
+          { id: '1', name: 'Mateo (P1)', role: 'Defensivo / Remisión', bando: 'A', color: '#38BDF8', img: 'assets/faces_dilema/2A.jpg' },
+          { id: '2', name: 'Clara (P2)', role: 'Buscadora de Autonomía', bando: 'A', color: '#00FF87', img: 'assets/faces_dilema/3A.jpg' },
+          { id: '3', name: 'Raúl (P3)', role: 'Agresivo / Impulsivo', bando: 'B', color: '#EF4444', img: 'assets/faces_dilema/4A.jpg' },
+          { id: '4', name: 'Lucía (P4)', role: 'Observadora Silente', bando: 'A', color: '#C084FC', img: 'assets/faces_dilema/5A.jpg' },
+          { id: '5', name: 'Javi (P5)', role: 'Rescatador Compulsivo', bando: 'B', color: '#F59E0B', img: 'assets/faces_dilema/1A.jpg' },
+          { id: '6', name: 'Sonia (P6)', role: 'Vulnerable / Recaída', bando: 'A', color: '#F472B6', img: 'assets/faces_dilema/2A.jpg' },
+          { id: '7', name: 'Hugo (P7)', role: 'Escéptico / Reflexivo', bando: 'B', color: '#67E8F9', img: 'assets/faces_dilema/3A.jpg' }
+        ],
+        turns: [
+          { turn: 1, sender: 0, receiver: 0, flow: 'to_center', isPlenary: true, actType: 'iniciativa', recType: 'provocacion', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "El silencio hoy pesa demasiado. Mateo, miras a Raúl sin decir palabra. ¿Qué ocurre?" },
+          { turn: 2, sender: 1, receiver: 3, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'provocacion', tetra: ['-','+','-','+'], q81: '[Er>', color: '#EF4444', text: "No soporto a quien da lecciones cuando sabemos que no llegó a casa el viernes." },
+          { turn: 3, sender: 3, receiver: 1, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'provocacion', tetra: ['-','-','-','-'], q81: '[Rr]', color: '#EF4444', text: "¡No eres mi padre! Proyectas tu culpa porque tienes ganas de volver a caer tú." },
+          { turn: 4, sender: 2, receiver: 3, flow: 'peer', isPlenary: false, actType: 'iniciativa', recType: 'provocacion', tetra: ['+','+','0','+'], q81: '<Ee!', color: '#38BDF8', text: "¡Basta de gritar! Estamos para ayudarnos... Raúl, Mateo solo teme por el grupo." },
+          { turn: 5, sender: 0, receiver: 2, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "Clara, detente. Intentas rescatar para frenar el conflicto. ¿A quién proteges, a ellos o a tu ansiedad?" },
+          { turn: 6, sender: 4, receiver: 3, flow: 'peer', isPlenary: false, actType: 'iniciativa', recType: 'provocacion', tetra: ['0','0','-','0'], q81: '¡?r!', color: '#C084FC', text: "A mí me asustas, Raúl. Me dan ganas de no volver. La ira rompe este círculo." },
+          { turn: 7, sender: 7, receiver: 0, flow: 'to_center', isPlenary: true, actType: 'iniciativa', recType: 'provocacion', tetra: ['-','+','-','+'], q81: '[Er>', color: '#67E8F9', text: "Lucía tiene razón. Parece un patio escolar. Elena, ¿por qué toleras que Raúl viole las normas?" },
+          { turn: 8, sender: 6, receiver: 0, flow: 'to_center', isPlenary: true, actType: 'iniciativa', recType: 'feedback', tetra: ['-','-','-','-'], q81: '[Rr]', color: '#F472B6', text: "¡Dejad de pelear ya! Recaí el viernes... Oíros gritar me hace sentir que no hay esperanza." },
+          { turn: 9, sender: 6, receiver: 6, flow: 'silence', isPlenary: true, actType: 'iniciativa', recType: 'feedback', tetra: ['0','0','0','0'], q81: '¡¿?!', color: '#FFE600', text: "Silencio conmocionado en la sala. La confesión de Sonia congela las discusiones defensivas." },
+          { turn: 10, sender: 5, receiver: 6, flow: 'peer', isPlenary: false, actType: 'iniciativa', recType: 'provocacion', tetra: ['+','+','0','+'], q81: '<Ee!', color: '#F59E0B', text: "Tranquila, Sonia, todos estamos contigo. Raúl, pide perdón a Sonia, la estás aterrorizando." },
+          { turn: 11, sender: 0, receiver: 5, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "Javi, vuelve a tu sitio. No la rescates; deja que el grupo sienta el dolor real. Raúl, mira a Sonia." },
+          { turn: 12, sender: 3, receiver: 6, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "Perdóname, Sonia. Me pongo agresivo porque tengo pánico; yo también estuve a punto de cagarla." },
+          { turn: 13, sender: 1, receiver: 3, flow: 'peer', isPlenary: false, actType: 'respuesta', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#38BDF8', text: "No eres un monstruo, Raúl. Eres insoportable cuando atacas, pero yo siento el mismo terror a diario." },
+          { turn: 14, sender: 2, receiver: 0, flow: 'to_center', isPlenary: true, actType: 'iniciativa', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "Hoy por fin cae la careta. Ya no tengo que ser perfecta para que me queráis en este grupo." },
+          { turn: 15, sender: 6, receiver: 0, flow: 'from_center', isPlenary: true, actType: 'respuesta', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#F472B6', text: "Pensé que me rechazaríais con desprecio. Gracias por sostenerme en mi verdad sin juzgarme." },
+          { turn: 16, sender: 0, receiver: 0, flow: 'from_center', isPlenary: true, actType: 'iniciativa', recType: 'feedback', tetra: ['+','+','+','+'], q81: '<Ee>', color: '#00FF87', text: "El círculo ha sostenido la recaída sin huir ni triangular. La asamblea ha encontrado su tele auténtico." }
+        ]
+      },
+
       'dawes_orbell_5': {
         id: 'dawes_orbell_5',
         code: 'CULTURAL-AA-G2-T1-C1-V10-A16-ES-5',
@@ -2868,7 +2922,7 @@
     };
 
     /* ESTADO DEL SISTEMA */
-    let activeCorpus = CANONICAL_CORPORA['dawes_orbell_5'];
+    let activeCorpus = CANONICAL_CORPORA['clara_therapy_8'];
     let currentN = activeCorpus.actors.length;
     let actors = activeCorpus.actors;
     let TURNS = activeCorpus.turns;
@@ -2877,7 +2931,7 @@
     let playInterval = null;
     let playbackSpeed = 1.0;
     let sfxEnabled = true;
-    let voiceEnabled = false;
+    let voiceEnabled = true;
 
     // Disposición y UI
     let layoutMode = 'split'; 
@@ -3541,12 +3595,17 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
       else playZapTone(turn.q81);
     }
 
-    function speakText(text) {
+    function speakText(text, actorName) {
       if (!voiceEnabled || !('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      let phrase = text;
+      if (actorName) {
+        const cleanName = actorName.replace(/\(.*?\)/g, '').trim();
+        phrase = `${cleanName}: ${text}`;
+      }
+      const u = new SpeechSynthesisUtterance(phrase);
       u.lang = 'es-ES';
-      u.rate = 1.05;
+      u.rate = 1.0;
       window.speechSynthesis.speak(u);
     }
 
@@ -3930,7 +3989,9 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
 
       // Audio & Síntesis de voz
       playAppropriateTone(turn);
-      speakText(turn.text);
+      const act = actors[turn.sender];
+      const actName = act ? act.name : '';
+      speakText(turn.text, actName);
 
       // Dibujar vectores / radar
       drawVectors(turn);
@@ -3954,6 +4015,9 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
       } else if (activeCorpus.id === 'labor_mediation_6') {
         boteTxt = (tIdx < 7) ? '🤝 EN DISPUTA' : (tIdx < 13 ? '🤝 PREACUERDO' : '🤝 PACTO CERRADO');
         boteClr = (tIdx < 7) ? '#FF9F1C' : '#00FF87';
+      } else if (activeCorpus.id === 'clara_therapy_8') {
+        boteTxt = (tIdx < 7) ? '🌿 TENSIÓN DEFENSIVA' : (tIdx < 11 ? '🌿 VULNERABILIDAD' : '🌿 ALIANZA GRP');
+        boteClr = (tIdx < 7) ? '#FF9F1C' : (tIdx < 11 ? '#FF007F' : '#00FF87');
       }
 
       const bVal = document.getElementById('liveBoteVal');
@@ -3979,6 +4043,9 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         } else if (activeCorpus.id === '12_angry_men_8') {
           note.innerText = (tIdx < 4) ? 'DISIDENCIA SOLITARIA: DUDA INICIAL' : (tIdx < 12 ? 'EXAMEN CRÍTICO: GIRO DIALÉCTICO' : 'CONSENSO EN LA DUDA RAZONABLE');
           note.style.color = (tIdx < 12) ? '#38BDF8' : '#00FF87';
+        } else if (activeCorpus.id === 'clara_therapy_8') {
+          note.innerText = (tIdx < 7) ? 'CONFRONTACIÓN DEFENSIVA Y TRIANGULACIÓN' : (tIdx < 11 ? 'DESARME DEL RESCATADOR Y CONFESIÓN' : 'AUTONOMÍA Y RESIDUALIDAD EMPÁTICA (GRP)');
+          note.style.color = (tIdx < 7) ? '#FF9F1C' : (tIdx < 11 ? '#38BDF8' : '#00FF87');
         } else {
           note.innerText = `OBSERVACIÓN ACTIVA (${turn.actType.toUpperCase()} / ${turn.recType.toUpperCase()})`;
           note.style.color = '#38BDF8';
@@ -4313,6 +4380,17 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         if (emitCounts[k] >= 3) return '<span class="badge-status status-warning">🔥 ACTIVO</span>';
         if (k >= 4) return '<span class="badge-status status-eq">⚖️ ACUSACIÓN</span>';
         return '<span class="badge-status status-coop">🟢 DUDA</span>';
+      }
+
+      if (activeCorpus.id === 'clara_therapy_8') {
+        if (k === 0) return '<span class="badge-status status-leader">⭐ FACILITADORA</span>';
+        if (k === 2 && tIdx >= 13) return '<span class="badge-status status-coop">🌿 AUTÓNOMA</span>';
+        if (k === 6 && tIdx >= 7) return '<span class="badge-status status-coop">💖 VULNERABLE</span>';
+        if (k === 3 && tIdx >= 11) return '<span class="badge-status status-coop">🤝 DESARME</span>';
+        if (k === 5 && tIdx >= 10) return '<span class="badge-status status-eq">⏸️ CONTENIDO</span>';
+        if (k === 1 && tIdx >= 11) return '<span class="badge-status status-coop">🟢 SINTONÍA</span>';
+        if (k === 4 && tIdx >= 13) return '<span class="badge-status status-coop">👁️ INTEGRADA</span>';
+        return '<span class="badge-status status-eq">⚖️ CÍRCULO</span>';
       }
 
       if (emitNeg[k] >= 2) return '<span class="badge-status status-defector">🚨 OPOSITOR</span>';
@@ -5242,13 +5320,18 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     function toggleVoice() {
       initAudio();
       voiceEnabled = !voiceEnabled;
-      const label = voiceEnabled ? '🎙️ VOZ' : '🎙️ OFF';
       const teleVoice = document.getElementById('btnVoiceTele');
+      const led = document.getElementById('ledVoice');
       if (teleVoice) {
         teleVoice.classList.toggle('active', voiceEnabled);
-        teleVoice.innerText = label;
+        teleVoice.style.background = voiceEnabled ? 'rgba(0,255,135,0.2)' : 'rgba(255,255,255,0.06)';
+        teleVoice.style.borderColor = voiceEnabled ? '#00FF87' : '#64748B';
       }
-      if (voiceEnabled) speakText("Observador universal activado.");
+      if (led) {
+        led.style.background = voiceEnabled ? '#00FF87' : '#EF4444';
+        led.style.boxShadow = voiceEnabled ? '0 0 8px #00FF87' : '0 0 4px #EF4444';
+      }
+      if (voiceEnabled) speakText("Voz activada.");
     }
 
     // Teclado: Espacio = Play/Pausa, Flechas = Turnos, Tecla T = Contabilidad en 2º plano
@@ -5276,7 +5359,7 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     // INICIALIZACIÓN: MODO FOCO INTERACCIÓN (TABLAS EN SEGUNDO PLANO) POR DEFECTO
     function startDialecticoAuto() {
       setLayoutMode('interaccion-focus');
-      loadCorpus(CANONICAL_CORPORA['dawes_orbell_5']);
+      loadCorpus(CANONICAL_CORPORA['clara_therapy_8']);
       syncCanvasDimensions();
       startRadarAnimation();
       setTimeout(() => {
@@ -5298,6 +5381,260 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
     // Inicialización reactiva de idioma
     const initialLangProc = localStorage.getItem('nexord_lang') || 'es';
     setLanguage(initialLangProc);
+
+</script>
+
+  <script>
+    let isDialecticMotionActive = true;
+    function toggleDialecticMotion() {
+      isDialecticMotionActive = !isDialecticMotionActive;
+      const led = document.getElementById('led-dialectico-master');
+      const txt = document.getElementById('txt-dialectico-master');
+      const btn = document.getElementById('btn-master-dialectico');
+      if (led) {
+        led.style.background = isDialecticMotionActive ? '#00FF87' : '#EF4444';
+        led.style.boxShadow = isDialecticMotionActive ? '0 0 8px #00FF87' : '0 0 6px #EF4444';
+      }
+      if (txt) {
+        txt.textContent = isDialecticMotionActive ? '⚡ ACTION ! DIALÉCTICA EN MARCHA' : '⏸ ACTION ! PAUSADO';
+      }
+      if (btn) {
+        btn.style.borderColor = isDialecticMotionActive ? '#00FF87' : '#EF4444';
+      }
+    }
+  </script>
+
+    <script>
+
+        function triggerSpecialLoadDialectico() {
+      const pwd = prompt("🔐 Clave de acceso para carga local:");
+      if (!pwd) return;
+      const clean = pwd.trim().toUpperCase();
+      if (clean === "NEX_ORD" || clean === "NEXORD") {
+        sessionStorage.setItem('nexord_researcher_auth', 'unlocked');
+        const btn = document.getElementById('btn-special-load-dialectico');
+        const icon = document.getElementById('icon-dialectico-load');
+        if (btn) {
+          btn.classList.add('unlocked');
+          btn.style.opacity = '1';
+          btn.style.borderColor = '#00FF87';
+          btn.style.background = 'rgba(0,255,135,0.15)';
+          btn.style.color = '#00FF87';
+        }
+        if (icon) icon.textContent = '🔓';
+        const inp = document.getElementById('input-dialectico-smib');
+        if (inp) inp.click();
+      } else {
+        alert("⛔ Clave incorrecta.");
+      }
+    }
+        if (icon) icon.textContent = '🔓';
+        const inp = document.getElementById('input-dialectico-smib');
+        if (inp) inp.click();
+      } else {
+        alert("⛔ Clave incorrecta. Acceso no autorizado.");
+      }
+    }
+
+    function checkResearcherAuthDialectico() {
+      if (sessionStorage.getItem('nexord_researcher_auth') === 'unlocked') return true;
+      const pwd = prompt("🔐 ACCESO RESTRINGIDO A INVESTIGADORES (INICIADOS)\n\nIngrese la clave de autorización para cargar matrices SMIb dialécticas:");
+      if (!pwd) return false;
+      const clean = pwd.trim().toUpperCase();
+      if (clean === "NEX_ORD" || clean === "NEXORD") {
+        sessionStorage.setItem('nexord_researcher_auth', 'unlocked');
+        return true;
+      }
+      alert("⛔ Clave incorrecta.");
+      return false;
+    }
+    
+    function handleSmibDialecticoUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                alert(`Matriz SMIb Dialéctica de "${file.name}" cargada correctamente.`);
+            } catch(err) {
+                alert("Error al interpretar la matriz SMIb: " + err.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+    </script>
+
+  <!-- MODAL VISOR INTEGRADO DE DIÁLOGOS Y ANÁLISIS CLÍNICO DE CLARA -->
+  <div id="modalTherapyDocViewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999999; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+    <div style="width:94%; max-width:1180px; height:90%; background:#0B132B; border:1.5px solid #00FF87; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.9), 0 0 35px rgba(0,255,135,0.25);">
+      <!-- Cabecera -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:#14213D; border-bottom:1px solid rgba(0,255,135,0.3); gap:15px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:26px;">🌿</span>
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <h3 id="therapyDocTitle" style="margin:0; font-family:var(--font-outfit); font-size:1.15rem; color:#FFF; font-weight:800;">Diálogos Clínicos &amp; Simulación</h3>
+              <span style="font-family:var(--font-mono); font-size:10px; background:rgba(0,255,135,0.2); color:#00FF87; border:1px solid rgba(0,255,135,0.4); padding:2px 8px; border-radius:12px; font-weight:700;">T-Group • N=8</span>
+            </div>
+            <div id="therapyDocSubtitle" style="font-size:0.75rem; color:#94A3B8; margin-top:2px;">Grupo Terapéutico de Clara • Simulación Didáctica Canónica</div>
+          </div>
+        </div>
+        <!-- Pestañas de Lectura -->
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" id="tabBtnDialogos" onclick="switchTherapyDocTab('dialogos')" style="padding:6px 14px; border-radius:14px; font-size:11px; font-weight:800; cursor:pointer; background:#00FF87; color:#0B132B; border:none;">📖 Diálogos Completos</button>
+          <button type="button" id="tabBtnAnalisis" onclick="switchTherapyDocTab('analisis')" style="padding:6px 14px; border-radius:14px; font-size:11px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.08); color:#94A3B8; border:1px solid rgba(255,255,255,0.2);">📊 Informe Clínico (A3)</button>
+        </div>
+        <!-- Acciones -->
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="position:relative; display:flex; align-items:center;">
+            <input type="text" id="therapyDocSearch" placeholder="🔍 Buscar..." oninput="filterTherapyDocContent(this.value)" style="background:#0F172A; border:1px solid rgba(255,255,255,0.2); color:#FFF; font-size:11px; padding:6px 12px; border-radius:20px; width:160px; outline:none; transition:all 0.2s;" onfocus="this.style.width='220px'; this.style.borderColor='#00FF87';" onblur="if(!this.value) this.style.width='160px';">
+            <span id="therapyDocSearchCount" style="position:absolute; right:10px; font-size:10px; color:#00FF87; font-family:var(--font-mono);"></span>
+          </div>
+          <button type="button" onclick="downloadCurrentTherapyDoc()" style="background:rgba(0,255,135,0.18); border:1.5px solid #00FF87; color:#FFF; font-family:var(--font-mono); font-size:11px; font-weight:800; padding:6px 14px; border-radius:20px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <span>💾 Descargar (.txt)</span>
+          </button>
+          <button type="button" onclick="closeTherapyDocModal()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#F8FAFC; border-radius:8px; padding:6px 14px; cursor:pointer; font-weight:bold; font-size:12px;">✕ Cerrar</button>
+        </div>
+      </div>
+      <!-- Cuerpo -->
+      <div id="therapyDocBody" style="flex:1; overflow-y:auto; padding:24px 30px; font-family:'Roboto Mono', monospace; font-size:13px; line-height:1.75; color:#E2E8F0; background:#0B132B; white-space:pre-wrap; word-break:break-word; scroll-behavior:smooth;">
+        <!-- Contenido dinámico -->
+      </div>
+      <!-- Pie -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#0F172A; border-top:1px solid rgba(255,255,255,0.08); font-size:11px; color:#64748B; font-family:var(--font-mono);">
+        <span>Corpus Didáctico Clínico &bull; Triangulaciones de Bowen &bull; Sociometría de Moreno</span>
+        <span>Usa el buscador para localizar réplicas clínicas de cada participante</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+    // =========================================================================
+    // CONTROL DEL VISOR DE DOCUMENTACIÓN Y DIÁLOGOS CLÍNICOS DE CLARA
+    // =========================================================================
+    let activeTherapyTab = 'dialogos';
+    let rawTherapyText = '';
+
+    function openTherapyDocModal(tabKey) {
+      const modal = document.getElementById('modalTherapyDocViewer');
+      if (!modal) return;
+      activeTherapyTab = tabKey || 'dialogos';
+      loadTherapyTabData(activeTherapyTab);
+      modal.style.display = 'flex';
+    }
+
+    function closeTherapyDocModal() {
+      const modal = document.getElementById('modalTherapyDocViewer');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function switchTherapyDocTab(tabKey) {
+      activeTherapyTab = tabKey;
+      const btnDia = document.getElementById('tabBtnDialogos');
+      const btnAna = document.getElementById('tabBtnAnalisis');
+      if (btnDia && btnAna) {
+        if (tabKey === 'dialogos') {
+          btnDia.style.background = '#00FF87'; btnDia.style.color = '#0B132B'; btnDia.style.border = 'none';
+          btnAna.style.background = 'rgba(255,255,255,0.08)'; btnAna.style.color = '#94A3B8'; btnAna.style.border = '1px solid rgba(255,255,255,0.2)';
+        } else {
+          btnAna.style.background = '#00FF87'; btnAna.style.color = '#0B132B'; btnAna.style.border = 'none';
+          btnDia.style.background = 'rgba(255,255,255,0.08)'; btnDia.style.color = '#94A3B8'; btnDia.style.border = '1px solid rgba(255,255,255,0.2)';
+        }
+      }
+      loadTherapyTabData(tabKey);
+    }
+
+    function loadTherapyTabData(tabKey) {
+      const data = (typeof CANONICAL_THERAPY_DOCS !== 'undefined' && CANONICAL_THERAPY_DOCS[tabKey])
+        ? CANONICAL_THERAPY_DOCS[tabKey]
+        : { title: "Documentación Clínica", subtitle: "Grupo Terapéutico de Clara", text: "Cargando texto...", filename: "documento.txt" };
+
+      const titleEl = document.getElementById('therapyDocTitle');
+      const subEl = document.getElementById('therapyDocSubtitle');
+      if (titleEl) titleEl.textContent = data.title;
+      if (subEl) subEl.textContent = data.subtitle;
+
+      rawTherapyText = data.text;
+      renderTherapyContent(rawTherapyText);
+
+      const searchInput = document.getElementById('therapyDocSearch');
+      if (searchInput) searchInput.value = '';
+      const searchCount = document.getElementById('therapyDocSearchCount');
+      if (searchCount) searchCount.textContent = '';
+    }
+
+    function renderTherapyContent(text) {
+      const body = document.getElementById('therapyDocBody');
+      if (!body) return;
+      let formatted = text
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/^(\d+\.\s*(?:Elena|Mateo|Clara|Raúl|Lucía|Javi|Sonia|Hugo|Ricardo).*?:)/gm, '<span style="color:#00FF87; font-weight:bold;">$1</span>')
+        .replace(/^((?:Elena|Mateo|Clara|Raúl|Lucía|Javi|Sonia|Hugo|Ricardo).*?:)/gm, '<span style="color:#38BDF8; font-weight:bold;">$1</span>')
+        .replace(/\((Sin mirar.*?|Saltando.*?|Rompiendo.*?|Con voz quebrada.*?|Acercándose.*?|Bajando la cabeza.*?|Mirando por fin.*?|Inquieto.*?|Desde el suelo.*?|Se gira lentamente.*?)\)/g, '<span style="color:#FCD34D; font-style:italic;">($1)</span>')
+        .replace(/(\[Rr\]|\[Ee\]|\[Ar\]|¡Aa!|¡Ra\]|\(Ee\)|\[Er>|\<Ee\>|\(Ee\>)/g, '<span style="background:rgba(255,255,255,0.15); color:#00E5FF; padding:1px 4px; border-radius:3px; font-weight:bold;">$1</span>');
+
+      body.innerHTML = formatted;
+    }
+
+    function filterTherapyDocContent(term) {
+      const countEl = document.getElementById('therapyDocSearchCount');
+      if (!term || term.trim() === '') {
+        renderTherapyContent(rawTherapyText);
+        if (countEl) countEl.textContent = '';
+        return;
+      }
+      const q = term.trim().toLowerCase();
+      const lines = rawTherapyText.split('\n');
+      let matchCount = 0;
+      let resultHtml = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.toLowerCase().includes(q)) {
+          matchCount++;
+          const re = new RegExp(`(${term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')})`, 'gi');
+          const highlighted = line
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(re, '<mark style="background:#FFE600; color:#000; padding:1px 3px; border-radius:3px; font-weight:bold;">$1</mark>');
+          resultHtml.push(`<div style="background:rgba(0,255,135,0.06); padding:2px 6px; border-left:3px solid #00FF87; margin:2px 0;">${highlighted}</div>`);
+        }
+      }
+
+      const body = document.getElementById('therapyDocBody');
+      if (body) {
+        body.innerHTML = resultHtml.length > 0 
+          ? resultHtml.join('') 
+          : `<div style="text-align:center; padding:40px; color:#64748B;">No se encontraron líneas con "<strong>${term}</strong>".</div>`;
+      }
+      if (countEl) countEl.textContent = `${matchCount} líneas`;
+    }
+
+    function downloadCurrentTherapyDoc() {
+      const data = (typeof CANONICAL_THERAPY_DOCS !== 'undefined' && CANONICAL_THERAPY_DOCS[activeTherapyTab])
+        ? CANONICAL_THERAPY_DOCS[activeTherapyTab]
+        : null;
+
+      const text = data ? data.text : rawTherapyText;
+      const filename = data ? data.filename : "documentacion_grupo_terapeutico.txt";
+
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    window.openTherapyDocModal = openTherapyDocModal;
+    window.closeTherapyDocModal = closeTherapyDocModal;
+    window.switchTherapyDocTab = switchTherapyDocTab;
+    window.filterTherapyDocContent = filterTherapyDocContent;
+    window.downloadCurrentTherapyDoc = downloadCurrentTherapyDoc;
 
 </script>
 </body>

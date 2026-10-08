@@ -235,7 +235,7 @@ class UIPanels {
                 <!-- Indicador de Densidad -->
                 <div style="display:flex; align-items:center; gap:6px; background:rgba(15,23,42,0.8); padding:3px 10px; border-radius:6px; border:1px solid rgba(254,240,138,0.3);">
                     <span style="font-size:0.72rem; color:#a3e635; font-weight:bold;">⚡ DENSIDADES:</span>
-                    <span style="font-size:0.72rem; color:#fef08a; font-family:monospace; font-weight:bold;">BDR = ${bdrVal} | SDR = ${sdrVal}</span>
+                    <span style="font-size:0.72rem; color:#fef08a; font-family:monospace; font-weight:bold;">BDR = ${bdrVal} | SDR = ${sdrVal} | I_desgaste = ${(Math.max(0, (parseFloat(bdrVal)||0) - (parseFloat(sdrVal)||0))).toFixed(3)} (${(parseFloat(bdrVal)>0 ? ((((parseFloat(bdrVal)||0)-(parseFloat(sdrVal)||0))/(parseFloat(bdrVal)||1))*100).toFixed(1)+'%':'0.0%')})</span>
                 </div>
             </div>
 
@@ -2032,9 +2032,9 @@ class UIPanels {
             <!-- Bloques Diagnósticos Dinámicos -->
             ${(reportSection === 'completo' || reportSection === 'densidad') ? `
             <div style="background:rgba(30,41,59,0.7); border:1px solid #ff6384; border-radius:8px; padding:14px;">
-                <h4 style="color:#ff6384; margin:0 0 6px 0; font-size:0.92rem; font-weight:800;">1. Síntesis Diagnóstica de Cohesión & Estabilidad Red [${gtc.toUpperCase()}]</h4>
+                <h4 style="color:#ff6384; margin:0 0 6px 0; font-size:0.92rem; font-weight:800;">1. Síntesis Diagnóstica Canon 2026 de Cohesión & Estabilidad Red [${gtc.toUpperCase()}]</h4>
                 <p style="font-size:0.78rem; line-height:1.6; margin:0; color:#e2e8f0;">
-                    El análisis de la sociomatriz relacional SMIb para la configuración <b>${gtc.toUpperCase()}</b> evidencia una estructura socio-termodinámica caracterizada por un equilibrio dinámico entre la Densidad Absoluta (<b>BDR = ${bdrVal}</b>) y la Densidad Relativa (<b>SDR = ${sdrVal}</b>). Las trayectorias de elección reflejan una masa gravitatoria relacional estable con bajo nivel de fricción atractiva y óptima integración sociométrica.
+                    El análisis de la sociomatriz relacional SMIb para la configuración <b>${gtc.toUpperCase()}</b> evidencia una estructura socio-termodinámica con equilibrio entre la Densidad Bruta (<b>BDR = ${bdrVal}</b>) y la Densidad Relativa (<b>SDR = ${sdrVal}</b>). La <b>Inercia de Desgaste</b> se establece en <b>I<sub>desgaste</sub> = ${(Math.max(0, (parseFloat(bdrVal)||0) - (parseFloat(sdrVal)||0))).toFixed(3)}</b> (tasa disipativa por fricción: ${(parseFloat(bdrVal)>0 ? ((((parseFloat(bdrVal)||0)-(parseFloat(sdrVal)||0))/(parseFloat(bdrVal)||1))*100).toFixed(1)+'%':'0.0%')}), anclada a la escala porcentual canónica [0.0%, 100.0%] con Nivel del Mar basal en 50.0%.
                 </p>
             </div>
             ` : ''}

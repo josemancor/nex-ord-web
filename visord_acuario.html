@@ -199,6 +199,55 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 245, 212, 0.25);
       pointer-events: auto;
     }
+
+    /* =========================================================================
+       SISTEMA UNIVERSAL DE LUCES LED (VERDE / ROJO) PARA CONTROLES DE ACCIÓN
+       ========================================================================= */
+    .led-indicator {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+      flex-shrink: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .led-on {
+      background-color: #00FF87 !important;
+      box-shadow: 0 0 10px #00FF87, 0 0 18px rgba(0, 255, 135, 0.9) !important;
+      border: 1px solid #FFFFFF !important;
+    }
+    .led-off {
+      background-color: #EF4444 !important;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.7) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      opacity: 0.8 !important;
+    }
+    .led-pulse {
+      animation: led-blink 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes led-blink {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      100% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 14px #00FF87, 0 0 24px rgba(0, 255, 135, 1); }
+    }
+
+    .master-action-banner {
+      background: rgba(4, 20, 44, 0.96);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 2px solid #00FF87;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 255, 135, 0.45);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .master-action-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 255, 135, 0.75);
+    }
+    .master-action-banner.paused {
+      border-color: #EF4444 !important;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.4) !important;
+    }
   </style>
 </head>
 <body class="p-2 md:p-3.5 pb-24">
@@ -224,7 +273,13 @@
 
       <!-- Accesos Rápidos de Cabecera -->
       <div class="flex items-center gap-2.5 flex-wrap">
-        <button id="btn-audio-toggle" onclick="toggleAudio()" class="action-btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-teal-950 text-teal-300 border-2 border-teal-500/60 hover:bg-teal-900/80 shadow-sm shadow-teal-500/20" title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal">
+        <!-- BOTÓN MAESTRO DE ACCIÓN PROMINENTE EN CABECERA -->
+        <button id="btn-master-top" onclick="toggleMasterDynamics()" class="action-btn px-4 py-1.5 rounded-xl text-xs font-black flex items-center gap-2 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-md shadow-emerald-500/30 hover:scale-105" title="Iniciar / Detener Movimiento Dinámico del Acuario">
+          <span class="led-indicator led-on led-pulse" id="led-master-top"></span>
+          <span id="lbl-master-top">ACCIÓN: EN MOVIMIENTO</span>
+        </button>
+        <button id="btn-audio-toggle" onclick="toggleAudio()" class="action-btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-slate-900 text-slate-300 border-2 border-slate-700 hover:bg-slate-800 shadow-sm" title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal">
+          <span class="led-indicator led-off" id="led-audio"></span>
           <span id="audio-icon" class="text-sm">🔇</span> <span id="audio-label">AUDIO: OFF</span>
         </button>
         <button onclick="togglePedagogicModal()" class="action-btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-sky-950 text-sky-200 border-2 border-sky-500/60 hover:bg-sky-900/80 shadow-sm shadow-sky-500/20" title="Consultar Guía Pedagógica del Acuario">
@@ -258,22 +313,90 @@
           <span class="mono text-xs px-2.5 py-0.5 rounded-full bg-teal-950 text-teal-300 font-extrabold border border-teal-400" id="badge-current-n">N = 5</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-2">
-          <!-- 3x3 -->
-          <button onclick="loadScenario('3x3')" id="btn-scen-3x3" class="btn-scenario action-btn flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-teal-500/40 bg-slate-900/90 text-slate-100 hover:border-teal-300 shadow-sm">
-            <span class="outfit font-black text-base text-teal-300">3×3</span>
-            <span class="text-[10px] mono text-slate-300 font-bold mt-0.5">Tríada Micro</span>
+        <!-- =========================================================================
+             A) 3 EJERCICIOS DE EXPLORACIÓN Y APRENDIZAJE DE SERIE (JUGUETES DIDÁCTICOS)
+             ========================================================================= -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-[11px] font-black mono text-emerald-300 border-b border-emerald-500/30 pb-1">
+            <span class="flex items-center gap-1.5"><span>📚</span> 3 EJERCICIOS DE SERIE (EXPLORACIÓN)</span>
+            <span class="text-[9px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-500/40">Activos</span>
+          </div>
+
+          <!-- EJERCICIO 1: COHESIÓN Y DINÁMICA FLUIDA -->
+          <button onclick="loadScenario('20x20')" id="btn-scen-20x20" class="btn-scenario active action-btn flex items-center justify-between p-2.5 rounded-xl border-2 border-emerald-400 bg-emerald-950 text-slate-100 shadow-md shadow-emerald-500/25">
+            <div class="flex items-center gap-2">
+              <span class="led-indicator led-on" id="led-scen-20x20"></span>
+              <div class="text-left">
+                <div class="outfit font-black text-xs text-emerald-300">EJERCICIO 1: Dinámica Cohesiva Canónica</div>
+                <div class="text-[9.5px] text-slate-300 mono">Flotabilidad Z_mar, Baricentro y 6 Prismas</div>
+              </div>
+            </div>
+            <span class="text-[10px] mono text-emerald-300 font-black bg-emerald-900/70 px-2 py-0.5 rounded-full border border-emerald-500/50">N=20</span>
           </button>
-          <!-- 5x5 Canónico -->
-          <button onclick="loadScenario('5x5')" id="btn-scen-5x5" class="btn-scenario active action-btn flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-teal-400 bg-teal-950 text-slate-100 hover:border-teal-300 shadow-md shadow-teal-500/20">
-            <span class="outfit font-black text-base text-teal-300">5×5</span>
-            <span class="text-[10px] mono text-emerald-400 font-extrabold mt-0.5">5 Arquetipos</span>
+
+          <!-- EJERCICIO 2: FACCIONES Y BIPOLARIDAD -->
+          <button onclick="loadScenario('simul_02')" id="btn-scen-simul_02" class="btn-scenario action-btn flex items-center justify-between p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/90 text-slate-100 hover:border-teal-400">
+            <div class="flex items-center gap-2">
+              <span class="led-indicator led-off" id="led-scen-simul_02"></span>
+              <div class="text-left">
+                <div class="outfit font-black text-xs text-teal-300">EJERCICIO 2: Facciones & Polarización Bipolar</div>
+                <div class="text-[9.5px] text-slate-300 mono">Conflicto intergrupal [Rr] y Nodos Puente</div>
+              </div>
+            </div>
+            <span class="text-[10px] mono text-teal-300 font-black bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">N=12</span>
           </button>
-          <!-- 9x9 -->
-          <button onclick="loadScenario('9x9')" id="btn-scen-9x9" class="btn-scenario action-btn flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-teal-500/40 bg-slate-900/90 text-slate-100 hover:border-teal-300 shadow-sm">
-            <span class="outfit font-black text-base text-teal-300">9×9</span>
-            <span class="text-[10px] mono text-slate-300 font-bold mt-0.5">Red Meso</span>
+
+          <!-- EJERCICIO 3: ASFIXIA POR HALO Y AUTOCRACIA -->
+          <button onclick="loadScenario('simul_03')" id="btn-scen-simul_03" class="btn-scenario action-btn flex items-center justify-between p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/90 text-slate-100 hover:border-teal-400">
+            <div class="flex items-center gap-2">
+              <span class="led-indicator led-off" id="led-scen-simul_03"></span>
+              <div class="text-left">
+                <div class="outfit font-black text-xs text-rose-300">EJERCICIO 3: Diagnóstico de Asfixia por Halo</div>
+                <div class="text-[9.5px] text-slate-300 mono">Alerta BDF/BDC &lt; 0.40 y Parálisis Fáctica</div>
+              </div>
+            </div>
+            <span class="text-[10px] mono text-rose-300 font-black bg-rose-950/70 px-2 py-0.5 rounded-full border border-rose-500/50">N=8</span>
           </button>
+        </div>
+
+        <!-- =========================================================================
+             B) CASOS CULTURALES Y DE ARQUETIPO COMPLEMENTARIOS (DE SERIE)
+             ========================================================================= -->
+        <div class="mt-1 flex flex-col gap-1.5 bg-slate-950/60 p-2 rounded-xl border border-slate-800">
+          <div class="flex items-center justify-between text-[10px] font-bold mono text-slate-400">
+            <span>🏛️ CASOS CULTURALES DE SERIE:</span>
+            <span>Obras Maestras</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1 text-xs mono">
+            <button onclick="loadScenario('hombres12')" id="btn-scen-hombres12" class="action-btn p-1.5 rounded-lg border border-slate-700 bg-slate-900 text-slate-200 text-center font-bold text-[9.5px] hover:border-teal-400" title="12 Hombres sin Piedad (N=12)">
+              <span class="led-indicator led-off" id="led-scen-hombres12"></span> 12 Hombres
+            </button>
+            <button onclick="loadScenario('lorca')" id="btn-scen-lorca" class="action-btn p-1.5 rounded-lg border border-slate-700 bg-slate-900 text-slate-200 text-center font-bold text-[9.5px] hover:border-teal-400" title="La Casa de Bernarda Alba (N=8)">
+              <span class="led-indicator led-off" id="led-scen-lorca"></span> Bernarda Alba
+            </button>
+            <button onclick="loadScenario('moscas')" id="btn-scen-moscas" class="action-btn p-1.5 rounded-lg border border-slate-700 bg-slate-900 text-slate-200 text-center font-bold text-[9.5px] hover:border-teal-400" title="El Señor de las Moscas (N=9)">
+              <span class="led-indicator led-off" id="led-scen-moscas"></span> Moscas
+            </button>
+          </div>
+        </div>
+
+        <!-- Matriz Personalizada Cargada dinámicamente -->
+        <button onclick="loadScenario('custom')" id="btn-scen-custom" class="btn-scenario action-btn hidden flex items-center justify-between p-2.5 rounded-xl border-2 border-cyan-400 bg-cyan-950 text-slate-100 shadow-md shadow-cyan-500/25">
+          <div class="flex items-center gap-2">
+            <span class="led-indicator led-on" id="led-scen-custom"></span>
+            <span class="outfit font-black text-sm text-cyan-300" id="lbl-scen-custom">MATRIZ EXTERNA CARGADA</span>
+          </div>
+          <span class="text-[10px] mono text-cyan-300 font-black bg-cyan-900/70 px-2 py-0.5 rounded-full border border-cyan-500/50" id="badge-scen-custom">N=?</span>
+        </button>
+
+        <!-- BOTÓN ESPECIAL DISCRETO (SIN LEYENDA, PIDE CLAVE PARA CARGA LOCAL) -->
+        <div class="mt-2 flex items-center justify-end">
+          <button onclick="triggerSpecialLoadAcuario()" id="btn-special-load" style="background: transparent; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); border-radius: 8px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; opacity: 0.35;" onmouseover="this.style.opacity='0.85'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="if(!this.classList.contains('unlocked')){this.style.opacity='0.35'; this.style.borderColor='rgba(255,255,255,0.08)';}">
+            <span id="icon-special-load" style="font-size:11px;">🔒</span>
+          </button>
+          <input type="file" id="file-input-smib" accept=".json,.csv,.smib,.txt" class="hidden" onchange="handleSmibFileLoad(event)">
+        </div>
+        </div>
         </div>
 
         <div class="bg-slate-950/80 p-2.5 rounded-xl border border-teal-900/50">
@@ -293,16 +416,16 @@
           <span class="mono text-xs px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-300 border border-sky-400 font-extrabold shadow-sm" id="badge-step-status">TODOS</span>
         </div>
 
-        <!-- Selector de Perspectiva Relacional: DUAL, DA, RC -->
+        <!-- Selector de Perspectiva Relacional: DUAL, DA, RC (Con LEDs de Actividad) -->
         <div class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border-2 border-sky-900/60 text-xs mono">
-          <button onclick="setPerspectiveMode('DUAL')" id="btn-persp-dual" class="btn-mode active flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition" title="Ver tanto lo que el sujeto da como lo que recibe">
-            DUAL (DA+RC)
+          <button onclick="setPerspectiveMode('DUAL')" id="btn-persp-dual" class="btn-mode active flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition flex items-center justify-center gap-1" title="Ver tanto lo que el sujeto da como lo que recibe">
+            <span class="led-indicator led-on" id="led-persp-dual"></span> DUAL
           </button>
-          <button onclick="setPerspectiveMode('DA')" id="btn-persp-da" class="btn-mode flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-amber-300" title="Ver solo lo que el sujeto emite / da (lazos salientes)">
-            EMISIÓN (DA)
+          <button onclick="setPerspectiveMode('DA')" id="btn-persp-da" class="btn-mode flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-slate-300 flex items-center justify-center gap-1" title="Ver solo lo que el sujeto emite / da (lazos salientes)">
+            <span class="led-indicator led-off" id="led-persp-da"></span> EMISIÓN (DA)
           </button>
-          <button onclick="setPerspectiveMode('RC')" id="btn-persp-rc" class="btn-mode flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-cyan-300" title="Ver solo lo que el sujeto recibe del colectivo (lazos entrantes)">
-            RECEPCIÓN (RC)
+          <button onclick="setPerspectiveMode('RC')" id="btn-persp-rc" class="btn-mode flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-slate-300 flex items-center justify-center gap-1" title="Ver solo lo que el sujeto recibe del colectivo (lazos entrantes)">
+            <span class="led-indicator led-off" id="led-persp-rc"></span> RECEPCIÓN (RC)
           </button>
         </div>
 
@@ -310,8 +433,9 @@
         <div class="flex items-center justify-between gap-1.5 bg-slate-950 p-2 rounded-xl border border-slate-800">
           <button onclick="stepFirst()" class="action-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-slate-200 border border-slate-700 hover:text-white font-bold" title="Primer sujeto (Inicio)">⏮</button>
           <button onclick="stepPrev()" class="action-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-100 border border-slate-700 hover:border-teal-400 text-xs font-bold" title="Sujeto anterior">◀ Anterior</button>
-          <button onclick="toggleStepAutoPlay()" id="btn-step-play" class="action-btn px-3 py-1.5 rounded-lg bg-teal-500/30 text-teal-300 border-2 border-teal-400 hover:bg-teal-500/50 text-xs font-black flex items-center gap-1.5 shadow-sm shadow-teal-500/30" title="Reproducir proceso sujeto a sujeto automáticamente">
-            <span id="play-step-icon" class="text-sm">⏯</span> <span id="play-step-label">Auto Proceso</span>
+          <button onclick="toggleStepAutoPlay()" id="btn-step-play" class="action-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 border-2 border-slate-700 hover:border-teal-400 text-xs font-bold flex items-center gap-1.5 shadow-sm" title="Reproducir proceso sujeto a sujeto automáticamente">
+            <span class="led-indicator led-off" id="led-step-play"></span>
+            <span id="play-step-icon" class="text-sm">⏯</span> <span id="play-step-label">Sujetos Auto</span>
           </button>
           <button onclick="stepNext()" class="action-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-100 border border-slate-700 hover:border-teal-400 text-xs font-bold" title="Siguiente sujeto">Siguiente ▶</button>
           <button onclick="stepAll()" class="action-btn px-3 py-1.5 rounded-lg bg-sky-950 text-sky-300 border border-sky-500 hover:bg-sky-900 text-xs font-extrabold shadow-sm" title="Ver todos a la vez">Todos</button>
@@ -335,27 +459,27 @@
 
         <div class="grid grid-cols-2 gap-2 text-xs mono">
           <button onclick="filterFigure('ALL')" id="btn-fig-all" class="btn-fig active p-2 rounded-xl border-2 border-slate-600 bg-slate-900 text-slate-100 text-left flex items-center justify-between font-bold">
-            <span>🌐 Todas las Figuras</span>
+            <span class="flex items-center"><span class="led-indicator led-on" id="led-fig-all"></span>🌐 Todas</span>
             <span class="font-black text-teal-300 ml-1" id="cnt-fig-all">--</span>
           </button>
-          <button onclick="filterFigure('MUTUAL_CHOICE')" id="btn-fig-ee" class="btn-fig p-2 rounded-xl border-2 border-emerald-500/50 bg-emerald-950/50 text-emerald-300 text-left flex items-center justify-between font-bold">
-            <span>🟢 Elección Mútua &lt;Ee&gt;</span>
+          <button onclick="filterFigure('MUTUAL_CHOICE')" id="btn-fig-ee" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900 text-slate-300 text-left flex items-center justify-between font-bold">
+            <span class="flex items-center"><span class="led-indicator led-off" id="led-fig-ee"></span>🟢 Elección &lt;Ee&gt;</span>
             <span class="font-black ml-1" id="cnt-fig-ee">--</span>
           </button>
-          <button onclick="filterFigure('MUTUAL_REJECT')" id="btn-fig-rr" class="btn-fig p-2 rounded-xl border-2 border-rose-500/50 bg-rose-950/50 text-rose-300 text-left flex items-center justify-between font-bold">
-            <span>🔴 Rechazo Mútuo [Rr]</span>
+          <button onclick="filterFigure('MUTUAL_REJECT')" id="btn-fig-rr" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900 text-slate-300 text-left flex items-center justify-between font-bold">
+            <span class="flex items-center"><span class="led-indicator led-off" id="led-fig-rr"></span>🔴 Rechazo [Rr]</span>
             <span class="font-black ml-1" id="cnt-fig-rr">--</span>
           </button>
-          <button onclick="filterFigure('OPPOSITION')" id="btn-fig-opp" class="btn-fig p-2 rounded-xl border-2 border-amber-500/50 bg-amber-950/50 text-amber-300 text-left flex items-center justify-between font-bold">
-            <span>🟠 Oposición &lt;Er] / [Re&gt;</span>
+          <button onclick="filterFigure('OPPOSITION')" id="btn-fig-opp" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900 text-slate-300 text-left flex items-center justify-between font-bold">
+            <span class="flex items-center"><span class="led-indicator led-off" id="led-fig-opp"></span>🟠 Oposición</span>
             <span class="font-black ml-1" id="cnt-fig-opp">--</span>
           </button>
-          <button onclick="filterFigure('HALO_EXPECT')" id="btn-fig-halo" class="btn-fig p-2 rounded-xl border-2 border-cyan-500/50 bg-cyan-950/50 text-cyan-300 text-left flex items-center justify-between font-bold">
-            <span>🔵 Conjeturas (pDA/pRC)</span>
+          <button onclick="filterFigure('HALO_EXPECT')" id="btn-fig-halo" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900 text-slate-300 text-left flex items-center justify-between font-bold">
+            <span class="flex items-center"><span class="led-indicator led-off" id="led-fig-halo"></span>🔵 Conjeturas</span>
             <span class="font-black ml-1" id="cnt-fig-halo">--</span>
           </button>
-          <button onclick="filterFigure('NEUTRAL')" id="btn-fig-neu" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900/70 text-slate-300 text-left flex items-center justify-between font-bold">
-            <span>⚪ Neutral / Cero [0000]</span>
+          <button onclick="filterFigure('NEUTRAL')" id="btn-fig-neu" class="btn-fig p-2 rounded-xl border-2 border-slate-700 bg-slate-900 text-slate-300 text-left flex items-center justify-between font-bold">
+            <span class="flex items-center"><span class="led-indicator led-off" id="led-fig-neu"></span>⚪ Neutro [0]</span>
             <span class="font-black ml-1" id="cnt-fig-neu">--</span>
           </button>
         </div>
@@ -433,12 +557,20 @@
           </div>
         </div>
 
-        <!-- Filtro de Capas Visuales -->
+        <!-- Filtro de Capas Visuales (Con LEDs) -->
         <div class="flex items-center gap-1.5 text-xs mono mt-1">
-          <button onclick="setLayerVisibility('ALL')" id="layer-btn-all" class="flex-1 py-1.5 rounded-lg bg-teal-950 text-teal-300 border-2 border-teal-500/60 font-black shadow-sm">Todo</button>
-          <button onclick="setLayerVisibility('CORE')" id="layer-btn-core" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-200 border border-slate-700 font-bold hover:text-white">Solo Núcleos</button>
-          <button onclick="setLayerVisibility('HALO')" id="layer-btn-halo" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-200 border border-slate-700 font-bold hover:text-white">Solo Halos</button>
-          <button onclick="setLayerVisibility('FLOW')" id="layer-btn-flow" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-200 border border-slate-700 font-bold hover:text-white">Solo Flujos</button>
+          <button onclick="setLayerVisibility('ALL')" id="layer-btn-all" class="flex-1 py-1.5 rounded-lg bg-teal-950 text-teal-300 border-2 border-teal-500/60 font-black shadow-sm flex items-center justify-center">
+            <span class="led-indicator led-on" id="led-layer-all"></span> Todo
+          </button>
+          <button onclick="setLayerVisibility('CORE')" id="layer-btn-core" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 font-bold hover:text-white flex items-center justify-center">
+            <span class="led-indicator led-off" id="led-layer-core"></span> Núcleos
+          </button>
+          <button onclick="setLayerVisibility('HALO')" id="layer-btn-halo" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 font-bold hover:text-white flex items-center justify-center">
+            <span class="led-indicator led-off" id="led-layer-halo"></span> Halos
+          </button>
+          <button onclick="setLayerVisibility('FLOW')" id="layer-btn-flow" class="flex-1 py-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 font-bold hover:text-white flex items-center justify-center">
+            <span class="led-indicator led-off" id="led-layer-flow"></span> Flujos
+          </button>
         </div>
       </section>
 
@@ -449,8 +581,9 @@
             <span class="text-base">🎥</span>
             <h2 class="text-xs font-black uppercase tracking-wider text-slate-200 outfit">6. CÁMARA 360º & VISTAS</h2>
           </div>
-          <button onclick="toggleAutoRotate()" id="btn-autorotate" class="action-btn px-2.5 py-1 rounded-lg text-xs mono font-black bg-teal-950 text-teal-300 border border-teal-500">
-            🔄 Auto 360º: ON
+          <button onclick="toggleAutoRotate()" id="btn-autorotate" class="action-btn px-2.5 py-1 rounded-lg text-xs mono font-black bg-teal-950 text-teal-300 border-2 border-teal-400 flex items-center gap-1.5 shadow-sm">
+            <span class="led-indicator led-on" id="led-autorotate"></span>
+            <span id="lbl-autorotate">🔄 Auto 360º: ON</span>
           </button>
         </div>
 
@@ -481,7 +614,43 @@
       <div class="containment-frame flex-1 min-h-[580px] lg:min-h-[640px] flex flex-col relative select-none">
         
         <!-- Canvas de Three.js -->
+        <!-- Canvas de Three.js -->
         <div id="three-viewport" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"></div>
+        
+        <!-- DROP OVERLAY PARA ARRASTRAR Y SOLTAR MATRICES SMIb DIRECTAMENTE -->
+        <div id="smib-drop-overlay" class="absolute inset-0 bg-teal-950/80 border-4 border-dashed border-teal-400 z-50 flex flex-col items-center justify-center gap-3 text-white pointer-events-none hidden backdrop-blur-sm transition-all">
+          <span class="text-5xl animate-bounce">📂</span>
+          <span class="text-lg font-black mono text-teal-300">SOLTAR ARCHIVO PARA INGESTAR MATRIZ SMIb</span>
+          <span class="text-xs text-slate-300 mono">Formatos compatibles: .json, .csv, .smib, .txt (Siempre partiendo de SMIb)</span>
+        </div>
+
+        <!-- NOTIFICACIÓN TOAST FLOTANTE DE CARGA DE MATRIZ -->
+        <div id="smib-toast-notification" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-40 px-5 py-3 rounded-2xl bg-slate-950/95 border-2 border-teal-400 text-teal-300 mono font-black text-xs md:text-sm shadow-2xl flex items-center gap-3 pointer-events-none opacity-0 transition-opacity duration-300">
+          <span class="led-indicator led-on"></span>
+          <span id="smib-toast-text">MATRIZ SMIb PROCESADA CON ÉXITO</span>
+        </div>
+
+        <!-- =========================================================================
+             BARRA MAESTRA FLOTANTE DE ACCIÓN Y MOVIMIENTO EN EL ACUARIO 3D (SUPER DESTACADA)
+             ========================================================================= -->
+        <div class="absolute top-3.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 pointer-events-auto flex-wrap justify-center max-w-[95%]">
+          <button id="btn-master-dynamics" onclick="toggleMasterDynamics()" class="master-action-banner px-5 py-2.5 rounded-2xl font-black text-xs md:text-sm mono text-white flex items-center gap-3 cursor-pointer">
+            <span class="led-indicator led-on led-pulse" id="led-master-dynamics"></span>
+            <span id="txt-master-dynamics" class="tracking-wider font-black">⚡ ACTION ! ACUARIO EN MOVIMIENTO</span>
+          </button>
+          
+          <button id="btn-dyad-scanner" onclick="toggleDyadScanner()" class="hud-float px-4 py-2.5 rounded-2xl font-black text-xs mono text-cyan-200 border-2 border-cyan-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-cyan-200">
+            <span class="led-indicator led-on" id="led-dyad-scanner"></span>
+            <span id="txt-dyad-scanner">ACTION ! SCAN DÍADAS</span>
+          </button>
+
+          <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono flex items-center gap-1.5 border border-slate-700">
+            <span class="text-slate-400 text-[10px]">VEL:</span>
+            <button onclick="setDyadSpeed(1)" id="spd-1x" class="px-2 py-0.5 rounded font-black text-teal-300 bg-teal-950 border border-teal-500">1x</button>
+            <button onclick="setDyadSpeed(2)" id="spd-2x" class="px-2 py-0.5 rounded font-bold text-slate-300 hover:text-white">2x</button>
+            <button onclick="setDyadSpeed(4)" id="spd-4x" class="px-2 py-0.5 rounded font-bold text-slate-300 hover:text-white">4x</button>
+          </div>
+        </div>
 
         <!-- HUD SUPERIOR EN ESCENA: Identificación del Régimen -->
         <div class="absolute top-3.5 left-3.5 flex items-center gap-2 pointer-events-none z-10 flex-wrap">
@@ -712,6 +881,524 @@
        1. DEFINICIÓN DE PRESETS CANÓNICOS DE SOCIOMATRICES SMIb
        ========================================================================= */
     const PRESETS = {
+      '20x20': {
+        "name": "Grupo Can\u00f3nico G1T2C2 (N=20)",
+        "desc": "Dataset emp\u00edrico can\u00f3nico: N=20 sujetos, 380 d\u00edadas, Criterio L\u00fadico, T2. Densidad Grupal 10.24% (Saldo -39.76%), Reciprocidad rho=0.784, Inercia de Desgaste I=216.0 (27.20%). 6 Prismas opuestos 2 a 2 e invarianza baric\u00e9ntrica perfecta (SDR=578.0).",
+        "subjects": [
+                "B1",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
+                "B7",
+                "B8",
+                "B9",
+                "B10",
+                "B11",
+                "B12",
+                "B13",
+                "B14",
+                "B15",
+                "B16",
+                "B17",
+                "B18",
+                "B19",
+                "B20"
+        ],
+        "matrix": [
+                [
+                        "0000",
+                        "-0+0",
+                        "0000",
+                        "000+",
+                        "0+00",
+                        "0++0",
+                        "00+0",
+                        "+0+0",
+                        "0-+0",
+                        "0--0",
+                        "+0-0",
+                        "00+0",
+                        "0-+0",
+                        "0+0-",
+                        "0000",
+                        "-000",
+                        "00+0",
+                        "0+0+",
+                        "+00-",
+                        "0000"
+                ],
+                [
+                        "0+0-",
+                        "0000",
+                        "00-0",
+                        "+0+0",
+                        "000+",
+                        "0--0",
+                        "0++0",
+                        "000+",
+                        "-00+",
+                        "+0+0",
+                        "000+",
+                        "0+00",
+                        "0+00",
+                        "00+0",
+                        "-0+0",
+                        "+0+0",
+                        "0-0-",
+                        "0-00",
+                        "00-0",
+                        "00+0"
+                ],
+                [
+                        "0000",
+                        "0-00",
+                        "0000",
+                        "0000",
+                        "0-0-",
+                        "+000",
+                        "0000",
+                        "0++0",
+                        "+0+0",
+                        "0+00",
+                        "0+-0",
+                        "00-0",
+                        "0+0+",
+                        "00-0",
+                        "000+",
+                        "-000",
+                        "+000",
+                        "-000",
+                        "0-+0",
+                        "0000"
+                ],
+                [
+                        "+000",
+                        "0+0+",
+                        "0000",
+                        "0000",
+                        "0-+0",
+                        "000+",
+                        "00-0",
+                        "0-00",
+                        "-00+",
+                        "0000",
+                        "0+00",
+                        "-000",
+                        "+000",
+                        "+000",
+                        "0+00",
+                        "0++0",
+                        "0-00",
+                        "00-0",
+                        "0000",
+                        "00+0"
+                ],
+                [
+                        "00+0",
+                        "+000",
+                        "-0-0",
+                        "0+-0",
+                        "0000",
+                        "00-0",
+                        "0+00",
+                        "0-0-",
+                        "0000",
+                        "00+0",
+                        "000+",
+                        "0+0+",
+                        "-000",
+                        "0+-0",
+                        "+0-0",
+                        "00-0",
+                        "+0-0",
+                        "0-00",
+                        "0-0+",
+                        "000-"
+                ],
+                [
+                        "0++0",
+                        "0--0",
+                        "000+",
+                        "+000",
+                        "0-00",
+                        "0000",
+                        "0000",
+                        "0+00",
+                        "00-0",
+                        "+0-0",
+                        "000-",
+                        "+0+0",
+                        "00-0",
+                        "0+0+",
+                        "-00+",
+                        "0+0+",
+                        "-00+",
+                        "0-0+",
+                        "0000",
+                        "0000"
+                ],
+                [
+                        "0+00",
+                        "0++0",
+                        "0000",
+                        "0-00",
+                        "00+0",
+                        "0000",
+                        "0000",
+                        "+000",
+                        "-00-",
+                        "0000",
+                        "-0+0",
+                        "+00-",
+                        "000-",
+                        "0+0+",
+                        "0-+0",
+                        "0-00",
+                        "0000",
+                        "+00-",
+                        "0+00",
+                        "00-0"
+                ],
+                [
+                        "0+0+",
+                        "+000",
+                        "0++0",
+                        "00-0",
+                        "-0-0",
+                        "00+0",
+                        "000+",
+                        "0000",
+                        "0-00",
+                        "0+0-",
+                        "+000",
+                        "0-00",
+                        "00+0",
+                        "+000",
+                        "0--0",
+                        "00-0",
+                        "0++0",
+                        "-0+0",
+                        "000+",
+                        "000+"
+                ],
+                [
+                        "0+-0",
+                        "+00-",
+                        "0+0+",
+                        "+00-",
+                        "0000",
+                        "0-00",
+                        "-00-",
+                        "00-0",
+                        "0000",
+                        "0-0+",
+                        "00+0",
+                        "0+-0",
+                        "000+",
+                        "00+0",
+                        "+000",
+                        "0-00",
+                        "000+",
+                        "-0+0",
+                        "0++0",
+                        "0000"
+                ],
+                [
+                        "0--0",
+                        "0+0+",
+                        "00+0",
+                        "0000",
+                        "0+00",
+                        "0-0+",
+                        "0000",
+                        "-0+0",
+                        "+0-0",
+                        "0000",
+                        "0++0",
+                        "000-",
+                        "0-00",
+                        "0++0",
+                        "+000",
+                        "+00-",
+                        "000+",
+                        "-0-0",
+                        "00-0",
+                        "000+"
+                ],
+                [
+                        "0-0+",
+                        "+000",
+                        "0-+0",
+                        "00+0",
+                        "+000",
+                        "-000",
+                        "0+0-",
+                        "000+",
+                        "0+00",
+                        "0++0",
+                        "0000",
+                        "0000",
+                        "00-0",
+                        "+000",
+                        "000-",
+                        "0+00",
+                        "0000",
+                        "-0+0",
+                        "0-0+",
+                        "0000"
+                ],
+                [
+                        "0+00",
+                        "00+0",
+                        "0-00",
+                        "000-",
+                        "+0+0",
+                        "0+0+",
+                        "-00+",
+                        "00-0",
+                        "0-+0",
+                        "-000",
+                        "0000",
+                        "0000",
+                        "0+00",
+                        "00+0",
+                        "00+0",
+                        "+00+",
+                        "0+0-",
+                        "+000",
+                        "0-00",
+                        "00+0"
+                ],
+                [
+                        "0+-0",
+                        "00+0",
+                        "+0+0",
+                        "000+",
+                        "000-",
+                        "0-00",
+                        "-000",
+                        "0+00",
+                        "+000",
+                        "00-0",
+                        "0-00",
+                        "00+0",
+                        "0000",
+                        "+00+",
+                        "0+0+",
+                        "-00-",
+                        "0+00",
+                        "0-00",
+                        "00+0",
+                        "000-"
+                ],
+                [
+                        "-0+0",
+                        "0+00",
+                        "0-00",
+                        "000+",
+                        "0-+0",
+                        "+0+0",
+                        "+0+0",
+                        "000+",
+                        "0+00",
+                        "0++0",
+                        "000+",
+                        "0+00",
+                        "+00+",
+                        "0000",
+                        "00+0",
+                        "00+0",
+                        "-0+0",
+                        "000-",
+                        "0--0",
+                        "00-0"
+                ],
+                [
+                        "0000",
+                        "0+0-",
+                        "+000",
+                        "00+0",
+                        "0-0+",
+                        "+00-",
+                        "0+-0",
+                        "0--0",
+                        "000+",
+                        "000+",
+                        "-000",
+                        "0+00",
+                        "+0+0",
+                        "0+00",
+                        "0000",
+                        "0-+0",
+                        "0000",
+                        "-000",
+                        "000-",
+                        "000+"
+                ],
+                [
+                        "000-",
+                        "0+0+",
+                        "000-",
+                        "0++0",
+                        "0-00",
+                        "+0+0",
+                        "00-0",
+                        "0-00",
+                        "00-0",
+                        "-00+",
+                        "00+0",
+                        "+00+",
+                        "-00-",
+                        "0+00",
+                        "0+-0",
+                        "0000",
+                        "00-0",
+                        "+0-0",
+                        "0-+0",
+                        "0000"
+                ],
+                [
+                        "0+00",
+                        "-0-0",
+                        "000+",
+                        "00-0",
+                        "0-0+",
+                        "+00-",
+                        "0000",
+                        "0++0",
+                        "+000",
+                        "+000",
+                        "0000",
+                        "-0+0",
+                        "00+0",
+                        "0+0-",
+                        "0000",
+                        "0-00",
+                        "0000",
+                        "0-+0",
+                        "0+00",
+                        "0000"
+                ],
+                [
+                        "+0+0",
+                        "00-0",
+                        "000-",
+                        "0-00",
+                        "00-0",
+                        "+0-0",
+                        "-00+",
+                        "0+0-",
+                        "0+0-",
+                        "0-0-",
+                        "0+0-",
+                        "000+",
+                        "00-0",
+                        "-000",
+                        "000-",
+                        "0-0+",
+                        "0+-0",
+                        "0000",
+                        "+000",
+                        "00+0"
+                ],
+                [
+                        "-00+",
+                        "0-00",
+                        "0+-0",
+                        "0000",
+                        "+0-0",
+                        "0000",
+                        "00+0",
+                        "+000",
+                        "0++0",
+                        "0-00",
+                        "+0-0",
+                        "00-0",
+                        "0+00",
+                        "0--0",
+                        "-000",
+                        "0+-0",
+                        "00+0",
+                        "000+",
+                        "0000",
+                        "00-0"
+                ],
+                [
+                        "0000",
+                        "0+00",
+                        "0000",
+                        "0+00",
+                        "-000",
+                        "0000",
+                        "0-00",
+                        "+000",
+                        "0000",
+                        "+000",
+                        "0000",
+                        "0+00",
+                        "-000",
+                        "0-00",
+                        "+000",
+                        "0000",
+                        "0000",
+                        "0+00",
+                        "0-00",
+                        "0000"
+                ]
+        ]
+},
+      
+      // 12 Hombres sin Piedad (HSPD, N=12) - Transcripción Factual SMIb
+      'hombres12': {
+        name: '12 Hombres sin Piedad - T1 (N=12)',
+        desc: 'Deliberación judicial paradigmática (12 jurados, 132 díadas). Votación inicial 11-1: J8 (Davis) sostiene la duda razonable en soledad frente a la inercia masiva punitiva de J3 y J10.',
+        subjects: ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8', 'J9', 'J10', 'J11', 'J12'],
+        matrix: [["0000", "0+00", "++-0", "0--0", "0--0", "0--0", "00-0", "0--0", "00--", "0000", "0000", "00-0"], ["00+0", "0000", "00-0", "++-0", "++++", "00+0", "00+0", "00++", "--++", "0000", "00+0", "00++"], ["0-++", "0-00", "0000", "0-+0", "++-0", "00-0", "0000", "0000", "00-0", "0-00", "0000", "0-00"], ["0--0", "0+++", "0-+0", "0000", "++--", "0--0", "00++", "0--0", "00--", "0000", "0-+0", "0-++"], ["0--0", "++++", "0-++", "++--", "0000", "0-++", "00-0", "0--0", "00--", "00++", "00++", "00++"], ["0--0", "0+00", "0-00", "0--0", "++-0", "0000", "0000", "0000", "0-00", "--00", "0000", "0000"], ["0-00", "0+00", "0000", "++00", "0-00", "0000", "0000", "0-00", "0000", "0000", "0000", "00-0"], ["0--0", "++00", "0000", "0--0", "0--0", "0000", "00-0", "0000", "00++", "--00", "0000", "0000"], ["--00", "++--", "0-00", "++00", "++00", "00-0", "0000", "++00", "0000", "0000", "0000", "0000"], ["0000", "0000", "00-0", "0000", "++00", "00--", "0000", "00--", "0000", "0000", "0000", "00-0"], ["0000", "0-00", "0000", "0--0", "++00", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0-00", "+-00", "00-0", "+-00", "++00", "0000", "0-00", "0000", "0000", "0-00", "0000", "0000"]]
+      },
+
+      // La Casa de Bernarda Alba (LCBA, N=8) - Acto I
+      'lorca': {
+        name: 'La Casa de Bernarda Alba - Acto I (N=8)',
+        desc: 'Ecosistema de dominación y represión en el encierro del luto de 8 años: Bernarda (S1) impone su tiranía formal con el bastón; red oculta de tensiones y celos por Pepe el Romano entre las hermanas y Adela (S6).',
+        subjects: ['Bernarda', 'Angustias', 'Magdalena', 'Amelia', 'Martirio', 'Adela', 'Poncia', 'M.Josefa'],
+        matrix: [["0000", "+---", "+---", "+---", "+---", "+---", "+-+-", "----"], ["-+++", "0000", "0000", "0000", "----", "----", "0000", "0000"], ["-+++", "0000", "0000", "++++", "0000", "+0+0", "0000", "0000"], ["-+++", "0000", "++++", "0000", "0000", "0000", "0000", "0000"], ["-+++", "----", "0000", "0000", "0000", "----", "-0-0", "0000"], ["-+++", "----", "+0+0", "0000", "----", "0000", "+0+0", "++++"], ["-+-+", "0000", "0000", "0000", "-0-0", "+0+0", "0000", "0000"], ["----", "0000", "0000", "0000", "0000", "++++", "0000", "0000"]]
+      },
+
+      // El Señor de las Moscas (N=9) - Asamblea
+      'moscas': {
+        name: 'El Señor de las Moscas - Asamblea (N=9)',
+        desc: 'Colapso democrático y tribalización: Ralph (S1) y Piggy (S3) sostienen la caracola y el fuego; Jack (S2) y Roger (S5) lideran la facción tribal de caza, escindiendo el colectivo.',
+        subjects: ['Ralph', 'Jack', 'Piggy', 'Simon', 'Roger', 'Sam', 'Eric', 'Maurice', 'Percival'],
+        matrix: [["0000", "+-+-", "++++", "++++", "+-+-", "++++", "++++", "+000", "+000"], ["+-+-", "0000", "----", "+-+-", "++++", "+-+-", "+-+-", "++++", "+000"], ["++++", "----", "0000", "++++", "----", "++++", "++++", "0000", "0000"], ["++++", "+-+-", "++++", "0000", "+-+-", "++++", "++++", "0000", "0000"], ["+-+-", "++++", "----", "+-+-", "0000", "+-+-", "+-+-", "++++", "0000"], ["++++", "+-+-", "++++", "++++", "+-+-", "0000", "++++", "0000", "0000"], ["++++", "+-+-", "++++", "++++", "+-+-", "++++", "0000", "0000", "0000"], ["+000", "++++", "0000", "0000", "++++", "0000", "0000", "0000", "0000"], ["+000", "+000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"]]
+      },
+
+      // Grupo Canónico G2T1C1 (N=5)
+      'g2t1c1': {
+        name: 'Grupo Canónico G2T1C1 (N=5)',
+        desc: 'Segundo grupo canónico del diseño multidimensional G2T1C1: 5 sujetos, 20 díadas, Criterio Tarea T1. Matriz empírica fáctica con roles instrumentales y fricción de liderazgo.',
+        subjects: ['1A', '2A', '3A', '4A', '5A'],
+        matrix: [["0000", "0++0", "0000", "0-00", "----"], ["0++0", "0000", "++++", "---0", "0-00"], ["0000", "++++", "0000", "----", "0--0"], ["00-0", "0---", "--00", "0000", "0++0"], ["----", "00-0", "0--0", "0++0", "0000"]]
+      },
+    
+      
+      // COMODÍN SIMULACIÓN 02 (Carpeta VISORES): Polarización y Facciones (N=12)
+      'simul_02': {
+        name: 'Polarización Intergrupal y Facciones Enfrentadas (N=12)',
+        desc: 'Estructura meso-grupal polarizada en dos facciones opuestas (1A..6A vs 7A..12A, 132 díadas). Alta cohesión intra-facción y fuerte antagonismo recíproco inter-facción ([Rr]), con los nodos 5A y 8A actuando como puentes en alta tensión dialéctica.',
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A", "10A", "11A", "12A"],
+        matrix: [["0000", "0+0+", "++++", "0++0", "++++", "0+0+", "----", "+-+-", "----", "0--0", "----", "0--0"], ["0+0+", "0000", "0++0", "++++", "0+0+", "++++", "0--0", "+-+-", "0--0", "----", "0--0", "----"], ["++++", "0++0", "0000", "0+0+", "++++", "0+0+", "----", "+-+-", "----", "0--0", "----", "0--0"], ["0++0", "++++", "0+0+", "0000", "0+0+", "++++", "0--0", "+-+-", "0--0", "----", "0--0", "----"], ["++++", "0+0+", "++++", "0+0+", "0000", "0++0", "+-+-", "+00-", "+-+-", "+-+-", "+-+-", "+-+-"], ["0+0+", "++++", "0+0+", "++++", "0++0", "0000", "0--0", "+-+-", "0--0", "----", "0--0", "----"], ["----", "0--0", "----", "0--0", "+-+-", "0--0", "0000", "0+0+", "++++", "0++0", "++++", "0+0+"], ["+-+-", "+-+-", "+-+-", "+-+-", "+00-", "+-+-", "0+0+", "0000", "0++0", "++++", "0+0+", "++++"], ["----", "0--0", "----", "0--0", "+-+-", "0--0", "++++", "0++0", "0000", "0+0+", "++++", "0+0+"], ["0--0", "----", "0--0", "----", "+-+-", "----", "0++0", "++++", "0+0+", "0000", "0+0+", "++++"], ["----", "0--0", "----", "0--0", "+-+-", "0--0", "++++", "0+0+", "++++", "0+0+", "0000", "0++0"], ["0--0", "----", "0--0", "----", "+-+-", "----", "0+0+", "++++", "0+0+", "++++", "0++0", "0000"]]
+      },
+
+      // COMODÍN SIMULACIÓN 03 (Carpeta VISORES): Asfixia por Halo y Autocracia (N=8)
+      'simul_03': {
+        name: 'Liderazgo Asimétrico y Asfixia por Halo (N=8)',
+        desc: 'Ecosistema autocrático con Asfixia por Halo (BDF/BDC = 0.28 < 0.40). La masa conjetural e imaginaria (A1, A4) aplasta a la interacción fáctica directa (A2, A3), provocando parálisis comunicativa y hundimiento masivo de subordinados.',
+        subjects: ["1A (L\u00edder)", "2A", "3A", "4A", "5A", "6A", "7A", "8A"],
+        matrix: [["0000", "+00-", "+00-", "+00-", "+00-", "+00-", "+00-", "+00-"], ["-00+", "0000", "+00-", "0000", "+00-", "0000", "0000", "0000"], ["-00+", "+00-", "0000", "0000", "0000", "+00-", "0000", "0000"], ["-00+", "0000", "0000", "0000", "+00-", "0000", "+00-", "0000"], ["-00+", "+00-", "0000", "+00-", "0000", "0000", "0000", "+00-"], ["-00+", "0000", "+00-", "0000", "0000", "0000", "+00-", "0000"], ["-00+", "0000", "0000", "+00-", "0000", "+00-", "0000", "0000"], ["-00+", "0000", "0000", "0000", "+00-", "0000", "0000", "0000"]]
+      },
+    
       // 3x3: Tríada Micro-Dialéctica
       '3x3': {
         name: 'Tríada Micro-Dialéctica (N=3)',
@@ -771,9 +1458,21 @@
     /* =========================================================================
        2. ESTADO GLOBAL DE LA APLICACIÓN
        ========================================================================= */
-    let currentScenarioKey = '5x5';
-    let currentMatrix = JSON.parse(JSON.stringify(PRESETS['5x5'].matrix));
-    let currentSubjects = [...PRESETS['5x5'].subjects];
+    let currentScenarioKey = '20x20';
+    let currentMatrix = JSON.parse(JSON.stringify(PRESETS['20x20'].matrix));
+    let currentSubjects = [...PRESETS['20x20'].subjects];
+
+    // =========================================================================
+    // VARIABLES DE DINÁMICA, ACCIÓN CONTINUA Y MOVIOLA DIÁDICA
+    // =========================================================================
+    let isMasterDynamicsRunning = true; // ACCIÓN POR DEFECTO AL ABRIR
+    let isDyadScannerRunning = true;    // ESCÁNER DE DÍADAS ACTIVO POR DEFECTO
+    let dyadScannerTimer = null;
+    let dyadScannerSpeed = 1; // 1x, 2x, 4x
+    let activeDyadIndex = 0;
+    let allDyadList = [];
+    let dyadParticleGroup = null;
+    let dyadParticleMeshes = [];
     let N = currentSubjects.length;
 
     // Perspectiva relacional: 'DUAL', 'DA', 'RC'
@@ -801,15 +1500,25 @@
     /* =========================================================================
        3. MATEMÁTICA Y CÁLCULO DE LAS 18 DENSIDADES (D18)
        ========================================================================= */
-    const VAL_MAP = { '+': 1.0, '0': 0.0, '-': -1.0 };
+    // Decodificación canónica SMIb conforme a la Regla Canónica 3:
+    // Mayúsculas = Positivo (+1.0), '0' o '?' o ' ' = Neutro (0.0), Minúsculas = Negativo (-1.0), Dígitos 1-9 = Positivo (+1.0)
+    function decodeSmibChar(ch) {
+      if (!ch || ch === '0' || ch === '?' || ch === ' ' || ch === '¡' || ch === '!') return 0.0;
+      if (ch === '+') return 1.0;
+      if (ch === '-') return -1.0;
+      if (ch >= 'A' && ch <= 'Z') return 1.0;
+      if (ch >= 'a' && ch <= 'z') return -1.0;
+      if (ch >= '1' && ch <= '9') return 1.0;
+      return 0.0;
+    }
 
     function parseSmibCell(cellStr) {
-      if (!cellStr || cellStr.length < 4) return [0, 0, 0, 0];
+      if (!cellStr || typeof cellStr !== 'string' || cellStr.length < 4) return [0, 0, 0, 0];
       return [
-        VAL_MAP[cellStr[0]] !== undefined ? VAL_MAP[cellStr[0]] : 0,
-        VAL_MAP[cellStr[1]] !== undefined ? VAL_MAP[cellStr[1]] : 0,
-        VAL_MAP[cellStr[2]] !== undefined ? VAL_MAP[cellStr[2]] : 0,
-        VAL_MAP[cellStr[3]] !== undefined ? VAL_MAP[cellStr[3]] : 0
+        decodeSmibChar(cellStr[0]),
+        decodeSmibChar(cellStr[1]),
+        decodeSmibChar(cellStr[2]),
+        decodeSmibChar(cellStr[3])
       ];
     }
 
@@ -1385,6 +2094,7 @@
       const stats = d18State.nodes;
       const numSuj = stats.length;
 
+      allDyadList = [];
       let cntEE = 0, cntRR = 0, cntOPP = 0, cntHALO = 0, cntNEU = 0, cntALL = 0;
 
       for (let i = 0; i < numSuj; i++) {
@@ -1447,9 +2157,26 @@
           });
 
           const line = new THREE.Line(geom, mat);
-          line.userData = { from: i, to: j, fig: figType };
+          line.userData = { from: i, to: j, fig: figType, curve: curve };
           scene.add(line);
           flowLines.push(line);
+
+          // Registrar en lista viva de díadas para la Moviola
+          allDyadList.push({
+            from: i,
+            to: j,
+            nameFrom: currentSubjects[i],
+            nameTo: currentSubjects[j],
+            figType: figType,
+            figName: figType === 'MUTUAL_CHOICE' ? 'Elección Mútua <Ee>' : (figType === 'MUTUAL_REJECT' ? 'Rechazo Mútuo [Rr]' : (figType === 'OPPOSITION' ? 'Oposición Relacional' : (figType === 'HALO_EXPECT' ? 'Conjetura / Expectativa' : 'Neutral / Vacío'))),
+            figColorClass: figType === 'MUTUAL_CHOICE' ? 'text-emerald-300' : (figType === 'MUTUAL_REJECT' ? 'text-rose-300' : (figType === 'OPPOSITION' ? 'text-amber-300' : 'text-cyan-300')),
+            smib_ij: cell_ij,
+            smib_ji: cell_ji,
+            da_ij: da_ij,
+            da_ji: da_ji,
+            pda_ij: pda_ij,
+            meanZ: (stats[i].z + stats[j].z) / 2
+          });
         }
       }
 
@@ -1747,6 +2474,11 @@
 
       renderSubjectPills();
       renderAquariumState();
+      activeDyadIndex = 0;
+      if (isDyadScannerRunning && isMasterDynamicsRunning) {
+        startDyadScanner();
+      }
+      updateAllLeds();
     }
 
     function setPerspectiveMode(mode) {
@@ -1755,6 +2487,7 @@
       document.getElementById('btn-persp-da').className = mode === 'DA' ? 'btn-mode active flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-amber-300' : 'btn-mode flex-1 py-1.5 rounded-lg font-bold border border-transparent text-center transition text-slate-300';
       document.getElementById('btn-persp-rc').className = mode === 'RC' ? 'btn-mode active flex-1 py-1.5 rounded-lg font-black border border-transparent text-center transition text-cyan-300' : 'btn-mode flex-1 py-1.5 rounded-lg font-bold border border-transparent text-center transition text-slate-300';
       renderAquariumState();
+      updateAllLeds();
     }
 
     function filterFigure(fig) {
@@ -1774,6 +2507,7 @@
       });
       document.getElementById('badge-current-fig').textContent = fig;
       renderAquariumState();
+      updateAllLeds();
     }
 
     function setLayerVisibility(layer) {
@@ -1789,6 +2523,7 @@
         }
       });
       renderAquariumState();
+      updateAllLeds();
     }
 
     /* =========================================================================
@@ -1802,11 +2537,21 @@
       N = currentSubjects.length;
       activeSubjectIndex = null;
 
-      // Actualizar botones
-      ['3x3', '5x5', '9x9'].forEach(k => {
+      // Actualizar botones de escenarios
+      const allScenKeys = ['20x20', 'simul_02', 'simul_03', 'hombres12', 'lorca', 'moscas', 'g2t1c1', '9x9', '5x5', '3x3', 'custom'];
+      allScenKeys.forEach(k => {
         const btn = document.getElementById(`btn-scen-${k}`);
-        if (k === key) btn.classList.add('active');
-        else btn.classList.remove('active');
+        if (btn) {
+          if (k === key) {
+            btn.classList.add('active');
+            btn.classList.add('border-emerald-400');
+            btn.classList.add('bg-emerald-950');
+          } else {
+            btn.classList.remove('active');
+            btn.classList.remove('border-emerald-400');
+            btn.classList.remove('bg-emerald-950');
+          }
+        }
       });
 
       document.getElementById('badge-current-n').textContent = `N = ${N}`;
@@ -1815,6 +2560,11 @@
 
       renderSubjectPills();
       renderAquariumState();
+      activeDyadIndex = 0;
+      if (isDyadScannerRunning && isMasterDynamicsRunning) {
+        startDyadScanner();
+      }
+      updateAllLeds();
     }
 
     function resetScenarioToDefault() {
@@ -1822,6 +2572,422 @@
       populateSmibTable();
     }
 
+
+    /* =========================================================================
+       12. CARGADOR UNIVERSAL DE MATRICES SMIb (PUERTA ABIERTA A ANÁLISIS CONCRETOS)
+       ========================================================================= */
+    function showSmibToast(msg) {
+      const toast = document.getElementById('smib-toast-notification');
+      const text = document.getElementById('smib-toast-text');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 4000);
+    }
+
+    function handleSmibFileLoad(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        processSmibFileContent(file.name, e.target.result);
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function processSmibFileContent(fileName, textContent) {
+      try {
+        let parsedMatrix = null;
+        let parsedSubjects = null;
+        let studyName = fileName.replace(/\.[^/.]+$/, "");
+
+        const trimmed = textContent.trim();
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+          // JSON
+          const data = JSON.parse(trimmed);
+          if (Array.isArray(data)) {
+            // Matriz pura array de arrays
+            parsedMatrix = data;
+          } else if (data.matrix && Array.isArray(data.matrix)) {
+            parsedMatrix = data.matrix;
+            if (data.subjects && Array.isArray(data.subjects)) parsedSubjects = data.subjects;
+            if (data.name) studyName = data.name;
+          } else if (data.matrices_cuadradas && data.matrices_cuadradas.G1 && data.matrices_cuadradas.G1.SMIb) {
+            parsedMatrix = data.matrices_cuadradas.G1.SMIb;
+            if (data.metadata && data.metadata.sujetos_G1) parsedSubjects = data.metadata.sujetos_G1;
+            if (data.metadata && data.metadata.estudio) studyName = data.metadata.estudio;
+          } else if (data.SMIb && Array.isArray(data.SMIb)) {
+            parsedMatrix = data.SMIb;
+            if (data.subjects) parsedSubjects = data.subjects;
+          } else if (data.tensor_data && Array.isArray(data.tensor_data)) {
+            // Reconstrucción desde tensor records
+            const subsSet = new Set();
+            data.tensor_data.forEach(r => { if (r.Emisor) subsSet.add(r.Emisor); if (r.Receptor) subsSet.add(r.Receptor); });
+            parsedSubjects = Array.from(subsSet).sort();
+            const nSub = parsedSubjects.length;
+            const subMap = {};
+            parsedSubjects.forEach((s, idx) => subMap[s] = idx);
+            parsedMatrix = Array.from({length: nSub}, () => Array(nSub).fill("0000"));
+            data.tensor_data.forEach(r => {
+              const i = subMap[r.Emisor];
+              const j = subMap[r.Receptor];
+              if (i !== undefined && j !== undefined && i !== j) {
+                const charVal = (r.Tipo === 'E' || r.Valor > 0) ? '+' : '-';
+                parsedMatrix[i][j] = "0" + charVal + "00";
+              }
+            });
+            // Aplicar espejo canónico REC[i,j] = DA[j,i]
+            for (let i = 0; i < nSub; i++) {
+              for (let j = 0; j < nSub; j++) {
+                if (i !== j) {
+                  const da_ji = parsedMatrix[j][i][1];
+                  parsedMatrix[i][j] = parsedMatrix[i][j][0] + parsedMatrix[i][j][1] + da_ji + parsedMatrix[i][j][3];
+                }
+              }
+            }
+          }
+        } else {
+          // CSV / TSV / Texto
+          const lines = trimmed.split(/\r?\n/).filter(l => l.trim().length > 0);
+          if (lines.length >= 2) {
+            const sep = lines[0].includes(';') ? ';' : (lines[0].includes('\t') ? '\t' : ',');
+            let startRow = 0;
+            const firstTokens = lines[0].split(sep).map(t => t.trim());
+            
+            // Comprobar si primera fila es cabecera
+            if (firstTokens.some(t => t.length !== 4 || isNaN(t[0]))) {
+              // Cabecera detectada
+              parsedSubjects = firstTokens.filter(t => t.length > 0 && t.length < 15);
+              if (parsedSubjects.length > lines.length) parsedSubjects = parsedSubjects.slice(1);
+              startRow = 1;
+            }
+
+            const rawRows = [];
+            for (let r = startRow; r < lines.length; r++) {
+              let cols = lines[r].split(sep).map(c => c.trim().replace(/^["']|["']$/g, ''));
+              if (cols.length > 1) {
+                // Si la columna 0 es el ID, descartarla si cols.length = N + 1
+                if (cols.length === lines.length - startRow + 1) {
+                  cols = cols.slice(1);
+                }
+                rawRows.push(cols);
+              }
+            }
+            parsedMatrix = rawRows;
+          }
+        }
+
+        if (!parsedMatrix || !Array.isArray(parsedMatrix) || parsedMatrix.length < 2) {
+          alert("No se pudo detectar una matriz SMIb válida en el archivo.");
+          return;
+        }
+
+        const loadedN = parsedMatrix.length;
+        // Normalizar filas y celdas
+        const cleanMatrix = [];
+        for (let i = 0; i < loadedN; i++) {
+          const row = [];
+          for (let j = 0; j < loadedN; j++) {
+            if (i === j) {
+              row.push("0000");
+              continue;
+            }
+            let cell = (parsedMatrix[i] && parsedMatrix[i][j]) ? String(parsedMatrix[i][j]).trim() : "0000";
+            if (cell.length === 1) {
+              // Expansión simple a tetragrama [0, DA, 0, 0]
+              cell = "0" + cell + "00";
+            } else if (cell.length < 4) {
+              cell = (cell + "0000").slice(0, 4);
+            }
+            row.push(cell.slice(0, 4));
+          }
+          cleanMatrix.push(row);
+        }
+
+        // Espejo de seguridad canónico A3 (REC) = A2 (DA del partner) si A3 viene vacío
+        for (let i = 0; i < loadedN; i++) {
+          for (let j = 0; j < loadedN; j++) {
+            if (i !== j && cleanMatrix[i][j][2] === '0' && cleanMatrix[j][i][1] !== '0') {
+              const da_partner = cleanMatrix[j][i][1];
+              cleanMatrix[i][j] = cleanMatrix[i][j][0] + cleanMatrix[i][j][1] + da_partner + cleanMatrix[i][j][3];
+            }
+          }
+        }
+
+        if (!parsedSubjects || parsedSubjects.length !== loadedN) {
+          parsedSubjects = Array.from({length: loadedN}, (_, idx) => `S${idx + 1}`);
+        }
+
+        // Registrar como preset custom
+        PRESETS['custom'] = {
+          name: studyName.toUpperCase(),
+          desc: `Matriz SMIb ingestada factual desde el archivo "${fileName}". N=${loadedN} nodos, ${loadedN * (loadedN - 1)} díadas evaluadas.`,
+          subjects: parsedSubjects,
+          matrix: cleanMatrix
+        };
+
+        // Mostrar botón de matriz custom en UI
+        const btnCust = document.getElementById('btn-scen-custom');
+        const lblCust = document.getElementById('lbl-scen-custom');
+        const badgeCust = document.getElementById('badge-scen-custom');
+        const badgeInfo = document.getElementById('custom-matrix-loaded-badge');
+        const nameLbl = document.getElementById('custom-matrix-name-label');
+        const statsLbl = document.getElementById('custom-matrix-stats-label');
+        const ledCust = document.getElementById('led-custom-smib');
+
+        if (btnCust) btnCust.classList.remove('hidden');
+        if (lblCust) lblCust.textContent = studyName.toUpperCase();
+        if (badgeCust) badgeCust.textContent = `N=${loadedN} • ${loadedN * (loadedN - 1)} Díadas`;
+        if (badgeInfo) badgeInfo.classList.remove('hidden');
+        if (nameLbl) nameLbl.textContent = `MATRIZ: ${studyName.toUpperCase()}`;
+        if (statsLbl) statsLbl.textContent = `N=${loadedN} • ${loadedN * (loadedN - 1)} Díadas`;
+        if (ledCust) ledCust.className = 'led-indicator led-on';
+
+        // Cargar escenario custom
+        loadScenario('custom');
+        showSmibToast(`✅ MATRIZ SMIb INGESTADA: ${studyName} (N=${loadedN})`);
+
+      } catch (err) {
+        console.error("Error al procesar matriz SMIb:", err);
+        alert("Error al procesar el archivo SMIb: " + err.message);
+      }
+    }
+
+    function downloadCurrentSmib(format) {
+      if (!currentMatrix || !currentSubjects) return;
+      const studyKey = currentScenarioKey;
+      const dateStr = new Date().toISOString().slice(0, 10);
+      let filename = `MATRIZ_SMIb_${studyKey}_N${N}_${dateStr}`;
+      let content = "";
+      let mime = "text/plain";
+
+      if (format === 'json') {
+        filename += ".json";
+        mime = "application/json";
+        const payload = {
+          metadata: {
+            canon: "NEXORD Platinum 2026",
+            scenario: studyKey,
+            name: PRESETS[studyKey] ? PRESETS[studyKey].name : "SMIb Matrix",
+            date: dateStr,
+            N: N,
+            total_dyads: N * (N - 1)
+          },
+          subjects: currentSubjects,
+          matrix: currentMatrix
+        };
+        content = JSON.stringify(payload, null, 2);
+      } else {
+        filename += ".csv";
+        mime = "text/csv";
+        content = "ID," + currentSubjects.join(",") + "\n";
+        for (let i = 0; i < N; i++) {
+          content += currentSubjects[i] + "," + currentMatrix[i].join(",") + "\n";
+        }
+      }
+
+      const blob = new Blob([content], { type: mime + ";charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showSmibToast(`📥 Matriz descargada: ${filename}`);
+    }
+
+    // Configuración de Drag & Drop para matrices SMIb
+    function setupSmibDragAndDrop() {
+      const dropZone = document.getElementById('three-viewport');
+      const overlay = document.getElementById('smib-drop-overlay');
+      if (!dropZone || !overlay) return;
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        window.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          overlay.classList.remove('hidden');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        window.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (eventName === 'drop' || (e.clientX <= 0 || e.clientY <= 0)) {
+            overlay.classList.add('hidden');
+          }
+        }, false);
+      });
+
+      overlay.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        overlay.classList.add('hidden');
+      });
+
+      window.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        overlay.classList.add('hidden');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          if (!checkResearcherAuth()) {
+            showSmibToast("⛔ Carga cancelada: Se requiere contraseña NEX_ORD");
+            return;
+          }
+          const file = e.dataTransfer.files[0];
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            processSmibFileContent(file.name, evt.target.result);
+          };
+          reader.readAsText(file);
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setupSmibDragAndDrop();
+    });
+
+
+    /* =========================================================================
+       13. CARGADOR DE COMODINES DE SIMULACIÓN (CARPETA VISORES)
+       ========================================================================= */
+    const COMODIN_MAP = {
+      '01': { key: '20x20', file: 'VISORES/SIMUL_01_COHESION_CANONICA_20x20.json' },
+      '02': { key: 'simul_02', file: 'VISORES/SIMUL_02_POLARIZACION_FACCIONES_12x12.json' },
+      '03': { key: 'simul_03', file: 'VISORES/SIMUL_03_ASFIXIA_HALO_JERARQUIA_8x8.json' }
+    };
+
+    function loadComodin(id) {
+      const comodin = COMODIN_MAP[id];
+      if (!comodin) return;
+
+      // Intentar cargar mediante fetch si está en servidor web, o fallback nativo inmediato
+      fetch(comodin.file)
+        .then(res => {
+          if (!res.ok) throw new Error("Fetch no disponible en local");
+          return res.json();
+        })
+        .then(data => {
+          processSmibFileContent(comodin.file.split('/').pop(), JSON.stringify(data));
+          showSmibToast(`📦 Comodín cargado desde ${comodin.file}`);
+        })
+        .catch(err => {
+          // Fallback nativo a los presets precargados en memoria
+          loadScenario(comodin.key);
+          showSmibToast(`📦 Comodín ${id} activado desde recursos propios`);
+        });
+
+      // Actualizar LEDs de comodines
+      ['01', '02', '03'].forEach(k => {
+        const btn = document.getElementById(`btn-comodin-${k}`);
+        const led = document.getElementById(`led-comodin-${k}`);
+        if (btn) {
+          if (k === id) {
+            btn.className = "action-btn p-1.5 rounded-lg border border-emerald-400 bg-emerald-950 text-slate-100 text-center font-bold text-[10px] hover:border-emerald-300 flex flex-col items-center gap-0.5";
+          } else {
+            btn.className = "action-btn p-1.5 rounded-lg border border-slate-700 bg-slate-950 text-slate-300 text-center font-bold text-[10px] hover:border-teal-400 flex flex-col items-center gap-0.5";
+          }
+        }
+        if (led) led.className = `led-indicator ${k === id ? 'led-on' : 'led-off'}`;
+      });
+    }
+    
+
+    /* =========================================================================
+       14. SISTEMA DE SEGURIDAD Y ACCESO POR CONTRASEÑA 'NEX_ORD'
+       ========================================================================= */
+    function checkResearcherAuth() {
+      if (sessionStorage.getItem('nexord_researcher_auth') === 'unlocked') {
+        return true;
+      }
+      const pwd = prompt("🔐 ACCESO RESTRINGIDO A INVESTIGADORES (INICIADOS)\n\nIngrese la clave de autorización para activar la carga de archivos locales:");
+      if (!pwd) return false;
+      const clean = pwd.trim().toUpperCase();
+      if (clean === "NEX_ORD" || clean === "NEXORD") {
+        sessionStorage.setItem('nexord_researcher_auth', 'unlocked');
+        updateResearcherUI(true);
+        showSmibToast("🔓 ACCESO AUTORIZADO: MODO INVESTIGADOR DESBLOQUEADO");
+        return true;
+      } else {
+        alert("⛔ Clave incorrecta. El entorno permanece protegido en modo de exploración pública.");
+        return false;
+      }
+    }
+
+        function triggerSpecialLoadAcuario() {
+      const pwd = prompt("🔐 Clave de acceso para carga local:");
+      if (!pwd) return;
+      const clean = pwd.trim().toUpperCase();
+      if (clean === "NEX_ORD" || clean === "NEXORD") {
+        sessionStorage.setItem('nexord_researcher_auth', 'unlocked');
+        const btn = document.getElementById('btn-special-load');
+        const icon = document.getElementById('icon-special-load');
+        if (btn) {
+          btn.classList.add('unlocked');
+          btn.style.opacity = '1';
+          btn.style.borderColor = '#00FF87';
+          btn.style.background = 'rgba(0,255,135,0.15)';
+          btn.style.color = '#00FF87';
+        }
+        if (icon) icon.textContent = '🔓';
+        const inp = document.getElementById('file-input-smib');
+        if (inp) inp.click();
+      } else {
+        alert("⛔ Clave incorrecta.");
+      }
+    } else {
+        alert("⛔ Clave incorrecta. Acceso no autorizado.");
+      }
+    }
+
+    function unlockResearcherMode() {
+      if (sessionStorage.getItem('nexord_researcher_auth') === 'unlocked') {
+        const panel = document.getElementById('panel-smib-ingestion');
+        if (panel) {
+          panel.classList.toggle('hidden');
+          panel.classList.toggle('flex');
+        }
+        return;
+      }
+      if (checkResearcherAuth()) {
+        const panel = document.getElementById('panel-smib-ingestion');
+        if (panel) {
+          panel.classList.remove('hidden');
+          panel.classList.add('flex');
+        }
+      }
+    }
+
+    function updateResearcherUI(isUnlocked) {
+      const led = document.getElementById('led-researcher-status');
+      const lbl = document.getElementById('lbl-researcher-status');
+      const panel = document.getElementById('panel-smib-ingestion');
+      if (isUnlocked) {
+        if (led) led.className = 'led-indicator led-on';
+        if (lbl) lbl.textContent = 'Iniciado Activo';
+        if (panel) {
+          panel.classList.remove('hidden');
+          panel.classList.add('flex');
+        }
+      } else {
+        if (led) led.className = 'led-indicator led-off';
+        if (lbl) lbl.textContent = 'Desbloquear';
+      }
+    }
+
+    // Inicializar estado de investigador si ya estaba autorizado
+    window.addEventListener('DOMContentLoaded', () => {
+      if (sessionStorage.getItem('nexord_researcher_auth') === 'unlocked') {
+        updateResearcherUI(true);
+      }
+    });
+    
     /* =========================================================================
        10. EDITOR INTERACTIVO DE SOCIOMATRIZ SMIb
        ========================================================================= */
@@ -1833,6 +2999,7 @@
     function closeSmibEditorModal() {
       document.getElementById('modal-smib-editor').classList.add('hidden');
       renderAquariumState();
+      updateAllLeds();
     }
 
     function populateSmibTable() {
@@ -2015,6 +3182,183 @@
       }
     }
 
+
+    /* =========================================================================
+       CONTROL MAESTRO DE ACCIÓN Y SISTEMA DE LUCES LED UNIVERSAL
+       ========================================================================= */
+    function toggleMasterDynamics() {
+      isMasterDynamicsRunning = !isMasterDynamicsRunning;
+      
+      const btnBanner = document.getElementById('btn-master-dynamics');
+      const ledBanner = document.getElementById('led-master-dynamics');
+      const txtBanner = document.getElementById('txt-master-dynamics');
+
+      const ledTop = document.getElementById('led-master-top');
+      const lblTop = document.getElementById('lbl-master-top');
+
+      if (isMasterDynamicsRunning) {
+        if (controls) controls.autoRotate = true;
+        if (btnBanner) btnBanner.classList.remove('paused');
+        if (ledBanner) { ledBanner.className = 'led-indicator led-on led-pulse'; }
+        if (txtBanner) txtBanner.textContent = '⚡ ACTION ! ACUARIO EN MOVIMIENTO';
+        
+        if (ledTop) { ledTop.className = 'led-indicator led-on led-pulse'; }
+        if (lblTop) lblTop.textContent = 'ACTION ! EN VIVO';
+
+        if (!dyadScannerTimer && isDyadScannerRunning) startDyadScanner();
+      } else {
+        if (controls) controls.autoRotate = false;
+        if (btnBanner) btnBanner.classList.add('paused');
+        if (ledBanner) { ledBanner.className = 'led-indicator led-off'; }
+        if (txtBanner) txtBanner.textContent = '⏸ ACTION ! PAUSADO (CLIC PARA ACTIVAR)';
+
+        if (ledTop) { ledTop.className = 'led-indicator led-off'; }
+        if (lblTop) lblTop.textContent = 'ACTION ! PAUSADO';
+
+        if (dyadScannerTimer) {
+          clearInterval(dyadScannerTimer);
+          dyadScannerTimer = null;
+        }
+      }
+      updateAllLeds();
+    }
+
+    function toggleDyadScanner() {
+      isDyadScannerRunning = !isDyadScannerRunning;
+      const led = document.getElementById('led-dyad-scanner');
+      const txt = document.getElementById('txt-dyad-scanner');
+
+      if (isDyadScannerRunning) {
+        if (led) led.className = 'led-indicator led-on';
+        if (txt) txt.textContent = 'DÍADAS: SCAN VIVO';
+        startDyadScanner();
+      } else {
+        if (led) led.className = 'led-indicator led-off';
+        if (txt) txt.textContent = 'DÍADAS: PAUSADO';
+        if (dyadScannerTimer) {
+          clearInterval(dyadScannerTimer);
+          dyadScannerTimer = null;
+        }
+        highlightCurrentDyad(null);
+      }
+    }
+
+    function setDyadSpeed(spd) {
+      dyadScannerSpeed = spd;
+      ['1x', '2x', '4x'].forEach(s => {
+        const btn = document.getElementById(`spd-${s}`);
+        if (s === `${spd}x`) {
+          btn.className = 'px-2 py-0.5 rounded font-black text-teal-300 bg-teal-950 border border-teal-500';
+        } else {
+          btn.className = 'px-2 py-0.5 rounded font-bold text-slate-300 hover:text-white';
+        }
+      });
+      if (isDyadScannerRunning) {
+        startDyadScanner();
+      }
+    }
+
+    function startDyadScanner() {
+      if (dyadScannerTimer) clearInterval(dyadScannerTimer);
+      if (!allDyadList.length) return;
+
+      const intervalMs = Math.max(400, Math.floor(2200 / dyadScannerSpeed));
+      dyadScannerTimer = setInterval(() => {
+        if (!isMasterDynamicsRunning) return;
+        activeDyadIndex = (activeDyadIndex + 1) % allDyadList.length;
+        highlightCurrentDyad(activeDyadIndex);
+      }, intervalMs);
+      highlightCurrentDyad(activeDyadIndex);
+    }
+
+    function highlightCurrentDyad(idx) {
+      if (idx === null || !allDyadList[idx]) {
+        // Restaurar opacidades normales
+        flowLines.forEach(l => {
+          if (l.material) l.material.opacity = (activeSubjectIndex !== null ? 0.98 : 0.65);
+        });
+        return;
+      }
+
+      const d = allDyadList[idx];
+      flowLines.forEach(l => {
+        if (l.userData && l.userData.from === d.from && l.userData.to === d.to) {
+          l.material.opacity = 1.0;
+          l.material.linewidth = 3;
+        } else {
+          l.material.opacity = 0.12;
+        }
+      });
+
+      // Actualizar tarjeta Sonda Diádica con la díada viva
+      const probeCard = document.getElementById('dyadic-probe-card');
+      const probeTitle = document.getElementById('probe-title');
+      const probeStratum = document.getElementById('probe-stratum-badge');
+      const probeCoords = document.getElementById('probe-coords');
+      const probeMass = document.getElementById('probe-mass');
+      const probeBias = document.getElementById('probe-bias');
+      const probeGap = document.getElementById('probe-gap');
+      const probeAmb = document.getElementById('probe-amb');
+      const probeHint = document.getElementById('probe-hint');
+
+      if (probeTitle) probeTitle.textContent = `DÍADA #${idx + 1}/${allDyadList.length}: ${d.nameFrom} ➔ ${d.nameTo}`;
+      if (probeStratum) {
+        probeStratum.textContent = d.figName;
+        probeStratum.className = `text-xs font-bold ${d.figColorClass}`;
+      }
+      if (probeCoords) probeCoords.textContent = `SMIb: [${d.smib_ij}] / [${d.smib_ji}]`;
+      if (probeMass) probeMass.textContent = `Emisión DA: ${d.da_ij > 0 ? '+1' : (d.da_ij < 0 ? '-1' : '0')} | Rec: ${d.da_ji > 0 ? '+1' : (d.da_ji < 0 ? '-1' : '0')}`;
+      if (probeBias) probeBias.textContent = `Conjetura pDA: ${d.pda_ij > 0 ? '+1' : (d.pda_ij < 0 ? '-1' : '0')}`;
+      if (probeGap) probeGap.textContent = `Flotabilidad Diádica: ${d.meanZ >= 0 ? '+' : ''}${d.meanZ.toFixed(2)}m`;
+      if (probeAmb) probeAmb.textContent = d.figType;
+      if (probeHint) probeHint.innerHTML = `⚡ <strong class="text-teal-300">Escáner Diádico en Vivo:</strong> Flujo activo entre <strong>${d.nameFrom}</strong> y <strong>${d.nameTo}</strong>.`;
+    }
+
+    function updateAllLeds() {
+      // 1. Escenarios (LEDs de Actividad)
+      const allScenKeys = ['20x20', 'simul_02', 'simul_03', 'hombres12', 'lorca', 'moscas', 'g2t1c1', '9x9', '5x5', '3x3', 'custom'];
+      allScenKeys.forEach(k => {
+        const led = document.getElementById(`led-scen-${k}`);
+        if (led) led.className = `led-indicator ${k === currentScenarioKey ? 'led-on' : 'led-off'}`;
+      });
+      const customLed = document.getElementById('led-custom-smib');
+      if (customLed) customLed.className = `led-indicator ${PRESETS['custom'] ? 'led-on' : 'led-off'}`;
+
+      // 2. Perspectivas
+      const pDual = document.getElementById('led-persp-dual');
+      const pDa = document.getElementById('led-persp-da');
+      const pRc = document.getElementById('led-persp-rc');
+      if (pDual) pDual.className = `led-indicator ${currentPerspective === 'DUAL' ? 'led-on' : 'led-off'}`;
+      if (pDa) pDa.className = `led-indicator ${currentPerspective === 'DA' ? 'led-on' : 'led-off'}`;
+      if (pRc) pRc.className = `led-indicator ${currentPerspective === 'RC' ? 'led-on' : 'led-off'}`;
+
+      // 3. Figuras
+      const figKeys = ['ALL', 'MUTUAL_CHOICE', 'MUTUAL_REJECT', 'OPPOSITION', 'HALO_EXPECT', 'NEUTRAL'];
+      const figMap = {
+        'ALL': 'led-fig-all', 'MUTUAL_CHOICE': 'led-fig-ee', 'MUTUAL_REJECT': 'led-fig-rr',
+        'OPPOSITION': 'led-fig-opp', 'HALO_EXPECT': 'led-fig-halo', 'NEUTRAL': 'led-fig-neu'
+      };
+      figKeys.forEach(k => {
+        const el = document.getElementById(figMap[k]);
+        if (el) el.className = `led-indicator ${activeFigureFilter === k ? 'led-on' : 'led-off'}`;
+      });
+
+      // 4. Capas
+      const lMap = { 'ALL': 'led-layer-all', 'CORE': 'led-layer-core', 'HALO': 'led-layer-halo', 'FLOW': 'led-layer-flow' };
+      Object.keys(lMap).forEach(k => {
+        const el = document.getElementById(lMap[k]);
+        if (el) el.className = `led-indicator ${activeLayerVisibility === k ? 'led-on' : 'led-off'}`;
+      });
+
+      // 5. Audio
+      const aLed = document.getElementById('led-audio');
+      if (aLed) aLed.className = `led-indicator ${isAudioPlaying ? 'led-on' : 'led-off'}`;
+
+      // 6. Autorotate
+      const rLed = document.getElementById('led-autorotate');
+      if (rLed && controls) rLed.className = `led-indicator ${controls.autoRotate ? 'led-on' : 'led-off'}`;
+    }
+
     /* =========================================================================
        14. BUCLE DE ANIMACIÓN THREE.JS
        ========================================================================= */
@@ -2061,8 +3405,12 @@
        ========================================================================= */
     document.addEventListener('DOMContentLoaded', () => {
       initThreeScene();
-      loadScenario('5x5');
+      loadScenario('20x20');
       showD18Tab('elem');
+      updateAllLeds();
+      if (isDyadScannerRunning && isMasterDynamicsRunning) {
+        startDyadScanner();
+      }
     });
   </script>
 </body>
