@@ -246,10 +246,8 @@ De la discrepancia posicional $\Delta_{\text{rol}} = F_i^{\text{out}} - F_i^{\te
 
 ### 4.4. El Hiperespacio Relacional 18D, los 3 Prismas Duales y el Pentagrama de Densidades (10D)
 
-#### 4.4.1. Fundamentación Algorítmica de la Densidad Relacional: La Matriz de Trazabilidad 6D y los Moduladores
-En la sociometría ordinal canónica de NEXORD, la Densidad Relacional no es un recuento plano ni un promedio aritmético ingenuo: constituye la **masa térmica y estructural real** que aporta un vínculo interpersonal, definiendo la fuerza cohesiva o destructiva de la interacción sobre el continuo termodinámico ($\pm\mathbb{R}$).
-
-Para garantizar la reproducibilidad científica y evitar cualquier opacidad algorítmica, el motor de NEXORD procesa la interacción diádica $(i \to j)$ a través de una **Matriz de Trazabilidad de 6 Capas**. Esta arquitectura clínica descompone el flujo vincular mediante un conjunto explícito de **moduladores matemáticos** que ponderan rigurosamente el rango ordinal, las simetrías de acción, las reciprocidades cognitivas y las jerarquías de estatus:
+#### 4.4.1. Moduladores Diádicos y las 18 Densidades Relacionales (Tablas 3b y 3c)
+La densidad relacional diádica cuantifica la masa térmica y estructural de cada vínculo interpersonal sobre el continuo termodinámico ($\pm\mathbb{R}$). Para garantizar la máxima reproducibilidad y rigor analítico, el motor procesa cada interacción $(i \to j)$ mediante seis moduladores matemáticos objetivos (Tabla 3b):
 
 #### Tabla 3b. Matriz de Trazabilidad Algorítmica y Moduladores de la Densidad Diádica
 
@@ -262,11 +260,7 @@ Para garantizar la reproducibilidad científica y evitar cualquier opacidad algo
 | **5. Esfuerzo Perceptivo** | Presencia activa de meta-percepción ($pDA, pRC$) | **$1.2\times$** | Reconocimiento del coste cognitivo de anticipación. **Bono estrictamente anulado a $1.0\times$ si existe ceguera estructural**. |
 | **6. Prestigio del Emisor ($P_i$)** | Centralidad Jerárquica del Sujeto en la Red | **Variable** ($0.5$ a $1.5$) | Multiplicador de escala gravitatoria. Determina cuánta masa inercial arrastra la acción del emisor sobre el colectivo. |
 
-A partir de estas densidades diádicas moduladas, el sistema cuantifica simultáneamente los canales relacionales elementales y sus combinaciones invariantes. En la sociomatriz bidireccional integral, las componentes basales del sujeto integran emisión y recepción mediante el promedio baricéntrico $v_k(i) = \frac{1}{2}[\text{Fila}_k(i) + \text{Columna}_k(i)]$, garantizando el cierre simétrico de la red.
-
-**Convenio Universal de Prefijos S y B:**  
-* **S (Saldo / Densidad Relativa):** Magnitud con signo ($\pm\mathbb{R}$). Cuantifica vectores de fuerza, gradientes de potencial y dirección de atracción o rechazo.
-* **B (Bruta / Densidad Absoluta):** Magnitud modular sin signo ($|\cdot| \ge 0$). Cuantifica la masa relacional movilizada, energía cinética total y volumen metabólico del sistema.
+El cruce simétrico entre emisión y recepción en la sociomatriz genera las **18 Densidades Relacionales (18D)** de la Tabla 3c, regidas por dos prefijos universales: **S** (Saldo relativo con signo, $\pm\mathbb{R}$, vector de atracción o rechazo) y **B** (Densidad bruta modular, $|\cdot| \ge 0$, masa y energía total movilizada):
 
 #### Tabla 3c. Especificación y Cálculo Canónico de las 18 Densidades Relacionales e Invariantes Socio-Termodinámicos
 
@@ -291,30 +285,13 @@ A partir de estas densidades diádicas moduladas, el sistema cuantifica simultá
 | **17D** | $SDR$ | Invariante Global | $\sum S_{ij} = \sum D_k$ | $[-4.00, +4.00]$ | Saldo de Densidad Relativa total: barómetro homeostático del clima vincular. |
 | **18D** | $BDR$ | Invariante Global | $\sum B_{ij} = \sum \|D_k\|$ | $[0.00, +4.00]$ | Densidad Bruta Relacional: capacidad calorífica y masa total del sistema. |
 
-*(Nota analítica de asimetrías diádicas: El sistema deriva complementariamente los tres índices de desbalance de cada prisma: Asimetría Operativa $\text{Dif}_r = \|B_{12} - B_{34}\|$, Asimetría Ontológica $\text{Dif}_a = \|B_{14} - B_{23}\|$ y Asimetría Dialéctica $\text{Dif}_i = \|B_{13} - B_{24}\|$, junto con la Fricción Térmica $\Phi = BDR - \|SDR\|$).*
-
-#### 4.4.2. Los 3 Prismas Duales de Densidad
-Las cuatro densidades elementales $\{D_1, D_2, D_3, D_4\}$ admiten exactamente 3 particiones duales complementarias $[\binom{4}{2} / 2 = 3]$, que someten el vínculo a tres refracciones ortogonales independientes, que denominamos **PRISMAS**:
+#### 4.4.2. Los 3 Prismas Duales y el Pentagrama 10D (Figuras 8b y 8)
+Las cuatro densidades elementales $\{D_1, D_2, D_3, D_4\}$ admiten tres particiones duales ortogonales independientes o **Prismas** (Figura 8b): el **Operativo** (10D: Dador vs. Receptor), el **Ontológico** (14D: Mente vs. Hechos) y el **Dialéctico** (18D: Realismo vs. Compromiso). 
 
 ![Figura 8b: Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales](Figura_18D_Prismas_Duales_Crema.png)  
-*Figura 8b. Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales: Estructuración del tetragrama en 4 densidades elementales (D1–D4), saldos globales invariantes (SDR, BDR) y descomposición en los tres ejes fundamentales: Operativo (Dador/Receptor, 10D), Ontológico (Mente/Hechos, 14D) y Dialéctico (Realismo/Compromiso, 18D).*
+*Figura 8b. Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales: Estructuración del tetragrama en 4 densidades elementales (D1–D4), saldos globales invariantes (SDR, BDR) y descomposición en los tres ejes fundamentales: Operativo (10D), Ontológico (14D) y Dialéctico (18D).*
 
-La descomposición del campo grupal en sus **18 Densidades Relacionales (18D)** no es una enumeración combinatoria dispersa, sino una anatomía ordenada de los flujos psicosociales. El sistema articula sus tensiones en una secuencia dialéctica canónica donde la **Masa Bruta ($B$)** —volumen total de energía interactiva movilizada— y el **Saldo Relativo ($S$)** —dirección neta e inclinación vectorial del vínculo— se suceden en contrapunto armónico:
-
-$$\underbrace{B_{12} \; S_{12}}_{\text{DA (Iniciativa)}} \quad \underbrace{B_{14} \; S_{14}}_{\text{PA (Proyección)}} \quad \underbrace{B_{13} \; S_{13}}_{\text{XA (Sintonía)}} \quad \big[ D_1 \;\; D_2 \;\; D_3 \;\; D_4 \big] \quad \underbrace{S_{24} \; B_{24}}_{\text{XR (Desengaño)}} \quad \underbrace{S_{23} \; B_{23}}_{\text{PR (Hechos)}} \quad \underbrace{S_{34} \; B_{34}}_{\text{RC (Estatus)}} \quad \mathbf{SDR} \quad \mathbf{BDR}$$
-
-Esta secuencia ordenada manifiesta el principio de conservación energética: el desnivel entre la masa bruta ($B$) y su saldo proyectado ($S$) revela con exactitud milimétrica la *Inercia de Desgaste* ($I_{\text{desgaste}} = B - S$) de cada prisma relacional. El orden de las densidades no es un capricho analítico: es la escala termodinámica que permite leer, en un solo golpe de vista, desde la iniciativa activa del emisor hasta el estatus consolidado por el grupo, culminando en la síntesis homeostática global del $\mathbf{SDR}$ y el $\mathbf{BDR}$.
-
-#### 4.4.3. El Pentagrama Socio-Termodinámico y la Inercia del Desgaste Relacional
-Con la correspondencia canónica $D_k \equiv X_k$ del tetragrama, las diez densidades relacionales se organizan en dos macrodimensiones polares (DA y RECIBE) acopladas bajo dos estratos de conservación analítica:
-
-* **Estrato Vectorial con Signo (Valencia Neta y Sintonía):** el potencial neto del emisor $SDA = D_1 + D_2$ (expectativa emitida $D_1$ más acción real emitida $D_2$), el potencial neto del receptor $SRC = D_3 + D_4$ (acción real recibida $D_3$ más expectativa atribuida $D_4$), y el Saldo de Densidad Relativa total del campo $SDR = SDA + SRC$.
-* **Estrato Escalar Absoluto (Masa Cinética Total Movilizada):** la masa bruta de emisión $BDA = |D_1| + |D_2|$ y de recepción $BRC = |D_3| + |D_4|$, cuya suma define la Densidad Bruta Relacional $BDR = BDA + BRC$.
-
-La discrepancia analítica entre la energía total movilizada y el flujo neto cohesivo resultante define formalmente la **Inercia del Desgaste Relacional** ($I_{\text{desgaste}} = BDR - SDR$):
-
-* **Régimen de Eficiencia Máxima ($SDR \approx BDR \implies I_{\text{desgaste}} \approx 0$):** Las elecciones y expectativas convergen hacia la valencia positiva (`<Ee>`). Casi la totalidad de la energía invertida produce cohesión estructural y rendimiento útil.
-* **Régimen de Desgaste y Resistencia ($BDR \gg SDR \implies I_{\text{desgaste}} \gg 0$):** El colectivo moviliza grandes volúmenes de comunicación e interacción ($BDR$ elevado), pero las cancelaciones de signo provocadas por desconfianzas, tensiones latentes o desacoples perceptivos anulan el avance ($SDR \to 0$). La energía se disipa en forma de rumiación, sospecha y fricción estéril, cuantificando la fatiga estructural del grupo antes de que se manifieste en fracturas explícitas.
+En el plano operativo, el **Pentagrama Socio-Termodinámico** (Figura 8) articula las diez densidades canónicas desacoplando la emisión activa ($SDA, BDA$) del estatus receptivo ($SRC, BRC$), culminando en los invariantes globales $SDR$ y $BDR$. La discrepancia analítica entre la energía total movilizada y el flujo neto resultante define formalmente la **Inercia del Desgaste Relacional** ($I_{\text{desgaste}} = BDR - SDR$), cuantificando la energía disipada en rumiación y fricción estéril antes de que afloren fracturas abiertas en el grupo.
 
 ![Figura 8: Pentagrama Socio-Termodinámico (10D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)  
 *Figura 8. Pentagrama Socio-Termodinámico con las 10 densidades canónicas: desacoplamiento emisión/recepción y transición al continuo termodinámico; la brecha I_desgaste = BDR − SDR cuantifica la energía disipada en fricción.*
