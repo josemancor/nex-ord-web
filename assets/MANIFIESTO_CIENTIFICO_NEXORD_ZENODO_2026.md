@@ -74,9 +74,9 @@ Moreno concibió el concepto de átomo social y la arquitectura profunda de las 
 
 NEXORD sitúa la interacción relacional activa en el núcleo ontológico de la vida colectiva: el grupo no es un mero agregado de rasgos disposicionales individuales ni una red estática de nodos fríos, sino un campo dinámico de tensiones, atracciones y resistencias que emerge y se transforma continuamente.
 
-Como homenaje expreso a ambos fundadores, la Plataforma NEXORD encarga dos cartas territoriales en la tradición de la *Carte du Tendre* de Mademoiselle de Scudéry (1654) —género literario-cartográfico que la propia obra evoca al dar nombre al Protocolo Clélie de custodia de datos (§7.2)—: la *Carte de la Spontanéité et du Télé* para Jacob Levy Moreno (1934) y la *Carte du Champ Dynamique et de l'Espace Vital* para Kurt Lewin (1936–1951) (Figuras 1 y 2). Estas cartas declaran, con intención explícita, el estatuto epistémico del proyecto: en ningún momento NEXORD ha pretendido sustituir a sus inspiradores, sino completar algorítmicamente sus geniales intuiciones, adaptándolas a las posibilidades técnicas del cómputo contemporáneo. La continuidad con la tradición fundacional no es únicamente cartográfica: NEXORD opera indistintamente con protocolos de captura MORENO y ORBIT (doble pila interoperable, *dual-stack*), pues ambos son fundamentalmente intercambiables mediante una función de conversión automática recíproca ORBIT $\longleftrightarrow$ MORENO; y el tetragrama diádico ($pDA \cdot DA \cdot REC \cdot pREC$) que fundamenta la retícula Q81 es una construcción totalmente moreniana.
+Como homenaje expreso a ambos fundadores, la Plataforma NEXORD encarga dos cartas territoriales en la tradición de la *Carte du Tendre* de Mademoiselle de Scudéry (1654) —género literario-cartográfico que la propia obra evoca al dar nombre al Protocolo Clélie de custodia de datos (§7.2)—: la *Carte de la Spontanéité et du Télé* para Jacob Levy Moreno (1934) y la *Carte du Champ Dynamique et de l'Espace Vital* para Kurt Lewin (1936–1951) (Figuras 1 y 2). Estas cartas declaran, con intención explícita, el estatuto epistémico del proyecto: En ningún momento NEXORD ha pretendido sustituir a sus inspiradores, sino completar algorítmicamente sus geniales intuiciones, adaptándolas a las posibilidades técnicas del cómputo contemporáneo. La continuidad con la tradición fundacional no es únicamente cartográfica: NEXORD opera indistintamente con protocolos de captura MORENO y ORBIT (protocolos muy similares, dual-stack, pues ambos comparten un orden de elección/rechazo manifiesto; aunque ORBIT no se pronuncia directamente sobre las expectativas recíprocas, un algoritmo de conversión MORENO $\longleftrightarrow$ ORBIT permite una estimación probabilística que completa ambas formas sociométricas). El tetragrama diádico ($pDA \cdot DA \cdot REC \cdot pREC$) es una elaboración totalmente moreniana y constituye la base sólida sobre la que se ha construido la Plataforma NEXORD.
 
-La deuda específica con Kurt Lewin sostiene, asimismo, el atrevimiento que da título a esta obra: el origen del desarrollo de una «Física de lo Grupal» —y de la materialización de su variable cardinal, la densidad relacional que vertebra el aparato formal socio-termodinámico (§4.4)— se encuentra en la innovadora teoría del campo, que concibió la vida grupal como dinámica de fuerzas en un espacio vital medible: lo que aquí se cuantifica como densidad no es metáfora decorativa, sino continuación algorítmica de aquella intuición fundacional.
+La deuda específica con Kurt Lewin está en el origen del lema «La Física de lo Grupal» —y de la materialización de su variable cardinal, la densidad relacional que vertebra el aparato formal socio-termodinámico (§4.4)— se encuentra en la innovadora teoría del campo, que concibió la vida grupal como dinámica de fuerzas en un espacio vital medible: lo que aquí se cuantifica como densidad no es metáfora decorativa, sino continuación algorítmica de aquella intuición fundacional.
 
 Sin un orden canónico explícito, la sociometría histórica acumuló mediciones aisladas e inconmensurables entre sí: hermosas melodías que nadie podía leer en una misma partitura. NEXORD ofrece ese pentagrama común donde el orden no impone la música, sino que la hace legible y comparable.
 
@@ -84,40 +84,40 @@ Sin un orden canónico explícito, la sociometría histórica acumuló medicione
 *Figuras 1 y 2. Díptico Cartográfico Fundacional de la Psicología Social — Izquierda (Fig. 1): Carte de la Spontanéité et du Télé de Jacob L. Moreno (1934). Derecha (Fig. 2): Carte du Champ Dynamique & de l'Espace Vital de Kurt Lewin (1936–1951), ambas con orla conmemorativa institucional NEXORD.*
 
 ### 1.2. De la Jerarquía Cualitativa al Campo Continuo: Función Inversa al Rango
-En la fundamentación del método científico, el orden precede conceptualmente a la métrica cuantitativa. Mientras que la asignación de magnitudes cardinales a los estados afectivos presupone escalas de intervalos que no siempre reflejan el proceso subjetivo de decisión, la ordenación preferencial se ajusta directamente a la naturaleza del juicio relacional: la persona jerarquiza, prioriza y elige sus vínculos.
+En la fundamentación del método científico, el orden precede conceptualmente a la métrica cuantitativa. Mientras que la asignación de magnitudes cardinales a los estados afectivos presupone escalas de intervalos que no siempre reflejan el proceso subjetivo de decisión, la ordenación preferencial se ajusta perfectamente a la naturaleza del juicio relacional: la persona jerarquiza, prioriza y elige sus vínculos.
 
-Registrar el orden secuencial de elección permite capturar con fidelidad la estructura de las preferencias interpersonales sin imponer supuestos métricos a priori. En NEXORD, la métrica continua no se introduce como un postulado externo, sino que surge de forma analítica a partir del orden relacional mediante la función inversa al rango.
+Registrar el orden secuencial de elección permite capturar con precisión la estructura de las preferencias interpersonales sin imponer supuestos métricos a priori. En NEXORD, la métrica continua no se introduce como un postulado externo, sino que surge de forma analítica a partir del orden relacional mediante la función inversa al rango.
 
-El mecanismo analítico que hace posible el tránsito de la ordenación cualitativa al cálculo continuo es la cuantificación rigurosa del orden jerárquico mediante la función inversa al rango:
+El mecanismo analítico que hace posible el tránsito de la ordenación cualitativa al cálculo continuo es la cuantificación del orden jerárquico:
 
 $$W_{ij} = \frac{1}{r_{ij}^\gamma} \tag{1}$$
 
-donde $r_{ij} \in \{1, 2, \dots, N\}$ representa la posición ordinal estricta que el selector $i$ asigna al compañero $j$, y $\gamma$ modula la tasa de apertura y decaimiento del campo.
+donde $r_{ij} \in \{1, 2, \dots, N\}$ representa la posición ordinal estricta que el emisor $i$ asigna al compañero $j$, y $\gamma$ modula la interdistancia entre los distintos rangos.
 
-En su formulación complementaria de cota continua acotada, la densidad interpersonal normalizada adopta la forma:
+En su formulación complementaria, la densidad interpersonal normalizada adopta la forma:
 
 $$Z_{ij} = \frac{N - r_{ij}}{N - 1} \in [0, 1] \tag{2}$$
 
-donde el primer rango ($r_{ij} = 1$) alcanza la cota unitaria ($Z = 1.0$), el descarte o última posición ($r_{ij} = N$) desciende al cero absoluto ($Z = 0.0$), y los rangos intermedios se distribuyen de manera estrictamente equiespaciada. Es importante explicitar la jerarquía de operadores: la función inversa al rango (1) constituye el operador de cuantificación del valor del orden preferencial y sustenta el motor relacional de la plataforma (pesos de las sociomatrices SMIb y decaimiento del campo); la transformación lineal acotada (2) es una simplificación operativa empleada por la capa de interfaz e IA, y por aquellas métricas —como el coeficiente de fricción $\Phi$— que requieren una cota estricta en $[0, 1]$. Ambas transformaciones permiten operar el vínculo diádico como una fuerza continua y derivable, proyectable sobre variedades geométricas complejas. Esta convergencia formal dialoga con los modelos estadísticos para datos relacionales de orden de rango (Krivitsky & Butts, 2017) y con la evidencia psicométrica sobre la pérdida de información atribuible a las cuotas discretas truncadas (Terry, 2000).
+donde el primer rango ($r_{ij} = 1$) alcanza la cota unitaria ($Z = 1.0$), el descarte o última posición ($r_{ij} = N$) desciende al cero absoluto ($Z = 0.0$), y los rangos intermedios se distribuyen de manera estrictamente equiespaciada. Es importante explicitar la jerarquía de operadores: la función inversa al rango (1) constituye el operador de cuantificación del valor del orden preferencial y sustenta el motor relacional de la plataforma (pesos de las sociomatrices SMIb y decaimiento del campo); la transformación lineal acotada (2) es una simplificación operativa para aquellas métricas que requieren una cota estricta en $[0, 1]$. Ambas transformaciones permiten operar el vínculo diádico como una fuerza continua y derivable, proyectable sobre variedades geométricas complejas. Esta convergencia formal dialoga con los modelos estadísticos para datos relacionales de orden de rango (Krivitsky & Butts, 2017) y con la evidencia psicométrica sobre la pérdida de información atribuible a las cuotas discretas truncadas (Terry, 2000).
 
-### 1.3. El Axioma Fundamental: DAR y RECIBIR como Circuito Indisociable
-La emisión de preferencias (DAR) y la recepción de impacto colectivo (RECIBIR) no constituyen variables psicológicas independientes ni rasgos estables de personalidad aislados: son momentos constitutivos, polares e indisociables de un único circuito relacional continuo.
+### 1.3. El Axioma Fundamental: DAR y RECIBIR como Hecho Indisociable
+La emisión de preferencias (DAR) y la recepción de impacto recíproco (RECIBIR) no constituyen variables psicológicas independientes ni rasgos estables de personalidad: son momentos constitutivos, polares e indisociables de un único hecho relacional.
 
-El funcionamiento armónico o la fractura patológica de un colectivo no residen en los miembros tomados aisladamente, sino en la fluidez, simetría y cizalladura de sus intercambios mutuos. Un actor puede manifestar una disposición intensamente integradora mientras el grupo lo relega sistemáticamente a la invisibilidad o al rechazo; omitir la indisociabilidad de ambos polos conduce a diagnósticos ciegos a la exclusión latente y a intervenciones estigmatizantes.
+El funcionamiento armónico o la fractura patológica de un grupo no residen en los individuos como tales, sino en la fluidez, simetría y ruptura de sus intercambios mutuos. Un actor puede manifestar una disposición intensamente integradora mientras el grupo lo relega sistemáticamente a la invisibilidad o al rechazo; omitir la indisociabilidad de ambos polos conduce a diagnósticos ciegos a la exclusión latente y a intervenciones estigmatizantes.
 
 ---
 
 ## 2. Formato ORBIT, Dualidad Matricial y Clausura Diagonal
 
 ### 2.1. Orden sin empates y Dualidad Matricial A(i, k)=j vs. B(i, j)=k
-En la sociometría clásica, las condiciones del cálculo manual condujeron de forma natural a procedimientos de recuento basados en cuotas fijas (habitualmente tres elecciones y tres rechazos), donde cada mención recibía el mismo peso unitario ($1 = 1$). Este procedimiento, plenamente justificado en su contexto histórico, dejaba sin diferenciar la gradación de intensidad entre la primera preferencia nuclear y las elecciones sucesivas.
+En la sociometría clásica, las condiciones del cálculo manual condujeron de forma natural a procedimientos de recuento basados en cuotas fijas (habitualmente tres elecciones y tres rechazos), donde cada mención recibía el mismo peso, aunque pronto fue sustituido por una ponderación lineal inversa al rango (5-1).
 
-La Sociomatriz ORBIT (designada en su origen logístico como formato BREVE por su rapidez de administración) formaliza la ordenación preferencial exhaustiva $A(i, k) = j$ sobre el conjunto completo del colectivo, incorporando la auto-ubicación valorativa del emisor ($r_{ii} \in \{1, \dots, N\}$). La ordenación ordinal completa sin empates permite representar la jerarquía continua de las elecciones, facilitando la expresión natural del participante y preservando la información del dato sin truncamiento de cuotas. A partir de esta base ordinal, el modelo articula el tratamiento matricial y continuo de los intercambios relacionales como una permutación del espacio colectivo.
+La Sociomatriz ORBIT (inicialmente denominada como formato BREVE por su rapidez de administración) formaliza la ordenación preferencial exhaustiva $A(i, k) = j$ sobre el conjunto completo del grupo, donde el emisor ocupa su propio lugar como parte integrante que es. El orden total permite representar una secuencia completa de todos sus integrantes. A partir de esta base ordinal, el modelo articula el tratamiento matricial y continuo de los intercambios relacionales como una permutación del espacio colectivo.
 
 Esta estructura se articula analíticamente mediante dos representaciones matriciales complementarias y biyectivas:
 
 * **Matriz de Orden Directo $A(i, k) = j$:** Registra en cada fila $i$ el compañero $j$ asignado al casillero o rango de preferencia $k \in \{1^\circ, 2^\circ, \dots, N^\circ\}$.
-* **Sociomatriz de Distribución $B(i, j) = k$:** Sociomatriz cuadrada de orden $N \times N$ donde filas ($i$) y columnas ($j$) indexan a los miembros del colectivo, registrando el rango numérico adjudicado: $B(i, j) = k \iff A(i, k) = j$.
+* **Sociomatriz de Distribución $B(i, j) = k$:** Sociomatriz de orden $N \times N$ donde filas ($i$) y columnas ($j$) indican el orden en que $i$ ha colocado a $j$: $B(i, j) = k \iff A(i, k) = j$.
 
 Al constituir cada fila una permutación estricta del conjunto $\{1, 2, \dots, N\}$, la Sociomatriz ORBIT satisface de forma invariante la **propiedad de conservación de la suma ordinal por fila**:
 
@@ -129,10 +129,12 @@ Esta invariancia algebraica constituye el fundamento que hace posible la transpo
 * **Figura 4.** Sociomatriz ORBIT $A(i, k)=j$ y $B(i, j)=k$, en formato Excel para $N = 6$: Transposición a MORENO ($E, R, pE, pR$).
 * **Figura 5.** Matrices $SMI_a(i, j)$ del tetragrama figurativo y $SMI_b(i, j)$ del tetragrama alfanumérico.
 
-El formato ORBIT está especialmente indicado para su utilización en pequeños grupos ($N < 25$) —equipos de trabajo, células operativas, aulas o unidades convivenciales—, donde la ordenación exhaustiva y sin empates de todos los miembros resulta analítica y estructuralmente óptima para capturar con máxima resolución la microestructura relacional. Para colectivos de tamaño elevado ($N \ge 25$), NEXORD tiene dispuesto un protocolo especial de ordenación preferencial por fases sucesivas (un sistema que amplía las cuotas 3-5 morenianas a selecciones más amplias y estratificadas), sin merma de la resolución métrica.
+El formato ORBIT está especialmente indicado para su utilización en pequeños grupos ($N < 25$) —equipos de trabajo, células operativas, aulas o unidades convivenciales—, donde la ordenación exhaustiva resulta analítica y estructuralmente óptima para capturar con máxima resolución la microestructura relacional. Para colectivos de tamaño elevado ($N \ge 25$), NEXORD, en caso necesario, dispone de un procedimiento de ordenación por fases sucesivas (un sistema que amplía las cuotas 3-5 morenianas a selecciones más amplias y estratificadas), sin merma de la resolución métrica.
 
 ### 2.2. Clausura Diagonal Reflexiva y Sensores Nucleares (IDA, ITA, P(k))
-NEXORD resuelve la omisión secular de la diagonal principal sociométrica (tradicionalmente vacía, $r_{ii} = \emptyset$) exigiendo que cada participante se auto-ubique en el ranking colectivo ($r_{ii} \in \{1, \dots, N\}$). Esta clausura topológica convierte la matriz en un espacio relacional completo y continuo, activando tres sensores métricos fundamentales:
+Asegurados los dos extremos de la lista (E y R), el valor que les corresponde a los intermedios es prácticamente insignificante.
+
+NEXORD resuelve la omisión secular de la diagonal principal sociométrica requiriendo que cada participante se auto-ubique en el ranking colectivo. Esta clausura topológica convierte la matriz en un espacio relacional completo y continuo, activando tres indicadores métricos:
 
 * **Índice de Desajuste de Auto-rango ($IDA_i$):** Mide la discrepancia escalar entre la autoimagen proyectada ($r_{ii}$) y el consenso medio recibido del grupo ($\bar{R}_i^{\text{ext}}$):
 $$IDA_i = r_{ii} - \bar{R}_i^{\text{ext}} = r_{ii} - \left( \frac{1}{N - 1} \sum_{k \neq i}^N B(k, i) \right)$$
@@ -140,7 +142,7 @@ donde $IDA_i < 0$ cuantifica la sobreestimación jerárquica individual, $IDA_i 
 
 * **Índice de Tensión de Auto-rango ($ITA$):** Evalúa la fricción estructural inducida por la pugna por el liderazgo cuando múltiples participantes reclaman el primer rango de preferencia para sí mismos: $ITA = \max\left(0, \sum_{i=1}^N \mathbb{I}(r_{ii} = 1)\right) - 1$.
 
-* **Partición Cognitiva y Anclaje Combinatorio $P(k)$:** Al situar su auto-rango en la posición $k$, el espacio combinatorio admisible del sujeto queda acotado a $P(k) = \binom{N-1}{k-1}$, formalizando analíticamente que las preferencias interpersonales se emiten desde una auto-posición de referencia: hacia arriba o hacia abajo respecto del propio horizonte subjetivo.
+* **Partición Cognitiva y Anclaje Combinatorio $P(k)$:** Al situar su auto-rango en la posición $k$, el espacio combinatorio admisible del sujeto queda acotado a $P(k) = \binom{N-1}{k-1}$, formalizando que las preferencias interpersonales se emiten desde una auto-posición de referencia: hacia arriba o hacia abajo respecto del propio horizonte subjetivo.
 
 ---
 
@@ -156,37 +158,37 @@ $$ICE = 1 - \Phi \tag{4}$$
 Valores moderados de $\Phi$ reflejan dinamismo interno y plasticidad adaptativa, mientras que valores extremos señalan riesgos de fragmentación o turbulencia destructiva.
 
 ### 3.2. Psicologización de Regímenes y Prevención del Pensamiento Grupal (Groupthink)
-La dinámica colectiva no puede reducirse a una física inanimada: los estados del sistema expresan regímenes de articulación psicológica e interpersonal:
+La dinámica colectiva no puede reducirse a una física inanimada: los estados del sistema expresan fases de evolución psicológica e interpersonal:
 
-* **Régimen de Rigidez e Inercia Estructural:** Cristalizaciones jerárquicas rígidas, roles inmóviles y escasa permeabilidad comunicativa.
-* **Régimen de Fluidez y Cohesión Adaptativa:** Homeostasis abierta con circulación flexible de preferencias, acuerdos y divergencias.
-* **Régimen de Dispersión y Anomia:** Baja densidad de acoplamiento, desvinculación afectiva y ausencia de proyectos compartidos.
-* **Régimen de Efervescencia y Fusión Colectiva:** Alta activación emocional compartida e intensa movilización interactiva.
+* **Rigidez e Inercia Estructural:** Cristalizaciones jerárquicas rígidas, roles inmóviles y escasa permeabilidad comunicativa.
+* **Fluidez y Cohesión Adaptativa:** Homeostasis abierta con circulación flexible de preferencias, acuerdos y divergencias.
+* **Dispersión y Anomia:** Baja densidad de acoplamiento, desvinculación afectiva y ausencia de proyectos compartidos.
+* **Efervescencia y Fusión Colectiva:** Alta activación emocional compartida e intensa movilización interactiva.
 
-Bajo este prisma, NEXORD cuestiona radicalmente el supuesto tradicional de que la salud grupal óptima equivale a la cohesión absoluta ($ICE = 1.0, \Phi = 0$). Un colectivo sin discrepancias ni fricción interna constituye un sistema vulnerable al pensamiento grupal (*Groupthink*, Janis, 1972), donde las presiones hacia la conformidad anulan el pensamiento crítico y la toma informada de decisiones. La fricción moderada ($\Phi \in [\Phi_{\min}, \Phi_{\max}]$) y los gradientes en el circuito DAR/RECIBIR proporcionan la energía necesaria para la plasticidad, el aprendizaje organizativo y la adaptación evolutiva.
+Desde este punto de vista, NEXORD cuestiona radicalmente el supuesto tradicional de que la salud grupal óptima equivale a la cohesión absoluta ($ICE = 1.0, \Phi = 0$). Un colectivo sin discrepancias ni fricción interna constituye un sistema vulnerable al pensamiento grupal (*Groupthink*, Janis, 1972), donde las presiones hacia la conformidad anulan el pensamiento crítico y la toma informada de decisiones. La fricción moderada ($\Phi \in [\Phi_{\min}, \Phi_{\max}]$) y los gradientes en el circuito DAR/RECIBIR proporcionan la energía necesaria para la plasticidad, el aprendizaje organizativo y la adaptación evolutiva.
 
-### 3.3. La Metáfora del Puzle Vivo: Desatascamiento (Unjamming) vs. Reubicación Ecosistémica
-Frente a las intervenciones tradicionales que gestionan el conflicto mediante la exclusión punitiva o el señalamiento moral del sujeto discordante, NEXORD modela el colectivo como un puzle vivo. Un actor que experimenta una elevada fricción no es un elemento intrínsecamente patológico: suele sufrir un desacople de expectativas de rol o una asimetría de flujos con su entorno diádico inmediato.
+### 3.3. La Metáfora del Puzle: Desatascamiento (Unjamming) vs. Reubicación Ecosistémica
+Frente a las intervenciones tradicionales que gestionan el conflicto mediante la exclusión punitiva o el señalamiento moral del sujeto discordante, NEXORD modela el colectivo como un puzle. Un actor que experimenta una elevada fricción no es un elemento intrínsecamente patológico: suele sufrir un desacople de expectativas de rol o una asimetría de flujos con su entorno diádico inmediato.
 
 La facilitación diagnóstica promueve el desatascamiento (*unjamming*) mediante ajustes de tareas, clarificación comunicativa y apertura de canales de colaboración recíproca. Cuando tras un proceso sistemático de mediación la incompatibilidad estructural resulta persistente, el modelo contempla la reubicación ecosistémica digna: una migración hacia otro entorno grupal que preserve la integridad psicosocial del individuo y evite dinámicas de desgaste u ostracismo crónico.
 
-### 3.4. El Océano de Microestados y la Ley de Estabilidad Termodinámica
-La dimensión del espacio muestral sociométrico, incluso en el grupo más humilde, es enorme. Para un grupo de cinco personas, cada sujeto que ordena a los otros cuatro miembros dispone de $4! = 24$ ordenaciones estrictas; combinadas las elecciones independientes de los cinco participantes, el espacio total de microestados asciende a $24^5 = 7.962.624$ matrices posibles. Si se incluye la auto-ubicación del emisor ($5! = 120$ ordenaciones por fila), el espacio se dispara a $120^5 \approx 2,49 \times 10^{10}$ —casi 25.000 millones de configuraciones—: casi veinticinco mil millones de universos sociométricos posibles en una humilde habitación con cinco seres humanos sentados alrededor de una mesa. Dentro de este océano, la estabilidad termodinámica y la salud del sistema no dependen del azar, sino de la geometría del flujo energético: de la minimización de la disipación por cizalladura y de la existencia de atractores estables.
+### 3.4. El Universo de Microestados y la Ley de Estabilidad Termodinámica
+La dimensión del espacio muestral sociométrico, incluso en el grupo más humilde, es enorme. Para un grupo de cinco personas, cada sujeto que ordena a los otros cuatro miembros dispone de $4! = 24$ ordenaciones diferentes; combinadas las elecciones independientes de los cinco participantes, el espacio total de microestados asciende a $24^5 = 7.962.624$ matrices. Si se incluye la auto-ubicación del emisor ($5! = 120$ ordenaciones por fila), el espacio se dispara a $120^5 \approx 2,49 \times 10^{10}$ —casi 25.000 millones de configuraciones—: tan solo para un grupo de 5. Ante estas cifras, la estabilidad termodinámica y la salud del sistema no dependen del azar, sino de la geometría del flujo energético: de la minimización de la disipación por ruptura y de la existencia de atractores estables.
 
-La inmensa mayoría de las combinaciones corresponde a ruido térmico (matrices disonantes de alta fricción) o a trampas de congelación (fallas tectónicas y monopolios asfixiantes). Para que un microestado supere los umbrales de organización productiva y saludable debe satisfacer de forma simultánea tres invariantes termodinámicas:
-1. **Minimización de la disipación por cizalladura:** $\sum_i |Z_{ij} - Z_{ji}|^2 \to \min$ (reciprocidad y coherencia mutua).
+La inmensa mayoría de las combinaciones corresponderá a ruido térmico (matrices disonantes de alta fricción) o a trampas de congelación (fallas tectónicas y monopolios asfixiantes). Para que un microestado supere los umbrales de organización productiva y saludable debe satisfacer de forma simultánea tres invariantes termodinámicas:
+1. **Minimización de la disipación por ruptura:** $\sum_i |Z_{ij} - Z_{ji}|^2 \to \min$ (reciprocidad y coherencia mutua).
 2. **Equilibrio del gradiente barométrico:** $\sum_i (Z_i^{\text{in}} - Z_i^{\text{out}})^2 \le \varepsilon$ (ausencia de sumideros negros o manantiales sobrecargados).
 3. **Conectividad convectiva global:** existencia de cadenas de retorno transitivas sin nodos aislados ($Z_i^{\text{in}} > Z_{\text{crítico}}$ para todo $i$).
 
-De todo el océano combinatorio, solo un porcentaje sumamente selecto habita este régimen óptimo: el bienestar grupal no es la ausencia de estructura, sino una arquitectura de tensiones donde nadie queda condenado al cero absoluto ni forzado a sostener en soledad el peso del conjunto.
+De toda esta combinatoria, solo un porcentaje muy selecto accede a un estado óptimo: el bienestar grupal no es la ausencia de tensiones y conflictos sino un equilibrio entre ellos, donde nadie queda condenado al cero absoluto ni forzado a sostener en soledad el peso del conjunto.
 
-En síntesis: la salud y la productividad de un grupo no son una cuestión moral ni de buena voluntad, sino de aerodinámica e hidrostática relacional. Un grupo productivo es aquel cuyo elipsoide vuela horizontal, cuyos saldos de energía están en balance homeostático, y donde nadie tiene que ahogarse en el fondo del cañón para que otros puedan tomar el sol a cielo abierto.
+En síntesis: la salud y la productividad de un grupo no son una cuestión moral ni de buena voluntad, sino de aerodinámica e hidrostática relacional. Un grupo productivo es aquel cuyo elipsoide vuela horizontal, cuyos saldos de energía están en balance homeostático, y donde nadie tiene que ahogarse en el fondo del abismo para que otros puedan tomar el sol a cielo abierto.
 
 ---
 
 ## 4. Álgebra Tensorial, Retícula Q81 y el Pentagrama de Densidades
 
-### 4.1. Gramática Atómica de 12 Símbolos y la Celda Relacional X1 X2 X3 X4
+### 4.1. Los 12 Elementos Sintácticos y el Tetragrama Relacional A1 A2 A3 A4
 La retícula fundamental Q81 formaliza el espacio combinatorio completo de las $3^4 = 81$ configuraciones diádicas que articulan el campo relacional. Para dotar al sistema de una notación exacta, libre de ambigüedades, NEXORD establece un alfabeto de 12 símbolos distribuidos en tres estados de polaridad relacional:
 
 #### Tabla 1: Sintaxis — los 12 símbolos del alfabeto relacional NEXORD
@@ -213,31 +215,29 @@ La partición de $9 \times 9$ cruza los 9 perfiles de interacción activa (filas
 La numeralización de las 81 figuras relacionales ($Q_{81}(9, 9)$) se resuelve geométricamente mediante el barrido ordenado de las 17 antidiagonales secundarias, recorridas de abajo hacia arriba: cada antidiagonal define una isolínea de energía y valencia relacional neta constante, de modo que todas las figuras ubicadas sobre la misma antidiagonal comparten idéntica suma de polaridades entre acciones reales y expectativas cognitivas.
 
 Esta ordenación geométrica proporciona la **primera cuantificación métrico-escalar de la densidad relacional diádica** ($D_{Q81} \in [1, 81]$), estructurada en tres regiones fundamentales:
-* **Hemisferio de Disonancia y Rechazo (Escalares 1 a 36):** Las primeras 8 antidiagonales inferiores cubren $\sum_{k=1}^8 k = \frac{8 \times 9}{2} = 36$ figuras situadas en la zona de conflicto, desgaste y retracción vincular, partiendo del polo de máxima densidad negativa: `[Rr]` = 1.
+* **Vértice de Disonancia y Rechazo (Escalares 1 a 36):** Las primeras 8 antidiagonales inferiores cubren $\sum_{k=1}^8 k = \frac{8 \times 9}{2} = 36$ figuras situadas en la zona de conflicto, desgaste y retracción vincular, partiendo del polo de máxima densidad negativa: `[Rr]` = 1.
 * **Isolínea Baricéntrica Neutra (Escalares 37 a 45):** La antidiagonal transversal central ($d = 9$, constituida por 9 celdas) abarca los escalares 37 a 45. Su celda central (coordenada 5, 5) fija de manera unívoca el **centroide de indiferencia basal**:  
   $$\text{Celda}(5, 5) \implies \text{i¿?!} = 41$$
-* **Hemisferio de Cohesión y Resonancia (Escalares 46 a 81):** Las 8 antidiagonales superiores cubren las 36 figuras de atracción, convergencia y sinergia hasta alcanzar el extremo de la antidiagonal 17 (longitud 1), coronando el espacio en la figura de sintonía armónica plena: `<Ee>` = 81.
+* **Vértice de Cohesión y Resonancia (Escalares 46 a 81):** Las 8 antidiagonales superiores cubren las 36 figuras de atracción, convergencia y sinergia hasta alcanzar el extremo de la antidiagonal 17 (longitud 1), coronando el espacio en la figura de sintonía armónica plena: `<Ee>` = 81.
 
 **Normalización Continua de la Densidad $Q_{81}$:**  
 Al centrar la escala sobre el centroide neutro de indiferencia (41), la densidad diádica elemental de la figura se normaliza en el rango continuo canónico $[-1.00, +1.00]$:
 
 $$D_{Q81}(i, j) = \frac{Q_{81}(i, j) - 41}{40} \tag{13}$$
 
-donde:
-* $\text{Densidad Máxima Positiva: } D_{Q81}(\text{<Ee>}) = \frac{81 - 41}{40} = \mathbf{+1.000}$
-* $\text{Densidad Neutra Basal: } D_{Q81}(\text{i¿?!}) = \frac{41 - 41}{40} = \mathbf{0.000}$
-* $\text{Densidad Máxima Negativa: } D_{Q81}(\text{[Rr]}) = \frac{1 - 41}{40} = \mathbf{-1.000}$
+donde: $D_{Q81}(\text{<Ee>})$ = Densidad Máxima Positiva (+1.000), $D_{Q81}(\text{i¿?!})$ = Densidad Neutra (0.000) y $D_{Q81}(\text{[Rr]})$ = Densidad Máxima Negativa (-1.000).
 
 Esta geometría preserva una **simetría complementaria antipodal estricta**: $\text{Antípoda}(k) = 82 - k$, lo que implica que $\text{Figura}(i, j) + \text{Figura}(10-i, 10-j) = 82$, demostrando que el centroide neutro es autoinvariante bajo inversión polar ($41 + 41 = 82$).
 
 #### Tabla 3. Retícula Q81 (9 × 9): clasificación de las 81 figuras relacionales diádicas posibles, indexadas por antidiagonales de valencia creciente (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).
 
-### 4.3. El Tríptico Estructural del Sujeto Ti y el Diagnóstico Desdoblado
-Colapsar las relaciones de un sujeto en un promedio aritmético escalar simple constituye un error metodológico severo que engendra artefactos diagnósticos por cancelación polar (un individuo con un vínculo en 81 y otro en 1 promediaría falsamente en 41, confundiéndose con la indiferencia basal). NEXORD preserva la bidimensionalidad topológica desdoblando la posición del sujeto $i$ a través de su Tríptico Estructural $T_i = ( F_i^{\text{out}}, F_i^{\text{in}}, f_{ii} )$:
+### 4.3. El Tríptico Estructural del Sujeto como Unidad y el Diagnóstico Desdoblado
+La idea de dotar a cada miembro del grupo de una única figura relacional y de una única densidad global sólo es posible si se descarta un promedio de todas sus relaciones diádicas, lo que sería un procedimiento totalmente erróneo. NEXORD preserva la bidimensionalidad topológica desdoblando la posición del sujeto $i$ a través de su Tríptico Estructural:
 
-* **Figura Global Emisora ($F_i^{\text{out}}$):** Centroide bidimensional ($\bar{X}_i^{\text{out}}, \bar{Y}_i^{\text{out}}$) calculado sobre la fila $i$ de la sociomatriz, evaluando la iniciativa, la disposición activa y la confianza basal que $i$ proyecta hacia el grupo.
-* **Figura Global Receptora ($F_i^{\text{in}}$):** Centroide bidimensional ($\bar{X}_i^{\text{in}}, \bar{Y}_i^{\text{in}}$) calculado sobre la columna $i$, cuantificando el impacto objetivo, el estatus convergente y el horizonte de expectativas que el colectivo deposita sobre $i$.
-* **Auto-anclaje Reflexivo ($f_{ii}$):** Cierre diagonal reflexivo en Q81 que formaliza la autoimagen y la autoeficacia psicosocial del nodo.
+* **Emisión (DA):** $F_i^{\text{out}}$ = promedio numérico $Q_{81}$ de las elecciones y expectativas emitidas $(i, j)$, determinando el semi-tetragrama emisor $f_i^{\text{out}} = \text{‘xx..’}$.
+* **Recepción (RC):** $F_i^{\text{in}}$ = promedio numérico $Q_{81}$ de las elecciones y expectativas recibidas $(j, i)$, determinando el semi-tetragrama receptor $f_i^{\text{in}} = \text{‘..yy’}$.
+* **Figura Global del Sujeto:** De la articulación de ambos polos emerge su tetragrama integral $F_i^{\text{global}} = \text{‘XXYY’}$, cuyo valor $Q_{81}$ es el que corresponde canónicamente a la figura resultante.
+* **Auto-anclaje Reflexivo ($f_{ii}$):** Cierre diagonal reflexivo en $Q_{81}$ que formaliza la autoimagen y la autoeficacia psicosocial del nodo.
 
 De la discrepancia posicional $\Delta_{\text{rol}} = F_i^{\text{out}} - F_i^{\text{in}}$ emergen perfiles diagnósticos directos:
 * **Síndrome de Desgaste Relacional:** $F_i^{\text{out}} \gg F_i^{\text{in}}$ con declive en $f_{ii}$ (entrega e inversión no correspondidas, anticipando fatiga o abandono).
@@ -262,28 +262,7 @@ Para garantizar la reproducibilidad científica y evitar cualquier opacidad algo
 | **5. Esfuerzo Perceptivo** | Presencia activa de meta-percepción ($pDA, pRC$) | **$1.2\times$** | Reconocimiento del coste cognitivo de anticipación. **Bono estrictamente anulado a $1.0\times$ si existe ceguera estructural**. |
 | **6. Prestigio del Emisor ($P_i$)** | Centralidad Jerárquica del Sujeto en la Red | **Variable** ($0.5$ a $1.5$) | Multiplicador de escala gravitatoria. Determina cuánta masa inercial arrastra la acción del emisor sobre el colectivo. |
 
-**Ilustración Canónica del Algoritmo en la Hoja de Resultados Diádica:**
-* **Díada Armónica Plena (`<Ee>`):** Selector de alto prestigio ($P_i = 1.5$) que elige en 1ª opción ($1/r^k = 1.0$), con reciprocidad fáctica mutua ($1.5\times$), congruencia perceptiva acertada ($1.5\times$) y bono de esfuerzo lúcido ($1.2\times$):  
-  $$\text{Densidad}(i \to j) = (1.0 \times 1.5 \times 1.5 \times 1.2 \times 1.5) = \mathbf{4.86\text{ pts}}$$
-* **Díada Disonante / Paranoica (`[Ae)`):** Selector con estatus medio ($P_i = 1.0$) que relega en 2ª opción ($1/r^k = 0.354$), sin reciprocidad, con acierto nulo, esfuerzo perceptivo anulado por ceguera y oposición de sentimientos activa:  
-  $$\text{Densidad}(i \to j) = 0.354 - (1.0 \times 0.5) = -0.146 \implies \mathbf{0.00\text{ pts}}$$  
-  *(La radiación útil queda anulada: el vínculo no aporta cohesión y disipa energía en forma de fricción térmica estéril).*
-
-A partir de estas densidades diádicas moduladas, el sistema cuantifica simultáneamente los **4 canales elementales del tetragrama relacional** para cada sujeto $i$ promediando sobre el colectivo de tamaño $N$ ($j \neq i$):
-1. **D1 ($D_{pDA}$ / $dDP$) — Densidad de Expectativas Emitidas:**  
-   Horizonte proyectado por el emisor sobre cómo anticipa sus propios vínculos hacia el grupo:  
-   $$D_1(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{pDA}(i, j) \tag{16}$$
-2. **D2 ($D_{DA}$ / $dDA$) — Densidad de Elección Efectiva Emitida:**  
-   Flujo cinético y valencia neta de las elecciones efectivas emitidas por el sujeto hacia sus compañeros:  
-   $$D_2(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{DA}(i, j) \tag{17}$$
-3. **D3 ($D_{RC}$ / $dRA$) — Densidad de Elección Efectiva Recibida:**  
-   Estatus objetivo e impacto real de atracción o rechazo recibido del grupo:  
-   $$D_3(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{RC}(j, i) \tag{18}$$
-4. **D4 ($D_{pRC}$ / $dRP$) — Densidad de Expectativas Atribuidas al Receptor:**  
-   Campo reflejo de presunción que el colectivo proyecta sobre la receptividad del sujeto:  
-   $$D_4(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{pRC}(j, i) \tag{19}$$
-
-*(En la sociomatriz bidireccional integral, las componentes basales del sujeto integran emisión y recepción mediante el promedio baricéntrico $v_k(i) = \frac{1}{2}[\text{Fila}_k(i) + \text{Columna}_k(i)]$, garantizando el cierre simétrico de la red).*
+A partir de estas densidades diádicas moduladas, el sistema cuantifica simultáneamente los canales relacionales elementales y sus combinaciones invariantes. En la sociomatriz bidireccional integral, las componentes basales del sujeto integran emisión y recepción mediante el promedio baricéntrico $v_k(i) = \frac{1}{2}[\text{Fila}_k(i) + \text{Columna}_k(i)]$, garantizando el cierre simétrico de la red.
 
 **Convenio Universal de Prefijos S y B:**  
 * **S (Saldo / Densidad Relativa):** Magnitud con signo ($\pm\mathbb{R}$). Cuantifica vectores de fuerza, gradientes de potencial y dirección de atracción o rechazo.
