@@ -1,452 +1,662 @@
-# SOCIOMETRÍA ORDINAL COMPUTACIONAL Y DIAGNÓSTICO SOCIO-TERMODINÁMICO (PLATAFORMA NEXORD)
-## Manifiesto Científico, Fundamentación Teórico-Metodológica y Propuesta de Gobernanza en Ciencia Abierta
-### *«Hacia una Física de lo Grupal_JMC»*
-#### Edición Canónica Homologada v8.0 (2026)
+# SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD)
+### COMPUTATIONAL ORDINAL SOCIOMETRY (NEXORD)
 
-![Logo Institucional NEXORD](LOGO_NEXORD_OFICIAL.png)
+**Dr. José Manuel Cornejo Álvarez**  
+*Universidad de Barcelona (UB)*
 
-**Autor:** Dr. José Manuel Cornejo Álvarez  
-**Filiación Académica:** Titular de Psicología Social (Jubilado) · Facultat de Psicologia, Universitat de Barcelona (UB)  
-**Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico de la iniciativa del Banco Sociométrico (BSOC)  
-**Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)  
-**DOI de Edición Homologada:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)  
-**Página Web Oficial y Plataforma Interactiva:** [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/)  
-**Repositorio Oficial y Código Fuente:** [https://github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web)  
-**Ecosistema Maestro:** VISORD 3D/4D (Visualizador Sociométrico Ordinal)  
-**Idiomas Soportados por la Plataforma NEXORD:** Español (ES), English (EN), Français (FR), Deutsch (DE), Italiano (IT), Português (PT), Русский (RU), 中文 (ZH).  
+## SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD)
+### *«Hacia una Física de la Grupalidad»*
+
+**Edición V9.0 (Octubre, 2026)**
+
+* **Autor:** Dr. José Manuel Cornejo Álvarez
+* **Vinculación Académica:** Profesor Emérito Jubilado · Psicología Social
+* **Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico del Banco Sociométrico (BSOC)
+* **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396) · **DOI de Edición:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)
+* **Repositorio Oficial:** [github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web) · **Plataforma:** [josemancor.github.io/nex-ord-web](https://josemancor.github.io/nex-ord-web/)
+* **Ecosistema Maestro:** VISORD 3D/4D (Visualizador Sociométrico Ordinal)
 
 ---
 
-## Resumen
+## RESUMEN
 
-La Sociometría Ordinal Computacional NEXORD es, en lo esencial, una extensión actualizada de las intuiciones de Jacob Levy Moreno, creador de la Sociometría, y de Kurt Lewin, de la teoría del campo, dos grandes de la Psicología Social. Históricamente, la investigación en Psicología de los grupos ha estado condicionada por las limitaciones metodológicas y técnicas propias de la época en las que surgieron. Este Manifiesto parte de:
+La Sociometría Ordinal Computacional es, en lo esencial, una extensión actualizada de las intuiciones de Jacob Levy Moreno, creador de la Sociometría, y de Kurt Lewin, de la Teoría del Campo, dos grandes de la Psicología Social. Históricamente, la investigación en Psicología de los grupos ha estado condicionada por las limitaciones metodológicas y técnicas propias de la época en las que surgieron. Este Manifiesto parte de:
 
 **1)** La consideración del ‘vínculo relacional’, producto de la interacción humana, como núcleo que constituye la realidad existencial de los grupos. ‘Dar y Recibir’ son los pares de fuerza indisociables que mantienen el necesario intercambio dialéctico de afectos, ideas, intenciones, recursos y acciones para el logro de objetivos comunes. Del equilibrio homeostático permanente que se establece entre los intercambios interpersonales de aceptación y/o conflicto depende la salud personal y grupal, su bienestar, éxito y viabilidad, a corto y medio plazo.
 
-**2)** La cuantificación más precisa del orden relacional preferencial, con la aplicación de la función inversa al rango y los desarrollos teóricos, metodológicos y tecnológicos actuales están en la génesis de NEXORD, como plataforma general de investigación psicosocial sociométrica, con el propósito de intentar dar forma a las intuiciones que Moreno y Lewin no pudieron desarrollar en su época.
+**2)** La cuantificación más precisa del orden relacional preferencial, con la aplicación de la función inversa al rango ($W_{ij} = 1 / r_{ijk}$) y los desarrollos teóricos, metodológicos y tecnológicos actuales están en la génesis de NEXORD, como plataforma general de investigación psicosocial sociométrica, con el propósito de intentar formalizar las intuiciones que Moreno y Lewin no pudieron desarrollar en su época.
 
-**3)** La métrica continua, fruto de esta cuantificación, se articula formalmente, mediante álgebra matricial y tensorial, en el tetragrama relacional de raíz moreniana ($E, R, pE, pR$) en $3^4 = 81$ figuras diádicas operativas mediante la dualidad de matrices SMIb/SMIa que transforma la micro-interacción subjetiva en topología computable.
+**3)** La métrica continua, fruto de esta cuantificación, se articula formalmente, mediante álgebra matricial y tensorial, en el tetragrama de raíz moreniana ($E, R, pE, pR$; $p$: percepciones/expectativas), que definen $3^4 = 81$ (Q81) figuras de relación diádica; a las que se han añadido dos metapercepciones triádicas ($\alpha E, \omega E$) sobre la idea que se hace el emisor de las preferencias que realmente expresarán su primer elegido y la persona más rechazada. Estos datos transforman las micro-interacciones ($N \times N$) en topologías computables.
 
-**4)** La articulación de las 4 densidades elementales y su extensión a 18 densidades relacionales derivadas (espacio 18D) a partir de la retícula Q81, que cuantifican la masa y el flujo de los intercambios. Este gradiente permite modelar el colectivo como un sistema socio-termodinámico regido por estados de equilibrio y fricción relacional ($\Phi$), donde la discrepancia dialéctica actúa como condición necesaria de salud y adaptabilidad frente a la entropía del pensamiento grupal (*Groupthink*).
+**4)** La articulación en 4 densidades elementales ($pDA, DA, RC, pRC$) y su expansión combinatoria en 14 densidades derivadas (espacio 18D) cuantifican con precisión la masa y el flujo de los intercambios entre los componentes del grupo. Este gradiente permite modelar el conjunto como un sistema socio-termodinámico regido por estados de equilibrio y fricción relacional ($\Phi$), donde la discrepancia dialéctica actúa como condición necesaria de salud y adaptabilidad frente a la entropía del pensamiento grupal (*Groupthink*).
 
-**5)** La proyección simultánea en espacios factoriales duales (AFC $\parallel$ PCA), donde los actores emergen no como puntos estáticos, sino como dipolos cinemáticos diádicos ($DA \longrightarrow RECIBE$) cuyo centroide equilibra analíticamente la emisión y la recepción. Esta formulación revela la dominancia gravitatoria del eje relacional principal ($PC_1 \gg PC_2$) y permite la comparación geométrica de estructuras grupales mediante variedades de Grassmann $\operatorname{Gr}(k, N)$.
+**5)** La proyección simultánea en espacios factoriales duales de los actores (como emisores de preferencias al grupo y a la vez receptores de las preferencias grupales) que emergen, no como puntos estáticos, sino como dipolos cinemáticos ($DA \longleftrightarrow RECIBE$) cuyos centroides equilibran analíticamente la emisión y la recepción. Esta formulación revela la dominancia gravitatoria de los ejes principales ($F_1$ y $F_2$) y permite la comparación geométrica de estructuras grupales en las variedades de Grassmann $\operatorname{Gr}(k, N)$.
 
-**6)** La versatilidad del diseño multidimensional ($G \times T \times C$), que permite realizar comparaciones integradas (intra e inter grupales): transversales, longitudinales y criteriales. Esta arquitectura se potencia con los módulos de visualización interactiva VISORD, que facilitan la monitorización de las estructuras y procesos sociométricos resultantes de los análisis.
+**6)** La versatilidad del diseño multidimensional ($G \times T \times C$), permite realizar comparaciones simultáneas intra/inter grupales: transversales, longitudinales y de criterio de preferencia. Esta arquitectura matemática de relaciones abstractas se hace más comprensible, para los no expertos, con los módulos de visualización interactiva VISORD, que facilitan la monitorización y seguimiento de los resultados.
 
-**7)** El compromiso ético efectivo de NEXORD con un uso estrictamente constructivo y no punitivo de la sociometría: asegurando por diseño (*Privacy by Design*) la salvaguardia absoluta de la privacidad. Este marco exige la tutela institucional y el compromiso deontológico explícito del Investigador Principal (IP) como único interlocutor acreditado, todo ello bajo los estándares de Ciencia Abierta.
+**7)** En su aplicación a estudios de campo con personas reales, NEXORD garantiza un uso exclusivamente formativo, no punitivo, de los datos. Esta exigencia salvaguarda la privacidad por diseño (*Privacy by Design*) y exige la acreditación profesional e institucional así como el compromiso explícito del Investigador Principal (IP) conforme a los principios de la Ciencia Abierta, de no dañar jamás con sus informes la autoestima personal ni la reputación social de los participantes, dando por características intrínsecas de la personalidad individual lo que son fenómenos termodinámicos estrictamente grupales.
 
-**Palabras clave:** Plataforma NEXORD, VISORD, Sociometría Ordinal Computacional, Sociometría Preventiva, Formato Breve, Función Inversa al Rango, Densidades Relacionales (18D), Metapercepción, Planos Factoriales Duales, Variedades de Grassmann, Pensamiento Grupal, Ostracismo, Ética por Diseño, Ciencia Abierta.
+**Palabras clave:** Plataforma NEXORD, VISORD, Sociometría Ordinal Computacional, Sociometría Preventiva, Formato ORBIT, Función Inversa al Rango, Densidades Relacionales (18D), Metapercepción, Planos Factoriales Duales, Variedades de Grassmann, Pensamiento Grupal, Ostracismo, Ética por Diseño, Ciencia Abierta.
+
+---
+
+## ABSTRACT
+
+Computational Ordinal Sociometry is, in essence, an updated extension of the intuitions of Jacob Levy Moreno, creator of Sociometry, and Kurt Lewin, pioneer of Field Theory—two seminal figures in Social Psychology. Historically, research in the Psychology of groups has been conditioned by the methodological and technical limitations of the era in which they emerged. This Manifesto is grounded in:
+
+**1)** The conception of the ‘relational tie’, product of human interaction, as the existential core constituting the reality of groups. ‘Giving and Receiving’ are indissociable force pairs that sustain the necessary dialectical exchange of affect, ideas, intentions, resources, and actions toward shared goals. Personal and group health, wellbeing, success, and viability fundamentally depend on the permanent homeostatic balance established across interpersonal exchanges of acceptance and/or conflict in the short and medium term.
+
+**2)** The refined quantification of preferential relational order, through the application of the inverse rank function ($W_{ij} = 1 / r_{ijk}$) and contemporary theoretical, methodological, and technological developments, defines the genesis of NEXORD as an overarching sociometric psychosocial research platform, aiming to formally articulate the intuitions that Moreno and Lewin could not develop in their time.
+
+**3)** The continuous metric emerging from this quantification is formally articulated, through matrix and tensorial algebra, within the Moreno-rooted relational tetragram ($E, R, pE, pR$; $p$: perceptions/expectativas) defining $3^4 = 81$ (Q81) dyadic relational figures; to which two triadic metaperceptions ($\alpha E, \omega E$) have been added regarding the sender's expectation of the preferences that will actually be expressed by their first chosen and most rejected peers. These data transform micro-interactions ($N \times N$) into computable topologies.
+
+**4)** The articulation into 4 elementary densities ($pDA, DA, RC, pRC$) and their combinatorial expansion into 14 derived densities (18D space) precisely quantify the mass and flow of exchanges among group members. This gradient allows modeling the collective as a socio-thermodynamic system governed by equilibrium states and relational friction ($\Phi$), where dialectical discrepancy acts as a necessary condition for health and adaptability against the entropy of groupthink (*Groupthink*).
+
+**5)** The simultaneous projection in dual factorial spaces of the actors (as senders of preferences to the group and simultaneously recipients of group preferences) who emerge, not as static points, but as kinematic dipoles ($DA \longleftrightarrow RECIBE$) whose centroids analytically balance giving and receiving. This formulation reveals the gravitational dominance of the principal axes ($F_1$ and $F_2$) and enables the geometric comparison of group structures across Grassmann manifolds $\operatorname{Gr}(k, N)$.
+
+**6)** The versatility of the multidimensional design ($G \times T \times C$) enables simultaneous intra- and inter-group comparisons: cross-sectional, longitudinal, and across preference criteria. This mathematical architecture of abstract relationships becomes intuitive for non-experts through the VISORD interactive visualization modules, which facilitate the monitoring and tracking of analytical outcomes.
+
+**7)** In its application to real-world field studies with human participants, NEXORD guarantees an exclusively formative, non-punitive use of data. This requirement safeguards privacy by design (*Privacy by Design*) and demands professional and institutional accreditation as well as the explicit deontological pledge of the Principal Investigator (PI) under Open Science standards, never to damage with their reports the personal self-esteem or social standing of participants, giving as intrinsic traits of individual personality what are strictly group thermodynamic phenomena.
+
+**Keywords:** NEXORD Platform, VISORD, Computational Ordinal Sociometry, Preventive Sociometry, ORBIT Format, Inverse Rank Function, Relational Densities (18D), Metaperception, Dual Factorial Planes, Grassmann Manifolds, Groupthink, Ostracism, Ethics by Design, Open Science.
 
 ---
 
----
+> *«El vínculo humano no es un simple resultado numérico; es un **NEXO** que solo cobra sentido cuando adquiere **ORDEN**.*  
+> *Sin orden, la sociometría se limita a un recuento de simpatías; con orden, la sociometría se convierte en topología y termodinámica del espacio grupal.»*
 
 ## 1. Fundamentación Epistemológica
 
 ### 1.1. Superación del Límite Clásico y la Ontología del Vínculo
-El propósito de NEXORD es actualizar metodológicamente la tradición de la psicología social: trasladar al plano computacional las intuiciones que ni Jacob L. Moreno ni Kurt Lewin pudieron implementar con el instrumental técnico de su época. Moreno formalizó el concepto de átomo social, pero el cálculo manual limitó la sociometría a cuotas binarias fijas (típicamente tres elecciones y tres rechazos). Lewin conceptualizó la teoría del campo psicológico y la topología social, pero careció de operadores matemáticos continuos para cuantificar distancias relacionales sin distorsionar la naturaleza psicológica del vínculo. NEXORD sitúa la interacción relacional activa en el núcleo ontológico de la vida grupal: el grupo no es un agregado estático de individuos, sino un campo dinámico de fuerzas en continua configuración. Asimismo, como anclaje analógico y apoyo conceptual al postulado de una *Física de lo Grupal*, la formulación sintoniza con la intuición de Nikola Tesla (*«si deseas comprender el universo, piensa en términos de energía, frecuencia y vibración»*): los vínculos humanos se abordan no como categorías inertes o sumatorios discretos, sino como estados dinámicos de energía, gradientes de intercambio y patrones oscilatorios en un campo continuo.
+El propósito de la Sociometría Ordinal Computacional en NEXORD es actualizar metodológicamente la tradición fundacional de la psicología social: trasladar al plano computacional las intuiciones que ni Jacob Levy Moreno ni Kurt Lewin pudieron implementar con el instrumental técnico de su época.
 
-### 1.2. Cuantificación del Orden mediante la Función Inversa al Rango
-El mecanismo que posibilita el paso a una métrica continua es la cuantificación rigurosa del orden jerárquico mediante la función inversa al rango:
+Moreno concibió el concepto de átomo social y la arquitectura profunda de las preferencias afectivas, pero el cálculo manual obligó históricamente a constreñir los cuestionarios sociométricos a cuotas fijas de elección y rechazo binario (habitualmente tres elecciones positivas y tres negativas). Por su parte, Lewin formalizó la teoría del campo psicológico y la topología hodológica, pero careció de operadores matemáticos continuos capaces de cuantificar distancias psicológicas sin fracturar la naturaleza psicosocial del espacio vital.
 
-![Fórmula 1: Decaimiento Relacional](formulas/Formula_1_Decaimiento_Relacional.png)
+NEXORD sitúa la interacción relacional activa en el núcleo ontológico de la vida colectiva: el grupo no es un mero agregado de rasgos disposicionales individuales ni una red estática de nodos fríos, sino un campo dinámico de tensiones, atracciones y resistencias que emerge y se transforma continuamente.
 
-donde r_ij en {1, 2, ..., N} representa el rango ordinal estricto que el emisor i asigna al receptor j, y gamma > 0 modula la tasa de apertura y decaimiento relacional del campo. Esta formulación traduce la ordenación cualitativa en magnitudes relacionales continuas, permitiendo tratar el vínculo diádico como una fuerza medible y proyectable en espacios multidimensionales. Este principio formal converge armónicamente con los modelos estadísticos para datos relacionales de orden de rango (Krivitsky & Butts, 2017) y con la advertencia psicométrica sobre la pérdida de información atribuible a las cuotas discretas truncadas (Terry, 2000).
+Como homenaje expreso a ambos fundadores, la Plataforma NEXORD encarga dos cartas territoriales en la tradición de la *Carte du Tendre* de Mademoiselle de Scudéry (1654) —género literario-cartográfico que la propia obra evoca al dar nombre al Protocolo Clélie de custodia de datos (§7.2)—: la *Carte de la Spontanéité et du Télé* para Jacob Levy Moreno (1934) y la *Carte du Champ Dynamique et de l'Espace Vital* para Kurt Lewin (1936–1951) (Figuras 1 y 2). Estas cartas declaran, con intención explícita, el estatuto epistémico del proyecto: en ningún momento NEXORD ha pretendido sustituir a sus inspiradores, sino completar algorítmicamente sus geniales intuiciones, adaptándolas a las posibilidades técnicas del cómputo contemporáneo. La continuidad con la tradición fundacional no es únicamente cartográfica: NEXORD opera indistintamente con protocolos de captura MORENO y ORBIT (doble pila interoperable, *dual-stack*), pues ambos son fundamentalmente intercambiables mediante una función de conversión automática recíproca ORBIT $\longleftrightarrow$ MORENO; y el tetragrama diádico ($pDA \cdot DA \cdot REC \cdot pREC$) que fundamenta la retícula Q81 es una construcción totalmente moreniana.
 
+La deuda específica con Kurt Lewin sostiene, asimismo, el atrevimiento que da título a esta obra: el origen del desarrollo de una «Física de lo Grupal» —y de la materialización de su variable cardinal, la densidad relacional que vertebra el aparato formal socio-termodinámico (§4.4)— se encuentra en la innovadora teoría del campo, que concibió la vida grupal como dinámica de fuerzas en un espacio vital medible: lo que aquí se cuantifica como densidad no es metáfora decorativa, sino continuación algorítmica de aquella intuición fundacional.
 
+Sin un orden canónico explícito, la sociometría histórica acumuló mediciones aisladas e inconmensurables entre sí: hermosas melodías que nadie podía leer en una misma partitura. NEXORD ofrece ese pentagrama común donde el orden no impone la música, sino que la hace legible y comparable.
+
+![Figuras 1 y 2: Díptico Cartográfico Fundacional — Moreno (1934) y Lewin (1951)](Figura_01_Diptico_Moreno_Lewin_Homenaje.png)  
+*Figuras 1 y 2. Díptico Cartográfico Fundacional de la Psicología Social — Izquierda (Fig. 1): Carte de la Spontanéité et du Télé de Jacob L. Moreno (1934). Derecha (Fig. 2): Carte du Champ Dynamique & de l'Espace Vital de Kurt Lewin (1936–1951), ambas con orla conmemorativa institucional NEXORD.*
+
+### 1.2. De la Jerarquía Cualitativa al Campo Continuo: Función Inversa al Rango
+En la fundamentación del método científico, el orden precede conceptualmente a la métrica cuantitativa. Mientras que la asignación de magnitudes cardinales a los estados afectivos presupone escalas de intervalos que no siempre reflejan el proceso subjetivo de decisión, la ordenación preferencial se ajusta directamente a la naturaleza del juicio relacional: la persona jerarquiza, prioriza y elige sus vínculos.
+
+Registrar el orden secuencial de elección permite capturar con fidelidad la estructura de las preferencias interpersonales sin imponer supuestos métricos a priori. En NEXORD, la métrica continua no se introduce como un postulado externo, sino que surge de forma analítica a partir del orden relacional mediante la función inversa al rango.
+
+El mecanismo analítico que hace posible el tránsito de la ordenación cualitativa al cálculo continuo es la cuantificación rigurosa del orden jerárquico mediante la función inversa al rango:
+
+$$W_{ij} = \frac{1}{r_{ij}^\gamma} \tag{1}$$
+
+donde $r_{ij} \in \{1, 2, \dots, N\}$ representa la posición ordinal estricta que el selector $i$ asigna al compañero $j$, y $\gamma$ modula la tasa de apertura y decaimiento del campo.
+
+En su formulación complementaria de cota continua acotada, la densidad interpersonal normalizada adopta la forma:
+
+$$Z_{ij} = \frac{N - r_{ij}}{N - 1} \in [0, 1] \tag{2}$$
+
+donde el primer rango ($r_{ij} = 1$) alcanza la cota unitaria ($Z = 1.0$), el descarte o última posición ($r_{ij} = N$) desciende al cero absoluto ($Z = 0.0$), y los rangos intermedios se distribuyen de manera estrictamente equiespaciada. Es importante explicitar la jerarquía de operadores: la función inversa al rango (1) constituye el operador de cuantificación del valor del orden preferencial y sustenta el motor relacional de la plataforma (pesos de las sociomatrices SMIb y decaimiento del campo); la transformación lineal acotada (2) es una simplificación operativa empleada por la capa de interfaz e IA, y por aquellas métricas —como el coeficiente de fricción $\Phi$— que requieren una cota estricta en $[0, 1]$. Ambas transformaciones permiten operar el vínculo diádico como una fuerza continua y derivable, proyectable sobre variedades geométricas complejas. Esta convergencia formal dialoga con los modelos estadísticos para datos relacionales de orden de rango (Krivitsky & Butts, 2017) y con la evidencia psicométrica sobre la pérdida de información atribuible a las cuotas discretas truncadas (Terry, 2000).
 
 ### 1.3. El Axioma Fundamental: DAR y RECIBIR como Circuito Indisociable
-La emisión de preferencias (DAR) y la recepción de impacto colectivo (RECIBIR) no constituyen variables independientes ni rasgos de personalidad aislados: son momentos inmanentes e indisociables de un único circuito relacional continuo. El funcionamiento armónico o la disfunción de un grupo no residen en miembros aislados, sino en la fluidez, simetría y fricción de sus intercambios mutuos. Un actor puede emitir elecciones favorables mientras el grupo lo relega sistemáticamente; ignorar la indisociabilidad de ambos polos conduce a diagnósticos sesgados o ciegos al aislamiento estructural latente.
+La emisión de preferencias (DAR) y la recepción de impacto colectivo (RECIBIR) no constituyen variables psicológicas independientes ni rasgos estables de personalidad aislados: son momentos constitutivos, polares e indisociables de un único circuito relacional continuo.
+
+El funcionamiento armónico o la fractura patológica de un colectivo no residen en los miembros tomados aisladamente, sino en la fluidez, simetría y cizalladura de sus intercambios mutuos. Un actor puede manifestar una disposición intensamente integradora mientras el grupo lo relega sistemáticamente a la invisibilidad o al rechazo; omitir la indisociabilidad de ambos polos conduce a diagnósticos ciegos a la exclusión latente y a intervenciones estigmatizantes.
 
 ---
 
-## 2. Protocolo de Captura: Formato BREVE, Dualidad Matricial y Clausura Diagonal
+## 2. Formato ORBIT, Dualidad Matricial y Clausura Diagonal
 
-### 2.1. Arrastre Forzado sin Empates y Dualidad Matricial A(i, orden) vs. B(i, j)
-En el Formato BREVE, el participante accede a la relación de sus compañeros en un orden aleatorizado para neutralizar sesgos de anclaje. Mediante una tarea de arrastre forzado (*drag-and-drop*), ordena a la totalidad del grupo entre un polo de máxima preferencia y un polo de descarte. La regla de cero empates ($r_{ij} \neq r_{ik}$) erradica el sesgo de aquiescencia y asegura un ordenamiento completo. Esta captura se formaliza analíticamente en dos matrices complementarias:
-  * **Matriz A(i, orden) BREVE:** Representa las secuencias ordinales directas emitidas por cada participante. Sus filas corresponden a los emisores $i$, sus columnas a los puestos ordinales $k \in \{1º, \dots, Nº\}$, y el valor de cada celda indica la identidad del compañero situado en dicha posición: $A(i, k) = j$.
-  * **Matriz B(i, j) DISTRIBUCIÓN DEL ORDEN:** Sociomatriz cuadrada ($N \times N$) donde cada fila representa al emisor $i$, cada columna al receptor $j$, y el contenido registra el rango numérico asignado: $B(i, j) = k \iff A(i, k) = j$.
+### 2.1. Orden sin empates y Dualidad Matricial A(i, k)=j vs. B(i, j)=k
+En la sociometría clásica, las condiciones del cálculo manual condujeron de forma natural a procedimientos de recuento basados en cuotas fijas (habitualmente tres elecciones y tres rechazos), donde cada mención recibía el mismo peso unitario ($1 = 1$). Este procedimiento, plenamente justificado en su contexto histórico, dejaba sin diferenciar la gradación de intensidad entre la primera preferencia nuclear y las elecciones sucesivas.
 
-#### Tabla 1A: Formalización Factual de Grupo A ($G_1$, $N = 6$, Bipolar $3+3$) — Formato BREVE, Moreno Clásico y Metapercepciones
+La Sociomatriz ORBIT (designada en su origen logístico como formato BREVE por su rapidez de administración) formaliza la ordenación preferencial exhaustiva $A(i, k) = j$ sobre el conjunto completo del colectivo, incorporando la auto-ubicación valorativa del emisor ($r_{ii} \in \{1, \dots, N\}$). La ordenación ordinal completa sin empates permite representar la jerarquía continua de las elecciones, facilitando la expresión natural del participante y preservando la información del dato sin truncamiento de cuotas. A partir de esta base ordinal, el modelo articula el tratamiento matricial y continuo de los intercambios relacionales como una permutación del espacio colectivo.
 
-| ID Nodo | 1º | 2º | 3º | 4º | 5º | 6º | Elecciones (E) | Rechazos (R) | Expectativa E (pE) | Expectativa R (pR) | $\alpha E$ (Próximo) | $\omega E$ (Distante) |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1A** | 2A | 1A | 3A | 5A | 4A | 6A | 2A, 3A | 4A, 6A | 2A, 3A | 4A, 6A | 2A | 2A $\to$ 1A |
-| **2A** | 1A | 2A | 3A | 4A | 6A | 5A | 1A, 3A | 5A, 6A | 1A, 3A | 5A, 6A | 1A | 1A $\to$ 2A |
-| **3A** | 1A | 2A | 3A | 6A | 5A | 4A | 1A, 2A | 4A, 5A | 1A, 2A | 4A, 5A | 1A | 1A $\to$ 2A |
-| **4A** | 5A | 4A | 6A | 2A | 1A | 3A | 5A, 6A | 1A, 3A | 5A, 6A | 1A, 3A | 5A | 5A $\to$ 4A |
-| **5A** | 4A | 5A | 6A | 1A | 3A | 2A | 4A, 6A | 2A, 3A | 4A, 6A | 2A, 3A | 4A | 4A $\to$ 5A |
-| **6A** | 4A | 5A | 6A | 3A | 2A | 1A | 4A, 5A | 1A, 2A | 4A, 5A | 1A, 2A | 4A | 4A $\to$ 5A |
+Esta estructura se articula analíticamente mediante dos representaciones matriciales complementarias y biyectivas:
 
-#### Tabla 1B: Matriz Sociométrica SMIb Instrumental de Grupo A ($G_1$, $N = 6$) — Tetragrama Diádico $(A_1 A_2 A_3 A_4 = pDA \cdot DA \cdot RECIBE \cdot pRECIBE)$
+* **Matriz de Orden Directo $A(i, k) = j$:** Registra en cada fila $i$ el compañero $j$ asignado al casillero o rango de preferencia $k \in \{1^\circ, 2^\circ, \dots, N^\circ\}$.
+* **Sociomatriz de Distribución $B(i, j) = k$:** Sociomatriz cuadrada de orden $N \times N$ donde filas ($i$) y columnas ($j$) indexan a los miembros del colectivo, registrando el rango numérico adjudicado: $B(i, j) = k \iff A(i, k) = j$.
 
-| $G_1$ | 1A | 2A | 3A | 4A | 5A | 6A |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1A** | `0AA0` | `ABBA` | `ABBA` | `0ab0` | `0ab0` | `0ab0` |
-| **2A** | `BAAB` | `0AA0` | `ABBA` | `0ab0` | `0ab0` | `0ab0` |
-| **3A** | `BAAB` | `BAAB` | `0AA0` | `0ab0` | `0ab0` | `0ab0` |
-| **4A** | `0ba0` | `0ba0` | `0ba0` | `0AA0` | `ABBA` | `ABBA` |
-| **5A** | `0ba0` | `0ba0` | `0ba0` | `BAAB` | `0AA0` | `ABBA` |
-| **6A** | `0ba0` | `0ba0` | `0ba0` | `BAAB` | `BAAB` | `0AA0` |
+Al constituir cada fila una permutación estricta del conjunto $\{1, 2, \dots, N\}$, la Sociomatriz ORBIT satisface de forma invariante la **propiedad de conservación de la suma ordinal por fila**:
 
-#### Tabla 1C: Matriz Sociométrica SMIa Integrada de Grupo A ($G_1$, $N = 6$) — Retícula Canónica Q81
+$$\sum_{j=1}^N B(i, j) = \frac{N(N+1)}{2} = \text{cte} \quad \left(\text{para } N = 6, \sum_{j=1}^6 B(i, j) = 21\right)$$
 
-| $G_1$ | 1A | 2A | 3A | 4A | 5A | 6A | Diagnóstico Subgrupal |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **1A** | `¡¿?!` | `<Ee>` | `<Ee>` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesión $\{1A, 2A, 3A\}$ / Oposición $\{4A, 5A, 6A\}$ |
-| **2A** | `<Ee>` | `¡¿?!` | `<Ee>` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesión $\{1A, 2A, 3A\}$ / Oposición $\{4A, 5A, 6A\}$ |
-| **3A** | `<Ee>` | `<Ee>` | `¡¿?!` | `[Rr]` | `[Rr]` | `[Rr]` | Cohesión $\{1A, 2A, 3A\}$ / Oposición $\{4A, 5A, 6A\}$ |
-| **4A** | `[Rr]` | `[Rr]` | `[Rr]` | `¡¿?!` | `<Ee>` | `<Ee>` | Cohesión $\{4A, 5A, 6A\}$ / Oposición $\{1A, 2A, 3A\}$ |
-| **5A** | `[Rr]` | `[Rr]` | `[Rr]` | `<Ee>` | `¡¿?!` | `<Ee>` | Cohesión $\{4A, 5A, 6A\}$ / Oposición $\{1A, 2A, 3A\}$ |
-| **6A** | `[Rr]` | `[Rr]` | `[Rr]` | `<Ee>` | `<Ee>` | `¡¿?!` | Cohesión $\{4A, 5A, 6A\}$ / Oposición $\{1A, 2A, 3A\}$ |
+Esta invariancia algebraica constituye el fundamento que hace posible la transposición bidireccional y exacta entre la sociomatriz clásica de Moreno y la sociomatriz ORBIT, así como la posterior derivación de los tetragramas relacionales (Figuras 3–5):
 
-#### Tabla 1D: Formalización Factual de Grupo B ($G_2$, $N = 6$, Ostracismo Sistemático de 6B) — Formato BREVE y Estatus Receptor ($SRC$)
+* **Figura 3.** Sociomatriz clásica de Moreno ($E, R, pE, pR$) en formato Excel para $N = 6$: Transposición a ORBIT $A(i, k)=j$ y $B(i, j)=k$.
+* **Figura 4.** Sociomatriz ORBIT $A(i, k)=j$ y $B(i, j)=k$, en formato Excel para $N = 6$: Transposición a MORENO ($E, R, pE, pR$).
+* **Figura 5.** Matrices $SMI_a(i, j)$ del tetragrama figurativo y $SMI_b(i, j)$ del tetragrama alfanumérico.
 
-| ID | 1º | 2º | 3º | 4º | 5º | 6º (Rechazo) | Posición 6B en SMIa | Estatus Receptor ($SRC$) | Diagnóstico Posicional |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **1B** | 2B | 1B | 3B | 4B | 5B | **6B** | $1B \to 6B$: `[Rr]` | $+0.875$ | Líder Atractor Cohesivo |
-| **2B** | 1B | 2B | 3B | 5B | 4B | **6B** | $2B \to 6B$: `[Rr]` | $+1.250$ | Líder Atractor Principal |
-| **3B** | 1B | 2B | 3B | 4B | 5B | **6B** | $3B \to 6B$: `[Rr]` | $+0.625$ | Núcleo Cohesionado |
-| **4B** | 3B | 4B | 1B | 2B | 5B | **6B** | $4B \to 6B$: `[Rr]` | $+0.125$ | Neutro Integrado |
-| **5B** | 2B | 3B | 5B | 1B | 4B | **6B** | $5B \to 6B$: `[Rr]` | $+0.125$ | Neutro Integrado |
-| **6B** | 1B | 2B | 6B | 3B | 4B | 5B | $6B \to \text{Grupo}$: `<Er]` | **$-1.500$** | **Ostracismo Unánime (Asfixia Vincular)** |
+El formato ORBIT está especialmente indicado para su utilización en pequeños grupos ($N < 25$) —equipos de trabajo, células operativas, aulas o unidades convivenciales—, donde la ordenación exhaustiva y sin empates de todos los miembros resulta analítica y estructuralmente óptima para capturar con máxima resolución la microestructura relacional. Para colectivos de tamaño elevado ($N \ge 25$), NEXORD tiene dispuesto un protocolo especial de ordenación preferencial por fases sucesivas (un sistema que amplía las cuotas 3-5 morenianas a selecciones más amplias y estratificadas), sin merma de la resolución métrica.
 
-![Figura 1: Arquitectura de Captura y Entrada de Datos BREVE](Figura_Seccion_2_1_Entrada_Datos_BREVE.png)
+### 2.2. Clausura Diagonal Reflexiva y Sensores Nucleares (IDA, ITA, P(k))
+NEXORD resuelve la omisión secular de la diagonal principal sociométrica (tradicionalmente vacía, $r_{ii} = \emptyset$) exigiendo que cada participante se auto-ubique en el ranking colectivo ($r_{ii} \in \{1, \dots, N\}$). Esta clausura topológica convierte la matriz en un espacio relacional completo y continuo, activando tres sensores métricos fundamentales:
 
-*Figura 1: Arquitectura de Entrada BREVE y Matrices Derivadas SMIb / SMIa (Escenario Canónico N = 6, Grupo Bipolar G1). Panel Izquierdo: Matriz A(i, orden) de rankings forzados 1º a 6º, transcripción biunívoca a Moreno (E, R, pE, pR) y metapercepciones trianguladas (αE, ωE). Panel Central: Sociomatriz SMIb instrumental de tetragramas (A1·A2·A3·A4). Panel Derecho: Sociomatriz SMIa integrada en la retícula Q81.*
+* **Índice de Desajuste de Auto-rango ($IDA_i$):** Mide la discrepancia escalar entre la autoimagen proyectada ($r_{ii}$) y el consenso medio recibido del grupo ($\bar{R}_i^{\text{ext}}$):
+$$IDA_i = r_{ii} - \bar{R}_i^{\text{ext}} = r_{ii} - \left( \frac{1}{N - 1} \sum_{k \neq i}^N B(k, i) \right)$$
+donde $IDA_i < 0$ cuantifica la sobreestimación jerárquica individual, $IDA_i > 0$ la autoinhibición o subestimación periférica, e $IDA_i = 0$ la calibración isomórfica con el entorno social. A escala grupal, el desajuste colectivo se sintetiza mediante la dispersión cuadrática media $\sigma_{\text{IDA}} = \sqrt{\frac{1}{N} \sum_{i=1}^N (IDA_i)^2}$.
 
+* **Índice de Tensión de Auto-rango ($ITA$):** Evalúa la fricción estructural inducida por la pugna por el liderazgo cuando múltiples participantes reclaman el primer rango de preferencia para sí mismos: $ITA = \max\left(0, \sum_{i=1}^N \mathbb{I}(r_{ii} = 1)\right) - 1$.
 
-
-
-### 2.2. Clausura Diagonal Reflexiva y Sensores Nucleares
-NEXORD resuelve la omisión de la diagonal principal sociométrica (tradicionalmente vacía, r_ii = vacío) requiriendo que cada persona se auto-ubique en el ranking (r_ii en {1, ..., N}). Este auto-anclaje cierra la sociomatriz como un espacio continuo y activa tres sensores analíticos:
-  * **IDA (Índice de Desajuste de Auto-rango):** Diferencia angular entre la autoimagen (r_ii) y la valoración media exterior recibida de los compañeros (R_ext_i):
-
-![Fórmula 2: Desajuste de Autoimagen IDA](formulas/Formula_2_Desajuste_Autoimagen_IDA.png)
-
-  donde IDA < 0 señala sobreestimación o inflación de estatus, IDA > 0 indica inhibición o subestimación, e IDA = 0 expresa calibración armónica. A nivel colectivo, se calcula la dispersión cuadrática del grupo:
-
-![Fórmula 3: Desajuste Colectivo IDA_grupo](formulas/Formula_3_Desajuste_Grupo_IDA_grupo.png)
-
-  * **ITA (Índice de Tensión de Auto-rango):** Evalúa la fricción estructural derivada de la pugna por posiciones de liderazgo cuando múltiples miembros reclaman el primer rango (r_ii = 1).
-  * **Partición Cognitiva P(k):** Al fijar su auto-rango en k, el espacio combinatorio del sujeto se condiciona a P(k) = (k-1)!(N-k)!, formalizando que los juicios interpersonales se emiten desde una auto-posición de referencia (hacia arriba o hacia abajo respecto de uno mismo):
-
-![Fórmula 5: Anclaje Combinatorio P(k)](formulas/Formula_5_Anclaje_Combinatorio_Pk.png)
-
-
-
-
-
-
+* **Partición Cognitiva y Anclaje Combinatorio $P(k)$:** Al situar su auto-rango en la posición $k$, el espacio combinatorio admisible del sujeto queda acotado a $P(k) = \binom{N-1}{k-1}$, formalizando analíticamente que las preferencias interpersonales se emiten desde una auto-posición de referencia: hacia arriba o hacia abajo respecto del propio horizonte subjetivo.
 
 ---
 
 ## 3. Dinámica Relacional: Regímenes del Campo, Fricción y Viabilidad
 
-### 3.1. Coeficiente de Fricción (Φ) y Cohesión Estructural (ICE)
-La resistencia y el desajuste interno del sistema colectivo se sintetizan en el Coeficiente de Fricción Relacional (Φ) y su complemento, el Índice de Cohesión Estructural (ICE):
+### 3.1. Coeficiente de Fricción Relacional (Φ) y Cohesión Estructural (ICE)
+La resistencia interna del sistema colectivo se sintetiza en el Coeficiente de Fricción Relacional ($\Phi$) y en su métrica complementaria, el Índice de Cohesión Estructural ($ICE$):
 
-![Fórmula 4: Fricción Relacional y Cohesión Estructural ICE](formulas/Formula_4_Friccion_Cohesion_ICE.png)
+$$\Phi = \frac{2}{N(N - 1)} \sum_{i < j} |Z_{ij} - Z_{ji}|^\alpha \quad (\alpha \ge 1) \tag{3}$$
 
-donde valores moderados de Φ reflejan dinamismo interno, mientras que extremos de alta tensión señalan riesgo de fractura.
+$$ICE = 1 - \Phi \tag{4}$$
 
+Valores moderados de $\Phi$ reflejan dinamismo interno y plasticidad adaptativa, mientras que valores extremos señalan riesgos de fragmentación o turbulencia destructiva.
 
+### 3.2. Psicologización de Regímenes y Prevención del Pensamiento Grupal (Groupthink)
+La dinámica colectiva no puede reducirse a una física inanimada: los estados del sistema expresan regímenes de articulación psicológica e interpersonal:
 
-### 3.2. Psicologización de los Regímenes del Campo y Prevención del Pensamiento Grupal
-La dinámica grupal no debe asimilarse a una física inanimada: los estados del sistema expresan regímenes de articulación psicológica y relacional entre los miembros:
-  * **Régimen de Rigidez e Inercia Estructural:** Caracterizado por cristalizaciones jerárquicas rígidas, roles inmóviles y escasa permeabilidad al cambio comunicativo.
-  * **Régimen de Fluidez y Cohesión Adaptativa:** Caracterizado por una homeostasis comunicativa abierta, donde las preferencias y críticas circulan con flexibilidad funcional.
-  * **Régimen de Dispersión y Anomia:** Caracterizado por baja densidad de interacciones, desvinculación afectiva y ausencia de proyectos compartidos.
-  * **Régimen de Efervescencia y Fusión Colectiva:** Caracterizado por alta activación emocional compartida e intensa movilización interactiva.
+* **Régimen de Rigidez e Inercia Estructural:** Cristalizaciones jerárquicas rígidas, roles inmóviles y escasa permeabilidad comunicativa.
+* **Régimen de Fluidez y Cohesión Adaptativa:** Homeostasis abierta con circulación flexible de preferencias, acuerdos y divergencias.
+* **Régimen de Dispersión y Anomia:** Baja densidad de acoplamiento, desvinculación afectiva y ausencia de proyectos compartidos.
+* **Régimen de Efervescencia y Fusión Colectiva:** Alta activación emocional compartida e intensa movilización interactiva.
 
-  Bajo esta perspectiva, NEXORD cuestiona el supuesto de que la salud grupal óptima equivale a la cohesión absoluta (ICE = 1.0, Φ = 0). Un colectivo sin discrepancias ni fricción interna constituye un sistema vulnerable al pensamiento grupal (*Groupthink*, Janis, 1972), donde la presión hacia la conformidad anula el pensamiento crítico. La fricción moderada y los gradientes de DAR/RECIBIR proporcionan la energía necesaria para la plasticidad y reorganización adaptativa del colectivo.
+Bajo este prisma, NEXORD cuestiona radicalmente el supuesto tradicional de que la salud grupal óptima equivale a la cohesión absoluta ($ICE = 1.0, \Phi = 0$). Un colectivo sin discrepancias ni fricción interna constituye un sistema vulnerable al pensamiento grupal (*Groupthink*, Janis, 1972), donde las presiones hacia la conformidad anulan el pensamiento crítico y la toma informada de decisiones. La fricción moderada ($\Phi \in [\Phi_{\min}, \Phi_{\max}]$) y los gradientes en el circuito DAR/RECIBIR proporcionan la energía necesaria para la plasticidad, el aprendizaje organizativo y la adaptación evolutiva.
 
-  Within this framework, NEXORD questions the assumption that optimal functioning equals absolute cohesion (ICE = 1.0, Φ = 0). A collective devoid of friction represents a vulnerable system prone to Groupthink (Janis, 1972), where consensus pressures suppress divergent perspectives. Moderate friction and transactional gradients supply the necessary impetus for organizational learning and adaptive plasticity.
+### 3.3. La Metáfora del Puzle Vivo: Desatascamiento (Unjamming) vs. Reubicación Ecosistémica
+Frente a las intervenciones tradicionales que gestionan el conflicto mediante la exclusión punitiva o el señalamiento moral del sujeto discordante, NEXORD modela el colectivo como un puzle vivo. Un actor que experimenta una elevada fricción no es un elemento intrínsecamente patológico: suele sufrir un desacople de expectativas de rol o una asimetría de flujos con su entorno diádico inmediato.
 
-### 3.3. La Metáfora del Puzle Vivo: Desatascamiento (Unjamming) y Reubicación Ecosistémica
-Frente a modelos que abordan el conflicto mediante la exclusión punitiva o el señalamiento del sujeto divergente, NEXORD concibe al grupo como un puzle vivo. Un participante que experimenta fricción no es intrínsecamente problemático: suele sufrir un desacople de expectativas o una asimetría de flujos respecto de su entorno inmediato. La intervención diagnóstica promueve el desatascamiento (*unjamming*) mediante ajustes organizativos locales, clarificación de tareas y apertura de canales de colaboración. Cuando tras un proceso riguroso la incompatibilidad relacional resulta persistente, el modelo reconoce la pertinencia de una reubicación o migración ecosistémica digna, preservando la integridad del sujeto y evitando dinámicas de desgaste u ostracismo crónico.
+La facilitación diagnóstica promueve el desatascamiento (*unjamming*) mediante ajustes de tareas, clarificación comunicativa y apertura de canales de colaboración recíproca. Cuando tras un proceso sistemático de mediación la incompatibilidad estructural resulta persistente, el modelo contempla la reubicación ecosistémica digna: una migración hacia otro entorno grupal que preserve la integridad psicosocial del individuo y evite dinámicas de desgaste u ostracismo crónico.
+
+### 3.4. El Océano de Microestados y la Ley de Estabilidad Termodinámica
+La dimensión del espacio muestral sociométrico, incluso en el grupo más humilde, es enorme. Para un grupo de cinco personas, cada sujeto que ordena a los otros cuatro miembros dispone de $4! = 24$ ordenaciones estrictas; combinadas las elecciones independientes de los cinco participantes, el espacio total de microestados asciende a $24^5 = 7.962.624$ matrices posibles. Si se incluye la auto-ubicación del emisor ($5! = 120$ ordenaciones por fila), el espacio se dispara a $120^5 \approx 2,49 \times 10^{10}$ —casi 25.000 millones de configuraciones—: casi veinticinco mil millones de universos sociométricos posibles en una humilde habitación con cinco seres humanos sentados alrededor de una mesa. Dentro de este océano, la estabilidad termodinámica y la salud del sistema no dependen del azar, sino de la geometría del flujo energético: de la minimización de la disipación por cizalladura y de la existencia de atractores estables.
+
+La inmensa mayoría de las combinaciones corresponde a ruido térmico (matrices disonantes de alta fricción) o a trampas de congelación (fallas tectónicas y monopolios asfixiantes). Para que un microestado supere los umbrales de organización productiva y saludable debe satisfacer de forma simultánea tres invariantes termodinámicas:
+1. **Minimización de la disipación por cizalladura:** $\sum_i |Z_{ij} - Z_{ji}|^2 \to \min$ (reciprocidad y coherencia mutua).
+2. **Equilibrio del gradiente barométrico:** $\sum_i (Z_i^{\text{in}} - Z_i^{\text{out}})^2 \le \varepsilon$ (ausencia de sumideros negros o manantiales sobrecargados).
+3. **Conectividad convectiva global:** existencia de cadenas de retorno transitivas sin nodos aislados ($Z_i^{\text{in}} > Z_{\text{crítico}}$ para todo $i$).
+
+De todo el océano combinatorio, solo un porcentaje sumamente selecto habita este régimen óptimo: el bienestar grupal no es la ausencia de estructura, sino una arquitectura de tensiones donde nadie queda condenado al cero absoluto ni forzado a sostener en soledad el peso del conjunto.
+
+En síntesis: la salud y la productividad de un grupo no son una cuestión moral ni de buena voluntad, sino de aerodinámica e hidrostática relacional. Un grupo productivo es aquel cuyo elipsoide vuela horizontal, cuyos saldos de energía están en balance homeostático, y donde nadie tiene que ahogarse en el fondo del cañón para que otros puedan tomar el sol a cielo abierto.
 
 ---
 
 ## 4. Álgebra Tensorial, Retícula Q81 y el Pentagrama de Densidades
 
-### 4.1. El Tetragrama Diádico y la Doble Notación
-Cada celda (i, j) sintetiza cuatro momentos atómicos: D1 = pDA (expectativa emitida), D2 = DA (preferencia emitida), D3 = REC (preferencia recibida) y D4 = pREC (expectativa recibida).
+### 4.1. Gramática Atómica de 12 Símbolos y la Celda Relacional X1 X2 X3 X4
+La retícula fundamental Q81 formaliza el espacio combinatorio completo de las $3^4 = 81$ configuraciones diádicas que articulan el campo relacional. Para dotar al sistema de una notación exacta, libre de ambigüedades, NEXORD establece un alfabeto de 12 símbolos distribuidos en tres estados de polaridad relacional:
 
-| Posición / Dimension | Momento Psicosocial / Construct | Positiva (+) [SMIb: A-Z] | Neutra (0) [SMIb: 0] | Negativa (-) [SMIb: a-z] |
-| :---: | :--- | :---: | :---: | :---: |
-| **D_1** | **pDA** (Expectativa emitida / Emitted expectation) | `<` (espera elección / expects choice) | `¡` (espera neutralidad / expects neutrality) | `[` (espera rechazo / expects rejection) |
-| **D_2** | **DA** (Elección dada / Emitted choice) | `E` (elección / choice) | `¿` (indiferencia / indifference) | `R` (rechazo / rejection) |
-| **D_3** | **REC** (Elección recibida / Received choice) | `e` (elección recibida / received choice) | `?` (indiferencia recibida / received indifference) | `r` (rechazo recibido / received rejection) |
-| **D_4** | **pREC** (Expectativa atribuida / Attributed expectation) | `>` (atribuye elección / attributes choice) | `!` (atribuye neutralidad / attributes neutrality) | `]` (atribuye rechazo / attributes rejection) |
+#### Tabla 1: Sintaxis — los 12 símbolos del alfabeto relacional NEXORD
 
-La retícula contiene las 81 figuras relacionales exhaustivas (Q81 = 3^4), destacando los polos de mutua elección (<Ee>), mutuo rechazo ([Rr]) y neutralidad reflexiva (¡¿?!), operadas analíticamente mediante 255 indicadores booleanos (I255). Esta formalización de configuraciones relacionales con signo (+ / -) y la medición de la fricción diádica dialogan constructivamente con las investigaciones contemporáneas sobre grafos firmados, geometría de comunicabilidad e índices de frustración estructural (Aref & Wilson, 2021; Cucuringu et al., 2023; Diaz-Diaz & Estrada, 2025).
+| Tipo | DA: Percepción ($p\_DA$) | DA: Efectiva ($DA$) | RECIBE: Efectiva ($RC$) | RECIBE: Percepción ($p\_RC$) | Código Alfanumérico |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Elige (+)** | `<` | `E` | `e` | `>` | `A – Z` |
+| **Indiferencia (0)** | `i` | `¿` | `?` | `!` | `0000` |
+| **Rechaza (−)** | `[` | `R` | `r` | `]` | `a – z` |
 
-![Tabla 1: Retícula Canónica de las 81 Figuras Relacionales Q81](Tabla_Anexo_I_Matriz_Q81.png)
+Cada interacción interpersonal $(i, j)$ queda formalizada como una figura relacional compuesta por cuatro elementos o "tetragrama" formado por las acciones de **DAR** y de **RECIBIR** y dos perspectivas: **PREFERENCIA** manifestada y **EXPECTATIVA** sobre la reciprocidad diádica ($p\_DA, DA, RC, p\_RC$). A su vez, los elementos de este tetragrama o "unidad relacional" operan con tres posibles valores ($\{+\}, \{=\}, \{-\}$). Esta estructura configura un total de $3^4 = 81$ arquetipos relacionales, cuyo eje está formado por las 3 figuras emblemáticas (Tabla 2):
 
+#### Tabla 2. Figuras relacionales sociométricas emblemáticas
 
-### 4.2. La Doctrina Canónica de las 18 Densidades Relacionales (18D) y los 3 Prismas Duales
-El análisis de las micro-interacciones diádicas transita del recuento ordinal discreto al continuo socio-termodinámico mediante la **ley física de decaimiento atencional al rango** $W(k) = 2^{1-k}$ ($1º=1.000, 2º=0.500, 3º=0.250\dots$). Para distinguir el rango ordinal de la magnitud física continua, las cuatro componentes del tetragrama diádico adoptan el prefijo diferencial **`d`**: $\{dDP, dDA, dRA, dRP\} \equiv \{\mathbf{1}, \mathbf{2}, \mathbf{3}, \mathbf{4}\}$. El espacio continuo opera bajo el convenio de prefijos **$S$** (Saldo con signo, $\pm\mathbb{R}$, que cuantifica gradientes y dirección de flujo) y **$B$** (Masa bruta sin signo, $|\cdot| \ge 0$, que cuantifica energía total y gasto metabólico).
+| `<Ee>:` | `i¿?!` | `[Rr]` |
+| :---: | :---: | :---: |
+| Elección recíproca, mutuamente percibida | Indiferencia absoluta | Rechazo recíproco, mutuamente percibido |
 
-El cuarteto elemental admite exactamente **3 particiones duales complementarias ($\binom{4}{2}/2 = 3$ Prismas Duales Invariantes)**, que someten la díada a una refracción analítica exhaustiva:
+La formalización de configuraciones relacionales con signo ($+, -$) y la medición de la fricción diádica dialogan constructivamente con la investigación contemporánea sobre grafos firmados, geometría de comunicabilidad e índices de frustración estructural (Aref & Wilson, 2021; Cucuringu et al., 2023; Diaz-Diaz & Estrada, 2025).
 
-```
-                            EL TETRAGRAMA DE DENSIDAD
-                         [ dDP    dDA  │  dRA    dRP ]
-                                       │
-        ┌──────────────────────────────┼──────────────────────────────┐
-        ▼                              ▼                              ▼
-  PRISMA 1: OPERATIVO           PRISMA 2: ONTOLÓGICO           PRISMA 3: DIALÉCTICO
-  [ 12  │  34 ]                 [ 14  │  23 ]                  [ 13  │  24 ]
-  Dador vs. Receptor            Mente vs. Hechos               Sintonía Cruzada
-  S12, B12  │  S34, B34         S14, B14  │  S23, B23          S13, B13  │  S24, B24
-```
+### 4.2. Topología Antidiagonal del Retículo (9 × 9) y Numeralización [1, 81] como Primera Cuantificación de la Densidad
+La partición de $9 \times 9$ cruza los 9 perfiles de interacción activa (filas $i = \text{<E}, \text{¡E}, \text{[E}, \text{<¿}, \text{i¿}, \text{[¿}, \text{<R}, \text{¡R}, \text{[R}$) con los 9 perfiles de percepción (columnas $j = \text{e>}, \text{e!}, \text{e]}, \text{?>}, \text{?!}, \text{?]}, \text{r>}, \text{r!}, \text{r]}$). 
 
-1. **Prisma 1: Eje Operativo (Dador vs. Receptor) $\rightarrow [12 \mid 34]$:**  
-   Separa el intercambio según la polaridad de emisión y recepción.
-   * Lado Dador (Emisión): Saldo Dador $S_{12} = dDP + dDA$ (SDA: expansividad neta) y Masa Dadora $B_{12} = |dDP| + |dDA|$ (BDA: inversión bruta emitida).
-   * Lado Receptor (Recepción): Saldo Receptor $S_{34} = dRA + dRP$ (SRC: estatus inducido) y Masa Receptora $B_{34} = |dRA| + |dRP|$ (BRC: presión vincular convergente).
-   * *Diagnóstico:* Revela asimetrías de poder, liderazgos nutricios, sumideros pasivos y focos de marginación estructural.
+La numeralización de las 81 figuras relacionales ($Q_{81}(9, 9)$) se resuelve geométricamente mediante el barrido ordenado de las 17 antidiagonales secundarias, recorridas de abajo hacia arriba: cada antidiagonal define una isolínea de energía y valencia relacional neta constante, de modo que todas las figuras ubicadas sobre la misma antidiagonal comparten idéntica suma de polaridades entre acciones reales y expectativas cognitivas.
 
-2. **Prisma 2: Eje Ontológico (Mente vs. Hechos) $\rightarrow [14 \mid 23]$:**  
-   Contrasta el universo de las conjeturas cognitivas con el universo de los actos reales.
-   * Mundo Mental (Expectativas Cruzadas): Saldo de Percepción $S_{14} = dDP + dRP$ y Masa de Percepción $B_{14} = |dDP| + |dRP|$.
-   * Mundo Fáctico (Votos Efectivos Reales): Saldo de Acción $S_{23} = dDA + dRA$ y Masa de Acción $B_{23} = |dDA| + |dRA|$.
-   * *Diagnóstico:* Si $B_{14} \gg B_{23}$, diagnostica **Neurosis Colectiva o Rumiación Grupal** (el colectivo disipa su energía en temores o fantasías sin correlato factual); si $B_{23} \gg B_{14}$, diagnostica **Impulsividad Ciega o Anomia Reflexiva** (acción sin mentalización ni empatía hacia el partner).
+Esta ordenación geométrica proporciona la **primera cuantificación métrico-escalar de la densidad relacional diádica** ($D_{Q81} \in [1, 81]$), estructurada en tres regiones fundamentales:
+* **Hemisferio de Disonancia y Rechazo (Escalares 1 a 36):** Las primeras 8 antidiagonales inferiores cubren $\sum_{k=1}^8 k = \frac{8 \times 9}{2} = 36$ figuras situadas en la zona de conflicto, desgaste y retracción vincular, partiendo del polo de máxima densidad negativa: `[Rr]` = 1.
+* **Isolínea Baricéntrica Neutra (Escalares 37 a 45):** La antidiagonal transversal central ($d = 9$, constituida por 9 celdas) abarca los escalares 37 a 45. Su celda central (coordenada 5, 5) fija de manera unívoca el **centroide de indiferencia basal**:  
+  $$\text{Celda}(5, 5) \implies \text{i¿?!} = 41$$
+* **Hemisferio de Cohesión y Resonancia (Escalares 46 a 81):** Las 8 antidiagonales superiores cubren las 36 figuras de atracción, convergencia y sinergia hasta alcanzar el extremo de la antidiagonal 17 (longitud 1), coronando el espacio en la figura de sintonía armónica plena: `<Ee>` = 81.
 
-3. **Prisma 3: Eje Dialéctico (Sintonía Cruzada y Realismo) $\rightarrow [13 \mid 24]$:**  
-   Cruza la expectativa de un polo con la acción efectiva del otro.
-   * Acierto del Dador (Expectativa Emisor + Acción Partner): $S_{13} = dDP + dRA$ y $B_{13} = |dDP| + |dRA|$ (Saldo de Realismo).
-   * Respuesta al Receptor (Acción Emisor + Expectativa Partner): $S_{24} = dDA + dRP$ y $B_{24} = |dDA| + |dRP|$ (Saldo de Correspondencia).
-   * *Diagnóstico:* Evalúa la **fricción silenciosa por desajuste empático** y desilusión sociométrica ($S_{13} \ll 0$ existiendo $dDP > 0$).
+**Normalización Continua de la Densidad $Q_{81}$:**  
+Al centrar la escala sobre el centroide neutro de indiferencia (41), la densidad diádica elemental de la figura se normaliza en el rango continuo canónico $[-1.00, +1.00]$:
 
-El acoplamiento se completa con los operadores globales: Potencial Neto Relacional ($SDR = SDA + SRC$), Masa Bruta Total ($BDR = BDA + BRC$) y la Asimetría Posicional ($Dif-DR = SDA - SRC$), integrando el canon de las **18 densidades relacionales continuas (espacio 18D)**.
+$$D_{Q81}(i, j) = \frac{Q_{81}(i, j) - 41}{40} \tag{13}$$
 
+donde:
+* $\text{Densidad Máxima Positiva: } D_{Q81}(\text{<Ee>}) = \frac{81 - 41}{40} = \mathbf{+1.000}$
+* $\text{Densidad Neutra Basal: } D_{Q81}(\text{i¿?!}) = \frac{41 - 41}{40} = \mathbf{0.000}$
+* $\text{Densidad Máxima Negativa: } D_{Q81}(\text{[Rr]}) = \frac{1 - 41}{40} = \mathbf{-1.000}$
 
-The elemental quartet partitions into exactly **3 invariant dual prisms ($\binom{4}{2}/2 = 3$)**, providing exhaustive structural refractions of dyadic reality:
-1. **Prism 1: Operational Axis (Sender vs. Receiver) $\rightarrow [12 \mid 34]$:** Disentangles outbound expansiveness ($S_{12}, B_{12} \equiv SDA, BDA$) from inbound status impact ($S_{34}, B_{34} \equiv SRC, BRC$).
-2. **Prism 2: Ontological Axis (Mind vs. Facts) $\rightarrow [14 \mid 23]$:** Contrasts cognitive expectation mass ($S_{14}, B_{14}$) against effective behavioral mass ($S_{23}, B_{23}$), diagnosing **Collective Neurosis / Group Rumination** ($B_{14} \gg B_{23}$) versus **Blind Impulsivity / Reflexive Anomie** ($B_{23} \gg B_{14}$).
-3. **Prism 3: Dialectical Axis (Cross-Attunement & Realism) $\rightarrow [13 \mid 24]$:** Evaluates sender realism ($S_{13}, B_{13}$) versus receiver response ($S_{24}, B_{24}$), diagnosing latent interpersonal friction and sociometric disillusionment ($S_{13} \ll 0$ when $dDP > 0$).
-Global coupling via $SDR = SDA + SRC$, $BDR = BDA + BRC$, and positional asymmetry $Dif-DR = SDA - SRC$ integrates the canonical **18 continuous relational densities (18D space)**.
+Esta geometría preserva una **simetría complementaria antipodal estricta**: $\text{Antípoda}(k) = 82 - k$, lo que implica que $\text{Figura}(i, j) + \text{Figura}(10-i, 10-j) = 82$, demostrando que el centroide neutro es autoinvariante bajo inversión polar ($41 + 41 = 82$).
 
-![Figura 2: Pentagrama Socio-Termodinámico de Densidades Relacionales (18D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)
+#### Tabla 3. Retícula Q81 (9 × 9): clasificación de las 81 figuras relacionales diádicas posibles, indexadas por antidiagonales de valencia creciente (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).
 
-### 4.3. La Cuantificación Continua de la Figura Relacional Síntesis de cada Sujeto
-Históricamente, resumir la posición global de un individuo frente al colectivo mediante el promedio aritmético de sus figuras discretas generaba artefactos espurios por cancelación (promediar elecciones y rechazos intensos producía una falsa neutralidad o indiferencia). NEXORD resuelve este dilema formalizando la **Figura Relacional Síntesis** mediante la descomposición vectorial continua:
-  * **Densidad Marginal de Emisión ($\bar{d}_{i\cdot}$):** Volumen medio de energía relacional proyectada por el sujeto hacia el grupo: $\bar{d}_{i\cdot} = \frac{1}{N-1}\sum_{j \neq i} d_{ij}$ (expansividad media).
-  * **Densidad Marginal de Recepción ($\bar{d}_{\cdot i}$):** Volumen medio de atracción o impacto que el grupo hace converger sobre el sujeto: $\bar{d}_{\cdot i} = \frac{1}{N-1}\sum_{j \neq i} d_{ji}$ (estatus o centralidad media de entrada).
-  * **Densidad Global Integrada ($D_i$):** Semisuma canónica de ambos marginales:
-    $$D_i = \frac{\bar{d}_{i\cdot} + \bar{d}_{\cdot i}}{2}$$
-    Esta magnitud preserva la conservación de masa relacional del sistema ($\frac{1}{N}\sum_i D_i = \Delta$) y cuantifica el tamaño, volumen métrico y radio gravitatorio de la envolvente de la figura en el espacio tridimensional.
-  * **Sesgo Diferencial Relacional ($\delta_i$):** Balance normalizado entre dar y recibir:
-    $$\delta_i = \frac{\bar{d}_{i\cdot} - \bar{d}_{\cdot i}}{\bar{d}_{i\cdot} + \bar{d}_{\cdot i}} \in [-1, +1]$$
-    donde $\delta_i > 0$ indica un sesgo proactivo/expansivo (predomina el dar), $\delta_i < 0$ un sesgo atractor/receptivo (predomina el recibir), y $\delta_i \approx 0$ equilibrio homeostático simétrico.
-  * **Orientación Vectorial ($\theta_i$):** Ángulo director en el plano relacional $(In, Out)$: $\theta_i = \arctan\left(\frac{\bar{d}_{\cdot i}}{\bar{d}_{i\cdot}}\right)$, donde $\theta = 45^\circ$ expresa reciprocidad marginal perfecta, $\theta \to 0^\circ$ expansión pura sin recepción y $\theta \to 90^\circ$ absorción pasiva. La relación entre ambos marginales determina la excentricidad morfológica del esferoide nodal (achatado hacia la corriente convergente o alargado hacia la emisión).
+### 4.3. El Tríptico Estructural del Sujeto Ti y el Diagnóstico Desdoblado
+Colapsar las relaciones de un sujeto en un promedio aritmético escalar simple constituye un error metodológico severo que engendra artefactos diagnósticos por cancelación polar (un individuo con un vínculo en 81 y otro en 1 promediaría falsamente en 41, confundiéndose con la indiferencia basal). NEXORD preserva la bidimensionalidad topológica desdoblando la posición del sujeto $i$ a través de su Tríptico Estructural $T_i = ( F_i^{\text{out}}, F_i^{\text{in}}, f_{ii} )$:
 
+* **Figura Global Emisora ($F_i^{\text{out}}$):** Centroide bidimensional ($\bar{X}_i^{\text{out}}, \bar{Y}_i^{\text{out}}$) calculado sobre la fila $i$ de la sociomatriz, evaluando la iniciativa, la disposición activa y la confianza basal que $i$ proyecta hacia el grupo.
+* **Figura Global Receptora ($F_i^{\text{in}}$):** Centroide bidimensional ($\bar{X}_i^{\text{in}}, \bar{Y}_i^{\text{in}}$) calculado sobre la columna $i$, cuantificando el impacto objetivo, el estatus convergente y el horizonte de expectativas que el colectivo deposita sobre $i$.
+* **Auto-anclaje Reflexivo ($f_{ii}$):** Cierre diagonal reflexivo en Q81 que formaliza la autoimagen y la autoeficacia psicosocial del nodo.
 
-### 4.4. El Paradigma de VISORD Acuario y la Hidrostática Relacional
-El ecosistema **VISORD Acuario** transmuta el sociograma bidimensional estático en un volumen fluido continuo tridimensional. En este espacio, los actores flotan e interactúan conforme a las leyes de la física socio-termodinámica:
-  * **Eje X (Base):** Emisión / Expansividad ($SDA$).
-  * **Eje Z (Base):** Recepción / Estatus ($SRC$).
-  * **Eje Y (Profundidad / Cota Hidrostática):** Densidad Global Integrada ($Z_i = D_i \times \text{escala}$).
-  * **Los Tres Estratos Hidrostáticos Canónicos:**
-    1. **Cielo Abierto (Atmósfera):** Estrato superior reservado a nodos con hiper-inversión relacional cuya flotabilidad supera la lámina de agua ($Z_i > Z_{\text{mar}}$).
-    2. **Lámina de Agua ($Z_{\text{mar}}$):** Superficie de flotación homeostática del colectivo.
-    3. **Fondo Marino / Bentos (Abisal):** Cuenca de sustentación deficitaria y ostracismo donde caen los nodos con asfixia relacional ($Z_i \to 0$ o ratio $BDF/BDC < 0.5$).
-  * **La Cuaterna Canónica de Laboratorios VISORD:** VISORD estructura su exploración interactiva avanzada en cuatro laboratorios especializados: **`VISORD_demo`** (dinámica continua 3D/4D y transiciones de fase), **`VISORD_cultural`** (sociometría de obras maestras con reactividad cero), **`VISORD_radiológico`** (radiografías 15-27-54 y variedades de Grassmann), **`VISORD_dialéctico`** (micro-interacciones, anfiteatro de tensiones y dilemas sociales), coronados por la hidrostática volumétrica continua de **`VISORD_acuario`**.
+De la discrepancia posicional $\Delta_{\text{rol}} = F_i^{\text{out}} - F_i^{\text{in}}$ emergen perfiles diagnósticos directos:
+* **Síndrome de Desgaste Relacional:** $F_i^{\text{out}} \gg F_i^{\text{in}}$ con declive en $f_{ii}$ (entrega e inversión no correspondidas, anticipando fatiga o abandono).
+* **Liderazgo Retraído o de Reserva:** $F_i^{\text{in}} \gg F_i^{\text{out}}$ (fuerte demanda y atracción recibida frente a repliegue o cautela emisora).
+* **Inhibición de Estatus:** $F_i^{\text{in}} \gg 41$ conviviendo con $f_{ii} \le 41$ (reconocimiento grupal objetivo no asimilado internamente por el individuo).
 
+### 4.4. El Hiperespacio Relacional 18D, los 3 Prismas Duales y el Pentagrama de Densidades (10D)
+
+#### 4.4.1. Fundamentación Algorítmica de la Densidad Relacional: La Matriz de Trazabilidad 6D y los Moduladores
+En la sociometría ordinal canónica de NEXORD, la Densidad Relacional no es un recuento plano ni un promedio aritmético ingenuo: constituye la **masa térmica y estructural real** que aporta un vínculo interpersonal, definiendo la fuerza cohesiva o destructiva de la interacción sobre el continuo termodinámico ($\pm\mathbb{R}$).
+
+Para garantizar la reproducibilidad científica y evitar cualquier opacidad algorítmica, el motor de NEXORD procesa la interacción diádica $(i \to j)$ a través de una **Matriz de Trazabilidad de 6 Capas**. Esta arquitectura clínica descompone el flujo vincular mediante un conjunto explícito de **moduladores matemáticos** que ponderan rigurosamente el rango ordinal, las simetrías de acción, las reciprocidades cognitivas y las jerarquías de estatus:
+
+#### Tabla 3b. Matriz de Trazabilidad Algorítmica y Moduladores de la Densidad Diádica
+
+| Vector de Fuerza | Condición Evaluada | Modulador Matemático Asignado | Impacto en la Estructura |
+| :--- | :--- | :---: | :--- |
+| **1. Función Inversa ($1/r^k$)** | Rango Ordinal ($1º, 2º, 3º\dots$) | $\text{Base}$ | Fija el potencial inicial del vínculo. Penaliza de forma no lineal ($k \ge 1.0$) la baja priorización atencional. |
+| **2. Reciprocidad Diádica** | Congruencia de Acción (`Ee`, `Rr`, `Aa`) | **$1.5\times$** | Prioriza (+50%) el vínculo fáctico real y el homomorfismo relacional simétrico frente a la mera expectativa. |
+| **3. Acierto / Verdad** | Congruencia Perceptiva (`<e>`, `(e`) | **$1.5\times$** | Premio termodinámico a la lucidez mental, la sintonía empática y la salud estructural de la red. |
+| **4. Oposición de Sentimientos** | Disonancias y Paranoias (`(]`, `Er`, `[>`) | **$-(P_i \times 0.5)$** | Penalización destructiva proporcional al estatus ($P_i$). La toxicidad de un líder daña la red más que la de un nodo periférico. |
+| **5. Esfuerzo Perceptivo** | Presencia activa de meta-percepción ($pDA, pRC$) | **$1.2\times$** | Reconocimiento del coste cognitivo de anticipación. **Bono estrictamente anulado a $1.0\times$ si existe ceguera estructural**. |
+| **6. Prestigio del Emisor ($P_i$)** | Centralidad Jerárquica del Sujeto en la Red | **Variable** ($0.5$ a $1.5$) | Multiplicador de escala gravitatoria. Determina cuánta masa inercial arrastra la acción del emisor sobre el colectivo. |
+
+**Ilustración Canónica del Algoritmo en la Hoja de Resultados Diádica:**
+* **Díada Armónica Plena (`<Ee>`):** Selector de alto prestigio ($P_i = 1.5$) que elige en 1ª opción ($1/r^k = 1.0$), con reciprocidad fáctica mutua ($1.5\times$), congruencia perceptiva acertada ($1.5\times$) y bono de esfuerzo lúcido ($1.2\times$):  
+  $$\text{Densidad}(i \to j) = (1.0 \times 1.5 \times 1.5 \times 1.2 \times 1.5) = \mathbf{4.86\text{ pts}}$$
+* **Díada Disonante / Paranoica (`[Ae)`):** Selector con estatus medio ($P_i = 1.0$) que relega en 2ª opción ($1/r^k = 0.354$), sin reciprocidad, con acierto nulo, esfuerzo perceptivo anulado por ceguera y oposición de sentimientos activa:  
+  $$\text{Densidad}(i \to j) = 0.354 - (1.0 \times 0.5) = -0.146 \implies \mathbf{0.00\text{ pts}}$$  
+  *(La radiación útil queda anulada: el vínculo no aporta cohesión y disipa energía en forma de fricción térmica estéril).*
+
+A partir de estas densidades diádicas moduladas, el sistema cuantifica simultáneamente los **4 canales elementales del tetragrama relacional** para cada sujeto $i$ promediando sobre el colectivo de tamaño $N$ ($j \neq i$):
+1. **D1 ($D_{pDA}$ / $dDP$) — Densidad de Expectativas Emitidas:**  
+   Horizonte proyectado por el emisor sobre cómo anticipa sus propios vínculos hacia el grupo:  
+   $$D_1(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{pDA}(i, j) \tag{16}$$
+2. **D2 ($D_{DA}$ / $dDA$) — Densidad de Elección Efectiva Emitida:**  
+   Flujo cinético y valencia neta de las elecciones efectivas emitidas por el sujeto hacia sus compañeros:  
+   $$D_2(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{DA}(i, j) \tag{17}$$
+3. **D3 ($D_{RC}$ / $dRA$) — Densidad de Elección Efectiva Recibida:**  
+   Estatus objetivo e impacto real de atracción o rechazo recibido del grupo:  
+   $$D_3(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{RC}(j, i) \tag{18}$$
+4. **D4 ($D_{pRC}$ / $dRP$) — Densidad de Expectativas Atribuidas al Receptor:**  
+   Campo reflejo de presunción que el colectivo proyecta sobre la receptividad del sujeto:  
+   $$D_4(i) = \frac{1}{N - 1} \sum_{j \neq i} W_{pRC}(j, i) \tag{19}$$
+
+*(En la sociomatriz bidireccional integral, las componentes basales del sujeto integran emisión y recepción mediante el promedio baricéntrico $v_k(i) = \frac{1}{2}[\text{Fila}_k(i) + \text{Columna}_k(i)]$, garantizando el cierre simétrico de la red).*
+
+**Convenio Universal de Prefijos S y B:**  
+* **S (Saldo / Densidad Relativa):** Magnitud con signo ($\pm\mathbb{R}$). Cuantifica vectores de fuerza, gradientes de potencial y dirección de atracción o rechazo.
+* **B (Bruta / Densidad Absoluta):** Magnitud modular sin signo ($|\cdot| \ge 0$). Cuantifica la masa relacional movilizada, energía cinética total y volumen metabólico del sistema.
+
+#### Tabla 3c. Especificación y Cálculo Canónico de las 18 Densidades Relacionales e Invariantes Socio-Termodinámicos
+
+| Dimensión | Símbolo / Alias | Partición / Eje | Fórmula de Cálculo Exacta | Rango Métrico | Significado Socio-Termodinámico |
+| :---: | :---: | :---: | :---: | :---: | :--- |
+| **1D** | $D_1$ ($dDP, D_{pDA}$) | Base 4D | $\frac{1}{N-1}\sum W_{pDA}(i, j)$ | $[-1.00, +1.00]$ | Expectativa previa y confianza anticipatoria emitida hacia el grupo. |
+| **2D** | $D_2$ ($dDA, D_{DA}$) | Base 4D | $\frac{1}{N-1}\sum W_{DA}(i, j)$ | $[-1.00, +1.00]$ | Flujo cinético y acción preferencial efectiva emitida por el sujeto. |
+| **3D** | $D_3$ ($dRA, D_{RC}$) | Base 4D | $\frac{1}{N-1}\sum W_{RC}(j, i)$ | $[-1.00, +1.00]$ | Estatus e impacto real de atracción o rechazo recibido del colectivo. |
+| **4D** | $D_4$ ($dRP, D_{pRC}$) | Base 4D | $\frac{1}{N-1}\sum W_{pRC}(j, i)$ | $[-1.00, +1.00]$ | Campo reflejo de presunción atribuido al sujeto por sus compañeros. |
+| **5D** | $S_{12}$ ($SDA$) | Prisma 1 Operativo | $D_1 + D_2$ | $[-2.00, +2.00]$ | Potencial neto emisor: expansividad y manantial/sumidero de iniciativa. |
+| **6D** | $B_{12}$ ($BDA$) | Prisma 1 Operativo | $\|D_1\| + \|D_2\|$ | $[0.00, +2.00]$ | Masa bruta dadora: gasto metabólico total e inversión emisora. |
+| **7D** | $S_{34}$ ($SRC$) | Prisma 1 Operativo | $D_3 + D_4$ | $[-2.00, +2.00]$ | Potencial neto receptor: estatus global inducido por el entorno social. |
+| **8D** | $B_{34}$ ($BRC$) | Prisma 1 Operativo | $\|D_3\| + \|D_4\|$ | $[0.00, +2.00]$ | Masa bruta receptora: presión social incidente y carga de impacto. |
+| **9D** | $S_{14}$ ($SP$) | Prisma 2 Ontológico | $D_1 + D_4$ | $[-2.00, +2.00]$ | Saldo cognitivo: clima de confianza y presunción compartida. |
+| **10D** | $B_{14}$ ($BP$) | Prisma 2 Ontológico | $\|D_1\| + \|D_4\|$ | $[0.00, +2.00]$ | Masa bruta cognitiva: volumen de rumiación mental y carga prospectiva. |
+| **11D** | $S_{23}$ ($SA$) | Prisma 2 Ontológico | $D_2 + D_3$ | $[-2.00, +2.00]$ | Saldo fáctico: verdad objetiva de elecciones y rechazos reales. |
+| **12D** | $B_{23}$ ($BA$) | Prisma 2 Ontológico | $\|D_2\| + \|D_3\|$ | $[0.00, +2.00]$ | Masa bruta fáctica: volumen de acción motora y contacto real. |
+| **13D** | $S_{13}$ | Prisma 3 Dialéctico | $D_1 + D_3$ | $[-2.00, +2.00]$ | Saldo de realismo: confirmación vs. desilusión (lo esperado vs. lo recibido). |
+| **14D** | $B_{13}$ | Prisma 3 Dialéctico | $\|D_1\| + \|D_3\|$ | $[0.00, +2.00]$ | Masa de realismo: vulnerabilidad afectiva en la prueba de realidad. |
+| **15D** | $S_{24}$ | Prisma 3 Dialéctico | $D_2 + D_4$ | $[-2.00, +2.00]$ | Saldo de respuesta: satisfacción vs. frustración del deseo ajeno. |
+| **16D** | $B_{24}$ | Prisma 3 Dialéctico | $\|D_2\| + \|D_4\|$ | $[0.00, +2.00]$ | Masa de correspondencia: compromiso diádico y responsabilidad recíproca. |
+| **17D** | $SDR$ | Invariante Global | $\sum S_{ij} = \sum D_k$ | $[-4.00, +4.00]$ | Saldo de Densidad Relativa total: barómetro homeostático del clima vincular. |
+| **18D** | $BDR$ | Invariante Global | $\sum B_{ij} = \sum \|D_k\|$ | $[0.00, +4.00]$ | Densidad Bruta Relacional: capacidad calorífica y masa total del sistema. |
+
+*(Nota analítica de asimetrías diádicas: El sistema deriva complementariamente los tres índices de desbalance de cada prisma: Asimetría Operativa $\text{Dif}_r = \|B_{12} - B_{34}\|$, Asimetría Ontológica $\text{Dif}_a = \|B_{14} - B_{23}\|$ y Asimetría Dialéctica $\text{Dif}_i = \|B_{13} - B_{24}\|$, junto con la Fricción Térmica $\Phi = BDR - \|SDR\|$).*
+
+#### 4.4.2. Los 3 Prismas Duales de Densidad
+Las cuatro densidades elementales $\{D_1, D_2, D_3, D_4\}$ admiten exactamente 3 particiones duales complementarias $[\binom{4}{2} / 2 = 3]$, que someten el vínculo a tres refracciones ortogonales independientes, que denominamos **PRISMAS**:
+
+![Figura 8b: Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales](Figura_18D_Prismas_Duales_Crema.png)  
+*Figura 8b. Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales: Estructuración del tetragrama en 4 densidades elementales (D1–D4), saldos globales invariantes (SDR, BDR) y descomposición en los tres ejes fundamentales: Operativo (Dador/Receptor, 10D), Ontológico (Mente/Hechos, 14D) y Dialéctico (Realismo/Compromiso, 18D).*
+
+La descomposición del campo grupal en sus **18 Densidades Relacionales (18D)** no es una enumeración combinatoria dispersa, sino una anatomía ordenada de los flujos psicosociales. El sistema articula sus tensiones en una secuencia dialéctica canónica donde la **Masa Bruta ($B$)** —volumen total de energía interactiva movilizada— y el **Saldo Relativo ($S$)** —dirección neta e inclinación vectorial del vínculo— se suceden en contrapunto armónico:
+
+$$\underbrace{B_{12} \; S_{12}}_{\text{DA (Iniciativa)}} \quad \underbrace{B_{14} \; S_{14}}_{\text{PA (Proyección)}} \quad \underbrace{B_{13} \; S_{13}}_{\text{XA (Sintonía)}} \quad \big[ D_1 \;\; D_2 \;\; D_3 \;\; D_4 \big] \quad \underbrace{S_{24} \; B_{24}}_{\text{XR (Desengaño)}} \quad \underbrace{S_{23} \; B_{23}}_{\text{PR (Hechos)}} \quad \underbrace{S_{34} \; B_{34}}_{\text{RC (Estatus)}} \quad \mathbf{SDR} \quad \mathbf{BDR}$$
+
+Esta secuencia ordenada manifiesta el principio de conservación energética: el desnivel entre la masa bruta ($B$) y su saldo proyectado ($S$) revela con exactitud milimétrica la *Inercia de Desgaste* ($I_{\text{desgaste}} = B - S$) de cada prisma relacional. El orden de las densidades no es un capricho analítico: es la escala termodinámica que permite leer, en un solo golpe de vista, desde la iniciativa activa del emisor hasta el estatus consolidado por el grupo, culminando en la síntesis homeostática global del $\mathbf{SDR}$ y el $\mathbf{BDR}$.
+
+#### 4.4.3. El Pentagrama Socio-Termodinámico y la Inercia del Desgaste Relacional
+Con la correspondencia canónica $D_k \equiv X_k$ del tetragrama, las diez densidades relacionales se organizan en dos macrodimensiones polares (DA y RECIBE) acopladas bajo dos estratos de conservación analítica:
+
+* **Estrato Vectorial con Signo (Valencia Neta y Sintonía):** el potencial neto del emisor $SDA = D_1 + D_2$ (expectativa emitida $D_1$ más acción real emitida $D_2$), el potencial neto del receptor $SRC = D_3 + D_4$ (acción real recibida $D_3$ más expectativa atribuida $D_4$), y el Saldo de Densidad Relativa total del campo $SDR = SDA + SRC$.
+* **Estrato Escalar Absoluto (Masa Cinética Total Movilizada):** la masa bruta de emisión $BDA = |D_1| + |D_2|$ y de recepción $BRC = |D_3| + |D_4|$, cuya suma define la Densidad Bruta Relacional $BDR = BDA + BRC$.
+
+La discrepancia analítica entre la energía total movilizada y el flujo neto cohesivo resultante define formalmente la **Inercia del Desgaste Relacional** ($I_{\text{desgaste}} = BDR - SDR$):
+
+* **Régimen de Eficiencia Máxima ($SDR \approx BDR \implies I_{\text{desgaste}} \approx 0$):** Las elecciones y expectativas convergen hacia la valencia positiva (`<Ee>`). Casi la totalidad de la energía invertida produce cohesión estructural y rendimiento útil.
+* **Régimen de Desgaste y Resistencia ($BDR \gg SDR \implies I_{\text{desgaste}} \gg 0$):** El colectivo moviliza grandes volúmenes de comunicación e interacción ($BDR$ elevado), pero las cancelaciones de signo provocadas por desconfianzas, tensiones latentes o desacoples perceptivos anulan el avance ($SDR \to 0$). La energía se disipa en forma de rumiación, sospecha y fricción estéril, cuantificando la fatiga estructural del grupo antes de que se manifieste en fracturas explícitas.
+
+![Figura 8: Pentagrama Socio-Termodinámico (10D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)  
+*Figura 8. Pentagrama Socio-Termodinámico con las 10 densidades canónicas: desacoplamiento emisión/recepción y transición al continuo termodinámico; la brecha I_desgaste = BDR − SDR cuantifica la energía disipada en fricción.*
+
+### 4.5. El Paradigma de VISORD Acuario y la Hidrostática Relacional
+Como culminación perceptiva y experimental de este formalismo socio-termodinámico, el entorno **VISORD Acuario** constituye una aplicación complementaria de NEXORD que facilita la percepción visual y auditiva integrada de las estructuras de densidad relacional dentro de un diseño multidimensional $G \times T \times C$.
+
+El escenario se modela como un acuario tridimensional continuo definido sobre el volumen cartesiano $\mathbf{DA} \times \mathbf{RECIBE} \times \mathbf{DENSIDAD}$, estructurado analíticamente en tres zonas y estratos característicos:
+1. **Fondo sumergido (Bentos relacional):** Cuencas de atracción de baja cota y alta presión negativa, donde se concentran los estados de rechazo mutuo (`[Rr]`), conflicto latente y aislamiento estructural.
+2. **Superficie del agua (Nivel barométrico neutro):** Lámina homeostática de flotabilidad basal correspondiente al centroide de indiferencia (`i¿?! = 41`) y equilibrio disyuntivo.
+3. **Cielo abierto (Atmósfera convectiva):** Estrato superior de alta densidad positiva y cohesión óptima, donde gravitan las figuras de resonancia armónica (`<Ee>`) y liderazgo integrador libre de fricción.
+
+En este escenario se proyectan distintos valores de densidad relacional en **disyuntiva completa**:
+* **Nivel Intra-sujeto:** Proyección diferencial de los distintos pares relacionales y dipolos cinemáticos de un mismo actor frente a sus compañeros.
+* **Nivel Unitario:** Distribución de los sujetos en tanto que agentes dobles: Dadores activos de preferencia ($DA$) y Receptores de impacto grupal ($RECIBE$).
+* **Nivel Macro-relacional:** Densidades globales agregadas e inter-estratales entre Grupos ($G$), entre Tiempos ($T$) y entre Criterios ($C$).
 
 ---
 
 ## 5. Soluciones Gráficas, Espacio Multidimensional GxTyCz y Geometría Invariante
 
-### 5.1. Soluciones Gráficas y Planos Duales Paralelos (AFC ∥ PCA)
-NEXORD desarrolla diversas soluciones gráficas para restituir con claridad el campo relacional sin saturación informativa:
-  * **Sociogramas Continuos Tridimensionales:** Representación espacial de cuencas de atracción (verde neón, <Ee>), zonas de oposición (naranja) y fricción (magenta, [Rr]), con control diacrónico longitudinal.
-  * **Espacio Factorial Dual Paralelo (AFC ∥ PCA):**
-    * **Análisis Factorial de Correspondencias (AFC):** Opera sobre tablas relativas de contingencia con métrica Chi-cuadrado ($\chi^2$), idóneo para contrastar perfiles de frecuencias y polarización categórica.
-    * **Análisis de Componentes Principales (PCA):** Opera sobre la métrica continua de densidades y la función inversa al rango ($W = \pm 1/r$), preservando la masa inercial y evitando empates ciegos.
-    * **Planos Duales Conmutables:** Permiten desdoblar la observación en el plano de Emisores/Dadores (quién elige), de Receptores (quién es elegido) o el **Biplot Factorial Conjunto (F1 × F2)**. El Eje Factorial 1 (horizontal) sintetiza la Polarización Afectiva (<Ee> vs. [Rr]), mientras que el Eje Factorial 2 (vertical) proyecta la Expansividad y Visibilidad de Poder (Densidad Absoluta BDR).
-  * **Ejes Slender Verticales (1D):** Proyecciones esbeltas que ordenan los elementos según su peso estructural, flanqueados por tablas auxiliares externas de contribución absoluta (CTA), calidad de representación (COR) y varianza explicada acumulada (CTR).
-  * **Structurogramas Intergrupales:** Polígonos de sustentación vincular para el análisis morfológico comparado entre grupos.
+### 5.1. Soluciones Gráficas: Representación Visual y Topografía Relacional
+El VISORD ha surgido de la necesidad de hacer más visibles —y audibles— los procesos y las estructuras relacionales resultantes de la investigación. El ojo y el oído humanos están poco preparados para asimilar ristras de números y coeficientes abstractos; en cambio, tienen una enorme capacidad para percibir de forma intuitiva formas, relieves, cambios tonales, distancias relativas, densidades e iluminaciones.
 
-![Figura 3: Soluciones Gráficas de Navegación 3D del Campo Relacional](Figura_Seccion_4_1_VISORD_3D_Engine.png)
+La «lupa matemática» de la Sociometría Ordinal de NEXORD ha avanzado, mediante sus animaciones VISORD, en la creación de visualizaciones interactivas que facilitan una mejor percepción y comprensión de los fenómenos de interacción grupal. Como ha demostrado fehacientemente la investigación cosmológica, la progresiva matematización ha conseguido hacer ver y oír lo que resulta imperceptible a nuestros sentidos biológicos. Y esa lupa ha sido posible gracias al avance realizado en la cuantificación más precisa de los órdenes de preferencia.
 
-![Figura 4: Plano Factorial Biplot MESO (F1 × F2) en Espacio Dual (AFC / PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)
+NEXORD articula un conjunto de soluciones gráficas continuas destinadas a restituir el campo relacional sin saturación perceptiva:
 
-*Figura 4: Plano Factorial Biplot MESO (F1 × F2) en Espacio Dual Paralelo (AFC Benzécri ∥ PCA Socio-Termodinámico 10D). Panel Izquierdo: AFC sobre contingencia discreta ℕ₀ y retícula invariante Q81. Panel Derecho: PCA 10D continuo (±ℝ) con el Pentagrama de Densidades, vectores en +X y prolongaciones discontinuas hacia -X a través del origen (0,0). En ambos espacios se proyectan los sujetos como dipolos vectoriales diádicos [DA ──► RC] con baricentro (+), revelando la cuenca de atracción (2 y 1), la bisectriz homeostática (3 y 4) y la cuenca de ostracismo/disipación entrópica (6 y 5).*
+* **Sociogramas Continuos Tridimensionales (VISORD 3D/4D):** Visualización en el espacio continuo de cuencas de atracción (verde esmeralda, `<Ee>`), zonas intermedias de oposición (ámbar) y filamentos de alta cizalladura o fricción (magenta, `[Rr]`), con navegación temporal diacrónica (Figura 11).
+* **Planos Factoriales Duales Paralelos (Biplot MESO $F_1 \times F_2$, espacio dual AFC $\parallel$ PCA):** Proyección simultánea donde el vector diádico $DA \longrightarrow RC$ vertebra la posición de cada sujeto con baricentro exacto en el origen ($\Delta = 0.000$). En el AFC, sobre la tabla de contingencia de recuentos enteros $\mathbb{N}_0$ bajo la métrica $\chi^2$; en el PCA, sobre la matriz de densidades continuas $\pm \mathbb{R}$ estandarizadas. El contraste evidencia la aportación sustantiva de la socio-termodinámica relacional (Figura 9).
+* **Ejes Slender Verticales 1D:** Proyecciones derivadas de la descomposición espectral y el análisis de correspondencias (Benzécri, 1973; Cornejo, 1988), flanqueadas por ejes verticales de contribución absoluta (CTA) y calidad de representación (COR). Conviene fijar las definiciones formales de estas métricas: la COR (calidad de representación) del elemento $i$ sobre el eje $\alpha$ es $\text{COR}_{i\alpha} = d^2(i, \alpha) / d^2(i, G) \in [0, 1]$, la proporción de la inercia del elemento recuperada sobre ese eje; la CTR (contribución) es $\text{CTR}_{i\alpha} = p_i \cdot d^2(i, \alpha) / \lambda_\alpha$, el peso relativo del elemento en la construcción de la varianza de ese eje (las contribuciones sobre un eje suman 100%); la varianza explicada acumulada, $\lambda_\alpha / \sum_\beta \lambda_\beta$, es una propiedad del eje derivada de los autovalores, conceptualmente distinta de cualquier contribución elemental (Figura 10).
+* **Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Dimensiones (Algoritmo DIMO / ANCORM):** Para superar la limitación clásica de los planos 2D sin perder la interpretabilidad intuitiva del espacio euclídeo, NEXORD incorpora en su motor el método de proyección axonométrica jerárquica de hasta 6 factores factoriales desarrollado por el Dr. José Manuel Cornejo Álvarez (*ver Anexo II para su formulación analítica completa y reglas de tracción por CTA*).
+* **Structurogramas Intergrupales:** Polígonos de sustentación vincular para el análisis morfológico comparativo entre colectivos.
 
-![Figura 5: Plano Factorial Comparativo y Structurogramas](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)
+![Figura 9: Planos Duales en Paralelo (Biplot MESO F1 × F2, AFC ∥ PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)  
+*Figura 9. PLANOS DUALES EN PARALELO (Biplot MESO F1 × F2, espacio dual AFC ∥ PCA): el vector diádico DA ⟶ RC con baricentro en el origen (Δ = 0.000). (A) AFC sobre frecuencias de las figuras Q81 en emisores y receptores (contingencia ℕ₀, métrica χ²); (B) PCA sobre las 10 densidades en los mismos sujetos (continuo ±ℝ). El contraste evidencia la aportación sustantiva de la termodinámica relacional.*
 
-*Figura 5: Plano Factorial Comparativo Intergrupal (AFC / PCA). Líneas de fuerza de polarización y structurogramas poligonales de sustentación relacional entre dos colectivos independientes.*
+![Figura 10: Ejes verticales factoriales 1D (COR–CTA–CTR)](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)  
+*Figura 10. Ejes verticales factoriales 1D (Ejes 1 y 2, matriz SDR): calidad métrica bilateral COR–CTA–CTR de sujetos y figuras Q81, evitando la saturación de los diagramas 2D.*
 
+![Figura 11: Navegación 3D interactiva en VISORD Engine](Figura_Seccion_4_1_VISORD_3D_Engine.png)  
+*Figura 11. VISORD_demo 3D: fases en la formación interactiva de grupos y resultados termodinámicos numéricos y gráficos en tiempo real; fuerzas de atracción y repulsión en acción.*
 
+### 5.2. El Espacio Multidimensional GxTyCz
+NEXORD está configurada como una Plataforma de Investigación Sociométrica Psicosocial que trasciende la concepción tradicional del test sociométrico como una fotografía estática, aislada y unidimensional. La plataforma concibe el campo de las interacciones humanas como un espacio de investigación tensorial abierto, continuo y parametrizable, formalizado sobre el producto cartesiano $G \times T \times C$ donde el investigador puede diseñar desde estudios puntuales de una sola sociomatriz hasta ambiciosos programas longitudinales y comparativos intergrupales. La formulación matricial no impone restricciones previas sobre el diseño experimental, articulándose sobre cuatro ejes fundamentales:
 
+1. **Eje G — Colectivos y Grupos ($G = \{G_1, G_2, \dots, G_x\}$):**
+Transversalidad estructural. El sistema admite operar tanto sobre un único colectivo natural como sobre constelaciones de grupos independientes, departamentos de una misma organización, redes de aulas o células operativas en misiones críticas. Este eje habilita la comparación morfológica intergrupal (mediante distancias geodésicas en variedades de Grassmann) sin forzar interacciones cruzadas artificiales entre miembros que pertenecen a entornos convivenciales distintos.
 
+2. **Eje T — Oleadas Temporales Longitudinales ($T = \{T_1, T_2, \dots, T_y\}$):**
+Investigaciones longitudinales, donde el seguimiento sociométrico de grupos a lo largo del tiempo permite evaluar su evolución y contrastar los efectos de situaciones, de incidentes o el resultado de intervenciones estratégicas programadas. NEXORD puede monitorizar la evolución diacrónica de la cohesión, la velocidad de sedimentación del estatus, la inercia o mutabilidad del liderazgo, el enquistamiento o disolución de tensiones latentes (`[Rr]`) y la trayectoria cinemática de los actores en el espacio de densidades. Esta perspectiva longitudinal permite diagnosticar si el colectivo evoluciona hacia un régimen de fluidez adaptativa o si se precipita hacia trampas de rigidez, polarización o desgaste estructural antes de que se produzcan fracturas abiertas.
 
+3. **Eje C — Criterios Sociométricos Plurales ($C = \{C_1, C_2, \dots, C_z\}$):**
+Diversidad de criterios valorativos. Las preferencias y expectativas en las relaciones diádicas no son estáticas, pueden variar mucho según se consideren distintos criterios de valoración que se utilicen: operacionales, motivacionales, cognitivos, socioafectivos, de liderazgo, etc.:
+* **Criterios instrumentales o de tarea ($C_1$):** competencia técnica, eficacia percibida, coordinación operativa y reparto de cargas de trabajo.
+* **Criterios socioafectivos o expresivos ($C_2$):** simpatía, afinidad emocional, confianza interpersonal y convivencia informal.
+* **Criterios de estrés o liderazgo en crisis ($C_3$):** fiabilidad bajo presión, arbitraje en el conflicto y delegación de autoridad en situaciones de incertidumbre.
 
+La plataforma calcula matrices de discrepancia inter-criterio y coeficientes de correlación ordinal que desvelan fracturas invisibles al análisis clásico: sujetos altamente demandados en la tarea pero aislados afectivamente, o líderes informales de gran arrastre socioafectivo, pero desconectados de los objetivos operativos del grupo.
 
-### 5.1.1. Ruptura Paradigmática: De la Contingencia Categórica (Moreno
-La articulación paralela del Análisis Factorial de Correspondencias (AFC) y del Análisis de Componentes Principales Socio-Termodinámico (PCA 10D) explicita con rigor analítico el salto cualitativo que la Sociometría Ordinal Computacional introduce respecto a la sociometría clásica de Moreno (1934) y al tratamiento factorial tradicional de Benzécri (1973):
-  * **1. Naturaleza Ontológica de la Métrica: Discretización Categórica ($\mathbb{N}_0$) frente a Continuo Energético con Signo ($\pm\mathbb{R}$):**
-    * *Sociometría Clásica (Moreno, 1934; Benzécri, 1973):* Opera sobre tablas de contingencia relativas nutridas de recuentos discretos enteros ($\mathbb{N}_0$) derivados de cuotas fijas (típicamente 3 elecciones y 3 rechazos). La métrica Chi-cuadrado ($\chi^2$) divide las frecuencias observadas por la raíz del producto de masas marginales ($\sqrt{r_i \cdot c_j}$), lo que introduce una inflación geométrica artificial en las periferias de baja frecuencia y fragmenta la inercia factorial entre múltiples ejes ortogonales ($F_1 \approx 50.7\%, F_2 \approx 37.1\%$). Fundamentalmente, el AFC hipostasía el rechazo $[Rr]$ como una entidad sustantiva cualitativa simétrica e independiente de la elección.
-    * *Socio-Termodinámica NEXORD (2026):* El operador continuo de decaimiento exponencial al rango $W(k) = 2^{1-k}$ ($1º=1.000, 2º=0.500, 3º=0.250\dots$) sobre la administración BREVE por arrastre forzado sin empates transmuta la asignación subjetiva en magnitudes continuas con signo ($\pm\mathbb{R}$). En el espacio PCA 10D (descompuesto ortogonalmente por SVD sobre la matriz centrada del Pentagrama), las 10 variables canónicas de densidad ($SDR, BDR, SDA, SRC, BDA, BRC, D_1..D_4$) convergen armónicamente en el semiplano positivo ($+X$). El rechazo mutuo $[Rr]$, el conflicto y el aislamiento ya no son un polo cualitativo simétrico, sino un **déficit energético, un vacío gravitatorio y una pérdida de masa vincular**, formalmente proyectados en las prolongaciones proyectivas negativas ($-X$) que atraviesan el origen baricéntrico $(0,0)$.
-  * **2. Del Nodo Puntual Estático al Dipolo Vectorial Dinámico ($DA \longrightarrow RC$):**
-    * En el sociograma clásico, el sujeto es concebido como un punto estático sin masa ni trabajo físico, o como un centroide pasivo en el plano factorial.
-    * En NEXORD, el sujeto relacional es ontológicamente un **dipolo vectorial cinemático en continua tensión**: se proyecta simultáneamente su posición activa de emisión vincular ($DA / SDA$) y su posición receptora de investidura colectiva ($RC / SRC$). La flecha dirigida $DA \longrightarrow RC$ cuantifica el trabajo socio-termodinámico y la asimetría posicional del actor mediante el saldo diferencial:
-      $$\Delta_i = RC_i - DA_i$$
-    * El baricentro intrínseco del sujeto ($+$) se sitúa con exactitud matemática en el punto medio del vector $[(DA + RC)/2]$, garantizando la conservación de su identidad constitutiva sin colapso estático.
-  * **3. Las Tres Cuencas Topológicas del Campo Relacional:**
-    * *Cuenca de Atracción Gravitatoria (Sujetos Líderes 2 y 1):* Vectores ascendentes con balance marcadamente positivo ($\Delta > 0$). El colectivo inviste en ellos una masa gravitatoria desproporcionada sin exigirles un sobreesfuerzo de emisión ($RC \gg DA$). Constituyen pozos de potencial gravitatorio que vertebran, polarizan y cohesionan la red grupal a coste entrópico cero.
-    * *Bisectriz Homeostática y Umbral Crítico (Sujetos Medios 3 y 4):* El Sujeto 3 se sitúa con precisión milimétrica sobre la bisectriz homeostática ($RC = DA, \Delta \approx 0$), operando como amortiguador térmico e intermediario equilibrador que absorbe las oscilaciones del sistema. El Sujeto 4 marca el umbral crítico de congelación relacional: recibe nulo impacto positivo ($RC = 0$), pero aún sostiene el campo mediante su esfuerzo de emisión ($DA > 0$), acumulando un déficit tensional severo ($\Delta < 0$).
-    * *Cuenca de Ostracismo y Disipación Entrópica (Sujetos Periféricos 6 y 5):* Vectores descendentes y colapsados con balance severamente negativo ($\Delta < 0$). Situados íntegramente en el semiplano proyectivo negativo ($-X$), opuestos a todos los vectores directores de densidad ($SDR, SRC, BDR\dots$). Actúan como sumideros de disipación entrópica donde el sistema descarga sus tensiones y fricciones internas, evidenciando fenómenos de exclusión estructural invisibles para la sociometría clásica.
-  * **4. Dominancia Inercial del Gradiente Gravitatorio ($PC_1 \gg PC_2$):**
-    * Frente a la dispersión inercial del AFC, donde la varianza se disipa entre perfiles de frecuencias heterogéneos, en el PCA socio-termodinámico el primer componente factorial ($PC_1$) acapara más del **$87.5\%$ de la inercia total** (y hasta el $90\%$ en corpora longitudinales).
-    * Este hallazgo prueba formalmente que los colectivos humanos responden a una **ley unificada de gravedad socio-afectiva**: el campo relacional no se fragmenta en dimensiones inconexas, sino que se organiza a lo largo de un gradiente dipolar dominante que enfrenta la concentración de densidad relacional ($+X$) frente al vacío disipativo ($-X$).
-  * **5. El Teorema Baricéntrico de Conservación Relacional:**
-    * En todo colectivo humano cerrado se verifica analítica y empíricamente la ley fundamental de conservación:
-      $$\sum_{i=1}^N DA_i \equiv \sum_{j=1}^N RC_j$$
-    * Como consecuencia necesaria, el centroide colectivo de masa del sistema coincide con precisión de máquina ($\Delta_{\text{centroide}} = 0.000$, residuo flotante $\approx 2.22 \times 10^{-16}$) sobre el origen cartesiano $(0,0)$. Toda energía vincular que un actor gana en recepción ($RC$) proviene estrictamente de la inversión emitida ($DA$) por sus pares: ninguna masa relacional se crea ni se destruye; únicamente se redistribuye a lo largo del tensor diádico del campo.
-    * Esta dualidad vectorial se apoya en el **Teorema Baricéntrico de NEXORD**: mientras que las estrategias de renderizado superficial (como el puntillismo socio-termodinámico) constituyen técnicas coyunturales de visualización global, el posicionamiento relativo de los actores obedece a una rigurosa ley analítica de conservación. En el espacio factorial dual, la coordenada directa del sujeto en la tabla activa coincide de forma exacta con el baricentro de sus proyecciones suplementarias: en AFC como media ponderada por frecuencias entre emisión y recepción $\left[F_\alpha(i,\text{ACT}) = \frac{f_{i\cdot}^{\text{DA}}F_\alpha(i,\text{DA}) + f_{i\cdot}^{\text{RC}}F_\alpha(i,\text{RC})}{f_{i\cdot}^{\text{DA}} + f_{i\cdot}^{\text{RC}}}\right]$, y en PCA como punto medio exacto de la masa relacional $\left[PC_\alpha(i,\text{SDR}) = \frac{PC_\alpha(i,\text{SDA}) + PC_\alpha(i,\text{SRC})}{2}\right]$. De este modo, el dipolo diádico $DA \longrightarrow RC$ une con rigor geométrico la inversión emitida y la investidura recibida, atravesando el baricentro constitutivo del sujeto sin colapso estático ($\Delta_{\text{centroide}} = 0.000$).
+4. **Eje Z — Variables Contextuales y Psicosociales Complementarias ($Z$):**
+El puente analítico entre la topología relacional y los atributos individuales de los actores. Aunque el cálculo sociométrico intrínseco opera exclusivamente sobre las preferencias de ordenación pura (la estructura del vínculo), NEXORD integra de forma nativa dos baterías estándar de calibración:
+* **Batería Sociodemográfica $V_{10}$:** diez variables contextuales normativas (en 3 modalidades homogéneas por ítem) que sitúan al actor en su coordenada biográfica, de rol formal, antigüedad o estatus institucional.
+* **Batería de Atribución Adjetival Grupal $A_{16}$:** dieciséis adjetivos agrupados en 4 factores: (temático, funcional, cognitivo, afectivo) (AAG; Vicente, Cornejo & Barbero, 2006), evaluados en escala par (1–8, sin punto neutro de escape) para mapear el clima cognitivo-emocional y la atmósfera valorativa proyectada sobre el grupo.
 
+Proyectadas como variables ilustrativas o suplementarias en los planos factoriales duales (AFC $\parallel$ PCA), las variables $Z$ enriquecen la interpretación clínica sin alterar la pureza métrica del campo relacional. Asimismo, el mantenimiento de este estándar común constituye el marco de referencia del Banco Sociométrico (BSOC) para garantizar la comparabilidad retrospectiva e histórica de sociomatrices provenientes de épocas, culturas y contextos organizacionales muy diversos.
 
-### 5.2. El Diseño Multidimensional GxTyCz sin Limitaciones a Priori
-La formulación matricial de NEXORD no presenta limitaciones a priori en los posibles diseños de análisis:
-  * **Grupos (G):** Admite cualquier número de colectivos formales o informales independientes, subgrupos de trabajo o unidades organizativas.
-  * **Oleadas Temporales (T):** Permite el seguimiento longitudinal continuo en T momentos temporales (T1, T2, ..., Tn), trazando la evolución diacrónica de la cohesión y las fracturas latentes.
-  * **Criterios Sociométricos (C):** Modela simultáneamente múltiples criterios funcionales y afectivos (C1 tarea, C2 afecto, C3 afrontamiento de crisis), registrando cómo muta la topología grupal según el prisma evaluativo.
-  * **Variables Complementarias (Z):** Integra atributos de perfil sociodemográfico (edad, género, antigüedad) y baterías de actividad grupal (AAG, Vicente et al., 2006).
+![Tabla 4: Batería V10 y A16](Tabla_Seccion_5_2_Bateria_VAR10_AAG16.png)  
+*Tabla 4. Cuadro normativo de la batería de 10 variables contextuales (V₁₀, 3 modalidades) y 16 adjetivos de atribución grupal (A₁₆, 4 × 4, escala par 1–8 sin neutro).*
 
-  Junto al núcleo del ranking ordinal, la arquitectura formal del sistema articula de modo armónico dos componentes psicométricos complementarios:
-  * **Metapercepciones Triádicas Nativas ($aE$ y $oE$):** Para completar el campo socio-cognitivo del sujeto sin sobrecargar la captura, el sistema integra nativamente las expectativas trianguladas que el emisor proyecta sobre los extremos de su constelación relacional:
-    * **$aE$ (Expectativa sobre el 1º elegido / más próximo):** ¿A quiénes cree el emisor que preferirá elegir su más próximo (su 1ª elección)?
-    * **$oE$ (Expectativa sobre el más distante / más rechazado):** ¿A quiénes cree el emisor que preferirá elegir su más distante?
-    Esta doble atribución triangulada formaliza el cierre socio-cognitivo del actor (en la tradición de Heider y Festinger), permitiendo evaluar la transitividad percibida, la coherencia cognitiva y el balance de expectativas en el colectivo.
-  * **Baterías Auxiliares Modulares de Referencia ($V_{10}$ y $A_{16}$):** Para garantizar la homogeneidad métrica y la comparabilidad intergrupal dentro del Banco Sociométrico (BSOC), se parametrizan por defecto una batería sociodemográfica estandarizada ($V_{10,3}$, diez variables contextuales clave con tres modalidades) y la escala de Atribución Adjetival Grupal ($A_{16,4}$, 16 adjetivos normativos articulados en cuatro factores: Temático, Funcional, Cognitivo y Afectivo, evaluados en escalas pares forzadas 1-8). No obstante, ambas baterías constituyen instrumentos complementarios y modulares: su inclusión es plenamente opcional y personalizable por el Investigador Principal (IP) en función de los objetivos sustantivos del estudio.
+El despliegue aplicado del espacio $G \times T \times C$ se canaliza a través de los 10 dominios ecosistémicos de calibración (Tabla 5), que fijan los parámetros estructurales del campo —inercia relacional $\alpha$ y tasa de decaimiento $\gamma$— junto con el foco psicosocial y los criterios estándar de elección, según el contexto institucional de aplicación (educativo, familiar, deportivo, comunitario, misiones críticas, terapéutico, laboral, institucional, militar y ecológico-penitenciario).
 
-  Alongside core ordinal rankings, the system's formal architecture articulates two complementary psychometric modules:
-  * **Native Triadic Metaperceptions ($aE$ and $oE$):** To complete the actor's socio-cognitive field without inflating administrative burden, NEXORD natively captures triangulated expectations projected onto the boundary poles of the relational constellation:
-    * **$aE$ (Expectations on the Closest Peer):** Who does the sender expect their closest peer (1st choice) will prefer to choose?
-    * **$oE$ (Expectations on the Most Distant Peer):** Who does the sender expect their most distant or rejected peer will prefer to choose?
-    This triadic attribution operationalizes socio-cognitive closure (following Heider and Festinger), assessing perceived transitivity, cognitive balance, and structural coherence within the group.
-  * **Modular Reference Batteries ($V_{10}$ and $A_{16}$):** To ensure cross-group metric standardization within the Sociometric Data Bank (BSOC), the platform specifies by default a decadic sociodemographic battery ($V_{10,3}$, ten key attributes with three modalities) and the Group Adjective Attribution inventory ($A_{16,4}$, 16 canonical adjectives structured across four factors: Thematic, Functional, Cognitive, and Affective, utilizing 1-8 forced even scales). Nonetheless, both batteries remain modular, optional reference baselines: they can be modified, replaced, or tailored under the Principal Investigator's (PI) criteria according to specific substantive requirements.
+![Tabla 5: Catálogo de los 10 Dominios Ecosistémicos](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
+*Tabla 5. Catálogo de los 10 dominios ecosistémicos de aplicación con parametrización estructural (α, γ), foco psicosocial y criterios de elección.*
 
 ### 5.3. PCA Multigrupo y Distancia Geodésica en Variedades de Grassmann Gr(k, N)
-Para comparar colectivos independientes sin forzar interacciones cruzadas ficticias, cada grupo se modela como un subespacio vectorial k-dimensional en R^N. A partir de los ángulos canónicos de Jordan cos(theta_m) = sigma_m(U_1^T U_2), se calcula la distancia geodésica invariante de escala:
+Para comparar colectivos sin forzar interacciones cruzadas artificiales, cada grupo se proyecta como un subespacio $k$-dimensional dentro de $\mathbb{R}^N$. A partir de los ángulos principales de Jordan $\cos(\theta_m) = \sigma_m(U_1^T U_2)$, se calcula la distancia geodésica invariante de escala:
 
-![Fórmula 7: Distancia Geodésica en Variedades de Grassmann](formulas/Formula_7_Distancia_Geodesica_Grassmann.png)
+$$d_{\operatorname{Gr}}(U_1, U_2) = \sqrt{\sum_{m=1}^k \theta_m^2} \tag{20}$$
 
-Esta métrica permite contrastar cuantitativamente si dos colectivos comparten morfología relacional con independencia del tamaño de sus muestras.
+Esta métrica determina rigurosamente (Figura 12) si dos grupos comparten la misma morfología relacional con independencia de las diferencias en sus tamaños muestrales. Más allá del acuerdo puntual entre observadores, es la persistencia y constancia temporal de estas configuraciones en el espacio geométrico lo que permite contrastar la solidez de las estructuras relacionales frente a variaciones coyunturales o fluctuaciones aleatorias.
 
+![Figura 12: Plano factorial comparativo intergrupal (G1 vs G2)](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)  
+*Figura 12. Plano factorial comparativo intergrupal (G1 vs G2) y structrogramas diacrónicos; la distancia geodésica en Gr(k, N) cuantifica la morfología relacional compartida.*
 
-This metric quantitatively determines whether two collectives share relational configurations regardless of sample size differences.
+A nivel del sujeto individual, la matriz de interdistancias euclídeas de rangos $d_{\text{DA}} / d_{\text{RC}}$ (Tabla 6) documenta sobre el corpus G2T1C1 la ley de asimetría relacional: la dispersión receptora media ($4.84; DT = 0.64$) supera sistemáticamente a la emisora ($4.15; DT = 0.49$), y los diagnósticos posicionales por nodo —de la consonancia isométrica de 5A ($\Delta = -0.09$) al desbalance máximo de 3A ($\Delta = -1.39$)— ilustran la granularidad del diagnóstico socio-termodinámico.
+
+![Tabla 6: Matriz Numérica de Interdistancias Euclídeas de Rangos](Tabla_Anexo_IV_Interdistancias_G2T1C1.png)  
+*Tabla 6. Matriz numérica de interdistancias euclídeas de rangos (d_DA, d_RC, Δ = d_DA − d_RC) con diagnóstico estructural por sujeto, corpus G2T1C1: validación empírica de la ley de asimetría relacional.*
 
 ---
 
-## 6. Investigación Experimental: Laboratorio Físico, Sociometría Dialéctica y Diagnóstico Multimodal
+## 6. Investigación Experimental: Laboratorio Físico, Sociometría Dialéctica y Cognición Triádica
 
-### 6.1. Monitorización de Diseños Experimentales en el Laboratorio Físico
-La plataforma está preparada para monitorizar diseños experimentales presenciales en el laboratorio físico de psicología social y dinámicas de grupo. En entornos de observación sistemática, seminarios de trabajo y cámaras de registro conductual, NEXORD permite capturar en tiempo real las interacciones cara a cara, cuantificando la emergencia progresiva de estructuras informales de liderazgo, reciprocidad y centralidad relacional durante la ejecución de tareas compartidas.
+### 6.1. Monitorización Experimental en el Laboratorio Físico
+La plataforma está diseñada para la monitorización de investigaciones experimentales complejas en laboratorio físico: seguimiento diacrónico de tareas de alta interdependencia, simulación de crisis y evaluación continua de intervenciones en dinámicas de grupos reducidos.
 
 ### 6.2. Sociometría Dialéctica y Estudio de Dilemas Sociales
-Concebida como una **línea de investigación experimental y emergente actualmente en desarrollo**, la Sociometría Dialéctica explora el registro de secuencias interactivas continuas en tiempo real. Mediante la delimitación controlada de un **espacio de interacción** y la calibración de **contadores de interacción** (frecuencias de intervención, secuencias temporales de turnos de palabra y equilibrio de escucha mutua), esta vertiente en modelización permite observar la dinámica procesal en dilemas sociales y tareas de cooperación colectiva, rastreando la emergencia de confianza, reciprocidad gradual o conductas de defección (*free-riding*) bajo estricta anonimización.
+En situaciones de cooperación y conflicto (p. ej., dilemas de bienes comunes o dilema del prisionero iterado), NEXORD cuantifica el desacople entre las expectativas cognitivas y la conducta relacional observable, capturando la emergencia de alianzas, deserciones y normas de reciprocidad.
 
-### 6.3. Percepción Multimodal: El Modelo del Iceberg y la Sonificación Hidrodinámica
-En todo grupo humano coexisten una parte visible en la superficie (roles formales, acuerdos declarados y conducta manifiesta) y un fondo relacional oculto y sumergido (expectativas tácitas, tensiones latentes, simpatías no verbalizadas y rechazos sutiles). El objetivo metodológico fundamental de la plataforma es **hacer visible y audible las dinámicas y procesos de interacción en los grupos**:
-  * **Dimensión Visual:** Articulada mediante las soluciones gráficas y sociogramas continuos tridimensionales.
-  * **Dimensión Auditiva (Sonificación Hidrodinámica):** Traduce los gradientes de fricción (Φ), el potencial neto (SDR) y las asimetrías de flujo a frecuencias y resonancias armónicas (calibradas a 432 Hz con timbres orquestales diferenciados). Esta sonificación permite percibir acústicamente la tensión o armonía del campo grupal, ofreciendo a los investigadores un canal perceptual complementario para la detección de dinámicas ocultas bajo la superficie.
+### 6.3. Percepción Multimodal: Modelo del Iceberg y Sonificación Hidrodinámica
+NEXORD implementa el modelo del iceberg en dos vertientes:
+* **Representación Gráfica 3D:** Hace emerger a la superficie visual la estructura sumergida de tensiones, rechazos latentes y lazos informales que no se manifiestan en la jerarquía formal.
+* **Sonificación Hidrodinámica:** Convierte densidades y fricciones en flujos tonales continuos, permitiendo la monitorización auditiva de estados de turbulencia o calma colectiva sin sobrecargar la atención visual del analista.
 
-![Figura 6: Campo Continuo y Soluciones Gráficas Tridimensionales](Figura_Sociograma_3D_Continuo_Plasma_N50.png)
+La capacidad de calcular el campo para colectivos de gran tamaño sin pérdida de continuidad analítica resuelve una limitación histórica de la sociometría tradicional, que solía restringirse a grupos pequeños ($N < 30$) por la saturación de los sociogramas clásicos (Figura 13).
 
+![Figura 13: Campo continuo de interacción y modelo del iceberg (N = 50)](Figura_Sociograma_3D_Continuo_Plasma_N50.png)  
+*Figura 13. Campo continuo de interacción y modelo del iceberg en un colectivo de N = 50 sujetos: la base relacional sumergida hecha visible.*
 
+### 6.4. El Corpus CULTURAL como Entorno de Reactividad Cero
+La literatura dramática y la narrativa cinematográfica constituyen laboratorios humanos privilegiados: sistemas cerrados, perfectamente documentados y de reactividad cero (el texto no se altera por ser observado). NEXORD ha procesado obras maestras de la dramaturgia y la literatura (*Doce hombres sin piedad* de Reginald Rose, *La casa de Bernarda Alba* de Federico García Lorca, *El señor de las moscas* de William Golding), demostrando que las leyes socio-termodinámicas identifican con precisión matemática los nudos dramáticos, las transiciones de fase y los colapsos de liderazgo sin recurrir a datos inferidos por observación.
 
-### 6.4. El Corpus CULTURAL como Laboratorio de Reactividad Cero
-A través de la categoría de datos CULTURAL, NEXORD transcribe obras maestras del cine, teatro y literatura a matrices sociométricas ordinales. Al tratarse de biografías relacionales completas, permiten auditar dinámicas extremas (como polarización o autoritarismo en obras de Lorca, Sartre o Rose) en un entorno experimental con reactividad evaluativa cero, sirviendo de contraste psicométrico robusto.
+### 6.5. Cognición Social Triádica: Expectativas Proyectadas αE y ωE
+NEXORD extiende la captura de expectativas incorporando dos sensores de la teoría de la mente relacional:
+* **Mejor Valorado Esperado ($\alpha E$):** La expectativa de cada sujeto sobre quién será el miembro más elegido por el colectivo.
+* **Peor Valorado Esperado ($\omega E$):** La expectativa de cada sujeto sobre quién concentrará el mayor rechazo o descarte grupal.
+
+Estas métricas cuantifican la precisión de lectura de campo o lucidez sistémica (Tsankova & Tair, 2021) mediante la distancia euclídea entre la expectativa emitida y la realidad colectiva observada: $\Delta_\alpha = \|\alpha E - \text{Elección Real}(\alpha)\|$ y $\Delta_\omega = \|\omega E - \text{Elección Real}(\omega)\|$.
+
+Sujetos con $\Delta_\alpha \approx 0$ y $\Delta_\omega \approx 0$ operan como sensores naturales de la dinámica del grupo, cuya perspectiva anticipa cambios de fase estructurales.
+
+### 6.6. Simulación Sociométrica In Silico: el Motor PLATINUM
+La realización concreta de un estudio sociométrico real comporta dificultades, trabajo y tiempo considerables. Para desplegar la investigación metodológica, la formación investigadora y la calibración instrumental sin esa carga —y sin exposición alguna de sujetos humanos—, NEXORD integra un motor de simulación sociométrica in silico (PLATINUM), en la línea de lo que la Biología Sintética o la Epidemiología Computacional representan para sus respectivos campos: no se trata de inventar ruido estadístico desconectado de la naturaleza humana, sino de extrapolar las leyes topológicas de la sociometría —sus valencias y dinámicas reales— para modelar organizaciones plausibles y desafiantes que fuerzan a los algoritmos preventivos de la plataforma a demostrar su fiabilidad in vitro antes de actuar sobre tejido social vivo. La simulación ya no es un dibujo: es una biografía social reproducible.
+
+El investigador define el escenario deseado en el espacio de diseño $G \times T \times C$ (grupos, oleadas temporales, criterios con sus consignas literales, tamaños muestrales y dominio de contexto), mediante un archivo estándar de parámetros o mediante asistente interactivo guiado, y gobierna la morfología del colectivo mediante familias de moduladores paramétricos continuos:
+* **(a) Termodinámicos:** densidad objetivo de valencia, saturación de nodos estrella, tolerancia de convergencia.
+* **(b) De gravedad cinética y ensamblaje:** cohesión, transparencia metaperceptiva, sesgo intergrupal, ruido térmico, reciprocidad, triangulación y facciones latentes.
+* **(c) Temporales longitudinales:** inercia estructural, olvido de agravios y ruptura exógena.
+* **(d) Contextuales:** baterías $V_{10}$ y $A_{16}$ y el catálogo de los 10 dominios de calibración $\alpha / \gamma$ (Tabla 5).
+
+La reproducibilidad es absoluta: la semilla pseudoaleatoria garantiza la regeneración bit a bit de cualquier corpus, y el tamaño de lote habilita réplicas Monte Carlo. Cada simulación se identifica con una clave estandarizada (`SIMUL-...`) y codifica sus sujetos con las etiquetas posicionales formales (`1A1a`...), preservando la anonimidad por diseño; SIMUL se sitúa así junto a PROPIO, REAL y CULTURAL en el catálogo de las cuatro categorías operativas de datos de la plataforma:
+* **REAL (Corpus Empíricos de Campo):** Datos obtenidos de colectivos humanos vivos (organizaciones laborales, aulas educativas, equipos deportivos o unidades asistenciales), recogidos mediante los protocolos de captura web de la plataforma bajo estricto consentimiento informado, salvaguarda de privacidad y compromiso de uso exclusivamente formativo y no punitivo (§6.7 y §7.1). Esta modalidad faculta al motor de simulación para estimar por defecto —si fuera conveniente o necesario— los valores de las Variables Contextuales ($V_{10}$) y de los Adjetivos de Atribución Grupal ($A_{16}$) a partir de los datos sociométricos recogidos y la información complementaria aportada por el Investigador Principal, cuando dichos datos de contexto no hayan podido ser recabados directamente en el campo.
+* **PROPIO (Corpus del Investigador):** Sociomatrices y diseños singulares aportados directamente por el usuario, docente o consultor para su explotación particular, docencia o intervención específica en sus propios grupos naturales; permite al simulador recoger los datos diseñados por el propio Investigador Principal y, si es conveniente, completar datos faltantes para garantizar la continuidad analítica del estudio.
+* **CULTURAL (Laboratorios de Reactividad Cero):** Redes relacionales extraídas de textos dramáticos, guiones cinematográficos u obras literarias maestras (*Doce hombres sin piedad*, *La casa de Bernarda Alba*, etc.), que constituyen sistemas relacionales cerrados y exhaustivamente documentados donde las dinámicas de grupo se despliegan con reactividad cero del observador (§6.4); en esta modalidad, el sistema revisa la codificación realizada y completa lo necesario para el análisis.
+* **SIMUL (Simulación In Silico):** Escenarios sintéticos generados algorítmicamente por el motor PLATINUM gobernando paramétricamente las leyes del campo (atracción, fricción, reciprocidad, clustering), empleados para la calibración del instrumental, el desarrollo metodológico y la formación investigadora sin exposición ni sobrecarga de participantes humanos.
+
+El circuito operativo articula cuatro eslabones:
+1. Definición del escenario.
+2. Generación del eslabón factual de simulación por el motor PLATINUM.
+3. Ingestión por el orquestador factorial (255 indicadores, matrices SMIb, proyecciones AFC/PCA y geometría de Grassmann).
+4. Proyección VISORD 3D/4D y transferencia a la web promocional.
+
+Los corpus simulados constituyen, asimismo, el banco de verdad conocida (*ground truth*) sobre el que los indicadores del sistema ($IDA, \Phi, ICE$ y las densidades del Pentagrama) pueden contrastarse bajo regímenes de parámetros conocidos a priori y el sustrato de las visualizaciones públicas del ecosistema VISORD.
+
+### 6.7. Captura de Campo Asistida por Web
+NEXORD permite la realización logística —práctica, rápida, personalizada y con alto control de validez— de la recogida de respuestas sociométricas en completos y complejos diseños de estudio de campo, administrados íntegramente vía web. El Investigador Principal es el único interlocutor y último responsable del estudio: diseña con NEXORD la configuración concreta (grupos simultáneos, oleadas temporales de recogida longitudinal, criterios y consignas, censos de miembros y canales de contacto), programa el momento de conexión y dispensa a cada participante un protocolo o cuestionario aleatorizado (`.html`) que cumplimenta en privado desde su propio smartphone.
+
+La infraestructura integra controles de validez logística en cada eslabón: solicitud previa de consentimiento informado —y, para menores, la autorización expresa de tutores—; fotografías o avatares exclusivos para el reconocimiento de las personas y listas de nombres aleatorizadas que neutralizan sesgos de orden; control de los tiempos de respuesta y repesca de miembros retrasados; y, al cierre del estudio, la entrega de un código privado e intransferible que abre a cada participante el acceso a su report personal: los resultados generales de su grupo, sus resultados individuales y sugerencias constructivas de actuación o de reestructuración de actitudes y tareas, en coherencia con los derechos de devolución no estigmatizante (§7.3).
+
+En conjunto, la plasticidad sociométrica que NEXORD pone en manos del investigador es muy amplia —cualquier configuración del espacio $G \times T \times C$, en cualquiera de los modos de adquisición descritos— y puede aportar valiosos conocimientos sobre invariantes relacionales que hasta ahora han resultado difíciles de determinar.
+
+### 6.8. Horizontes de Futuro: Hacia una Sociometría Científica «Adulta» y la Física de lo Social a Gran Escala
+
+El desarrollo histórico de la sociometría, desde las intuiciones fundacionales de J. L. Moreno en los años treinta hasta la formalización no paramétrica de NEXORD, ha estado enfocado primordialmente en el nivel intra-grupal: el individuo como unidad electora y el grupo inmediato como espacio de interacción. 
+
+Sin embargo, los grandes retos de la convivencia en las sociedades complejas —desde la fricción interdepartamental en organizaciones hasta las fracturas territoriales o los alineamientos geopolíticos— exigen dar un salto cualitativo: **tratar al grupo entero como unidad relacional activa dentro de una Sociometría Ordinal Intergrupal (SOI)**. No se trata de impartir doctrina, sino de abrir horizontes hacia una sociometría científica plenamente madura, capaz de abordar la complejidad de los sistemas sociales a gran escala.
+
+#### 1. El sustrato cognitivo-emocional: de Sherif y Festinger al mapa ordinal
+Las relaciones entre colectivos rara vez se deciden exclusivamente sobre balances económicos o acuerdos contractuales explícitos. Se articulan sobre un denso sustrato de representaciones sociales, estereotipos compartidos, simpatías identitarias y percepciones mutuas de amenaza o liderazgo. 
+
+La psicología social clásica ya intuyó este territorio en investigaciones pioneras de enorme calado:
+* Los experimentos de campo de **Muzafer Sherif** en las colonias de vacaciones (*Robbers Cave*), que evidenciaron con qué facilidad dos colectivos en competición caen en la hostilidad mutua y cómo solo las *metas supraordenadas* logran reconfigurar el campo relacional.
+* Las aportaciones fundamentales de **Leon Festinger** sobre los procesos de comparación social, que explican la génesis del **favoritismo intragrupal y la discriminación exogrupal**: la necesidad de los grupos de compararse con otros para salvaguardar una identidad positiva, generando mecanismos espontáneos de inclusión preferente hacia los propios y de postergación hacia los ajenos.
+* Las formulaciones sobre el *grupo mínimo* y la categorización social, que demostraron que basta una distinción simbólica mínima para que estos sesgos de diferenciación intergrupal se activen de forma inmediata.
+
+Lo que aquellas investigaciones demostraron en el laboratorio encuentra en la metodología ordinal de NEXORD su instrumento natural de captura a gran escala: las comunidades humanas no miden sus afectos ni sus rivalidades con escalas métricas artificiales; **ordenan sus preferencias de forma heurística**. El favoritismo intragrupal y el recelo hacia el exogrupo son, en esencia, **operaciones ordinales de jerarquización social**: sabemos con claridad meridiana a quién colocamos en primer lugar como aliado natural, a quién situamos en la periferia de nuestra confianza y hacia quién dirigimos el rechazo.
+
+#### 2. La termodinámica social como herramienta analítica
+La extensión intergrupal plantea un interrogante técnico evidente: los colectivos no tienen una «cabeza única» que responda un test. Es aquí donde los conceptos de la física estadística y la termodinámica social dejan de ser una metáfora para convertirse en herramienta operativa:
+
+1. **La Entropía Interna del Colectivo Emisor:**  
+   Mediante el motor intra-grupal de NEXORD, es posible agregar los rankings individuales de un colectivo para obtener su consenso mediano (Kemeny-Mallows), cuantificando al mismo tiempo su dispersión o *entropía interna* ($S$). Un grupo internamente cohesionado (baja entropía) actúa con alta inercia relacional, proyectando hacia el exterior un vector de alianzas nítido y firme. Por el contrario, un grupo fragmentado (alta entropía) emite una señal difusa y volátil.
+2. **Temperatura Social y Transiciones de Fase:**  
+   La polarización y el extremismo en las atribuciones intergrupales permiten modelar la *temperatura social* del sistema. A temperaturas moderadas, las alianzas y negociaciones son fluidas; cuando la temperatura de conflicto rebasa un umbral crítico, el sistema experimenta *transiciones de fase*, colapsando de golpe en bloques antagónicos y trincheras rígidas.
+3. **Asimetría de Nexo y Actores de Mediación:**  
+   La asimetría ordinal $|R_{ij} - R_{ji}|$ detecta de inmediato relaciones de dominación, dependencia o falta de correspondencia entre comunidades, señalando asimismo a aquellos colectivos que, al recibir reconocimiento transversal desde posiciones enfrentadas, están llamados a desempeñar una función de puente o mediación.
+
+#### 3. Un horizonte abierto para las nuevas generaciones
+La Sociometría Ordinal Intergrupal no pretende agotar la inmensa complejidad de los lazos humanos, sino brindar un marco metodológico libre de supuestos métricos espurios para investigarla. 
+
+Dejar constancia de estas posibilidades en el presente Manifiesto responde al anhelo de tender un puente entre la tradición experimental psicosocial y las herramientas contemporáneas de los sistemas complejos. Es una invitación abierta para que las futuras generaciones de investigadores tomen el testigo y apliquen esta lente a la comprensión y mejora de la convivencia humana, desde la escala comunitaria hasta el escenario internacional.
 
 ---
 
 ## 7. Gobernanza Institucional, Ética por Diseño y Ciencia Abierta
 
-### 7.1. Ética por Diseño y Uso No Punitivo
-La plataforma incorpora salvaguardas éticas en su propio diseño técnico (*Ethics by Design*). El sistema prohíbe explícitamente el uso de la sociometría para fines punitivos, listas de descarte o selección negativa. La ejecución sobre datos reales de campo (categoría REAL) requiere la autenticación y responsabilidad formal de un Investigador Principal (IP) acreditado.
-  * **Compromiso Deontológico Explícito del Investigador Principal (IP):** Queda estrictamente vedado atribuir a rasgos intrínsecos de la personalidad individual o al mérito/demérito personal de los participantes lo que son, en rigor epistemológico y metodológico, posiciones relacionales y fenómenos socio-termodinámicos estrictamente derivados de la dinámica de campo del grupo. Toda devolución o intervención sociométrica debe salvaguardar la autoestima personal y la reputación social de los sujetos, orientando el diagnóstico hacia el ajuste del entorno, la clarificación de roles y el bienestar colectivo.
+### 7.1. Ética por Diseño y Uso Estrictamente No Punitivo
+NEXORD incorpora salvaguardas éticas en el núcleo de su diseño algorítmico (*Ethics by Design*). El sistema prohíbe de forma explícita el uso de la sociometría para fines punitivos, expedientes disciplinarios, despidos o listas de descarte. Cualquier procesamiento sobre colectivos reales (categoría REAL) exige la autenticación, tutela y responsabilidad de un Investigador Principal (IP) debidamente acreditado.
 
-### 7.2. Ciencia Abierta, Protocolo Clélie y Custodia Institucional (BSOC)
-En coherencia con los principios de Ciencia Abierta y Datos FAIR, la formulación matemática, metodológica y computacional de NEXORD es de acceso libre. La plataforma web interactiva completa, sus motores algorítmicos y los visualizadores tridimensionales VISORD están accesibles públicamente en la página web oficial del proyecto: [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/). Para proteger la confidencialidad, los datos de campo se anonimizan bajo códigos formales canónicos (1A1a..5A1a) y se aseguran mediante sellado criptográfico inmutable (SHA3-512, Protocolo Clélie), bajo la custodia académica del Banco Sociométrico (BSOC / Universitat de Barcelona).
+### 7.2. Ciencia Abierta, Protocolo Clélie y Custodia en el Banco Sociométrico (BSOC)
+En cumplimiento estricto de los principios de Ciencia Abierta y Datos FAIR (*Findable, Accessible, Interoperable, Reusable*), los fundamentos metodológicos y matemáticos de la plataforma son de acceso público.
+
+Los datos de campo se anonimizan bajo códigos alfanuméricos normalizados (`1A1a` … `5A1a`) y se protegen mediante sellado criptográfico inmutable con algoritmo SHA3-512 (Protocolo Clélie), bajo la custodia académica del Banco Sociométrico (BSOC).
+
+El BSOC tiene su origen en la idea de dar un uso retrospectivo a los numerosísimos estudios sociométricos realizados anteriormente: el BSOC nace para preservar y poner en valor el amplio patrimonio empírico generado a lo largo de décadas de investigación psicosocial, permitiendo que sociomatrices procedentes de estudios locales e históricos puedan integrarse en investigaciones retrospectivas, comparativas y metaanálisis. Consolidada la donación de sociomatrices al banco bajo el protocolo estándar SMIb —que unifica ambos formatos de captura (MORENO y ORBIT)—, ese acervo histórico se convierte en capital científico reutilizable bajo los principios FAIR, preservando la inversión empírica de generaciones previas de investigadores.
+
+La Plataforma NEXORD se materializa en cuatro elementos integrados:
+1. La suite computacional en código Python que implementa la totalidad del aparato formal (en revisión y mejora continua, distribuida bajo acreditación institucional conforme a §7.4).
+2. El presente Manifiesto Científico, de acceso abierto con DOI en Zenodo/CERN.
+3. El artículo de primicia académica sometido a revista especializada (*Psicothema*).
+4. La página web promocional alojada en GitHub Pages, con su ecosistema de animaciones VISORD 3D/4D —piezas interactivas de carácter divulgativo y en parte lúdico, sin relación directa con el software operativo, aunque utilizables como visualizadores interactivos de estudios simulados o reales debidamente anonimizados—. La interfaz web organiza las nueve estaciones del modelo en un dial radial interactivo de navegación.
 
 ### 7.3. Derechos de los Participantes y Devolución Constructiva
-Los participantes disponen de claves temporales individuales para verificar la fidelidad del procesamiento de sus datos, sin acceso a información de terceros. La re-identificación de nodos queda reservada exclusivamente al IP responsable en contextos de orientación o apoyo psicológico. Toda devolución de resultados tiene carácter formativo, constructivo y no estigmatizante, orientada a favorecer la salud integral del colectivo. En investigaciones administradas a través de entornos web, la plataforma contempla como opción metodológica el despliegue del **Portal del Participante**, concebido como una garantía técnica de transparencia y fidelidad en la captura. Mediante credenciales individuales seguras y efímeras, cada integrante puede acceder a un entorno restringido para verificar la correcta recepción de sus propias respuestas, sin visibilidad alguna sobre las elecciones ni los ordenamientos emitidos por el resto de los miembros. Toda función de devolución individual, formativa o de apoyo grupal permanece supeditada en todo momento a la **custodia exclusiva y al criterio orientador del Investigador Principal (IP)**, salvaguardando la confidencialidad mutua y evitando cualquier exposición o juicio perjudicial entre pares.
+Cada participante dispone de credenciales temporales individuales para verificar el procesamiento adecuado de sus propios datos, sin acceso a información individualizada de terceros.
+
+La re-identificación de nodos queda reservada exclusivamente al Investigador Principal en contextos de apoyo psicológico o mediación formativa. Toda devolución de resultados tiene carácter reflexivo, pedagógico y constructivo, orientada al bienestar integral y al desarrollo saludable del colectivo.
+
+### 7.4. Riesgo de doble uso y declaración del creador
+La potencia diagnóstica que NEXORD ha podido desarrollar a través de sus múltiples algoritmos la convierte en un potencial «arma social» si su utilización cayera en manos desaprensivas e irresponsables. La información sociométrica es de alta sensibilidad social y susceptible de provocar daños personales y colectivos de gran magnitud sin una clara y expresa exigencia de supervisión académica institucional.
+
+Como creador de NEXORD y partidario convencido de la *Open Science*, considero esencial el objetivo de total transparencia y difusión del conocimiento. Sin embargo, los graves riesgos que conllevaría una mala praxis sociométrica me impiden destinar la libre distribución de este software de investigación al público general, reservándolo para su utilización en instituciones científicas universitarias solventes. Por esa misma razón, NEXORD ha implementado rigurosos controles de seguridad por diseño (*security by design*) que impedirán su funcionamiento si no se cumplen las condiciones de acreditación profesional e institucional de los Investigadores Principales (IP), así como su aceptación expresa del compromiso de hacer un uso ético y positivo, favorecedor del bienestar y la salud personal y grupal, cuando se trate de estudios reales de campo con seres humanos.
+
+Conviene precisar el alcance de esta declaración. El presente Manifiesto es un documento puramente programático —la exposición de las características teóricas, metodológicas y pragmáticas del proyecto—: ni él, ni la Plataforma informática, ni sus algoritmos son objeto de la protección de la propiedad intelectual; el Manifiesto se difunde abiertamente bajo licencia CC BY 4.0, y el control que aquí se defiende no es un control del conocimiento, sino del acceso operativo al instrumento.
+
+Desde el inicio del proyecto, su creador ha albergado la intención de legar el software a una institución universitaria o centro de investigación que lo acoja —a través de su fundación de transferencia—, que sería la depositaria y administradora única del software bajo su exclusiva supervisión, en caso de ampliar algún día su distribución a otros centros internacionales interesados. Como culminación de este esfuerzo y en correspondencia con mi condición de Profesor Emérito Jubilado de la Universitat de Barcelona (UB), manifiesto mi ofrecimiento formal de legar la titularidad y derechos de la Plataforma NEXORD a la Universitat de Barcelona a través de su fundación de transferencia (la Fundació Bosch i Gimpera, FBG), para que asuma su custodia institucional, la supervisión de sus estrictas garantías éticas y la gestión de convenios internacionales con centros acreditados de todo el mundo.
 
 ---
 
 ## 8. Anexos Técnicos Formalizados
 
-### 8.1. Anexo I: Matrices Duales (SMIb
+### 8.1. Anexo I: Matrices Duales (SMIb y SMIa, Retícula Q81)
+Formalización de la correspondencia biyectiva entre el orden de asignación alfanumérico y las figuras diádicas computables en la retícula fundamental Q81.
 
-  * **Matriz SMIb:** Registra en cada celda (i, j) el tetragrama numérico (A1 · A2 · A3 · A4) = (pDA · DA · RECIBE · pRECIBE).
-  * **Matriz SMIa:** Condensa el tetragrama en las 81 figuras relacionales exhaustivas (1 = [Rr], 41 = ¡¿?!, 81 = <Ee>).
-  * **Catálogo de Indicadores Booleanos I255:** Partición disyuntiva exhaustiva del espacio diádico a lo largo de la diagonal de consonancia perceptiva.
+![Tabla Anexo I: Matriz Q81](Tabla_Anexo_I_Matriz_Q81.png)  
+*Tabla Anexo I. Matriz estructural Q81 con las 81 figuras relacionales básicas ordenadas por antidiagonales de valencia creciente.*
 
-### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6)
+### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO / ANCORM)
 
-  * **Métricas Factoriales (Cornejo, 1988):**
-    * COR mide la calidad de representación del nodo i sobre el factor alfa.
-    * CTA expresa el porcentaje de inercia factorial explicada por el elemento i.
-    * CTR refleja la varianza acumulada explicada global.
-  * **Ejes Factoriales Verticales:** Ejes esbeltos verticales que ordenan los elementos según su peso estructural, evitando la saturación gráfica de los diagramas de dispersión 2D habituales.
+En el Análisis Factorial de Correspondencias (AFC) y en el Análisis de Componentes Principales (PCA), la dispersión visual sobre planos bidimensionales tradicionales colapsa y satura con frecuencia la resolución métrica de los elementos. Para superar este umbral, NEXORD implementa dos tecnologías analíticas complementarias:
 
-![Figura Anexo II: Ejes Verticales Factoriales 1D](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)
+#### 1. Los Ejes Slender Verticales 1D
+Cada factor factorial principal se descompone en un eje vertical independiente donde los elementos se distribuyen según su coordenada exacta, complementados bilateralmente por sus indicadores métricos:
+* **Calidad de Representación ($\text{COR}$):** Proporción de la varianza del elemento capturada por el eje:
+$$\text{COR}_{i\alpha} = \frac{d^2(i, \alpha)}{d^2(i, G)} \in [0, 1]$$
+* **Contribución Absoluta ($\text{CTA}$ / $\text{CTR}$):** Participación porcentual del elemento en la construcción de la inercia del eje:
+$$\text{CTR}_{i\alpha} = \frac{p_i \cdot d^2(i, \alpha)}{\lambda_\alpha} \quad \left(\sum_i \text{CTR}_{i\alpha} = 100\%\right)$$
 
-
+#### 2. Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Factores Factoriales (Algoritmo DIMO / ANCORM del Dr. J. M. Cornejo Álvarez)
+Desarrollado en la tesis doctoral sobre Análisis de Correspondencias del Dr. Cornejo, el algoritmo DIMO resuelve la representación visual en un único plano bidimensional ($X, Y$) de hasta 6 factores jerarquizados ($F_1$ a $F_6$) derivados de la descomposición espectral Benzécri $\chi^2$, sin recurrir a recursos pictóricos auxiliares (como variaciones de color o grosor de nodo) que pudieran dificultar la lectura métrica precisa:
+* **Anclaje Basal Cartesiano ($F_1, F_2$):** Los dos primeros factores —que concentran la masa crítica de inercia del campo relacional— determinan la posición cartesiana inicial $(f_1, f_2)$ de cada sujeto.
+* **Despliegue Radial por Cuadrantes para Factores Superiores ($F_3, F_4, F_5, F_6$):** Cada cuadrante del plano se subdivide mediante cortes de $33^\circ$ y $66^\circ$ en sectores angulares normalizados que albergan las direcciones de los ejes sucesivos. Los vectores axonométricos se proyectan en razones geométricas exactas ($1/3, 2/3, 1/2$).
+* **Tracción Dinámica Regida por la Contribución Absoluta ($\text{CTA}$):** La posición final proyectada del elemento es el resultado de un vector de desplazamiento accionado exclusivamente por la masa de información que el sujeto aporta a los factores 3 a 6:
+$$\Delta x_i = \sum_{k=3}^6 \beta_k \cdot \text{CTA}_{ik} \cdot \cos(\theta_k), \quad \Delta y_i = \sum_{k=3}^6 \beta_k \cdot \text{CTA}_{ik} \cdot \sin(\theta_k)$$
+Si un actor satura su inercia en los planos 1 y 2 ($\sum \text{CTA}_{1,2} \approx 100\%$), el punto permanece en reposo basal ($\Delta = 0$). Si su singularidad relacional reside en factores superiores, una fuerza de tracción lo desplaza en la dirección axonométrica del factor responsable, preservando en un solo mapa 2D toda la riqueza dimensional 6D.
+* **Traza Vectorial Continua:** Una línea fina orientada une la posición basal $(f_1, f_2)$ con la coordenada final proyectada en 6D, eliminando cualquier ambigüedad de lectura espacial.
 
 ### 8.3. Anexo III: Catálogo de los 10 Dominios Ecosistémicos
-NEXORD calibra la inercia relacional (alfa) y la tasa de decaimiento relacional (gamma) a lo largo de 10 dominios institucionales normativos (escolar, universitario, deportivo, sanitario, laboral, etc.):
+Parametrización estructural completa ($\alpha$, $\gamma$) y criterios de aplicación para los contextos: Educativo, Familiar, Deportivo, Comunitario, Misiones Críticas, Terapéutico, Laboral, Institucional, Militar y Penitenciario.
 
-![Tabla Anexo III: Catálogo de los 10 Dominios Ecosistémicos](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)
-
-
+![Tabla Anexo III: Catálogo 10 Dominios](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
+*Tabla Anexo III. Catálogo de los 10 dominios ecosistémicos de calibración con inercia relacional (α) y tasa de decaimiento (γ).*
 
 ### 8.4. Anexo IV: Interdistancias de Rango Emisor-Receptor y Diagonal de Isometría
-Distancias euclídeas para la emisión del dador (d_DA) y la recepción (d_RC), preservando el orden estricto de emisión:
-  * **Diagonal de Isometría (d_DA = d_RC):** Evalúa la simetría relacional y verifica el Principio de Asimetría Relacional (la dispersión en recepción supera sistemáticamente a la dispersión en emisión).
+Matriz completa de distancias euclídeas de rangos ($d_{\text{DA}}, d_{\text{RC}}, \Delta = d_{\text{DA}} - d_{\text{RC}}$) calculadas sobre el corpus de referencia G2T1C1, evidenciando la ley de asimetría relacional y la desviación respecto a la diagonal de isometría.
 
-![Figura Anexo IV: Plano de Dispersión de Interdistancias Euclídeas](Figura_Anexo_IV_Plano_Interdistancias_G2T1C1.png)
-
-![Tabla Anexo IV: Tabla de Interdistancias Euclídeas](Tabla_Anexo_IV_Interdistancias_G2T1C1.png)
-
-
-
+![Tabla Anexo IV: Interdistancias G2T1C1](Tabla_Anexo_IV_Interdistancias_G2T1C1.png)  
+*Tabla Anexo IV. Matriz de interdistancias euclídeas de rangos del corpus G2T1C1 con diagnósticos de asimetría de rol.*
 
 ---
 
-## 9. Referencias Bibliográficas
+## 9. Bibliografía Temática
 
-1. Absil, P.-A., Mahony, R., & Sepulchre, R. (2008). *Optimization algorithms on matrix manifolds*. Princeton University Press.
-2. Aref, S., & Wilson, M. C. (2021). The frustration index is a key measure for analysing signed networks. *Journal of Complex Networks*, 7(2), cnz006. https://doi.org/10.1093/comnet/cnz006
-3. Avramidis, E., Strogilos, V., Aroni, K., & Kankaraki, C. T. (2017). Using sociometric techniques to assess the social impacts of inclusion. *Educational Research Review*, 20, 68–80.
-4. Bales, R. F. (1950). *Interaction process analysis: A method for the study of small groups*. Addison-Wesley.
-5. Benzécri, J.-P. (1973). *L'Analyse des Données: T. 2, L'Analyse des Correspondances*. Dunod.
-6. Borsboom, D., et al. (2021). Network analysis of multivariate data in psychological science. *Nature Reviews Methods Primers*, 1(1), 58.
-7. Cornejo, J. M. (1988). *Técnicas de investigación social: El análisis de correspondencias*. PPU.
-8. Cornejo, J. M. (2026). *Computational Ordinal Sociometry (NEXORD): An Algorithmic, Matrix, and 4D Socio-Thermodynamic Framework*. Zenodo. https://doi.org/10.5281/zenodo.18926396
-9. Cucuringu, M., Mantzaris, A. V., & Roberts, J. (2023). The Bradley-Terry stochastic block model for directed ranking networks. *Journal of Complex Networks*, 11(4), cnad025. https://doi.org/10.1093/comnet/cnad025
-10. Diaz-Diaz, F., & Estrada, E. (2025). Signed graphs in data sciences via communicability geometry. *Information Sciences*, 680, 121110. https://doi.org/10.1016/j.ins.2024.121110
-11. Festinger, L. (1950). Informal social communication. *Psychological Review*, 57(5), 271–282.
-12. Heider, F. (1958). *The psychology of interpersonal relations*. John Wiley & Sons.
-13. Janis, I. L. (1972). *Victims of Groupthink: A psychological study of foreign-policy decisions and fiascoes*. Houghton Mifflin.
-14. Kenny, D. A., & Garcia, R. L. (2012). Using the Actor–Partner Interdependence Model to study the effects of group composition. *Small Group Research*, 43(4), 468–496.
-15. Krivitsky, P. N., & Butts, C. T. (2017). Exponential-family random graph models for rank-order relational data. *Sociological Methodology*, 47(1), 68–112. https://doi.org/10.1111/socm.12038
-16. Lewin, K. (1951). *Field theory in social science: Selected theoretical papers*. Harper & Row.
-17. Morales Domínguez, J. F., & Cornejo Álvarez, J. M. (2026). Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal. *Psicothema* (en revisión).
-18. Moreno, J. L. (1934). *Who shall survive? A new approach to the problem of human interrelations*. Nervous and Mental Disease Publishing Co.
-19. Nicolis, G., & Prigogine, I. (1977). *Self-organization in nonequilibrium systems: From dissipative structures to order through fluctuations*. John Wiley & Sons.
-20. Scudéry, M. de (1654). *Clélie, histoire romaine*. Augustin Courbé.
-21. Terry, R. (2000). Recent advances in measurement theory and the use of sociometric techniques. In A. H. N. Cillessen & W. M. Bukowski (Eds.), *Recent advances in the measurement of acceptance and rejection in the peer system* (pp. 27–48). Jossey-Bass. https://doi.org/10.1002/cd.23220008804
-22. Tsankova, E., & Tair, E. (2021). Meta-accuracy in sociometric status perceptions. *Frontiers in Psychology*, 12, 642398.
-23. Vicente, R., Cornejo, J. M., & Barbero, F. (2006). Análisis de la Actividad Grupal (AAG). *Psicothema*, 18(3), 445–452.
-24. Ye, K., & Lim, L.-H. (2016). Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197.
+### I. Obra de Referencia y Autoría del Sistema NEXORD
+*Fundamentación epistemológica, validación psicométrica y arquitectura del motor analítico.*
+
+1. **Cornejo, J. M. (1988).** *Técnicas de investigación social: El análisis de correspondencias*. Barcelona: PPU.
+2. **Vicente, R., Cornejo, J. M., & Barbero, F. (2006).** Análisis de la Actividad Grupal (AAG). *Anuario de Psicología*, 37(3), 299–320.
+3. **Cornejo, J. M. (2026).** *Computational Ordinal Sociometry (NEXORD): An updated mathematical extension of Moreno and Lewin's foundational insights*. Technical Monograph Series, Banco Sociométrico (BSOC). https://doi.org/10.5281/zenodo.18941691
+4. **Cornejo Álvarez, J. M., & Morales Domínguez, J. F. (en prensa).** Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal. *Psicothema*.
+
+### II. Raíces Históricas, Dinámica de Grupos y Teoría del Campo
+*La genealogía vincular: del mapa afectivo fundacional al campo hodológico de fuerzas y presiones de grupo.*
+
+5. **Scudéry, M. de (1654).** *Clélie, histoire romaine*. Paris: Augustin Courbé. *(Precursora histórica de la cartografía relacional y afectiva: la Carte de Tendre).*
+6. **Moreno, J. L. (1934).** *Who shall survive? A new approach to the problem of human interrelations*. Washington, DC: Nervous and Mental Disease Publishing Co.
+7. **Lewin, K. (1951).** *Field theory in social science: Selected theoretical papers* (D. Cartwright, Ed.). New York: Harper & Row.
+8. **Bales, R. F. (1950).** *Interaction process analysis: A method for the study of small groups*. Cambridge, MA: Addison-Wesley.
+9. **Festinger, L. (1950).** Informal social communication. *Psychological Review*, 57(5), 271–282. https://doi.org/10.1037/h0056932
+10. **Janis, I. L. (1972).** *Victims of Groupthink: A psychological study of foreign-policy decisions and fiascoes*. Boston: Houghton Mifflin.
+
+### III. Interdependencia Diádica, Metapercepción, Ostracismo y Dinámica de Exclusión
+*El átomo social relacional: expectativas cruzadas, balance afectivo, modelado actor-pareja y psicología de la invisibilidad.*
+
+11. **Heider, F. (1958).** *The psychology of interpersonal relations*. New York: John Wiley & Sons.
+12. **Kenny, D. A., & Garcia, R. L. (2012).** Using the Actor–Partner Interdependence Model to study the effects of group composition. *Small Group Research*, 43(4), 468–496. https://doi.org/10.1177/1046496412444424
+13. **Tsankova, E., & Tair, E. (2021).** Meta-accuracy in sociometric status perceptions. *Frontiers in Psychology*, 12, 650502. https://doi.org/10.3389/fpsyg.2021.650502
+14. **Williams, K. D. (2007).** Ostracism. *Annual Review of Psychology*, 58, 425–452. https://doi.org/10.1146/annurev.psych.58.110405.085641
+
+### IV. Transición Computacional, Medición Psicométrica y Aplicación Inclusiva
+*De la informatización pionera del sociograma a la precisión métrica en entornos educativos y de inclusión.*
+
+15. **Barrasa, Á., & Gil, F. (2004).** Un programa informático para el cálculo y la representación de índices y valores sociométricos. *Psicothema*, 16(2), 329–335.
+16. **Terry, R. (2000).** Recent advances in measurement theory and the use of sociometric techniques. *New Directions for Child and Adolescent Development*, 2000(88), 27–41. https://doi.org/10.1002/cd.23220008804
+17. **Avramidis, E., Strogilos, V., Aroni, K., & Kankaraki, C. T. (2017).** Using sociometric techniques to assess the social inclusion of children with special educational needs in mainstream schools: A methodological review. *International Journal of Research & Method in Education*, 40(4), 337–356. https://doi.org/10.1080/1743727X.2015.1111803
+
+### V. Modelado Estadístico de Redes Ordinales, Redes Firmadas y Grafos Espectrales
+*El sustrato matemático del orden preferencial, concordancia de rangos, polaridad dual (elección/rechazo) y conectividad de red.*
+
+18. **Kendall, M. G. (1938).** A new measure of rank correlation. *Biometrika*, 30(1/2), 81–93. https://doi.org/10.1093/biomet/30.1-2.81
+19. **Fiedler, M. (1973).** Algebraic connectivity of graphs. *Czechoslovak Mathematical Journal*, 23(2), 298–305.
+20. **Aref, S., & Wilson, M. C. (2021).** The frustration index is a key measure for analysing signed networks. *Journal of Complex Networks*, 7(2), cnz006. https://doi.org/10.1093/comnet/cnz006
+21. **Borsboom, D., Deserno, M. K., Rhemtulla, M., Epskamp, S., Fried, E. I., McNally, R. J., ... & Waldorp, L. J. (2021).** Network analysis of multivariate data in psychological science. *Nature Reviews Methods Primers*, 1(1), 58. https://doi.org/10.1038/s43586-021-00055-w
+22. **Cucuringu, M., Mantzaris, A. V., & Roberts, J. (2023).** The Bradley-Terry stochastic block model for directed ranking networks. *Journal of Complex Networks*, 11(4), cnad025. https://doi.org/10.1093/comnet/cnad025
+23. **Diaz-Diaz, F., & Estrada, E. (2025).** Signed graphs in data sciences via communicability geometry. *Information Sciences*, 688, 121110. https://doi.org/10.1016/j.ins.2024.121110
+24. **Krivitsky, P. N., & Butts, C. T. (2017).** Exponential-family random graph models for rank-order relational data. *Sociological Methodology*, 47(1), 68–112. https://doi.org/10.1111/socm.12038
+
+### VI. Física Relacional, Teoría de la Información y Termodinámica de Sistemas Complejos
+*La física del campo grupal: observación relativa (Rovelli), información integrada irreductible (Tononi) y autoorganización fuera del equilibrio (Nicolis & Prigogine).*
+
+25. **Nicolis, G., & Prigogine, I. (1977).** *Self-organization in nonequilibrium systems: From dissipative structures to order through fluctuations*. New York: John Wiley & Sons.
+26. **Rovelli, C. (1996).** Relational quantum mechanics. *International Journal of Theoretical Physics*, 35(8), 1637–1678. https://doi.org/10.1007/BF02302262
+27. **Tononi, G. (2004).** An information integration theory of consciousness. *BMC Neuroscience*, 5(1), 42. https://doi.org/10.1186/1471-2202-5-42
+
+### VII. Geometría Matricial, Variedades de Grassmann y Análisis Multivariante
+*Optimización en variedades, proyección factorial y distancias métricas continuas del espacio relacional.*
+
+28. **Benzécri, J.-P. (1973).** *L'Analyse des Données: T. 2, L'Analyse des Correspondances*. Paris: Dunod.
+29. **Absil, P.-A., Mahony, R., & Sepulchre, R. (2008).** *Optimization algorithms on matrix manifolds*. Princeton, NJ: Princeton University Press.
+30. **Ye, K., & Lim, L.-H. (2016).** Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197. https://doi.org/10.1137/15M1047648
 
 ---
 
-*(C) 2026 Dr. José Manuel Cornejo Álvarez / Plataforma NEXORD (VISORD) / Banco Sociométrico BSOC / Universitat de Barcelona.*  
-*Publicado bajo licencia Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional (CC BY-NC-ND 4.0).*
+*(C) 2026 Dr. José Manuel Cornejo Álvarez / Plataforma NEXORD / Banco Sociométrico (BSOC). Publicado en Zenodo bajo Licencia Creative Commons Atribución 4.0 Internacional (CC BY 4.0).*
