@@ -300,30 +300,30 @@ En el plano operativo, el **Pentagrama Socio-Termodinámico** (Figura 8) articul
 Como culminación perceptiva y experimental de este formalismo socio-termodinámico, el entorno **VISORD Acuario** constituye una aplicación complementaria de NEXORD que facilita la percepción visual y auditiva integrada de las estructuras de densidad relacional dentro de un diseño multidimensional $G \times T \times C$.
 
 El escenario se modela como un acuario tridimensional continuo definido sobre el volumen cartesiano $\mathbf{DA} \times \mathbf{RECIBE} \times \mathbf{DENSIDAD}$, estructurado analíticamente en tres zonas y estratos característicos:
-1. **Fondo sumergido (Bentos relacional):** Cuencas de atracción de baja cota y alta presión negativa, donde se concentran los estados de rechazo mutuo (`[Rr]`), conflicto latente y aislamiento estructural.
-2. **Superficie del agua (Nivel barométrico neutro):** Lámina homeostática de flotabilidad basal correspondiente al centroide de indiferencia (`i¿?! = 41`) y equilibrio disyuntivo.
-3. **Cielo abierto (Atmósfera convectiva):** Estrato superior de alta densidad positiva y cohesión óptima, donde gravitan las figuras de resonancia armónica (`<Ee>`) y liderazgo integrador libre de fricción.
+1. **Fondo sumergido:** Zona de alta presión negativa, donde se concentran los estados de rechazo mutuo (`[Rr]`), conflicto latente y aislamiento estructural.
+2. **Superficie del agua:** Lámina homeostática de flotabilidad basal correspondiente al centroide de indiferencia (`i¿?! = 41`) y equilibrio disyuntivo.
+3. **Cielo abierto:** Estrato superior de alta densidad positiva y cohesión óptima, donde gravitan las figuras de resonancia armónica (`<Ee>`) y liderazgo integrador libre de fricción.
 
 En este escenario se proyectan distintos valores de densidad relacional en **disyuntiva completa**:
 * **Nivel Intra-sujeto:** Proyección diferencial de los distintos pares relacionales y dipolos cinemáticos de un mismo actor frente a sus compañeros.
 * **Nivel Unitario:** Distribución de los sujetos en tanto que agentes dobles: Dadores activos de preferencia ($DA$) y Receptores de impacto grupal ($RECIBE$).
-* **Nivel Macro-relacional:** Densidades globales agregadas e inter-estratales entre Grupos ($G$), entre Tiempos ($T$) y entre Criterios ($C$).
+* **Nivel Macro-relacional:** Densidades globales agregadas entre Grupos ($G$), entre Tiempos ($T$) y entre Criterios ($C$).
 
 ---
 
 ## 5. Soluciones Gráficas, Espacio Multidimensional GxTyCz y Geometría Invariante
 
 ### 5.1. Soluciones Gráficas: Representación Visual y Topografía Relacional
-El VISORD ha surgido de la necesidad de hacer más visibles —y audibles— los procesos y las estructuras relacionales resultantes de la investigación. El ojo y el oído humanos están poco preparados para asimilar ristras de números y coeficientes abstractos; en cambio, tienen una enorme capacidad para percibir de forma intuitiva formas, relieves, cambios tonales, distancias relativas, densidades e iluminaciones.
+El VISORD ha surgido de la necesidad de hacer más perceptibles los procesos y las estructuras relacionales resultantes de la investigación. El ojo y el oído humanos están poco preparados para asimilar ristras de números y coeficientes abstractos; en cambio, tienen una enorme capacidad para percibir de forma intuitiva formas, relieves, cambios tonales, distancias relativas, densidades e iluminaciones.
 
-La «lupa matemática» de la Sociometría Ordinal de NEXORD ha avanzado, mediante sus animaciones VISORD, en la creación de visualizaciones interactivas que facilitan una mejor percepción y comprensión de los fenómenos de interacción grupal. Como ha demostrado fehacientemente la investigación cosmológica, la progresiva matematización ha conseguido hacer ver y oír lo que resulta imperceptible a nuestros sentidos biológicos. Y esa lupa ha sido posible gracias al avance realizado en la cuantificación más precisa de los órdenes de preferencia.
+La «lupa matemática» de la Sociometría Ordinal de NEXORD ha avanzado, mediante sus animaciones VISORD, en la creación de visualizaciones interactivas que facilitan una mejor comprensión de los fenómenos de interacción grupal. Como ha demostrado fehacientemente la investigación cosmológica, la progresiva matematización ha conseguido hacer ver y oír lo que resulta imperceptible a nuestros sentidos biológicos. Y esa lupa ha sido posible gracias al avance realizado en la cuantificación más precisa de los órdenes de preferencia.
 
 NEXORD articula un conjunto de soluciones gráficas continuas destinadas a restituir el campo relacional sin saturación perceptiva:
 
-* **Sociogramas Continuos Tridimensionales (VISORD 3D/4D):** Visualización en el espacio continuo de cuencas de atracción (verde esmeralda, `<Ee>`), zonas intermedias de oposición (ámbar) y filamentos de ruptura o fricción (magenta, `[Rr]`), con navegación temporal diacrónica (Figura 11).
-* **Planos Factoriales Duales Paralelos (Biplot MESO $F_1 \times F_2$, espacio dual AFC $\parallel$ PCA):** Proyección simultánea donde el vector diádico $DA \longrightarrow RC$ vertebra la posición de cada sujeto con baricentro exacto en el origen ($\Delta = 0.000$). En el AFC, sobre la tabla de contingencia de recuentos enteros $\mathbb{N}_0$ bajo la métrica $\chi^2$; en el PCA, sobre la matriz de densidades continuas $\pm \mathbb{R}$ estandarizadas. El contraste evidencia la aportación sustantiva de la socio-termodinámica relacional (Figura 9).
-* **Ejes Slender Verticales 1D:** Proyecciones derivadas de la descomposición espectral y el análisis de correspondencias (Benzécri, 1973; Cornejo, 1988), flanqueadas por ejes verticales de contribución absoluta (CTA) y calidad de representación (COR). Conviene fijar las definiciones formales de estas métricas: la COR (calidad de representación) del elemento $i$ sobre el eje $\alpha$ es $\text{COR}_{i\alpha} = d^2(i, \alpha) / d^2(i, G) \in [0, 1]$, la proporción de la inercia del elemento recuperada sobre ese eje; la CTR (contribución) es $\text{CTR}_{i\alpha} = p_i \cdot d^2(i, \alpha) / \lambda_\alpha$, el peso relativo del elemento en la construcción de la varianza de ese eje (las contribuciones sobre un eje suman 100%); la varianza explicada acumulada, $\lambda_\alpha / \sum_\beta \lambda_\beta$, es una propiedad del eje derivada de los autovalores, conceptualmente distinta de cualquier contribución elemental (Figura 10).
-* **Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Dimensiones (Algoritmo DIMO / ANCORM):** Para superar la limitación clásica de los planos 2D sin perder la interpretabilidad intuitiva del espacio euclídeo, NEXORD incorpora en su motor el método de proyección axonométrica jerárquica de hasta 6 factores factoriales desarrollado por el Dr. José Manuel Cornejo Álvarez (*ver Anexo II para su formulación analítica completa y reglas de tracción por CTA*).
+* **Sociogramas Continuos Tridimensionales (VISORD 3D/4D):** Visualización en el espacio continuo de cuencas de atracción (`<Ee>`), zonas intermedias de oposición y filamentos de ruptura o fricción (`[Rr]`), con navegación temporal diacrónica (Figura 11).
+* **Planos Factoriales Duales Paralelos (Biplot MESO $F_1 \times F_2$, espacio dual AFC $\parallel$ PCA):** Proyección simultánea donde el vector diádico $DA \longrightarrow RC$ vertebra la posición de cada sujeto con baricentro en el origen ($\Delta = 0.000$). En el AFC, sobre la tabla de contingencia de recuentos enteros $\mathbb{N}_0$ bajo la métrica $\chi^2$; en el PCA, sobre la matriz de densidades continuas $\pm \mathbb{R}$ estandarizadas. El contraste evidencia la aportación sustantiva de la socio-termodinámica relacional (Figura 9).
+* **Ejes Slender Verticales 1D:** Proyecciones derivadas de la descomposición espectral y el análisis de correspondencias (Figura 10).
+* **Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Dimensiones (Algoritmo DIMO):** Para superar la limitación clásica de los planos 2D sin perder la interpretabilidad intuitiva del espacio euclídeo, NEXORD incorpora en su motor el método de proyección axonométrica jerárquica de hasta 6 factores factoriales desarrollado por el autor.
 * **Structurogramas Intergrupales:** Polígonos de sustentación vincular para el análisis morfológico comparativo entre colectivos.
 
 ![Figura 9: Planos Duales en Paralelo (Biplot MESO F1 × F2, AFC ∥ PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)  
@@ -336,7 +336,7 @@ NEXORD articula un conjunto de soluciones gráficas continuas destinadas a resti
 *Figura 11. VISORD_demo 3D: fases en la formación interactiva de grupos y resultados termodinámicos numéricos y gráficos en tiempo real; fuerzas de atracción y repulsión en acción.*
 
 ### 5.2. El Espacio Multidimensional GxTyCz
-NEXORD está configurada como una Plataforma de Investigación Sociométrica Psicosocial que trasciende la concepción tradicional del test sociométrico como una fotografía estática, aislada y unidimensional. La plataforma concibe el campo de las interacciones humanas como un espacio de investigación tensorial abierto, continuo y parametrizable, formalizado sobre el producto cartesiano $G \times T \times C$ donde el investigador puede diseñar desde estudios puntuales de una sola sociomatriz hasta ambiciosos programas longitudinales y comparativos intergrupales. La formulación matricial no impone restricciones previas sobre el diseño experimental, articulándose sobre cuatro ejes fundamentales:
+NEXORD está configurada como una Plataforma de Investigación Sociométrica Psicosocial que trasciende la concepción tradicional del test sociométrico como una fotografía estática, aislada y unidimensional. La plataforma concibe el campo de las interacciones humanas como un espacio de investigación tensorial abierto, continuo y parametrizable, formalizado sobre el producto cartesiano $G \times T \times C$ donde el investigador puede diseñar desde estudios puntuales de una sola sociomatriz hasta ambiciosos programas longitudinales y comparativos intergrupales. La formulación matricial se articula sobre cuatro ejes fundamentales:
 
 1. **Eje G — Colectivos y Grupos ($G = \{G_1, G_2, \dots, G_x\}$):**
 Transversalidad estructural. El sistema admite operar tanto sobre un único colectivo natural como sobre constelaciones de grupos independientes, departamentos de una misma organización, redes de aulas o células operativas en misiones críticas. Este eje habilita la comparación morfológica intergrupal (mediante distancias geodésicas en variedades de Grassmann) sin forzar interacciones cruzadas artificiales entre miembros que pertenecen a entornos convivenciales distintos.
@@ -354,68 +354,76 @@ La plataforma calcula matrices de discrepancia inter-criterio y coeficientes de 
 
 4. **Eje Z — Variables Contextuales y Psicosociales Complementarias ($Z$):**
 El puente analítico entre la topología relacional y los atributos individuales de los actores. Aunque el cálculo sociométrico intrínseco opera exclusivamente sobre las preferencias de ordenación pura (la estructura del vínculo), NEXORD integra de forma nativa dos baterías estándar de calibración:
-* **Batería Sociodemográfica $V_{10}$:** diez variables contextuales normativas (en 3 modalidades homogéneas por ítem) que sitúan al actor en su coordenada biográfica, de rol formal, antigüedad o estatus institucional.
-* **Batería de Atribución Adjetival Grupal $A_{16}$:** dieciséis adjetivos agrupados en 4 factores: (temático, funcional, cognitivo, afectivo) (AAG; Vicente, Cornejo & Barbero, 2006), evaluados en escala par (1–8, sin punto neutro de escape) para mapear el clima cognitivo-emocional y la atmósfera valorativa proyectada sobre el grupo.
+* **Batería Sociodemográfica $V_{10}$:** diez variables contextuales (en 3 modalidades homogéneas por ítem) que sitúan al actor en su coordenada biográfica, de rol formal, antigüedad o estatus institucional.
+* **Batería de Atribución Adjetival Grupal $A_{16}$:** dieciséis adjetivos agrupados en 4 factores (temático, funcional, cognitivo, afectivo) (AAG; Vicente, Cornejo & Barbero, 2006), evaluados en escala par (1–8, sin punto medio) para mapear el clima cognitivo-emocional y la atmósfera valorativa proyectada sobre el grupo.
 
-Proyectadas como variables ilustrativas o suplementarias en los planos factoriales duales (AFC $\parallel$ PCA), las variables $Z$ enriquecen la interpretación clínica sin alterar la pureza métrica del campo relacional. Asimismo, el mantenimiento de este estándar común constituye el marco de referencia del Banco Sociométrico (BSOC) para garantizar la comparabilidad retrospectiva e histórica de sociomatrices provenientes de épocas, culturas y contextos organizacionales muy diversos.
+Proyectadas como variables ilustrativas o suplementarias en los planos factoriales duales (AFC $\parallel$ PCA), las variables $Z$ enriquecen la interpretación clínica sin alterar la pureza métrica del campo relacional. Asimismo, el mantenimiento de este estándar común constituye el marco de referencia del Banco Sociométrico (BSOC) para garantizar la comparabilidad retrospectiva e histórica de sociomatrices provenientes de épocas, culturas y contextos organizacionales diversos.
+
+La batería $A_{16}$ se estructura en cuatro factores canónicos que agrupan los dieciséis adjetivos normativos del sistema:
+* **Temático (TEMA):** *claro, coherente, flexible, consensuado*.
+* **Funcional (FUNC):** *productivo, ordenado, activo, ejemplar*.
+* **Cognitivo (COGN):** *abierto, crítico, perceptivo, expresivo*.
+* **Afectivo (AFEC):** *amistoso, leal, colaborador, tolerante*.
+
+Por cada adjetivo, la división dicotómica de la valoración del grupo permite detectar, mediante los centroides de densidad de ambos extremos, sensibilidades distintivas en la percepción de la Actividad Grupal, inclusive cruzada con las variables sociodemográficas.
 
 ![Tabla 4: Batería V10 y A16](Tabla_Seccion_5_2_Bateria_VAR10_AAG16.png)  
-*Tabla 4. Cuadro normativo de la batería de 10 variables contextuales (V₁₀, 3 modalidades) y 16 adjetivos de atribución grupal (A₁₆, 4 × 4, escala par 1–8 sin neutro).*
+*Tabla 4. Cuadro de la batería de 10 variables contextuales (V₁₀, 3 modalidades) y 16 adjetivos de atribución grupal (A₁₆, 4 × 4, escala par 1–8 sin puntuación media).*
 
 El despliegue aplicado del espacio $G \times T \times C$ se canaliza a través de los 10 dominios ecosistémicos de calibración (Tabla 5), que fijan los parámetros estructurales del campo —inercia relacional $\alpha$ y tasa de decaimiento $\gamma$— junto con el foco psicosocial y los criterios estándar de elección, según el contexto institucional de aplicación (educativo, familiar, deportivo, comunitario, misiones críticas, terapéutico, laboral, institucional, militar y ecológico-penitenciario).
 
-![Tabla 5: Catálogo de los 10 Dominios Ecosistémicos](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
-*Tabla 5. Catálogo de los 10 dominios ecosistémicos de aplicación con parametrización estructural (α, γ), foco psicosocial y criterios de elección.*
+![Tabla 5: 10 Dominios Ecosistémicos](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
+*Tabla 5. Los 10 dominios ecosistémicos de aplicación con parametrización estructural (α, γ), foco psicosocial y criterios de elección.*
 
 ### 5.3. PCA Multigrupo y Distancia Geodésica en Variedades de Grassmann Gr(k, N)
 Para comparar colectivos sin forzar interacciones cruzadas artificiales, cada grupo se proyecta como un subespacio $k$-dimensional dentro de $\mathbb{R}^N$. A partir de los ángulos principales de Jordan $\cos(\theta_m) = \sigma_m(U_1^T U_2)$, se calcula la distancia geodésica invariante de escala:
 
 $$d_{\operatorname{Gr}}(U_1, U_2) = \sqrt{\sum_{m=1}^k \theta_m^2} \tag{20}$$
 
-Esta métrica determina rigurosamente (Figura 12) si dos grupos comparten la misma morfología relacional con independencia de las diferencias en sus tamaños muestrales. Más allá del acuerdo puntual entre observadores, es la persistencia y constancia temporal de estas configuraciones en el espacio geométrico lo que permite contrastar la solidez de las estructuras relacionales frente a variaciones coyunturales o fluctuaciones aleatorias.
+Esta métrica determina rigurosamente (Figura 12) si dos grupos comparten la misma morfología relacional con independencia de las diferencias en sus tamaños muestrales. Aunque el acuerdo entre observadores es un componente apreciable de confiabilidad de los hallazgos de estructuras invariantes, es la persistencia y constancia temporal de estas configuraciones en el espacio geométrico lo que permite contrastar la solidez de las estructuras relacionales frente a variaciones coyunturales o fluctuaciones aleatorias.
 
 ![Figura 12: Plano factorial comparativo intergrupal (G1 vs G2)](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)  
 *Figura 12. Plano factorial comparativo intergrupal (G1 vs G2) y structrogramas diacrónicos; la distancia geodésica en Gr(k, N) cuantifica la morfología relacional compartida.*
 
-A nivel del sujeto individual, la matriz de interdistancias euclídeas de rangos $d_{\text{DA}} / d_{\text{RC}}$ (Tabla 6) documenta sobre el corpus G2T1C1 la ley de asimetría relacional: la dispersión receptora media ($4.84; DT = 0.64$) supera sistemáticamente a la emisora ($4.15; DT = 0.49$), y los diagnósticos posicionales por nodo —de la consonancia isométrica de 5A ($\Delta = -0.09$) al desbalance máximo de 3A ($\Delta = -1.39$)— ilustran la granularidad del diagnóstico socio-termodinámico.
+En los individuos, la matriz de interdistancias euclídeas de rangos $d_{\text{DA}} / d_{\text{RC}}$ (Tabla 6) documenta sobre el corpus G2T1C1 la ley de asimetría relacional: la dispersión receptora media ($4.84; DT = 0.64$) supera sistemáticamente a la emisora ($4.15; DT = 0.49$), y los diagnósticos posicionales por nodo —de la consonancia isométrica de 5A ($\Delta = -0.09$) al desbalance máximo de 3A ($\Delta = -1.39$)— ilustran la granularidad del diagnóstico socio-termodinámico.
 
 ![Tabla 6: Matriz Numérica de Interdistancias Euclídeas de Rangos](Tabla_Anexo_IV_Interdistancias_G2T1C1.png)  
 *Tabla 6. Matriz numérica de interdistancias euclídeas de rangos (d_DA, d_RC, Δ = d_DA − d_RC) con diagnóstico estructural por sujeto, corpus G2T1C1: validación empírica de la ley de asimetría relacional.*
 
 ---
 
-## 6. Investigación Experimental: Laboratorio Físico, Sociometría Dialéctica y Cognición Triádica
+## 6. Investigación Experimental: Sociometría Dialéctica, Sociometría Sintética y Cognición Triádica
 
-### 6.1. Monitorización Experimental en el Laboratorio Físico
-La plataforma está diseñada para la monitorización de investigaciones experimentales complejas en laboratorio físico: seguimiento diacrónico de tareas de alta interdependencia, simulación de crisis y evaluación continua de intervenciones en dinámicas de grupos reducidos.
+### 6.1. Monitorización Experimental en el Laboratorio Presencial
+La plataforma está diseñada para la monitorización de investigaciones experimentales complejas en laboratorio presencial: seguimiento diacrónico de tareas de alta interdependencia, simulación de crisis y evaluación continua de intervenciones en dinámicas de grupos reducidos.
 
 ### 6.2. Sociometría Dialéctica y Estudio de Dilemas Sociales
-En situaciones de cooperación y conflicto (p. ej., dilemas de bienes comunes o dilema del prisionero iterado), NEXORD cuantifica el desacople entre las expectativas cognitivas y la conducta relacional observable, capturando la emergencia de alianzas, deserciones y normas de reciprocidad.
+En situaciones de cooperación y conflicto (p. ej., dilemas de bienes comunes o dilema del prisionero iterado), NEXORD cuantifica el desacople entre las expectativas cognitivas y la conducta relacional observable, capturando la emergencia de alianzas, deserciones y normas de reciprocidad. La aplicación a un grupo del formato ORBIT como PRE y/o POST en diseños experimentales se revela como una buena estrategia de contrastación en VD y VI.
 
 ### 6.3. Percepción Multimodal: Modelo del Iceberg y Sonificación Hidrodinámica
 NEXORD implementa el modelo del iceberg en dos vertientes:
 * **Representación Gráfica 3D:** Hace emerger a la superficie visual la estructura sumergida de tensiones, rechazos latentes y lazos informales que no se manifiestan en la jerarquía formal.
 * **Sonificación Hidrodinámica:** Convierte densidades y fricciones en flujos tonales continuos, permitiendo la monitorización auditiva de estados de turbulencia o calma colectiva sin sobrecargar la atención visual del analista.
 
-La capacidad de calcular el campo para colectivos de gran tamaño sin pérdida de continuidad analítica resuelve una limitación histórica de la sociometría tradicional, que solía restringirse a grupos pequeños ($N < 30$) por la saturación de los sociogramas clásicos (Figura 13).
+La capacidad de calcular las densidades del campo para colectivos de gran tamaño sin pérdida de continuidad analítica resuelve una limitación histórica de la sociometría tradicional, que solía restringirse a grupos pequeños ($N < 30$) por la saturación de los sociogramas clásicos (Figura 13).
 
 ![Figura 13: Campo continuo de interacción y modelo del iceberg (N = 50)](Figura_Sociograma_3D_Continuo_Plasma_N50.png)  
 *Figura 13. Campo continuo de interacción y modelo del iceberg en un colectivo de N = 50 sujetos: la base relacional sumergida hecha visible.*
 
 ### 6.4. El Corpus CULTURAL como Entorno de Reactividad Cero
-La literatura dramática y la narrativa cinematográfica constituyen laboratorios humanos privilegiados: sistemas cerrados, perfectamente documentados y de reactividad cero (el texto no se altera por ser observado). NEXORD ha procesado obras maestras de la dramaturgia y la literatura (*Doce hombres sin piedad* de Reginald Rose, *La casa de Bernarda Alba* de Federico García Lorca, *El señor de las moscas* de William Golding), demostrando que las leyes socio-termodinámicas identifican con precisión matemática los nudos dramáticos, las transiciones de fase y los colapsos de liderazgo sin recurrir a datos inferidos por observación.
+Las obras maestras de la literatura universal y del cine están repletas, directa o indirectamente, de situaciones grupales con descripciones vívidas, realizadas por observadores perspicaces, de los entresijos de las relaciones humanas. El análisis de estas interacciones desde la perspectiva sociométrica constituye una alternativa «no reactiva» valiosa de acceso al estudio de estructuras grupales complejas. NEXORD ha procesado obras maestras de la dramaturgia y la literatura (*Doce hombres sin piedad* de Reginald Rose, *La casa de Bernarda Alba* de Federico García Lorca, *El señor de las moscas* de William Golding), demostrando que las leyes socio-termodinámicas identifican con precisión matemática los nudos dramáticos, las transiciones de fase y los colapsos de liderazgo sin recurrir a datos inferidos por observación.
 
 ### 6.5. Cognición Social Triádica: Expectativas Proyectadas αE y ωE
-NEXORD extiende la captura de expectativas incorporando dos sensores de la teoría de la mente relacional:
-* **Mejor Valorado Esperado ($\alpha E$):** La expectativa de cada sujeto sobre quién será el miembro más elegido por el colectivo.
-* **Peor Valorado Esperado ($\omega E$):** La expectativa de cada sujeto sobre quién concentrará el mayor rechazo o descarte grupal.
+NEXORD incorpora a la sociometría de las metapercepciones y expectativas diádicas el nivel de las metapercepciones triádicas. Al preguntar a cada participante sobre las preferencias que cree que expresarán los sujetos que él mismo ha colocado en su primer y último puesto en la lista, se configura un espacio de cognición social triádica articulado por dos sensores fundamentales:
+* **Mejor Valorado ($\alpha E$):** La expectativa de cada sujeto sobre quién será el miembro más elegido por el colectivo.
+* **Peor Valorado ($\omega E$):** La expectativa de cada sujeto sobre quién concentrará el mayor rechazo o descarte grupal.
 
 Estas métricas cuantifican la precisión de lectura de campo o lucidez sistémica (Tsankova & Tair, 2021) mediante la distancia euclídea entre la expectativa emitida y la realidad colectiva observada: $\Delta_\alpha = \|\alpha E - \text{Elección Real}(\alpha)\|$ y $\Delta_\omega = \|\omega E - \text{Elección Real}(\omega)\|$.
 
 Sujetos con $\Delta_\alpha \approx 0$ y $\Delta_\omega \approx 0$ operan como sensores naturales de la dinámica del grupo, cuya perspectiva anticipa cambios de fase estructurales.
 
-### 6.6. Simulación Sociométrica In Silico: el Motor PLATINUM
-La realización concreta de un estudio sociométrico real comporta dificultades, trabajo y tiempo considerables. Para desplegar la investigación metodológica, la formación investigadora y la calibración instrumental sin esa carga —y sin exposición alguna de sujetos humanos—, NEXORD integra un motor de simulación sociométrica in silico (PLATINUM), en la línea de lo que la Biología Sintética o la Epidemiología Computacional representan para sus respectivos campos: no se trata de inventar ruido estadístico desconectado de la naturaleza humana, sino de extrapolar las leyes topológicas de la sociometría —sus valencias y dinámicas reales— para modelar organizaciones plausibles y desafiantes que fuerzan a los algoritmos preventivos de la plataforma a demostrar su fiabilidad in vitro antes de actuar sobre tejido social vivo. La simulación ya no es un dibujo: es una biografía social reproducible.
+### 6.6. Simulación Sociométrica In Silico
+La realización concreta de un estudio sociométrico real comporta dificultades, trabajo y tiempo considerables. Para desplegar la investigación metodológica, la formación investigadora y la calibración instrumental sin esa carga —y sin exposición alguna de sujetos humanos—, NEXORD integra un algoritmo de simulación sociométrica in silico, en la línea de lo que la Biología Sintética o la Epidemiología Computacional representan para sus respectivos campos: no se trata de inventar ruido estadístico desconectado de la naturaleza humana, sino de extrapolar las leyes topológicas de la sociometría —sus valencias y dinámicas reales— para modelar organizaciones plausibles y desafiantes que fuerzan a los algoritmos preventivos de la plataforma a demostrar su fiabilidad in vitro antes de actuar sobre tejido social vivo. La simulación ya no es un dibujo: es una biografía social reproducible.
 
 El investigador define el escenario deseado en el espacio de diseño $G \times T \times C$ (grupos, oleadas temporales, criterios con sus consignas literales, tamaños muestrales y dominio de contexto), mediante un archivo estándar de parámetros o mediante asistente interactivo guiado, y gobierna la morfología del colectivo mediante familias de moduladores paramétricos continuos:
 * **(a) Termodinámicos:** densidad objetivo de valencia, saturación de nodos estrella, tolerancia de convergencia.
@@ -424,14 +432,14 @@ El investigador define el escenario deseado en el espacio de diseño $G \times T
 * **(d) Contextuales:** baterías $V_{10}$ y $A_{16}$ y el catálogo de los 10 dominios de calibración $\alpha / \gamma$ (Tabla 5).
 
 La reproducibilidad es absoluta: la semilla pseudoaleatoria garantiza la regeneración bit a bit de cualquier corpus, y el tamaño de lote habilita réplicas Monte Carlo. Cada simulación se identifica con una clave estandarizada (`SIMUL-...`) y codifica sus sujetos con las etiquetas posicionales formales (`1A1a`...), preservando la anonimidad por diseño; SIMUL se sitúa así junto a PROPIO, REAL y CULTURAL en el catálogo de las cuatro categorías operativas de datos de la plataforma:
-* **REAL (Corpus Empíricos de Campo):** Datos obtenidos de colectivos humanos vivos (organizaciones laborales, aulas educativas, equipos deportivos o unidades asistenciales), recogidos mediante los protocolos de captura web de la plataforma bajo estricto consentimiento informado, salvaguarda de privacidad y compromiso de uso exclusivamente formativo y no punitivo (§6.7 y §7.1). Esta modalidad faculta al motor de simulación para estimar por defecto —si fuera conveniente o necesario— los valores de las Variables Contextuales ($V_{10}$) y de los Adjetivos de Atribución Grupal ($A_{16}$) a partir de los datos sociométricos recogidos y la información complementaria aportada por el Investigador Principal, cuando dichos datos de contexto no hayan podido ser recabados directamente en el campo.
+* **REAL (Corpus Empíricos de Campo):** Datos obtenidos de colectivos humanos vivos (organizaciones laborales, aulas educativas, equipos deportivos o unidades asistenciales), recogidos mediante los protocolos de captura web de la plataforma bajo estricto consentimiento informado, salvaguarda de privacidad y compromiso de uso exclusivamente formativo y no punitivo (§6.7 y §7.1). Esta modalidad faculta al algoritmo de simulación para estimar por defecto —si fuera conveniente o necesario— los valores de las Variables Contextuales ($V_{10}$) y de los Adjetivos de Atribución Grupal ($A_{16}$) a partir de los datos sociométricos recogidos y la información complementaria aportada por el Investigador Principal, cuando dichos datos de contexto no hayan podido ser recabados directamente en el campo.
 * **PROPIO (Corpus del Investigador):** Sociomatrices y diseños singulares aportados directamente por el usuario, docente o consultor para su explotación particular, docencia o intervención específica en sus propios grupos naturales; permite al simulador recoger los datos diseñados por el propio Investigador Principal y, si es conveniente, completar datos faltantes para garantizar la continuidad analítica del estudio.
 * **CULTURAL (Laboratorios de Reactividad Cero):** Redes relacionales extraídas de textos dramáticos, guiones cinematográficos u obras literarias maestras (*Doce hombres sin piedad*, *La casa de Bernarda Alba*, etc.), que constituyen sistemas relacionales cerrados y exhaustivamente documentados donde las dinámicas de grupo se despliegan con reactividad cero del observador (§6.4); en esta modalidad, el sistema revisa la codificación realizada y completa lo necesario para el análisis.
-* **SIMUL (Simulación In Silico):** Escenarios sintéticos generados algorítmicamente por el motor PLATINUM gobernando paramétricamente las leyes del campo (atracción, fricción, reciprocidad, clustering), empleados para la calibración del instrumental, el desarrollo metodológico y la formación investigadora sin exposición ni sobrecarga de participantes humanos.
+* **SIMUL (Simulación In Silico):** Escenarios sintéticos generados algorítmicamente gobernando paramétricamente las leyes del campo (atracción, fricción, reciprocidad, clustering), empleados para la calibración del instrumental, el desarrollo metodológico y la formación investigadora sin exposición ni sobrecarga de participantes humanos.
 
 El circuito operativo articula cuatro eslabones:
 1. Definición del escenario.
-2. Generación del eslabón factual de simulación por el motor PLATINUM.
+2. Generación del eslabón factual de simulación por el algoritmo de simulación.
 3. Ingestión por el orquestador factorial (255 indicadores, matrices SMIb, proyecciones AFC/PCA y geometría de Grassmann).
 4. Proyección VISORD 3D/4D y transferencia a la web promocional.
 
@@ -442,13 +450,13 @@ NEXORD permite la realización logística —práctica, rápida, personalizada y
 
 La infraestructura integra controles de validez logística en cada eslabón: solicitud previa de consentimiento informado —y, para menores, la autorización expresa de tutores—; fotografías o avatares exclusivos para el reconocimiento de las personas y listas de nombres aleatorizadas que neutralizan sesgos de orden; control de los tiempos de respuesta y repesca de miembros retrasados; y, al cierre del estudio, la entrega de un código privado e intransferible que abre a cada participante el acceso a su report personal: los resultados generales de su grupo, sus resultados individuales y sugerencias constructivas de actuación o de reestructuración de actitudes y tareas, en coherencia con los derechos de devolución no estigmatizante (§7.3).
 
-En conjunto, la plasticidad sociométrica que NEXORD pone en manos del investigador es muy amplia —cualquier configuración del espacio $G \times T \times C$, en cualquiera de los modos de adquisición descritos— y puede aportar valiosos conocimientos sobre invariantes relacionales que hasta ahora han resultado difíciles de determinar.
+En conjunto, la plasticidad sociométrica que NEXORD pone en manos del investigador es muy amplia —cualquier configuración del espacio $G \times T \times C$, en cualquiera de los modos de adquisición descritos— y puede aportar valiosos conocimientos sobre invariantes relacionales que hasta ahora han resultado difíciles de aislar.
 
-### 6.8. Horizontes de Futuro: Hacia una Sociometría Científica «Adulta» y la Física de lo Social a Gran Escala
+### 6.8. Horizontes de Futuro: Hacia una Sociometría Científica de mayor amplitud y la Física de lo Social a Gran Escala
 
 El desarrollo histórico de la sociometría, desde las intuiciones fundacionales de J. L. Moreno en los años treinta hasta la formalización no paramétrica de NEXORD, ha estado enfocado primordialmente en el nivel intra-grupal: el individuo como unidad electora y el grupo inmediato como espacio de interacción. 
 
-Sin embargo, los grandes retos de la convivencia en las sociedades complejas —desde la fricción interdepartamental en organizaciones hasta las fracturas territoriales o los alineamientos geopolíticos— exigen dar un salto cualitativo: **tratar al grupo entero como unidad relacional activa dentro de una Sociometría Ordinal Intergrupal (SOI)**. No se trata de impartir doctrina, sino de abrir horizontes hacia una sociometría científica plenamente madura, capaz de abordar la complejidad de los sistemas sociales a gran escala.
+Sin embargo, los grandes retos de la convivencia en las sociedades complejas —desde la fricción interdepartamental en organizaciones hasta las fracturas territoriales o los alineamientos geopolíticos— exigen dar un salto cualitativo: **tratar al grupo entero como unidad relacional activa dentro de una Sociometría Ordinal Intergrupal (SOI)**. No se trata de impartir doctrina, sino de abrir horizontes hacia una sociometría científica plenamente madura, capaz de abordar la complejidad de los sistemas relacionales a gran escala.
 
 #### 1. El sustrato cognitivo-emocional: de Sherif y Festinger al mapa ordinal
 Las relaciones entre colectivos rara vez se deciden exclusivamente sobre balances económicos o acuerdos contractuales explícitos. Se articulan sobre un denso sustrato de representaciones sociales, estereotipos compartidos, simpatías identitarias y percepciones mutuas de amenaza o liderazgo. 
@@ -480,7 +488,7 @@ Dejar constancia de estas posibilidades en el presente Manifiesto responde al an
 ## 7. Gobernanza Institucional, Ética por Diseño y Ciencia Abierta
 
 ### 7.1. Ética por Diseño y Uso Estrictamente No Punitivo
-NEXORD incorpora salvaguardas éticas en el núcleo de su diseño algorítmico (*Ethics by Design*). El sistema prohíbe de forma explícita el uso de la sociometría para fines punitivos, expedientes disciplinarios, despidos o listas de descarte. Cualquier procesamiento sobre colectivos reales (categoría REAL) exige la autenticación, tutela y responsabilidad de un Investigador Principal (IP) debidamente acreditado.
+NEXORD incorpora salvaguardas éticas en el núcleo de su diseño algorítmico (*Ethics by Design*). El sistema prohíbe de forma explícita el uso de la sociometría para fines punitivos, expedientes disciplinarios, despidos o listas de descarte. Cualquier procesamiento sobre colectivos reales (categoría REAL) exige la autenticación, tutela y responsabilidad de un Investigador Principal (IP) debidamente acreditado profesional e institucionalmente.
 
 ### 7.2. Ciencia Abierta, Protocolo Clélie y Custodia en el Banco Sociométrico (BSOC)
 En cumplimiento estricto de los principios de Ciencia Abierta y Datos FAIR (*Findable, Accessible, Interoperable, Reusable*), los fundamentos metodológicos y matemáticos de la plataforma son de acceso público.
@@ -507,8 +515,6 @@ Como creador de NEXORD y partidario convencido de la *Open Science*, considero e
 
 Conviene precisar el alcance de esta declaración. El presente Manifiesto es un documento puramente programático —la exposición de las características teóricas, metodológicas y pragmáticas del proyecto—: ni él, ni la Plataforma informática, ni sus algoritmos son objeto de la protección de la propiedad intelectual; el Manifiesto se difunde abiertamente bajo licencia CC BY 4.0, y el control que aquí se defiende no es un control del conocimiento, sino del acceso operativo al instrumento.
 
-Desde el inicio del proyecto, su creador ha albergado la intención de legar el software a una institución universitaria o centro de investigación que lo acoja —a través de su fundación de transferencia—, que sería la depositaria y administradora única del software bajo su exclusiva supervisión, en caso de ampliar algún día su distribución a otros centros internacionales interesados. Como culminación de este esfuerzo y en correspondencia con mi condición de Profesor Emérito Jubilado de la Universitat de Barcelona (UB), manifiesto mi ofrecimiento formal de legar la titularidad y derechos de la Plataforma NEXORD a la Universitat de Barcelona a través de su fundación de transferencia (la Fundació Bosch i Gimpera, FBG), para que asuma su custodia institucional, la supervisión de sus estrictas garantías éticas y la gestión de convenios internacionales con centros acreditados de todo el mundo.
-
 ---
 
 ## 8. Anexos Técnicos Formalizados
@@ -519,7 +525,7 @@ Formalización de la correspondencia biyectiva entre el orden de asignación alf
 ![Tabla Anexo I: Matriz Q81](Tabla_Anexo_I_Matriz_Q81.png)  
 *Tabla Anexo I. Matriz estructural Q81 con las 81 figuras relacionales básicas ordenadas por antidiagonales de valencia creciente.*
 
-### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO / ANCORM)
+### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO)
 
 En el Análisis Factorial de Correspondencias (AFC) y en el Análisis de Componentes Principales (PCA), la dispersión visual sobre planos bidimensionales tradicionales colapsa y satura con frecuencia la resolución métrica de los elementos. Para superar este umbral, NEXORD implementa dos tecnologías analíticas complementarias:
 
@@ -530,9 +536,9 @@ $$\text{COR}_{i\alpha} = \frac{d^2(i, \alpha)}{d^2(i, G)} \in [0, 1]$$
 * **Contribución Absoluta ($\text{CTA}$ / $\text{CTR}$):** Participación porcentual del elemento en la construcción de la inercia del eje:
 $$\text{CTR}_{i\alpha} = \frac{p_i \cdot d^2(i, \alpha)}{\lambda_\alpha} \quad \left(\sum_i \text{CTR}_{i\alpha} = 100\%\right)$$
 
-#### 2. Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Factores Factoriales (Algoritmo DIMO / ANCORM del Dr. J. M. Cornejo Álvarez)
-Desarrollado en la tesis doctoral sobre Análisis de Correspondencias del Dr. Cornejo, el algoritmo DIMO resuelve la representación visual en un único plano bidimensional ($X, Y$) de hasta 6 factores jerarquizados ($F_1$ a $F_6$) derivados de la descomposición espectral Benzécri $\chi^2$, sin recurrir a recursos pictóricos auxiliares (como variaciones de color o grosor de nodo) que pudieran dificultar la lectura métrica precisa:
-* **Anclaje Basal Cartesiano ($F_1, F_2$):** Los dos primeros factores —que concentran la masa crítica de inercia del campo relacional— determinan la posición cartesiana inicial $(f_1, f_2)$ de cada sujeto.
+#### 2. Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Factores Factoriales (Algoritmo DIMO)
+El algoritmo DIMO resuelve la representación visual en un único plano bidimensional ($X, Y$) de hasta 6 factores jerarquizados ($F_1$ a $F_6$) derivados de la descomposición espectral, sin recurrir a recursos pictóricos auxiliares (como variaciones de color o grosor de nodo) que pudieran dificultar la lectura métrica precisa:
+* **Anclaje Basal Cartesiano:** Los dos primeros factores —que concentran la masa crítica de inercia del campo relacional— determinan la posición cartesiana inicial $(f_1, f_2)$ de cada sujeto.
 * **Despliegue Radial por Cuadrantes para Factores Superiores ($F_3, F_4, F_5, F_6$):** Cada cuadrante del plano se subdivide mediante cortes de $33^\circ$ y $66^\circ$ en sectores angulares normalizados que albergan las direcciones de los ejes sucesivos. Los vectores axonométricos se proyectan en razones geométricas exactas ($1/3, 2/3, 1/2$).
 * **Tracción Dinámica Regida por la Contribución Absoluta ($\text{CTA}$):** La posición final proyectada del elemento es el resultado de un vector de desplazamiento accionado exclusivamente por la masa de información que el sujeto aporta a los factores 3 a 6:
 $$\Delta x_i = \sum_{k=3}^6 \beta_k \cdot \text{CTA}_{ik} \cdot \cos(\theta_k), \quad \Delta y_i = \sum_{k=3}^6 \beta_k \cdot \text{CTA}_{ik} \cdot \sin(\theta_k)$$
