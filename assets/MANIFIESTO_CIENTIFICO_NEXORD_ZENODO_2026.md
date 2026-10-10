@@ -123,11 +123,11 @@ Al constituir cada fila una permutación estricta del conjunto $\{1, 2, \dots, N
 
 $$\sum_{j=1}^N B(i, j) = \frac{N(N+1)}{2} = \text{cte} \quad \left(\text{para } N = 6, \sum_{j=1}^6 B(i, j) = 21\right)$$
 
-Esta invariancia algebraica constituye el fundamento que hace posible la transposición bidireccional y exacta entre la sociomatriz clásica de Moreno y la sociomatriz ORBIT, así como la posterior derivación de los tetragramas relacionales (Figuras 3–5):
+Esta invariancia algebraica constituye el fundamento que hace posible la transposición bidireccional y exacta entre la sociomatriz clásica de Moreno y la sociomatriz ORBIT, así como la posterior derivación de los tetragramas relacionales:
 
-* **Figura 3.** Sociomatriz clásica de Moreno ($E, R, pE, pR$) en formato Excel para $N = 6$: Transposición a ORBIT $A(i, k)=j$ y $B(i, j)=k$.
-* **Figura 4.** Sociomatriz ORBIT $A(i, k)=j$ y $B(i, j)=k$, en formato Excel para $N = 6$: Transposición a MORENO ($E, R, pE, pR$).
-* **Figura 5.** Matrices $SMI_a(i, j)$ del tetragrama figurativo y $SMI_b(i, j)$ del tetragrama alfanumérico.
+* **Matriz clásica de Moreno:** Sociomatriz ($E, R, pE, pR$) en formato de entrada para $N = 6$: Transposición a ORBIT $A(i, k)=j$ y $B(i, j)=k$.
+* **Sociomatriz ORBIT:** Formato $A(i, k)=j$ y $B(i, j)=k$, en formato Excel para $N = 6$: Transposición a MORENO ($E, R, pE, pR$).
+* **Matrices SMI:** Matrices $SMI_a(i, j)$ del tetragrama figurativo y $SMI_b(i, j)$ del tetragrama alfanumérico.
 
 El formato ORBIT está especialmente indicado para su utilización en pequeños grupos ($N < 25$) —equipos de trabajo, células operativas, aulas o unidades convivenciales—, donde la ordenación exhaustiva resulta analítica y estructuralmente óptima para capturar con máxima resolución la microestructura relacional. Para colectivos de tamaño elevado ($N \ge 25$), NEXORD, en caso necesario, dispone de un procedimiento de ordenación por fases sucesivas (un sistema que amplía las cuotas 3-5 morenianas a selecciones más amplias y estratificadas), sin merma de la resolución métrica.
 
@@ -191,7 +191,7 @@ En síntesis: la salud y la productividad de un grupo no son una cuestión moral
 ### 4.1. Los 12 Elementos Sintácticos y el Tetragrama Relacional A1 A2 A3 A4
 La retícula fundamental Q81 formaliza el espacio combinatorio completo de las $3^4 = 81$ configuraciones diádicas que articulan el campo relacional. Para dotar al sistema de una notación exacta, libre de ambigüedades, NEXORD establece un alfabeto de 12 símbolos distribuidos en tres estados de polaridad relacional:
 
-#### Tabla 1: Sintaxis — los 12 símbolos del alfabeto relacional NEXORD
+#### Tabla 1. Sintaxis — los 12 símbolos del alfabeto relacional NEXORD
 
 | Tipo | DA: Percepción ($p\_DA$) | DA: Efectiva ($DA$) | RECIBE: Efectiva ($RC$) | RECIBE: Percepción ($p\_RC$) | Código Alfanumérico |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -229,7 +229,7 @@ donde: $D_{Q81}(\text{<Ee>})$ = Densidad Máxima Positiva (+1.000), $D_{Q81}(\te
 
 Esta geometría preserva una **simetría complementaria antipodal estricta**: $\text{Antípoda}(k) = 82 - k$, lo que implica que $\text{Figura}(i, j) + \text{Figura}(10-i, 10-j) = 82$, demostrando que el centroide neutro es autoinvariante bajo inversión polar ($41 + 41 = 82$).
 
-#### Tabla 3. Retícula Q81 (9 × 9): clasificación de las 81 figuras relacionales diádicas posibles, indexadas por antidiagonales de valencia creciente (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).
+#### Tabla 3a. Retícula Q81 (9 × 9): clasificación de las 81 figuras relacionales diádicas posibles, indexadas por antidiagonales de valencia creciente (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).
 
 ### 4.3. El Tríptico Estructural del Sujeto como Unidad y el Diagnóstico Desdoblado
 La idea de dotar a cada miembro del grupo de una única figura relacional y de una única densidad global sólo es posible si se descarta un promedio de todas sus relaciones diádicas, lo que sería un procedimiento totalmente erróneo. NEXORD preserva la bidimensionalidad topológica desdoblando la posición del sujeto $i$ a través de su Tríptico Estructural:
@@ -285,16 +285,16 @@ El cruce simétrico entre emisión y recepción en la sociomatriz genera las **1
 | **17D** | $SDR$ | Invariante Global | $\sum S_{ij} = \sum D_k$ | $[-4.00, +4.00]$ | Saldo de Densidad Relativa total: barómetro homeostático del clima vincular. |
 | **18D** | $BDR$ | Invariante Global | $\sum B_{ij} = \sum \|D_k\|$ | $[0.00, +4.00]$ | Densidad Bruta Relacional: capacidad calorífica y masa total del sistema. |
 
-#### 4.4.2. Los 3 Prismas Duales y el Pentagrama 10D (Figuras 8b y 8)
-Las cuatro densidades elementales $\{D_1, D_2, D_3, D_4\}$ admiten tres particiones duales ortogonales independientes o **Prismas** (Figura 8b): el **Operativo** (10D: Dador vs. Receptor), el **Ontológico** (14D: Mente vs. Hechos) y el **Dialéctico** (18D: Realismo vs. Compromiso). 
+#### 4.4.2. Los 3 Prismas Duales y el Pentagrama 10D (Figuras 3 y 4)
+Las cuatro densidades elementales $\{D_1, D_2, D_3, D_4\}$ admiten tres particiones duales ortogonales independientes o **Prismas** (Figura 3): el **Operativo** (10D: Dador vs. Receptor), el **Ontológico** (14D: Mente vs. Hechos) y el **Dialéctico** (18D: Realismo vs. Compromiso). 
 
-![Figura 8b: Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales](Figura_18D_Prismas_Duales_Crema.png)  
-*Figura 8b. Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales: Estructuración del tetragrama en 4 densidades elementales (D1–D4), saldos globales invariantes (SDR, BDR) y descomposición en los tres ejes fundamentales: Operativo (10D), Ontológico (14D) y Dialéctico (18D).*
+![Figura 3: Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales](Figura_18D_Prismas_Duales_Crema.png)  
+*Figura 3. Arquitectura Canónica del Espacio Relacional 18D y los 3 Prismas Duales: Estructuración del tetragrama en 4 densidades elementales (D1–D4), saldos globales invariantes (SDR, BDR) y descomposición en los tres ejes fundamentales: Operativo (10D), Ontológico (14D) y Dialéctico (18D).*
 
-En el plano operativo, el **Pentagrama Socio-Termodinámico** (Figura 8) articula las diez densidades canónicas desacoplando la emisión activa ($SDA, BDA$) del estatus receptivo ($SRC, BRC$), culminando en los invariantes globales $SDR$ y $BDR$. La discrepancia analítica entre la energía total movilizada y el flujo neto resultante define formalmente la **Inercia del Desgaste Relacional** ($I_{\text{desgaste}} = BDR - SDR$), cuantificando la energía disipada en rumiación y fricción estéril antes de que afloren fracturas abiertas en el grupo.
+En el plano operativo, el **Pentagrama Socio-Termodinámico** (Figura 4) articula las diez densidades canónicas desacoplando la emisión activa ($SDA, BDA$) del estatus receptivo ($SRC, BRC$), culminando en los invariantes globales $SDR$ y $BDR$. La discrepancia analítica entre la energía total movilizada y el flujo neto resultante define formalmente la **Inercia del Desgaste Relacional** ($I_{\text{desgaste}} = BDR - SDR$), cuantificando la energía disipada en rumiación y fricción estéril antes de que afloren fracturas abiertas en el grupo.
 
-![Figura 8: Pentagrama Socio-Termodinámico (10D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)  
-*Figura 8. Pentagrama Socio-Termodinámico con las 10 densidades canónicas: desacoplamiento emisión/recepción y transición al continuo termodinámico; la brecha I_desgaste = BDR − SDR cuantifica la energía disipada en fricción.*
+![Figura 4: Pentagrama Socio-Termodinámico (10D)](Figura_Pentagrama_Socio_Termodinamico_10D.png)  
+*Figura 4. Pentagrama Socio-Termodinámico con las 10 densidades canónicas: desacoplamiento emisión/recepción y transición al continuo termodinámico; la brecha I_desgaste = BDR − SDR cuantifica la energía disipada en fricción.*
 
 ### 4.5. El Paradigma de VISORD Acuario y la Hidrostática Relacional
 Como culminación perceptiva y experimental de este formalismo socio-termodinámico, el entorno **VISORD Acuario** constituye una aplicación complementaria de NEXORD que facilita la percepción visual y auditiva integrada de las estructuras de densidad relacional dentro de un diseño multidimensional $G \times T \times C$.
@@ -320,20 +320,20 @@ La «lupa matemática» de la Sociometría Ordinal de NEXORD ha avanzado, median
 
 NEXORD articula un conjunto de soluciones gráficas continuas destinadas a restituir el campo relacional sin saturación perceptiva:
 
-* **Sociogramas Continuos Tridimensionales (VISORD 3D/4D):** Visualización en el espacio continuo de cuencas de atracción (`<Ee>`), zonas intermedias de oposición y filamentos de ruptura o fricción (`[Rr]`), con navegación temporal diacrónica (Figura 11).
-* **Planos Factoriales Duales Paralelos (Biplot MESO $F_1 \times F_2$, espacio dual AFC $\parallel$ PCA):** Proyección simultánea donde el vector diádico $DA \longrightarrow RC$ vertebra la posición de cada sujeto con baricentro en el origen ($\Delta = 0.000$). En el AFC, sobre la tabla de contingencia de recuentos enteros $\mathbb{N}_0$ bajo la métrica $\chi^2$; en el PCA, sobre la matriz de densidades continuas $\pm \mathbb{R}$ estandarizadas. El contraste evidencia la aportación sustantiva de la socio-termodinámica relacional (Figura 9).
-* **Ejes Slender Verticales 1D:** Proyecciones derivadas de la descomposición espectral y el análisis de correspondencias (Figura 10).
+* **Planos Factoriales Duales Paralelos (Biplot MESO $F_1 \times F_2$, espacio dual AFC $\parallel$ PCA):** Proyección simultánea donde el vector diádico $DA \longrightarrow RC$ vertebra la posición de cada sujeto con baricentro en el origen ($\Delta = 0.000$). En el AFC, sobre la tabla de contingencia de recuentos enteros $\mathbb{N}_0$ bajo la métrica $\chi^2$; en el PCA, sobre la matriz de densidades continuas $\pm \mathbb{R}$ estandarizadas. El contraste evidencia la aportación sustantiva de la socio-termodinámica relacional (Figura 5).
+* **Ejes Slender Verticales 1D:** Proyecciones derivadas de la descomposición espectral y el análisis de correspondencias (Figura 6).
+* **Sociogramas Continuos Tridimensionales (VISORD 3D/4D):** Visualización en el espacio continuo de cuencas de atracción (`<Ee>`), zonas intermedias de oposición y filamentos de ruptura o fricción (`[Rr]`), con navegación temporal diacrónica (Figura 7).
 * **Proyección Axonométrica Jerarquizada en el plano 2D de hasta 6 Dimensiones (Algoritmo DIMO):** Para superar la limitación clásica de los planos 2D sin perder la interpretabilidad intuitiva del espacio euclídeo, NEXORD incorpora en su motor el método de proyección axonométrica jerárquica de hasta 6 factores factoriales desarrollado por el autor.
 * **Structurogramas Intergrupales:** Polígonos de sustentación vincular para el análisis morfológico comparativo entre colectivos.
 
-![Figura 9: Planos Duales en Paralelo (Biplot MESO F1 × F2, AFC ∥ PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)  
-*Figura 9. PLANOS DUALES EN PARALELO (Biplot MESO F1 × F2, espacio dual AFC ∥ PCA): el vector diádico DA ⟶ RC con baricentro en el origen (Δ = 0.000). (A) AFC sobre frecuencias de las figuras Q81 en emisores y receptores (contingencia ℕ₀, métrica χ²); (B) PCA sobre las 10 densidades en los mismos sujetos (continuo ±ℝ). El contraste evidencia la aportación sustantiva de la termodinámica relacional.*
+![Figura 5: Planos Duales en Paralelo (Biplot MESO F1 × F2, AFC ∥ PCA)](Figura_Plano_Factorial_Biplot_MESO_PCA.png)  
+*Figura 5. PLANOS DUALES EN PARALELO (Biplot MESO F1 × F2, espacio dual AFC ∥ PCA): el vector diádico DA ⟶ RC con baricentro en el origen (Δ = 0.000). (A) AFC sobre frecuencias de las figuras Q81 en emisores y receptores (contingencia ℕ₀, métrica χ²); (B) PCA sobre las 10 densidades en los mismos sujetos (continuo ±ℝ). El contraste evidencia la aportación sustantiva de la termodinámica relacional.*
 
-![Figura 10: Ejes verticales factoriales 1D (COR–CTA–CTR)](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)  
-*Figura 10. Ejes verticales factoriales 1D (Ejes 1 y 2, matriz SDR): calidad métrica bilateral COR–CTA–CTR de sujetos y figuras Q81, evitando la saturación de los diagramas 2D.*
+![Figura 6: Ejes verticales factoriales 1D (COR–CTA–CTR)](Figura_Anexo_II_Ejes_Verticales_Factoriales.png)  
+*Figura 6. Ejes verticales factoriales 1D (Ejes 1 y 2, matriz SDR): calidad métrica bilateral COR–CTA–CTR de sujetos y figuras Q81, evitando la saturación de los diagramas 2D.*
 
-![Figura 11: Navegación 3D interactiva en VISORD Engine](Figura_Seccion_4_1_VISORD_3D_Engine.png)  
-*Figura 11. VISORD_demo 3D: fases en la formación interactiva de grupos y resultados termodinámicos numéricos y gráficos en tiempo real; fuerzas de atracción y repulsión en acción.*
+![Figura 7: Navegación 3D interactiva en VISORD Engine](Figura_Seccion_4_1_VISORD_3D_Engine.png)  
+*Figura 7. VISORD_demo 3D: fases en la formación interactiva de grupos y resultados termodinámicos numéricos y gráficos en tiempo real; fuerzas de atracción y repulsión en acción.*
 
 ### 5.2. El Espacio Multidimensional GxTyCz
 NEXORD está configurada como una Plataforma de Investigación Sociométrica Psicosocial que trasciende la concepción tradicional del test sociométrico como una fotografía estática, aislada y unidimensional. La plataforma concibe el campo de las interacciones humanas como un espacio de investigación tensorial abierto, continuo y parametrizable, formalizado sobre el producto cartesiano $G \times T \times C$ donde el investigador puede diseñar desde estudios puntuales de una sola sociomatriz hasta ambiciosos programas longitudinales y comparativos intergrupales. La formulación matricial se articula sobre cuatro ejes fundamentales:
@@ -380,10 +380,10 @@ Para comparar colectivos sin forzar interacciones cruzadas artificiales, cada gr
 
 $$d_{\operatorname{Gr}}(U_1, U_2) = \sqrt{\sum_{m=1}^k \theta_m^2} \tag{20}$$
 
-Esta métrica determina rigurosamente (Figura 12) si dos grupos comparten la misma morfología relacional con independencia de las diferencias en sus tamaños muestrales. Aunque el acuerdo entre observadores es un componente apreciable de confiabilidad de los hallazgos de estructuras invariantes, es la persistencia y constancia temporal de estas configuraciones en el espacio geométrico lo que permite contrastar la solidez de las estructuras relacionales frente a variaciones coyunturales o fluctuaciones aleatorias.
+Esta métrica determina rigurosamente (Figura 8) si dos grupos comparten la misma morfología relacional con independencia de las diferencias en sus tamaños muestrales. Aunque el acuerdo entre observadores es un componente apreciable de confiabilidad de los hallazgos de estructuras invariantes, es la persistencia y constancia temporal de estas configuraciones en el espacio geométrico lo que permite contrastar la solidez de las estructuras relacionales frente a variaciones coyunturales o fluctuaciones aleatorias.
 
-![Figura 12: Plano factorial comparativo intergrupal (G1 vs G2)](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)  
-*Figura 12. Plano factorial comparativo intergrupal (G1 vs G2) y structrogramas diacrónicos; la distancia geodésica en Gr(k, N) cuantifica la morfología relacional compartida.*
+![Figura 8: Plano factorial comparativo intergrupal (G1 vs G2)](Figura_Seccion_4_2_Plano_Factorial_Comparativo_G1_G2.png)  
+*Figura 8. Plano factorial comparativo intergrupal (G1 vs G2) y structrogramas diacrónicos; la distancia geodésica en Gr(k, N) cuantifica la morfología relacional compartida.*
 
 En los individuos, la matriz de interdistancias euclídeas de rangos $d_{\text{DA}} / d_{\text{RC}}$ (Tabla 6) documenta sobre el corpus G2T1C1 la ley de asimetría relacional: la dispersión receptora media ($4.84; DT = 0.64$) supera sistemáticamente a la emisora ($4.15; DT = 0.49$), y los diagnósticos posicionales por nodo —de la consonancia isométrica de 5A ($\Delta = -0.09$) al desbalance máximo de 3A ($\Delta = -1.39$)— ilustran la granularidad del diagnóstico socio-termodinámico.
 
@@ -405,10 +405,10 @@ NEXORD implementa el modelo del iceberg en dos vertientes:
 * **Representación Gráfica 3D:** Hace emerger a la superficie visual la estructura sumergida de tensiones, rechazos latentes y lazos informales que no se manifiestan en la jerarquía formal.
 * **Sonificación Hidrodinámica:** Convierte densidades y fricciones en flujos tonales continuos, permitiendo la monitorización auditiva de estados de turbulencia o calma colectiva sin sobrecargar la atención visual del analista.
 
-La capacidad de calcular las densidades del campo para colectivos de gran tamaño sin pérdida de continuidad analítica resuelve una limitación histórica de la sociometría tradicional, que solía restringirse a grupos pequeños ($N < 30$) por la saturación de los sociogramas clásicos (Figura 13).
+La capacidad de calcular las densidades del campo para colectivos de gran tamaño sin pérdida de continuidad analítica resuelve una limitación histórica de la sociometría tradicional, que solía restringirse a grupos pequeños ($N < 30$) por la saturación de los sociogramas clásicos (Figura 9).
 
-![Figura 13: Campo continuo de interacción y modelo del iceberg (N = 50)](Figura_Sociograma_3D_Continuo_Plasma_N50.png)  
-*Figura 13. Campo continuo de interacción y modelo del iceberg en un colectivo de N = 50 sujetos: la base relacional sumergida hecha visible.*
+![Figura 9: Campo continuo de interacción y modelo del iceberg (N = 50)](Figura_Sociograma_3D_Continuo_Plasma_N50.png)  
+*Figura 9. Campo continuo de interacción y modelo del iceberg en un colectivo de N = 50 sujetos: la base relacional sumergida hecha visible.*
 
 ### 6.4. El Corpus CULTURAL como Entorno de Reactividad Cero
 Las obras maestras de la literatura universal y del cine están repletas, directa o indirectamente, de situaciones grupales con descripciones vívidas, realizadas por observadores perspicaces, de los entresijos de las relaciones humanas. El análisis de estas interacciones desde la perspectiva sociométrica constituye una alternativa «no reactiva» valiosa de acceso al estudio de estructuras grupales complejas. NEXORD ha procesado obras maestras de la dramaturgia y la literatura (*Doce hombres sin piedad* de Reginald Rose, *La casa de Bernarda Alba* de Federico García Lorca, *El señor de las moscas* de William Golding), demostrando que las leyes socio-termodinámicas identifican con precisión matemática los nudos dramáticos, las transiciones de fase y los colapsos de liderazgo sin recurrir a datos inferidos por observación.
