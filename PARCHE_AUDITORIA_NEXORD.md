@@ -57,7 +57,7 @@
     - Generada versión WebP (127 KB) y AVIF (122 KB) a partir de la imagen original (283 KB), reduciendo el peso en más del 57%.
     - Integrado `image-set` en CSS y `<link rel="preload">` prioritario en el `<head>`.
 11. **Favicon Vectorial NEXORD:**  
-    - Creado `favicon.svg` con anillo orbital verde neón (`#00FF87`), acento cian y el número 9 dorado (`#FFE600`) representativo del cenit Tesla 3-6-9.
+    - Creado `favicon.svg` con anillo orbital verde neón (`#00FF87`), acento cian y el número 9 dorado (`#FFE600`) representativo del cenit 3-6-9.
 12. **Preconnect a Fuentes Tipográficas:**  
     - `<link rel="preconnect">` a `fonts.googleapis.com` y `fonts.gstatic.com`.
 14. **AudioContext Robusto:**  

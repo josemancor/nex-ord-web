@@ -2,7 +2,7 @@
 
 **Ecosistema VISORD Engine / Plataforma NEXORD (2026)**  
 **Autores:** J. Francisco Morales Domínguez (UNED) & José Manuel Cornejo Álvarez (UB)  
-**Registro Oficial:** CERN Zenodo `10.5281/zenodo.18941691` · Safe Creative `2603074794486`
+**Registro Oficial:** CERN Zenodo `10.5281/zenodo.23303953` · Safe Creative `2603074794486`
 
 ---
 

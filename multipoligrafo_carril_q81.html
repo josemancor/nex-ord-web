@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD · Multipolígrafo Socio-Termodinámico (Carril Q81)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-space: #0B132B;
+      --bg-panel: #111C3D;
+      --bg-card: rgba(17, 28, 61, 0.75);
+      --border-subtle: rgba(56, 189, 248, 0.18);
+      --border-glow: rgba(0, 255, 135, 0.4);
+      --neon-green: #00FF87;
+      --neon-cyan: #38BDF8;
+      --neon-orange: #FF9F1C;
+      --neon-purple: #C084FC;
+      --neon-gold: #FFE600;
+      --neon-magenta: #FF007F;
+      --neon-alert: #FF0055;
+      --text-main: #F1F5F9;
+      --text-dim: #94A3B8;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Roboto Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-space);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabecera Canónica */
+    header {
+      background: rgba(11, 19, 43, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--neon-green);
+      background: rgba(0, 255, 135, 0.10);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #FFFFFF;
+    }
+
+    .brand-title span {
+      font-size: 0.76rem;
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+    }
+
+    .header-pills {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--neon-cyan);
+    }
+
+    .pill-badge.active {
+      border-color: rgba(255, 230, 0, 0.4);
+      background: rgba(255, 230, 0, 0.12);
+      color: var(--neon-gold);
+    }
+
+    /* Contenedor Principal */
+    main {
+      flex: 1;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 1720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Panel de la Autopista */
+    .highway-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 22px 14px 22px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    .highway-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .lane-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lane-tag .tag-num {
+      background: var(--neon-green);
+      color: #060D1E;
+      font-weight: 900;
+      font-family: var(--font-mono);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+    }
+
+    .lane-tag .tag-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .meridian-hud {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--neon-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 230, 0, 0.08);
+      border: 1px solid rgba(255, 230, 0, 0.25);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    /* Lienzo Canvas */
+    /* Canvas Wrapper con mayor altura para aireación */
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: #060B1A;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* Tooltip HUD Flotante */
+    #hover-tooltip {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: rgba(11, 19, 43, 0.92);
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #E2E8F0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 260px;
+      z-index: 10;
+    }
+
+    #hover-tooltip .tt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 4px;
+      font-weight: 700;
+      color: var(--neon-green);
+    }
+
+    #hover-tooltip .tt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 12px;
+      margin-top: 4px;
+    }
+
+    /* Barra de Controles y Canales */
+    .controls-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .controls-panel { grid-template-columns: 1fr; }
+    }
+
+    .control-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .control-box h3 {
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+    }
+
+    .toggle-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .toggle-chip.active {
+      border-color: currentColor;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .toggle-chip input {
+      display: none;
+    }
+
+    .chip-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .scenarios-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-scenario {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-scenario:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--neon-cyan);
+      color: #FFFFFF;
+    }
+
+    .btn-scenario.active-scenario {
+      background: rgba(0, 255, 135, 0.18);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    /* Nota Canónica */
+    .note-box {
+      background: rgba(11, 19, 43, 0.6);
+      border-left: 3px solid var(--neon-gold);
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .note-box strong {
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABECERA INSTITUCIONAL CANÓNICA -->
+  <header>
+    <div class="brand-box">
+      <div class="brand-logo">NEXORD</div>
+      <div class="brand-title">
+        <h1>MULTIPOLÍGRAFO SOCIO-TERMODINÁMICO</h1>
+        <span>CARRIL ATÓMICO Q81 · 81 ESTACIONES SINCRONIZADAS</span>
+      </div>
+    </div>
+    <div class="header-pills">
+      <div class="pill-badge active" id="badge-meridian">EJE 41 CANÓNICO ACTIVO</div>
+      <div class="pill-badge" id="badge-mode">MODO: ESTÁTICO / REPOSO</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- LIENZO DE LA AUTOPISTA: CARRIL 1 -->
+    <div class="highway-card">
+      <div class="highway-header">
+        <div class="lane-tag">
+          <span class="tag-num">CARRIL 1</span>
+          <span class="tag-title">Espectro Relacional Q81 (1 → 81)</span>
+        </div>
+        <div class="meridian-hud">
+          <span>📍</span>
+          <span>MERIDIANO 41: <strong>¡¿?!></strong> (Neutralidad e Indiferencia)</span>
+        </div>
+      </div>
+
+      <!-- Contenedor del Canvas -->
+      <div class="canvas-wrapper" id="canvas-container">
+        <canvas id="polygraphCanvas"></canvas>
+
+        <!-- Tooltip HUD al posarse sobre una estación -->
+        <div id="hover-tooltip" style="display: none;">
+          <div class="tt-header">
+            <span id="tt-id">ID 41</span>
+            <span id="tt-sym">¡¿?!></span>
+          </div>
+          <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 2px;" id="tt-def">Indiferencia pura</div>
+          <div class="tt-grid">
+            <div style="color: var(--neon-cyan);">D1: <span id="tt-d1">0.00</span></div>
+            <div style="color: var(--neon-green);">D2: <span id="tt-d2">0.00</span></div>
+            <div style="color: var(--neon-orange);">D3: <span id="tt-d3">0.00</span></div>
+            <div style="color: var(--neon-purple);">D4: <span id="tt-d4">0.00</span></div>
+            <div style="color: var(--neon-gold);">BDR: <span id="tt-bdr">0.00</span></div>
+            <div style="color: #00F0FF;">SDR: <span id="tt-sdr">0.00</span></div>
+          </div>
+          <div style="font-size: 0.70rem; color: var(--neon-alert); margin-top: 4px;">
+            Fricción Térmica Δ: <strong id="tt-delta">0.00</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLES Y CONFIGURACIÓN -->
+    <div class="controls-panel">
+
+      <!-- Panel 1: Canales Activos -->
+      <div class="control-box">
+        <h3><span>🎛️</span> Señales Sincronizadas del Carril</h3>
+        <div class="toggles-grid">
+          <label class="toggle-chip active" style="color: var(--neon-cyan);">
+            <input type="checkbox" id="chk-d1" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>D1 (pDA)</span>
+          </label>
+          <label class="toggle-chip active" style="color: var(--neon-green);">
+            <input type="checkbox" id="chk-d2" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>D2 (DA)</span>
+          </label>
+          <label class="toggle-chip active" style="color: var(--neon-orange);">
+            <input type="checkbox" id="chk-d3" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>D3 (RC)</span>
+          </label>
+          <label class="toggle-chip active" style="color: var(--neon-purple);">
+            <input type="checkbox" id="chk-d4" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>D4 (pRC)</span>
+          </label>
+          <label class="toggle-chip active" style="color: var(--neon-gold);">
+            <input type="checkbox" id="chk-bdr" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>BDR (Masa)</span>
+          </label>
+          <label class="toggle-chip active" style="color: #00F0FF;">
+            <input type="checkbox" id="chk-sdr" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>SDR (Saldo)</span>
+          </label>
+          <label class="toggle-chip active" style="color: var(--neon-alert); grid-column: span 2;">
+            <input type="checkbox" id="chk-halo" checked onchange="redraw()">
+            <span class="chip-dot"></span>
+            <span>Halo Fricción Térmica (Δ = Φ)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Panel 2: Sociomatrices Reales Canónicas (G2T2C2) -->
+      <div class="control-box">
+        <h3><span>👑</span> Sociomatrices Reales Canónicas (G2T2C2 &middot; N=6)</h3>
+        <div class="scenarios-grid">
+          <button class="btn-scenario active-scenario" id="btn-mat-1g1t1c" onclick="loadRealMatrix('1g1t1c')">👑 Grupo A &middot; T1 (1g1t1c)</button>
+          <button class="btn-scenario" id="btn-mat-1g2t1c" onclick="loadRealMatrix('1g2t1c')">📈 Grupo A &middot; T2 (1g2t1c)</button>
+          <button class="btn-scenario" id="btn-mat-2g1t1c" onclick="loadRealMatrix('2g1t1c')">🛡️ Grupo B &middot; T1 (2g1t1c)</button>
+          <button class="btn-scenario" id="btn-mat-2g2t1c" onclick="loadRealMatrix('2g2t1c')">📈 Grupo B &middot; T2 (2g2t1c)</button>
+        </div>
+        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-scenario" onclick="loadScenario('cohesion')">🌿 Cohesión Teórica</button>
+          <button class="btn-scenario" onclick="loadScenario('polarizacion')">⚡ Polarización Teórica</button>
+          <button class="btn-scenario" onclick="loadScenario('mascara')">🎭 Máscara Teórica</button>
+          <button class="btn-scenario" id="btn-stream" onclick="toggleStream()">▶️ Barrido Play</button>
+        </div>
+        <div style="font-size:0.75rem; color: var(--text-dim); margin-top: 4px;">
+          Proyecta los 30 vínculos y las <strong>d reales de los sujetos</strong> (1A..6A / 1B..6B) celda a celda en Q81.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NOTA PEDAGÓGICA CANÓNICA -->
+    <div class="note-box">
+      <strong>💡 Nota Canónica de Interpretación:</strong> El eje horizontal recorre estrictamente las <strong>81 Figuras Diádicas Canónicas (<em>Q</em><sub>81</sub>)</strong> desde el ID 1 (rechazo total mutuo) hasta el ID 81 (elección mutua plena), con la <strong>vertical dorada fija en la celda 41</strong> (<em>¡¿?!></em>, punto neutro de balance). A lo largo de todo el espectro, las 4 densidades del tetragrama (<em>D</em><sub>1</sub>..<em>D</em><sub>4</sub>) y los dos integradores socio-termodinámicos (<strong>BDR</strong> y <strong>SDR</strong>) modulan sus amplitudes y fluctuaciones. El sombreado carmesí continuo delata en directo el <strong>desnivel de fricción térmica (&Delta; = BDR &minus; SDR &equiv; &Phi;)</strong> generado por el conflicto o el engaño estructural en el colectivo.
+    </div>
+  </main>
+
+  <script>
+    // =========================================================================
+    // CATÁLOGO CANÓNICO OFICIAL DE LAS 81 FIGURAS SOCIOMÉTRICAS (Q81)
+    // =========================================================================
+    // Tetragrama: A1 (pDA), A2 (DA), A3 (RC), A4 (pRC)
+    // Valores canónicos: +1 (Positivo/Elección), 0 (Neutro/Indiferencia), -1 (Negativo/Rechazo)
+
+    const REAL_SOCIOMATRICES = {
+  "1g1t1c": {
+    "clave": "1G1T1C (Grupo A \u00b7 TtCc)",
+    "bdr": 0.48,
+    "sdr": 0.22,
+    "entropia": 0.35,
+    "n_sujetos": 6,
+    "sujetos": [
+      "1A",
+      "2A",
+      "3A",
+      "4A",
+      "5A",
+      "6A"
+    ],
+    "q_map": {
+      "50": [
+        {
+          "from": "1A",
+          "to": "2A",
+          "fullFrom": "1A1a",
+          "fullTo": "2A1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        },
+        {
+          "from": "1A",
+          "to": "5A",
+          "fullFrom": "1A1a",
+          "fullTo": "5A1a",
+          "smib": "00D0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.0
+        },
+        {
+          "from": "1A",
+          "to": "6A",
+          "fullFrom": "1A1a",
+          "fullTo": "6A1a",
+          "smib": "00C0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.25,
+          "d4": 0.0
+        }
+      ],
+      "81": [
+        {
+          "from": "1A",
+          "to": "3A",
+          "fullFrom": "1A1a",
+          "fullTo": "3A1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        },
+        {
+          "from": "3A",
+          "to": "1A",
+          "fullFrom": "3A1a",
+          "fullTo": "1A1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        }
+      ],
+      "15": [
+        {
+          "from": "1A",
+          "to": "4A",
+          "fullFrom": "1A1a",
+          "fullTo": "4A1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5A",
+          "to": "4A",
+          "fullFrom": "5A1a",
+          "fullTo": "4A1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "49": [
+        {
+          "from": "2A",
+          "to": "1A",
+          "fullFrom": "2A1a",
+          "fullTo": "1A1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5A",
+          "to": "1A",
+          "fullFrom": "5A1a",
+          "fullTo": "1A1a",
+          "smib": "0C00",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "1A",
+          "fullFrom": "6A1a",
+          "fullTo": "1A1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "72": [
+        {
+          "from": "2A",
+          "to": "3A",
+          "fullFrom": "2A1a",
+          "fullTo": "3A1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "3A",
+          "fullFrom": "6A1a",
+          "fullTo": "3A1a",
+          "smib": "AAC0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 0.25,
+          "d4": 0.0
+        }
+      ],
+      "1": [
+        {
+          "from": "2A",
+          "to": "4A",
+          "fullFrom": "2A1a",
+          "fullTo": "4A1a",
+          "smib": "aaaa",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -1.0,
+          "d4": -1.0
+        },
+        {
+          "from": "4A",
+          "to": "2A",
+          "fullFrom": "4A1a",
+          "fullTo": "2A1a",
+          "smib": "aabb",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -0.5,
+          "d4": -0.5
+        }
+      ],
+      "41": [
+        {
+          "from": "2A",
+          "to": "5A",
+          "fullFrom": "2A1a",
+          "fullTo": "5A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "2A",
+          "to": "6A",
+          "fullFrom": "2A1a",
+          "fullTo": "6A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5A",
+          "to": "2A",
+          "fullFrom": "5A1a",
+          "fullTo": "2A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "2A",
+          "fullFrom": "6A1a",
+          "fullTo": "2A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "75": [
+        {
+          "from": "3A",
+          "to": "2A",
+          "fullFrom": "3A1a",
+          "fullTo": "2A1a",
+          "smib": "0BBB",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.5,
+          "d4": 0.5
+        },
+        {
+          "from": "3A",
+          "to": "6A",
+          "fullFrom": "3A1a",
+          "fullTo": "6A1a",
+          "smib": "0CEE",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.062,
+          "d4": 0.062
+        }
+      ],
+      "45": [
+        {
+          "from": "3A",
+          "to": "4A",
+          "fullFrom": "3A1a",
+          "fullTo": "4A1a",
+          "smib": "aaCC",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.25
+        }
+      ],
+      "71": [
+        {
+          "from": "3A",
+          "to": "5A",
+          "fullFrom": "3A1a",
+          "fullTo": "5A1a",
+          "smib": "00DD",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.125
+        }
+      ],
+      "11": [
+        {
+          "from": "4A",
+          "to": "1A",
+          "fullFrom": "4A1a",
+          "fullTo": "1A1a",
+          "smib": "00aa",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -1.0,
+          "d4": -1.0
+        },
+        {
+          "from": "4A",
+          "to": "5A",
+          "fullFrom": "4A1a",
+          "fullTo": "5A1a",
+          "smib": "00dd",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.125,
+          "d4": -0.125
+        }
+      ],
+      "37": [
+        {
+          "from": "4A",
+          "to": "3A",
+          "fullFrom": "4A1a",
+          "fullTo": "3A1a",
+          "smib": "AAcc",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": -0.25,
+          "d4": -0.25
+        }
+      ],
+      "16": [
+        {
+          "from": "4A",
+          "to": "6A",
+          "fullFrom": "4A1a",
+          "fullTo": "6A1a",
+          "smib": "0Bee",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": -0.062,
+          "d4": -0.062
+        }
+      ],
+      "67": [
+        {
+          "from": "5A",
+          "to": "3A",
+          "fullFrom": "5A1a",
+          "fullTo": "3A1a",
+          "smib": "AA00",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "57": [
+        {
+          "from": "5A",
+          "to": "6A",
+          "fullFrom": "5A1a",
+          "fullTo": "6A1a",
+          "smib": "0BA0",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "5A",
+          "fullFrom": "6A1a",
+          "fullTo": "5A1a",
+          "smib": "0CB0",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.5,
+          "d4": 0.0
+        }
+      ],
+      "21": [
+        {
+          "from": "6A",
+          "to": "4A",
+          "fullFrom": "6A1a",
+          "fullTo": "4A1a",
+          "smib": "aaA0",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        }
+      ]
+    }
+  },
+  "1g2t1c": {
+    "clave": "1G2T1C (Grupo A \u00b7 TtCc)",
+    "bdr": 0.48,
+    "sdr": 0.22,
+    "entropia": 0.35,
+    "n_sujetos": 6,
+    "sujetos": [
+      "1A",
+      "2A",
+      "3A",
+      "4A",
+      "5A",
+      "6A"
+    ],
+    "q_map": {
+      "50": [
+        {
+          "from": "1A",
+          "to": "2A",
+          "fullFrom": "1A1a",
+          "fullTo": "2A1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        },
+        {
+          "from": "1A",
+          "to": "5A",
+          "fullFrom": "1A1a",
+          "fullTo": "5A1a",
+          "smib": "00D0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.0
+        },
+        {
+          "from": "1A",
+          "to": "6A",
+          "fullFrom": "1A1a",
+          "fullTo": "6A1a",
+          "smib": "00E0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.062,
+          "d4": 0.0
+        }
+      ],
+      "81": [
+        {
+          "from": "1A",
+          "to": "3A",
+          "fullFrom": "1A1a",
+          "fullTo": "3A1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        },
+        {
+          "from": "3A",
+          "to": "1A",
+          "fullFrom": "3A1a",
+          "fullTo": "1A1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        }
+      ],
+      "21": [
+        {
+          "from": "1A",
+          "to": "4A",
+          "fullFrom": "1A1a",
+          "fullTo": "4A1a",
+          "smib": "aaC0",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.0
+        }
+      ],
+      "49": [
+        {
+          "from": "2A",
+          "to": "1A",
+          "fullFrom": "2A1a",
+          "fullTo": "1A1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5A",
+          "to": "1A",
+          "fullFrom": "5A1a",
+          "fullTo": "1A1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "1A",
+          "fullFrom": "6A1a",
+          "fullTo": "1A1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "72": [
+        {
+          "from": "2A",
+          "to": "3A",
+          "fullFrom": "2A1a",
+          "fullTo": "3A1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "3A",
+          "fullFrom": "6A1a",
+          "fullTo": "3A1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        }
+      ],
+      "1": [
+        {
+          "from": "2A",
+          "to": "4A",
+          "fullFrom": "2A1a",
+          "fullTo": "4A1a",
+          "smib": "aaaa",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -1.0,
+          "d4": -1.0
+        },
+        {
+          "from": "4A",
+          "to": "2A",
+          "fullFrom": "4A1a",
+          "fullTo": "2A1a",
+          "smib": "aabb",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -0.5,
+          "d4": -0.5
+        }
+      ],
+      "41": [
+        {
+          "from": "2A",
+          "to": "5A",
+          "fullFrom": "2A1a",
+          "fullTo": "5A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "2A",
+          "to": "6A",
+          "fullFrom": "2A1a",
+          "fullTo": "6A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5A",
+          "to": "2A",
+          "fullFrom": "5A1a",
+          "fullTo": "2A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "2A",
+          "fullFrom": "6A1a",
+          "fullTo": "2A1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "75": [
+        {
+          "from": "3A",
+          "to": "2A",
+          "fullFrom": "3A1a",
+          "fullTo": "2A1a",
+          "smib": "0BBB",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.5,
+          "d4": 0.5
+        },
+        {
+          "from": "3A",
+          "to": "6A",
+          "fullFrom": "3A1a",
+          "fullTo": "6A1a",
+          "smib": "0CEE",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.062,
+          "d4": 0.062
+        }
+      ],
+      "45": [
+        {
+          "from": "3A",
+          "to": "4A",
+          "fullFrom": "3A1a",
+          "fullTo": "4A1a",
+          "smib": "aaCC",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.25
+        }
+      ],
+      "71": [
+        {
+          "from": "3A",
+          "to": "5A",
+          "fullFrom": "3A1a",
+          "fullTo": "5A1a",
+          "smib": "00DD",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.125
+        }
+      ],
+      "16": [
+        {
+          "from": "4A",
+          "to": "1A",
+          "fullFrom": "4A1a",
+          "fullTo": "1A1a",
+          "smib": "0Baa",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": -1.0,
+          "d4": -1.0
+        }
+      ],
+      "37": [
+        {
+          "from": "4A",
+          "to": "3A",
+          "fullFrom": "4A1a",
+          "fullTo": "3A1a",
+          "smib": "AAcc",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": -0.25,
+          "d4": -0.25
+        }
+      ],
+      "11": [
+        {
+          "from": "4A",
+          "to": "5A",
+          "fullFrom": "4A1a",
+          "fullTo": "5A1a",
+          "smib": "00dd",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.125,
+          "d4": -0.125
+        },
+        {
+          "from": "4A",
+          "to": "6A",
+          "fullFrom": "4A1a",
+          "fullTo": "6A1a",
+          "smib": "00ee",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.062,
+          "d4": -0.062
+        }
+      ],
+      "67": [
+        {
+          "from": "5A",
+          "to": "3A",
+          "fullFrom": "5A1a",
+          "fullTo": "3A1a",
+          "smib": "AA00",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "15": [
+        {
+          "from": "5A",
+          "to": "4A",
+          "fullFrom": "5A1a",
+          "fullTo": "4A1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "4A",
+          "fullFrom": "6A1a",
+          "fullTo": "4A1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "57": [
+        {
+          "from": "5A",
+          "to": "6A",
+          "fullFrom": "5A1a",
+          "fullTo": "6A1a",
+          "smib": "0CA0",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6A",
+          "to": "5A",
+          "fullFrom": "6A1a",
+          "fullTo": "5A1a",
+          "smib": "0CB0",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.5,
+          "d4": 0.0
+        }
+      ]
+    }
+  },
+  "2g1t1c": {
+    "clave": "2G1T1C (Grupo B \u00b7 TtCc)",
+    "bdr": 0.48,
+    "sdr": 0.22,
+    "entropia": 0.35,
+    "n_sujetos": 6,
+    "sujetos": [
+      "1B",
+      "2B",
+      "3B",
+      "4B",
+      "5B",
+      "6B"
+    ],
+    "q_map": {
+      "50": [
+        {
+          "from": "1B",
+          "to": "2B",
+          "fullFrom": "1B1a",
+          "fullTo": "2B1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        },
+        {
+          "from": "1B",
+          "to": "5B",
+          "fullFrom": "1B1a",
+          "fullTo": "5B1a",
+          "smib": "00D0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.0
+        },
+        {
+          "from": "1B",
+          "to": "6B",
+          "fullFrom": "1B1a",
+          "fullTo": "6B1a",
+          "smib": "00E0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.062,
+          "d4": 0.0
+        }
+      ],
+      "81": [
+        {
+          "from": "1B",
+          "to": "3B",
+          "fullFrom": "1B1a",
+          "fullTo": "3B1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        },
+        {
+          "from": "3B",
+          "to": "1B",
+          "fullFrom": "3B1a",
+          "fullTo": "1B1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        }
+      ],
+      "21": [
+        {
+          "from": "1B",
+          "to": "4B",
+          "fullFrom": "1B1a",
+          "fullTo": "4B1a",
+          "smib": "aaC0",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.0
+        }
+      ],
+      "49": [
+        {
+          "from": "2B",
+          "to": "1B",
+          "fullFrom": "2B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5B",
+          "to": "1B",
+          "fullFrom": "5B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "1B",
+          "fullFrom": "6B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "72": [
+        {
+          "from": "2B",
+          "to": "3B",
+          "fullFrom": "2B1a",
+          "fullTo": "3B1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "3B",
+          "fullFrom": "6B1a",
+          "fullTo": "3B1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        }
+      ],
+      "1": [
+        {
+          "from": "2B",
+          "to": "4B",
+          "fullFrom": "2B1a",
+          "fullTo": "4B1a",
+          "smib": "aaaa",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -1.0,
+          "d4": -1.0
+        },
+        {
+          "from": "4B",
+          "to": "2B",
+          "fullFrom": "4B1a",
+          "fullTo": "2B1a",
+          "smib": "aabb",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -0.5,
+          "d4": -0.5
+        }
+      ],
+      "41": [
+        {
+          "from": "2B",
+          "to": "5B",
+          "fullFrom": "2B1a",
+          "fullTo": "5B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "2B",
+          "to": "6B",
+          "fullFrom": "2B1a",
+          "fullTo": "6B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5B",
+          "to": "2B",
+          "fullFrom": "5B1a",
+          "fullTo": "2B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "2B",
+          "fullFrom": "6B1a",
+          "fullTo": "2B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "75": [
+        {
+          "from": "3B",
+          "to": "2B",
+          "fullFrom": "3B1a",
+          "fullTo": "2B1a",
+          "smib": "0BBB",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.5,
+          "d4": 0.5
+        },
+        {
+          "from": "3B",
+          "to": "6B",
+          "fullFrom": "3B1a",
+          "fullTo": "6B1a",
+          "smib": "0CEE",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.062,
+          "d4": 0.062
+        }
+      ],
+      "45": [
+        {
+          "from": "3B",
+          "to": "4B",
+          "fullFrom": "3B1a",
+          "fullTo": "4B1a",
+          "smib": "aaCC",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.25
+        }
+      ],
+      "71": [
+        {
+          "from": "3B",
+          "to": "5B",
+          "fullFrom": "3B1a",
+          "fullTo": "5B1a",
+          "smib": "00DD",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.125
+        }
+      ],
+      "16": [
+        {
+          "from": "4B",
+          "to": "1B",
+          "fullFrom": "4B1a",
+          "fullTo": "1B1a",
+          "smib": "0Baa",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": -1.0,
+          "d4": -1.0
+        }
+      ],
+      "37": [
+        {
+          "from": "4B",
+          "to": "3B",
+          "fullFrom": "4B1a",
+          "fullTo": "3B1a",
+          "smib": "AAcc",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": -0.25,
+          "d4": -0.25
+        }
+      ],
+      "11": [
+        {
+          "from": "4B",
+          "to": "5B",
+          "fullFrom": "4B1a",
+          "fullTo": "5B1a",
+          "smib": "00dd",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.125,
+          "d4": -0.125
+        },
+        {
+          "from": "4B",
+          "to": "6B",
+          "fullFrom": "4B1a",
+          "fullTo": "6B1a",
+          "smib": "00ee",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.062,
+          "d4": -0.062
+        }
+      ],
+      "67": [
+        {
+          "from": "5B",
+          "to": "3B",
+          "fullFrom": "5B1a",
+          "fullTo": "3B1a",
+          "smib": "AA00",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "15": [
+        {
+          "from": "5B",
+          "to": "4B",
+          "fullFrom": "5B1a",
+          "fullTo": "4B1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "4B",
+          "fullFrom": "6B1a",
+          "fullTo": "4B1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "57": [
+        {
+          "from": "5B",
+          "to": "6B",
+          "fullFrom": "5B1a",
+          "fullTo": "6B1a",
+          "smib": "0CA0",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "5B",
+          "fullFrom": "6B1a",
+          "fullTo": "5B1a",
+          "smib": "0CB0",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.5,
+          "d4": 0.0
+        }
+      ]
+    }
+  },
+  "2g2t1c": {
+    "clave": "2G2T1C (Grupo B \u00b7 TtCc)",
+    "bdr": 0.48,
+    "sdr": 0.22,
+    "entropia": 0.35,
+    "n_sujetos": 6,
+    "sujetos": [
+      "1B",
+      "2B",
+      "3B",
+      "4B",
+      "5B",
+      "6B"
+    ],
+    "q_map": {
+      "50": [
+        {
+          "from": "1B",
+          "to": "2B",
+          "fullFrom": "1B1a",
+          "fullTo": "2B1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        },
+        {
+          "from": "1B",
+          "to": "5B",
+          "fullFrom": "1B1a",
+          "fullTo": "5B1a",
+          "smib": "00D0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.0
+        },
+        {
+          "from": "1B",
+          "to": "6B",
+          "fullFrom": "1B1a",
+          "fullTo": "6B1a",
+          "smib": "00E0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.062,
+          "d4": 0.0
+        },
+        {
+          "from": "2B",
+          "to": "6B",
+          "fullFrom": "2B1a",
+          "fullTo": "6B1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "5B",
+          "fullFrom": "6B1a",
+          "fullTo": "5B1a",
+          "smib": "00B0",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.5,
+          "d4": 0.0
+        }
+      ],
+      "81": [
+        {
+          "from": "1B",
+          "to": "3B",
+          "fullFrom": "1B1a",
+          "fullTo": "3B1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        },
+        {
+          "from": "3B",
+          "to": "1B",
+          "fullFrom": "3B1a",
+          "fullTo": "1B1a",
+          "smib": "AAAA",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 1.0
+        }
+      ],
+      "21": [
+        {
+          "from": "1B",
+          "to": "4B",
+          "fullFrom": "1B1a",
+          "fullTo": "4B1a",
+          "smib": "aaC0",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.0
+        }
+      ],
+      "49": [
+        {
+          "from": "2B",
+          "to": "1B",
+          "fullFrom": "2B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5B",
+          "to": "1B",
+          "fullFrom": "5B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5B",
+          "to": "6B",
+          "fullFrom": "5B1a",
+          "fullTo": "6B1a",
+          "smib": "0C00",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "1B",
+          "fullFrom": "6B1a",
+          "fullTo": "1B1a",
+          "smib": "0B00",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "2B",
+          "fullFrom": "6B1a",
+          "fullTo": "2B1a",
+          "smib": "0C00",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "72": [
+        {
+          "from": "2B",
+          "to": "3B",
+          "fullFrom": "2B1a",
+          "fullTo": "3B1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "3B",
+          "fullFrom": "6B1a",
+          "fullTo": "3B1a",
+          "smib": "AAA0",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 1.0,
+          "d4": 0.0
+        }
+      ],
+      "15": [
+        {
+          "from": "2B",
+          "to": "4B",
+          "fullFrom": "2B1a",
+          "fullTo": "4B1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "6B",
+          "to": "4B",
+          "fullFrom": "6B1a",
+          "fullTo": "4B1a",
+          "smib": "aa00",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "41": [
+        {
+          "from": "2B",
+          "to": "5B",
+          "fullFrom": "2B1a",
+          "fullTo": "5B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        },
+        {
+          "from": "5B",
+          "to": "2B",
+          "fullFrom": "5B1a",
+          "fullTo": "2B1a",
+          "smib": "0000",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ],
+      "75": [
+        {
+          "from": "3B",
+          "to": "2B",
+          "fullFrom": "3B1a",
+          "fullTo": "2B1a",
+          "smib": "0BBB",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": 0.5,
+          "d4": 0.5
+        },
+        {
+          "from": "3B",
+          "to": "6B",
+          "fullFrom": "3B1a",
+          "fullTo": "6B1a",
+          "smib": "0CEE",
+          "d1": 0.0,
+          "d2": 0.25,
+          "d3": 0.062,
+          "d4": 0.062
+        }
+      ],
+      "45": [
+        {
+          "from": "3B",
+          "to": "4B",
+          "fullFrom": "3B1a",
+          "fullTo": "4B1a",
+          "smib": "aaCC",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": 0.25,
+          "d4": 0.25
+        }
+      ],
+      "71": [
+        {
+          "from": "3B",
+          "to": "5B",
+          "fullFrom": "3B1a",
+          "fullTo": "5B1a",
+          "smib": "00DD",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": 0.125,
+          "d4": 0.125
+        }
+      ],
+      "16": [
+        {
+          "from": "4B",
+          "to": "1B",
+          "fullFrom": "4B1a",
+          "fullTo": "1B1a",
+          "smib": "0Baa",
+          "d1": 0.0,
+          "d2": 0.5,
+          "d3": -1.0,
+          "d4": -1.0
+        }
+      ],
+      "11": [
+        {
+          "from": "4B",
+          "to": "2B",
+          "fullFrom": "4B1a",
+          "fullTo": "2B1a",
+          "smib": "00bb",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.5,
+          "d4": -0.5
+        },
+        {
+          "from": "4B",
+          "to": "6B",
+          "fullFrom": "4B1a",
+          "fullTo": "6B1a",
+          "smib": "00ee",
+          "d1": 0.0,
+          "d2": 0.0,
+          "d3": -0.062,
+          "d4": -0.062
+        }
+      ],
+      "37": [
+        {
+          "from": "4B",
+          "to": "3B",
+          "fullFrom": "4B1a",
+          "fullTo": "3B1a",
+          "smib": "AAcc",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": -0.25,
+          "d4": -0.25
+        }
+      ],
+      "1": [
+        {
+          "from": "4B",
+          "to": "5B",
+          "fullFrom": "4B1a",
+          "fullTo": "5B1a",
+          "smib": "aadd",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -0.125,
+          "d4": -0.125
+        },
+        {
+          "from": "5B",
+          "to": "4B",
+          "fullFrom": "5B1a",
+          "fullTo": "4B1a",
+          "smib": "aaaa",
+          "d1": -1.0,
+          "d2": -1.0,
+          "d3": -1.0,
+          "d4": -1.0
+        }
+      ],
+      "67": [
+        {
+          "from": "5B",
+          "to": "3B",
+          "fullFrom": "5B1a",
+          "fullTo": "3B1a",
+          "smib": "AA00",
+          "d1": 1.0,
+          "d2": 1.0,
+          "d3": 0.0,
+          "d4": 0.0
+        }
+      ]
+    }
+  }
+};
+    let currentMatrixKey = '1g1t1c'; // Por defecto sociomatriz real Grupo A T1
+    const Q81_DATA = [];
+
+    // Generador exhaustivo de las 81 figuras según la sintaxis oficial NEXORD
+    // 9x9 matriz con ID 1 a 81
+    const MATRIX_9x9_CONFIG = [
+      // Fila 1 (A4 = +1, A1=+1..-1, A2=E,¿,R, A3=e)
+      { id: 81, sym: '<Ee>', d1: 1,  d2: 1,  d3: 1,  d4: 1,  def: 'Elección total mutua' },
+      { id: 80, sym: '<¿e>', d1: 1,  d2: 0,  d3: 1,  d4: 1,  def: 'Elección unilateral con percepciones positivas' },
+      { id: 78, sym: '<Re>', d1: 1,  d2: -1, d3: 1,  d4: 1,  def: 'Oposición de preferencias con percepciones positivas' },
+      { id: 75, sym: '¡Ee>', d1: 0,  d2: 1,  d3: 1,  d4: 1,  def: 'Elección mutua con percepción positiva unilateral' },
+      { id: 71, sym: '¡¿e>', d1: 0,  d2: 0,  d3: 1,  d4: 1,  def: 'Relación positiva unilateral' },
+      { id: 66, sym: '¡Re>', d1: 0,  d2: -1, d3: 1,  d4: 1,  def: 'Relación positiva unilateral con rechazo efectivo' },
+      { id: 60, sym: '[Ee>', d1: -1, d2: 1,  d3: 1,  d4: 1,  def: 'Elección mutua con percepciones contrapuestas' },
+      { id: 53, sym: '[¿e>', d1: -1, d2: 0,  d3: 1,  d4: 1,  def: 'Relación positiva unilateral con percepción de rechazo' },
+      { id: 45, sym: '[Re>', d1: -1, d2: -1, d3: 1,  d4: 1,  def: 'Oposición total de sentimientos' },
+
+      // Fila 2
+      { id: 79, sym: '<E?>', d1: 1,  d2: 1,  d3: 0,  d4: 1,  def: 'Relación positiva parcial con desconocimiento' },
+      { id: 77, sym: '<¿?>', d1: 1,  d2: 0,  d3: 0,  d4: 1,  def: 'Percepciones positivas con desconocimiento mutuo' },
+      { id: 74, sym: '<R?>', d1: 1,  d2: -1, d3: 0,  d4: 1,  def: 'Percepciones positivas con rechazo unilateral' },
+      { id: 70, sym: '¡E?>', d1: 0,  d2: 1,  d3: 0,  d4: 1,  def: 'Elección percibida unilateralmente' },
+      { id: 65, sym: '¡¿?>', d1: 0,  d2: 0,  d3: 0,  d4: 1,  def: 'Indiferencia con percepción positiva unilateral' },
+      { id: 59, sym: '¡R?>', d1: 0,  d2: -1, d3: 0,  d4: 1,  def: 'Indiferencia con percepción positiva contrariada' },
+      { id: 52, sym: '[E?>', d1: -1, d2: 1,  d3: 0,  d4: 1,  def: 'Elección percibida con rechazo esperado' },
+      { id: 44, sym: '[¿?>', d1: -1, d2: 0,  d3: 0,  d4: 1,  def: 'Desconocimiento mutuo con percepciones contrapuestas' },
+      { id: 36, sym: '[R?>', d1: -1, d2: -1, d3: 0,  d4: 1,  def: 'Percepción positiva con rechazo unilateral' },
+
+      // Fila 3
+      { id: 76, sym: '<Er>', d1: 1,  d2: 1,  d3: -1, d4: 1,  def: 'Oposición real con percepciones positivas' },
+      { id: 73, sym: '<¿r>', d1: 1,  d2: 0,  d3: -1, d4: 1,  def: 'Percepciones positivas con rechazo unilateral' },
+      { id: 69, sym: '<Rr>', d1: 1,  d2: -1, d3: -1, d4: 1,  def: 'Rechazo mutuo con percepciones positivas' },
+      { id: 64, sym: '¡Er>', d1: 0,  d2: 1,  d3: -1, d4: 1,  def: 'Percepción acertada de elección con rechazo' },
+      { id: 58, sym: '¡¿r>', d1: 0,  d2: 0,  d3: -1, d4: 1,  def: 'Rechazo contradictorio con desconocimiento' },
+      { id: 51, sym: '¡Rr>', d1: 0,  d2: -1, d3: -1, d4: 1,  def: 'Rechazo mutuo con percepción contradictoria' },
+      { id: 43, sym: '[Er>', d1: -1, d2: 1,  d3: -1, d4: 1,  def: 'Percepciones acertadas contrapuestas' },
+      { id: 35, sym: '[¿r>', d1: -1, d2: 0,  d3: -1, d4: 1,  def: 'Rechazo acertado con percepción positiva unilateral' },
+      { id: 28, sym: '[Rr>', d1: -1, d2: -1, d3: -1, d4: 1,  def: 'Rechazo mutuo con percepciones contrapuestas' },
+
+      // Fila 4
+      { id: 72, sym: '<Ee!>', d1: 1,  d2: 1,  d3: 1,  d4: 0,  def: 'Elección mutua con percepción unilateral' },
+      { id: 68, sym: '<¿e!>', d1: 1,  d2: 0,  d3: 1,  d4: 0,  def: 'Percepción de elección en la indiferencia' },
+      { id: 63, sym: '<Re!>', d1: 1,  d2: -1, d3: 1,  d4: 0,  def: 'Percepción de elección con rechazo unilateral' },
+      { id: 57, sym: '¡Ee!>', d1: 0,  d2: 1,  d3: 1,  d4: 0,  def: 'Elección mutua con desconocimiento' },
+      { id: 50, sym: '¡¿e!>', d1: 0,  d2: 0,  d3: 1,  d4: 0,  def: 'Elección unilateral en la indiferencia' },
+      { id: 42, sym: '¡Re!>', d1: 0,  d2: -1, d3: 1,  d4: 0,  def: 'Oposición efectiva con desconocimiento' },
+      { id: 34, sym: '[Ee!>', d1: -1, d2: 1,  d3: 1,  d4: 0,  def: 'Elección mutua con percepción negativa' },
+      { id: 27, sym: '[¿e!>', d1: -1, d2: 0,  d3: 1,  d4: 0,  def: 'Falsa percepción de rechazo con indiferencia' },
+      { id: 21, sym: '[Re!>', d1: -1, d2: -1, d3: 1,  d4: 0,  def: 'Rechazo total con elección unilateral' },
+
+      // Fila 5 (Centro Neutro: 41)
+      { id: 67, sym: '<E?!>', d1: 1,  d2: 1,  d3: 0,  d4: 0,  def: 'Elección esperada unilateral' },
+      { id: 62, sym: '<¿?!>', d1: 1,  d2: 0,  d3: 0,  d4: 0,  def: 'Percepción positiva unilateral' },
+      { id: 56, sym: '<R?!>', d1: 1,  d2: -1, d3: 0,  d4: 0,  def: 'Rechazo en el desconocimiento' },
+      { id: 49, sym: '¡E?!>', d1: 0,  d2: 1,  d3: 0,  d4: 0,  def: 'Elección unilateral en la indiferencia' },
+      { id: 41, sym: '¡¿?!>', d1: 0,  d2: 0,  d3: 0,  d4: 0,  def: 'Indiferencia absoluta (Centro Neutro Canónico)' },
+      { id: 33, sym: '¡R?!>', d1: 0,  d2: -1, d3: 0,  d4: 0,  def: 'Rechazo unilateral' },
+      { id: 26, sym: '[E?!>', d1: -1, d2: 1,  d3: 0,  d4: 0,  def: 'Elección unilateral contradictoria' },
+      { id: 20, sym: '[¿?!>', d1: -1, d2: 0,  d3: 0,  d4: 0,  def: 'Percepción de rechazo unilateral' },
+      { id: 15, sym: '[R?!>', d1: -1, d2: -1, d3: 0,  d4: 0,  def: 'Rechazo total en la indiferencia' },
+
+      // Fila 6
+      { id: 61, sym: '<Er!>', d1: 1,  d2: 1,  d3: -1, d4: 0,  def: 'Elección total con rechazo unilateral' },
+      { id: 55, sym: '<¿r!>', d1: 1,  d2: 0,  d3: -1, d4: 0,  def: 'Falsa percepción de elección' },
+      { id: 48, sym: '<Rr!>', d1: 1,  d2: -1, d3: -1, d4: 0,  def: 'Rechazo mutuo con percepción positiva' },
+      { id: 40, sym: '¡Er!>', d1: 0,  d2: 1,  d3: -1, d4: 0,  def: 'Oposición real con indiferencia' },
+      { id: 32, sym: '¡¿r!>', d1: 0,  d2: 0,  d3: -1, d4: 0,  def: 'Rechazo unilateral en indiferencia' },
+      { id: 25, sym: '¡Rr!>', d1: 0,  d2: -1, d3: -1, d4: 0,  def: 'Rechazo recíproco' },
+      { id: 19, sym: '[Er!>', d1: -1, d2: 1,  d3: -1, d4: 0,  def: 'Percepción acertada de rechazo' },
+      { id: 14, sym: '[¿r!>', d1: -1, d2: 0,  d3: -1, d4: 0,  def: 'Percepción acertada de rechazo' },
+      { id: 10, sym: '[Rr!>', d1: -1, d2: -1, d3: -1, d4: 0,  def: 'Rechazo mutuo con percepción negativa' },
+
+      // Fila 7
+      { id: 54, sym: '<Ee]', d1: 1,  d2: 1,  d3: 1,  d4: -1, def: 'Elección mutua con percepciones contrapuestas' },
+      { id: 47, sym: '<¿e]', d1: 1,  d2: 0,  d3: 1,  d4: -1, def: 'Percepción acertada con desilusión' },
+      { id: 39, sym: '<Re]', d1: 1,  d2: -1, d3: 1,  d4: -1, def: 'Percepciones acertadas encontradas' },
+      { id: 31, sym: '¡Ee]', d1: 0,  d2: 1,  d3: 1,  d4: -1, def: 'Elección mutua con desilusión' },
+      { id: 24, sym: '¡¿e]', d1: 0,  d2: 0,  d3: 1,  d4: -1, def: 'Elección contradictoria' },
+      { id: 18, sym: '¡Re]', d1: 0,  d2: -1, d3: 1,  d4: -1, def: 'Percepción de rechazo' },
+      { id: 13, sym: '[Ee]', d1: -1, d2: 1,  d3: 1,  d4: -1, def: 'Paradoja de elección mutua con temor recíproco' },
+      { id: 9,  sym: '[¿e]', d1: -1, d2: 0,  d3: 1,  d4: -1, def: 'Percepción de rechazo mutuo' },
+      { id: 6,  sym: '[Re]', d1: -1, d2: -1, d3: 1,  d4: -1, def: 'Rechazo emitido con elección recibida' },
+
+      // Fila 8
+      { id: 46, sym: '<E?]', d1: 1,  d2: 1,  d3: 0,  d4: -1, def: 'Elección total con percepción negativa' },
+      { id: 38, sym: '<¿?]', d1: 1,  d2: 0,  d3: 0,  d4: -1, def: 'Percepciones contrapuestas' },
+      { id: 30, sym: '<R?]', d1: 1,  d2: -1, d3: 0,  d4: -1, def: 'Percepción de rechazo con expectativa' },
+      { id: 23, sym: '¡E?]', d1: 0,  d2: 1,  d3: 0,  d4: -1, def: 'Falsa percepción de elección' },
+      { id: 17, sym: '¡¿?]', d1: 0,  d2: 0,  d3: 0,  d4: -1, def: 'Percepción de rechazo unilateral' },
+      { id: 12, sym: '¡R?]', d1: 0,  d2: -1, d3: 0,  d4: -1, def: 'Percepción acertada de rechazo' },
+      { id: 8,  sym: '[E?]', d1: -1, d2: 1,  d3: 0,  d4: -1, def: 'Percepción recíproca de rechazo' },
+      { id: 5,  sym: '[¿?]', d1: -1, d2: 0,  d3: 0,  d4: -1, def: 'Hostilidad recíproca anticipada' },
+      { id: 3,  sym: '[R?]', d1: -1, d2: -1, d3: 0,  d4: -1, def: 'Rechazo emitido con cautela' },
+
+      // Fila 9
+      { id: 37, sym: '<Er]', d1: 1,  d2: 1,  d3: -1, d4: -1, def: 'Oposición total de sentimientos' },
+      { id: 29, sym: '<¿r]', d1: 1,  d2: 0,  d3: -1, d4: -1, def: 'Rechazo total con percepción unilateral' },
+      { id: 22, sym: '<Rr]', d1: 1,  d2: -1, d3: -1, d4: -1, def: 'Rechazo mutuo con percepciones opuestas' },
+      { id: 16, sym: '¡Er]', d1: 0,  d2: 1,  d3: -1, d4: -1, def: 'Falsa percepción de rechazo' },
+      { id: 11, sym: '¡¿r]', d1: 0,  d2: 0,  d3: -1, d4: -1, def: 'Rechazo total ante la indiferencia' },
+      { id: 7,  sym: '¡Rr]', d1: 0,  d2: -1, d3: -1, d4: -1, def: 'Rechazo mutuo con unilateralidad' },
+      { id: 4,  sym: '[Er]', d1: -1, d2: 1,  d3: -1, d4: -1, def: 'Percepciones recíprocas de rechazo con elección' },
+      { id: 2,  sym: '[¿r]', d1: -1, d2: 0,  d3: -1, d4: -1, def: 'Rechazo recibido confirmado' },
+      { id: 1,  sym: '[Rr]', d1: -1, d2: -1, d3: -1, d4: -1, def: 'Rechazo recíproco total' }
+    ];
+
+    // Ordenar exactamente de ID 1 a ID 81 (orden ascendente)
+    MATRIX_9x9_CONFIG.sort((a, b) => a.id - b.id);
+
+    // Inicializar el array de 81 figuras con frecuencia 0 por defecto
+    for (let i = 0; i < 81; i++) {
+      const cfg = MATRIX_9x9_CONFIG[i];
+      Q81_DATA.push({
+        id: cfg.id,
+        sym: cfg.sym,
+        def: cfg.def,
+        d1: cfg.d1,
+        d2: cfg.d2,
+        d3: cfg.d3,
+        d4: cfg.d4,
+        freq: 0, // Frecuencia empírica en el grupo
+        bdr: 0,  // Masa
+        sdr: 0,  // Saldo
+        delta: 0 // Fricción
+      });
+    }
+
+    // =========================================================================
+    // ESCENARIOS Y DATOS
+    // =========================================================================
+    function setFrequencies(freqMap, noiseAmp = 0.04) {
+      for (let i = 0; i < 81; i++) {
+        const item = Q81_DATA[i];
+        // Frecuencia base del mapa o cálculo continuo
+        let f = freqMap[item.id] !== undefined ? freqMap[item.id] : 0;
+
+        // Añadir micro-fluctuación térmica natural (respiración del campo grupal)
+        if (noiseAmp > 0) {
+          const thermalJitter = Math.sin(i * 0.73 + 1.2) * 0.025 + Math.cos(i * 1.45) * 0.02;
+          f = Math.max(0.01, f + thermalJitter * noiseAmp * (f > 0.05 ? 1.0 : 0.4));
+        }
+
+        item.freq = Math.min(1.0, f);
+
+        // BDR: Masa absoluta continua
+        item.bdr = Math.max(0.02, item.freq * 0.92);
+
+        // SDR: Saldo neto ponderado por la valencia efectiva de la figura
+        const netSign = (item.d2 + item.d3) / 2;
+        item.sdr = item.freq * netSign * 0.88;
+
+        // Desnivel de fricción térmica: energía bruta frente a saldo constructivo
+        item.delta = Math.max(0, item.bdr - Math.max(0, item.sdr));
+      }
+    }
+
+    // =========================================================================
+    // MOTOR DE CARGA DE SOCIOMATRICES REALES CANÓNICAS (G2T2C2)
+    // =========================================================================
+    const NODE_COLORS = {
+      '1A': '#00FF87', '2A': '#38BDF8', '3A': '#FFE600', '4A': '#FF007F', '5A': '#FF9F1C', '6A': '#C084FC',
+      '1B': '#00FF87', '2B': '#38BDF8', '3B': '#FFE600', '4B': '#FF007F', '5B': '#FF9F1C', '6B': '#C084FC'
+    };
+
+    let isRealDataMode = true;
+
+    function loadRealMatrix(key) {
+      isRealDataMode = true;
+      currentMatrixKey = key;
+      const mat = REAL_SOCIOMATRICES[key];
+      if (!mat) return;
+
+      document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active-scenario'));
+      const activeBtn = document.getElementById('btn-mat-' + key);
+      if (activeBtn) activeBtn.classList.add('active-scenario');
+
+      document.getElementById('badge-mode').innerText = 'MATRIZ REAL: ' + mat.clave;
+      document.getElementById('badge-meridian').innerText = 'BDR: ' + mat.bdr + ' | SDR: ' + (mat.sdr > 0 ? '+' : '') + mat.sdr + ' | S: ' + mat.entropia;
+
+      // Poblar cada figura de Q81 con los vínculos empíricos
+      for (let i = 0; i < 81; i++) {
+        const item = Q81_DATA[i];
+        const qidStr = String(item.id);
+        const links = mat.q_map[qidStr] || [];
+        item.links = links;
+
+        if (links.length === 0) {
+          item.freq = 0;
+          item.bdr = 0;
+          item.sdr = 0;
+          item.delta = 0;
+          item.d1_real = 0;
+          item.d2_real = 0;
+          item.d3_real = 0;
+          item.d4_real = 0;
+        } else {
+          item.freq = links.length / 10.0; // Escalado de masa
+          let sumD1 = 0, sumD2 = 0, sumD3 = 0, sumD4 = 0;
+          let rawMass = 0, netBal = 0;
+          links.forEach(l => {
+            sumD1 += l.d1;
+            sumD2 += l.d2;
+            sumD3 += l.d3;
+            sumD4 += l.d4;
+            rawMass += Math.abs(l.d2) + Math.abs(l.d3);
+            netBal += (l.d2 + l.d3) / 2.0;
+          });
+          item.d1_real = sumD1 / links.length;
+          item.d2_real = sumD2 / links.length;
+          item.d3_real = sumD3 / links.length;
+          item.d4_real = sumD4 / links.length;
+
+          item.bdr = Math.min(1.0, (rawMass / links.length) * 0.95);
+          item.sdr = (netBal / links.length) * 0.90;
+          item.delta = Math.max(0, item.bdr - Math.max(0, item.sdr));
+        }
+      }
+
+      redraw();
+    }
+
+    function loadScenario(type) {
+      document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active-scenario'));
+      if (event && event.target) event.target.classList.add('active-scenario');
+
+      const freqMap = {};
+
+      if (type === 'cohesion') {
+        // PERFIL CONTINUO DE COHESIÓN Y SINTONÍA (Flujo ondulatorio ascendente)
+        // Fondo suave en zona baja, ondulaciones en media, y densa cordillera viva en zona alta (50..81)
+        for (let i = 1; i <= 81; i++) {
+          if (i <= 20) {
+            // Zona I: Mínimo rechazo residual fluctuante
+            freqMap[i] = 0.04 + 0.03 * Math.sin(i * 0.8);
+          } else if (i <= 40) {
+            // Zona II: Indiferencias y exploraciones sutiles
+            freqMap[i] = 0.12 + 0.08 * Math.sin(i * 0.6 + 0.5);
+          } else if (i <= 60) {
+            // Zona III: Apertura y elecciones unilaterales en ascenso
+            freqMap[i] = 0.28 + 0.18 * Math.cos(i * 0.45);
+          } else {
+            // Zona IV: Sintonía y mutualidad plena (cordillera viva con picos)
+            const phase = (i - 60) / 21;
+            const wave = 0.55 + 0.35 * Math.sin(i * 0.75) + 0.10 * phase;
+            freqMap[i] = Math.min(1.0, wave);
+          }
+        }
+        // Picos de referencia canónica
+        freqMap[81] = 0.98; // <Ee>
+        freqMap[80] = 0.88; // <¿e>
+        freqMap[75] = 0.78; // ¡Ee>
+        freqMap[72] = 0.70; // <Ee!>
+        freqMap[71] = 0.65; // ¡¿e>
+        freqMap[41] = 0.22; // Neutro
+
+        document.getElementById('badge-mode').innerText = 'ESCENARIO: COHESIÓN FLUÍDA';
+        setFrequencies(freqMap, 1.0);
+
+      } else if (type === 'polarizacion') {
+        // PERFIL CONTINUO DE POLARIZACIÓN EXTREMA (Bipolaridad turbulenta)
+        // Picos y ondas vivas en los dos extremos (1..25 y 60..81) con valle tenso central
+        for (let i = 1; i <= 81; i++) {
+          if (i <= 25) {
+            // Frente de Hostilidad / Rechazo
+            const waveLeft = 0.60 + 0.32 * Math.cos(i * 0.55) + 0.08 * Math.sin(i * 1.2);
+            freqMap[i] = Math.min(0.96, waveLeft);
+          } else if (i <= 55) {
+            // Valle central de distanciamiento
+            freqMap[i] = 0.10 + 0.08 * Math.sin(i * 0.5);
+          } else {
+            // Frente de Elección y Alianza
+            const waveRight = 0.58 + 0.34 * Math.sin(i * 0.6) + 0.06 * Math.cos(i * 1.1);
+            freqMap[i] = Math.min(0.96, waveRight);
+          }
+        }
+        freqMap[1] = 0.95;  // [Rr]
+        freqMap[4] = 0.82;
+        freqMap[7] = 0.74;
+        freqMap[10] = 0.68;
+        freqMap[81] = 0.94; // <Ee>
+        freqMap[75] = 0.80;
+        freqMap[41] = 0.12;
+
+        document.getElementById('badge-mode').innerText = 'ESCENARIO: POLARIZACIÓN TURBULENTA';
+        setFrequencies(freqMap, 1.2);
+
+      } else if (type === 'mascara') {
+        // PERFIL CONTINUO DE MÁSCARA / DISIMULO (Alta fricción y disonancia de fase)
+        // Las líneas D2 (emitido) y D4 (esperado) oscilan en oposición continua generando halo térmico
+        for (let i = 1; i <= 81; i++) {
+          const isFrictionFigure = [45, 66, 53, 60, 37, 13, 21, 34, 43, 50, 56, 61, 74, 76, 78].includes(i);
+          if (isFrictionFigure) {
+            freqMap[i] = 0.75 + 0.20 * Math.sin(i * 0.9);
+          } else {
+            freqMap[i] = 0.22 + 0.14 * Math.cos(i * 0.7);
+          }
+        }
+        freqMap[45] = 0.96; // [Re>
+        freqMap[66] = 0.88; // ¡Re>
+        freqMap[53] = 0.82; // [¿e>
+        freqMap[60] = 0.74; // [Ee>
+        freqMap[37] = 0.68; // <Er]
+        freqMap[13] = 0.62; // [Ee]
+
+        document.getElementById('badge-mode').innerText = 'ESCENARIO: MÁSCARA Y FRICCIÓN CONTINUA';
+        setFrequencies(freqMap, 1.4);
+
+      } else if (type === 'nada') {
+        // Reposo absoluto (cero puro)
+        for (let i = 1; i <= 81; i++) freqMap[i] = 0;
+        document.getElementById('badge-mode').innerText = 'ESCENARIO: REPOSO (NADA)';
+        setFrequencies(freqMap, 0.0);
+      }
+
+      redraw();
+    }
+
+    // =========================================================================
+    // MOTOR DE RENDERIZADO CANVAS (HIGHWAY DISPLAY)
+    // =========================================================================
+    const canvas = document.getElementById('polygraphCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let hoverIndex = -1;
+
+    function resizeCanvas() {
+      const container = document.getElementById('canvas-container');
+      width = container.clientWidth;
+      height = container.clientHeight;
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      redraw();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function redraw() {
+      if (!width || !height) return;
+
+      // 1. Limpieza de Fondo Cartesiano
+      ctx.fillStyle = '#060B1A';
+      ctx.fillRect(0, 0, width, height);
+
+      const padLeft = 85;
+      const padRight = 60;
+      const padX = padLeft;
+      const padY = 54;
+      const plotW = width - padLeft - padRight;
+      const plotH = height - padY * 2;
+      const yZero = padY + plotH / 2; // Eje 0.0 en el centro exacto
+
+      // 2. Cuadrícula Milimetrada e Isobaras
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.06)';
+      ctx.lineWidth = 1;
+
+      // REGLA GRADUADA VERTICAL: EJE DE ESCALA D
+      // Marcas mayores (cada 0.25) y menores (cada 0.05)
+      for (let v = -1.0; v <= 1.001; v += 0.05) {
+        const y = yZero - v * (plotH / 2);
+        const isMajor = Math.abs(Math.round(v * 100) % 25) < 1;
+        const isHalf = Math.abs(Math.round(v * 100) % 50) < 1;
+        const isZero = Math.abs(v) < 0.001;
+
+        if (isMajor) {
+          // Isobara horizontal por todo el ancho
+          ctx.strokeStyle = isZero ? 'rgba(255, 230, 0, 0.35)' : 'rgba(56, 189, 248, 0.12)';
+          ctx.lineWidth = isZero ? 1.5 : 1;
+          if (isZero) ctx.setLineDash([4, 4]); else ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(padLeft, y);
+          ctx.lineTo(padLeft + plotW, y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Tick mayor izquierdo
+          ctx.strokeStyle = isZero ? '#FFE600' : 'rgba(255, 255, 255, 0.6)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(padLeft - 8, y);
+          ctx.lineTo(padLeft, y);
+          ctx.stroke();
+
+          // Tick mayor derecho
+          ctx.beginPath();
+          ctx.moveTo(padLeft + plotW, y);
+          ctx.lineTo(padLeft + plotW + 8, y);
+          ctx.stroke();
+
+          // Rótulo numérico de la escala a la izquierda
+          ctx.font = isZero ? 'bold 11px Roboto Mono' : '10px Roboto Mono';
+          ctx.textAlign = 'right';
+
+          if (isZero) {
+            ctx.fillStyle = '#FFE600';
+            ctx.fillText('±0.00 REPOSO', padLeft - 12, y + 4);
+          } else if (v > 0) {
+            ctx.fillStyle = '#00FF87';
+            ctx.fillText('+' + v.toFixed(2), padLeft - 12, y + 3.5);
+          } else {
+            ctx.fillStyle = '#FF007F';
+            ctx.fillText(v.toFixed(2), padLeft - 12, y + 3.5);
+          }
+
+          // Rótulo a la derecha (escala dual)
+          ctx.textAlign = 'left';
+          ctx.fillStyle = isZero ? '#FFE600' : (v > 0 ? 'rgba(0, 255, 135, 0.6)' : 'rgba(255, 0, 127, 0.6)');
+          ctx.fillText((v > 0 ? '+' : '') + v.toFixed(2), padLeft + plotW + 12, y + 3.5);
+        } else {
+          // Tick menor milimétrico (solo en las reglas laterales)
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(padLeft - 4, y);
+          ctx.lineTo(padLeft, y);
+          ctx.moveTo(padLeft + plotW, y);
+          ctx.lineTo(padLeft + plotW + 4, y);
+          ctx.stroke();
+        }
+      }
+
+      // Eje vertical izquierdo (Línea de la Regla D)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, padY - 10);
+      ctx.lineTo(padLeft, padY + plotH + 10);
+      ctx.moveTo(padLeft + plotW, padY - 10);
+      ctx.lineTo(padLeft + plotW, padY + plotH + 10);
+      ctx.stroke();
+
+      // Título vertical del Eje D (girado 90°)
+      ctx.save();
+      ctx.translate(18, yZero);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = 'var(--neon-cyan)';
+      ctx.font = 'bold 10px Roboto Mono';
+      ctx.textAlign = 'center';
+      ctx.letterSpacing = '1px';
+      ctx.fillText('ESCALA DE DENSIDAD D (D1..D4 · SDR · BDR)', 0, 0);
+      ctx.restore();
+
+      // 2b. ZONAS INTERMEDIAS COLOREADAS A CADA LADO DEL MERIDIANO 41
+      const xStep = plotW / 80;
+      const x1 = padX;
+      const x20 = padX + (20 - 1) * xStep;
+      const x41 = padX + (41 - 1) * xStep;
+      const x60 = padX + (60 - 1) * xStep;
+      const x81 = padX + plotW;
+
+      // Sombreados de Fondo para las 4 Zonas Intermedias
+      // Zona 1 (1 - 20): Rechazo Extremo / Hostilidad (Magenta)
+      ctx.fillStyle = 'rgba(255, 0, 127, 0.07)';
+      ctx.fillRect(x1, padY, x20 - x1, plotH);
+
+      // Zona 2 (21 - 40): Tensión Latente / Disonancia (Naranja)
+      ctx.fillStyle = 'rgba(255, 159, 28, 0.07)';
+      ctx.fillRect(x20, padY, x41 - x20, plotH);
+
+      // Zona 3 (42 - 60): Apertura / Elección Parcial (Cian)
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.07)';
+      ctx.fillRect(x41, padY, x60 - x41, plotH);
+
+      // Zona 4 (61 - 81): Sintonía Mutua / Cohesión Plena (Verde)
+      ctx.fillStyle = 'rgba(0, 255, 135, 0.07)';
+      ctx.fillRect(x60, padY, x81 - x60, plotH);
+
+      // Líneas Divisorias Intermedias (Discontinuas sutiles en 20 y 60)
+      ctx.strokeStyle = 'rgba(255, 159, 28, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(x20, padY);
+      ctx.lineTo(x20, padY + plotH);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.beginPath();
+      ctx.moveTo(x60, padY);
+      ctx.lineTo(x60, padY + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Rótulos de las 4 Zonas Intermedias en la banda superior
+      ctx.font = 'bold 9.5px Roboto Mono';
+      ctx.textAlign = 'center';
+
+      // Rótulo Zona 1
+      ctx.fillStyle = '#FF007F';
+      ctx.fillText('ZONA I: RECHAZO TOTAL (1-20)', (x1 + x20) / 2, padY - 14);
+
+      // Rótulo Zona 2
+      ctx.fillStyle = '#FF9F1C';
+      ctx.fillText('ZONA II: TENSIÓN / DISONANCIA (21-40)', (x20 + x41) / 2, padY - 14);
+
+      // Rótulo Zona 3
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText('ZONA III: APERTURA PARCIAL (42-60)', (x41 + x60) / 2, padY - 14);
+
+      // Rótulo Zona 4
+      ctx.fillStyle = '#00FF87';
+      ctx.fillText('ZONA IV: SINTONÍA PLENA (61-81)', (x60 + x81) / 2, padY - 14);
+
+      // 3. LA VERTICAL CANÓNICA EN LA CELDA 41 (MERIDIANO DE EQUILIBRIO)
+      // Brillo Láser Celda 41
+      const grad41 = ctx.createLinearGradient(x41, padY, x41, padY + plotH);
+      grad41.addColorStop(0, 'rgba(255, 230, 0, 0.6)');
+      grad41.addColorStop(0.5, 'rgba(255, 230, 0, 0.9)');
+      grad41.addColorStop(1, 'rgba(255, 230, 0, 0.6)');
+
+      ctx.strokeStyle = grad41;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#FFE600';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.moveTo(x41, padY - 26);
+      ctx.lineTo(x41, padY + plotH + 20);
+      ctx.stroke();
+      ctx.shadowBlur = 0; // reset
+
+      // Rótulo Meridiano 41
+      ctx.fillStyle = '#FFE600';
+      ctx.font = 'bold 11px Roboto Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('📍 CELDA 41 · ¡¿?!> (NEUTRO)', x41, padY - 32);
+
+      // 4. Rótulos de Extremos (ID 1 e ID 81)
+      ctx.fillStyle = '#FF007F';
+      ctx.font = 'bold 10px Roboto Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText('ID 1: [Rr] (Rechazo Total)', padX, padY + plotH + 30);
+
+      ctx.fillStyle = '#00FF87';
+      ctx.textAlign = 'right';
+      ctx.fillText('ID 81: <Ee> (Elección Plena)', padX + plotW, padY + plotH + 30);
+
+      // Comprobación de toggles
+      const showD1 = document.getElementById('chk-d1').checked;
+      const showD2 = document.getElementById('chk-d2').checked;
+      const showD3 = document.getElementById('chk-d3').checked;
+      const showD4 = document.getElementById('chk-d4').checked;
+      const showBDR = document.getElementById('chk-bdr').checked;
+      const showSDR = document.getElementById('chk-sdr').checked;
+      const showHalo = document.getElementById('chk-halo').checked;
+
+      // Coordenadas calculadas para las 81 estaciones
+      const points = [];
+      for (let i = 0; i < 81; i++) {
+        const item = Q81_DATA[i];
+        const x = padX + i * xStep;
+
+        if (item.freq === 0 && (!item.links || item.links.length === 0)) {
+          // "NADA": plano en el cero
+          points.push({
+            x,
+            yD1: yZero,
+            yD2: yZero,
+            yD3: yZero,
+            yD4: yZero,
+            yBDR: yZero,
+            ySDR: yZero,
+            hasData: false
+          });
+        } else {
+          // En modo real usamos las medias reales de los vínculos, sino la simulación
+          const d1V = isRealDataMode ? (item.d1_real || 0) : (item.d1 * item.freq);
+          const d2V = isRealDataMode ? (item.d2_real || 0) : (item.d2 * item.freq);
+          const d3V = isRealDataMode ? (item.d3_real || 0) : (item.d3 * item.freq);
+          const d4V = isRealDataMode ? (item.d4_real || 0) : (item.d4 * item.freq);
+          points.push({
+            x,
+            yD1: yZero - d1V * (plotH / 2),
+            yD2: yZero - d2V * (plotH / 2),
+            yD3: yZero - d3V * (plotH / 2),
+            yD4: yZero - d4V * (plotH / 2),
+            yBDR: yZero - (item.bdr) * (plotH / 2),
+            ySDR: yZero - (item.sdr) * (plotH / 2),
+            hasData: true
+          });
+        }
+      }
+
+      // 5. FUNCIÓN DE INTERPOLACIÓN FLUIDA (SPLINE DE CATMULL-ROM / BÉZIER CÚBICO)
+      // Convierte puntos discretos en ondas suaves y orgánicas con inercia física de aguja
+      function buildSmoothPath(ctx, pts, prop, isReverse = false) {
+        const len = pts.length;
+        if (len < 2) return;
+
+        const indices = [];
+        if (!isReverse) {
+          for (let i = 0; i < len; i++) indices.push(i);
+        } else {
+          for (let i = len - 1; i >= 0; i--) indices.push(i);
+        }
+
+        const startIdx = indices[0];
+        if (!isReverse) {
+          ctx.moveTo(pts[startIdx].x, pts[startIdx][prop]);
+        } else {
+          ctx.lineTo(pts[startIdx].x, pts[startIdx][prop]);
+        }
+
+        const tension = 6.0; // Inercia calibrada para flujo orgánico natural
+
+        for (let k = 0; k < len - 1; k++) {
+          const i0 = indices[Math.max(0, k - 1)];
+          const i1 = indices[k];
+          const i2 = indices[k + 1];
+          const i3 = indices[Math.min(len - 1, k + 2)];
+
+          const p0 = pts[i0], p1 = pts[i1], p2 = pts[i2], p3 = pts[i3];
+
+          const cp1x = p1.x + (p2.x - p0.x) / tension;
+          const cp1y = p1[prop] + (p2[prop] - p0[prop]) / tension;
+          const cp2x = p2.x - (p3.x - p1.x) / tension;
+          const cp2y = p2[prop] - (p3[prop] - p1[prop]) / tension;
+
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2[prop]);
+        }
+      }
+
+      // RENDERIZADO: HALO TÉRMICO DE FRICCIÓN (ÁREA FLUIDA ENTRE BDR Y SDR)
+      if (showHalo) {
+        ctx.beginPath();
+        // Recorrido superior suave BDR
+        buildSmoothPath(ctx, points, 'yBDR', false);
+        // Recorrido inferior inverso suave SDR
+        buildSmoothPath(ctx, points, 'ySDR', true);
+        ctx.closePath();
+
+        const haloGrad = ctx.createLinearGradient(0, padY, 0, padY + plotH);
+        haloGrad.addColorStop(0, 'rgba(255, 0, 85, 0.38)');
+        haloGrad.addColorStop(0.5, 'rgba(255, 70, 0, 0.22)');
+        haloGrad.addColorStop(1, 'rgba(255, 159, 28, 0.12)');
+        ctx.fillStyle = haloGrad;
+        ctx.fill();
+      }
+
+      // 6. FUNCIÓN AUXILIAR PARA TRAZAR ONDAS CONTINUAS ORGÁNICAS
+      function drawSignal(prop, color, lineWidth = 2, isGlow = false) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        if (isGlow) {
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 8;
+        }
+
+        ctx.beginPath();
+        buildSmoothPath(ctx, points, prop, false);
+        ctx.stroke();
+        ctx.shadowBlur = 0; // reset
+
+        // Dibujar perlas luminosas en las celdas activas
+        for (let i = 0; i < 81; i++) {
+          if (points[i].hasData) {
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 6;
+            ctx.beginPath();
+            ctx.arc(points[i].x, points[i][prop], 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      // 7. TRAZADO DE SEÑALES ACTIVAS (ENVELOPE ONDULATORIA)
+      if (showBDR) drawSignal('yBDR', '#FFE600', 2.2, true);
+      if (showSDR) drawSignal('ySDR', '#00F0FF', 2.0, true);
+      if (showD1) drawSignal('yD1', '#38BDF8', 1.8);
+      if (showD2) drawSignal('yD2', '#00FF87', 2.0);
+      if (showD3) drawSignal('yD3', '#FF9F1C', 1.8);
+      if (showD4) drawSignal('yD4', '#C084FC', 1.8);
+
+      // 7b. PROYECCIÓN DE TODAS LAS D DE LOS SUJETOS (ENJAMBRE PUNTILLISTA CANÓNICO)
+      if (isRealDataMode) {
+        for (let i = 0; i < 81; i++) {
+          const item = Q81_DATA[i];
+          if (!item.links || item.links.length === 0) continue;
+          const x = points[i].x;
+
+          item.links.forEach((l, lIdx) => {
+            const nodeColor = NODE_COLORS[l.from] || '#00FF87';
+            // Dibujar la preferencia emitida d2 real del sujeto en esa figura
+            const yEmitter = yZero - l.d2 * (plotH / 2);
+            // Pequeño desplazamiento si hay múltiples sujetos para máxima legibilidad
+            const xOffset = item.links.length > 1 ? (lIdx - (item.links.length - 1) / 2) * 7 : 0;
+
+            // Perla luminosa del sujeto
+            ctx.fillStyle = nodeColor;
+            ctx.shadowColor = nodeColor;
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(x + xOffset, yEmitter, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Etiqueta identificativa del sujeto real (1A, 2A, 3A...)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 8.5px Roboto Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText(l.from, x + xOffset, yEmitter - 7);
+          });
+        }
+      }
+
+      // 8. HIGHLIGHT AL PASAR EL RATÓN SOBRE UNA ESTACIÓN
+      if (hoverIndex >= 0 && hoverIndex < 81) {
+        const hp = points[hoverIndex];
+        const hItem = Q81_DATA[hoverIndex];
+
+        // Línea vertical tenue sobre la estación activa
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(hp.x, padY);
+        ctx.lineTo(hp.x, padY + plotH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Círculo diana en la línea de reposo o valor
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(hp.x, yZero, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // =========================================================================
+    // INTERACCIÓN Y HOVER TOOLTIP
+    // =========================================================================
+    const tooltip = document.getElementById('hover-tooltip');
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const padLeft = 85;
+      const padRight = 60;
+      const plotW = width - padLeft - padRight;
+      const xStep = plotW / 80;
+
+      if (mouseX >= padLeft - xStep / 2 && mouseX <= padLeft + plotW + xStep / 2) {
+        const rawIdx = Math.round((mouseX - padLeft) / xStep);
+        const idx = Math.max(0, Math.min(80, rawIdx));
+        if (idx !== hoverIndex) {
+          hoverIndex = idx;
+          updateTooltip(hoverIndex);
+          redraw();
+        }
+        tooltip.style.display = 'flex';
+      } else {
+        if (hoverIndex !== -1) {
+          hoverIndex = -1;
+          tooltip.style.display = 'none';
+          redraw();
+        }
+      }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      hoverIndex = -1;
+      tooltip.style.display = 'none';
+      redraw();
+    });
+
+    function updateTooltip(idx) {
+      const item = Q81_DATA[idx];
+      document.getElementById('tt-id').innerText = `ID ${item.id} (${idx + 1}/81)`;
+      document.getElementById('tt-sym').innerText = item.sym;
+      document.getElementById('tt-def').innerText = item.def;
+
+      document.getElementById('tt-d1').innerText = (item.d1 * item.freq).toFixed(2);
+      document.getElementById('tt-d2').innerText = (item.d2 * item.freq).toFixed(2);
+      document.getElementById('tt-d3').innerText = (item.d3 * item.freq).toFixed(2);
+      document.getElementById('tt-d4').innerText = (item.d4 * item.freq).toFixed(2);
+      document.getElementById('tt-bdr').innerText = item.bdr.toFixed(2);
+      document.getElementById('tt-sdr').innerText = item.sdr.toFixed(2);
+      document.getElementById('tt-delta').innerText = item.delta.toFixed(2);
+
+      // Renderizar listado de díadas y sujetos reales si existen
+      let linksBox = document.getElementById('tt-links-container');
+      if (!linksBox) {
+        linksBox = document.createElement('div');
+        linksBox.id = 'tt-links-container';
+        linksBox.style.marginTop = '6px';
+        linksBox.style.paddingTop = '5px';
+        linksBox.style.borderTop = '1px solid rgba(255,255,255,0.12)';
+        linksBox.style.fontSize = '0.70rem';
+        linksBox.style.maxHeight = '140px';
+        linksBox.style.overflowY = 'auto';
+        document.getElementById('hover-tooltip').appendChild(linksBox);
+      }
+
+      if (item.links && item.links.length > 0) {
+        let htmlLinks = '<div style="color: #FFE600; font-weight: 700; margin-bottom: 2px;">👥 SUJETOS EN ESTA CELDA (' + item.links.length + '):</div>';
+        item.links.forEach(l => {
+          const c = NODE_COLORS[l.from] || '#00FF87';
+          htmlLinks += '<div style="margin-top:2px;"><strong style="color:' + c + ';">' + l.from + '</strong> &rarr; <strong>' + l.to + '</strong> [' + l.smib + '] (DA:' + (l.d2 > 0 ? '+' : '') + l.d2 + ', RC:' + (l.d3 > 0 ? '+' : '') + l.d3 + ')</div>';
+        });
+        linksBox.innerHTML = htmlLinks;
+        linksBox.style.display = 'block';
+      } else {
+        linksBox.style.display = 'none';
+      }
+
+      // Color del símbolo según su posición respecto al eje 41
+      if (item.id === 41) {
+        document.getElementById('tt-sym').style.color = 'var(--neon-gold)';
+      } else if (item.id > 41) {
+        document.getElementById('tt-sym').style.color = 'var(--neon-green)';
+      } else {
+        document.getElementById('tt-sym').style.color = 'var(--neon-magenta)';
+      }
+    }
+
+    // =========================================================================
+    // BARRIDO CONTINUO (STREAM PLAY)
+    // =========================================================================
+    let isStreaming = false;
+    let streamInterval = null;
+    let streamStep = 0;
+
+    function toggleStream() {
+      const btn = document.getElementById('btn-stream');
+      if (isStreaming) {
+        clearInterval(streamInterval);
+        isStreaming = false;
+        btn.innerText = '▶️ Barrido Continuo (Play)';
+        btn.classList.remove('active-scenario');
+        document.getElementById('badge-mode').innerText = 'MODO: PAUSADO';
+      } else {
+        isStreaming = true;
+        btn.innerText = '⏸️ Pausar Barrido';
+        btn.classList.add('active-scenario');
+        document.getElementById('badge-mode').innerText = 'MODO: ESCANEANDO EN VIVO';
+        streamInterval = setInterval(() => {
+          streamStep = (streamStep + 1) % 81;
+          hoverIndex = streamStep;
+          updateTooltip(hoverIndex);
+          redraw();
+        }, 120);
+      }
+    }
+
+    // Inicialización al cargar
+    window.onload = () => {
+      resizeCanvas();
+      loadRealMatrix('1g1t1c');
+    };
+  </script>
+</body>
+</html>

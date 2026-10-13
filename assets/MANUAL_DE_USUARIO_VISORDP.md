@@ -104,4 +104,4 @@ El **Dominio 6 (Sociometría Cultural y Narrativa)** traslada la instrumentació
 
 ---
 *© 2026 NEX_ORD Project - Ecosistema Científico VISORD*
-*DOI Registro de Referencia: 10.5281/zenodo.18941691*
+*DOI Registro de Referencia: 10.5281/zenodo.23303953*

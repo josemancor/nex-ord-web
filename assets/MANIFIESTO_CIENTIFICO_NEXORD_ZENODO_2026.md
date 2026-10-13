@@ -12,7 +12,7 @@
 * **Autor:** Dr. José Manuel Cornejo Álvarez
 * **Vinculación Académica:** Profesor Emérito Jubilado · Psicología Social
 * **Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico del Banco Sociométrico (BSOC)
-* **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396) · **DOI de Edición:** [10.5281/zenodo.18941691](https://doi.org/10.5281/zenodo.18941691)
+* **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396) · **DOI de Edición:** [10.5281/zenodo.23303953](https://doi.org/10.5281/zenodo.23303953)
 * **Repositorio Oficial:** [github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web) · **Plataforma:** [josemancor.github.io/nex-ord-web](https://josemancor.github.io/nex-ord-web/)
 * **Ecosistema Maestro:** VISORD 3D/4D (Visualizador Sociométrico Ordinal)
 
@@ -575,7 +575,7 @@ El espacio relacional 18D formaliza la totalidad de los balances de intercambio 
 
 1. **Cornejo, J. M. (1988).** *Técnicas de investigación social: El análisis de correspondencias*. Barcelona: PPU.
 2. **Vicente, R., Cornejo, J. M., & Barbero, F. (2006).** Análisis de la Actividad Grupal (AAG). *Anuario de Psicología*, 37(3), 299–320.
-3. **Cornejo, J. M. (2026).** *Computational Ordinal Sociometry (NEXORD): An updated mathematical extension of Moreno and Lewin's foundational insights*. Technical Monograph Series, Banco Sociométrico (BSOC). https://doi.org/10.5281/zenodo.18941691
+3. **Cornejo, J. M. (2026).** *Computational Ordinal Sociometry (NEXORD): An updated mathematical extension of Moreno and Lewin's foundational insights*. Technical Monograph Series, Banco Sociométrico (BSOC). https://doi.org/10.5281/zenodo.23303953
 4. **Cornejo Álvarez, J. M., & Morales Domínguez, J. F. (en prensa).** Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal. *Psicothema*.
 
 ### II. Raíces Históricas, Dinámica de Grupos y Teoría del Campo

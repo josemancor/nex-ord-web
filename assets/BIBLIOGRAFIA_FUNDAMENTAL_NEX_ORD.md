@@ -1,11 +1,11 @@
-# Bibliografía Fundamental NEX_ORD
+# Bibliografía Fundamental NEXORD
 
-Esta selección bibliográfica fundamenta las bases históricas, teóricas y técnicas del sistema **NEX_ORD (Sociometría Ordinal)**, uniendo la tradición moreniana con la vanguardia de la Psicología Social contemporánea y la computación avanzada.
+Esta selección bibliográfica fundamenta las bases históricas, teóricas y técnicas del sistema **NEXORD (Sociometría Ordinal)**, uniendo la tradición moreniana con la vanguardia de la Psicología Social contemporánea y la computación avanzada.
 
 ## 0. Obra de Referencia y Autoría del Sistema
-Marco conceptual y técnico desarrollado para la versión Canónica 2026.
+Marco conceptual y técnico desarrollado para la versión Platinum 2026.
 
-*   **Cornejo Álvarez, J. M. (2026).** *Sociometría Ordinal Computacional (NEX_ORD): Teoría de la Densidad Relacional y Proyección Estratégica 6D.* Edición Canónica V2. (Obra maestra que define el motor AMRC y el sistema de interpretación experto).
+*   **Cornejo Álvarez, J. M. (2026).** *Sociometría Ordinal Computacional (NEXORD): Teoría de la Densidad Relacional y Proyección Estratégica 6D.* Edición Platinum V2. (Obra maestra que define el motor AMRC y el sistema de interpretación experto).
 *   **Cornejo Álvarez, J. M. (2025).** *Microcirugía Sociométrica: El Candado Ético y la Oxigenación de Grupos en Crisis.* [Protocolos Clínicos].
 
 ## 1. Fuentes Seminales e Históricas
@@ -33,12 +33,27 @@ Bases para definir la aceptación, el marginación, el ostracismo y la agencia e
 ## 3. Investigaciones Específicas sobre Ostracismo y Medición
 Aportaciones sugeridas por Antigravity para reforzar la medición técnica del "silencio social" y el significado léxico.
 
+*   **Terry, R. (2000).** *Recent advances in measurement theory and the use of sociometric techniques.* En A. H. N. Cillessen & W. M. Bukowski (Eds.), Recent advances in the measurement of acceptance and rejection in the peer system (New Directions for Child Development, No. 88, pp. 27–48). Jossey-Bass. https://doi.org/10.1002/cd.23220008804 (Modelización psicométrica del perceptor frente al receptor, crítica a la pérdida de información en cuotas discretas y fundamentación de la medición ordinal en sociometría).
 *   **Williams, K. D. (2007).** *Ostracism.* Annual Review of Psychology, 58, 425-452. (Referencia fundamental sobre la psicología del ostracismo).
 *   **Williams, K. D. (2001).** *Ostracism: The power of silence.* Guilford Press. (Analiza cómo el silencio anula la agencia).
 *   **Osgood, C. E., Suci, G. J., & Tannenbaum, P. H. (1957).** *The measurement of meaning.* University of Illinois Press. (Fundamento de los Factores AAG y el Diferencial Semántico).
 *   **Pentland, A. (2014).** *Social Physics: How Good Ideas Spread—The Lessons from a New Science.* Penguin Press. (Fundamento de la "Física de lo Social" computable).
 *   **Watts, D. J., & Strogatz, S. H. (1998).** *Collective dynamics of ‘small-world’ networks.* Nature, 393(6684), 440-442. (Base para la topografía relacional y los 'conglomerados').
 
-## 4. Documentación Técnica NEX_ORD (Documentos Internos)
-*   **Proyecto NEX_ORD. (2026).** *Informe de Sociometría Ordinal Académico: Hacia una Sociometría Computacional de Tercera Generación.* [Documento interno de investigación].
-*   **Moreno, J. L., & Proyecto NEX_ORD. (2025).** *Evolución de la Matriz de Distancias Ordinales y el Índice de Saturación del Vacío (ISV).* Informe de Microcirugía Relacional.
+## 4. Modelado Estadístico de Redes Ordinales, Grafos Firmados y Equilibrio Estructural (2017–2026)
+Contribuciones metodológicas y matemáticas que fundamentan el tratamiento de rankings relacionales y redes con valencia afectiva contrapuesta.
+
+*   **Aref, S., & Wilson, M. C. (2021).** *The frustration index is a key measure for analysing signed networks.* Journal of Complex Networks, 7(2), cnz006. https://doi.org/10.1093/comnet/cnz006 (Formulación matemática rigurosa del cálculo del índice de frustración para cuantificar la tensión estructural en redes con lazos positivos y negativos).
+*   **Cucuringu, M., Mantzaris, A. V., & Roberts, J. (2023).** *The Bradley-Terry stochastic block model for directed ranking networks.* Journal of Complex Networks, 11(4), cnad025. https://doi.org/10.1093/comnet/cnad025 (Modelización de comunidades y jerarquías relacionales en grafos dirigidos a partir de comparaciones de preferencias ordinales).
+*   **Diaz-Diaz, F., & Estrada, E. (2025).** *Signed graphs in data sciences via communicability geometry.* Information Sciences, 680, 121110. https://doi.org/10.1016/j.ins.2024.121110 (Desarrollo de la geometría de comunicabilidad sobre grafos firmados, aportando soporte algebraico a los operadores de difusión y afinidad en redes con atracción y rechazo).
+*   **Krivitsky, P. N., & Butts, C. T. (2017).** *Exponential-family random graph models for rank-order relational data.* Sociological Methodology, 47(1), 68–112. https://doi.org/10.1111/socm.12038 (Fundamentación de modelos de la familia exponencial para datos relacionales de orden de rango, demostrando la necesidad de preservar la jerarquía ordinal frente a cortes dicotómicos).
+
+## 5. Física Relacional, Teoría de la Información y Termodinámica de Sistemas Complejos
+*   **Nicolis, G., & Prigogine, I. (1977).** *Self-organization in nonequilibrium systems: From dissipative structures to order through fluctuations.* John Wiley & Sons. (Fundamento de la autoorganización fuera del equilibrio y fluctuaciones disipativas en sistemas colectivos).
+*   **Rovelli, C. (1996).** *Relational quantum mechanics.* International Journal of Theoretical Physics, 35(8), 1637–1678. https://doi.org/10.1007/BF02302262 (Principio epistemológico de la física relacional en NEXORD: ningún índice sociométrico tiene significado en reposo; su valor existe únicamente en la correlación diferencial de estados interdependientes).
+*   **Tononi, G. (2004).** *An information integration theory of consciousness.* BMC Neuroscience, 5(1), 42. https://doi.org/10.1186/1471-2202-5-42 (Fundamentación del Índice de Información Integrada Φ y del Corte de Información Mínima MIP: el grupo como organismo irreducible que trasciende la suma aditiva de sus componentes).
+*   **Barrasa, Á., & Gil, F. (2004).** *Un programa informático para el cálculo y la representación de índices y valores sociométricos.* Psicothema, 16(2), 329–335. (Precedente en la informatización y computación algorítmica de matrices sociométricas).
+
+## 6. Documentación Técnica NEXORD (Documentos Internos)
+*   **Proyecto NEXORD. (2026).** *Informe de Sociometría Ordinal Académico: Hacia una Sociometría Computacional de Tercera Generación.* [Documento interno de investigación].
+*   **Moreno, J. L., & Proyecto NEXORD. (2025).** *Evolución de la Matriz de Distancias Ordinales y el Índice de Saturación del Vacío (ISV).* Informe de Microcirugía Relacional.
