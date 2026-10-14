@@ -9735,6 +9735,30 @@
     let modalDualTime = 1;
     let modalDualCrit = 1;
     let modalDualTab = '1a';
+    let modalDualRedCol = 9; // 9, 6, 3
+    let modalDualRedView = 'METRICS'; // 'METRICS' o 'SUBJECTS'
+    let modalDualRedMetric = 's12';
+    let modalDualRedPrisma = 'all'; // 'all', 'tetra', 'p1', 'p2', 'p3', 'inv'
+
+    function setModalDualRedCol(nCols) {
+      modalDualRedCol = parseInt(nCols);
+      renderDualDensitiesModal();
+    }
+
+    function setModalDualRedView(vMode) {
+      modalDualRedView = vMode;
+      renderDualDensitiesModal();
+    }
+
+    function setModalDualRedPrisma(pId) {
+      modalDualRedPrisma = pId;
+      renderDualDensitiesModal();
+    }
+
+    function setModalDualRedMetric(mId) {
+      modalDualRedMetric = mId;
+      renderDualDensitiesModal();
+    }
 
     function openDualDensitiesModal() {
       const modal = document.getElementById('modal-dual-densities');
@@ -9753,8 +9777,10 @@
       modalDualTab = tab;
       const b1a = document.getElementById('tab-btn-1a');
       const b1b = document.getElementById('tab-btn-1b');
+      const b1c = document.getElementById('tab-btn-1c');
       if (b1a) b1a.classList.toggle('active', tab === '1a');
       if (b1b) b1b.classList.toggle('active', tab === '1b');
+      if (b1c) b1c.classList.toggle('active', tab === '1c');
       renderDualDensitiesModal();
     }
 
@@ -9898,7 +9924,7 @@
           </div>
         `;
         container.innerHTML = html;
-      } else {
+      } else if (modalDualTab === '1b') {
         // 1b) d_sujetos globales: Tabla de Marginales por Sujeto
         const marg = computeSubjectMarginals(mat);
         let html = `
@@ -9974,6 +10000,557 @@
             </div>
           </div>
         `;
+        container.innerHTML = html;
+      } else if (modalDualTab === '1c') {
+        // ==============================================================
+        // 1c) REDUCCIÓN PROGRESIVA 18D (9, 6, 3) BAJO LOS 3 PRISMAS
+        // ==============================================================
+        const numCols = modalDualRedCol;
+        const totalDyads = N * (N - 1);
+
+        // Definiciones de Columnas
+        const COLS_9 = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+        const COLS_9_NAMES = [
+          'Elección (esperando Elección)', 'Elección (indiferencia esperada)', 'Elección (esperando Rechazo)',
+          'Indiferencia (esperando Elección)', 'Indiferencia (indiferencia mutua)', 'Indiferencia (esperando Rechazo)',
+          'Rechazo (esperando Elección)', 'Rechazo (indiferencia esperada)', 'Rechazo (esperando Rechazo)'
+        ];
+        const COLS_9_AREAS = ['POS', 'POS', 'POS', 'NEU', 'NEU', 'NEU', 'NEG', 'NEG', 'NEG'];
+
+        const COLS_6 = ['E', '¿', 'R', 'e', '?', 'r'];
+        const COLS_6_NAMES = [
+          'Elección Emitida DA (A2 = E)', 'Indiferencia Emitida DA (A2 = ¿)', 'Rechazo Emitido DA (A2 = R)',
+          'Elección Recibida REC (A3 = e)', 'Indiferencia Recibida REC (A3 = ?)', 'Rechazo Recibido REC (A3 = r)'
+        ];
+        const COLS_6_AREAS = ['POS', 'NEU', 'NEG', 'POS', 'NEU', 'NEG'];
+
+        const COLS_3 = ['POS', 'NEU', 'NEG'];
+        const COLS_3_LABELS = ['(+) ELECCIÓN', '(0) INDIFERENCIA', '(-) RECHAZO'];
+        const COLS_3_NAMES = [
+          'Cuenca Polar Positiva / Elección (<Ee>)',
+          'Cuenca Polar Neutra / Indiferencia (¡¿?!)',
+          'Cuenca Polar Negativa / Rechazo ([Rr])'
+        ];
+        const COLS_3_AREAS = ['POS', 'NEU', 'NEG'];
+
+        const AREA_THEME = {
+          'POS': { border: 'rgba(0, 255, 135, 0.8)', color: '#00FF87', bg: 'rgba(0, 255, 135, 0.12)', bgSubtle: 'rgba(0, 255, 135, 0.05)' },
+          'NEU': { border: 'rgba(255, 230, 0, 0.8)', color: '#FFE600', bg: 'rgba(255, 230, 0, 0.12)', bgSubtle: 'rgba(255, 230, 0, 0.05)' },
+          'NEG': { border: 'rgba(255, 0, 127, 0.8)', color: '#FF007F', bg: 'rgba(255, 0, 127, 0.12)', bgSubtle: 'rgba(255, 0, 127, 0.05)' }
+        };
+
+        // Catálogo Canónico de Métricas (18 Densidades + 3 Diferenciales + Fricción Phi)
+        const METRIC_ROWS_18D = [
+          { id: 'f', label: 'f (Frecuencia)', prisma: 'meta', desc: 'Recuento absoluto de enlaces censados', isCount: true, col: '#FFCC00' },
+
+          // 1. TETRAGRAMA CANÓNICO (4D)
+          { id: 'val_a1', label: 'A1: dDP (Expectativa Emisor)', prisma: 'tetra', desc: 'Expectativa que el emisor tiene de lo que hará el partner (p_DA)', isCount: false, col: '#00FF87' },
+          { id: 'val_a2', label: 'A2: dDA (Preferencia Emisor)', prisma: 'tetra', desc: 'Preferencia efectiva que el emisor otorga al partner (DA)', isCount: false, col: '#00F0FF' },
+          { id: 'val_a3', label: 'A3: dRA (Preferencia Recibida)', prisma: 'tetra', desc: 'Preferencia efectiva que el partner otorga al emisor (REC)', isCount: false, col: '#F472B6' },
+          { id: 'val_a4', label: 'A4: dRP (Expectativa Recibida)', prisma: 'tetra', desc: 'Expectativa que el partner tiene de lo que hará el emisor (p_REC)', isCount: false, col: '#A78BFA' },
+
+          // 2. PRISMA 1: EJE OPERATIVO (Dador vs. Receptor) [12 | 34]
+          { id: 's12', label: 'S12: Saldo Dador (SDA)', prisma: 'p1', desc: 'Expansividad neta emitente (dDP + dDA)', isCount: false, col: '#38BDF8' },
+          { id: 'b12', label: 'B12: Masa Bruta Dadora (BDA)', prisma: 'p1', desc: 'Gasto metabólico total de emisión (|dDP| + |dDA|)', isCount: false, col: '#38BDF8' },
+          { id: 's34', label: 'S34: Saldo Receptor (SRC)', prisma: 'p1', desc: 'Estatus neto inducido por el grupo (dRA + dRP)', isCount: false, col: '#FF007F' },
+          { id: 'b34', label: 'B34: Masa Bruta Receptora (BRC)', prisma: 'p1', desc: 'Presión social incidente acumulada (|dRA| + |dRP|)', isCount: false, col: '#FF007F' },
+          { id: 'dif_r', label: 'Dif_r: Asimetría de Rol', prisma: 'p1', desc: 'Diferencial de rol y desequilibrio donante/receptor (S12 - S34)', isCount: false, col: '#FFE600' },
+
+          // 3. PRISMA 2: EJE ONTOLÓGICO (Mente vs. Hechos) [14 | 23]
+          { id: 's14', label: 'S14: Saldo de Expectativas (SP)', prisma: 'p2', desc: 'Clima de confianza previa y presunción de afinidad (dDP + dRP)', isCount: false, col: '#FFE600' },
+          { id: 'b14', label: 'B14: Masa de Expectativas (BP)', prisma: 'p2', desc: 'Volumen de rumiación mental y carga cognitiva (|dDP| + |dRP|)', isCount: false, col: '#FFE600' },
+          { id: 's23', label: 'S23: Saldo Fáctico / Acciones (SA)', prisma: 'p2', desc: 'Verdad objetiva empírica de las preferencias reales (dDA + dRA)', isCount: false, col: '#F97316' },
+          { id: 'b23', label: 'B23: Masa Fáctica / Acciones (BA)', prisma: 'p2', desc: 'Volumen efectivo de acción motora vinculante (|dDA| + |dRA|)', isCount: false, col: '#F97316' },
+          { id: 'dif_a', label: 'Dif_a: Inercia Fantasmática', prisma: 'p2', desc: 'Asimetría entre hechos reales y fantasías colectivas (S23 - S14)', isCount: false, col: '#FB7185' },
+
+          // 4. PRISMA 3: EJE DIALÉCTICO (Sintonía Cruzada y Realismo) [13 | 24]
+          { id: 's13', label: 'S13: Saldo Realismo Emisor (Acierto)', prisma: 'p3', desc: 'Grado de acierto o colisión por desilusión propia (dDP + dRA)', isCount: false, col: '#C084FC' },
+          { id: 'b13', label: 'B13: Masa Realismo Emisor', prisma: 'p3', desc: 'Tensión absoluta de verificación empática (|dDP| + |dRA|)', isCount: false, col: '#C084FC' },
+          { id: 's24', label: 'S24: Saldo Respuesta al Partner', prisma: 'p3', desc: 'Respuesta efectiva a la expectativa ajena (dDA + dRP)', isCount: false, col: '#818CF8' },
+          { id: 'b24', label: 'B24: Masa Respuesta al Partner', prisma: 'p3', desc: 'Compromiso diádico y responsabilidad recíproca (|dDA| + |dRP|)', isCount: false, col: '#818CF8' },
+          { id: 'dif_i', label: 'Dif_i: Inercia de Desengaño', prisma: 'p3', desc: 'Fricción silenciosa por desajuste empático (S13 - S24)', isCount: false, col: '#E879F9' },
+
+          // 5. INVARIANTES SOCIO-TERMODINÁMICOS Y FRICCIÓN
+          { id: 'sdr', label: 'SDR: Saldo Densidad Relativa', prisma: 'inv', desc: 'Barómetro homeostático del clima colectivo: ½ (S12 + S34)', isCount: false, col: '#00FF87' },
+          { id: 'bdr', label: 'BDR: Densidad Bruta Relacional', prisma: 'inv', desc: 'Capacidad calorífica y energía cinética total: ½ (B12 + B34)', isCount: false, col: '#FFE600' },
+          { id: 'phi', label: 'Φ: Tensión Termodinámica (Fricción)', prisma: 'inv', desc: 'Energía disipada por disonancia estructural: BDR - |SDR|', isCount: false, col: '#FF007F' }
+        ];
+
+        // Filtrado por prisma si está activo
+        const visibleMetrics = METRIC_ROWS_18D.filter(m => {
+          if (m.id === 'f') return true;
+          if (modalDualRedPrisma === 'all') return true;
+          return m.prisma === modalDualRedPrisma;
+        });
+
+        // Extracción de Díadas
+        const dyads = [];
+        if (mat.q_map) {
+          for (const qidStr in mat.q_map) {
+            const qid = parseInt(qidStr);
+            mat.q_map[qidStr].forEach(l => {
+              const d1 = (l.d1 !== undefined) ? l.d1 : 0.0;
+              const d2 = (l.d2 !== undefined) ? l.d2 : 0.0;
+              const d3 = (l.d3 !== undefined) ? l.d3 : 0.0;
+              const d4 = (l.d4 !== undefined) ? l.d4 : 0.0;
+
+              const val_a1 = d1;
+              const val_a2 = d2;
+              const val_a3 = d3;
+              const val_a4 = d4;
+
+              const s12 = d1 + d2;
+              const b12 = Math.abs(d1) + Math.abs(d2);
+              const s34 = d3 + d4;
+              const b34 = Math.abs(d3) + Math.abs(d4);
+              const dif_r = s12 - s34;
+
+              const s14 = d1 + d4;
+              const b14 = Math.abs(d1) + Math.abs(d4);
+              const s23 = d2 + d3;
+              const b23 = Math.abs(d2) + Math.abs(d3);
+              const dif_a = s23 - s14;
+
+              const s13 = d1 + d3;
+              const b13 = Math.abs(d1) + Math.abs(d3);
+              const s24 = d2 + d4;
+              const b24 = Math.abs(d2) + Math.abs(d4);
+              const dif_i = s13 - s24;
+
+              const sdr = (s12 + s34) / 2.0;
+              const bdr = (b12 + b34) / 2.0;
+              const phi = bdr - Math.abs(sdr);
+
+              const sym1 = d1 > 0 ? '<' : (d1 === 0 ? '¡' : '[');
+              const sym2 = d2 > 0 ? 'E' : (d2 === 0 ? '¿' : 'R');
+              const emiKey = sym1 + sym2;
+
+              dyads.push({
+                from: l.from, to: l.to, qid,
+                d1, d2, d3, d4,
+                val_a1, val_a2, val_a3, val_a4,
+                s12, b12, s34, b34, dif_r,
+                s14, b14, s23, b23, dif_a,
+                s13, b13, s24, b24, dif_i,
+                sdr, bdr, phi,
+                emiKey
+              });
+            });
+          }
+        }
+
+        let html = `
+          <div class="dual-matrix-container">
+            ${globalBadgeHtml}
+
+            <!-- Barra de Herramientas de Reducción Progresiva 18D -->
+            <div style="background:rgba(11,19,43,0.85); border:1px solid rgba(56,189,248,0.25); border-radius:6px; padding:8px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <!-- Selector de Nivel (Micro 9, Meso 6, Macro 3) -->
+              <div style="display:flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:0.70rem;">
+                <span style="color:var(--text-dim); margin-right:4px;">Escala:</span>
+                <button class="sub-bar-btn ${numCols === 9 ? 'active' : ''}" onclick="setModalDualRedCol(9)" style="font-size:0.68rem; padding:3px 8px;">
+                  🔲 Micro 9 (Modalidades DA)
+                </button>
+                <button class="sub-bar-btn ${numCols === 6 ? 'active' : ''}" onclick="setModalDualRedCol(6)" style="font-size:0.68rem; padding:3px 8px;">
+                  ✂️ Meso 6 (Descriptores Q6a)
+                </button>
+                <button class="sub-bar-btn ${numCols === 3 ? 'active' : ''}" onclick="setModalDualRedCol(3)" style="font-size:0.68rem; padding:3px 8px;">
+                  🎯 Macro 3 (Cuencas Polares)
+                </button>
+              </div>
+
+              <!-- Selector de Modo de Visualización -->
+              <div style="display:flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:0.70rem;">
+                <span style="color:var(--text-dim); margin-right:4px;">Vista:</span>
+                <button class="sub-bar-btn ${modalDualRedView === 'METRICS' ? 'active' : ''}" onclick="setModalDualRedView('METRICS')" style="font-size:0.68rem; padding:3px 8px; color:var(--neon-green);">
+                  ⚡ Síntesis Baricéntrica (Métricas 18D)
+                </button>
+                <button class="sub-bar-btn ${modalDualRedView === 'SUBJECTS' ? 'active' : ''}" onclick="setModalDualRedView('SUBJECTS')" style="font-size:0.68rem; padding:3px 8px; color:var(--neon-cyan);">
+                  👥 Perfiles de Sujetos
+                </button>
+              </div>
+
+              <!-- Insignia de Invarianza Baricéntrica -->
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="color:#00FF87; font-weight:800; font-family:var(--font-mono); font-size:0.65rem; background:rgba(0,255,135,0.12); border:1px solid rgba(0,255,135,0.35); padding:3px 8px; border-radius:4px;" title="Teorema de Conservación: SDR y BDR invariantes en todos los prismas y niveles">
+                  ✨ Invarianza Baricéntrica &Delta; = 0.000
+                </span>
+              </div>
+            </div>
+
+            <!-- Filtros de Prismas y Métrica para Vista de Sujetos -->
+            <div style="background:rgba(5,9,23,0.7); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:6px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-family:var(--font-mono); font-size:0.68rem;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span style="color:var(--text-dim);">Filtro Prismas:</span>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'all' ? 'active' : ''}" onclick="setModalDualRedPrisma('all')">Todos (18D)</button>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'tetra' ? 'active' : ''}" onclick="setModalDualRedPrisma('tetra')" style="color:#00FF87;">Tetragrama (4D)</button>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'p1' ? 'active' : ''}" onclick="setModalDualRedPrisma('p1')" style="color:#38BDF8;">P1: Operativo</button>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'p2' ? 'active' : ''}" onclick="setModalDualRedPrisma('p2')" style="color:#FFE600;">P2: Ontológico</button>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'p3' ? 'active' : ''}" onclick="setModalDualRedPrisma('p3')" style="color:#C084FC;">P3: Dialéctico</button>
+                <button class="flank-btn-prisma ${modalDualRedPrisma === 'inv' ? 'active' : ''}" onclick="setModalDualRedPrisma('inv')" style="color:#00F0FF;">Invariantes</button>
+              </div>
+
+              ${modalDualRedView === 'SUBJECTS' ? `
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="color:var(--text-dim);">Métrica en Celdas:</span>
+                  <select onchange="setModalDualRedMetric(this.value)" style="background:#0F172A; color:#00E5FF; border:1px solid rgba(0,229,255,0.3); border-radius:4px; padding:2px 6px; font-family:var(--font-mono); font-size:0.68rem;">
+                    <option value="f" ${modalDualRedMetric === 'f' ? 'selected' : ''}>f (Frecuencia de Enlaces)</option>
+                    <option value="s12" ${modalDualRedMetric === 's12' ? 'selected' : ''}>S12 (SDA: Expansividad)</option>
+                    <option value="b12" ${modalDualRedMetric === 'b12' ? 'selected' : ''}>B12 (BDA: Masa Emisión)</option>
+                    <option value="s34" ${modalDualRedMetric === 's34' ? 'selected' : ''}>S34 (SRC: Estatus)</option>
+                    <option value="b34" ${modalDualRedMetric === 'b34' ? 'selected' : ''}>B34 (BRC: Masa Recepción)</option>
+                    <option value="dif_r" ${modalDualRedMetric === 'dif_r' ? 'selected' : ''}>Dif_r (Asimetría Rol)</option>
+                    <option value="s14" ${modalDualRedMetric === 's14' ? 'selected' : ''}>S14 (SP: Expectativas)</option>
+                    <option value="b14" ${modalDualRedMetric === 'b14' ? 'selected' : ''}>B14 (BP: Masa Expectativas)</option>
+                    <option value="s23" ${modalDualRedMetric === 's23' ? 'selected' : ''}>S23 (SA: Hechos Fácticos)</option>
+                    <option value="b23" ${modalDualRedMetric === 'b23' ? 'selected' : ''}>B23 (BA: Masa Fáctica)</option>
+                    <option value="dif_a" ${modalDualRedMetric === 'dif_a' ? 'selected' : ''}>Dif_a (Inercia Fantasmática)</option>
+                    <option value="s13" ${modalDualRedMetric === 's13' ? 'selected' : ''}>S13 (Acierto Emisor)</option>
+                    <option value="b13" ${modalDualRedMetric === 'b13' ? 'selected' : ''}>B13 (Masa Realismo)</option>
+                    <option value="s24" ${modalDualRedMetric === 's24' ? 'selected' : ''}>S24 (Respuesta Partner)</option>
+                    <option value="b24" ${modalDualRedMetric === 'b24' ? 'selected' : ''}>B24 (Masa Respuesta)</option>
+                    <option value="dif_i" ${modalDualRedMetric === 'dif_i' ? 'selected' : ''}>Dif_i (Inercia Desengaño)</option>
+                    <option value="sdr" ${modalDualRedMetric === 'sdr' ? 'selected' : ''}>SDR (Densidad Relativa)</option>
+                    <option value="bdr" ${modalDualRedMetric === 'bdr' ? 'selected' : ''}>BDR (Densidad Bruta)</option>
+                    <option value="phi" ${modalDualRedMetric === 'phi' ? 'selected' : ''}>Φ (Tensión / Fricción)</option>
+                  </select>
+                </div>
+              ` : ''}
+            </div>
+        `;
+
+        if (modalDualRedView === 'METRICS') {
+          // ============================================================
+          // MODO 1: SÍNTESIS BARICÉNTICA (MÉTRICAS 18D)
+          // ============================================================
+          const colDyadCounts = Array(numCols).fill(0);
+          const colMetricSums = {};
+          visibleMetrics.forEach(m => { colMetricSums[m.id] = Array(numCols).fill(0.0); });
+          const totalMetricGlobal = {};
+          visibleMetrics.forEach(m => { totalMetricGlobal[m.id] = 0.0; });
+
+          // Acumular enlaces
+          dyads.forEach(d => {
+            if (numCols === 9) {
+              const c = COLS_9.indexOf(d.emiKey);
+              if (c >= 0) {
+                colDyadCounts[c]++;
+                visibleMetrics.forEach(m => {
+                  if (m.id !== 'f') {
+                    const v = d[m.id] || 0.0;
+                    colMetricSums[m.id][c] += v;
+                    totalMetricGlobal[m.id] += v;
+                  }
+                });
+              }
+            } else if (numCols === 6) {
+              const c_emi = (d.d2 > 0) ? 0 : ((d.d2 === 0) ? 1 : 2);
+              const c_rec = (d.d3 > 0) ? 3 : ((d.d3 === 0) ? 4 : 5);
+              colDyadCounts[c_emi]++;
+              colDyadCounts[c_rec]++;
+              visibleMetrics.forEach(m => {
+                if (m.id !== 'f') {
+                  const v = d[m.id] || 0.0;
+                  colMetricSums[m.id][c_emi] += v;
+                  colMetricSums[m.id][c_rec] += v;
+                  totalMetricGlobal[m.id] += v;
+                }
+              });
+            } else if (numCols === 3) {
+              const c = (d.sdr > 0.15) ? 0 : ((d.sdr < -0.15) ? 2 : 1);
+              colDyadCounts[c]++;
+              visibleMetrics.forEach(m => {
+                if (m.id !== 'f') {
+                  const v = d[m.id] || 0.0;
+                  colMetricSums[m.id][c] += v;
+                  totalMetricGlobal[m.id] += v;
+                }
+              });
+            }
+          });
+
+          // Cabecera de Tabla
+          html += `
+            <table class="dual-matrix-table" style="font-size:0.67rem;">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="text-align:left; min-width:200px; background:#0F172A; color:var(--neon-cyan);">
+                    Métrica Socio-Termodinámica (18D)
+                  </th>
+          `;
+
+          if (numCols === 9) {
+            html += `
+                  <th colspan="3" style="background:#003322; color:#00FF87; border-bottom:1px solid #00FF87;">ELECCIÓN (+)</th>
+                  <th colspan="3" style="background:#332b00; color:#FFE600; border-bottom:1px solid #FFE600;">INDIFERENCIA (0)</th>
+                  <th colspan="3" style="background:#3b0724; color:#FF007F; border-bottom:1px solid #FF007F;">RECHAZO (-)</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">Centroide &mu;</th>
+                </tr>
+                <tr>
+            `;
+            for (let c = 0; c < 9; c++) {
+              const safeKey = COLS_9[c].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              const theme = AREA_THEME[COLS_9_AREAS[c]];
+              html += `<th style="background:#1E293B; color:${theme.color}; font-weight:800;" title="${COLS_9_NAMES[c]}">${safeKey}</th>`;
+            }
+            html += `</tr>`;
+          } else if (numCols === 6) {
+            html += `
+                  <th colspan="3" style="background:#002b4d; color:#00E5FF; border-bottom:1px solid #00E5FF;">EMISIÓN DA (A2)</th>
+                  <th colspan="3" style="background:#3b0724; color:#FF2A85; border-bottom:1px solid #FF2A85;">RECEPCIÓN REC (A3)</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">Centroide &mu;</th>
+                </tr>
+                <tr>
+                  <th style="background:#1E293B; color:#00FF87;" title="Elección Emitida DA (A2 = E)">E (+)</th>
+                  <th style="background:#1E293B; color:#FFE600;" title="Indiferencia Emitida DA (A2 = ¿)">¿ (0)</th>
+                  <th style="background:#1E293B; color:#FF007F;" title="Rechazo Emitido DA (A2 = R)">R (-)</th>
+                  <th style="background:#1E293B; color:#00FF87;" title="Elección Recibida REC (A3 = e)">e (+)</th>
+                  <th style="background:#1E293B; color:#FFE600;" title="Indiferencia Recibida REC (A3 = ?)">? (0)</th>
+                  <th style="background:#1E293B; color:#FF007F;" title="Rechazo Recibido REC (A3 = r)">r (-)</th>
+                </tr>
+            `;
+          } else if (numCols === 3) {
+            html += `
+                  <th colspan="3" style="background:#002b4d; color:#00E5FF; border-bottom:1px solid #00E5FF;">CONDENSACIÓN POLAR TRIÁDICA</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">Centroide &mu;</th>
+                </tr>
+                <tr>
+                  <th style="background:#1E293B; color:#00FF87;" title="${COLS_3_NAMES[0]}">(+) ELECCIÓN</th>
+                  <th style="background:#1E293B; color:#FFE600;" title="${COLS_3_NAMES[1]}">(0) INDIFERENCIA</th>
+                  <th style="background:#1E293B; color:#FF007F;" title="${COLS_3_NAMES[2]}">(-) RECHAZO</th>
+                </tr>
+            `;
+          }
+
+          html += `</thead><tbody>`;
+
+          // Filas de Métricas
+          visibleMetrics.forEach(m => {
+            const isCount = m.isCount;
+            const rowBg = isCount ? 'background:rgba(255,204,0,0.06);' : 'background:rgba(15,23,42,0.5);';
+
+            html += `<tr style="${rowBg}">`;
+            html += `
+              <th style="text-align:left; background:#0F172A; padding-left:8px; color:${m.col || '#E2E8F0'}; font-weight:${isCount ? '900' : '700'};" title="${m.desc}">
+                ${m.label}
+              </th>
+            `;
+
+            for (let c = 0; c < numCols; c++) {
+              const cnt = colDyadCounts[c];
+              let cellContent = '';
+
+              if (isCount) {
+                cellContent = cnt > 0 ? `<b style="color:#FFCC00; font-size:0.75rem;">${cnt}</b>` : `<span style="color:#475569; opacity:0.35;">0</span>`;
+              } else {
+                if (cnt > 0) {
+                  const avg = colMetricSums[m.id][c] / cnt;
+                  const colVal = (avg > 0.001) ? '#00FF87' : ((avg < -0.001) ? '#FF007F' : '#FFE600');
+                  const sign = avg > 0.0001 ? '+' : '';
+                  cellContent = `
+                    <div style="color:${colVal}; font-weight:800; font-size:0.70rem;">${sign}${avg.toFixed(2)}</div>
+                    <div style="font-size:0.56rem; color:var(--text-dim); opacity:0.7;">f:${cnt}</div>
+                  `;
+                } else {
+                  cellContent = `<span style="color:#475569; opacity:0.35;">—</span>`;
+                }
+              }
+              html += `<td style="vertical-align:middle; text-align:center;">${cellContent}</td>`;
+            }
+
+            // Columna Centroide Global
+            let grandVal = '';
+            if (isCount) {
+              const totAll = (numCols === 6) ? totalDyads : colDyadCounts.reduce((a,b)=>a+b, 0);
+              grandVal = `<b style="color:#FFCC00; font-size:0.75rem;">${totAll}</b>`;
+            } else {
+              const gAvg = totalDyads > 0 ? (totalMetricGlobal[m.id] / totalDyads) : 0.0;
+              const colVal = (gAvg > 0.001) ? '#00FF87' : ((gAvg < -0.001) ? '#FF007F' : '#FFE600');
+              const sign = gAvg > 0.0001 ? '+' : '';
+              grandVal = `<b style="color:${colVal}; font-size:0.72rem;">${sign}${gAvg.toFixed(2)}</b>`;
+            }
+            html += `<th style="background:#0F172A; text-align:center;">${grandVal}</th>`;
+            html += `</tr>`;
+          });
+
+          html += `</tbody></table>`;
+
+        } else {
+          // ============================================================
+          // MODO 2: PERFILES DE SUJETOS (1..N)
+          // ============================================================
+          const activeM = visibleMetrics.find(m => m.id === modalDualRedMetric) || visibleMetrics[0];
+          const isCount = activeM.isCount;
+
+          html += `
+            <table class="dual-matrix-table" style="font-size:0.67rem;">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="text-align:left; min-width:80px; background:#0F172A; color:var(--neon-cyan);">Sujeto</th>
+          `;
+
+          if (numCols === 9) {
+            html += `
+                  <th colspan="3" style="background:#003322; color:#00FF87;">ELECCIÓN (+)</th>
+                  <th colspan="3" style="background:#332b00; color:#FFE600;">INDIFERENCIA (0)</th>
+                  <th colspan="3" style="background:#3b0724; color:#FF007F;">RECHAZO (-)</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">&Sigma; Fila</th>
+                </tr>
+                <tr>
+            `;
+            for (let c = 0; c < 9; c++) {
+              const safeKey = COLS_9[c].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              const theme = AREA_THEME[COLS_9_AREAS[c]];
+              html += `<th style="background:#1E293B; color:${theme.color}; font-weight:800;">${safeKey}</th>`;
+            }
+            html += `</tr>`;
+          } else if (numCols === 6) {
+            html += `
+                  <th colspan="3" style="background:#002b4d; color:#00E5FF;">EMISIÓN DA (A2)</th>
+                  <th colspan="3" style="background:#3b0724; color:#FF2A85;">RECEPCIÓN REC (A3)</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">&Sigma; Fila</th>
+                </tr>
+                <tr>
+                  <th style="background:#1E293B; color:#00FF87;">E (+)</th>
+                  <th style="background:#1E293B; color:#FFE600;">¿ (0)</th>
+                  <th style="background:#1E293B; color:#FF007F;">R (-)</th>
+                  <th style="background:#1E293B; color:#00FF87;">e (+)</th>
+                  <th style="background:#1E293B; color:#FFE600;">? (0)</th>
+                  <th style="background:#1E293B; color:#FF007F;">r (-)</th>
+                </tr>
+            `;
+          } else if (numCols === 3) {
+            html += `
+                  <th colspan="3" style="background:#002b4d; color:#00E5FF;">CONDENSACIÓN POLAR TRIÁDICA</th>
+                  <th rowspan="2" style="background:#0F172A; color:#FFCC00; min-width:70px;">&Sigma; Fila</th>
+                </tr>
+                <tr>
+                  <th style="background:#1E293B; color:#00FF87;">(+) ELECCIÓN</th>
+                  <th style="background:#1E293B; color:#FFE600;">(0) INDIFERENCIA</th>
+                  <th style="background:#1E293B; color:#FF007F;">(-) RECHAZO</th>
+                </tr>
+            `;
+          }
+
+          html += `</thead><tbody>`;
+
+          const colTotals = Array(numCols).fill(0);
+          const colSumValues = Array(numCols).fill(0.0);
+          let grandSumVal = 0.0;
+          let grandCountTot = 0;
+
+          subjects.forEach(si => {
+            const subjDyads = dyads.filter(d => d.from === si);
+            const rowCounts = Array(numCols).fill(0);
+            const rowValues = Array(numCols).fill(0.0);
+            let rowTotalVal = 0.0;
+            let rowTotalCnt = 0;
+
+            subjDyads.forEach(d => {
+              let c = -1;
+              if (numCols === 9) {
+                c = COLS_9.indexOf(d.emiKey);
+              } else if (numCols === 6) {
+                c = (d.d2 > 0) ? 0 : ((d.d2 === 0) ? 1 : 2);
+              } else if (numCols === 3) {
+                c = (d.sdr > 0.15) ? 0 : ((d.sdr < -0.15) ? 2 : 1);
+              }
+
+              if (c >= 0 && c < numCols) {
+                rowCounts[c]++;
+                colTotals[c]++;
+                rowTotalCnt++;
+                grandCountTot++;
+                const val = d[activeM.id] || 0.0;
+                rowValues[c] += val;
+                colSumValues[c] += val;
+                rowTotalVal += val;
+                grandSumVal += val;
+              }
+            });
+
+            html += `<tr>`;
+            html += `<th style="text-align:left; background:#0F172A; color:#FFFFFF; font-weight:800;">${si}</th>`;
+
+            for (let c = 0; c < numCols; c++) {
+              const cnt = rowCounts[c];
+              let cellContent = '';
+              if (isCount) {
+                cellContent = cnt > 0 ? `<b style="color:#FFF; font-size:0.75rem;">${cnt}</b>` : `<span style="color:#475569; opacity:0.35;">—</span>`;
+              } else {
+                if (cnt > 0) {
+                  const avg = rowValues[c] / cnt;
+                  const colVal = (avg > 0.001) ? '#00FF87' : ((avg < -0.001) ? '#FF007F' : '#FFE600');
+                  const sign = avg > 0.0001 ? '+' : '';
+                  cellContent = `
+                    <div style="color:${colVal}; font-weight:800; font-size:0.70rem;">${sign}${avg.toFixed(2)}</div>
+                    <div style="font-size:0.56rem; color:var(--text-dim); opacity:0.7;">f:${cnt}</div>
+                  `;
+                } else {
+                  cellContent = `<span style="color:#475569; opacity:0.35;">—</span>`;
+                }
+              }
+              html += `<td style="vertical-align:middle; text-align:center;">${cellContent}</td>`;
+            }
+
+            // Total Fila
+            let rowTotHtml = '';
+            if (isCount) {
+              rowTotHtml = `<b style="color:#00FF9D; font-size:0.75rem;">${rowTotalCnt}</b>`;
+            } else {
+              const rAvg = rowTotalCnt > 0 ? (rowTotalVal / rowTotalCnt) : 0.0;
+              const colVal = (rAvg > 0.001) ? '#00FF87' : ((rAvg < -0.001) ? '#FF007F' : '#FFE600');
+              const sign = rAvg > 0.0001 ? '+' : '';
+              rowTotHtml = `<b style="color:${colVal}; font-size:0.72rem;">${sign}${rAvg.toFixed(2)}</b>`;
+            }
+            html += `<th style="background:#0F172A; text-align:center;">${rowTotHtml}</th>`;
+            html += `</tr>`;
+          });
+
+          html += `</tbody><tfoot>`;
+          // Fila Suma Grupo
+          html += `<tr><th style="text-align:left; background:#020617; color:#FFCC00; font-weight:800;">&Sigma; Grupo</th>`;
+          for (let c = 0; c < numCols; c++) {
+            html += `<th style="background:#020617; color:#00FF9D; font-size:0.72rem;">${colTotals[c]}</th>`;
+          }
+          html += `<th style="background:#020617; color:#FFCC00; font-weight:900;">${grandCountTot}</th></tr>`;
+
+          // Fila Media Grupo
+          html += `<tr><th style="text-align:left; background:#0B132B; color:#38BDF8; font-weight:800;">&mu; Media</th>`;
+          for (let c = 0; c < numCols; c++) {
+            let mStr = '';
+            if (isCount) {
+              mStr = (colTotals[c] / N).toFixed(2);
+            } else {
+              const avg = (colTotals[c] > 0) ? (colSumValues[c] / colTotals[c]) : 0.0;
+              const sign = avg > 0.0001 ? '+' : '';
+              mStr = `${sign}${avg.toFixed(2)}`;
+            }
+            html += `<th style="background:#0B132B; color:#38BDF8; font-size:0.70rem;">${mStr}</th>`;
+          }
+          const grandAvgStr = isCount ? (grandCountTot / N).toFixed(2) : ((grandSumVal / (grandCountTot || 1) >= 0 ? '+' : '') + (grandSumVal / (grandCountTot || 1)).toFixed(2));
+          html += `<th style="background:#0B132B; color:#FFCC00; font-size:0.70rem;">${grandAvgStr}</th></tr>`;
+          html += `</tfoot></table>`;
+        }
+
+        // Nota Explicativa Pedagógica Canónica (Regla 10)
+        html += `
+          <div style="margin-top:10px; font-size:0.68rem; color:var(--text-dim); line-height:1.45; background:rgba(15,23,42,0.8); border-left:3px solid #00E5FF; padding:8px 12px; border-radius:0 6px 6px 0;">
+            💡 <strong>Nota Explicativa de Reducción Progresiva 18D (Teorema de Conservación de los 3 Prismas):</strong>
+            La reducción progresiva transita sin pérdida de energía desde el continuo micro-diádico hacia <strong>Micro 9</strong> (modalidades de acción del emisor), <strong>Meso 6</strong> (descriptores Q6a bipolares $E, ¿, R$ vs $e, ?, r$) y <strong>Macro 3</strong> (cuencas polares universales de atracción $\langle Ee \rangle$, indiferencia $¡¿?!$ y rechazo $[Rr]$):
+            <br>
+            &bull; <strong>Conservación Absoluta (&Delta; = 0.000):</strong> Las leyes universales garantizan que el Saldo de Densidad Relativa y la Densidad Bruta son idénticos bajo las tres descomposiciones:
+            <span style="color:#00FF87; font-family:var(--font-mono);">SDR = &frac12; (S12 + S34) &equiv; &frac12; (S14 + S23) &equiv; &frac12; (S13 + S24)</span> y
+            <span style="color:#FFE600; font-family:var(--font-mono);">BDR = &frac12; (B12 + B34) &equiv; &frac12; (B14 + B23) &equiv; &frac12; (B13 + B24)</span>.
+            <br>
+            &bull; <strong>Los 3 Prismas de Refracción:</strong>
+            1) <strong>P1 Operativo [12 | 34]:</strong> Asimetría de rol $Dif_r = S12 - S34$ (emisores nutricios vs. sumideros pasivos);
+            2) <strong>P2 Ontológico [14 | 23]:</strong> Inercia fantasmática $Dif_a = S23 - S14$ (acciones fácticas vs. expectativas cruzadas; detecta neurosis colectiva si $B14 \gg B23$);
+            3) <strong>P3 Dialéctico [13 | 24]:</strong> Inercia de desengaño $Dif_i = S13 - S24$ (acierto del emisor $S13$ frente a correspondencia del partner $S24$; detecta fricción silenciosa y desencanto vincular).
+          </div>
+        </div>
+        `;
+
         container.innerHTML = html;
       }
     }
@@ -11760,7 +12337,9 @@
         "MATRIZ_ID", "GRUPO_ID", "GRUPO_NOMBRE", "TIEMPO", "CRITERIO_COD", "CRITERIO_NOMBRE",
         "Q81_ID", "Q81_SIMBOLO", "Q81_NOMBRE", "DIADA_FROM", "DIADA_TO",
         "SMIB_CODE", "D1_pDA", "D2_DA", "D3_RC", "D4_pRC",
-        "B12_EMISOR", "S12_EMISOR", "B34_RECEPTOR", "S34_RECEPTOR",
+        "B12_EMISOR", "S12_EMISOR", "B34_RECEPTOR", "S34_RECEPTOR", "DIF_R_ROL",
+        "B14_MENTE", "S14_EXPECTATIVAS", "B23_HECHOS", "S23_FACTICO", "DIF_A_FANTASMATICA",
+        "B13_REALISMO_EMI", "S13_ACIERTO_EMI", "B24_RESPUESTA_REC", "S24_CORRESPONDENCIA", "DIF_I_DESENGANO",
         "BDR_DIADA", "SDR_DIADA", "FRICCION_PHI", "REGIMEN_PSICOSOCIAL",
         "GRUPO_BDR_GLOBAL", "GRUPO_SDR_GLOBAL", "GRUPO_ENTROPIA_H", "GRUPO_FRICCION_PHI"
       ];
@@ -11802,6 +12381,20 @@
                 const s12 = (d1 + d2).toFixed(3);
                 const b34 = (Math.abs(d3) + Math.abs(d4)).toFixed(3);
                 const s34 = (d3 + d4).toFixed(3);
+                const dif_r = (parseFloat(s12) - parseFloat(s34)).toFixed(3);
+
+                const b14 = (Math.abs(d1) + Math.abs(d4)).toFixed(3);
+                const s14 = (d1 + d4).toFixed(3);
+                const b23 = (Math.abs(d2) + Math.abs(d3)).toFixed(3);
+                const s23 = (d2 + d3).toFixed(3);
+                const dif_a = (parseFloat(s23) - parseFloat(s14)).toFixed(3);
+
+                const b13 = (Math.abs(d1) + Math.abs(d3)).toFixed(3);
+                const s13 = (d1 + d3).toFixed(3);
+                const b24 = (Math.abs(d2) + Math.abs(d4)).toFixed(3);
+                const s24 = (d2 + d4).toFixed(3);
+                const dif_i = (parseFloat(s13) - parseFloat(s24)).toFixed(3);
+
                 const bdrDiada = ((Math.abs(d1) + Math.abs(d2) + Math.abs(d3) + Math.abs(d4)) / 2.0).toFixed(3);
                 const sdrDiada = ((d1 + d2 + d3 + d4) / 2.0).toFixed(3);
                 const phiDiada = (bdrDiada - Math.abs(sdrDiada)).toFixed(3);
@@ -11831,7 +12424,9 @@
                   `"${l.to}"`,
                   `"${l.smib || ''}"`,
                   d1, d2, d3, d4,
-                  b12, s12, b34, s34,
+                  b12, s12, b34, s34, dif_r,
+                  b14, s14, b23, s23, dif_a,
+                  b13, s13, b24, s24, dif_i,
                   bdrDiada, sdrDiada, phiDiada,
                   `"${regimen}"`,
                   gBDR, gSDR, gEnt, gFric
@@ -12001,6 +12596,9 @@
             </button>
             <button class="dual-tab-pill" id="tab-btn-1b" onclick="setModalDualTab('1b')">
               1b) d_sujetos globales: &frac12; [ d(i,&middot;) + d(&middot;,j) ]
+            </button>
+            <button class="dual-tab-pill" id="tab-btn-1c" onclick="setModalDualTab('1c')">
+              1c) Reducción Progresiva 18D (9, 6, 3)
             </button>
           </div>
 
