@@ -2271,7 +2271,7 @@
           <span style="color: #F472B6; font-weight: 800;">2. PROYECCIÓN ESPECTRAL EN Q81:</span>
           <div style="font-size: 0.70rem; margin-top: 2px;">
             &bull; <strong>2a) d_díadas:</strong> Primero se averigua cuál es su <strong>figura prototípica diádica</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna factual (pDA, DA, RC, pRC); y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad diádica</strong> &frac12; [ d(i, j) + d(j, i) ].<br>
-            &bull; <strong>2b) d_sujetos globales:</strong> Primero se averigua cuál es su <strong>figura prototípica global</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna marginal; y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad socio-termodinámica</strong> (SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ]).
+            &bull; <strong>2b) d_sujetos globales:</strong> Figura prototípica en 2 fases: 1) promedio Q81(i,j)_num &rarr; (A1,A2); 2) promedio Q81(j,i)_num &rarr; (A3,A4); 3) síntesis (A1,A2,A3,A4) en Q<sub>81</sub> &rarr; inscribe su densidad socio-termodinámica (SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ]).
           </div>
         </div>
       </div>
@@ -9503,7 +9503,8 @@
       redrawAll();
     }
 
-    // CÁLCULO DE VECTORES MARGINALES POR SUJETO PARA UNA MATRIZ DADA (Calculado una sola vez por sociomatriz)
+    // CÁLCULO DE VECTORES MARGINALES Y FIGURA PROTOTÍPICA POR SUJETO EN DOS FASES
+    // (Algoritmo canónico: 1: promedio Q81(i,j)_num -> (A1,A2); 2: promedio Q81(j,i)_num -> (A3,A4); 3: síntesis (A1,A2,A3,A4) en Q81)
     function computeSubjectMarginals(mat) {
       if (!mat || !mat.sujetos) return [];
       if (mat._subjectMarginals) return mat._subjectMarginals; // Calculada una sola vez para cada sociomatriz
@@ -9513,7 +9514,11 @@
       if (mat.q_map) {
         for (const qid in mat.q_map) {
           const list = mat.q_map[qid];
-          if (Array.isArray(list)) allLinks.push(...list);
+          if (Array.isArray(list)) {
+            list.forEach(l => {
+              allLinks.push({ ...l, qid: parseInt(qid, 10) });
+            });
+          }
         }
       }
 
@@ -9521,32 +9526,43 @@
         const emitted = allLinks.filter(l => l.from === s);
         const received = allLinks.filter(l => l.to === s);
 
+        // Densidades continuas inherentes (ya calculadas en la sociomatriz)
         const d1 = emitted.length ? (emitted.reduce((acc, l) => acc + l.d1, 0) / emitted.length) : 0;
-        const d2 = emitted.length ? (emitted.reduce((acc, l) => acc + l.d2, 0) / emitted.length) : 0; // SDA = (i, ·)
-        const d3 = received.length ? (received.reduce((acc, l) => acc + l.d3, 0) / received.length) : 0; // SRC = (·, j)
+        const d2 = emitted.length ? (emitted.reduce((acc, l) => acc + l.d2, 0) / emitted.length) : 0; // SDA = d(i, ·)
+        const d3 = received.length ? (received.reduce((acc, l) => acc + l.d3, 0) / received.length) : 0; // SRC = d(·, j)
         const d4 = received.length ? (received.reduce((acc, l) => acc + l.d4, 0) / received.length) : 0;
 
-        const sdr = (d2 + d3) / 2.0; // Saldo marginal: ((·, j) + (i, ·)) / 2
+        const sdr = (d2 + d3) / 2.0; // Saldo marginal: ½ [ d(i, ·) + d(·, j) ]
         const bdr = Math.min(1.0, (Math.abs(d2) + Math.abs(d3)) / 2.0);
 
-        // Mapeo discreto a figura canónica Q81 (-1, 0, 1)
-        const toTernary = (v) => (v >= 0.12 ? 1 : (v <= -0.12 ? -1 : 0));
-        const t1 = toTernary(d1);
-        const t2 = toTernary(d2);
-        const t3 = toTernary(d3);
-        const t4 = toTernary(d4);
+        // ALGORITMO CANÓNICO EN DOS FASES (NEXORD):
+        // 1) Promedio de los Q81(i, j)_num (emisiones) -> entero más próximo -> extrae (A1, A2)
+        const avgQEmit = emitted.length ? (emitted.reduce((acc, l) => acc + l.qid, 0) / emitted.length) : 41;
+        const qEmitInt = Math.round(avgQEmit);
+        const figEmit = MATRIX_9x9_CONFIG.find(f => f.id === qEmitInt) || MATRIX_9x9_CONFIG.find(f => f.id === 41);
+        const a1 = figEmit.d1;
+        const a2 = figEmit.d2;
 
-        let matchedFig = MATRIX_9x9_CONFIG.find(f => f.d1 === t1 && f.d2 === t2 && f.d3 === t3 && f.d4 === t4);
+        // 2) Promedio de los Q81(j, i)_num (recepciones) -> entero más próximo -> extrae (A3, A4)
+        const avgQRecv = received.length ? (received.reduce((acc, l) => acc + l.qid, 0) / received.length) : 41;
+        const qRecvInt = Math.round(avgQRecv);
+        const figRecv = MATRIX_9x9_CONFIG.find(f => f.id === qRecvInt) || MATRIX_9x9_CONFIG.find(f => f.id === 41);
+        const a3 = figRecv.d3;
+        const a4 = figRecv.d4;
+
+        // 3) En el entero más próximo de 1) y 2), la figura representativa es la combinación (A1, A2) de 1) y (A3, A4) de 2)
+        let matchedFig = MATRIX_9x9_CONFIG.find(f => f.d1 === a1 && f.d2 === a2 && f.d3 === a3 && f.d4 === a4);
         if (!matchedFig) {
           let bestDist = Infinity;
           for (const f of MATRIX_9x9_CONFIG) {
-            const dist = (f.d1 - d1)**2 + (f.d2 - d2)**2 + (f.d3 - d3)**2 + (f.d4 - d4)**2;
+            const dist = (f.d1 - a1)**2 + (f.d2 - a2)**2 + (f.d3 - a3)**2 + (f.d4 - a4)**2;
             if (dist < bestDist) {
               bestDist = dist;
               matchedFig = f;
             }
           }
         }
+
         const qid = matchedFig ? matchedFig.id : 41;
         const q81_num = qid;
         const figura_prototipica = matchedFig ? matchedFig.sym : '¡¿?!';
@@ -9554,15 +9570,18 @@
         return {
           subject: s,
           d1, d2, d3, d4,
-          sda: d2, // Emisión (i, ·)
-          src: d3, // Recepción (·, j)
-          sdr,     // Saldo marginal baricéntrico [(·, j) + (i, ·)] / 2
+          sda: d2, // Emisión d(i, ·)
+          src: d3, // Recepción d(·, j)
+          sdr,     // Saldo marginal baricéntrico ½ [ d(i, ·) + d(·, j) ]
           bdr,
           qid,
           q81_num,            // Número exacto Q81 (1..81)
           figura_prototipica, // Figura prototípica global SMIb
           figSym: figura_prototipica,
-          figDef: matchedFig ? matchedFig.def : 'Centro Neutro'
+          figDef: matchedFig ? matchedFig.def : 'Centro Neutro',
+          // Desglose del algoritmo en 2 fases
+          avgQEmit, qEmitInt, figEmitSym: figEmit.sym, a1, a2,
+          avgQRecv, qRecvInt, figRecvSym: figRecv.sym, a3, a4
         };
       });
 
@@ -9590,23 +9609,27 @@
         return mat._globalFigure;
       }
 
-      const N = subjects.length;
-      const d1 = subjects.reduce((acc, s) => acc + s.d1, 0) / N;
-      const d2 = subjects.reduce((acc, s) => acc + s.d2, 0) / N;
-      const d3 = subjects.reduce((acc, s) => acc + s.d3, 0) / N;
-      const d4 = subjects.reduce((acc, s) => acc + s.d4, 0) / N;
+      // En la sociomatriz:
+      // Fase 1: Promedio de los Q81_num de emisión de todos los sujetos -> (A1, A2)
+      const avgQEmit = subjects.reduce((acc, s) => acc + s.avgQEmit, 0) / subjects.length;
+      const qEmitInt = Math.round(avgQEmit);
+      const figEmit = MATRIX_9x9_CONFIG.find(f => f.id === qEmitInt) || MATRIX_9x9_CONFIG.find(f => f.id === 41);
+      const a1 = figEmit.d1;
+      const a2 = figEmit.d2;
 
-      const toTernary = (v) => (v >= 0.10 ? 1 : (v <= -0.10 ? -1 : 0));
-      const t1 = toTernary(d1);
-      const t2 = toTernary(d2);
-      const t3 = toTernary(d3);
-      const t4 = toTernary(d4);
+      // Fase 2: Promedio de los Q81_num de recepción de todos los sujetos -> (A3, A4)
+      const avgQRecv = subjects.reduce((acc, s) => acc + s.avgQRecv, 0) / subjects.length;
+      const qRecvInt = Math.round(avgQRecv);
+      const figRecv = MATRIX_9x9_CONFIG.find(f => f.id === qRecvInt) || MATRIX_9x9_CONFIG.find(f => f.id === 41);
+      const a3 = figRecv.d3;
+      const a4 = figRecv.d4;
 
-      let matchedFig = MATRIX_9x9_CONFIG.find(f => f.d1 === t1 && f.d2 === t2 && f.d3 === t3 && f.d4 === t4);
+      // Fase 3: Síntesis canónica (A1, A2) de 1) y (A3, A4) de 2)
+      let matchedFig = MATRIX_9x9_CONFIG.find(f => f.d1 === a1 && f.d2 === a2 && f.d3 === a3 && f.d4 === a4);
       if (!matchedFig) {
         let bestDist = Infinity;
         for (const f of MATRIX_9x9_CONFIG) {
-          const dist = (f.d1 - d1)**2 + (f.d2 - d2)**2 + (f.d3 - d3)**2 + (f.d4 - d4)**2;
+          const dist = (f.d1 - a1)**2 + (f.d2 - a2)**2 + (f.d3 - a3)**2 + (f.d4 - a4)**2;
           if (dist < bestDist) {
             bestDist = dist;
             matchedFig = f;
@@ -9614,12 +9637,19 @@
         }
       }
 
+      const N = subjects.length;
+      const d1 = subjects.reduce((acc, s) => acc + s.d1, 0) / N;
+      const d2 = subjects.reduce((acc, s) => acc + s.d2, 0) / N;
+      const d3 = subjects.reduce((acc, s) => acc + s.d3, 0) / N;
+      const d4 = subjects.reduce((acc, s) => acc + s.d4, 0) / N;
+
       mat._globalFigure = {
         qid: matchedFig ? matchedFig.id : 41,
         q81_num: matchedFig ? matchedFig.id : 41,
         sym: matchedFig ? matchedFig.sym : '¡¿?!',
         def: matchedFig ? (matchedFig.def || 'Estado Colectivo') : 'Centro Neutro',
         d1, d2, d3, d4,
+        a1, a2, a3, a4,
         bdr: (mat.bdr !== undefined) ? mat.bdr : Math.min(1.0, (Math.abs(d2) + Math.abs(d3)) / 2.0),
         sdr: (mat.sdr !== undefined) ? mat.sdr : (d2 + d3) / 2.0
       };
@@ -9844,9 +9874,13 @@
               <td style="color:var(--neon-gold);">${bdrStr}</td>
               <td style="color:#94A3B8;">${pStr}</td>
               <td style="font-weight:800; color:#F472B6;">Q${s.q81_num}</td>
-              <td style="text-align:left; color:#E2E8F0;">
+              <td style="text-align:left; color:#E2E8F0;" title="Deducción Canónica en 2 Fases:
+1) Promedio Q(i,j)=${s.avgQEmit.toFixed(1)} &rarr; Q${s.qEmitInt} (${s.figEmitSym}) &rArr; (A1=${s.a1>0?'+':''}${s.a1}, A2=${s.a2>0?'+':''}${s.a2})
+2) Promedio Q(j,i)=${s.avgQRecv.toFixed(1)} &rarr; Q${s.qRecvInt} (${s.figRecvSym}) &rArr; (A3=${s.a3>0?'+':''}${s.a3}, A4=${s.a4>0?'+':''}${s.a4})
+3) Síntesis (A1,A2,A3,A4) &rArr; Q${s.q81_num} (${s.figura_prototipica})">
                 <strong style="color:var(--neon-gold); font-family:var(--font-mono);">${s.figura_prototipica}</strong>
                 <span style="font-size:0.62rem; color:var(--text-dim); margin-left:4px;">${s.figDef}</span>
+                <span style="font-size:0.58rem; color:#38BDF8; margin-left:6px; font-family:var(--font-mono); background:rgba(56,189,248,0.1); padding:1px 4px; border-radius:3px;" title="Fase 1: Q${s.qEmitInt} &middot; Fase 2: Q${s.qRecvInt}">1:Q${s.qEmitInt} &middot; 2:Q${s.qRecvInt}</span>
               </td>
             </tr>
           `;
@@ -9856,7 +9890,13 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1b / 2b) d_sujetos globales:</strong> La <strong>densidad global</strong> ya está calculada en las matrices; lo que se determina analíticamente es la <strong>figura prototípica global</strong> en Q<sub>81</sub> (calculada una sola vez para cada sociomatriz). En <strong>2b</strong>, primero se averigua la figura prototípica global de cada sujeto y a qué Q81_num (1..81) corresponde a partir de su cuaterna marginal (pDA, DA, RC, pRC), asociándole su densidad socio-termodinámica SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ] y BDR<sub>i</sub> (Teorema Baricéntrico &Delta; = 0.000).
+              💡 <strong>Lectura 1b / 2b) d_sujetos globales (Algoritmo Canónico en 2 Fases):</strong> La <strong>densidad global</strong> ya está calculada en las matrices; la <strong>figura prototípica</strong> en Q<sub>81</sub> se deduce en <strong>dos fases</strong> (calculadas una sola vez para cada sociomatriz):
+              <br>
+              &bull; <strong>1)</strong> Promedio de los <em>Q81(i, j)_num</em> (emisiones) &rarr; entero más próximo &rarr; extrae <strong>(A1, A2)</strong>.
+              <br>
+              &bull; <strong>2)</strong> Promedio de los <em>Q81(j, i)_num</em> (recepciones) &rarr; entero más próximo &rarr; extrae <strong>(A3, A4)</strong>.
+              <br>
+              &bull; <strong>3)</strong> En el entero más próximo de 1) y 2), la figura representativa de cada sujeto es la <strong>combinación exacta de (A1, A2) de 1) y (A3, A4) de 2)</strong>, asociándole su densidad socio-termodinámica precalculada SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ] y BDR<sub>i</sub> (Teorema Baricéntrico &Delta; = 0.000).
             </div>
           </div>
         `;
