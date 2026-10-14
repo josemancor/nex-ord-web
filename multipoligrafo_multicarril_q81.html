@@ -2263,7 +2263,7 @@
         <div>
           <span style="color: var(--neon-cyan); font-weight: 800;">1. DENSIDADES POR SUJETOS:</span>
           <div style="font-size: 0.70rem; margin-top: 2px;">
-            &bull; <strong>1a) d_díadas:</strong> &frac12; [ (i, j) + (j, i) ] &middot; Balance diádico par a par (atracción/rechazo simétrico mutuo).<br>
+            &bull; <strong>1a) d_díadas:</strong> &frac12; [ (i, j) + (j, i) ] &middot; Balance diádico en la matriz completa <em>N</em> &times; <em>N</em> (el emisor forma parte del grupo).<br>
             &bull; <strong>1b) d_sujetos globales:</strong> &frac12; [ (&middot;, j) + (i, &middot;) ] = &frac12; [ SRC<sub>i</sub> + SDA<sub>i</sub> ] = SDR<sub>i</sub> &middot; Saldo marginal integrado de los <em>N</em> sujetos (Teorema Baricéntrico &Delta; = 0.000).
           </div>
         </div>
@@ -9613,7 +9613,7 @@
           <div class="dual-matrix-container">
             <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
               <span style="color:var(--neon-cyan); font-weight:800; font-family:var(--font-mono); font-size:0.75rem;">
-                MATRIZ 1a) d_díadas &middot; ${mat.clave || matKey} &middot; N=${N} (${N*(N-1)} Díadas Factuales)
+                MATRIZ 1a) d_díadas &middot; ${mat.clave || matKey} &middot; N=${N} (${N*N} Díadas [N &times; N] &middot; El Emisor Forma Parte del Grupo)
               </span>
               <span style="font-size:0.65rem; color:var(--text-dim); font-family:var(--font-mono);">
                 Fórmula Canónica: &frac12; [ (i,j) + (j,i) ]
@@ -9642,7 +9642,15 @@
           html += `<tr><th style="text-align:left; background:rgba(14,23,50,0.9); color:#FFFFFF;">${si}</th>`;
           subjects.forEach(sj => {
             if (si === sj) {
-              html += `<td class="cell-diag">—</td>`;
+              html += `
+                <td class="cell-diag" title="Auto-posición reflexiva: ${si} es miembro del colectivo N=${N}">
+                  <div class="cell-diad-box" style="border-color:rgba(0,255,135,0.25); background:rgba(0,255,135,0.04);">
+                    <div class="cell-sub-vals" style="color:var(--neon-green); font-size:0.58rem;">${si} &harr; ${si}</div>
+                    <div class="cell-semisum zero" title="Auto-percepción / Clausura reflexiva">0.000</div>
+                    <div class="cell-smib-tag" style="color:var(--neon-green); font-size:0.56rem;">Auto &middot; Grupo</div>
+                  </div>
+                </td>
+              `;
             } else {
               const link = pairMap[`${si}->${sj}`];
               if (link) {
@@ -9681,7 +9689,8 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1a) d_díadas:</strong> En cada celda (i, j), se visualiza la preferencia directa emitida (i, j), la preferencia recibida (j, i) y la semisuma resultante &frac12; [ (i, j) + (j, i) ].
+              💡 <strong>Lectura 1a) d_díadas (Matriz N &times; N = ${N*N} díadas):</strong> En cada celda (i, j) se visualiza la preferencia directa emitida (i, j), la preferencia recibida (j, i) y la semisuma resultante &frac12; [ (i, j) + (j, i) ].
+              <strong>El emisor también forma parte del grupo</strong>: el universo relacional abarca las ${N*N} posiciones de la sociomatriz completa.
               Verde = Atracción mutua predominante (&gt;0); Rosa/Magenta = Rechazo mutuo predominante (&lt;0); Amarillo = Neutralidad simétrica (0).
             </div>
           </div>
