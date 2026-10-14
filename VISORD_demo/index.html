@@ -2210,7 +2210,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 </head>
 <body>
 
-<div id="top-dashboard" style="position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; align-items: flex-start; gap: 15px; z-index: 10; pointer-events: none;">
+<div id="top-dashboard" style="position: absolute; top: 58px; width: 100%; display: flex; justify-content: center; align-items: flex-start; gap: 15px; z-index: 10; pointer-events: none;">
     <!-- LEFT HUD -->
     <div style="display: flex; gap: 30px; pointer-events: auto; align-items: stretch;">
         <div class="metric-box" id="disp-nuevos-vinculos" style="background: rgba(14, 17, 23, 0.85); border: 1px solid #555; box-shadow: 0 0 12px rgba(0,0,0,0.5); min-width: 160px; border-radius: 8px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; text-align: center; overflow: hidden;">
@@ -2252,7 +2252,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             <a href="../index.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; background:rgba(0,162,255,0.18); color:#00E5FF; border:1px solid rgba(0,229,255,0.45); padding:4px 10px; border-radius:6px; font-family:'Courier New', monospace; font-size:11px; font-weight:700; transition:all 0.2s;" onmouseover="this.style.background='rgba(0,162,255,0.35)'" onmouseout="this.style.background='rgba(0,162,255,0.18)'">🏠 ← Portal</a>
             <div style="font-family: sans-serif; font-size: 22px; font-weight: 900; letter-spacing: 4px; color: #fff; text-shadow: 0 0 15px rgba(0,162,255,0.8), 0 0 30px rgba(0,162,255,0.4);">VISORD <span style="font-size: 11px; background: rgba(0, 255, 157, 0.2); color: #00FF9D; padding: 2px 6px; border-radius: 4px; border: 1px solid #00FF9D; vertical-align: middle;">CLASSIC CLOUD</span></div>
             <a href="index_omni.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg, rgba(255,0,127,0.25), rgba(112,0,255,0.25)); color:#FF77CC; border:1px solid rgba(255,119,204,0.5); padding:4px 10px; border-radius:6px; font-family:'Courier New', monospace; font-size:11px; font-weight:700; transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(255,0,127,0.45), rgba(112,0,255,0.45))'" onmouseout="this.style.background='linear-gradient(135deg, rgba(255,0,127,0.25), rgba(112,0,255,0.25))'">✨ Omni-Visor 3D</a>
-            <button id="btn-demo-audio-top" class="audio-demo-btn" onclick="toggleVisordDemoAudio()" title="Narración 3D Moviola (Cadencia sosegada estilo 1a)">
+            <!-- BOTON MAESTRO DE ACCION DESTACADO VISORD DEMO -->
+            <button id="btn-master-action-demo" onclick="togglePlay()" style="background: rgba(0, 255, 135, 0.25); border: 2px solid #00FF87; color: #FFFFFF; padding: 5px 14px; border-radius: 20px; font-family: monospace; font-size: 11px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 16px rgba(0,255,135,0.45); transition: all 0.2s;" title="Iniciar / Pausar Dinámica 3D Moviola">
+                <span id="led-demo-master" style="width:9px; height:9px; border-radius:50%; background:#00FF87; box-shadow:0 0 10px #00FF87; display:inline-block;"></span>
+                <span id="txt-demo-master">⚡ ACTION ! EN MOVIMIENTO</span>
+            </button>
+            <button id="btn-demo-audio-top"  class="audio-demo-btn" onclick="toggleVisordDemoAudio()" title="Narración 3D Moviola (Cadencia sosegada estilo 1a)">
                 <span id="demo-top-audio-icon">🔊</span>
                 <span id="demo-top-audio-text">Narración 3D Moviola</span>
                 <span class="demo-audio-wave" id="demo-top-audio-wave">
@@ -2449,12 +2454,35 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         <div id="disp-fase" style="margin-top:10px; font-size:11px; color:#AAA; text-align:center; display:none;"><span data-i18n="phase_lbl">Fase:</span> <span id="fase-texto" data-i18n="preparing" style="color:#FFF; font-weight:bold;">Preparando...</span></div>
     </div>
     
-    <h2 data-i18n="external_data" style="margin-bottom: 5px;">DATOS EXTERNOS</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px;">
-        <button onclick="document.getElementById('file-upload').click()" data-i18n="import_csv" style="padding: 8px; background: #333; color: #FFF; border: 1px solid #555; border-radius: 4px; cursor: pointer;">📥 IMPORTAR CSV</button>
-        <button onclick="openManualMode()" data-i18n="manual_mode" style="padding: 8px; background: #FFCC00; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">✏️ MANUAL</button>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 6px;">
+        <button onclick="triggerSpecialLoadDemo()" id="btn-special-load-demo" style="background: transparent; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); border-radius: 6px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; opacity: 0.35;" onmouseover="this.style.opacity='0.85'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="if(!this.classList.contains('unlocked')){this.style.opacity='0.35'; this.style.borderColor='rgba(255,255,255,0.08)';}">
+            <span id="icon-special-load-demo" style="font-size:11px;">🔒</span>
+        </button>
     </div>
-    <input type="file" id="file-upload" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button onclick="openManualMode()" data-i18n="manual_mode" style="padding: 7px; background: #FFCC00; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">✏️ EDITOR MANUAL</button>
+            <button onclick="exportSmibMatrixJSON()" style="padding: 7px; background: #1E293B; color: #00E5FF; border: 1px solid #00E5FF; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">💾 EXPORTAR SMIb</button>
+        </div>
+        <!-- 3 EJERCICIOS DE EXPLORACIÓN DE SERIE PREINSTALADOS -->
+        <div style="background: rgba(0, 255, 135, 0.1); border: 1.5px solid #00FF87; border-radius: 8px; padding: 8px; margin-top: 6px;">
+            <div style="font-size: 10px; font-weight: 900; color: #00FF87; font-family: monospace; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                <span>📚 3 EJERCICIOS DE SERIE</span>
+                <span style="color:#FFF; background:rgba(0,255,135,0.25); padding:1px 5px; border-radius:3px; font-size:8.5px;">EXPLORACIÓN</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <button onclick="loadDemoComodin('01')" style="padding: 6px 8px; font-size: 10px; font-weight: bold; background: #1E293B; color: #00FF87; border: 1px solid #00FF87; border-radius: 5px; cursor: pointer; text-align: left; display:flex; justify-content:space-between;" title="Ejercicio 1: Cohesión Canónica N=20">
+                    <span>1. Cohesión Canónica</span><span style="color:#94A3B8;">N=20</span>
+                </button>
+                <button onclick="loadDemoComodin('02')" style="padding: 6px 8px; font-size: 10px; font-weight: bold; background: #1E293B; color: #38BDF8; border: 1px solid #38BDF8; border-radius: 5px; cursor: pointer; text-align: left; display:flex; justify-content:space-between;" title="Ejercicio 2: Polarización y Facciones N=12">
+                    <span>2. Facciones Bipolares</span><span style="color:#94A3B8;">N=12</span>
+                </button>
+                <button onclick="loadDemoComodin('03')" style="padding: 6px 8px; font-size: 10px; font-weight: bold; background: #1E293B; color: #FB7185; border: 1px solid #FB7185; border-radius: 5px; cursor: pointer; text-align: left; display:flex; justify-content:space-between;" title="Ejercicio 3: Asfixia por Halo y Autocracia N=8">
+                    <span>3. Asfixia por Halo</span><span style="color:#94A3B8;">N=8</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="file-upload" accept=".json,.csv,.smib,.txt" style="display: none;" onchange="handleFileUpload(event)">
 
     <div id="advanced-params-section" style="display: none;">
         <h2 style="margin-bottom: 5px;" data-i18n="params_sim">PARÁMETROS (Simulación)</h2>
@@ -2653,7 +2681,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         
         <div style="width: 1px; height: 22px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
         
-        <button class="btn-vcr" id="btn-play" onclick="togglePlay()" data-i18n="btn_pause" style="background: rgba(0, 255, 135, 0.2); border-color: #00FF87; color: #00FF87;">⏸️ PAUSA</button>
+        <button class="btn-vcr" id="btn-play" onclick="togglePlay()" data-i18n="btn_pause" style="display:inline-flex; align-items:center; gap:6px; background: rgba(0, 255, 135, 0.2); border-color: #00FF87; color: #00FF87;"><span id="led-btn-play" style="width:8px; height:8px; border-radius:50%; background:#00FF87; box-shadow:0 0 8px #00FF87; display:inline-block;"></span> ⏸️ PAUSA</button>
         <button class="btn-vcr" id="btn-step" onclick="stepForward()" data-i18n="btn_step" style="background: rgba(56, 189, 248, 0.2); border-color: #38BDF8; color: #38BDF8;">⏭️ PASO A PASO</button>
         <div style="width: 1px; height: 22px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
         <button class="btn-vcr" onclick="toggleCameraTour()" id="btn-tour" data-i18n="btn_drone">🚁 DRONE 3D</button>
@@ -5086,7 +5114,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     function togglePlay() {
         isPlaying = !isPlaying;
         const btn = document.getElementById('btn-play');
-        btn.innerHTML = isPlaying ? "⏸️ PAUSA" : "▶️ PLAY";
+        btn.innerHTML = isPlaying ? '<span id="led-btn-play" style="width:8px; height:8px; border-radius:50%; background:#00FF87; box-shadow:0 0 8px #00FF87; display:inline-block; margin-right:4px;"></span>⏸️ PAUSA' : '<span id="led-btn-play" style="width:8px; height:8px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444; display:inline-block; margin-right:4px;"></span>▶️ PLAY';
+        const masterLed = document.getElementById('led-demo-master');
+        const masterTxt = document.getElementById('txt-demo-master');
+        const masterBtn = document.getElementById('btn-master-action-demo');
+        if (masterLed) {
+            masterLed.style.background = isPlaying ? '#00FF87' : '#EF4444';
+            masterLed.style.boxShadow = isPlaying ? '0 0 10px #00FF87' : '0 0 6px #EF4444';
+        }
+        if (masterTxt) {
+            masterTxt.textContent = isPlaying ? '⚡ ACTION ! EN MOVIMIENTO' : '⏸ ACTION ! PAUSADO';
+        }
+        if (masterBtn) {
+            masterBtn.style.borderColor = isPlaying ? '#00FF87' : '#EF4444';
+        }
         if(isPlaying) {
             btn.classList.remove('active');
             loopEngine();
@@ -11617,6 +11658,29 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         URL.revokeObjectURL(encodedUri);
     }
 
+    function triggerSpecialLoadDemo() {
+        const pwd = prompt("🔐 Clave de acceso para carga local:");
+        if (!pwd) return;
+        const clean = pwd.trim().toUpperCase();
+        if (clean === "NEX_ORD" || clean === "NEXORD") {
+            sessionStorage.setItem('nexord_researcher_auth', 'unlocked');
+            const btn = document.getElementById('btn-special-load-demo');
+            const icon = document.getElementById('icon-special-load-demo');
+            if (btn) {
+                btn.classList.add('unlocked');
+                btn.style.opacity = '1';
+                btn.style.borderColor = '#00FF87';
+                btn.style.background = 'rgba(0,255,135,0.15)';
+                btn.style.color = '#00FF87';
+            }
+            if (icon) icon.textContent = '🔓';
+            const fileInp = document.getElementById('file-upload');
+            if (fileInp) fileInp.click();
+        } else {
+            alert("⛔ Clave incorrecta.");
+        }
+    }
+
     function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -12487,6 +12551,24 @@ function openLightbox(src) {
 <!-- =========================================================================
      MANDO UNIVERSAL NEXORD EN FILA INDIA (NAVEGACIÓN LATERAL PERMANENTE - REGLA 15)
      ========================================================================= -->
+  <footer class="nexord-standalone-footer" style="display:none;">
+    <div class="nexord-doi-footer-block">
+      <div class="doi-citation-badge">
+        <span class="doi-brand">NEXORD.</span>
+        <span class="doi-sep">•</span>
+        <span class="doi-label">DOI:</span>
+        <a href="https://doi.org/10.5281/zenodo.23303953" target="_blank" rel="noopener" class="doi-link">10.5281/zenodo.23303953</a>
+        <span class="doi-sep">•</span>
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" class="doi-license" title="Creative Commons Atribución 4.0 Internacional">CC-BY-4.0</a>
+        <span class="doi-sep">•</span>
+        <button type="button" class="btn-bibtex-trigger" onclick="toggleBibtexModal(event)">
+          <span class="bibtex-icon">📑</span> CITAR CON BibTeX
+        </button>
+      </div>
+    </div>
+    <p style="font-size:0.75rem; color:#94A3B8; margin-top:8px; font-family:'Roboto Mono',monospace;">NEXORD © 2026 · Sociometría Ordinal Computacional &bull; Open Science</p>
+  </footer>
+
 <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
   <a href="../index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal de Niveles)"><span>🏠</span></a>
   <a href="../nivel7_documentacion.html" class="nav-pod-btn nav-pod-prev-lvl" title="Nivel Anterior (Nivel 7: Documentación & Ética)"><span>◀</span></a>
@@ -12808,6 +12890,157 @@ window.addEventListener('keydown', triggerAudioOnFirstInteraction, { passive: tr
 window.addEventListener('scroll', triggerAudioOnFirstInteraction, { passive: true, once: true });
 
 </script>
+<!-- MODAL CANÓNICO DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->
+<div id="nexord-bibtex-modal" class="bibtex-modal" style="display:none;" onclick="if(event.target===this) toggleBibtexModal()">
+  <div class="bibtex-modal-box">
+    <div class="bibtex-modal-header">
+      <div class="bibtex-modal-title">
+        <span>📑</span> Cita Académica Oficial · NEXORD / VISORD Engine
+      </div>
+      <button type="button" class="bibtex-close-btn" onclick="toggleBibtexModal()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <!-- Pestañas de Formato de Cita -->
+    <div style="display:flex; gap:8px; padding:12px 20px 0 20px; border-bottom:1px solid rgba(56,189,248,0.2); background:rgba(15,23,42,0.6);">
+      <button type="button" class="citation-tab-btn active" id="tab-bibtex" onclick="switchCitationFormat('bibtex')" style="background:transparent; border:none; border-bottom:2px solid #00FF87; color:#00FF87; font-family:'Roboto Mono',monospace; font-size:0.80rem; font-weight:800; padding:6px 12px; cursor:pointer;">BibTeX</button>
+      <button type="button" class="citation-tab-btn" id="tab-apa" onclick="switchCitationFormat('apa')" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94A3B8; font-family:'Roboto Mono',monospace; font-size:0.80rem; font-weight:800; padding:6px 12px; cursor:pointer;">APA (7ª ed.)</button>
+      <button type="button" class="citation-tab-btn" id="tab-ris" onclick="switchCitationFormat('ris')" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94A3B8; font-family:'Roboto Mono',monospace; font-size:0.80rem; font-weight:800; padding:6px 12px; cursor:pointer;">RIS (Zotero/Mendeley)</button>
+    </div>
+
+    <div class="bibtex-modal-body">
+      <p id="citation-format-hint" style="font-size: 0.78rem; color: #94A3B8; margin-bottom: 10px;">
+        Entrada para LaTeX, Overleaf y gestores bibliográficos compatibles:
+      </p>
+
+      <!-- Bloque BibTeX -->
+      <pre id="bibtex-code-block" class="bibtex-pre">@misc{cornejo2026nexord,
+  author       = {Cornejo, J. M.},
+  title        = {{NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico}},
+  year         = {2026},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.23303953},
+  url          = {https://doi.org/10.5281/zenodo.23303953},
+  note         = {Creative Commons Attribution 4.0 International (CC-BY-4.0)}
+}</pre>
+
+      <!-- Bloque APA (oculto por defecto) -->
+      <pre id="apa-code-block" class="bibtex-pre" style="display:none; color:#A7F3D0; font-family:'Inter',sans-serif; font-size:0.88rem; line-height:1.6;">Cornejo, J. M. (2026). <em>NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico</em>. Zenodo. https://doi.org/10.5281/zenodo.23303953</pre>
+
+      <!-- Bloque RIS (oculto por defecto) -->
+      <pre id="ris-code-block" class="bibtex-pre" style="display:none;">TY  - GEN
+AU  - Cornejo, J. M.
+TI  - NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico
+PY  - 2026
+PB  - Zenodo
+DO  - 10.5281/zenodo.23303953
+UR  - https://doi.org/10.5281/zenodo.23303953
+ER  - </pre>
+
+      <!-- Enlaces complementarios -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:0.78rem; flex-wrap:wrap; gap:8px;">
+        <a href="https://doi.org/10.5281/zenodo.23303953" target="_blank" rel="noopener" style="color:#38BDF8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+          <span>🌐</span> Ver registro en CERN Zenodo ↗
+        </a>
+        <a href="assets/MANIFIESTO_CIENTIFICO_NEXORD_ZENODO_2026.pdf" target="_blank" style="color:#00FF87; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Descargar Manifiesto Oficial (Español, PDF 58 MB)">
+          <span>📄</span> Manifiesto ES (PDF) ↗
+        </a>
+        <a href="../assets/NEXORD_SCIENTIFIC_MANIFESTO_ZENODO_2026_EN.pdf" target="_blank" style="color:#38BDF8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Download Official Manifesto (English, PDF 58 MB)">
+          <span>📄</span> Manifesto EN (PDF) ↗
+        </a>
+      </div>
+    </div>
+
+    <div class="bibtex-modal-footer">
+      <span id="bibtex-copy-status" class="bibtex-status-msg"></span>
+      <button type="button" class="btn-copy-bibtex" onclick="copyActiveCitation()">
+        <span id="bibtex-copy-icon">📋</span> <span id="bibtex-copy-text">Copiar al Portapapeles</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let activeCitationFormat = 'bibtex';
+
+function switchCitationFormat(fmt) {
+  activeCitationFormat = fmt;
+  const tabBib = document.getElementById('tab-bibtex');
+  const tabApa = document.getElementById('tab-apa');
+  const tabRis = document.getElementById('tab-ris');
+  
+  const blockBib = document.getElementById('bibtex-code-block');
+  const blockApa = document.getElementById('apa-code-block');
+  const blockRis = document.getElementById('ris-code-block');
+  const hint = document.getElementById('citation-format-hint');
+  
+  [tabBib, tabApa, tabRis].forEach(t => {
+    if (t) {
+      t.style.borderBottomColor = 'transparent';
+      t.style.color = '#94A3B8';
+    }
+  });
+
+  [blockBib, blockApa, blockRis].forEach(b => {
+    if (b) b.style.display = 'none';
+  });
+
+  if (fmt === 'bibtex') {
+    if (tabBib) { tabBib.style.borderBottomColor = '#00FF87'; tabBib.style.color = '#00FF87'; }
+    if (blockBib) blockBib.style.display = 'block';
+    if (hint) hint.innerText = 'Entrada para LaTeX, Overleaf y gestores bibliográficos compatibles:';
+  } else if (fmt === 'apa') {
+    if (tabApa) { tabApa.style.borderBottomColor = '#00FF87'; tabApa.style.color = '#00FF87'; }
+    if (blockApa) blockApa.style.display = 'block';
+    if (hint) hint.innerText = 'Cita en formato estándar APA 7ª Edición para informes y tesis:';
+  } else if (fmt === 'ris') {
+    if (tabRis) { tabRis.style.borderBottomColor = '#00FF87'; tabRis.style.color = '#00FF87'; }
+    if (blockRis) blockRis.style.display = 'block';
+    if (hint) hint.innerText = 'Formato RIS estándar para importación directa en Zotero, Mendeley y EndNote:';
+  }
+}
+
+function toggleBibtexModal(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const m = document.getElementById('nexord-bibtex-modal');
+  if (!m) return;
+  const isHidden = (m.style.display === 'none' || !m.style.display);
+  m.style.display = isHidden ? 'flex' : 'none';
+  document.body.style.overflow = isHidden ? 'hidden' : '';
+}
+
+function copyActiveCitation() {
+  let targetBlock = document.getElementById('bibtex-code-block');
+  if (activeCitationFormat === 'apa') targetBlock = document.getElementById('apa-code-block');
+  if (activeCitationFormat === 'ris') targetBlock = document.getElementById('ris-code-block');
+  
+  const btnText = document.getElementById('bibtex-copy-text');
+  const btnIcon = document.getElementById('bibtex-copy-icon');
+  const status = document.getElementById('bibtex-copy-status');
+  if (!targetBlock) return;
+  
+  const text = targetBlock.innerText || targetBlock.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    if (btnText) btnText.innerText = '¡Copiado!';
+    if (btnIcon) btnIcon.innerText = '✅';
+    if (status) status.innerText = `Cita (${activeCitationFormat.toUpperCase()}) copiada`;
+    setTimeout(() => {
+      if (btnText) btnText.innerText = 'Copiar al Portapapeles';
+      if (btnIcon) btnIcon.innerText = '📋';
+      if (status) status.innerText = '';
+    }, 2500);
+  }).catch(() => {
+    const range = document.createRange();
+    range.selectNode(targetBlock);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    if (btnText) btnText.innerText = '¡Copiado!';
+    setTimeout(() => { if (btnText) btnText.innerText = 'Copiar al Portapapeles'; }, 2500);
+  });
+}
+</script>
+
   <script src="../nexord_dial_nav.js" defer></script>
 
 </body>
