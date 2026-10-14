@@ -2275,6 +2275,9 @@
           </div>
         </div>
       </div>
+      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.08); margin-top: 6px; padding-top: 5px; font-size: 0.68rem; color: #94A3B8;">
+        ⚖️ <strong>Regla Factual de Agregación:</strong> La <strong>densidad global</strong> ya está calculada en las matrices; lo que se determina analíticamente es la <strong>figura global prototípica</strong> en el espacio Q<sub>81</sub> (estación y símbolo canónico), calculada <strong>una sola vez para cada sociomatriz</strong> a la que se adjunta su respectiva densidad socio-termodinámica precalculada.
+      </div>
     </div>
     </section> <!-- Fin polygraph-center-stage -->
 
@@ -9500,9 +9503,11 @@
       redrawAll();
     }
 
-    // CÁLCULO DE VECTORES MARGINALES POR SUJETO PARA UNA MATRIZ DADA
+    // CÁLCULO DE VECTORES MARGINALES POR SUJETO PARA UNA MATRIZ DADA (Calculado una sola vez por sociomatriz)
     function computeSubjectMarginals(mat) {
       if (!mat || !mat.sujetos) return [];
+      if (mat._subjectMarginals) return mat._subjectMarginals; // Calculada una sola vez para cada sociomatriz
+
       const subjects = mat.sujetos;
       const allLinks = [];
       if (mat.q_map) {
@@ -9512,7 +9517,7 @@
         }
       }
 
-      return subjects.map(s => {
+      const result = subjects.map(s => {
         const emitted = allLinks.filter(l => l.from === s);
         const received = allLinks.filter(l => l.to === s);
 
@@ -9560,6 +9565,65 @@
           figDef: matchedFig ? matchedFig.def : 'Centro Neutro'
         };
       });
+
+      mat._subjectMarginals = result;
+      return result;
+    }
+
+    // DETERMINACIÓN DE LA FIGURA PROTOTÍPICA GLOBAL DE LA SOCIOMATRIZ EN Q81
+    // (La densidad global ya está calculada en la matriz; la figura global se calcula UNA SOLA VEZ para cada sociomatriz)
+    function computeMatrixGlobalFigure(mat) {
+      if (!mat) return null;
+      if (mat._globalFigure) return mat._globalFigure; // Calculada una sola vez para cada sociomatriz
+
+      const subjects = computeSubjectMarginals(mat);
+      if (!subjects || subjects.length === 0) {
+        mat._globalFigure = {
+          qid: 41,
+          q81_num: 41,
+          sym: '¡¿?!',
+          def: 'Indiferencia pura / Reposo ecuatorial',
+          d1: 0, d2: 0, d3: 0, d4: 0,
+          bdr: (mat.bdr !== undefined) ? mat.bdr : 0,
+          sdr: (mat.sdr !== undefined) ? mat.sdr : 0
+        };
+        return mat._globalFigure;
+      }
+
+      const N = subjects.length;
+      const d1 = subjects.reduce((acc, s) => acc + s.d1, 0) / N;
+      const d2 = subjects.reduce((acc, s) => acc + s.d2, 0) / N;
+      const d3 = subjects.reduce((acc, s) => acc + s.d3, 0) / N;
+      const d4 = subjects.reduce((acc, s) => acc + s.d4, 0) / N;
+
+      const toTernary = (v) => (v >= 0.10 ? 1 : (v <= -0.10 ? -1 : 0));
+      const t1 = toTernary(d1);
+      const t2 = toTernary(d2);
+      const t3 = toTernary(d3);
+      const t4 = toTernary(d4);
+
+      let matchedFig = MATRIX_9x9_CONFIG.find(f => f.d1 === t1 && f.d2 === t2 && f.d3 === t3 && f.d4 === t4);
+      if (!matchedFig) {
+        let bestDist = Infinity;
+        for (const f of MATRIX_9x9_CONFIG) {
+          const dist = (f.d1 - d1)**2 + (f.d2 - d2)**2 + (f.d3 - d3)**2 + (f.d4 - d4)**2;
+          if (dist < bestDist) {
+            bestDist = dist;
+            matchedFig = f;
+          }
+        }
+      }
+
+      mat._globalFigure = {
+        qid: matchedFig ? matchedFig.id : 41,
+        q81_num: matchedFig ? matchedFig.id : 41,
+        sym: matchedFig ? matchedFig.sym : '¡¿?!',
+        def: matchedFig ? (matchedFig.def || 'Estado Colectivo') : 'Centro Neutro',
+        d1, d2, d3, d4,
+        bdr: (mat.bdr !== undefined) ? mat.bdr : Math.min(1.0, (Math.abs(d2) + Math.abs(d3)) / 2.0),
+        sdr: (mat.sdr !== undefined) ? mat.sdr : (d2 + d3) / 2.0
+      };
+      return mat._globalFigure;
     }
 
     // MODAL DUAL DE DENSIDADES (1a d_díadas vs 1b d_sujetos globales)
@@ -9611,10 +9675,40 @@
       const subjects = mat.sujetos || [];
       const N = subjects.length;
 
+      const globFig = computeMatrixGlobalFigure(mat);
+      const bdrVal = (mat.bdr !== undefined) ? mat.bdr.toFixed(2) : globFig.bdr.toFixed(2);
+      const sdrVal = (mat.sdr !== undefined) ? mat.sdr.toFixed(2) : globFig.sdr.toFixed(2);
+      const sdrSign = parseFloat(sdrVal) > 0 ? '+' : '';
+      const sdrColor = parseFloat(sdrVal) > 0 ? 'var(--neon-green)' : (parseFloat(sdrVal) < 0 ? 'var(--neon-alert)' : 'var(--neon-gold)');
+
+      const globalBadgeHtml = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; background:rgba(15,23,42,0.85); border:1px solid rgba(56,189,248,0.22); border-radius:6px; padding:6px 12px; margin-bottom:10px; font-size:0.72rem;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--text-dim);">Sociomatriz:</span>
+            <strong style="color:#FFFFFF; font-size:0.75rem;">${mat.clave || matKey}</strong>
+            <span style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.68rem;">(N = ${N})</span>
+          </div>
+          <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+            <div title="Densidad Global ya calculada en la sociomatriz">
+              <span style="color:var(--text-dim); font-size:0.68rem;">Densidad Global (Matriz):</span>
+              <span style="color:var(--neon-gold); font-weight:800; font-family:var(--font-mono); margin-left:4px;">BDR ${bdrVal}</span>
+              <span style="color:${sdrColor}; font-weight:800; font-family:var(--font-mono); margin-left:6px;">SDR ${sdrSign}${sdrVal}</span>
+            </div>
+            <div style="border-left:1px solid rgba(255,255,255,0.15); padding-left:12px;" title="Figura Prototípica Global de la sociomatriz calculada una sola vez">
+              <span style="color:var(--text-dim); font-size:0.68rem;">Figura Global (Q81):</span>
+              <span style="color:#F472B6; font-weight:800; font-family:var(--font-mono); margin-left:4px;">Q${globFig.qid}</span>
+              <strong style="color:var(--neon-gold); font-family:var(--font-mono); margin-left:5px;">${globFig.sym}</strong>
+              <span style="color:var(--text-dim); font-size:0.65rem; margin-left:5px;">(${globFig.def})</span>
+            </div>
+          </div>
+        </div>
+      `;
+
       if (modalDualTab === '1a') {
         // 1a) d_díadas: Matriz Diádica (i,j) + (j,i) / 2
         let html = `
           <div class="dual-matrix-container">
+            ${globalBadgeHtml}
             <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
               <span style="color:var(--neon-cyan); font-weight:800; font-family:var(--font-mono); font-size:0.75rem;">
                 MATRIZ 1a) d_díadas &middot; ${mat.clave || matKey} &middot; N=${N} (${N*N} Díadas [N &times; N] &middot; El Emisor Forma Parte del Grupo)
@@ -9693,8 +9787,8 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1a / 2a) d_díadas (Matriz N &times; N = ${N*N} díadas):</strong> En <strong>2a</strong>, primero se averigua cuál es su <strong>figura prototípica diádica</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna factual (pDA, DA, RC, pRC); y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad diádica</strong> resultante &frac12; [ d(i, j) + d(j, i) ].
-              <strong>El emisor también forma parte del grupo</strong>: el universo relacional abarca las ${N*N} posiciones de la sociomatriz completa.
+              💡 <strong>Lectura 1a / 2a) d_díadas (Matriz N &times; N = ${N*N} díadas):</strong> La <strong>densidad global</strong> ya está calculada en las matrices; lo que se determina analíticamente es la <strong>figura prototípica</strong> en Q<sub>81</sub> (calculada una sola vez para cada sociomatriz). En <strong>2a</strong>, primero se averigua su figura prototípica diádica y a qué Q81_num (1..81) corresponde a partir de (pDA, DA, RC, pRC); y una vez localizada su estación en Q<sub>81</sub>, se inscribe su densidad diádica resultante &frac12; [ d(i, j) + d(j, i) ].
+              <strong>El emisor también forma parte del grupo</strong> (${N*N} díadas completas).
               Verde = Atracción mutua predominante (&gt;0); Rosa/Magenta = Rechazo mutuo predominante (&lt;0); Amarillo = Neutralidad simétrica (0).
             </div>
           </div>
@@ -9705,6 +9799,7 @@
         const marg = computeSubjectMarginals(mat);
         let html = `
           <div class="dual-matrix-container">
+            ${globalBadgeHtml}
             <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
               <span style="color:var(--neon-green); font-weight:800; font-family:var(--font-mono); font-size:0.75rem;">
                 VECTOR 1b) d_sujetos globales &middot; ${mat.clave || matKey} &middot; N=${N} Sujetos Agregados
@@ -9761,7 +9856,7 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1b / 2b) d_sujetos globales:</strong> En <strong>2b</strong>, primero se averigua cuál es su <strong>figura prototípica global</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su perfil cuatridimensional marginal (pDA, DA, RC, pRC). Una vez determinada su posición arquetípica en Q<sub>81</sub>, se inscribe su <strong>densidad socio-termodinámica</strong> (SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ] y BDR<sub>i</sub>), verificando el <strong>Teorema Baricéntrico de NEXORD</strong> (&Delta; = 0.000).
+              💡 <strong>Lectura 1b / 2b) d_sujetos globales:</strong> La <strong>densidad global</strong> ya está calculada en las matrices; lo que se determina analíticamente es la <strong>figura prototípica global</strong> en Q<sub>81</sub> (calculada una sola vez para cada sociomatriz). En <strong>2b</strong>, primero se averigua la figura prototípica global de cada sujeto y a qué Q81_num (1..81) corresponde a partir de su cuaterna marginal (pDA, DA, RC, pRC), asociándole su densidad socio-termodinámica SDR<sub>i</sub> = &frac12; [ d(i, &middot;) + d(&middot;, j) ] y BDR<sub>i</sub> (Teorema Baricéntrico &Delta; = 0.000).
             </div>
           </div>
         `;
@@ -11648,6 +11743,11 @@
     // INICIALIZACIÓN ONLOAD
     // ==============================================================
     window.onload = () => {
+      // Pre-calcular una sola vez para cada sociomatriz su figura prototípica global (Q81) y marginales
+      for (const k in TENSOR_DATA) {
+        computeSubjectMarginals(TENSOR_DATA[k]);
+        computeMatrixGlobalFigure(TENSOR_DATA[k]);
+      }
       resizeCanvases();
       updateChipClasses();
       updateMoviolaReadout();
