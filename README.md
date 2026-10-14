@@ -6,12 +6,13 @@ Plataforma científica y ecosistema interactivo de diagnóstico socio-termodiná
 
 ## 🌐 Enlaces Oficiales de la Plataforma
 
-1. 🌐 **VISORD Demo 3D (Simulador Grupal $N < 51$)**: [visord_demo.html](https://nexord.org/visord_demo.html)
-2. 🎭 **VISORD Cultural (Sociometría de Obras Maestras)**: [visord_cultural.html](https://nexord.org/visord_cultural.html)
-3. ⚡ **VISORD Dialéctico (Observador Universal de Textos)**: [visord_dialectico.html](https://nexord.org/visord_dialectico.html)
-4. 🔬 **Entorno Operativo — Plataforma de Investigación**: [v_plataforma.html](https://nexord.org/v_plataforma.html)
-5. 🔐 **Portal del Participante (Retorno Ético Web)**: [retorno_participante.html](https://nexord.org/retorno_participante.html)
-6. 📖 **Glosario Oficial de Términos**: [glosario.html](https://nexord.org/glosario.html)
+- 🌐 **Plataforma Web Oficial (Online)**: [https://josemancor.github.io/nex-ord-web/index.html](https://josemancor.github.io/nex-ord-web/index.html)
+- 🔬 **VISORD Demo 3D (Simulador Grupal $N < 51$)**: [https://josemancor.github.io/nex-ord-web/visord_demo.html](https://josemancor.github.io/nex-ord-web/visord_demo.html)
+- 🎭 **VISORD Cultural (Sociometría de Obras Maestras)**: [https://josemancor.github.io/nex-ord-web/visord_cultural.html](https://josemancor.github.io/nex-ord-web/visord_cultural.html)
+- ⚡ **VISORD Dialéctico (Observador Universal de Textos)**: [https://josemancor.github.io/nex-ord-web/visord_dialectico.html](https://josemancor.github.io/nex-ord-web/visord_dialectico.html)
+- 🔬 **Entorno Operativo — Plataforma de Investigación**: [https://josemancor.github.io/nex-ord-web/v_plataforma.html](https://josemancor.github.io/nex-ord-web/v_plataforma.html)
+- 🔐 **Portal del Participante (Retorno Ético Web)**: [https://josemancor.github.io/nex-ord-web/retorno_participante.html](https://josemancor.github.io/nex-ord-web/retorno_participante.html)
+- 📖 **Glosario Oficial de Términos**: [https://josemancor.github.io/nex-ord-web/glosario.html](https://josemancor.github.io/nex-ord-web/glosario.html)
 
 ---
 
