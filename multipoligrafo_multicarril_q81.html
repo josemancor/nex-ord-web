@@ -1883,10 +1883,10 @@
           <!-- Recuadro 4: Resolución Analítica (1a/2a d_díadas vs 1b/2b d_sujetos globales) -->
           <div class="projection-box box-res" title="Resolución Analítica Dual: 1a/2a d_díadas vs 1b/2b d_sujetos globales">
             <span class="projection-box-label">🔬 RESOLUCIÓN</span>
-            <button class="btn-proj p-res active" id="btn-res-extenso" onclick="setResolutionMode('extenso', this)" title="1a) d_díadas: (i,j)+(j,i)/2 | 2a) d_díadas en Q81">
+            <button class="btn-proj p-res active" id="btn-res-extenso" onclick="setResolutionMode('extenso', this)" title="1a) d_díadas: (i,j)+(j,i)/2 | 2a) d_díadas: Primero figura prototípica y Q81_num antes de incluir densidad">
               <strong>1a/2a d_díadas</strong>
             </button>
-            <button class="btn-proj p-res" id="btn-res-comprimido" onclick="setResolutionMode('comprimido', this)" title="1b) d_sujetos globales: (·,j)+(i,·)/2 | 2b) d_sujetos globales en Q81">
+            <button class="btn-proj p-res" id="btn-res-comprimido" onclick="setResolutionMode('comprimido', this)" title="1b) d_sujetos globales: (·,j)+(i,·)/2 | 2b) d_sujetos globales: Primero figura prototípica global y Q81_num antes de incluir densidad">
               <strong>1b/2b d_sujetos globales</strong>
             </button>
             <button class="btn-proj p-res-table" id="btn-res-table" onclick="openDualDensitiesModal()" title="Ver Tabla Comparativa: 1a) d_díadas vs 1b) d_sujetos globales">
@@ -2270,8 +2270,8 @@
         <div>
           <span style="color: #F472B6; font-weight: 800;">2. PROYECCIÓN ESPECTRAL EN Q81:</span>
           <div style="font-size: 0.70rem; margin-top: 2px;">
-            &bull; <strong>2a) d_díadas:</strong> Q<sub>81</sub>( &frac12; [ (i, j) + (j, i) ] ) &middot; Proyección de cada díada factual en su casilla arquetípica.<br>
-            &bull; <strong>2b) d_sujetos globales:</strong> Q<sub>81</sub>( &frac12; [ (&middot;, j) + (i, &middot;) ] ) &middot; Proyección de los marginales de cada sujeto en su estación arquetípica condensada.
+            &bull; <strong>2a) d_díadas:</strong> Primero se averigua cuál es su <strong>figura prototípica diádica</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna factual (pDA, DA, RC, pRC); y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad diádica</strong> &frac12; [ (i, j) + (j, i) ].<br>
+            &bull; <strong>2b) d_sujetos globales:</strong> Primero se averigua cuál es su <strong>figura prototípica global</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna marginal; y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad socio-termodinámica</strong> (SDR<sub>i</sub> = &frac12; [ SRC<sub>i</sub> + SDA<sub>i</sub> ]).
           </div>
         </div>
       </div>
@@ -9487,8 +9487,8 @@
       const subBar = document.getElementById('projection-sub-bar');
       if (subBar) {
         const resNotice = (currentResolutionMode === 'extenso')
-          ? '<span style="color:#38BDF8; margin-left:8px;">[1a/2a d_díadas: Balance diádico (i,j)+(j,i)/2 en Q81]</span>'
-          : '<span style="color:#F472B6; margin-left:8px;">[1b/2b d_sujetos globales: Saldo marginal (·,j)+(i,·)/2 en Q81]</span>';
+          ? '<span style="color:#38BDF8; margin-left:8px;">[2a) d_díadas: Figura prototípica diádica y Q81_num &rarr; Densidad &frac12;[(i,j)+(j,i)] en Q81]</span>'
+          : '<span style="color:#F472B6; margin-left:8px;">[2b) d_sujetos globales: Figura prototípica global y Q81_num &rarr; Densidad SDR en Q81]</span>';
         const oldNotice = subBar.querySelector('.sub-bar-res-notice');
         if (oldNotice) oldNotice.remove();
         const span = document.createElement('span');
@@ -9543,6 +9543,8 @@
           }
         }
         const qid = matchedFig ? matchedFig.id : 41;
+        const q81_num = qid;
+        const figura_prototipica = matchedFig ? matchedFig.sym : '¡¿?!';
 
         return {
           subject: s,
@@ -9552,7 +9554,9 @@
           sdr,     // Saldo marginal baricéntrico [(·, j) + (i, ·)] / 2
           bdr,
           qid,
-          figSym: matchedFig ? matchedFig.sym : '¡¿?!',
+          q81_num,            // Número exacto Q81 (1..81)
+          figura_prototipica, // Figura prototípica global SMIb
+          figSym: figura_prototipica,
           figDef: matchedFig ? matchedFig.def : 'Centro Neutro'
         };
       });
@@ -9689,7 +9693,7 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1a) d_díadas (Matriz N &times; N = ${N*N} díadas):</strong> En cada celda (i, j) se visualiza la preferencia directa emitida (i, j), la preferencia recibida (j, i) y la semisuma resultante &frac12; [ (i, j) + (j, i) ].
+              💡 <strong>Lectura 1a / 2a) d_díadas (Matriz N &times; N = ${N*N} díadas):</strong> En <strong>2a</strong>, primero se averigua cuál es su <strong>figura prototípica diádica</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su cuaterna factual (pDA, DA, RC, pRC); y una vez localizada su estación en Q<sub>81</sub>, se inscribe su <strong>densidad diádica</strong> resultante &frac12; [ (i, j) + (j, i) ].
               <strong>El emisor también forma parte del grupo</strong>: el universo relacional abarca las ${N*N} posiciones de la sociomatriz completa.
               Verde = Atracción mutua predominante (&gt;0); Rosa/Magenta = Rechazo mutuo predominante (&lt;0); Amarillo = Neutralidad simétrica (0).
             </div>
@@ -9718,8 +9722,8 @@
                   <th title="Saldo Marginal Baricéntrico: [(·,j) + (i,·)] / 2" style="color:var(--neon-gold);">Saldo Marginal &frac12; [ (·,j)+(i,·) ]</th>
                   <th title="Densidad Bruta Marginal: [|(i,·)| + |(·,j)|] / 2">Densidad BDR</th>
                   <th title="Expectativa Emitida y Recibida (pDA / pRC)">Expectativas (pDA / pRC)</th>
-                  <th title="Estación Arquetípica en el espacio continuo Q81">Estación Q81</th>
-                  <th style="text-align:left;">Arquetipo Relacional SMIb</th>
+                  <th title="Estación Arquetípica en el catálogo Q81 (1..81)">Q81_num (Estación)</th>
+                  <th style="text-align:left;" title="Figura Prototípica Global en el espacio Q81">Figura Prototípica Global (Q81)</th>
                 </tr>
               </thead>
               <tbody>
@@ -9744,9 +9748,9 @@
               <td><span class="cell-semisum ${sdrClass}" style="font-size:0.75rem;">${sdrStr}</span></td>
               <td style="color:var(--neon-gold);">${bdrStr}</td>
               <td style="color:#94A3B8;">${pStr}</td>
-              <td style="font-weight:800; color:#F472B6;">Q${s.qid}</td>
+              <td style="font-weight:800; color:#F472B6;">Q${s.q81_num}</td>
               <td style="text-align:left; color:#E2E8F0;">
-                <strong style="color:var(--neon-gold); font-family:var(--font-mono);">${s.figSym}</strong>
+                <strong style="color:var(--neon-gold); font-family:var(--font-mono);">${s.figura_prototipica}</strong>
                 <span style="font-size:0.62rem; color:var(--text-dim); margin-left:4px;">${s.figDef}</span>
               </td>
             </tr>
@@ -9757,8 +9761,7 @@
               </tbody>
             </table>
             <div style="margin-top:8px; font-size:0.68rem; color:var(--text-dim); line-height:1.4;">
-              💡 <strong>Lectura 1b) d_sujetos globales:</strong> Condensa el comportamiento sociométrico de cada sujeto a su vector baricéntrico.
-              Verifica el <strong>Teorema Baricéntrico de NEXORD</strong>: el saldo relacional neto coincide exactamente con el punto medio de emisión y recepción (SDR = (SRC + SDA) / 2), proyectando a cada actor en su estación canónica de Q81.
+              💡 <strong>Lectura 1b / 2b) d_sujetos globales:</strong> En <strong>2b</strong>, primero se averigua cuál es su <strong>figura prototípica global</strong> y a qué <strong>Q81_num</strong> corresponde (1..81) a partir de su perfil cuatridimensional marginal (pDA, DA, RC, pRC). Una vez determinada su posición arquetípica en Q<sub>81</sub>, se inscribe su <strong>densidad socio-termodinámica</strong> (SDR<sub>i</sub> = &frac12; [ SRC<sub>i</sub> + SDA<sub>i</sub> ] y BDR<sub>i</sub>), verificando el <strong>Teorema Baricéntrico de NEXORD</strong> (&Delta; = 0.000).
             </div>
           </div>
         `;
