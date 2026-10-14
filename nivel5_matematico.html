@@ -5316,7 +5316,7 @@
                 8. 🧊 Hipercubo Tensor 3D
               </button>
               <button class="g-item-btn" id="g-item-8" onclick="selectGalleryItem(8, this)" style="background:transparent; border:1px solid rgba(255,255,255,0.12); color:#94A3B8; padding:5px 8px; border-radius:5px; text-align:left; cursor:pointer; font-size:0.78rem; font-family:monospace; font-weight:700;">
-                9. 🕊️ Red Socio-Afectiva
+                9. 🕊️ Red Dual (Atracción &amp; Rechazo)
               </button>
             </div>
           </div>
@@ -5338,8 +5338,8 @@
         <div style="flex: 1 1 auto; min-width: 0; background: #060A18; border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 10px; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 8px 30px rgba(0,0,0,0.65);">
           
           <!-- Encabezado del Gráfico Activo -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(56,189,248,0.25); padding-bottom: 4px;">
-            <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(56,189,248,0.25); padding-bottom: 4px; gap: 8px;">
+            <div style="flex: 1 1 auto; min-width: 0;">
               <h3 id="g-view-title" style="font-size: 1.15rem; font-weight: 900; color: #FFFFFF; margin: 0;">
                 1. Diagrama de Dispersión Relacional (DA vs REC)
               </h3>
@@ -5347,7 +5347,21 @@
                 Estudio Factual 1g1t1c · N=5 (1A..5A) · Bisectriz de reciprocidad Y=X
               </div>
             </div>
-            <button onclick="openCurrentGalleryLightbox()" style="background: rgba(0,255,135,0.15); border: 1px solid #00FF87; color: #00FF87; padding: 4px 12px; border-radius: 6px; font-size: 0.80rem; font-family: monospace; font-weight: 800; cursor: pointer;">
+
+            <!-- Sub-conmutador Dual de Sociogramas (visible solo en Item 9) -->
+            <div id="soc-dual-switch-container" style="display: none; align-items: center; gap: 6px; flex-shrink: 0;">
+              <span style="font-family: monospace; font-size: 0.74rem; color: #94A3B8; font-weight: 700;">POLARIDAD:</span>
+              <div style="display: inline-flex; background: rgba(5,8,20,0.85); border: 1px solid rgba(56,189,248,0.3); border-radius: 20px; padding: 2px; gap: 3px;">
+                <button id="soc-btn-atrac" onclick="switchSociogramPolarity('atraccion')" style="background: rgba(0,255,135,0.2); border: 1px solid #00FF87; color: #00FF87; padding: 3px 11px; border-radius: 16px; font-size: 0.76rem; font-family: monospace; font-weight: 800; cursor: pointer; transition: all 0.2s;">
+                  💚 Atracción (+1)
+                </button>
+                <button id="soc-btn-rech" onclick="switchSociogramPolarity('rechazo')" style="background: transparent; border: 1px solid transparent; color: #94A3B8; padding: 3px 11px; border-radius: 16px; font-size: 0.76rem; font-family: monospace; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                  💔 Rechazo (-1)
+                </button>
+              </div>
+            </div>
+
+            <button onclick="openCurrentGalleryLightbox()" style="background: rgba(0,255,135,0.15); border: 1px solid #00FF87; color: #00FF87; padding: 4px 12px; border-radius: 6px; font-size: 0.80rem; font-family: monospace; font-weight: 800; cursor: pointer; flex-shrink: 0;">
               🔍 Zoom HD
             </button>
           </div>
@@ -7900,16 +7914,84 @@
         interp: "Superficie de evolución temporal (T1..T3) y contraste criterial (C1..C2) entre colectivos independientes."
       },
       {
-        title: "9. Red Socio-Afectiva Humanizada (Grafo de Fuerzas)",
-        sub: "Nodos con Rostro · Flechas Orientadas con Espesor W(k) · Halos Gravitatorios",
-        scale: "Micro (Individual)",
-        metric: "Fuerzas Fructerman",
-        img: "assets/g1t1c1/red_humanizada_1g1t1c.png",
-        interp: "Visualización intuitiva con anonimización canónica y vectores relacionales coloreados según la valencia del vínculo."
+        title: "9. Sociograma Canónico de Atracción y Cohesión (Moreno +)",
+        sub: "Estudio Factual 1g1t1c · Red Polarizada de Elecciones (+1) · Tríada {1A,2A,3A} y Díada {4A,5A}",
+        scale: "Micro (Diádico)",
+        metric: "Grafo Dual Moreno",
+        img: "assets/g1t1c1/soc_moreno_atraccion_1g1t1c.png",
+        img_atrac: "assets/g1t1c1/soc_moreno_atraccion_1g1t1c.png",
+        img_rech: "assets/g1t1c1/soc_moreno_relegacion_1g1t1c.png",
+        title_atrac: "9. Sociograma Canónico de Atracción y Cohesión (Moreno +)",
+        sub_atrac: "Estudio Factual 1g1t1c · Red Polarizada de Elecciones (+1) · Tríada {1A,2A,3A} y Díada {4A,5A}",
+        interp_atrac: "Visualización de alianzas y cohesión diádica: revela la división en dos islas estancas (la tríada mayoritaria articulada en torno al líder 2A y la díada segregada 4A-5A, sin puentes de atracción intergrupo).",
+        title_rech: "9. Sociograma Canónico de Rechazo y Conflicto (Moreno -)",
+        sub_rech: "Estudio Factual 1g1t1c · Red Polarizada de Tensiones (-1) · Oposición Sistemática Inter-Facción",
+        interp_rech: "Visualización de fricción térmica y ostracismo: mapea el bombardeo de rechazo mutuo [Rr] entre el bloque A {1A, 2A, 3A} y el bloque B {4A, 5A}, concentrando en 4A y 5A la máxima estigmatización grupal.",
+        interp: "Visualización de alianzas y cohesión diádica: revela la división en dos islas estancas (la tríada mayoritaria articulada en torno al líder 2A y la díada segregada 4A-5A, sin puentes de atracción intergrupo)."
       }
     ];
 
     let currentGalleryIdx = 0;
+    let sociogramPolarity = 'atraccion'; // 'atraccion' | 'rechazo'
+
+    function switchSociogramPolarity(polarity, updateView = true) {
+      sociogramPolarity = polarity;
+      const btnAtrac = document.getElementById('soc-btn-atrac');
+      const btnRech = document.getElementById('soc-btn-rech');
+      const item = galleryItems[8];
+
+      if (polarity === 'atraccion') {
+        if (btnAtrac) {
+          btnAtrac.style.background = 'rgba(0,255,135,0.2)';
+          btnAtrac.style.borderColor = '#00FF87';
+          btnAtrac.style.color = '#00FF87';
+          btnAtrac.style.fontWeight = '800';
+        }
+        if (btnRech) {
+          btnRech.style.background = 'transparent';
+          btnRech.style.borderColor = 'transparent';
+          btnRech.style.color = '#94A3B8';
+          btnRech.style.fontWeight = '700';
+        }
+        item.img = item.img_atrac;
+        item.title = item.title_atrac;
+        item.sub = item.sub_atrac;
+        item.interp = item.interp_atrac;
+      } else {
+        if (btnRech) {
+          btnRech.style.background = 'rgba(255,0,127,0.2)';
+          btnRech.style.borderColor = '#FF007F';
+          btnRech.style.color = '#FF007F';
+          btnRech.style.fontWeight = '800';
+        }
+        if (btnAtrac) {
+          btnAtrac.style.background = 'transparent';
+          btnAtrac.style.borderColor = 'transparent';
+          btnAtrac.style.color = '#94A3B8';
+          btnAtrac.style.fontWeight = '700';
+        }
+        item.img = item.img_rech;
+        item.title = item.title_rech;
+        item.sub = item.sub_rech;
+        item.interp = item.interp_rech;
+      }
+
+      if (updateView && currentGalleryIdx === 8) {
+        const titleEl = document.getElementById('g-view-title');
+        if (titleEl) titleEl.textContent = item.title;
+        const subEl = document.getElementById('g-view-sub');
+        if (subEl) subEl.textContent = item.sub;
+        const interpEl = document.getElementById('g-view-interp');
+        if (interpEl) interpEl.textContent = item.interp;
+        const imgEl = document.getElementById('g-view-img');
+        if (imgEl) {
+          imgEl.style.opacity = '0.7';
+          imgEl.src = item.img;
+          imgEl.alt = item.title;
+          imgEl.onload = () => { imgEl.style.opacity = '1'; };
+        }
+      }
+    }
 
     function selectGalleryItem(idx, btn) {
       if (!btn) btn = document.getElementById(`g-item-${idx}`);
@@ -7929,6 +8011,16 @@
       }
 
       currentGalleryIdx = idx;
+
+      // Mostrar/ocultar conmutador dual de sociogramas según el item
+      const dualSwitchContainer = document.getElementById('soc-dual-switch-container');
+      if (dualSwitchContainer) {
+        dualSwitchContainer.style.display = (idx === 8) ? 'inline-flex' : 'none';
+      }
+      if (idx === 8) {
+        switchSociogramPolarity(sociogramPolarity, false);
+      }
+
       const item = galleryItems[idx];
       if (!item) return;
 
@@ -7965,6 +8057,10 @@
       galleryItems.forEach(it => {
         const pImg = new Image();
         pImg.src = it.img;
+        if (it.img_rech) {
+          const pImg2 = new Image();
+          pImg2.src = it.img_rech;
+        }
       });
     });
 
