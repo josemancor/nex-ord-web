@@ -522,9 +522,6 @@ As the creator of NEXORD and a staunch advocate of Open Science, I consider the 
 
 It is vital to clarify the exact scope of this declaration. This Manifesto is a programmatic scientific document—a comprehensive exposition of the theoretical, methodological, and pragmatic architecture of the initiative—: neither this document, nor the computational platform, nor its algorithms are subjected to proprietary intellectual property restrictions; this Manifesto is disseminated openly under a Creative Commons Attribution 4.0 International license (CC BY 4.0), and the safeguards advocated herein do not restrict scientific knowledge, but rather regulate operational access to the diagnostic instrument.
 
-From the inception of the project, its creator has harbored the steadfast intention of bequeathing the software to a prestigious public university or recognized research institution—through its designated knowledge transfer foundation—which shall serve as the sole trustee and administrator of the codebase under its exclusive stewardship, should its operational deployment eventually be extended to other interested international research centers. As the culmination of this endeavor and in keeping with my status as Professor Emeritus (Retired) at the Universitat de Barcelona (UB), I formally declare my offer to bequeath the ownership and institutional rights of the NEXORD Platform to the Universitat de Barcelona to the Faculty of Psychology of the Universitat de Barcelona, so that it may assume institutional stewardship, oversight of its strict ethical safeguards, and the administration of international agreements with accredited research centers worldwide.
-
-
 ---
 
 ## 8. Formalized Technical Annexes
