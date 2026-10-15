@@ -352,7 +352,7 @@
          ========================================================================= -->
     <aside id="acuario-sidebar" class="w-full lg:w-[350px] xl:w-[370px] flex-shrink-0 flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-80px)] pr-1.5 transition-all duration-300">
 
-      <!-- 1. BLOQUE MAESTRO: ¡ ACCIÓN ! + PREAJUSTES 1-CLIC (Op1, Op2, Op3) -->
+      <!-- 1. BLOQUE MAESTRO: ACCION! + Op1 Op2 Op3 + pause borrar velocidad ... -->
       <div class="flex flex-col gap-2 bg-slate-950/95 p-2.5 rounded-2xl border-2 border-emerald-500/60 shadow-xl shadow-emerald-500/10">
         <div class="flex items-center gap-1.5">
           <!-- BOTÓN MAESTRO DE ACCIÓN -->
@@ -367,214 +367,283 @@
         </div>
 
         <!-- 3 OPCIONES PREPARADAS 1-CLIC: Op1, Op2, Op3 -->
-        <div class="flex flex-col gap-1.5 pt-1 border-t border-slate-800">
-          <div class="flex items-center justify-between text-[9px] mono text-slate-400 font-bold uppercase tracking-wider">
-            <span class="text-teal-300">⚡ OPCIONES PREPARADAS:</span>
-            <span class="text-emerald-400">1-CLIC DIRECTO</span>
+        <div class="grid grid-cols-3 gap-1.5 text-xs mono">
+          <!-- Op1 -->
+          <button id="btn-op1" onclick="launchPreparedConfig('OP1')" class="p-2 rounded-xl bg-emerald-950/90 text-emerald-200 border-2 border-emerald-400 text-left font-black flex flex-col gap-0.5 shadow-[0_0_10px_rgba(0,255,135,0.25)] hover:scale-[1.02] transition cursor-pointer" title="Canónica Normal: G1·T1·C1 (N=6)">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-emerald-300 font-black">Op1</span>
+              <span id="led-op1" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <div class="text-[9px] text-emerald-200 font-bold leading-tight">Canónica</div>
+            <div class="text-[7.5px] text-emerald-400 font-normal">G1·T1·C1 (N=6)</div>
+          </button>
+
+          <!-- Op2 -->
+          <button id="btn-op2" onclick="launchPreparedConfig('OP2')" class="p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-amber-400 hover:text-amber-200 text-left font-bold flex flex-col gap-0.5 hover:scale-[1.02] transition cursor-pointer" title="Dinámica de Tarea: G2·T2·C2 (N=6)">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-amber-300 font-black">Op2</span>
+              <span id="led-op2" class="w-1.5 h-1.5 rounded-full bg-amber-400 opacity-60"></span>
+            </div>
+            <div class="text-[9px] text-amber-200 font-bold leading-tight">Tarea</div>
+            <div class="text-[7.5px] text-amber-400 font-normal">G2·T2·C2 (N=6)</div>
+          </button>
+
+          <!-- Op3 -->
+          <button id="btn-op3" onclick="launchPreparedConfig('OP3')" class="p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 hover:text-cyan-200 text-left font-bold flex flex-col gap-0.5 hover:scale-[1.02] transition cursor-pointer" title="Hipertensor Global: G3T3C2 (N=18)">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-cyan-300 font-black">Op3</span>
+              <span id="led-op3" class="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-60"></span>
+            </div>
+            <div class="text-[9px] text-cyan-200 font-bold leading-tight">Global</div>
+            <div class="text-[7.5px] text-cyan-400 font-normal">G3T3C2 (N=18)</div>
+          </button>
+        </div>
+
+        <!-- CONTROLES DINÁMICA: pause, borrar, velocidad, ... -->
+        <div class="grid grid-cols-4 gap-1 pt-1.5 border-t border-slate-800 text-[10px] mono">
+          <!-- pause -->
+          <button id="btn-ctrl-pause" onclick="togglePauseSimulation()" class="py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition" title="Pausar o reanudar dinámica del acuario">
+            <span id="ico-ctrl-pause">⏸</span> <span id="lbl-ctrl-pause">pause</span>
+          </button>
+          <!-- borrar -->
+          <button id="btn-ctrl-borrar" onclick="resetAndClearAquariumScene()" class="py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-rose-400 text-rose-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition" title="Borrar rastro diádico y deseleccionar sujeto">
+            <span>🧹</span> <span>borrar</span>
+          </button>
+          <!-- velocidad -->
+          <button id="btn-ctrl-speed" onclick="cycleSimulationSpeed()" class="py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition" title="Ajustar velocidad de rotación y escáner">
+            <span>⚡</span> <span id="lbl-ctrl-speed">1.0x</span>
+          </button>
+          <!-- ... -->
+          <button id="btn-ctrl-more" onclick="toggleExtraControlsMenu()" class="py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-teal-400 text-teal-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition" title="Más controles de cámara y visualización">
+            <span>⋯</span> <span>más</span>
+          </button>
+        </div>
+
+        <!-- Sub-panel desplegable de '...' -->
+        <div id="extra-controls-menu" class="hidden p-2 rounded-xl bg-slate-900/90 border border-slate-700 text-[9px] mono flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-slate-400 font-bold">
+            <span>OPCIONES COMPLEMENTARIAS:</span>
+            <button onclick="toggleExtraControlsMenu()" class="text-slate-400 hover:text-white">✕</button>
           </div>
-          <div class="grid grid-cols-3 gap-1.5 text-xs mono">
-            <!-- Op1 -->
-            <button id="btn-op1" onclick="launchPreparedConfig('OP1')" class="p-2 rounded-xl bg-emerald-950/90 text-emerald-200 border-2 border-emerald-400 text-left font-black flex flex-col gap-0.5 shadow-[0_0_10px_rgba(0,255,135,0.25)] hover:scale-[1.02] transition cursor-pointer" title="Canónica Normal: G1·T1·C1 (N=6, Afinidad, SDR, Sábana 360°)">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-emerald-300 font-black">Op1</span>
-                <span id="led-op1" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              </div>
-              <div class="text-[9px] text-emerald-200 font-bold leading-tight">Canónica</div>
-              <div class="text-[7.5px] text-emerald-400 font-normal">G1·T1·C1 (N=6)</div>
-            </button>
-
-            <!-- Op2 -->
-            <button id="btn-op2" onclick="launchPreparedConfig('OP2')" class="p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-amber-400 hover:text-amber-200 text-left font-bold flex flex-col gap-0.5 hover:scale-[1.02] transition cursor-pointer" title="Dinámica de Tarea: G2·T2·C2 (N=6, Tarea, Fricción, Chispas)">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-amber-300 font-black">Op2</span>
-                <span id="led-op2" class="w-1.5 h-1.5 rounded-full bg-amber-400 opacity-60"></span>
-              </div>
-              <div class="text-[9px] text-amber-200 font-bold leading-tight">Tarea</div>
-              <div class="text-[7.5px] text-amber-400 font-normal">G2·T2·C2 (N=6)</div>
-            </button>
-
-            <!-- Op3 -->
-            <button id="btn-op3" onclick="launchPreparedConfig('OP3')" class="p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 hover:text-cyan-200 text-left font-bold flex flex-col gap-0.5 hover:scale-[1.02] transition cursor-pointer" title="Hipertensor Global: G3T3C2 (N=18, Grupos A+B+C simultáneos)">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-cyan-300 font-black">Op3</span>
-                <span id="led-op3" class="w-1.5 h-1.5 rounded-full bg-cyan-400 opacity-60"></span>
-              </div>
-              <div class="text-[9px] text-cyan-200 font-bold leading-tight">Global</div>
-              <div class="text-[7.5px] text-cyan-400 font-normal">G3T3C2 (N=18)</div>
-            </button>
+          <div class="grid grid-cols-3 gap-1">
+            <button onclick="toggleAutoRotate()" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-cyan-300 text-center font-bold">🔄 Auto 360°</button>
+            <button onclick="resetCamera3D()" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-teal-300 text-center font-bold">📷 Reset Cam</button>
+            <button onclick="toggleRelationalSheet()" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-purple-300 text-center font-bold">🌊 Sábana-Ola</button>
+            <button onclick="setCameraView('top')" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-white text-center font-bold">Cenital</button>
+            <button onclick="setCameraView('front')" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-white text-center font-bold">Frontal</button>
+            <button onclick="toggleCleanSheetMode()" class="p-1 rounded bg-slate-950 border border-slate-800 text-slate-300 hover:text-sky-300 text-center font-bold">🫧 Limpia</button>
           </div>
         </div>
       </div>
 
       <!-- =========================================================================
-           1. PESTAÑA: BASE MATRICIAL & ESCALA: n(i, j) / n / q(9, 9) / q(9)
+           1. FONDO: NxN, NdxNr, QxQ, QdxQr, GxG, TxT, CxC, GxT, GxC, TxC, GCxT
            ========================================================================= -->
       <section class="glass-panel rounded-2xl p-2.5 flex flex-col gap-2 border border-slate-800 transition-all">
         <div onclick="toggleSidebarSection('tab1')" class="flex items-center justify-between cursor-pointer select-none">
           <div class="flex items-center gap-1.5">
             <span class="text-cyan-400 font-black text-xs" id="chev-sidebar-tab1">▼</span>
-            <span class="text-xs font-black mono text-cyan-300">1) BASE & ESCALA:</span>
+            <span class="text-xs font-black mono text-cyan-300">1 fondo</span>
           </div>
-          <span class="mono text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 font-bold border border-cyan-500/50" id="lbl-tab1-val">n(i, j)</span>
+          <span class="mono text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 font-bold border border-cyan-500/50" id="lbl-tab1-val">NxN</span>
         </div>
-        <div id="content-sidebar-tab1" class="flex flex-col gap-1.5 pt-1.5 border-t border-slate-800/80">
-          <div class="grid grid-cols-2 gap-1.5 text-xs mono">
-            <button onclick="selectTab1Base('n_ij')" id="btn-base-n_ij" class="p-1.5 rounded-xl bg-cyan-950 text-cyan-200 border border-cyan-400 text-left font-black transition cursor-pointer">
-              <div class="text-[10px]">n(i, j) · Diádica</div>
-              <div class="text-[7.5px] text-cyan-400">1d..6d × 6r..1r</div>
-            </button>
-            <button onclick="selectTab1Base('n')" id="btn-base-n" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">n · Nodal</div>
-              <div class="text-[7.5px] text-slate-400">1..6 × 6..1</div>
-            </button>
-            <button onclick="selectTab1Base('q99')" id="btn-base-q99" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">q(9, 9) · Cripta Q81</div>
-              <div class="text-[7.5px] text-slate-400">9d × 9r (81 figs)</div>
-            </button>
-            <button onclick="selectTab1Base('q9')" id="btn-base-q9" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">q(9) · Eneagrama</div>
-              <div class="text-[7.5px] text-slate-400">9 macro-sectores</div>
-            </button>
-          </div>
-          <!-- Sub-selector Q81: 1-81, 9d, 9r, <E..e> -->
-          <div class="px-2 py-1.5 rounded-xl bg-slate-950/80 border border-cyan-900/60 flex flex-col gap-1">
-            <div class="text-[8.5px] text-cyan-400 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span>BASE Q81 ETIQUETAS:</span>
-              <span id="lbl-q81-mode-indicator" class="text-cyan-200 normal-case font-mono font-bold">1-81</span>
-            </div>
-            <div class="grid grid-cols-4 gap-1">
-              <button type="button" id="btn-q81-lbl-num" onclick="setQ81LabelMode('NUM', event)" class="px-1.5 py-1 rounded bg-cyan-950 border border-cyan-400 text-cyan-300 font-black text-[9.5px] text-center transition cursor-pointer hover:bg-cyan-900" title="Modo numérico 1-81">1-81</button>
-              <button type="button" id="btn-q81-lbl-da" onclick="setQ81LabelMode('DA', event)" class="px-1.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9.5px] text-center transition cursor-pointer hover:border-cyan-400 hover:text-white" title="Modo Dadores 9d">9d</button>
-              <button type="button" id="btn-q81-lbl-rc" onclick="setQ81LabelMode('RC', event)" class="px-1.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9.5px] text-center transition cursor-pointer hover:border-cyan-400 hover:text-white" title="Modo Receptores 9r">9r</button>
-              <button type="button" id="btn-q81-lbl-sym" onclick="setQ81LabelMode('SYM', event)" class="px-1.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9.5px] text-center transition cursor-pointer hover:border-cyan-400 hover:text-white" title="Modo Sintáctico: <E ¡E [E ... e> e! e]">&lt;E..e&gt;</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           2. PESTAÑA: HIPERCUBO NORMAL G3T3C2: G / T / C / GT / GC / TC / GCxT
-           ========================================================================= -->
-      <section class="glass-panel rounded-2xl p-2.5 flex flex-col gap-2 border border-slate-800 transition-all">
-        <div onclick="toggleSidebarSection('tab2')" class="flex items-center justify-between cursor-pointer select-none">
-          <div class="flex items-center gap-1.5">
-            <span class="text-teal-400 font-black text-xs" id="chev-sidebar-tab2">▼</span>
-            <span class="text-xs font-black mono text-teal-300">2) HIPERCUBO G3T3C2:</span>
-          </div>
-          <span class="mono text-[10px] px-2 py-0.5 rounded-full bg-teal-950 text-teal-300 font-bold border border-teal-500/50" id="lbl-tab2-val">G1·T1·C1</span>
-        </div>
-        <div id="content-sidebar-tab2" class="flex flex-col gap-2 pt-1.5 border-t border-slate-800/80 text-xs mono">
-          <!-- Grupo G -->
-          <div>
-            <div class="flex items-center justify-between text-[8.5px] text-slate-400 font-bold mb-1">
-              <span>GRUPO EMPÍRICO (G):</span>
-              <span class="text-teal-300 text-[8px]">g1 g2 g3 × g3 g2 g1</span>
-            </div>
-            <div class="grid grid-cols-3 gap-1 mb-1">
-              <button onclick="setNormalG(1)" id="btn-g-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">
-                <div>G1 (A)</div>
-                <div class="text-[7.5px] text-teal-400">1A..6A</div>
+        <div id="content-sidebar-tab1" class="flex flex-col gap-2 pt-1.5 border-t border-slate-800/80">
+          
+          <!-- Bloque 1: Cuadrículas de Sujetos y Figuras -->
+          <div class="flex flex-col gap-1">
+            <span class="text-[8.5px] mono text-slate-400 font-bold uppercase tracking-wider">CUADRÍCULAS BASE:</span>
+            <div class="grid grid-cols-2 gap-1.5 text-xs mono">
+              <!-- NxN -->
+              <button onclick="setFondoBase('NxN')" id="btn-fondo-NxN" class="p-1.5 rounded-xl bg-cyan-950 text-cyan-200 border-2 border-cyan-400 text-left font-black transition cursor-pointer shadow-sm">
+                <div class="text-[10px]">NxN</div>
+                <div class="text-[7.5px] text-cyan-400">Nodal 1..N × N..1</div>
               </button>
-              <button onclick="setNormalG(2)" id="btn-g-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
-                <div>G2 (B)</div>
-                <div class="text-[7.5px] text-slate-400">1B..6B</div>
+              <!-- NdxNr -->
+              <button onclick="setFondoBase('NdxNr')" id="btn-fondo-NdxNr" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
+                <div class="text-[10px]">NdxNr</div>
+                <div class="text-[7.5px] text-slate-400">Diádica 1d..Nd × Nr..1r</div>
               </button>
-              <button onclick="setNormalG(3)" id="btn-g-3" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
-                <div>G3 (C)</div>
-                <div class="text-[7.5px] text-slate-400">1C..6C</div>
+              <!-- QxQ -->
+              <button onclick="setFondoBase('QxQ')" id="btn-fondo-QxQ" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
+                <div class="text-[10px]">QxQ</div>
+                <div class="text-[7.5px] text-slate-400">Figuras 1..9 × 9..1</div>
+              </button>
+              <!-- QdxQr -->
+              <button onclick="setFondoBase('QdxQr')" id="btn-fondo-QdxQr" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
+                <div class="text-[10px]">QdxQr</div>
+                <div class="text-[7.5px] text-slate-400">1d..9d × 9r..1r / &lt;E..r]</div>
               </button>
             </div>
-            <button onclick="toggleIntergroupCycle()" id="btn-intergroup-cycle" class="w-full py-1 px-2 rounded-lg bg-teal-950/60 hover:bg-teal-900 border border-teal-500/40 text-[8.5px] text-teal-200 font-bold flex items-center justify-between cursor-pointer">
-              <span>🔄 Cruce Intergrupal:</span>
-              <span class="text-teal-400 font-mono font-black">g1 g2 g3 × g3 g2 g1</span>
-            </button>
-          </div>
-
-          <!-- Tiempo T -->
-          <div>
-            <div class="flex items-center justify-between text-[8.5px] text-slate-400 font-bold mb-1">
-              <span>TRAYECTORIA TEMPORAL (T):</span>
-              <span class="text-cyan-300 text-[8px]">t1 t2 t3 × t3 t2 t1</span>
-            </div>
-            <div class="grid grid-cols-3 gap-1 mb-1">
-              <button onclick="setNormalT(1)" id="btn-t-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">T1</button>
-              <button onclick="setNormalT(2)" id="btn-t-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">T2</button>
-              <button onclick="setNormalT(3)" id="btn-t-3" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">T3</button>
-            </div>
-            <button onclick="toggleTemporalMoviola()" id="btn-temporal-moviola" class="w-full py-1 px-2 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/40 text-[8.5px] text-cyan-200 font-bold flex items-center justify-between cursor-pointer">
-              <span>⏱️ Moviola Temporal:</span>
-              <span class="text-cyan-400 font-mono font-black">t1 t2 t3 × t3 t2 t1</span>
-            </button>
-          </div>
-
-          <!-- Criterio C -->
-          <div>
-            <div class="flex items-center justify-between text-[8.5px] text-slate-400 font-bold mb-1">
-              <span>CRITERIO SOCIOMÉTRICO (C):</span>
-              <span class="text-amber-300 text-[8px]">c1 × c2</span>
-            </div>
-            <div class="grid grid-cols-2 gap-1">
-              <button onclick="setNormalC(1)" id="btn-c-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">
-                <div>C1: Afinidad</div>
-              </button>
-              <button onclick="setNormalC(2)" id="btn-c-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
-                <div>C2: Tarea</div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tensores Compuestos -->
-          <div class="border-t border-slate-800 pt-1.5">
-            <div class="text-[8.5px] text-slate-400 font-bold mb-1">TENSORES COMPUESTOS:</div>
-            <div class="grid grid-cols-3 gap-1 mb-1">
-              <button onclick="selectTab2Cube('GT')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">GT</button>
-              <button onclick="selectTab2Cube('GC')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">GC</button>
-              <button onclick="selectTab2Cube('TC')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">TC</button>
-            </div>
-            <button onclick="selectTab2Cube('GCxT')" class="w-full p-2 rounded-xl bg-teal-950/80 hover:bg-teal-900 border border-teal-400 text-teal-200 font-black text-center cursor-pointer">
-              <div class="text-[10px]">GCxT · Hipertensor Global (N=18)</div>
-              <div class="text-[7.5px] text-teal-400 font-normal">G1 (A) + G2 (B) + G3 (C) simultáneos</div>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           3. PESTAÑA: ESPACIO & PROYECCIONES 18D
-           ========================================================================= -->
-      <section class="glass-panel rounded-2xl p-2.5 flex flex-col gap-2 border border-slate-800 transition-all">
-        <div onclick="toggleSidebarSection('tab3')" class="flex items-center justify-between cursor-pointer select-none">
-          <div class="flex items-center gap-1.5">
-            <span class="text-emerald-400 font-black text-xs" id="chev-sidebar-tab3">▼</span>
-            <span class="text-xs font-black mono text-emerald-300">3) ESPACIO & PROYECCIÓN 18D:</span>
-          </div>
-          <span class="mono text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-bold border border-emerald-500/50" id="lbl-tab3-val">18D SDR</span>
-        </div>
-        <div id="content-sidebar-tab3" class="flex flex-col gap-1.5 pt-1.5 border-t border-slate-800/80 text-xs mono">
-          <div class="grid grid-cols-2 gap-1.5">
-            <button onclick="selectTab3Mode('SDR')" class="p-1.5 rounded-xl bg-emerald-950 text-emerald-200 border border-emerald-400 text-left font-black transition cursor-pointer">
-              <div class="text-[10px]">SDR (Total)</div>
-              <div class="text-[7.5px] text-emerald-400">Baricentro ±ℝ</div>
-            </button>
-            <button onclick="selectTab3Mode('FACT')" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-emerald-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">FACT (Hechos)</div>
-              <div class="text-[7.5px] text-slate-400">A2 + A3</div>
-            </button>
-            <button onclick="selectTab3Mode('COGN')" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">COGN (Halos)</div>
-              <div class="text-[7.5px] text-cyan-400">A1 + A4</div>
-            </button>
-            <button onclick="selectTab3Mode('BDR')" class="p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-amber-400 text-left font-bold transition cursor-pointer">
-              <div class="text-[10px]">BDR (Masa)</div>
-              <div class="text-[7.5px] text-amber-400">W(k)=2^(1-k)</div>
-            </button>
-            <button onclick="selectTab3Mode('GAP')" class="col-span-2 p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-rose-400 text-left font-bold transition cursor-pointer">
-              <div class="flex items-center justify-between">
-                <span class="text-[10px] text-rose-300">GAP · Brecha Ontológica (BDF/BDC)</span>
-                <span id="hud-gap-ratio-mini" class="text-[9px] text-rose-300 font-bold">1.00</span>
+            
+            <!-- Sub-selector Etiquetas Q81 -->
+            <div id="box-q81-lbl-modes" class="px-2 py-1 rounded-xl bg-slate-950/80 border border-cyan-900/60 flex items-center justify-between text-[9px] mono">
+              <span class="text-cyan-400 font-bold">Etiquetas Q:</span>
+              <div class="flex items-center gap-1">
+                <button type="button" id="btn-q81-lbl-num" onclick="setQ81LabelMode('NUM', event)" class="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-400 text-cyan-300 font-black text-[9px]">1-81</button>
+                <button type="button" id="btn-q81-lbl-da" onclick="setQ81LabelMode('DA', event)" class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9px]">9d</button>
+                <button type="button" id="btn-q81-lbl-rc" onclick="setQ81LabelMode('RC', event)" class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9px]">9r</button>
+                <button type="button" id="btn-q81-lbl-sym" onclick="setQ81LabelMode('SYM', event)" class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9px]">&lt;E..e&gt;</button>
               </div>
+            </div>
+          </div>
+
+          <!-- Bloque 2: Cruces Tensoriales (GxG, TxT, CxC, GxT, GxC, TxC, GCxT) -->
+          <div class="flex flex-col gap-1 border-t border-slate-800 pt-1.5">
+            <span class="text-[8.5px] mono text-slate-400 font-bold uppercase tracking-wider">CRUCES TENSORIALES:</span>
+            <div class="grid grid-cols-3 gap-1 text-[10px] mono">
+              <!-- GxG -->
+              <button onclick="setFondoBase('GxG')" id="btn-fondo-GxG" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>GxG</div>
+                <div class="text-[7.5px] text-slate-400">Intergrupal</div>
+              </button>
+              <!-- TxT -->
+              <button onclick="setFondoBase('TxT')" id="btn-fondo-TxT" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>TxT</div>
+                <div class="text-[7.5px] text-slate-400">Moviola</div>
+              </button>
+              <!-- CxC -->
+              <button onclick="setFondoBase('CxC')" id="btn-fondo-CxC" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>CxC</div>
+                <div class="text-[7.5px] text-slate-400">Afin/Tarea</div>
+              </button>
+              <!-- GxT -->
+              <button onclick="setFondoBase('GxT')" id="btn-fondo-GxT" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>GxT</div>
+                <div class="text-[7.5px] text-slate-400">Grupos×T</div>
+              </button>
+              <!-- GxC -->
+              <button onclick="setFondoBase('GxC')" id="btn-fondo-GxC" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>GxC</div>
+                <div class="text-[7.5px] text-slate-400">Grupos×C</div>
+              </button>
+              <!-- TxC -->
+              <button onclick="setFondoBase('TxC')" id="btn-fondo-TxC" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer">
+                <div>TxC</div>
+                <div class="text-[7.5px] text-slate-400">Tiempos×C</div>
+              </button>
+            </div>
+            <!-- GCxT -->
+            <button onclick="setFondoBase('GCxT')" id="btn-fondo-GCxT" class="w-full p-2 rounded-xl bg-slate-900 hover:bg-teal-950 text-slate-200 border border-slate-700 hover:border-teal-400 font-bold text-center transition cursor-pointer mt-0.5">
+              <div class="text-[10px] mono font-black text-teal-300">GCxT · Hipertensor Global (N=18)</div>
+              <div class="text-[7.5px] text-slate-400 font-normal">Cruce Grupos×Criterios (6) × Tiempos (3)</div>
             </button>
           </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           2. 18D: D1 a D18
+           ========================================================================= -->
+      <section class="glass-panel rounded-2xl p-2.5 flex flex-col gap-2 border border-slate-800 transition-all">
+        <div onclick="toggleSidebarSection('tab2_18d')" class="flex items-center justify-between cursor-pointer select-none">
+          <div class="flex items-center gap-1.5">
+            <span class="text-emerald-400 font-black text-xs" id="chev-sidebar-tab2_18d">▼</span>
+            <span class="text-xs font-black mono text-emerald-300">2 18D</span>
+          </div>
+          <span class="mono text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-bold border border-emerald-500/50" id="lbl-18d-val">D13 · SDR</span>
+        </div>
+        <div id="content-sidebar-tab2_18d" class="flex flex-col gap-1.5 pt-1.5 border-t border-slate-800/80 text-xs mono">
+          
+          <div class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wider flex items-center justify-between">
+            <span>DESCRIPTORES SOCIO-TERMODINÁMICOS:</span>
+            <span class="text-emerald-400 text-[8px]" id="lbl-18d-active-name">Saldo Total ±ℝ</span>
+          </div>
+
+          <!-- Cuadrícula Compacta de 18 Dimensiones: D1 a D18 (6 x 3) -->
+          <div class="grid grid-cols-6 gap-1 text-[10px] text-center font-bold">
+            <!-- D1 -->
+            <button onclick="selectD18Dimension('D1')" id="btn-18d-D1" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D1: p_DA (Expectativa Emisor)">
+              <span class="font-black text-[9.5px]">D1</span>
+              <span class="text-[7px] text-slate-400 font-normal">pDA</span>
+            </button>
+            <!-- D2 -->
+            <button onclick="selectD18Dimension('D2')" id="btn-18d-D2" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D2: DA (Preferencia Emisor)">
+              <span class="font-black text-[9.5px]">D2</span>
+              <span class="text-[7px] text-slate-400 font-normal">DA</span>
+            </button>
+            <!-- D3 -->
+            <button onclick="selectD18Dimension('D3')" id="btn-18d-D3" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D3: REC (Preferencia Receptor)">
+              <span class="font-black text-[9.5px]">D3</span>
+              <span class="text-[7px] text-slate-400 font-normal">REC</span>
+            </button>
+            <!-- D4 -->
+            <button onclick="selectD18Dimension('D4')" id="btn-18d-D4" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D4: p_REC (Expectativa Receptor)">
+              <span class="font-black text-[9.5px]">D4</span>
+              <span class="text-[7px] text-slate-400 font-normal">pRC</span>
+            </button>
+            <!-- D5 -->
+            <button onclick="selectD18Dimension('D5')" id="btn-18d-D5" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D5: SDA (Saldo Dador)">
+              <span class="font-black text-[9.5px]">D5</span>
+              <span class="text-[7px] text-slate-400 font-normal">SDA</span>
+            </button>
+            <!-- D6 -->
+            <button onclick="selectD18Dimension('D6')" id="btn-18d-D6" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D6: SRC (Saldo Receptor)">
+              <span class="font-black text-[9.5px]">D6</span>
+              <span class="text-[7px] text-slate-400 font-normal">SRC</span>
+            </button>
+            <!-- D7 -->
+            <button onclick="selectD18Dimension('D7')" id="btn-18d-D7" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D7: BDA (Masa Dador)">
+              <span class="font-black text-[9.5px]">D7</span>
+              <span class="text-[7px] text-slate-400 font-normal">BDA</span>
+            </button>
+            <!-- D8 -->
+            <button onclick="selectD18Dimension('D8')" id="btn-18d-D8" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D8: BRC (Masa Receptor)">
+              <span class="font-black text-[9.5px]">D8</span>
+              <span class="text-[7px] text-slate-400 font-normal">BRC</span>
+            </button>
+            <!-- D9 -->
+            <button onclick="selectD18Dimension('D9')" id="btn-18d-D9" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D9: SDF (Saldo Fáctico DA+REC)">
+              <span class="font-black text-[9.5px]">D9</span>
+              <span class="text-[7px] text-slate-400 font-normal">SDF</span>
+            </button>
+            <!-- D10 -->
+            <button onclick="selectD18Dimension('D10')" id="btn-18d-D10" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D10: SDC (Saldo Cognitivo pDA+pREC)">
+              <span class="font-black text-[9.5px]">D10</span>
+              <span class="text-[7px] text-slate-400 font-normal">SDC</span>
+            </button>
+            <!-- D11 -->
+            <button onclick="selectD18Dimension('D11')" id="btn-18d-D11" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D11: BDF (Masa Fáctica)">
+              <span class="font-black text-[9.5px]">D11</span>
+              <span class="text-[7px] text-slate-400 font-normal">BDF</span>
+            </button>
+            <!-- D12 -->
+            <button onclick="selectD18Dimension('D12')" id="btn-18d-D12" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D12: BDC (Masa Cognitiva)">
+              <span class="font-black text-[9.5px]">D12</span>
+              <span class="text-[7px] text-slate-400 font-normal">BDC</span>
+            </button>
+            <!-- D13 (SDR - ACTIVO POR DEFECTO) -->
+            <button onclick="selectD18Dimension('D13')" id="btn-18d-D13" class="p-1 rounded bg-emerald-950 border-2 border-emerald-400 text-emerald-200 flex flex-col items-center justify-center cursor-pointer transition shadow-[0_0_8px_rgba(0,255,135,0.4)]" title="D13: SDR (Saldo Relativo Global / Flotabilidad)">
+              <span class="font-black text-[9.5px]">D13</span>
+              <span class="text-[7px] text-emerald-400 font-normal">SDR</span>
+            </button>
+            <!-- D14 -->
+            <button onclick="selectD18Dimension('D14')" id="btn-18d-D14" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D14: BDR (Masa Relacional Total)">
+              <span class="font-black text-[9.5px]">D14</span>
+              <span class="text-[7px] text-slate-400 font-normal">BDR</span>
+            </button>
+            <!-- D15 -->
+            <button onclick="selectD18Dimension('D15')" id="btn-18d-D15" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D15: GAP (Brecha BDF/BDC)">
+              <span class="font-black text-[9.5px]">D15</span>
+              <span class="text-[7px] text-slate-400 font-normal">GAP</span>
+            </button>
+            <!-- D16 -->
+            <button onclick="selectD18Dimension('D16')" id="btn-18d-D16" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D16: AMB (Ambivalencia Cognitiva)">
+              <span class="font-black text-[9.5px]">D16</span>
+              <span class="text-[7px] text-slate-400 font-normal">AMB</span>
+            </button>
+            <!-- D17 -->
+            <button onclick="selectD18Dimension('D17')" id="btn-18d-D17" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D17: MASS (Masa Di Integrada)">
+              <span class="font-black text-[9.5px]">D17</span>
+              <span class="text-[7px] text-slate-400 font-normal">Di</span>
+            </button>
+            <!-- D18 -->
+            <button onclick="selectD18Dimension('D18')" id="btn-18d-D18" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D18: BIAS (Sesgo de Flujo Relacional)">
+              <span class="font-black text-[9.5px]">D18</span>
+              <span class="text-[7px] text-slate-400 font-normal">&delta;i</span>
+            </button>
+          </div>
+
           <button onclick="open18DSpectrogramModal()" class="w-full py-1.5 px-2 rounded-xl bg-teal-950 hover:bg-teal-900 border border-teal-500/60 text-teal-200 font-bold text-[10px] flex items-center justify-between transition mt-0.5 cursor-pointer">
             <span>🌐 LÁMINA ESPECTROGRAMA 18D</span>
             <span class="text-[8.5px] bg-teal-400 text-slate-950 px-1.5 py-0.2 rounded font-black">ZENODO</span>
@@ -2298,25 +2367,34 @@
     /* =========================================================================
        4. DAMERO ADAPTADO AL FONDO Y CRUCES PERPENDICULARES
        ========================================================================= */
-    function getDameroGridCoords(count, span = 8.8) {
+    function getDameroGridCoords(countX, countZ = null, span = 8.8) {
+      if (typeof countZ !== 'number') {
+        span = (typeof countZ === 'number') ? countZ : (span || 8.8);
+        countZ = countX;
+      }
       const halfSpan = span / 2;
-      const step = count > 1 ? span / count : span;
+      const stepX = countX > 1 ? span / countX : span;
+      const stepZ = countZ > 1 ? span / countZ : span;
       const floorY = -3.48;
       return {
         span,
         halfSpan,
-        step,
-        count,
+        step: Math.min(stepX, stepZ),
+        stepX,
+        stepZ,
+        countX,
+        countZ,
+        count: countX,
         floorY,
-        // Dador (X): 0..count-1 (1d..Kd de izq a dcha)
+        // Dador (X): 0..countX-1 (de izq a dcha)
         getX: function(dIdx) {
-          if (count <= 1) return 0;
-          return -halfSpan + (dIdx + 0.5) * step;
+          if (countX <= 1) return 0;
+          return -halfSpan + (dIdx + 0.5) * stepX;
         },
-        // Receptor (Z): 0..count-1 (1r..Kr donde 1r fondo, Kr frente)
+        // Receptor (Z): 0..countZ-1 (de fondo a frente)
         getZ: function(rIdx) {
-          if (count <= 1) return 0;
-          return -halfSpan + (rIdx + 0.5) * step;
+          if (countZ <= 1) return 0;
+          return -halfSpan + (rIdx + 0.5) * stepZ;
         }
       };
     }
@@ -2399,20 +2477,125 @@
         baseFloorGrid = null;
       }
 
-      const isQ = (currentAquariumBase === 'QxQ' || currentAquariumBase === 'Q9');
-      const isTensor = (currentAquariumBase === 'TENSOR');
-      const count = isQ ? 9 : (isTensor ? 3 : Math.min(N, 12));
+      const baseKey = currentAquariumBase || 'NxN';
+      let countX = Math.min(N, 12);
+      let countZ = Math.min(N, 12);
+      let daLabels = [];
+      let rcLabels = [];
+      let titleDaText = 'DADORES (DA) ➔';
+      let titleRcText = 'RECEPTORES (RC) ➔';
+
+      const symDa = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
+      const symRc = ['r]', 'r!', 'r>', '?]', '?!', '?>', 'e]', 'e!', 'e>'];
+
+      if (baseKey === 'NxN') {
+        countX = Math.min(N, 12);
+        countZ = Math.min(N, 12);
+        daLabels = Array.from({length: countX}, (_, i) => `${i + 1}`);
+        rcLabels = Array.from({length: countZ}, (_, i) => `${countZ - i}`);
+        titleDaText = 'ORDINAL X (1 ➔ N) ➔';
+        titleRcText = 'ORDINAL Z (N ➔ 1) ➔';
+      } else if (baseKey === 'NdxNr') {
+        countX = Math.min(N, 12);
+        countZ = Math.min(N, 12);
+        daLabels = Array.from({length: countX}, (_, i) => `${i + 1}d`);
+        rcLabels = Array.from({length: countZ}, (_, i) => `${countZ - i}r`);
+        titleDaText = 'DADORES (1d ➔ Nd) ➔';
+        titleRcText = 'RECEPTORES (Nr ➔ 1r) ➔';
+      } else if (baseKey === 'QxQ') {
+        countX = 9;
+        countZ = 9;
+        if (q81LabelMode === 'NUM') {
+          daLabels = Array.from({length: 9}, (_, i) => `${i + 1}`);
+          rcLabels = Array.from({length: 9}, (_, i) => `${9 - i}`);
+        } else {
+          daLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+          rcLabels = ['9', '8', '7', '6', '5', '4', '3', '2', '1'];
+        }
+        titleDaText = 'FIGURAS Q81 (1 ➔ 9) ➔';
+        titleRcText = 'FIGURAS Q81 (9 ➔ 1) ➔';
+      } else if (baseKey === 'QdxQr' || baseKey === 'Q9') {
+        countX = 9;
+        countZ = 9;
+        if (q81LabelMode === 'SYM') {
+          daLabels = symDa;
+          rcLabels = symRc;
+        } else if (q81LabelMode === 'RC') {
+          daLabels = Array.from({length: 9}, (_, i) => `${i + 1}r`);
+          rcLabels = Array.from({length: 9}, (_, i) => `${9 - i}r`);
+        } else {
+          daLabels = Array.from({length: 9}, (_, i) => `${i + 1}d`);
+          rcLabels = Array.from({length: 9}, (_, i) => `${9 - i}r`);
+        }
+        titleDaText = (q81LabelMode === 'SYM') ? 'DADORES Q81 (<E..[R) ➔' : 'DADORES Q81 (1d..9d) ➔';
+        titleRcText = (q81LabelMode === 'SYM') ? 'RECEPTORES Q81 (r]..e>) ➔' : 'RECEPTORES Q81 (9r..1r) ➔';
+      } else if (baseKey === 'GxG') {
+        countX = 3;
+        countZ = 3;
+        daLabels = ['g1 (A)', 'g2 (B)', 'g3 (C)'];
+        rcLabels = ['g3 (C)', 'g2 (B)', 'g1 (A)'];
+        titleDaText = 'GRUPOS EMISORES (g1 ➔ g3) ➔';
+        titleRcText = 'GRUPOS RECEPTORES (g3 ➔ g1) ➔';
+      } else if (baseKey === 'TxT') {
+        countX = 3;
+        countZ = 3;
+        daLabels = ['t1', 't2', 't3'];
+        rcLabels = ['t3', 't2', 't1'];
+        titleDaText = 'TIEMPO ORIGEN (t1 ➔ t3) ➔';
+        titleRcText = 'TIEMPO DESTINO (t3 ➔ t1) ➔';
+      } else if (baseKey === 'CxC') {
+        countX = 2;
+        countZ = 2;
+        daLabels = ['c1 (Afinidad)', 'c2 (Tarea)'];
+        rcLabels = ['c2 (Tarea)', 'c1 (Afinidad)'];
+        titleDaText = 'CRITERIO 1 (Afinidad ➔ Tarea) ➔';
+        titleRcText = 'CRITERIO 2 (Tarea ➔ Afinidad) ➔';
+      } else if (baseKey === 'GxT') {
+        countX = 3;
+        countZ = 3;
+        daLabels = ['g1 (A)', 'g2 (B)', 'g3 (C)'];
+        rcLabels = ['t3', 't2', 't1'];
+        titleDaText = 'GRUPOS G (g1 ➔ g3) ➔';
+        titleRcText = 'TIEMPOS T (t3 ➔ t1) ➔';
+      } else if (baseKey === 'GxC') {
+        countX = 3;
+        countZ = 2;
+        daLabels = ['g1 (A)', 'g2 (B)', 'g3 (C)'];
+        rcLabels = ['c2 (Tarea)', 'c1 (Afinidad)'];
+        titleDaText = 'GRUPOS G (g1 ➔ g3) ➔';
+        titleRcText = 'CRITERIOS C (c2 ➔ c1) ➔';
+      } else if (baseKey === 'TxC') {
+        countX = 3;
+        countZ = 2;
+        daLabels = ['t1', 't2', 't3'];
+        rcLabels = ['c2 (Tarea)', 'c1 (Afinidad)'];
+        titleDaText = 'TIEMPOS T (t1 ➔ t3) ➔';
+        titleRcText = 'CRITERIOS C (c2 ➔ c1) ➔';
+      } else if (baseKey === 'GCxT' || baseKey === 'TENSOR') {
+        countX = 6;
+        countZ = 3;
+        daLabels = ['g1c1', 'g1c2', 'g2c1', 'g2c2', 'g3c1', 'g3c2'];
+        rcLabels = ['t3', 't2', 't1'];
+        titleDaText = 'CRUCES GC (6) ➔';
+        titleRcText = 'TIEMPOS T (3) ➔';
+      } else {
+        countX = Math.min(N, 12);
+        countZ = Math.min(N, 12);
+        daLabels = Array.from({length: countX}, (_, i) => `${i + 1}d`);
+        rcLabels = Array.from({length: countZ}, (_, i) => `${countZ - i}r`);
+      }
+
       const floorY = -3.48;
       const span = 8.8;
       const halfSpan = span / 2;
-      const damero = getDameroGridCoords(count, span);
+      const damero = getDameroGridCoords(countX, countZ, span);
 
       // 1. DAMERO ADAPTADO AL FONDO (Checkerboard real con baldosas alternadas y cruces perpendiculares)
       const dameroGroup = new THREE.Group();
       dameroGroup.name = "damero-floor";
 
       // A. Baldosas del Damero en cuadrícula alternada
-      const squareGeom = new THREE.PlaneGeometry(damero.step * 0.98, damero.step * 0.98);
+      const squareGeom = new THREE.PlaneGeometry(damero.stepX * 0.98, damero.stepZ * 0.98);
       squareGeom.rotateX(-Math.PI / 2);
 
       const matDark = new THREE.MeshStandardMaterial({
@@ -2430,8 +2613,8 @@
         opacity: 0.82
       });
 
-      for (let i = 0; i < count; i++) {
-        for (let j = 0; j < count; j++) {
+      for (let i = 0; i < countX; i++) {
+        for (let j = 0; j < countZ; j++) {
           const isEven = (i + j) % 2 === 0;
           const sq = new THREE.Mesh(squareGeom, isEven ? matLight : matDark);
           sq.position.set(damero.getX(i), floorY + 0.01, damero.getZ(j));
@@ -2452,7 +2635,7 @@
       });
 
       // Perpendiculares X (desde las etiquetas DA exteriores hacia el fondo Z)
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < countX; i++) {
         const x = damero.getX(i);
         const pts = [
           new THREE.Vector3(x, floorY + 0.015, 6.15),
@@ -2463,7 +2646,7 @@
       }
 
       // Perpendiculares Z (desde las etiquetas RC exteriores a través de X)
-      for (let j = 0; j < count; j++) {
+      for (let j = 0; j < countZ; j++) {
         const z = damero.getZ(j);
         const pts = [
           new THREE.Vector3(-6.15, floorY + 0.015, z),
@@ -2477,8 +2660,8 @@
       const crossGeom = new THREE.BufferGeometry();
       const crossPoints = [];
       const crossSize = Math.min(0.12, damero.step * 0.16);
-      for (let i = 0; i < count; i++) {
-        for (let j = 0; j < count; j++) {
+      for (let i = 0; i < countX; i++) {
+        for (let j = 0; j < countZ; j++) {
           const cx = damero.getX(i);
           const cz = damero.getZ(j);
           crossPoints.push(
@@ -2511,66 +2694,24 @@
       baseFloorGrid = dameroGroup;
       scene.add(baseFloorGrid);
 
-      // Símbolos sintácticos canónicos Q81 para Dadores y Receptores
-      const symDa = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
-      const symRc = ['e>', 'e!', 'e]', '?>', '?!', '?]', 'r>', 'r!', 'r]'];
-
       // 2. Lado 1 (Eje Frontal Exterior Z = 6.15): Fuera del acuario en la bandeja pedestal
-      // Dadores DA (1d..6d o 1..6 o 1d..9d o <E..[R o g1..g3)
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < countX; i++) {
         const x = damero.getX(i);
-        let lbl = '';
-        if (isQ) {
-          if (q81LabelMode === 'SYM') {
-            lbl = symDa[i] || `${i + 1}d`;
-          } else if (q81LabelMode === 'RC') {
-            lbl = `${i + 1}r`;
-          } else {
-            lbl = `${i + 1}d`;
-          }
-        } else if (isTensor) {
-          lbl = `g${i + 1}`;
-        } else if (currentAquariumRegime === 'MARGINAL') {
-          lbl = `${i + 1}`;
-        } else {
-          lbl = `${i + 1}d`;
-        }
-        const sp = createBaseEdgeSprite(lbl, 'DA');
+        const sp = createBaseEdgeSprite(daLabels[i] || `${i + 1}`, 'DA');
         sp.position.set(x, floorY + 0.14, 6.15);
         baseLabelsGroup.add(sp);
       }
-      const titleDaText = isQ ? (q81LabelMode === 'SYM' ? 'DADORES (<E ¡E [E ...)' : 'DADORES (DA) ➔') : (isTensor ? 'GRUPOS (G1 ➔ G3) ➔' : (currentAquariumRegime === 'MARGINAL' ? 'ORDINAL DA (1 ➔ N)' : 'DADORES (DA) ➔'));
       const titleDa = createBaseTitleSprite(titleDaText, 'DA');
       titleDa.position.set(0, floorY + 0.14, 6.80);
       baseLabelsGroup.add(titleDa);
 
       // 3. Lado 2 (Eje Lateral Izquierdo Exterior X = -6.15): Fuera del acuario en la bandeja pedestal
-      // Receptores RC: orden canónico socio (6r..1r o 6..1 o 9r..1r o e>..r] o g3..g1)
-      for (let j = 0; j < count; j++) {
+      for (let j = 0; j < countZ; j++) {
         const z = damero.getZ(j);
-        const rIdx = j; // 0=1r..count-1=Kr
-        const invNum = rIdx + 1;
-        let lbl = '';
-        if (isQ) {
-          if (q81LabelMode === 'SYM') {
-            lbl = symRc[rIdx] || `${invNum}r`;
-          } else if (q81LabelMode === 'DA') {
-            lbl = `${invNum}d`;
-          } else {
-            lbl = `${invNum}r`;
-          }
-        } else if (isTensor) {
-          lbl = `g${invNum}`;
-        } else if (currentAquariumRegime === 'MARGINAL') {
-          lbl = `${invNum}`;
-        } else {
-          lbl = `${invNum}r`;
-        }
-        const sp = createBaseEdgeSprite(lbl, 'RC');
+        const sp = createBaseEdgeSprite(rcLabels[j] || `${j + 1}`, 'RC');
         sp.position.set(-6.15, floorY + 0.14, z);
         baseLabelsGroup.add(sp);
       }
-      const titleRcText = isQ ? (q81LabelMode === 'SYM' ? 'RECEPTORES (e> e! e] ...)' : 'RECEPTORES (RC) ➔') : (isTensor ? 'GRUPOS (G3 ➔ G1) ➔' : (currentAquariumRegime === 'MARGINAL' ? 'ORDINAL RC (N ➔ 1)' : 'RECEPTORES (RC) ➔'));
       const titleRc = createBaseTitleSprite(titleRcText, 'RC');
       titleRc.position.set(-6.80, floorY + 0.14, 0);
       baseLabelsGroup.add(titleRc);
@@ -2849,23 +2990,83 @@
 
     function computeVerticalElevation(st) {
       if (!st) return currentSeaLevel * 2.8;
-      let val = (st.SDR !== undefined) ? st.SDR : 0;
-      if (currentVerticalProjection === 'BDR') {
-        val = ((st.BDR !== undefined ? st.BDR : 0.5) - 0.5) * 1.6;
-      } else if (currentVerticalProjection === 'SRC') {
-        val = (st.SRC || 0) * 1.5;
-      } else if (currentVerticalProjection === 'SDA') {
-        val = (st.SDA || 0) * 1.5;
-      } else if (currentVerticalProjection === 'BDF') {
-        val = ((st.BDF !== undefined ? st.BDF : 0.5) - 0.5) * 1.6;
-      } else if (currentVerticalProjection === 'BDC') {
-        val = ((st.BDC !== undefined ? st.BDC : 0.5) - 0.5) * 1.6;
-      } else if (currentVerticalProjection === 'GAP') {
-        val = ((st.gapRatio || 1.0) - 1.0) * 0.9;
-      } else if (currentVerticalProjection === 'SDF') {
-        val = (st.SDF || 0) * 1.2;
-      } else if (currentVerticalProjection === 'SDC') {
-        val = (st.SDC || 0) * 1.2;
+      let val = 0;
+      const proj = currentVerticalProjection || 'D13';
+
+      switch (proj) {
+        case 'D1':  // p_DA (Expectativa Emisor)
+          val = (st.d && st.d[0] !== undefined) ? st.d[0] * 1.5 : 0;
+          break;
+        case 'D2':  // DA (Preferencia Emisor)
+          val = (st.SDA !== undefined) ? st.SDA * 1.5 : 0;
+          break;
+        case 'D3':  // REC (Preferencia Receptor)
+          val = (st.SRC !== undefined) ? st.SRC * 1.5 : 0;
+          break;
+        case 'D4':  // p_REC (Expectativa Receptor)
+          val = (st.d && st.d[3] !== undefined) ? st.d[3] * 1.5 : 0;
+          break;
+        case 'D5':  // SDA
+        case 'SDA':
+          val = (st.SDA !== undefined) ? st.SDA * 1.5 : 0;
+          break;
+        case 'D6':  // SRC
+        case 'SRC':
+          val = (st.SRC !== undefined) ? st.SRC * 1.5 : 0;
+          break;
+        case 'D7':  // BDA
+        case 'BDA':
+          val = ((st.BDA !== undefined ? st.BDA : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D8':  // BRC
+        case 'BRC':
+          val = ((st.BRC !== undefined ? st.BRC : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D9':  // SDF (Fáctico)
+        case 'SDF':
+        case 'FACT':
+          val = (st.SDF !== undefined) ? st.SDF * 1.2 : 0;
+          break;
+        case 'D10': // SDC (Cognitivo)
+        case 'SDC':
+        case 'COGN':
+          val = (st.SDC !== undefined) ? st.SDC * 1.2 : 0;
+          break;
+        case 'D11': // BDF
+        case 'BDF':
+          val = ((st.BDF !== undefined ? st.BDF : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D12': // BDC
+        case 'BDC':
+          val = ((st.BDC !== undefined ? st.BDC : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D13': // SDR (Saldo Relativo Total)
+        case 'SDR':
+        case 'TOTAL':
+          val = (st.SDR !== undefined) ? st.SDR : 0;
+          break;
+        case 'D14': // BDR
+        case 'BDR':
+          val = ((st.BDR !== undefined ? st.BDR : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D15': // GAP
+        case 'GAP':
+          val = ((st.gapRatio || 1.0) - 1.0) * 0.9;
+          break;
+        case 'D16': // AMB
+        case 'AMB':
+          val = ((st.ambiguity !== undefined ? st.ambiguity : 0.5) - 0.5) * 1.5;
+          break;
+        case 'D17': // MASS
+        case 'MASS':
+          val = ((st.massDi !== undefined ? st.massDi : 0.5) - 0.5) * 1.6;
+          break;
+        case 'D18': // BIAS
+        case 'BIAS':
+          val = (st.biasDelta !== undefined) ? st.biasDelta * 1.5 : 0;
+          break;
+        default:
+          val = (st.SDR !== undefined) ? st.SDR : 0;
       }
       const baseWaterY = currentSeaLevel * 2.8;
       const elevY = baseWaterY + val * 1.85;
@@ -2879,31 +3080,59 @@
       const st = d18State.nodes[idx];
       const pY = computeVerticalElevation(st);
 
-      const isQ = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
-      const isTensor = (currentAquariumBase === 'TENSOR');
-      const count = isQ ? 9 : (isTensor ? 3 : Math.min(N, 12));
-      const damero = getDameroGridCoords(count);
+      const baseKey = currentAquariumBase || 'NxN';
+      let countX = Math.min(N, 12);
+      let countZ = Math.min(N, 12);
+      if (baseKey === 'QxQ' || baseKey === 'QdxQr' || baseKey === 'Q9') {
+        countX = 9; countZ = 9;
+      } else if (baseKey === 'GCxT' || baseKey === 'TENSOR') {
+        countX = 6; countZ = 3;
+      } else if (baseKey === 'GxT' || baseKey === 'GxG' || baseKey === 'TxT') {
+        countX = 3; countZ = 3;
+      } else if (baseKey === 'GxC' || baseKey === 'TxC') {
+        countX = 3; countZ = 2;
+      } else if (baseKey === 'CxC') {
+        countX = 2; countZ = 2;
+      }
+
+      const damero = getDameroGridCoords(countX, countZ);
 
       let pX = 0;
       let pZ = 0;
 
-      if (isQ) {
-        // En Q81: 81 figuras situadas en damero 9x9 (Dadores 1d..9d × Receptores 1r..9r)
-        // Cruces exactos: 1,1; 2,2; 3,3 o 1d,5r como damero adaptado al fondo
-        const dIdx = Math.floor(idx / 9); // 0..8
-        const rIdx = idx % 9;             // 0..8
+      if (baseKey === 'QxQ' || baseKey === 'QdxQr' || currentScenarioKey === 'q81') {
+        const dIdx = Math.floor(idx / 9);
+        const rIdx = idx % 9;
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
-      } else if (isTensor) {
-        // En Tensor Hipercubo: 3 grupos x 6 sujetos distribuidos en el damero
-        const tDamero = getDameroGridCoords(6);
-        const sIdx = idx % 6;
-        pX = tDamero.getX(sIdx);
-        pZ = tDamero.getZ(sIdx);
+      } else if (baseKey === 'GCxT' || baseKey === 'TENSOR') {
+        const dIdx = idx % 6;
+        const rIdx = Math.floor(idx / 6) % 3;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      } else if (baseKey === 'GxT') {
+        const dIdx = idx % 3;
+        const rIdx = Math.floor(idx / 3) % 3;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      } else if (baseKey === 'GxC' || baseKey === 'TxC') {
+        const dIdx = idx % 3;
+        const rIdx = idx % 2;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      } else if (baseKey === 'CxC') {
+        const dIdx = idx % 2;
+        const rIdx = idx % 2;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      } else if (baseKey === 'GxG' || baseKey === 'TxT') {
+        const dIdx = idx % 3;
+        const rIdx = idx % 3;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
       } else {
-        // Canon Socio: "los puntos se situan en el cruce exacto de la perpendicular 1,1 2,2 3,3 o 1d,5r como un damero adaptado al fondo"
-        const dIdx = idx % count;
-        const rIdx = idx % count;
+        const dIdx = idx % countX;
+        const rIdx = idx % countZ;
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       }
@@ -4847,34 +5076,124 @@
       }
     }
 
-    // 1. PESTAÑA 1: n(i, j) / n / q(9, 9) / q(9)
-    function selectTab1Base(baseType) {
-      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
-      if (baseType === 'n_ij') {
-        if (currentScenarioKey === 'q81') loadScenario('1g1t1c');
-        setAquariumBase('NxN');
-        setAquariumRegime('DIADIC');
-        updateTab1Label('n(i, j)');
-        showSmibToast('📐 Base n(i, j): Matriz Diádica N×N');
-      } else if (baseType === 'n') {
-        if (currentScenarioKey === 'q81') loadScenario('1g1t1c');
-        setAquariumBase('NxN');
-        setAquariumRegime('MARGINAL');
-        updateTab1Label('n');
-        showSmibToast('📐 Base n: Proyección Nodal / Vectores Marginales');
-      } else if (baseType === 'q99') {
+    // =========================================================================
+    // CONTROLES DE REPRODUCCIÓN: pause, borrar, velocidad, ...
+    // =========================================================================
+    function togglePauseSimulation() {
+      toggleMasterDynamics();
+      const isPaused = !isMasterDynamicsRunning;
+      const ico = document.getElementById('ico-ctrl-pause');
+      const lbl = document.getElementById('lbl-ctrl-pause');
+      const btn = document.getElementById('btn-ctrl-pause');
+      if (ico) ico.textContent = isPaused ? '▶' : '⏸';
+      if (lbl) lbl.textContent = isPaused ? 'reanudar' : 'pause';
+      if (btn) {
+        btn.className = isPaused 
+          ? 'py-1.5 px-1.5 rounded-lg bg-amber-950 border border-amber-400 text-amber-200 font-bold flex items-center justify-center gap-1 cursor-pointer transition shadow-sm'
+          : 'py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition';
+      }
+    }
+
+    function resetAndClearAquariumScene() {
+      activeSubjectIndex = null;
+      activeDyadIndex = 0;
+      updateDyadPerpendicularGuides(null, null, null);
+      
+      flowLines.forEach(l => {
+        if (l.material) l.material.opacity = 0.55;
+      });
+      
+      renderAquariumState();
+      renderSubjectPills();
+      showSmibToast('🧹 Acuario limpio: Rastros y selecciones restablecidos');
+    }
+
+    const SIMULATION_SPEEDS = [0.5, 1.0, 1.5, 2.0, 3.0];
+    let currentSpeedIdx = 1; // 1.0x
+
+    function cycleSimulationSpeed() {
+      currentSpeedIdx = (currentSpeedIdx + 1) % SIMULATION_SPEEDS.length;
+      const spd = SIMULATION_SPEEDS[currentSpeedIdx];
+      dyadScannerSpeed = spd;
+      if (controls) controls.autoRotateSpeed = 0.75 * spd;
+      
+      const lbl = document.getElementById('lbl-ctrl-speed');
+      if (lbl) lbl.textContent = `${spd.toFixed(1)}x`;
+
+      if (isDyadScannerRunning && dyadScannerTimer) {
+        startDyadScanner();
+      }
+      showSmibToast(`⚡ Velocidad ajustada a ${spd.toFixed(1)}x`);
+    }
+
+    function toggleExtraControlsMenu() {
+      const el = document.getElementById('extra-controls-menu');
+      if (el) el.classList.toggle('hidden');
+    }
+
+    // =========================================================================
+    // 1. FONDO: NxN, NdxNr, QxQ, QdxQr, GxG, TxT, CxC, GxT, GxC, TxC, GCxT
+    // =========================================================================
+    function setFondoBase(baseKey) {
+      currentAquariumBase = baseKey;
+      
+      // Ajustar régimen o escenario según el fondo
+      if (baseKey === 'NxN') {
+        if (currentScenarioKey === 'q81' || currentScenarioKey === 'g3t3c2_global') loadScenario('1g1t1c');
+        currentAquariumRegime = 'MARGINAL';
+      } else if (baseKey === 'NdxNr') {
+        if (currentScenarioKey === 'q81' || currentScenarioKey === 'g3t3c2_global') loadScenario('1g1t1c');
+        currentAquariumRegime = 'DIADIC';
+      } else if (baseKey === 'QxQ' || baseKey === 'QdxQr') {
         generateQ81Preset();
         loadScenario('q81');
-        setAquariumBase('QxQ');
-        updateTab1Label('q(9, 9)');
-        showSmibToast('🏛️ Base q(9, 9): Cuadrícula 9×9 de las 81 Figuras Q81');
-      } else if (baseType === 'q9') {
-        setAquariumBase('Q9');
-        updateTab1Label('q(9)');
-        showSmibToast('📐 Base q(9): Macro-Categorías Q9 del Eneagrama');
+      } else if (baseKey === 'GCxT') {
+        loadScenario('g3t3c2_global');
+      } else {
+        // GxG, TxT, CxC, GxT, GxC, TxC
+        if (currentScenarioKey === 'q81') loadScenario('1g1t1c');
+        updateG3T3C2Matrix();
       }
+
+      // Actualizar botones de los 11 fondos
+      const allBases = ['NxN', 'NdxNr', 'QxQ', 'QdxQr', 'GxG', 'TxT', 'CxC', 'GxT', 'GxC', 'TxC', 'GCxT'];
+      allBases.forEach(b => {
+        const btn = document.getElementById(`btn-fondo-${b}`);
+        if (btn) {
+          const isActive = (b === baseKey);
+          if (b === 'GCxT') {
+            btn.className = isActive 
+              ? 'w-full p-2 rounded-xl bg-teal-950 text-teal-200 border-2 border-teal-400 font-black text-center shadow-[0_0_12px_rgba(0,255,135,0.35)] transition cursor-pointer mt-0.5'
+              : 'w-full p-2 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center transition cursor-pointer mt-0.5';
+          } else if (['GxG', 'TxT', 'CxC', 'GxT', 'GxC', 'TxC'].includes(b)) {
+            btn.className = isActive
+              ? 'p-1.5 rounded-lg bg-teal-950 text-teal-200 border-2 border-teal-400 text-center font-black shadow-[0_0_10px_rgba(0,255,135,0.3)] transition cursor-pointer'
+              : 'p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 text-center font-bold transition cursor-pointer';
+          } else {
+            btn.className = isActive
+              ? 'p-1.5 rounded-xl bg-cyan-950 text-cyan-200 border-2 border-cyan-400 text-left font-black shadow-[0_0_10px_rgba(0,245,212,0.3)] transition cursor-pointer'
+              : 'p-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:border-cyan-400 text-left font-bold transition cursor-pointer';
+          }
+        }
+      });
+
+      const lbl = document.getElementById('lbl-tab1-val');
+      if (lbl) lbl.textContent = baseKey;
+
+      updateBaseGridAndLabels();
       renderAquariumState(currentSpawnCount);
       updatePreConfigDisplay();
+      showSmibToast(`📐 Fondo seleccionado: ${baseKey}`);
+    }
+
+    function selectTab1Base(baseType) {
+      const map = {
+        'n_ij': 'NdxNr',
+        'n': 'NxN',
+        'q99': 'QxQ',
+        'q9': 'QdxQr'
+      };
+      setFondoBase(map[baseType] || baseType);
     }
 
     function updateTab1Label(txt) {
@@ -4900,7 +5219,7 @@
         showSmibToast(`🧊 Hipercubo Multidimensional: Tensor ${cubeDim}`);
       } else if (cubeDim === 'GCxT') {
         loadScenario('g3t3c2_global');
-        setAquariumBase('TENSOR');
+        setFondoBase('GCxT');
         showSmibToast('🏛️ Hipertensor Global GCxT: Los 3 Grupos (A, B, C) en Acción (N=18)');
       }
       renderAquariumState(currentSpawnCount);
@@ -4912,34 +5231,70 @@
       if (el) el.textContent = txt;
     }
 
-    // 3. PESTAÑA 3: 18D
-    function selectTab3Mode(mode) {
-      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
-      if (mode === 'SDR') {
-        setAglutinadorMode('TOTAL');
-        setVerticalProjection('SDR');
-        updateTab3Label('18D SDR');
-      } else if (mode === 'FACT') {
-        setAglutinadorMode('FACT');
-        setVerticalProjection('BDF');
-        updateTab3Label('18D Fáctico');
-      } else if (mode === 'COGN') {
-        setAglutinadorMode('COGN');
-        setVerticalProjection('BDC');
-        updateTab3Label('18D Conjetural');
-      } else if (mode === 'BDR') {
-        setVerticalProjection('BDR');
-        updateTab3Label('18D BDR');
-      } else if (mode === 'GAP') {
-        setVerticalProjection('GAP');
-        updateTab3Label('18D Brecha');
+    // =========================================================================
+    // 2. 18D: D1 a D18
+    // =========================================================================
+    let currentD18Dimension = 'D13'; // Default SDR
+    const D18_METADATA = {
+      'D1':  { name: 'p_DA', label: 'Expectativa Emisor', unit: '[-1, +1]' },
+      'D2':  { name: 'DA', label: 'Preferencia Emisor', unit: '[-1, +1]' },
+      'D3':  { name: 'REC', label: 'Preferencia Receptor', unit: '[-1, +1]' },
+      'D4':  { name: 'p_REC', label: 'Expectativa Receptor', unit: '[-1, +1]' },
+      'D5':  { name: 'SDA', label: 'Saldo Dador', unit: '[-1, +1]' },
+      'D6':  { name: 'SRC', label: 'Saldo Receptor (Estatus)', unit: '[-1, +1]' },
+      'D7':  { name: 'BDA', label: 'Masa Dador (Expansividad)', unit: '[0, 1]' },
+      'D8':  { name: 'BRC', label: 'Masa Receptor (Atracción)', unit: '[0, 1]' },
+      'D9':  { name: 'SDF', label: 'Saldo Fáctico (DA + REC)', unit: '[-2, +2]' },
+      'D10': { name: 'SDC', label: 'Saldo Cognitivo (pDA + pREC)', unit: '[-2, +2]' },
+      'D11': { name: 'BDF', label: 'Masa Fáctica (BDA + BRC)', unit: '[0, 2]' },
+      'D12': { name: 'BDC', label: 'Masa Cognitiva (B1 + B4)', unit: '[0, 2]' },
+      'D13': { name: 'SDR', label: 'Saldo Relativo Total (Flotabilidad)', unit: '[-1, +1]' },
+      'D14': { name: 'BDR', label: 'Densidad Bruta Total (Energía)', unit: '[0, 1]' },
+      'D15': { name: 'GAP', label: 'Brecha Ontológica (BDF/BDC)', unit: 'Ratio' },
+      'D16': { name: 'AMB', label: 'Ambivalencia Cognitiva', unit: '[0, 1]' },
+      'D17': { name: 'MASS', label: 'Masa Integrada Di', unit: '[0, 1]' },
+      'D18': { name: 'BIAS', label: 'Sesgo de Flujo Relacional (δi)', unit: '[-1, +1]' }
+    };
+
+    function selectD18Dimension(dimKey) {
+      if (!D18_METADATA[dimKey]) dimKey = 'D13';
+      currentD18Dimension = dimKey;
+      currentVerticalProjection = dimKey;
+
+      for (let k = 1; k <= 18; k++) {
+        const key = `D${k}`;
+        const btn = document.getElementById(`btn-18d-${key}`);
+        if (btn) {
+          const isActive = (key === dimKey);
+          btn.className = isActive
+            ? 'p-1 rounded bg-emerald-950 border-2 border-emerald-400 text-emerald-200 flex flex-col items-center justify-center cursor-pointer transition shadow-[0_0_8px_rgba(0,255,135,0.4)]'
+            : 'p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition';
+        }
       }
+
+      const meta = D18_METADATA[dimKey];
+      const lblVal = document.getElementById('lbl-18d-val');
+      const lblName = document.getElementById('lbl-18d-active-name');
+      if (lblVal) lblVal.textContent = `${dimKey} · ${meta.name}`;
+      if (lblName) lblName.textContent = meta.label;
+
       renderAquariumState(currentSpawnCount);
-      updatePreConfigDisplay();
+      showSmibToast(`🌐 Dimensión 18D: ${dimKey} · ${meta.name} (${meta.label})`);
+    }
+
+    function selectTab3Mode(mode) {
+      const map = {
+        'SDR': 'D13',
+        'FACT': 'D9',
+        'COGN': 'D10',
+        'BDR': 'D14',
+        'GAP': 'D15'
+      };
+      selectD18Dimension(map[mode] || 'D13');
     }
 
     function updateTab3Label(txt) {
-      const el = document.getElementById('lbl-tab3-val');
+      const el = document.getElementById('lbl-18d-val') || document.getElementById('lbl-tab3-val');
       if (el) el.textContent = txt;
     }
 
