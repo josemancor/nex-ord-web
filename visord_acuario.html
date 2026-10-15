@@ -550,98 +550,150 @@
             <span class="text-emerald-400 text-[8px]" id="lbl-18d-active-name">Saldo Total ±ℝ</span>
           </div>
 
+          <!-- BARRA DE SUPERPOSICIÓN DIALÉCTICA (Canon socio: SDR-BDR, D1-D2, D3-D4, D1-D4, D2-D3, D1-D3, D2-D4) -->
+          <div class="flex flex-col gap-1 my-1 p-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider flex items-center justify-between">
+              <span>SUPERPOSICIÓN DIALÉCTICA:</span>
+              <span class="text-amber-400 text-[7.5px] font-black" id="lbl-sp-active-pair">SDR ⬌ BDR</span>
+            </div>
+
+            <!-- Fila Principal: SDR-BDR (con tonalidad ámbar para BDR) y modos base -->
+            <div class="grid grid-cols-3 gap-1">
+              <button onclick="setDialecticPair('D13', 'D14')" id="btn-pair-sdr-bdr" class="py-1 px-0.5 rounded-lg bg-amber-950 border border-amber-400 text-amber-200 font-black text-[8px] cursor-pointer hover:scale-[1.02] transition text-center shadow-[0_0_8px_rgba(245,158,11,0.3)]" title="Superponer SDR (Relativo) frente a BDR (Masa Absoluta en Ámbar)">
+                🧬 SDR ⬌ BDR
+              </button>
+              <button onclick="setSuperpositionPreset('SINGLE')" id="btn-sp-single" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 font-bold text-[8px] cursor-pointer hover:scale-[1.02] transition text-center" title="Modo singular (1 sola dimensión)">
+                🔘 1 sola
+              </button>
+              <button onclick="setSuperpositionPreset('ALL_18D')" id="btn-sp-all" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-purple-400 text-purple-300 font-bold text-[8px] cursor-pointer hover:scale-[1.02] transition text-center" title="Superponer las 18 Dimensiones como posibilidad">
+                ✨ 18D
+              </button>
+            </div>
+
+            <!-- Fila Pares Canónicos Tetragrama: Emisor, Receptor, Cognitivo, Fáctico -->
+            <div class="grid grid-cols-4 gap-1">
+              <button onclick="setDialecticPair('D1', 'D2')" id="btn-pair-d1-d2" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-cyan-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Emisor: D1 (p_DA Expectativa) frente a D2 (DA Preferencia)">
+                D1 ⬌ D2
+              </button>
+              <button onclick="setDialecticPair('D3', 'D4')" id="btn-pair-d3-d4" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-rose-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Receptor: D3 (REC Preferencia) frente a D4 (p_REC Expectativa)">
+                D3 ⬌ D4
+              </button>
+              <button onclick="setDialecticPair('D1', 'D4')" id="btn-pair-d1-d4" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-purple-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Cognitivo: D1 (p_DA) frente a D4 (p_REC) Metapercepciones">
+                D1 ⬌ D4
+              </button>
+              <button onclick="setDialecticPair('D2', 'D3')" id="btn-pair-d2-d3" class="py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Fáctico: D2 (DA) frente a D3 (REC) Hechos directos">
+                D2 ⬌ D3
+              </button>
+            </div>
+
+            <!-- Fila Diagonales Cruzadas -->
+            <div class="grid grid-cols-2 gap-1">
+              <button onclick="setDialecticPair('D1', 'D3')" id="btn-pair-d1-d3" class="py-1 px-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-sky-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Diagonal 1: D1 (p_DA Expectativa Emisor) frente a D3 (REC Preferencia Receptor)">
+                Diagonal: D1 ⬌ D3
+              </button>
+              <button onclick="setDialecticPair('D2', 'D4')" id="btn-pair-d2-d4" class="py-1 px-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-indigo-400 text-slate-300 font-bold text-[7.5px] cursor-pointer hover:scale-[1.02] transition text-center" title="Diagonal 2: D2 (DA Preferencia Emisor) frente a D4 (p_REC Expectativa Receptor)">
+                Diagonal: D2 ⬌ D4
+              </button>
+            </div>
+          </div>
+
           <!-- Cuadrícula Compacta de 18 Dimensiones: D1 a D18 (6 x 3) -->
           <div class="grid grid-cols-6 gap-1 text-[10px] text-center font-bold">
             <!-- D1 -->
-            <button onclick="selectD18Dimension('D1')" id="btn-18d-D1" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D1: p_DA (Expectativa Emisor)">
+            <button onclick="handleD18ButtonClick('D1')" id="btn-18d-D1" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 flex flex-col items-center justify-center cursor-pointer transition" title="D1: p_DA (Expectativa Emisor A1)">
               <span class="font-black text-[9.5px]">D1</span>
               <span class="text-[7px] text-slate-400 font-normal">pDA</span>
             </button>
             <!-- D2 -->
-            <button onclick="selectD18Dimension('D2')" id="btn-18d-D2" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D2: DA (Preferencia Emisor)">
+            <button onclick="handleD18ButtonClick('D2')" id="btn-18d-D2" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D2: DA (Preferencia Emisor A2)">
               <span class="font-black text-[9.5px]">D2</span>
               <span class="text-[7px] text-slate-400 font-normal">DA</span>
             </button>
             <!-- D3 -->
-            <button onclick="selectD18Dimension('D3')" id="btn-18d-D3" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D3: REC (Preferencia Receptor)">
+            <button onclick="handleD18ButtonClick('D3')" id="btn-18d-D3" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-rose-400 text-slate-300 hover:text-rose-300 flex flex-col items-center justify-center cursor-pointer transition" title="D3: REC (Preferencia Receptor A3)">
               <span class="font-black text-[9.5px]">D3</span>
               <span class="text-[7px] text-slate-400 font-normal">REC</span>
             </button>
             <!-- D4 -->
-            <button onclick="selectD18Dimension('D4')" id="btn-18d-D4" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D4: p_REC (Expectativa Receptor)">
+            <button onclick="handleD18ButtonClick('D4')" id="btn-18d-D4" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-purple-400 text-slate-300 hover:text-purple-300 flex flex-col items-center justify-center cursor-pointer transition" title="D4: p_REC (Expectativa Receptor A4)">
               <span class="font-black text-[9.5px]">D4</span>
               <span class="text-[7px] text-slate-400 font-normal">pRC</span>
             </button>
             <!-- D5 -->
-            <button onclick="selectD18Dimension('D5')" id="btn-18d-D5" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D5: SDA (Saldo Dador)">
+            <button onclick="handleD18ButtonClick('D5')" id="btn-18d-D5" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-teal-400 text-slate-300 hover:text-teal-300 flex flex-col items-center justify-center cursor-pointer transition" title="D5: SDA (Saldo Dador)">
               <span class="font-black text-[9.5px]">D5</span>
               <span class="text-[7px] text-slate-400 font-normal">SDA</span>
             </button>
             <!-- D6 -->
-            <button onclick="selectD18Dimension('D6')" id="btn-18d-D6" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D6: SRC (Saldo Receptor)">
+            <button onclick="handleD18ButtonClick('D6')" id="btn-18d-D6" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-rose-400 text-slate-300 hover:text-rose-300 flex flex-col items-center justify-center cursor-pointer transition" title="D6: SRC (Saldo Receptor)">
               <span class="font-black text-[9.5px]">D6</span>
               <span class="text-[7px] text-slate-400 font-normal">SRC</span>
             </button>
             <!-- D7 -->
-            <button onclick="selectD18Dimension('D7')" id="btn-18d-D7" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D7: BDA (Masa Dador)">
+            <button onclick="handleD18ButtonClick('D7')" id="btn-18d-D7" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D7: BDA (Masa Dador)">
               <span class="font-black text-[9.5px]">D7</span>
               <span class="text-[7px] text-slate-400 font-normal">BDA</span>
             </button>
             <!-- D8 -->
-            <button onclick="selectD18Dimension('D8')" id="btn-18d-D8" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D8: BRC (Masa Receptor)">
+            <button onclick="handleD18ButtonClick('D8')" id="btn-18d-D8" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-rose-400 text-slate-300 hover:text-rose-300 flex flex-col items-center justify-center cursor-pointer transition" title="D8: BRC (Masa Receptor)">
               <span class="font-black text-[9.5px]">D8</span>
               <span class="text-[7px] text-slate-400 font-normal">BRC</span>
             </button>
             <!-- D9 -->
-            <button onclick="selectD18Dimension('D9')" id="btn-18d-D9" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D9: SDF (Saldo Fáctico DA+REC)">
+            <button onclick="handleD18ButtonClick('D9')" id="btn-18d-D9" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-lime-400 text-slate-300 hover:text-lime-300 flex flex-col items-center justify-center cursor-pointer transition" title="D9: SDF (Saldo Fáctico DA+REC)">
               <span class="font-black text-[9.5px]">D9</span>
               <span class="text-[7px] text-slate-400 font-normal">SDF</span>
             </button>
             <!-- D10 -->
-            <button onclick="selectD18Dimension('D10')" id="btn-18d-D10" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D10: SDC (Saldo Cognitivo pDA+pREC)">
+            <button onclick="handleD18ButtonClick('D10')" id="btn-18d-D10" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-sky-400 text-slate-300 hover:text-sky-300 flex flex-col items-center justify-center cursor-pointer transition" title="D10: SDC (Saldo Cognitivo pDA+pREC)">
               <span class="font-black text-[9.5px]">D10</span>
               <span class="text-[7px] text-slate-400 font-normal">SDC</span>
             </button>
             <!-- D11 -->
-            <button onclick="selectD18Dimension('D11')" id="btn-18d-D11" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D11: BDF (Masa Fáctica)">
+            <button onclick="handleD18ButtonClick('D11')" id="btn-18d-D11" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-amber-400 text-slate-300 hover:text-amber-300 flex flex-col items-center justify-center cursor-pointer transition" title="D11: BDF (Masa Fáctica)">
               <span class="font-black text-[9.5px]">D11</span>
               <span class="text-[7px] text-slate-400 font-normal">BDF</span>
             </button>
             <!-- D12 -->
-            <button onclick="selectD18Dimension('D12')" id="btn-18d-D12" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D12: BDC (Masa Cognitiva)">
+            <button onclick="handleD18ButtonClick('D12')" id="btn-18d-D12" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-purple-400 text-slate-300 hover:text-purple-300 flex flex-col items-center justify-center cursor-pointer transition" title="D12: BDC (Masa Cognitiva)">
               <span class="font-black text-[9.5px]">D12</span>
               <span class="text-[7px] text-slate-400 font-normal">BDC</span>
             </button>
             <!-- D13 (SDR - ACTIVO POR DEFECTO) -->
-            <button onclick="selectD18Dimension('D13')" id="btn-18d-D13" class="p-1 rounded bg-emerald-950 border-2 border-emerald-400 text-emerald-200 flex flex-col items-center justify-center cursor-pointer transition shadow-[0_0_8px_rgba(0,255,135,0.4)]" title="D13: SDR (Saldo Relativo Global / Flotabilidad)">
+            <button onclick="handleD18ButtonClick('D13')" id="btn-18d-D13" class="p-1 rounded bg-emerald-950 border-2 border-emerald-400 text-emerald-200 flex flex-col items-center justify-center cursor-pointer transition shadow-[0_0_8px_rgba(0,255,135,0.4)]" title="D13: SDR (Saldo Relativo Global / Flotabilidad)">
               <span class="font-black text-[9.5px]">D13</span>
               <span class="text-[7px] text-emerald-400 font-normal">SDR</span>
             </button>
             <!-- D14 -->
-            <button onclick="selectD18Dimension('D14')" id="btn-18d-D14" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D14: BDR (Masa Relacional Total)">
+            <button onclick="handleD18ButtonClick('D14')" id="btn-18d-D14" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-amber-400 text-slate-300 hover:text-amber-300 flex flex-col items-center justify-center cursor-pointer transition" title="D14: BDR (Masa Relacional Total - Tonalidad Ámbar)">
               <span class="font-black text-[9.5px]">D14</span>
-              <span class="text-[7px] text-slate-400 font-normal">BDR</span>
+              <span class="text-[7px] text-amber-400 font-normal">BDR</span>
             </button>
             <!-- D15 -->
-            <button onclick="selectD18Dimension('D15')" id="btn-18d-D15" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D15: GAP (Brecha BDF/BDC)">
+            <button onclick="handleD18ButtonClick('D15')" id="btn-18d-D15" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-yellow-400 text-slate-300 hover:text-yellow-300 flex flex-col items-center justify-center cursor-pointer transition" title="D15: GAP (Brecha BDF/BDC)">
               <span class="font-black text-[9.5px]">D15</span>
               <span class="text-[7px] text-slate-400 font-normal">GAP</span>
             </button>
             <!-- D16 -->
-            <button onclick="selectD18Dimension('D16')" id="btn-18d-D16" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D16: AMB (Ambivalencia Cognitiva)">
+            <button onclick="handleD18ButtonClick('D16')" id="btn-18d-D16" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-orange-400 text-slate-300 hover:text-orange-300 flex flex-col items-center justify-center cursor-pointer transition" title="D16: AMB (Ambivalencia Cognitiva)">
               <span class="font-black text-[9.5px]">D16</span>
               <span class="text-[7px] text-slate-400 font-normal">AMB</span>
             </button>
             <!-- D17 -->
-            <button onclick="selectD18Dimension('D17')" id="btn-18d-D17" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D17: MASS (Masa Di Integrada)">
+            <button onclick="handleD18ButtonClick('D17')" id="btn-18d-D17" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-fuchsia-400 text-slate-300 hover:text-fuchsia-300 flex flex-col items-center justify-center cursor-pointer transition" title="D17: MASS (Masa Di Integrada)">
               <span class="font-black text-[9.5px]">D17</span>
               <span class="text-[7px] text-slate-400 font-normal">Di</span>
             </button>
             <!-- D18 -->
-            <button onclick="selectD18Dimension('D18')" id="btn-18d-D18" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition" title="D18: BIAS (Sesgo de Flujo Relacional)">
+            <button onclick="handleD18ButtonClick('D18')" id="btn-18d-D18" class="p-1 rounded bg-slate-900 border border-slate-700 hover:border-indigo-400 text-slate-300 hover:text-indigo-300 flex flex-col items-center justify-center cursor-pointer transition" title="D18: BIAS (Sesgo de Flujo Relacional)">
               <span class="font-black text-[9.5px]">D18</span>
               <span class="text-[7px] text-slate-400 font-normal">&delta;i</span>
             </button>
+          </div>
+
+          <!-- RESUMEN DE SUPERPOSICIÓN MULTICAPA -->
+          <div id="lbl-18d-superposition-summary" class="text-[8px] text-slate-400 px-1 py-0.5 rounded bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
+            <span class="text-slate-500">Capa:</span> <strong class="text-emerald-300">D13 (SDR)</strong>
           </div>
 
           <button onclick="open18DSpectrogramModal()" class="w-full py-1.5 px-2 rounded-xl bg-teal-950 hover:bg-teal-900 border border-teal-500/60 text-teal-200 font-bold text-[10px] flex items-center justify-between transition mt-0.5 cursor-pointer">
@@ -2197,9 +2249,15 @@
     let baseFloorGrid = null;
     let dropLines = [];
     let footprintMeshes = [];
+    let superposedMeshes = []; // Meshes for superposed 18D markers, BDR rings, struts, fibers (Canon socio: superponer todas las 18D)
+    let activeD18Superposition = ['D13']; // Array of active dimensions for vertical superposition. Default: ['D13'] (SDR)
+    let isMultiSuperpositionMode = false;
     let activePerpendicularGuides = null;
     let q81LabelMode = 'NUM'; // Canon socio: "cuando se utilice Q81, la etiqueta será numérica 1-81, o 9d o 9r"
-    let showNodeLabelsOnSheet = false; // Canon socio: "si las etiquetas están en la base, no hay necesidad de ponerlas en la sábana. La sábana está muy lograda, socio!!"
+    let showNodeLabelsOnSheet = false; // Canon socio: "si las etiquetas están en la base, no hay necesidad de ponerlas en la sábana"
+    let isAscendingFromFloor = false; // Canon socio: "cuando se pulsa acción se reinicia toda las fases desde el fondo"
+    let ascentStartTime = 0;
+    const ASCENT_DURATION = 1.80; // Duración en segundos del ascenso hidrostático desde el damero
 
     function generateQ81Preset() {
       if (PRESETS['q81']) return PRESETS['q81'];
@@ -2893,6 +2951,7 @@
       flowLines.forEach(l => scene.remove(l));
       dropLines.forEach(l => scene.remove(l));
       footprintMeshes.forEach(f => scene.remove(f));
+      superposedMeshes.forEach(m => scene.remove(m));
       if (activePerpendicularGuides) {
         scene.remove(activePerpendicularGuides);
         activePerpendicularGuides = null;
@@ -2902,6 +2961,7 @@
       flowLines = [];
       dropLines = [];
       footprintMeshes = [];
+      superposedMeshes = [];
     }
 
     let progressiveSpawnTimer = null;
@@ -2987,10 +3047,10 @@
       scaleY: 2.6
     };
 
-    function computeVerticalElevation(st) {
+    function computeVerticalElevation(st, specificProj = null) {
       if (!st) return currentSeaLevel * 2.8;
       let val = 0;
-      const proj = currentVerticalProjection || 'D13';
+      const proj = specificProj || currentVerticalProjection || 'D13';
 
       switch (proj) {
         case 'D1':  // p_DA (Expectativa Emisor)
@@ -3175,121 +3235,228 @@
         // Posición tridimensional armónica calculada según Base, Régimen y Proyección 18D
         const posVec = getNodePosition(idx);
         const pX = posVec.x;
-        const pY = posVec.y;
+        const targetY = posVec.y;
         const pZ = posVec.z;
-
-        // A. NÚCLEO FÁCTICO (Esfera interior refinada y compacta - canon socio: sábana limpia)
-        const isQ81 = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
-        const coreRadius = isQ81 ? 0.055 : (isCleanSheetMode ? 0.075 : Math.max(0.08, 0.08 + (st.BDF || 0) * 0.05));
-        const coreGeom = new THREE.SphereGeometry(coreRadius, 20, 20);
+        const floorY = -3.48;
+        const initialY = isAscendingFromFloor ? (floorY + 0.12) : targetY;
+        const pY = initialY;
 
         // Color según signo del Saldo Fáctico (SDF)
         let coreColor = 0xFFE600;
         if (st.SDF > 0.15) coreColor = 0x00FF87; // Verde expansión
         else if (st.SDF < -0.15) coreColor = 0xFF007F; // Magenta rechazo
 
-        const coreMat = new THREE.MeshStandardMaterial({
-          color: coreColor,
-          roughness: 0.2,
-          metalness: 0.85,
-          emissive: coreColor,
-          emissiveIntensity: isHighlighted ? 0.45 : 0.08,
-          transparent: true,
-          opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.96) * opacityMult
-        });
+        if (activeD18Superposition.length > 1) {
+          // =========================================================================
+          // MODO SUPERPOSICIÓN DIALÉCTICA (Canon socio: SDR-BDR, D1-D2, D3-D4, D1-D4, D2-D3, D1-D3, D2-D4 o 18D)
+          // =========================================================================
+          const elevations = activeD18Superposition.map(d => ({
+            dim: d,
+            targetY: computeVerticalElevation(st, d),
+            meta: D18_METADATA[d] || { name: d, color: 0x00FF87, hex: '#00FF87' }
+          }));
+          const minY = Math.min(...elevations.map(e => e.targetY));
+          const maxY = Math.max(...elevations.map(e => e.targetY));
 
-        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
-        coreMesh.position.set(pX, pY, pZ);
-        coreMesh.userData = { subjectIndex: idx, type: 'core', data: st };
-        scene.add(coreMesh);
-        nodeMeshes.push(coreMesh);
+          // 1. Tirante/Fibra vertical diádica conectando las dimensiones superpuestas del sujeto
+          const fiberGeom = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(pX, isAscendingFromFloor ? initialY : minY, pZ),
+            new THREE.Vector3(pX, isAscendingFromFloor ? initialY : maxY, pZ)
+          ]);
+          const isSdrBdrPair = (activeD18Superposition.includes('D13') && activeD18Superposition.includes('D14'));
+          const fiberColor = isSdrBdrPair ? 0xF59E0B : 0x38BDF8;
+          const fiberMat = new THREE.LineDashedMaterial({
+            color: fiberColor,
+            dashSize: 0.10,
+            gapSize: 0.06,
+            transparent: true,
+            opacity: 0.85 * opacityMult
+          });
+          const fiberLine = new THREE.Line(fiberGeom, fiberMat);
+          fiberLine.computeLineDistances();
+          fiberLine.userData = { subjectIndex: idx, type: 'spectrum_fiber', minY: minY, maxY: maxY, pX: pX, pZ: pZ };
+          scene.add(fiberLine);
+          superposedMeshes.push(fiberLine);
 
-        // NÚMERO DENTRO DEL CÍRCULO (Canon Socio: "si las etiquetas están en la base, no hay necesidad de ponerlas en la sábana")
-        if (showNodeLabelsOnSheet) {
-          let numText = '';
-          if (isQ81) {
-            // Canon socio: "cuando se utilice Q81, la etiqueta será numérica 1-81, o 9d o 9r"
-            if (q81LabelMode === 'NUM') {
-              numText = String(idx + 1);
-            } else if (q81LabelMode === 'DA') {
-              const d = (Math.floor(idx / 9) % 9) + 1;
-              numText = `${d}d`;
-            } else if (q81LabelMode === 'RC') {
-              const r = (idx % 9) + 1;
-              numText = `${r}r`;
+          // 2. Marcadores luminosos para cada dimensión activa
+          elevations.forEach(e => {
+            const dim = e.dim;
+            const targetY = e.targetY;
+            const markInitialY = isAscendingFromFloor ? initialY : targetY;
+            const markerRadius = activeD18Superposition.length <= 2 ? 0.082 : (activeD18Superposition.length <= 4 ? 0.068 : 0.046);
+            const markerGeom = new THREE.SphereGeometry(markerRadius, 20, 20);
+            
+            const markerMat = new THREE.MeshStandardMaterial({
+              color: e.meta.color,
+              emissive: e.meta.color,
+              emissiveIntensity: isHighlighted ? 0.55 : 0.12,
+              roughness: 0.22,
+              metalness: 0.82,
+              transparent: true,
+              opacity: 0.96 * opacityMult
+            });
+            const marker = new THREE.Mesh(markerGeom, markerMat);
+            marker.position.set(pX, markInitialY, pZ);
+            marker.userData = {
+              subjectIndex: idx,
+              type: 'superposed_marker',
+              dimKey: dim,
+              targetY: targetY,
+              pX: pX,
+              pZ: pZ
+            };
+            scene.add(marker);
+            nodeMeshes.push(marker);
+            superposedMeshes.push(marker);
+
+            // Tonalidad distintiva para BDR: Anillo Solar Ámbar (Canon socio: tonalidad distinta para BDR)
+            if (dim === 'D14') {
+              const bdrRingGeom = new THREE.RingGeometry(markerRadius * 1.35, markerRadius * 1.95, 20);
+              bdrRingGeom.rotateX(-Math.PI / 2);
+              const bdrRingMat = new THREE.MeshBasicMaterial({
+                color: 0xFF9F1C, // Solar Amber
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.92 * opacityMult
+              });
+              const bdrRing = new THREE.Mesh(bdrRingGeom, bdrRingMat);
+              bdrRing.position.set(pX, markInitialY, pZ);
+              bdrRing.userData = { subjectIndex: idx, type: 'bdr_ring', targetY: targetY, pX: pX, pZ: pZ };
+              scene.add(bdrRing);
+              superposedMeshes.push(bdrRing);
+            }
+          });
+
+          // Plomada vertical desde el damero hasta la cota superior
+          const dropGeom = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(pX, floorY + 0.015, pZ),
+            new THREE.Vector3(pX, isAscendingFromFloor ? initialY : maxY, pZ)
+          ]);
+          const dropMat = new THREE.LineDashedMaterial({
+            color: 0x38BDF8,
+            dashSize: 0.12,
+            gapSize: 0.08,
+            transparent: true,
+            opacity: 0.35 * opacityMult
+          });
+          const dropLine = new THREE.Line(dropGeom, dropMat);
+          dropLine.computeLineDistances();
+          dropLine.userData = { subjectIndex: idx, pX: pX, pZ: pZ, floorY: floorY, targetY: maxY };
+          scene.add(dropLine);
+          dropLines.push(dropLine);
+
+        } else {
+          // =========================================================================
+          // MODO SINGULAR ESTÁNDAR (1 sola dimensión activa)
+          // =========================================================================
+          // A. NÚCLEO FÁCTICO (Esfera interior refinada y compacta - canon socio: sábana limpia)
+          const isQ81 = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
+          const coreRadius = isQ81 ? 0.055 : (isCleanSheetMode ? 0.075 : Math.max(0.08, 0.08 + (st.BDF || 0) * 0.05));
+          const coreGeom = new THREE.SphereGeometry(coreRadius, 20, 20);
+
+
+          const coreMat = new THREE.MeshStandardMaterial({
+            color: coreColor,
+            roughness: 0.2,
+            metalness: 0.85,
+            emissive: coreColor,
+            emissiveIntensity: isHighlighted ? 0.45 : 0.08,
+            transparent: true,
+            opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.96) * opacityMult
+          });
+
+          const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+          coreMesh.position.set(pX, pY, pZ);
+          coreMesh.userData = { subjectIndex: idx, type: 'core', data: st, targetY: targetY, pX: pX, pZ: pZ };
+          scene.add(coreMesh);
+          nodeMeshes.push(coreMesh);
+
+          // NÚMERO DENTRO DEL CÍRCULO (Canon Socio: "si las etiquetas están en la base, no hay necesidad de ponerlas en la sábana")
+          if (showNodeLabelsOnSheet) {
+            let numText = '';
+            if (isQ81) {
+              if (q81LabelMode === 'NUM') {
+                numText = String(idx + 1);
+              } else if (q81LabelMode === 'DA') {
+                const d = (Math.floor(idx / 9) % 9) + 1;
+                numText = `${d}d`;
+              } else if (q81LabelMode === 'RC') {
+                const r = (idx % 9) + 1;
+                numText = `${r}r`;
+              } else {
+                numText = String(idx + 1);
+              }
             } else {
-              numText = String(idx + 1);
+              const numMatch = (st.code || '').match(/\d+/);
+              numText = numMatch ? numMatch[0] : String(idx + 1);
+              if (currentPerspective === 'DA') {
+                numText = `${numText}d`;
+              } else if (currentPerspective === 'RC') {
+                numText = `${numText}r`;
+              }
             }
-          } else {
-            const numMatch = (st.code || '').match(/\d+/);
-            numText = numMatch ? numMatch[0] : String(idx + 1);
-            if (currentPerspective === 'DA') {
-              numText = `${numText}d`;
-            } else if (currentPerspective === 'RC') {
-              numText = `${numText}r`;
-            }
+            const numSprite = createNodeNumberSprite(numText);
+            numSprite.position.set(pX, pY, pZ);
+            const numScale = Math.max(0.08, coreRadius * 0.95);
+            numSprite.scale.set(numScale, numScale, 1);
+            numSprite.material.opacity = (activeLayerVisibility === 'HALO' ? 0.05 : 0.98) * opacityMult;
+            numSprite.userData = { subjectIndex: idx, type: 'number', targetY: targetY };
+            scene.add(numSprite);
+            nodeMeshes.push(numSprite);
           }
-          const numSprite = createNodeNumberSprite(numText);
-          numSprite.position.set(pX, pY, pZ);
-          const numScale = Math.max(0.08, coreRadius * 0.95);
-          numSprite.scale.set(numScale, numScale, 1);
-          numSprite.material.opacity = (activeLayerVisibility === 'HALO' ? 0.05 : 0.98) * opacityMult;
-          numSprite.userData = { subjectIndex: idx, type: 'number' };
-          scene.add(numSprite);
-          nodeMeshes.push(numSprite);
+
+          // B. HALO COGNITIVO (Esfera exterior translúcida pulsante)
+          const isAsphyxiated = st.gapRatio < 0.50;
+          const haloRadius = coreRadius * 1.35;
+          const haloGeom = new THREE.SphereGeometry(haloRadius, 20, 20);
+
+          let haloColor = 0x00E5FF;
+          if (isAsphyxiated) haloColor = 0xC084FC; // Violáceo asfixia
+          else if (st.SDC < -0.15) haloColor = 0xFB7185;
+
+          const haloOpacity = isCleanSheetMode ? 0.0 : ((activeLayerVisibility === 'CORE' ? 0.02 : (isAsphyxiated ? 0.30 : 0.16)) * opacityMult);
+
+          const haloMat = new THREE.MeshStandardMaterial({
+            color: haloColor,
+            wireframe: false,
+            transparent: true,
+            opacity: haloOpacity,
+            roughness: 0.35,
+            metalness: 0.35
+          });
+
+          const haloMesh = new THREE.Mesh(haloGeom, haloMat);
+          haloMesh.position.set(pX, pY, pZ);
+          haloMesh.visible = !isCleanSheetMode;
+          haloMesh.userData = { 
+            subjectIndex: idx, 
+            type: 'halo', 
+            targetY: targetY, 
+            baseRadius: haloRadius, 
+            ambiguity: st.ambiguity,
+            isAsphyxiated: isAsphyxiated 
+          };
+          scene.add(haloMesh);
+          haloMeshes.push(haloMesh);
+
+          // C. PLOMADA VERTICAL PERPENDICULAR (Línea hacia el cruce exacto en el damero del fondo)
+          const dropGeom = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(pX, floorY + 0.015, pZ),
+            new THREE.Vector3(pX, pY, pZ)
+          ]);
+          const dropMat = new THREE.LineDashedMaterial({
+            color: coreColor,
+            dashSize: 0.12,
+            gapSize: 0.08,
+            transparent: true,
+            opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.40) * opacityMult
+          });
+          const dropLine = new THREE.Line(dropGeom, dropMat);
+          dropLine.computeLineDistances();
+          dropLine.userData = { subjectIndex: idx, pX: pX, pZ: pZ, floorY: floorY, targetY: targetY };
+          scene.add(dropLine);
+          dropLines.push(dropLine);
         }
-
-        // B. HALO COGNITIVO (Esfera exterior translúcida pulsante)
-        // Socio: la sábana limpia sin los círculos . los círculos pueden ser más pequeños.
-        const isAsphyxiated = st.gapRatio < 0.50;
-        const haloRadius = coreRadius * 1.35; // Ceñido y discreto (círculos más pequeños)
-        const haloGeom = new THREE.SphereGeometry(haloRadius, 20, 20);
-
-        let haloColor = 0x00E5FF;
-        if (isAsphyxiated) haloColor = 0xC084FC; // Violáceo asfixia
-        else if (st.SDC < -0.15) haloColor = 0xFB7185;
-
-        const haloOpacity = isCleanSheetMode ? 0.0 : ((activeLayerVisibility === 'CORE' ? 0.02 : (isAsphyxiated ? 0.30 : 0.16)) * opacityMult);
-
-        const haloMat = new THREE.MeshStandardMaterial({
-          color: haloColor,
-          wireframe: false,
-          transparent: true,
-          opacity: haloOpacity,
-          roughness: 0.35,
-          metalness: 0.35
-        });
-
-        const haloMesh = new THREE.Mesh(haloGeom, haloMat);
-        haloMesh.position.set(pX, pY, pZ);
-        haloMesh.visible = !isCleanSheetMode;
-        haloMesh.userData = { 
-          subjectIndex: idx, 
-          type: 'halo', 
-          baseRadius: haloRadius, 
-          ambiguity: st.ambiguity,
-          isAsphyxiated: isAsphyxiated 
-        };
-        scene.add(haloMesh);
-        haloMeshes.push(haloMesh);
-
-        // C. PLOMADA VERTICAL PERPENDICULAR (Línea hacia el cruce exacto en el damero del fondo)
-        const floorY = -3.48;
-        const dropGeom = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(pX, floorY + 0.015, pZ),
-          new THREE.Vector3(pX, pY, pZ)
-        ]);
-        const dropMat = new THREE.LineDashedMaterial({
-          color: coreColor,
-          dashSize: 0.12,
-          gapSize: 0.08,
-          transparent: true,
-          opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.40) * opacityMult
-        });
-        const dropLine = new THREE.Line(dropGeom, dropMat);
-        dropLine.computeLineDistances();
-        scene.add(dropLine);
-        dropLines.push(dropLine);
 
         // D. DIANA / HUELLA DEL CRUCE EN EL DAMERO (Cruce exacto en el suelo)
         const ringGeom = new THREE.RingGeometry(0.06, 0.12, 20);
@@ -3395,7 +3562,9 @@
 
           // Rastro atenuado de díadas anteriores conforme al canon:
           let lineOpacity = (activeSubjectIndex !== null ? 0.98 : 0.65);
-          if (effectiveCount !== null && effectiveCount < numSuj) {
+          if (isAscendingFromFloor) {
+            lineOpacity = 0.0;
+          } else if (effectiveCount !== null && effectiveCount < numSuj) {
             // Durante la aparición progresiva, las díadas del último sujeto agregado brillan activas al 100%,
             // mientras que las díadas anteriores conservan su rastro atenuado (~0.22)
             if (i === effectiveCount - 1 || j === effectiveCount - 1) {
@@ -5093,7 +5262,9 @@
     // CONTROLES DE REPRODUCCIÓN: pause, borrar, velocidad, ...
     // =========================================================================
     function togglePauseSimulation() {
-      toggleMasterDynamics();
+      isMasterDynamicsRunning = !isMasterDynamicsRunning;
+      if (controls) controls.autoRotate = isMasterDynamicsRunning;
+
       const isPaused = !isMasterDynamicsRunning;
       const ico = document.getElementById('ico-ctrl-pause');
       const lbl = document.getElementById('lbl-ctrl-pause');
@@ -5105,12 +5276,38 @@
           ? 'py-1.5 px-1.5 rounded-lg bg-amber-950 border border-amber-400 text-amber-200 font-bold flex items-center justify-center gap-1 cursor-pointer transition shadow-sm'
           : 'py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition';
       }
+
+      if (isPaused) {
+        if (dyadScannerTimer) {
+          clearInterval(dyadScannerTimer);
+          dyadScannerTimer = null;
+        }
+        showSmibToast('⏸ Dinámica del Acuario pausada');
+      } else {
+        if (!dyadScannerTimer && isDyadScannerRunning && !isAscendingFromFloor) {
+          startDyadScanner();
+        }
+        showSmibToast('▶ Dinámica del Acuario reanudada');
+      }
+      updateAllLeds();
     }
 
     function resetAndClearAquariumScene() {
+      isAscendingFromFloor = false;
+      isMasterDynamicsRunning = false;
+      if (controls) controls.autoRotate = false;
+      if (dyadScannerTimer) {
+        clearInterval(dyadScannerTimer);
+        dyadScannerTimer = null;
+      }
       activeSubjectIndex = null;
       activeDyadIndex = 0;
       updateDyadPerpendicularGuides(null, null, null);
+      
+      const ico = document.getElementById('ico-ctrl-pause');
+      const lbl = document.getElementById('lbl-ctrl-pause');
+      if (ico) ico.textContent = '▶';
+      if (lbl) lbl.textContent = 'reanudar';
       
       flowLines.forEach(l => {
         if (l.material) l.material.opacity = 0.55;
@@ -5118,7 +5315,8 @@
       
       renderAquariumState();
       renderSubjectPills();
-      showSmibToast('🧹 Acuario limpio: Rastros y selecciones restablecidos');
+      updateAllLeds();
+      showSmibToast('🧹 Acuario en reposo: Nodos y rastros en el fondo');
     }
 
     const SIMULATION_SPEEDS = [0.5, 1.0, 1.5, 2.0, 3.0];
@@ -5249,50 +5447,218 @@
     // =========================================================================
     let currentD18Dimension = 'D13'; // Default SDR
     const D18_METADATA = {
-      'D1':  { name: 'p_DA', label: 'Expectativa Emisor', unit: '[-1, +1]' },
-      'D2':  { name: 'DA', label: 'Preferencia Emisor', unit: '[-1, +1]' },
-      'D3':  { name: 'REC', label: 'Preferencia Receptor', unit: '[-1, +1]' },
-      'D4':  { name: 'p_REC', label: 'Expectativa Receptor', unit: '[-1, +1]' },
-      'D5':  { name: 'SDA', label: 'Saldo Dador', unit: '[-1, +1]' },
-      'D6':  { name: 'SRC', label: 'Saldo Receptor (Estatus)', unit: '[-1, +1]' },
-      'D7':  { name: 'BDA', label: 'Masa Dador (Expansividad)', unit: '[0, 1]' },
-      'D8':  { name: 'BRC', label: 'Masa Receptor (Atracción)', unit: '[0, 1]' },
-      'D9':  { name: 'SDF', label: 'Saldo Fáctico (DA + REC)', unit: '[-2, +2]' },
-      'D10': { name: 'SDC', label: 'Saldo Cognitivo (pDA + pREC)', unit: '[-2, +2]' },
-      'D11': { name: 'BDF', label: 'Masa Fáctica (BDA + BRC)', unit: '[0, 2]' },
-      'D12': { name: 'BDC', label: 'Masa Cognitiva (B1 + B4)', unit: '[0, 2]' },
-      'D13': { name: 'SDR', label: 'Saldo Relativo Total (Flotabilidad)', unit: '[-1, +1]' },
-      'D14': { name: 'BDR', label: 'Densidad Bruta Total (Energía)', unit: '[0, 1]' },
-      'D15': { name: 'GAP', label: 'Brecha Ontológica (BDF/BDC)', unit: 'Ratio' },
-      'D16': { name: 'AMB', label: 'Ambivalencia Cognitiva', unit: '[0, 1]' },
-      'D17': { name: 'MASS', label: 'Masa Integrada Di', unit: '[0, 1]' },
-      'D18': { name: 'BIAS', label: 'Sesgo de Flujo Relacional (δi)', unit: '[-1, +1]' }
+      'D1':  { name: 'p_DA', label: 'Expectativa Emisor (A1)', unit: '[-1, +1]', color: 0x00E5FF, hex: '#00E5FF' }, // Sky Cyan
+      'D2':  { name: 'DA',   label: 'Preferencia Emisor (A2)', unit: '[-1, +1]', color: 0x00FF87, hex: '#00FF87' }, // Emerald Green
+      'D3':  { name: 'REC',  label: 'Preferencia Receptor (A3)', unit: '[-1, +1]', color: 0xFF007F, hex: '#FF007F' }, // Neon Magenta
+      'D4':  { name: 'p_REC',label: 'Expectativa Receptor (A4)', unit: '[-1, +1]', color: 0xA855F7, hex: '#A855F7' }, // Electric Purple
+      'D5':  { name: 'SDA',  label: 'Saldo Dador (Expansividad)', unit: '[-1, +1]', color: 0x2DD4BF, hex: '#2DD4BF' }, // Teal
+      'D6':  { name: 'SRC',  label: 'Saldo Receptor (Estatus)', unit: '[-1, +1]', color: 0xF43F5E, hex: '#F43F5E' }, // Rose
+      'D7':  { name: 'BDA',  label: 'Masa Dador (Actividad)', unit: '[0, 1]', color: 0x34D399, hex: '#34D399' }, // Mint
+      'D8':  { name: 'BRC',  label: 'Masa Receptor (Atracción)', unit: '[0, 1]', color: 0xFB7185, hex: '#FB7185' }, // Coral
+      'D9':  { name: 'SDF',  label: 'Saldo Fáctico (DA + REC)', unit: '[-2, +2]', color: 0xA3E635, hex: '#A3E635' }, // Lime
+      'D10': { name: 'SDC',  label: 'Saldo Cognitivo (pDA + pREC)', unit: '[-2, +2]', color: 0x38BDF8, hex: '#38BDF8' }, // Ice Blue
+      'D11': { name: 'BDF',  label: 'Masa Fáctica (BDA + BRC)', unit: '[0, 2]', color: 0xFBBF24, hex: '#FBBF24' }, // Amber
+      'D12': { name: 'BDC',  label: 'Masa Cognitiva (B1 + B4)', unit: '[0, 2]', color: 0xC084FC, hex: '#C084FC' }, // Soft Violet
+      'D13': { name: 'SDR',  label: 'Saldo Relativo Total (Flotabilidad)', unit: '[-1, +1]', color: 0x00F5D4, hex: '#00F5D4' }, // Bioluminescent Cyan
+      'D14': { name: 'BDR',  label: 'Densidad Bruta Total (Energía/Masa)', unit: '[0, 1]', color: 0xFF9F1C, hex: '#FF9F1C' }, // Solar Amber / Bronze Gold
+      'D15': { name: 'GAP',  label: 'Brecha Ontológica (BDF/BDC)', unit: 'Ratio', color: 0xFFE600, hex: '#FFE600' }, // Gold Yellow
+      'D16': { name: 'AMB',  label: 'Ambivalencia Cognitiva', unit: '[0, 1]', color: 0xFB923C, hex: '#FB923C' }, // Orange
+      'D17': { name: 'MASS', label: 'Masa Integrada Di', unit: '[0, 1]', color: 0xE879F9, hex: '#E879F9' }, // Hot Fuchsia
+      'D18': { name: 'BIAS', label: 'Sesgo Relacional (δi)', unit: '[-1, +1]', color: 0x818CF8, hex: '#818CF8' } // Indigo
     };
 
-    function selectD18Dimension(dimKey) {
-      if (!D18_METADATA[dimKey]) dimKey = 'D13';
-      currentD18Dimension = dimKey;
-      currentVerticalProjection = dimKey;
+    function setSuperpositionPreset(presetKey) {
+      if (presetKey === 'SINGLE') {
+        isMultiSuperpositionMode = false;
+        activeD18Superposition = [currentD18Dimension || 'D13'];
+        showSmibToast(`🔘 Modo Singular: ${currentD18Dimension} (${D18_METADATA[currentD18Dimension]?.name || 'SDR'})`);
+      } else if (presetKey === 'SDR_BDR') {
+        setDialecticPair('D13', 'D14');
+        return;
+      } else if (presetKey === 'TETRA') {
+        isMultiSuperpositionMode = true;
+        activeD18Superposition = ['D1', 'D2', 'D3', 'D4'];
+        currentD18Dimension = 'D1';
+        showSmibToast('🎛️ Superposición Tetragrama: D1(pDA), D2(DA), D3(REC), D4(pRC) en 4 tonalidades');
+      } else if (presetKey === 'ALL_18D') {
+        isMultiSuperpositionMode = true;
+        activeD18Superposition = [];
+        for (let k = 1; k <= 18; k++) activeD18Superposition.push(`D${k}`);
+        currentD18Dimension = 'D13';
+        showSmibToast('✨ Superposición Total 18D: Todas las 18 dimensiones activas como posibilidad');
+      }
+      updateSuperpositionUI();
+      renderAquariumState(currentSpawnCount);
+    }
 
-      for (let k = 1; k <= 18; k++) {
-        const key = `D${k}`;
-        const btn = document.getElementById(`btn-18d-${key}`);
+    function setDialecticPair(dimA, dimB) {
+      isMultiSuperpositionMode = true;
+      activeD18Superposition = [dimA, dimB];
+      currentD18Dimension = dimA;
+      currentVerticalProjection = dimA;
+
+      const metaA = D18_METADATA[dimA] || { name: dimA, label: dimA };
+      const metaB = D18_METADATA[dimB] || { name: dimB, label: dimB };
+
+      if (dimA === 'D13' && dimB === 'D14') {
+        showSmibToast('🧬 Superposición Dialéctica: SDR (Relativo Verde) ⬌ BDR (Masa Absoluta Ámbar)');
+      } else {
+        showSmibToast(`🧬 Superposición Dialéctica: ${dimA} (${metaA.name}) ⬌ ${dimB} (${metaB.name})`);
+      }
+      updateSuperpositionUI();
+      renderAquariumState(currentSpawnCount);
+    }
+
+    function handleD18ButtonClick(dimKey) {
+      if (!D18_METADATA[dimKey]) dimKey = 'D13';
+
+      if (!isMultiSuperpositionMode) {
+        currentD18Dimension = dimKey;
+        currentVerticalProjection = dimKey;
+        activeD18Superposition = [dimKey];
+        showSmibToast(`🌐 Dimensión 18D: ${dimKey} · ${D18_METADATA[dimKey].name} (${D18_METADATA[dimKey].label})`);
+      } else {
+        const idx = activeD18Superposition.indexOf(dimKey);
+        if (idx >= 0) {
+          if (activeD18Superposition.length > 1) {
+            activeD18Superposition.splice(idx, 1);
+            showSmibToast(`➖ Desactivada ${dimKey} · ${D18_METADATA[dimKey].name}`);
+          } else {
+            showSmibToast(`⚠️ Debe quedar al menos 1 dimensión activa`);
+          }
+        } else {
+          activeD18Superposition.push(dimKey);
+          activeD18Superposition.sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+          showSmibToast(`➕ Superpuesta ${dimKey} · ${D18_METADATA[dimKey].name}`);
+        }
+      }
+      updateSuperpositionUI();
+      renderAquariumState(currentSpawnCount);
+    }
+
+    function updateSuperpositionUI() {
+      const isSingle = activeD18Superposition.length === 1;
+      const isAll = activeD18Superposition.length === 18;
+
+      const btnSingle = document.getElementById('btn-sp-single');
+      const btnAll = document.getElementById('btn-sp-all');
+
+      if (btnSingle) {
+        btnSingle.className = isSingle 
+          ? 'py-1 px-0.5 rounded-lg bg-emerald-950 border-2 border-emerald-400 text-emerald-300 font-black text-[8px] cursor-pointer shadow-sm'
+          : 'py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 font-bold text-[8px] cursor-pointer shadow-sm';
+      }
+      if (btnAll) {
+        btnAll.className = isAll
+          ? 'py-1 px-0.5 rounded-lg bg-purple-950 border-2 border-purple-400 text-purple-200 font-black text-[8px] cursor-pointer shadow-[0_0_8px_rgba(192,132,252,0.4)]'
+          : 'py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-purple-400 text-purple-300 font-bold text-[8px] cursor-pointer shadow-sm';
+      }
+
+      // Comprobación de pares dialécticos canónicos (Canon socio: SDR-BDR, D1-D2, D3-D4, D1-D4, D2-D3, D1-D3, D2-D4)
+      const pairs = [
+        { id: 'btn-pair-sdr-bdr', a: 'D13', b: 'D14', label: 'SDR ⬌ BDR (Ámbar)' },
+        { id: 'btn-pair-d1-d2',   a: 'D1',  b: 'D2',  label: 'D1 ⬌ D2 (Emisor)' },
+        { id: 'btn-pair-d3-d4',   a: 'D3',  b: 'D4',  label: 'D3 ⬌ D4 (Receptor)' },
+        { id: 'btn-pair-d1-d4',   a: 'D1',  b: 'D4',  label: 'D1 ⬌ D4 (Cognitivo)' },
+        { id: 'btn-pair-d2-d3',   a: 'D2',  b: 'D3',  label: 'D2 ⬌ D3 (Fáctico)' },
+        { id: 'btn-pair-d1-d3',   a: 'D1',  b: 'D3',  label: 'D1 ⬌ D3 (Diag. 1)' },
+        { id: 'btn-pair-d2-d4',   a: 'D2',  b: 'D4',  label: 'D2 ⬌ D4 (Diag. 2)' }
+      ];
+
+      let activePairMatch = null;
+      pairs.forEach(p => {
+        const btn = document.getElementById(p.id);
+        const isMatch = (activeD18Superposition.length === 2 && 
+                         activeD18Superposition.includes(p.a) && 
+                         activeD18Superposition.includes(p.b));
+        if (isMatch) activePairMatch = p;
         if (btn) {
-          const isActive = (key === dimKey);
-          btn.className = isActive
-            ? 'p-1 rounded bg-emerald-950 border-2 border-emerald-400 text-emerald-200 flex flex-col items-center justify-center cursor-pointer transition shadow-[0_0_8px_rgba(0,255,135,0.4)]'
-            : 'p-1 rounded bg-slate-900 border border-slate-700 hover:border-emerald-400 text-slate-300 hover:text-emerald-300 flex flex-col items-center justify-center cursor-pointer transition';
+          if (isMatch) {
+            const colA = D18_METADATA[p.a]?.hex || '#00FF87';
+            btn.style.borderColor = colA;
+            btn.style.boxShadow = `0 0 10px ${colA}88`;
+            btn.style.background = 'rgba(15, 23, 42, 0.95)';
+            btn.style.color = '#FFFFFF';
+            btn.className = 'py-1 px-0.5 rounded-lg border-2 font-black text-[7.5px] cursor-pointer shadow-sm';
+          } else {
+            btn.style.borderColor = '';
+            btn.style.boxShadow = '';
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.className = 'py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-300 font-bold text-[7.5px] cursor-pointer';
+          }
+        }
+      });
+
+      const lblPair = document.getElementById('lbl-sp-active-pair');
+      if (lblPair) {
+        if (activePairMatch) {
+          lblPair.textContent = activePairMatch.label;
+        } else if (isSingle) {
+          lblPair.textContent = `Singular: ${activeD18Superposition[0]}`;
+        } else if (isAll) {
+          lblPair.textContent = '18D Total';
+        } else {
+          lblPair.textContent = `${activeD18Superposition.length}D Superpuestas`;
         }
       }
 
-      const meta = D18_METADATA[dimKey];
+      // Botones D1 a D18
+      for (let k = 1; k <= 18; k++) {
+        const dimKey = `D${k}`;
+        const btn = document.getElementById(`btn-18d-${dimKey}`);
+        if (!btn) continue;
+        const meta = D18_METADATA[dimKey];
+        const isActive = activeD18Superposition.includes(dimKey);
+
+        if (isActive) {
+          btn.style.borderColor = meta.hex;
+          btn.style.boxShadow = `0 0 10px ${meta.hex}88`;
+          btn.style.background = 'rgba(15, 23, 42, 0.95)';
+          btn.style.color = meta.hex;
+          btn.className = 'p-1 rounded border-2 flex flex-col items-center justify-center cursor-pointer transition';
+        } else {
+          btn.style.borderColor = '';
+          btn.style.boxShadow = '';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.className = 'p-1 rounded bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center cursor-pointer transition';
+        }
+      }
+
       const lblVal = document.getElementById('lbl-18d-val');
       const lblName = document.getElementById('lbl-18d-active-name');
-      if (lblVal) lblVal.textContent = `${dimKey} · ${meta.name}`;
-      if (lblName) lblName.textContent = meta.label;
+      const lblSummary = document.getElementById('lbl-18d-superposition-summary');
 
-      renderAquariumState(currentSpawnCount);
-      showSmibToast(`🌐 Dimensión 18D: ${dimKey} · ${meta.name} (${meta.label})`);
+      if (isSingle) {
+        const singleKey = activeD18Superposition[0];
+        const meta = D18_METADATA[singleKey] || { name: singleKey, label: '' };
+        if (lblVal) lblVal.textContent = `${singleKey} · ${meta.name}`;
+        if (lblName) lblName.textContent = meta.label;
+        if (lblSummary) lblSummary.innerHTML = `<span class="text-slate-500">Capa:</span> <strong class="text-emerald-300">${singleKey} (${meta.name})</strong>`;
+      } else if (activePairMatch && activePairMatch.a === 'D13' && activePairMatch.b === 'D14') {
+        if (lblVal) lblVal.textContent = '🧬 SDR ⬌ BDR (Dual)';
+        if (lblName) lblName.textContent = 'SDR (Relativo Verde) + BDR (Masa Ámbar)';
+        if (lblSummary) lblSummary.innerHTML = `<span class="text-emerald-300">● SDR (Verde)</span> <span class="text-slate-500">vs</span> <span class="text-amber-400 font-black">● BDR (Ámbar)</span>`;
+      } else if (activePairMatch) {
+        const mA = D18_METADATA[activePairMatch.a];
+        const mB = D18_METADATA[activePairMatch.b];
+        if (lblVal) lblVal.textContent = `🧬 ${activePairMatch.label}`;
+        if (lblName) lblName.textContent = `${mA.label} vs ${mB.label}`;
+        if (lblSummary) lblSummary.innerHTML = `<span style="color:${mA.hex}">● ${mA.name}</span> <span class="text-slate-500">⬌</span> <span style="color:${mB.hex}">● ${mB.name}</span>`;
+      } else if (isAll) {
+        if (lblVal) lblVal.textContent = '✨ Todas 18D';
+        if (lblName) lblName.textContent = 'Espectro Completo 18 Dimensiones';
+        if (lblSummary) lblSummary.innerHTML = `<strong class="text-fuchsia-300">18 Dimensiones Superpuestas</strong>`;
+      } else {
+        if (lblVal) lblVal.textContent = `🎛️ ${activeD18Superposition.length}D Superpuestas`;
+        if (lblName) lblName.textContent = activeD18Superposition.map(d => D18_METADATA[d]?.name || d).join(', ');
+        if (lblSummary) lblSummary.innerHTML = `<span class="text-teal-300">${activeD18Superposition.join(' · ')}</span>`;
+      }
+    }
+
+    function selectD18Dimension(dimKey) {
+      handleD18ButtonClick(dimKey);
     }
 
     function selectTab3Mode(mode) {
@@ -5774,10 +6140,30 @@
         clearInterval(autoActionCountdownTimer);
         autoActionCountdownTimer = null;
       }
+      if (dyadScannerTimer) {
+        clearInterval(dyadScannerTimer);
+        dyadScannerTimer = null;
+      }
+      if (choreographyTimer) {
+        clearTimeout(choreographyTimer);
+        choreographyTimer = null;
+      }
+      if (progressiveSpawnTimer) {
+        clearInterval(progressiveSpawnTimer);
+        progressiveSpawnTimer = null;
+      }
       autoActionSecondsLeft = 0;
 
+      // Restablecer dinámicas y estado diádico al punto cero
       isMasterDynamicsRunning = true;
       if (controls) controls.autoRotate = true;
+      activeDyadIndex = 0;
+      activeSubjectIndex = null;
+      updateDyadPerpendicularGuides(null, null, null);
+
+      // Canon socio: "cuando se pulsa acción se reinicia toda las fases desde el fondo"
+      isAscendingFromFloor = true;
+      ascentStartTime = performance.now();
 
       const btnAction = document.getElementById('btn-master-action');
       const ledAction = document.getElementById('led-master-action');
@@ -5799,8 +6185,17 @@
         ledAction.style.boxShadow = '';
       }
       if (txtAction) {
-        txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
+        txtAction.textContent = '⚡ ¡ ACCIÓN ! (REINICIO DESDE EL FONDO)';
         txtAction.className = 'tracking-wider font-black text-slate-950';
+      }
+
+      const icoPause = document.getElementById('ico-ctrl-pause');
+      const lblPause = document.getElementById('lbl-ctrl-pause');
+      const btnPause = document.getElementById('btn-ctrl-pause');
+      if (icoPause) icoPause.textContent = '⏸';
+      if (lblPause) lblPause.textContent = 'pause';
+      if (btnPause) {
+        btnPause.className = 'py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition';
       }
 
       if (btnBanner) btnBanner.classList.remove('paused');
@@ -5810,91 +6205,72 @@
       if (ledTop) { ledTop.className = 'led-indicator led-on led-pulse'; }
       if (lblTop) lblTop.textContent = 'ACTION ! EN VIVO';
 
-      // Activar aparición progresiva con trazas hasta completar el colectivo
-      startProgressiveSpawn(N);
-      isRelationalSheetActive = true;
-      if (seaPlaneMesh) seaPlaneMesh.visible = true;
+      // FASE 1: DESDE EL FONDO (DAMERO)
+      const phaseBadge = document.getElementById('scene-phase-badge');
+      if (phaseBadge) {
+        phaseBadge.textContent = 'FASE 1/5: DESDE EL FONDO (DAMERO)';
+        phaseBadge.className = 'text-cyan-300 font-black animate-pulse';
+      }
 
-      if (isDyadScannerRunning) startDyadScanner();
+      // Desplegar estado inicial en el fondo
+      renderAquariumState();
       updateAllLeds();
       updatePreConfigDisplay();
-      
+
+      // Coreografía secuencial canónica de las 5 fases desde el fondo:
+      // FASE 2: Ascenso hidrostático suave desde el damero (t = 250ms)
+      choreographyTimer = setTimeout(() => {
+        if (phaseBadge) {
+          phaseBadge.textContent = 'FASE 2/5: ASCENSO HIDROSTÁTICO';
+          phaseBadge.className = 'text-emerald-300 font-black animate-pulse';
+        }
+
+        // FASE 3: Colectivo en equilibrio en cota 18D (t = 1900ms)
+        choreographyTimer = setTimeout(() => {
+          if (phaseBadge) {
+            phaseBadge.textContent = `FASE 3/5: COLECTIVO EN EQUILIBRIO 18D (N=${N})`;
+            phaseBadge.className = 'text-teal-300 font-black';
+          }
+
+          // FASE 4: Sábana-Ola Relacional RBF Ondulante (t = 2600ms)
+          choreographyTimer = setTimeout(() => {
+            isRelationalSheetActive = true;
+            if (seaPlaneMesh) seaPlaneMesh.visible = true;
+            if (phaseBadge) {
+              phaseBadge.textContent = 'FASE 4/5: SÁBANA GRAVITATORIA (PIEL RBF)';
+              phaseBadge.className = 'text-amber-300 font-black';
+            }
+
+            // FASE 5: Dinámica Diádica Activa + Escáner (t = 3400ms)
+            choreographyTimer = setTimeout(() => {
+              if (phaseBadge) {
+                phaseBadge.textContent = 'FASE 5/5: DINÁMICA DIÁDICA (EN VIVO)';
+                phaseBadge.className = 'text-emerald-300 font-black';
+              }
+              if (txtAction) {
+                txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
+              }
+              isDyadScannerRunning = true;
+              startDyadScanner();
+              updateAllLeds();
+            }, 800);
+
+          }, 700);
+
+        }, 1650);
+
+      }, 250);
+
       if (isAuto) {
-        showSmibToast('⚡ ¡ ACCIÓN ! Activado automáticamente. Escenario dispuesto para explorar.');
+        showSmibToast('⚡ ¡ ACCIÓN ! Activado automáticamente: Nodos y fases reiniciadas desde el fondo');
       } else {
-        showSmibToast('⚡ ¡ ACCIÓN ! Dinámica y rotación 360º activadas');
+        showSmibToast('⚡ ¡ ACCIÓN ! Reinicio completo desde el fondo: Fases 1 a 5 en marcha');
       }
     }
 
     function toggleMasterDynamics() {
-      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
-      // Si el usuario hace clic durante la cuenta atrás de 2s, activar de inmediato
-      if (autoActionCountdownTimer || (autoActionSecondsLeft > 0 && !isMasterDynamicsRunning)) {
-        triggerMasterActionLaunch(false);
-        return;
-      }
-
-      isMasterDynamicsRunning = !isMasterDynamicsRunning;
-      
-      const btnAction = document.getElementById('btn-master-action');
-      const ledAction = document.getElementById('led-master-action');
-      const txtAction = document.getElementById('txt-master-action');
-
-      const btnBanner = document.getElementById('btn-master-dynamics');
-      const ledBanner = document.getElementById('led-master-dynamics');
-      const txtBanner = document.getElementById('txt-master-dynamics');
-
-      const ledTop = document.getElementById('led-master-top');
-      const lblTop = document.getElementById('lbl-master-top');
-
-      if (isMasterDynamicsRunning) {
-        if (controls) controls.autoRotate = true;
-        if (btnAction) {
-          btnAction.className = 'flex-1 py-3 px-3 rounded-xl font-black text-xs md:text-sm mono text-slate-950 flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 shadow-[0_0_20px_rgba(0,255,135,0.45)] border-2 border-emerald-200 hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
-        }
-        if (ledAction) { 
-          ledAction.className = 'led-indicator led-on led-pulse'; 
-          ledAction.style.background = '';
-          ledAction.style.boxShadow = '';
-        }
-        if (txtAction) { txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)'; txtAction.className = 'tracking-wider font-black text-slate-950'; }
-
-        if (btnBanner) btnBanner.classList.remove('paused');
-        if (ledBanner) { ledBanner.className = 'led-indicator led-on led-pulse'; }
-        if (txtBanner) txtBanner.textContent = '⚡ ACTION ! ACUARIO EN MOVIMIENTO';
-        
-        if (ledTop) { ledTop.className = 'led-indicator led-on led-pulse'; }
-        if (lblTop) lblTop.textContent = 'ACTION ! EN VIVO';
-
-        if (!dyadScannerTimer && isDyadScannerRunning) startDyadScanner();
-        showSmibToast('⚡ ¡ ACCIÓN ! Dinámica y rotación 360º activadas');
-      } else {
-        if (controls) controls.autoRotate = false;
-        if (btnAction) {
-          btnAction.className = 'flex-1 py-3 px-3 rounded-xl font-black text-xs md:text-sm mono text-slate-200 flex items-center justify-center gap-2 bg-slate-900 border-2 border-slate-700 hover:border-amber-400 shadow-md hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
-        }
-        if (ledAction) { 
-          ledAction.className = 'led-indicator led-off'; 
-          ledAction.style.background = '';
-          ledAction.style.boxShadow = '';
-        }
-        if (txtAction) { txtAction.textContent = '⏸ ¡ ACCIÓN ! (PAUSADO)'; txtAction.className = 'tracking-wider font-black text-amber-300'; }
-
-        if (btnBanner) btnBanner.classList.add('paused');
-        if (ledBanner) { ledBanner.className = 'led-indicator led-off'; }
-        if (txtBanner) txtBanner.textContent = '⏸ ACTION ! PAUSADO (CLIC PARA ACTIVAR)';
-
-        if (ledTop) { ledTop.className = 'led-indicator led-off'; }
-        if (lblTop) lblTop.textContent = 'ACTION ! PAUSADO';
-
-        if (dyadScannerTimer) {
-          clearInterval(dyadScannerTimer);
-          dyadScannerTimer = null;
-        }
-        showSmibToast('⏸ Dinámica del Acuario pausada');
-      }
-      updateAllLeds();
-      updatePreConfigDisplay();
+      // Canon socio: Al pulsar Acción siempre se reinician todas las fases desde el fondo
+      triggerMasterActionLaunch(false);
     }
 
     function toggleDyadScanner() {
@@ -6066,6 +6442,158 @@
     function animateThree() {
       requestAnimationFrame(animateThree);
       const elapsedTime = clock.getElapsedTime();
+      const now = performance.now();
+      const floorY = -3.48;
+
+      // =========================================================================
+      // ASCENSO HIDROSTÁTICO SUAVE DESDE EL DAMERO (Canon socio: reinicio desde el fondo)
+      // =========================================================================
+      if (isAscendingFromFloor) {
+        const totalDuration = ASCENT_DURATION * 1000;
+        const elapsedTotal = now - ascentStartTime;
+        const globalProgress = Math.min(1.0, elapsedTotal / totalDuration);
+
+        // A. Nodos en Modo Singular
+        const visibleCores = nodeMeshes.filter(m => m.userData && m.userData.type === 'core');
+        const numNodes = Math.max(1, visibleCores.length || N);
+
+        visibleCores.forEach((core) => {
+          const idx = core.userData.subjectIndex;
+          const targetY = core.userData.targetY !== undefined ? core.userData.targetY : 0;
+          const pX = core.userData.pX !== undefined ? core.userData.pX : core.position.x;
+          const pZ = core.userData.pZ !== undefined ? core.userData.pZ : core.position.z;
+
+          const nodeDelay = (idx / numNodes) * 350;
+          const nodeElapsed = Math.max(0, elapsedTotal - nodeDelay);
+          const rawT = Math.min(1.0, nodeElapsed / 1450);
+          const easeT = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+
+          const curY = (floorY + 0.12) + (targetY - (floorY + 0.12)) * easeT;
+          core.position.y = curY;
+
+          const halo = haloMeshes.find(h => h.userData && h.userData.subjectIndex === idx);
+          if (halo) halo.position.y = curY;
+
+          const numSpr = nodeMeshes.find(m => m.userData && m.userData.type === 'number' && m.userData.subjectIndex === idx);
+          if (numSpr) numSpr.position.y = curY;
+
+          const drop = dropLines.find(d => d.userData && d.userData.subjectIndex === idx && d.userData.maxY === undefined);
+          if (drop) {
+            drop.geometry.setFromPoints([
+              new THREE.Vector3(pX, floorY + 0.015, pZ),
+              new THREE.Vector3(pX, curY, pZ)
+            ]);
+            drop.computeLineDistances();
+            if (drop.material) drop.material.opacity = 0.40 * Math.max(0.15, easeT);
+          }
+        });
+
+        // B. Nodos y Elementos en Modo Superposición Dialéctica
+        superposedMeshes.forEach((m) => {
+          const idx = m.userData.subjectIndex;
+          const pX = m.userData.pX;
+          const pZ = m.userData.pZ;
+          const nodeDelay = (idx / numNodes) * 350;
+          const nodeElapsed = Math.max(0, elapsedTotal - nodeDelay);
+          const rawT = Math.min(1.0, nodeElapsed / 1450);
+          const easeT = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+
+          if (m.userData.type === 'superposed_marker' || m.userData.type === 'bdr_ring') {
+            const curY = (floorY + 0.12) + (m.userData.targetY - (floorY + 0.12)) * easeT;
+            m.position.y = curY;
+          } else if (m.userData.type === 'spectrum_fiber') {
+            const curMin = (floorY + 0.12) + (m.userData.minY - (floorY + 0.12)) * easeT;
+            const curMax = (floorY + 0.12) + (m.userData.maxY - (floorY + 0.12)) * easeT;
+            m.geometry.setFromPoints([
+              new THREE.Vector3(pX, curMin, pZ),
+              new THREE.Vector3(pX, curMax, pZ)
+            ]);
+            if (m.computeLineDistances) m.computeLineDistances();
+          }
+        });
+
+        // Plomadas hacia el damero en modo superpuesto
+        dropLines.forEach(drop => {
+          if (drop.userData && drop.userData.maxY !== undefined) {
+            const idx = drop.userData.subjectIndex;
+            const pX = drop.userData.pX;
+            const pZ = drop.userData.pZ;
+            const targetY = drop.userData.targetY;
+            const nodeDelay = (idx / numNodes) * 350;
+            const nodeElapsed = Math.max(0, elapsedTotal - nodeDelay);
+            const rawT = Math.min(1.0, nodeElapsed / 1450);
+            const easeT = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+            const curY = (floorY + 0.12) + (targetY - (floorY + 0.12)) * easeT;
+            drop.geometry.setFromPoints([
+              new THREE.Vector3(pX, floorY + 0.015, pZ),
+              new THREE.Vector3(pX, curY, pZ)
+            ]);
+            drop.computeLineDistances();
+            if (drop.material) drop.material.opacity = 0.35 * Math.max(0.15, easeT);
+          }
+        });
+
+        // Corrientes diádicas emergiendo suavemente
+        flowLines.forEach(l => {
+          if (l.material) l.material.opacity = 0.65 * globalProgress;
+        });
+
+        // Al culminar el ascenso:
+        if (elapsedTotal >= totalDuration) {
+          isAscendingFromFloor = false;
+          visibleCores.forEach((core) => {
+            const idx = core.userData.subjectIndex;
+            const targetY = core.userData.targetY !== undefined ? core.userData.targetY : 0;
+            const pX = core.userData.pX !== undefined ? core.userData.pX : core.position.x;
+            const pZ = core.userData.pZ !== undefined ? core.userData.pZ : core.position.z;
+            core.position.y = targetY;
+            const halo = haloMeshes.find(h => h.userData && h.userData.subjectIndex === idx);
+            if (halo) halo.position.y = targetY;
+            const numSpr = nodeMeshes.find(m => m.userData && m.userData.type === 'number' && m.userData.subjectIndex === idx);
+            if (numSpr) numSpr.position.y = targetY;
+            const drop = dropLines.find(d => d.userData && d.userData.subjectIndex === idx && d.userData.maxY === undefined);
+            if (drop) {
+              drop.geometry.setFromPoints([
+                new THREE.Vector3(pX, floorY + 0.015, pZ),
+                new THREE.Vector3(pX, targetY, pZ)
+              ]);
+              drop.computeLineDistances();
+              if (drop.material) drop.material.opacity = 0.40;
+            }
+          });
+
+          superposedMeshes.forEach((m) => {
+            const pX = m.userData.pX;
+            const pZ = m.userData.pZ;
+            if (m.userData.type === 'superposed_marker' || m.userData.type === 'bdr_ring') {
+              m.position.y = m.userData.targetY;
+            } else if (m.userData.type === 'spectrum_fiber') {
+              m.geometry.setFromPoints([
+                new THREE.Vector3(pX, m.userData.minY, pZ),
+                new THREE.Vector3(pX, m.userData.maxY, pZ)
+              ]);
+              if (m.computeLineDistances) m.computeLineDistances();
+            }
+          });
+
+          dropLines.forEach(drop => {
+            if (drop.userData && drop.userData.maxY !== undefined) {
+              const pX = drop.userData.pX;
+              const pZ = drop.userData.pZ;
+              drop.geometry.setFromPoints([
+                new THREE.Vector3(pX, floorY + 0.015, pZ),
+                new THREE.Vector3(pX, drop.userData.targetY, pZ)
+              ]);
+              drop.computeLineDistances();
+              if (drop.material) drop.material.opacity = 0.35;
+            }
+          });
+
+          flowLines.forEach(l => {
+            if (l.material) l.material.opacity = 0.65;
+          });
+        }
+      }
 
       // Pulsación hidrodinámica del halo conjetural
       haloMeshes.forEach(mesh => {
@@ -6086,7 +6614,7 @@
 
         if (pos) {
           const isVibrating = (isSoftVibrationActive || isPosteriorFlipped || (camera && camera.position.y < -0.2));
-          const visibleNodes = nodeMeshes.filter(m => m.userData && m.userData.type === 'core' && m.parent);
+          const visibleNodes = nodeMeshes.filter(m => m.userData && (m.userData.type === 'core' || (m.userData.type === 'superposed_marker' && (m.userData.dimKey === 'D13' || m.userData.dimKey === activeD18Superposition[0]))) && m.parent);
 
           for (let i = 0; i < pos.count; i++) {
             const u = pos.getX(i); // Coordenada X del mundo
