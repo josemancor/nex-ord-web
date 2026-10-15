@@ -421,8 +421,8 @@ header {
           <span id="lang-flag">🇪🇸</span> <span id="lang-code">ES</span> ▾
         </button>
         <div class="lang-dropdown" id="lang-dropdown" role="menu" aria-label="Idiomas disponibles">
-          <button type="button" class="lang-opt active" role="menuitem" onclick="setLanguage('es')">🇪🇸 Español (ES)</button>
-          <a href="glosario.html?lang=en" class="lang-opt" role="menuitem">🇬🇧 English (EN)</a>
+          <button type="button" class="lang-opt active" id="opt-es" role="menuitem" onclick="setLanguage('es')">🇪🇸 Español (ES)</button>
+          <button type="button" class="lang-opt" id="opt-en" role="menuitem" onclick="setLanguage('en')">🇬🇧 English (EN)</button>
           <div style="border-top:1px solid rgba(255,255,255,0.12); margin:6px 0 2px 0; padding:6px 8px; font-size:0.68rem; color:#94A3B8; font-style:italic; line-height:1.35;">Idiomas para futuras localizaciones...</div>
         </div>
       </div>
@@ -433,76 +433,122 @@ header {
     let hasNavigated = false;
     let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
 
-    function goToInstitutional(e) {
-      if (hasNavigated) return;
-      if (e) {
-        if (e.target && (e.target.closest('header') || e.target.closest('button') || (e.target.closest('a') && !['click-anywhere-zone', 'mobile-tap-hint'].includes(e.target.closest('a').id)))) {
-          return;
-        }
-        if (e.preventDefault) e.preventDefault();
-        if (e.stopPropagation) e.stopPropagation();
+    const INDEX_I18N = {
+      es: {
+        flag: '🇪🇸',
+        code: 'ES',
+        title: 'NEXORD | La Física de lo Grupal · Diagnóstico Socio-Termodinámico',
+        desc: 'NEXORD | Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico. Modelado matemático de redes humanas mediante matrices SMIb y variedades de Grassmann.',
+        subtitle: 'Hacia una Física de lo Grupal',
+        dial: 'Dial Orbital',
+        custodia: 'Custodia',
+        portal: 'Portal Institucional ➔',
+        tap_hint: '👆 Pulsa en cualquier lugar para entrar ➔',
+        tap_aria: 'Acceder al Portal Institucional NEXORD'
+      },
+      en: {
+        flag: '🇬🇧',
+        code: 'EN',
+        title: 'NEXORD | Towards a Physics of the Group · Socio-Thermodynamic Diagnosis',
+        desc: 'NEXORD | Computational Ordinal Sociometry & Socio-Thermodynamic Diagnosis Platform. Mathematical modeling of human networks via SMIb matrices and Grassmann manifolds.',
+        subtitle: 'Towards a Physics of the Group',
+        dial: 'Orbital Dial',
+        custodia: 'Stewardship',
+        portal: 'Institutional Portal ➔',
+        tap_hint: '👆 Tap anywhere to enter ➔',
+        tap_aria: 'Access NEXORD Institutional Portal'
       }
-      hasNavigated = true;
-      window.location.href = 'index_promocional.html';
+    };
+
+    function setLanguage(lang) {
+      if (!INDEX_I18N[lang]) lang = 'es';
+      try {
+        localStorage.setItem('nexord_lang', lang);
+      } catch (e) {}
+      document.documentElement.lang = lang;
+      const dict = INDEX_I18N[lang];
+
+      document.title = dict.title;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', dict.desc);
+
+      const flagEl = document.getElementById('lang-flag');
+      const codeEl = document.getElementById('lang-code');
+      if (flagEl) flagEl.textContent = dict.flag;
+      if (codeEl) codeEl.textContent = dict.code;
+
+      const subEl = document.querySelector('.brand-subtitle');
+      if (subEl) subEl.textContent = dict.subtitle;
+
+      const dialEl = document.querySelector('a[href="dial_orbital.html"] span:last-child');
+      if (dialEl) dialEl.textContent = dict.dial;
+
+      const custEl = document.querySelector('a[href="index_promocional.html#custodia"] span:last-child');
+      if (custEl) custEl.textContent = dict.custodia;
+
+      const portalEl = document.querySelector('.btn-portal-main span:last-child');
+      if (portalEl) portalEl.textContent = dict.portal;
+
+      const tapEl = document.querySelector('#mobile-tap-hint span');
+      if (tapEl) tapEl.textContent = dict.tap_hint;
+
+      const clickZone = document.getElementById('click-anywhere-zone');
+      if (clickZone) {
+        clickZone.setAttribute('aria-label', dict.tap_aria);
+        clickZone.setAttribute('title', dict.tap_hint);
+      }
+
+      const optEs = document.getElementById('opt-es');
+      const optEn = document.getElementById('opt-en');
+      if (optEs) optEs.classList.toggle('active', lang === 'es');
+      if (optEn) optEn.classList.toggle('active', lang === 'en');
+
+      const dd = document.getElementById('lang-dropdown');
+      if (dd) dd.classList.remove('open');
+      const btn = document.getElementById('lang-btn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
 
-    // Soporte táctil universal para Smartphones y Tablets (iOS Safari, Android WebKit/Chrome)
-    window.addEventListener('touchstart', (e) => {
-      if (e.touches && e.touches[0]) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchStartTime = Date.now();
+    function toggleLangMenu(event) {
+      if (event) event.stopPropagation();
+      const dd = document.getElementById('lang-dropdown');
+      const btn = document.getElementById('lang-btn');
+      if (dd) {
+        const isOpen = dd.classList.toggle('open');
+        if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       }
-    }, { passive: true });
-
-    window.addEventListener('touchend', (e) => {
-      if (e.target && (e.target.closest('header') || e.target.closest('button') || (e.target.closest('a') && !['click-anywhere-zone', 'mobile-tap-hint'].includes(e.target.closest('a').id)))) {
-        return;
-      }
-      if (e.changedTouches && e.changedTouches[0]) {
-        const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
-        const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
-        const dt = Date.now() - touchStartTime;
-        // Cualquier pulsación intencionada (< 30px desplazamiento y < 1.2s duración) activa la transición
-        if (dx < 30 && dy < 30 && dt < 1200) {
-          goToInstitutional(e);
-        }
-      }
-    }, { passive: true });
-
-    // Eventos PointerUp para máxima compatibilidad con stylus y touchscreens
-    window.addEventListener('pointerup', (e) => {
-      if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-        if (e.target && (e.target.closest('header') || e.target.closest('button') || (e.target.closest('a') && !['click-anywhere-zone', 'mobile-tap-hint'].includes(e.target.closest('a').id)))) {
-          return;
-        }
-        goToInstitutional(e);
-      }
-    }, { passive: true });
-
-    function toggleLangMenu(e) {
-      if (e) e.stopPropagation();
-      const dd = document.getElementById("lang-dropdown");
-      const btn = document.getElementById("lang-btn");
-      if (!dd) return;
-      const isOpen = dd.classList.toggle("open");
-      if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
     }
 
-    window.addEventListener("click", (e) => {
-      const dd = document.getElementById("lang-dropdown");
-      if (dd && dd.classList.contains("open")) {
-        dd.classList.remove("open");
-        const btn = document.getElementById("lang-btn");
-        if (btn) btn.setAttribute("aria-expanded", "false");
+    document.addEventListener('click', function(e) {
+      const picker = document.querySelector('.lang-picker');
+      if (picker && !picker.contains(e.target)) {
+        const dd = document.getElementById('lang-dropdown');
+        if (dd) dd.classList.remove('open');
+        const btn = document.getElementById('lang-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
       }
     });
 
-    function setLanguage(lang) {
-      localStorage.setItem('nexord_lang', lang);
-      const dd = document.getElementById("lang-dropdown");
-      if (dd) dd.classList.remove("open");
+    function initLang() {
+      let lang = 'es';
+      try {
+        const p = new URLSearchParams(window.location.search);
+        const urlLang = p.get('lang');
+        if (urlLang && INDEX_I18N[urlLang]) {
+          lang = urlLang;
+        } else {
+          const saved = localStorage.getItem('nexord_lang');
+          if (saved && INDEX_I18N[saved]) {
+            lang = saved;
+          } else {
+            const browserLang = (navigator.language || '').toLowerCase().split('-')[0];
+            if (browserLang === 'en') lang = 'en';
+          }
+        }
+      } catch (e) {}
+      setLanguage(lang);
     }
+    initLang();
 
     // Redirección si se invoca con ?dial=open o #dial
     try {
