@@ -22,4 +22,4 @@ git push origin main
 
 echo "------------------------------------------------"
 echo "🎉 ¡Despliegue completado con éxito!"
-echo "🌐 Tu web estará actualizada en un par de minutos en https://nexord.org/"
+echo "🌐 Tu web estará actualizada en un par de minutos en https://nex-ord.org/"
