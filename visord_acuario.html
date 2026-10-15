@@ -2033,36 +2033,34 @@
 
     // 2. Fondo Arenoso / Lecho Marino Sólido y Claramente Distinguible
     function createSeabed() {
-      // Suelo de arena marina en Y = -3.55 con relieve sutil de micro-ondulaciones
-      const floorGeom = new THREE.PlaneGeometry(11.0, 11.0, 60, 60);
+      // Suelo de lecho marino en Y = -3.55: liso, abisal, suave y elegante
+      const floorGeom = new THREE.PlaneGeometry(11.0, 11.0, 36, 36);
       floorGeom.rotateX(-Math.PI / 2);
 
-      // Relieve fino de arena marina suave y ondulada
+      // Relieve extremadamente suave de arena abisal (sin facetado)
       const pos = floorGeom.attributes.position;
       for (let i = 0; i < pos.count; i++) {
         const u = pos.getX(i);
         const w = pos.getZ(i);
-        const h = Math.sin(u * 1.6) * Math.cos(w * 1.6) * 0.035 + Math.sin(u * 3.8 + w * 2.2) * 0.012;
+        const h = Math.sin(u * 0.8) * Math.cos(w * 0.8) * 0.02;
         pos.setY(i, h);
       }
       floorGeom.computeVertexNormals();
 
-      // Color arena marina cálida / lecho suave con acabado mate
+      // Color lecho marino abisal profundo y satinado
       const floorMat = new THREE.MeshStandardMaterial({
-        color: 0x9DB3A6, // Arena marina suave y contrastada
-        roughness: 0.85,
-        metalness: 0.08,
-        flatShading: true
+        color: 0x05162B, // Azul marino abisal profundo
+        roughness: 0.90,
+        metalness: 0.15,
+        flatShading: false // Smooth shading para evitar artefactos facetados
       });
       seabedMesh = new THREE.Mesh(floorGeom, floorMat);
       seabedMesh.position.y = -3.55;
       scene.add(seabedMesh);
 
-      // Nota Canónica: Se elimina la cuadrícula artificial del fondo para dejar el lecho marino limpio y diáfano
-
       // Zócalo de soporte base bajo la arena
       const baseGeom = new THREE.BoxGeometry(11.3, 0.4, 11.3);
-      const baseMat = new THREE.MeshStandardMaterial({ color: 0x02162B, roughness: 0.9 });
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x020E1C, roughness: 0.95 });
       const baseMesh = new THREE.Mesh(baseGeom, baseMat);
       baseMesh.position.y = -3.75;
       scene.add(baseMesh);
@@ -2321,9 +2319,17 @@
       renderAquariumState(N);
     }
 
-    function getNodePosition(idx, scaleXY, scaleZ) {
+    let currentAquariumScaling = {
+      centroidX: 0,
+      centroidZ: 0,
+      centroidY: 0,
+      scaleXY: 4.0,
+      scaleY: 2.6
+    };
+
+    function getRawNodeCoordinate(idx) {
       if (!d18State || !d18State.nodes || !d18State.nodes[idx]) {
-        return new THREE.Vector3(0, 0, 0);
+        return { x: 0, y: 0, z: 0 };
       }
       const st = d18State.nodes[idx];
       let coordX = st.x;
@@ -2345,15 +2351,15 @@
         coordX = st.SDA * 1.25;
         coordZ = st.SRC * 1.25;
       } else if (currentAquariumBase === 'QxQ') {
-        // Dispersión en cuadrícula 9x9 (las 81 figuras sociométricas)
+        // Dispersión armónica en cuadrícula 9x9 (las 81 figuras sociométricas)
         const qCol = (idx % 9) - 4;
         const qRow = Math.floor(idx / 9) - 4;
-        coordX = qCol * 0.16 + st.x * 0.06;
-        coordZ = qRow * 0.16 + st.y * 0.06;
+        coordX = qCol * 0.22 + st.x * 0.08;
+        coordZ = qRow * 0.22 + st.y * 0.08;
       } else if (currentAquariumBase === 'TENSOR') {
         const tier = idx % 3;
-        coordX = st.x + (tier - 1) * 0.22;
-        coordZ = st.y + (Math.floor(idx / 3) % 3 - 1) * 0.22;
+        coordX = st.x + (tier - 1) * 0.26;
+        coordZ = st.y + (Math.floor(idx / 3) % 3 - 1) * 0.26;
       }
 
       // Modulación por Régimen de Cálculo
@@ -2362,7 +2368,23 @@
         coordZ = (coordZ + st.massDi) * 0.5;
       }
 
-      return new THREE.Vector3(coordX * scaleXY, coordY * scaleZ, coordZ * scaleXY);
+      return { x: coordX, y: coordY, z: coordZ };
+    }
+
+    function getNodePosition(idx, scaleXY = null, scaleZ = null) {
+      const raw = getRawNodeCoordinate(idx);
+      const cx = currentAquariumScaling.centroidX;
+      const cz = currentAquariumScaling.centroidZ;
+      const cy = currentAquariumScaling.centroidY;
+
+      const sXY = scaleXY !== null ? scaleXY : currentAquariumScaling.scaleXY;
+      const sY = scaleZ !== null ? scaleZ : currentAquariumScaling.scaleY;
+
+      const pX = (raw.x - cx) * sXY;
+      const pZ = (raw.z - cz) * sXY;
+      const pY = (raw.y - cy) * sY;
+
+      return new THREE.Vector3(pX, pY, pZ);
     }
 
     function renderAquariumState(limitCount = null) {
@@ -2384,17 +2406,43 @@
         ? Math.min(numSuj, Math.max(1, limitCount))
         : numSuj;
 
-      // Calibrar dinámicamente factores de escala conforme al canon (evitar apelotonamiento y ocupar el espacio útil)
-      let maxAbsXY = 0.15;
-      let maxAbsZ = 0.15;
-      stats.forEach(st => {
-        if (Math.abs(st.x) > maxAbsXY) maxAbsXY = Math.abs(st.x);
-        if (Math.abs(st.y) > maxAbsXY) maxAbsXY = Math.abs(st.y);
-        if (Math.abs(st.z) > maxAbsZ) maxAbsZ = Math.abs(st.z);
-      });
+      // 1. Calibrar dinámicamente centrado baricéntrico y factores de escala (Regla 17 de AGENTS.md: ocupar el máximo espacio útil sin apelotonamiento)
+      let sumX = 0, sumZ = 0, sumY = 0;
+      const rawCoords = [];
+      for (let i = 0; i < numSuj; i++) {
+        const rc = getRawNodeCoordinate(i);
+        rawCoords.push(rc);
+        sumX += rc.x;
+        sumZ += rc.z;
+        sumY += rc.y;
+      }
+      const meanX = sumX / numSuj;
+      const meanZ = sumZ / numSuj;
+      const meanY = sumY / numSuj;
 
-      const SCALE_XY = Math.min(9.5, Math.max(3.4, 3.8 / maxAbsXY));
-      const SCALE_Z = Math.min(5.5, Math.max(2.8, 2.2 / maxAbsZ));
+      let maxDistXZ = 0.08;
+      let maxDistY = 0.08;
+      for (let i = 0; i < numSuj; i++) {
+        const dx = rawCoords[i].x - meanX;
+        const dz = rawCoords[i].z - meanZ;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist > maxDistXZ) maxDistXZ = dist;
+        const dy = Math.abs(rawCoords[i].y - meanY);
+        if (dy > maxDistY) maxDistY = dy;
+      }
+
+      // El acuario tiene anchura/profundidad de 11.2 (radio 5.6) y altura 7.3 (radio 3.65)
+      // Escalamos para que el cuerpo principal ocupe un radio de ~3.6 en el plano XZ y ~2.0 en Y
+      const SCALE_XY = Math.min(20.0, Math.max(3.6, 3.6 / maxDistXZ));
+      const SCALE_Z = Math.min(8.5, Math.max(2.2, 2.0 / maxDistY));
+
+      currentAquariumScaling = {
+        centroidX: meanX,
+        centroidZ: meanZ,
+        centroidY: meanY,
+        scaleXY: SCALE_XY,
+        scaleY: SCALE_Z
+      };
 
       // 1. Renderizar Nodos Bi-Capa (Núcleo + Halo) solo hasta effectiveCount
       for (let idx = 0; idx < effectiveCount; idx++) {
@@ -4674,39 +4722,43 @@
           : null;
 
         if (pos) {
-          const baseY = currentSeaLevel * 2.8;
           const isVibrating = (isSoftVibrationActive || isPosteriorFlipped || (camera && camera.position.y < -0.2));
           const visibleNodes = nodeMeshes.filter(m => m.userData && m.userData.type === 'core' && m.parent);
 
           for (let i = 0; i < pos.count; i++) {
-            const u = pos.getX(i);
-            const w = pos.getY(i); // En PlaneGeometry rotateX(-PI/2), Y local corresponde a Z del mundo
+            const u = pos.getX(i); // Coordenada X del mundo
+            const w = pos.getZ(i); // Coordenada Z del mundo (profundidad)
 
-            // 1. Onda oceánica sutil
-            let h = Math.sin(u * 1.4 + elapsedTime * 1.8) * Math.cos(w * 1.4 + elapsedTime * 1.2) * 0.045;
+            // 1. Onda oceánica ambiente sutil
+            let h = Math.sin(u * 0.9 + elapsedTime * 1.4) * Math.cos(w * 0.9 + elapsedTime * 1.1) * 0.05;
 
-            // 2. Modulación RBF por los centroides de los sujetos presentes
+            // 2. Modulación RBF continua inducida por los nodos visibles (enrejado de densidades)
             if (isRelationalSheetActive && visibleNodes.length > 0) {
               let rbfSum = 0;
+              let weightSum = 0;
+              const sigmaSq = 2.8; // Cobertura armónica continua que abraza los nodos
               for (let k = 0; k < visibleNodes.length; k++) {
                 const nodePos = visibleNodes[k].position;
                 const dx = u - nodePos.x;
                 const dz = w - nodePos.z;
                 const distSq = dx * dx + dz * dz;
-                const sigmaSq = 2.4; // Dispersión armónica suave
-                rbfSum += (nodePos.y - baseY) * 0.38 * Math.exp(-distSq / sigmaSq);
+                const weight = Math.exp(-distSq / sigmaSq);
+                rbfSum += nodePos.y * weight;
+                weightSum += weight;
               }
-              h += rbfSum;
+              const blend = Math.min(1.0, weightSum * 0.85);
+              h += (rbfSum / Math.max(0.001, weightSum)) * blend;
             }
 
             // 3. Vibración armónica suave automática al voltear hacia la cara posterior
             if (isVibrating) {
-              const vib = Math.sin(elapsedTime * 3.8 + u * 2.5 + w * 2.5) * Math.cos(elapsedTime * 2.1 - u * 1.8) * 0.042;
+              const vib = Math.sin(elapsedTime * 3.8 + u * 2.2 + w * 2.2) * Math.cos(elapsedTime * 2.1 - u * 1.6) * 0.08;
               h += vib;
             }
 
-            pos.setZ(i, h);
-            if (wirePos) wirePos.setZ(i, h);
+            // Modificar la elevación vertical Y del vértice (Sábana-Ola 3D real)
+            pos.setY(i, h);
+            if (wirePos) wirePos.setY(i, h);
           }
           pos.needsUpdate = true;
           seaPlaneMesh.geometry.computeVertexNormals();
