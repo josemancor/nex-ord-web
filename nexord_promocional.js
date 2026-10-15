@@ -205,18 +205,23 @@ function initHeroVideo() {
   const vid = document.getElementById('hero-master-video');
   if (!vid) return;
 
+  const btnPlay = document.getElementById('btn-video-play');
   const btnAudio = document.getElementById('btn-video-audio');
   const unmuteBadge = document.getElementById('hero-unmute-badge');
   const btnFs = document.getElementById('btn-video-fs');
+  const playIcon = document.getElementById('video-play-icon');
+  const playLabel = document.getElementById('video-play-label');
   const audioIcon = document.getElementById('video-audio-icon');
   const audioLabel = document.getElementById('video-audio-label');
   const playerWrap = document.getElementById('hero-player-wrap');
 
-  // Asegurar configuración playsinline y silencio inicial para permitir Autoplay nativo en navegadores
+  // Asegurar reproducción única (sin bucle), playsinline y silencio inicial para permitir Autoplay
+  vid.loop = false;
   vid.muted = true;
   vid.defaultMuted = true;
   vid.setAttribute('playsinline', '');
   vid.setAttribute('webkit-playsinline', '');
+  vid.removeAttribute('loop');
 
   function updateAudioUI(isMuted) {
     if (isMuted) {
@@ -267,22 +272,70 @@ function initHeroVideo() {
     }
   }
 
+  // Controlador de Reproducción / Pausa
+  function togglePlayPause(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (vid.paused || vid.ended) {
+      if (vid.ended) {
+        vid.currentTime = 0;
+      }
+      const p = vid.play();
+      if (p !== undefined) {
+        p.catch(err => console.warn("Video play error:", err));
+      }
+    } else {
+      vid.pause();
+    }
+  }
+
+  if (btnPlay) {
+    btnPlay.addEventListener('click', togglePlayPause);
+  }
+
   if (btnAudio) {
     btnAudio.addEventListener('click', toggleAudio);
   }
 
   if (unmuteBadge) {
-    unmuteBadge.addEventListener('click', toggleAudio);
-  }
-
-  // Pulsar en cualquier lugar del video también conmuta el audio
-  if (playerWrap) {
-    playerWrap.addEventListener('click', (e) => {
-      if (!e.target.closest('.video-ctrl-btn')) {
-        toggleAudio(e);
-      }
+    unmuteBadge.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      activateSound();
     });
   }
+
+  // Pulsar sobre el video conmuta Play / Pausa (salvo si se pulsa sobre botones de control)
+  if (playerWrap) {
+    playerWrap.addEventListener('click', (e) => {
+      if (e.target.closest('#hero-unmute-badge') || e.target.closest('.video-ctrl-btn')) {
+        return;
+      }
+      togglePlayPause(e);
+    });
+  }
+
+  // Sincronizar botones e iconos con el estado real del reproductor
+  vid.addEventListener('play', () => {
+    if (playIcon) playIcon.textContent = '⏸️';
+    if (playLabel) playLabel.textContent = 'Pausa';
+    if (btnPlay) btnPlay.classList.add('playing');
+  });
+
+  vid.addEventListener('pause', () => {
+    if (playIcon) playIcon.textContent = '▶️';
+    if (playLabel) playLabel.textContent = 'Reproducir';
+    if (btnPlay) btnPlay.classList.remove('playing');
+  });
+
+  vid.addEventListener('ended', () => {
+    // Al concluir la reproducción única (sin bucle)
+    if (playIcon) playIcon.textContent = '🔄';
+    if (playLabel) playLabel.textContent = 'Repetir';
+    if (btnPlay) btnPlay.classList.remove('playing');
+  });
 
   vid.addEventListener('volumechange', () => {
     updateAudioUI(vid.muted);
