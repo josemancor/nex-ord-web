@@ -272,19 +272,59 @@ function initHeroVideo() {
     }
   });
 
-  // Play / Pausa
+  // Garantizar silenciado nativo en propiedades DOM para que Android autorice el Autoplay
+  vid.muted = true;
+  vid.defaultMuted = true;
+  vid.setAttribute('playsinline', '');
+  vid.setAttribute('webkit-playsinline', '');
+
+  // Sincronizar iconos con el estado real del reproductor
+  vid.addEventListener('play', () => {
+    if (playIcon) playIcon.textContent = '⏸️';
+    if (playLabel) playLabel.textContent = 'Pausa';
+  });
+  vid.addEventListener('pause', () => {
+    if (playIcon) playIcon.textContent = '▶️';
+    if (playLabel) playLabel.textContent = 'Reproducir';
+  });
+
+  // Play / Pausa manual
   if (btnPlay) {
     btnPlay.addEventListener('click', () => {
       if (vid.paused) {
-        vid.play();
-        if (playIcon) playIcon.textContent = '⏸️';
-        if (playLabel) playLabel.textContent = 'Pausa';
+        vid.play().catch(() => {});
       } else {
         vid.pause();
-        if (playIcon) playIcon.textContent = '▶️';
-        if (playLabel) playLabel.textContent = 'Reproducir';
       }
     });
+  }
+
+  // Arranque seguro de Autoplay en Android / Chrome
+  function launchSafeAutoplay() {
+    vid.muted = true;
+    const playPromise = vid.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // En Android con ahorro de batería o datos, el navegador requiere interacción previa
+        const unlockOnTouch = () => {
+          vid.muted = true;
+          vid.play().catch(() => {});
+          ['touchstart', 'touchend', 'scroll', 'click'].forEach(evt => {
+            window.removeEventListener(evt, unlockOnTouch);
+          });
+        };
+        ['touchstart', 'touchend', 'scroll', 'click'].forEach(evt => {
+          window.addEventListener(evt, unlockOnTouch, { passive: true, once: true });
+        });
+      });
+    }
+  }
+
+  // Disparar en carga de DOM
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    launchSafeAutoplay();
+  } else {
+    window.addEventListener('DOMContentLoaded', launchSafeAutoplay, { once: true });
   }
 
   // Sincronización automática de subtítulos con estado Mute

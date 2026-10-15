@@ -8,6 +8,22 @@
    - Cuadrículas y vistas divididas apiladas verticalmente con total legibilidad
    ============================================================================= */
 
+/* =============================================================================
+   BLINDAJE UNIVERSAL ANTI-FONT-BOOSTING PARA ANDROID / CHROME / WEBKIT
+   Evita que el motor Blink de Android infle artificialmente los textos a 200%-350%
+   ============================================================================= */
+html, body {
+  -webkit-text-size-adjust: 100% !important;
+  -moz-text-size-adjust: 100% !important;
+  -ms-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+*, *::before, *::after {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
 @media (max-width: 768px) {
 
   /* -------------------------------------------------------------------------
@@ -21,6 +37,7 @@
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
   }
 
   body {
@@ -31,6 +48,9 @@
     overflow-y: auto !important;
     position: relative !important;
     -webkit-tap-highlight-color: transparent !important;
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+    max-width: 100vw !important;
   }
 
   .snap-container {
@@ -54,6 +74,20 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
+  }
+
+  /* Excepción para pantallas 3D inmersivas a pantalla completa (Nivel 1b, etc.) */
+  .screen-section#pantalla-b,
+  .screen-section.screen-3d-fullscreen {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    display: block !important;
   }
 
   /* -------------------------------------------------------------------------
@@ -331,16 +365,43 @@
     width: 100% !important;
   }
 
-  .canvas-container,
+  /* Gráficos 2D, radares y diagramas auxiliares (limitar altura para no romper scroll) */
+  .canvas-container:not(#canvas-3d-container):not(#canvas-cube-container):not(.visord-canvas-3d),
   .chart-canvas-wrap,
-  .threejs-viewport,
-  .visual-area,
-  canvas {
+  .visual-area {
     max-width: 100% !important;
     width: 100% !important;
     height: clamp(230px, 42vh, 320px) !important;
     min-height: 220px !important;
     box-sizing: border-box !important;
+  }
+
+  /* Canvases 3D WebGL inmersivos (Three.js / ForceGraph3D): NO aplastar con clamp */
+  #canvas-3d-container,
+  #canvas-cube-container,
+  .visord-canvas-3d,
+  .threejs-fullscreen-wrap {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  #canvas-3d-container canvas,
+  #canvas-cube-container canvas,
+  .visord-canvas-3d canvas,
+  .threejs-viewport canvas,
+  .threejs-fullscreen-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    max-width: 100% !important;
+    display: block !important;
+    touch-action: none !important;
   }
 
   /* Tablas y Matrices con Desplazamiento Táctil Fluido */
@@ -369,19 +430,26 @@
     overflow-y: auto !important;
   }
 
-  /* Jerarquía de Texto Moderada en Pantallas Pequeñas */
-  h1, .modal-h3, .title-formacion-grupal, .section-title {
-    font-size: 1.15rem !important;
+  /* Jerarquía de Texto Moderada y Blindada en Pantallas Pequeñas */
+  h1, .hero-title, .modal-h3, .title-formacion-grupal {
+    font-size: clamp(1.20rem, 5vw, 1.55rem) !important;
+    line-height: 1.25 !important;
+    word-break: break-word !important;
+  }
+  h2, .section-title {
+    font-size: clamp(1.05rem, 4vw, 1.30rem) !important;
+    line-height: 1.3 !important;
+    word-break: break-word !important;
+  }
+  h3, h4, .card-title, .jewel-card h3 {
+    font-size: 0.98rem !important;
     line-height: 1.3 !important;
   }
-  h2, h3 {
-    font-size: 1.00rem !important;
-    line-height: 1.25 !important;
-  }
-  p, li {
+  p, li, .hero-subtitle, .section-desc {
     font-size: 0.82rem !important;
-    line-height: 1.5 !important;
+    line-height: 1.45 !important;
   }
+
 
   /* -------------------------------------------------------------------------
      6. PORTADA PRINCIPAL (INDEX.HTML · DIAL 3-6-9)
