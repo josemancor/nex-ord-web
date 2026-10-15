@@ -1990,7 +1990,7 @@
       scene.background = new THREE.Color(0x07355E);
       scene.fog = new THREE.FogExp2(0x083C66, 0.015);
 
-      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 250);
       camera.position.set(7.6, 7.4, 10.6);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -2006,8 +2006,8 @@
       controls.dampingFactor = 0.05;
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.75;
-      controls.maxDistance = 24;
-      controls.minDistance = 3.5;
+      controls.maxDistance = 85;
+      controls.minDistance = 1.8;
 
       // Iluminación Solar Acuática (Penetración de rayos solares)
       const sunLight = new THREE.DirectionalLight(0xF0FDFF, 2.8);
@@ -2096,16 +2096,39 @@
       seabedMesh.position.y = -3.55;
       scene.add(seabedMesh);
 
-      // Zócalo de soporte base bajo la arena
-      const baseGeom = new THREE.BoxGeometry(11.3, 0.4, 11.3);
-      const baseMat = new THREE.MeshStandardMaterial({ color: 0x020E1C, roughness: 0.95 });
+      // Pedestal exterior expandido: bandeja perimetral que acoge las etiquetas fuera del acuario
+      const baseGeom = new THREE.BoxGeometry(14.8, 0.4, 14.8);
+      const baseMat = new THREE.MeshStandardMaterial({
+        color: 0x020D1A,
+        roughness: 0.85,
+        metalness: 0.25
+      });
       const baseMesh = new THREE.Mesh(baseGeom, baseMat);
       baseMesh.position.y = -3.75;
       scene.add(baseMesh);
+
+      // Borde embellecedor exterior del pedestal en verde/cyan bioluminiscente
+      const rimPts = [
+        new THREE.Vector3(-7.38, -3.55, -7.38),
+        new THREE.Vector3(7.38, -3.55, -7.38),
+        new THREE.Vector3(7.38, -3.55, 7.38),
+        new THREE.Vector3(-7.38, -3.55, 7.38),
+        new THREE.Vector3(-7.38, -3.55, -7.38)
+      ];
+      const rimGeom = new THREE.BufferGeometry().setFromPoints(rimPts);
+      const rimLine = new THREE.Line(rimGeom, new THREE.LineBasicMaterial({
+        color: 0x00F5D4,
+        transparent: true,
+        opacity: 0.45
+      }));
+      scene.add(rimLine);
     }
 
     let baseLabelsGroup = null;
     let baseFloorGrid = null;
+    let dropLines = [];
+    let footprintMeshes = [];
+    let activePerpendicularGuides = null;
     let q81LabelMode = 'NUM'; // Canon socio: "cuando se utilice Q81, la etiqueta será numérica 1-81, o 9d o 9r"
     let showNodeLabelsOnSheet = false; // Canon socio: "si las etiquetas están en la base, no hay necesidad de ponerlas en la sábana. La sábana está muy lograda, socio!!"
 
@@ -2272,6 +2295,97 @@
       return sprite;
     }
 
+    /* =========================================================================
+       4. DAMERO ADAPTADO AL FONDO Y CRUCES PERPENDICULARES
+       ========================================================================= */
+    function getDameroGridCoords(count, span = 8.8) {
+      const halfSpan = span / 2;
+      const step = count > 1 ? span / count : span;
+      const floorY = -3.48;
+      return {
+        span,
+        halfSpan,
+        step,
+        count,
+        floorY,
+        // Dador (X): 0..count-1 (1d..Kd de izq a dcha)
+        getX: function(dIdx) {
+          if (count <= 1) return 0;
+          return -halfSpan + (dIdx + 0.5) * step;
+        },
+        // Receptor (Z): 0..count-1 (1r..Kr donde 1r fondo, Kr frente)
+        getZ: function(rIdx) {
+          if (count <= 1) return 0;
+          return -halfSpan + (rIdx + 0.5) * step;
+        }
+      };
+    }
+
+    function updateDyadPerpendicularGuides(cx, cz, damero) {
+      if (activePerpendicularGuides) {
+        scene.remove(activePerpendicularGuides);
+        activePerpendicularGuides = null;
+      }
+      if (cx === null || cz === null || !damero) return;
+
+      activePerpendicularGuides = new THREE.Group();
+      const floorY = damero.floorY || -3.48;
+
+      // 1. Rayo perpendicular a Dador (a lo largo de Z hacia el frente exterior)
+      const daRayPts = [
+        new THREE.Vector3(cx, floorY + 0.03, cz),
+        new THREE.Vector3(cx, floorY + 0.03, 6.15)
+      ];
+      const daGeom = new THREE.BufferGeometry().setFromPoints(daRayPts);
+      const daMat = new THREE.LineBasicMaterial({
+        color: 0x00FF87, // Verde dador
+        transparent: true,
+        opacity: 0.90
+      });
+      activePerpendicularGuides.add(new THREE.Line(daGeom, daMat));
+
+      // 2. Rayo perpendicular a Receptor (a lo largo de X hacia el lateral izquierdo exterior)
+      const rcRayPts = [
+        new THREE.Vector3(cx, floorY + 0.03, cz),
+        new THREE.Vector3(-6.15, floorY + 0.03, cz)
+      ];
+      const rcGeom = new THREE.BufferGeometry().setFromPoints(rcRayPts);
+      const rcMat = new THREE.LineBasicMaterial({
+        color: 0x00E5FF, // Cyan receptor
+        transparent: true,
+        opacity: 0.90
+      });
+      activePerpendicularGuides.add(new THREE.Line(rcGeom, rcMat));
+
+      // 3. Diana pulsante en el cruce exacto (p.ej. 1,1; 2,2; 3,3 o 1d, 5r)
+      const targetGeom = new THREE.RingGeometry(0.08, 0.16, 20);
+      targetGeom.rotateX(-Math.PI / 2);
+      const targetMat = new THREE.MeshBasicMaterial({
+        color: 0xFFE600,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const targetMesh = new THREE.Mesh(targetGeom, targetMat);
+      targetMesh.position.set(cx, floorY + 0.035, cz);
+      activePerpendicularGuides.add(targetMesh);
+
+      // 4. Plomada vertical láser que asciende hacia la masa de agua
+      const laserPts = [
+        new THREE.Vector3(cx, floorY + 0.03, cz),
+        new THREE.Vector3(cx, Math.max(0.5, currentSeaLevel * 2.8 + 0.8), cz)
+      ];
+      const laserGeom = new THREE.BufferGeometry().setFromPoints(laserPts);
+      const laserMat = new THREE.LineBasicMaterial({
+        color: 0xFFE600,
+        transparent: true,
+        opacity: 0.55
+      });
+      activePerpendicularGuides.add(new THREE.Line(laserGeom, laserMat));
+
+      scene.add(activePerpendicularGuides);
+    }
+
     function updateBaseGridAndLabels() {
       if (!scene) return;
       if (baseLabelsGroup) {
@@ -2291,22 +2405,120 @@
       const floorY = -3.48;
       const span = 8.8;
       const halfSpan = span / 2;
+      const damero = getDameroGridCoords(count, span);
 
-      // 1. Cuadrícula de baldosas en el fondo abisal (como en la captura del acuario de socio)
-      baseFloorGrid = new THREE.GridHelper(span, count, 0x00F5D4, 0x133863);
-      baseFloorGrid.position.set(0, floorY, 0);
-      baseFloorGrid.material.opacity = 0.40;
-      baseFloorGrid.material.transparent = true;
+      // 1. DAMERO ADAPTADO AL FONDO (Checkerboard real con baldosas alternadas y cruces perpendiculares)
+      const dameroGroup = new THREE.Group();
+      dameroGroup.name = "damero-floor";
+
+      // A. Baldosas del Damero en cuadrícula alternada
+      const squareGeom = new THREE.PlaneGeometry(damero.step * 0.98, damero.step * 0.98);
+      squareGeom.rotateX(-Math.PI / 2);
+
+      const matDark = new THREE.MeshStandardMaterial({
+        color: 0x031427, // Marino abisal profundo
+        roughness: 0.92,
+        metalness: 0.15,
+        transparent: true,
+        opacity: 0.72
+      });
+      const matLight = new THREE.MeshStandardMaterial({
+        color: 0x06223E, // Azul oceánico medio
+        roughness: 0.88,
+        metalness: 0.20,
+        transparent: true,
+        opacity: 0.82
+      });
+
+      for (let i = 0; i < count; i++) {
+        for (let j = 0; j < count; j++) {
+          const isEven = (i + j) % 2 === 0;
+          const sq = new THREE.Mesh(squareGeom, isEven ? matLight : matDark);
+          sq.position.set(damero.getX(i), floorY + 0.01, damero.getZ(j));
+          dameroGroup.add(sq);
+        }
+      }
+
+      // B. Líneas Perpendiculares del Damero (Cruce exacto de la perpendicular)
+      const lineMat = new THREE.LineBasicMaterial({
+        color: 0x00F5D4,
+        transparent: true,
+        opacity: 0.45
+      });
+      const borderMat = new THREE.LineBasicMaterial({
+        color: 0x00FF87,
+        transparent: true,
+        opacity: 0.75
+      });
+
+      // Perpendiculares X (desde las etiquetas DA exteriores hacia el fondo Z)
+      for (let i = 0; i < count; i++) {
+        const x = damero.getX(i);
+        const pts = [
+          new THREE.Vector3(x, floorY + 0.015, 6.15),
+          new THREE.Vector3(x, floorY + 0.015, -halfSpan)
+        ];
+        const geom = new THREE.BufferGeometry().setFromPoints(pts);
+        dameroGroup.add(new THREE.Line(geom, lineMat));
+      }
+
+      // Perpendiculares Z (desde las etiquetas RC exteriores a través de X)
+      for (let j = 0; j < count; j++) {
+        const z = damero.getZ(j);
+        const pts = [
+          new THREE.Vector3(-6.15, floorY + 0.015, z),
+          new THREE.Vector3(halfSpan, floorY + 0.015, z)
+        ];
+        const geom = new THREE.BufferGeometry().setFromPoints(pts);
+        dameroGroup.add(new THREE.Line(geom, lineMat));
+      }
+
+      // C. Marcadores de cruce perpendicular en cada intersección (i, j)
+      const crossGeom = new THREE.BufferGeometry();
+      const crossPoints = [];
+      const crossSize = Math.min(0.12, damero.step * 0.16);
+      for (let i = 0; i < count; i++) {
+        for (let j = 0; j < count; j++) {
+          const cx = damero.getX(i);
+          const cz = damero.getZ(j);
+          crossPoints.push(
+            new THREE.Vector3(cx - crossSize, floorY + 0.02, cz),
+            new THREE.Vector3(cx + crossSize, floorY + 0.02, cz),
+            new THREE.Vector3(cx, floorY + 0.02, cz - crossSize),
+            new THREE.Vector3(cx, floorY + 0.02, cz + crossSize)
+          );
+        }
+      }
+      crossGeom.setFromPoints(crossPoints);
+      const crossLines = new THREE.LineSegments(crossGeom, new THREE.LineBasicMaterial({
+        color: 0x00FF87,
+        transparent: true,
+        opacity: 0.60
+      }));
+      dameroGroup.add(crossLines);
+
+      // Marco perimetral del Damero
+      const borderPts = [
+        new THREE.Vector3(-halfSpan, floorY + 0.015, -halfSpan),
+        new THREE.Vector3(halfSpan, floorY + 0.015, -halfSpan),
+        new THREE.Vector3(halfSpan, floorY + 0.015, halfSpan),
+        new THREE.Vector3(-halfSpan, floorY + 0.015, halfSpan),
+        new THREE.Vector3(-halfSpan, floorY + 0.015, -halfSpan)
+      ];
+      const borderGeom = new THREE.BufferGeometry().setFromPoints(borderPts);
+      dameroGroup.add(new THREE.Line(borderGeom, borderMat));
+
+      baseFloorGrid = dameroGroup;
       scene.add(baseFloorGrid);
 
       // Símbolos sintácticos canónicos Q81 para Dadores y Receptores
       const symDa = ['<E', '¡E', '[E', '<¿', '¡¿', '[¿', '<R', '¡R', '[R'];
       const symRc = ['e>', 'e!', 'e]', '?>', '?!', '?]', 'r>', 'r!', 'r]'];
 
-      // 2. Lado 1 (Eje Frontal Z = +halfSpan + 0.38): X va de -halfSpan a +halfSpan
+      // 2. Lado 1 (Eje Frontal Exterior Z = 6.15): Fuera del acuario en la bandeja pedestal
       // Dadores DA (1d..6d o 1..6 o 1d..9d o <E..[R o g1..g3)
       for (let i = 0; i < count; i++) {
-        const x = count > 1 ? -halfSpan + (i + 0.5) * (span / count) : 0;
+        const x = damero.getX(i);
         let lbl = '';
         if (isQ) {
           if (q81LabelMode === 'SYM') {
@@ -2324,24 +2536,24 @@
           lbl = `${i + 1}d`;
         }
         const sp = createBaseEdgeSprite(lbl, 'DA');
-        sp.position.set(x, floorY + 0.12, halfSpan + 0.38);
+        sp.position.set(x, floorY + 0.14, 6.15);
         baseLabelsGroup.add(sp);
       }
       const titleDaText = isQ ? (q81LabelMode === 'SYM' ? 'DADORES (<E ¡E [E ...)' : 'DADORES (DA) ➔') : (isTensor ? 'GRUPOS (G1 ➔ G3) ➔' : (currentAquariumRegime === 'MARGINAL' ? 'ORDINAL DA (1 ➔ N)' : 'DADORES (DA) ➔'));
       const titleDa = createBaseTitleSprite(titleDaText, 'DA');
-      titleDa.position.set(0, floorY + 0.12, halfSpan + 0.82);
+      titleDa.position.set(0, floorY + 0.14, 6.80);
       baseLabelsGroup.add(titleDa);
 
-      // 3. Lado 2 (Eje Lateral Izquierdo X = -halfSpan - 0.38): Z va de +halfSpan a -halfSpan
-      // Receptores RC: orden inverso canónico socio (6r..1r o 6..1 o 9r..1r o e>..r] o g3..g1)
+      // 3. Lado 2 (Eje Lateral Izquierdo Exterior X = -6.15): Fuera del acuario en la bandeja pedestal
+      // Receptores RC: orden canónico socio (6r..1r o 6..1 o 9r..1r o e>..r] o g3..g1)
       for (let j = 0; j < count; j++) {
-        const z = count > 1 ? halfSpan - (j + 0.5) * (span / count) : 0;
-        const invNum = count - j; // canon socio: 6r 5r 4r 3r 2r 1r
+        const z = damero.getZ(j);
+        const rIdx = j; // 0=1r..count-1=Kr
+        const invNum = rIdx + 1;
         let lbl = '';
         if (isQ) {
           if (q81LabelMode === 'SYM') {
-            const invIdx = count - 1 - j;
-            lbl = symRc[invIdx] || `${invNum}r`;
+            lbl = symRc[rIdx] || `${invNum}r`;
           } else if (q81LabelMode === 'DA') {
             lbl = `${invNum}d`;
           } else {
@@ -2355,12 +2567,12 @@
           lbl = `${invNum}r`;
         }
         const sp = createBaseEdgeSprite(lbl, 'RC');
-        sp.position.set(-halfSpan - 0.38, floorY + 0.12, z);
+        sp.position.set(-6.15, floorY + 0.14, z);
         baseLabelsGroup.add(sp);
       }
       const titleRcText = isQ ? (q81LabelMode === 'SYM' ? 'RECEPTORES (e> e! e] ...)' : 'RECEPTORES (RC) ➔') : (isTensor ? 'GRUPOS (G3 ➔ G1) ➔' : (currentAquariumRegime === 'MARGINAL' ? 'ORDINAL RC (N ➔ 1)' : 'RECEPTORES (RC) ➔'));
       const titleRc = createBaseTitleSprite(titleRcText, 'RC');
-      titleRc.position.set(-halfSpan - 0.82, floorY + 0.12, 0);
+      titleRc.position.set(-6.80, floorY + 0.14, 0);
       baseLabelsGroup.add(titleRc);
 
       scene.add(baseLabelsGroup);
@@ -2539,9 +2751,17 @@
       nodeMeshes.forEach(m => scene.remove(m));
       haloMeshes.forEach(m => scene.remove(m));
       flowLines.forEach(l => scene.remove(l));
+      dropLines.forEach(l => scene.remove(l));
+      footprintMeshes.forEach(f => scene.remove(f));
+      if (activePerpendicularGuides) {
+        scene.remove(activePerpendicularGuides);
+        activePerpendicularGuides = null;
+      }
       nodeMeshes = [];
       haloMeshes = [];
       flowLines = [];
+      dropLines = [];
+      footprintMeshes = [];
     }
 
     let progressiveSpawnTimer = null;
@@ -2627,67 +2847,66 @@
       scaleY: 2.6
     };
 
-    function getRawNodeCoordinate(idx) {
-      if (!d18State || !d18State.nodes || !d18State.nodes[idx]) {
-        return { x: 0, y: 0, z: 0 };
+    function computeVerticalElevation(st) {
+      if (!st) return currentSeaLevel * 2.8;
+      let val = (st.SDR !== undefined) ? st.SDR : 0;
+      if (currentVerticalProjection === 'BDR') {
+        val = ((st.BDR !== undefined ? st.BDR : 0.5) - 0.5) * 1.6;
+      } else if (currentVerticalProjection === 'SRC') {
+        val = (st.SRC || 0) * 1.5;
+      } else if (currentVerticalProjection === 'SDA') {
+        val = (st.SDA || 0) * 1.5;
+      } else if (currentVerticalProjection === 'BDF') {
+        val = ((st.BDF !== undefined ? st.BDF : 0.5) - 0.5) * 1.6;
+      } else if (currentVerticalProjection === 'BDC') {
+        val = ((st.BDC !== undefined ? st.BDC : 0.5) - 0.5) * 1.6;
+      } else if (currentVerticalProjection === 'GAP') {
+        val = ((st.gapRatio || 1.0) - 1.0) * 0.9;
+      } else if (currentVerticalProjection === 'SDF') {
+        val = (st.SDF || 0) * 1.2;
+      } else if (currentVerticalProjection === 'SDC') {
+        val = (st.SDC || 0) * 1.2;
       }
-      const st = d18State.nodes[idx];
-      let coordX = st.x;
-      let coordZ = st.y;
-      let coordY = st.z; // Default: SDR
-
-      // Modulación por Proyección Vertical 18D
-      if (currentVerticalProjection === 'BDR') coordY = (st.BDR - 0.5) * 1.8;
-      else if (currentVerticalProjection === 'SRC') coordY = st.SRC * 1.5;
-      else if (currentVerticalProjection === 'SDA') coordY = st.SDA * 1.5;
-      else if (currentVerticalProjection === 'BDF') coordY = (st.BDF - 0.5) * 1.8;
-      else if (currentVerticalProjection === 'BDC') coordY = (st.BDC - 0.5) * 1.8;
-      else if (currentVerticalProjection === 'GAP') coordY = (st.gapRatio - 1.0) * 0.8;
-      else if (currentVerticalProjection === 'SDF') coordY = st.SDF;
-      else if (currentVerticalProjection === 'SDC') coordY = st.SDC;
-
-      // Modulación por Base del Acuario
-      if (currentAquariumBase === 'Nda_Nrc') {
-        coordX = st.SDA * 1.25;
-        coordZ = st.SRC * 1.25;
-      } else if (currentAquariumBase === 'QxQ') {
-        // Dispersión armónica en cuadrícula 9x9 (las 81 figuras sociométricas)
-        const qCol = (idx % 9) - 4;
-        const qRow = Math.floor(idx / 9) - 4;
-        coordX = qCol * 0.22 + st.x * 0.08;
-        coordZ = qRow * 0.22 + st.y * 0.08;
-      } else if (currentAquariumBase === 'Q9') {
-        // Dispersión armónica en los 9 arquetipos del Eneagrama Sociométrico
-        const angle = (idx % 9) * (Math.PI * 2 / 9);
-        coordX = Math.cos(angle) * 0.72 + st.x * 0.10;
-        coordZ = Math.sin(angle) * 0.72 + st.y * 0.10;
-      } else if (currentAquariumBase === 'TENSOR') {
-        const tier = idx % 3;
-        coordX = st.x + (tier - 1) * 0.26;
-        coordZ = st.y + (Math.floor(idx / 3) % 3 - 1) * 0.26;
-      }
-
-      // Modulación por Régimen de Cálculo
-      if (currentAquariumRegime === 'DIADIC') {
-        coordX = (coordX + st.massDi) * 0.5;
-        coordZ = (coordZ + st.massDi) * 0.5;
-      }
-
-      return { x: coordX, y: coordY, z: coordZ };
+      const baseWaterY = currentSeaLevel * 2.8;
+      const elevY = baseWaterY + val * 1.85;
+      return Math.max(-3.20, Math.min(3.20, elevY));
     }
 
     function getNodePosition(idx, scaleXY = null, scaleZ = null) {
-      const raw = getRawNodeCoordinate(idx);
-      const cx = currentAquariumScaling.centroidX;
-      const cz = currentAquariumScaling.centroidZ;
-      const cy = currentAquariumScaling.centroidY;
+      if (!d18State || !d18State.nodes || !d18State.nodes[idx]) {
+        return new THREE.Vector3(0, currentSeaLevel * 2.8, 0);
+      }
+      const st = d18State.nodes[idx];
+      const pY = computeVerticalElevation(st);
 
-      const sXY = scaleXY !== null ? scaleXY : currentAquariumScaling.scaleXY;
-      const sY = scaleZ !== null ? scaleZ : currentAquariumScaling.scaleY;
+      const isQ = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
+      const isTensor = (currentAquariumBase === 'TENSOR');
+      const count = isQ ? 9 : (isTensor ? 3 : Math.min(N, 12));
+      const damero = getDameroGridCoords(count);
 
-      const pX = (raw.x - cx) * sXY;
-      const pZ = (raw.z - cz) * sXY;
-      const pY = (raw.y - cy) * sY;
+      let pX = 0;
+      let pZ = 0;
+
+      if (isQ) {
+        // En Q81: 81 figuras situadas en damero 9x9 (Dadores 1d..9d × Receptores 1r..9r)
+        // Cruces exactos: 1,1; 2,2; 3,3 o 1d,5r como damero adaptado al fondo
+        const dIdx = Math.floor(idx / 9); // 0..8
+        const rIdx = idx % 9;             // 0..8
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      } else if (isTensor) {
+        // En Tensor Hipercubo: 3 grupos x 6 sujetos distribuidos en el damero
+        const tDamero = getDameroGridCoords(6);
+        const sIdx = idx % 6;
+        pX = tDamero.getX(sIdx);
+        pZ = tDamero.getZ(sIdx);
+      } else {
+        // Canon Socio: "los puntos se situan en el cruce exacto de la perpendicular 1,1 2,2 3,3 o 1d,5r como un damero adaptado al fondo"
+        const dIdx = idx % count;
+        const rIdx = idx % count;
+        pX = damero.getX(dIdx);
+        pZ = damero.getZ(rIdx);
+      }
 
       return new THREE.Vector3(pX, pY, pZ);
     }
@@ -2711,42 +2930,12 @@
         ? Math.min(numSuj, Math.max(1, limitCount))
         : numSuj;
 
-      // 1. Calibrar dinámicamente centrado baricéntrico y factores de escala (Regla 17 de AGENTS.md: ocupar el máximo espacio útil sin apelotonamiento)
-      let sumX = 0, sumZ = 0, sumY = 0;
-      const rawCoords = [];
-      for (let i = 0; i < numSuj; i++) {
-        const rc = getRawNodeCoordinate(i);
-        rawCoords.push(rc);
-        sumX += rc.x;
-        sumZ += rc.z;
-        sumY += rc.y;
-      }
-      const meanX = sumX / numSuj;
-      const meanZ = sumZ / numSuj;
-      const meanY = sumY / numSuj;
-
-      let maxDistXZ = 0.08;
-      let maxDistY = 0.08;
-      for (let i = 0; i < numSuj; i++) {
-        const dx = rawCoords[i].x - meanX;
-        const dz = rawCoords[i].z - meanZ;
-        const dist = Math.sqrt(dx * dx + dz * dz);
-        if (dist > maxDistXZ) maxDistXZ = dist;
-        const dy = Math.abs(rawCoords[i].y - meanY);
-        if (dy > maxDistY) maxDistY = dy;
-      }
-
-      // El acuario tiene anchura/profundidad de 11.2 (radio 5.6) y altura 7.3 (radio 3.65)
-      // Escalamos para que el cuerpo principal ocupe un radio de ~3.6 en el plano XZ y ~2.0 en Y
-      const SCALE_XY = Math.min(20.0, Math.max(3.6, 3.6 / maxDistXZ));
-      const SCALE_Z = Math.min(8.5, Math.max(2.2, 2.0 / maxDistY));
-
       currentAquariumScaling = {
-        centroidX: meanX,
-        centroidZ: meanZ,
-        centroidY: meanY,
-        scaleXY: SCALE_XY,
-        scaleY: SCALE_Z
+        centroidX: 0,
+        centroidZ: 0,
+        centroidY: 0,
+        scaleXY: 1.0,
+        scaleY: 1.0
       };
 
       // 1. Renderizar Nodos Bi-Capa (Núcleo + Halo) solo hasta effectiveCount
@@ -2756,7 +2945,7 @@
         const opacityMult = isHighlighted ? 1.0 : 0.16;
 
         // Posición tridimensional armónica calculada según Base, Régimen y Proyección 18D
-        const posVec = getNodePosition(idx, SCALE_XY, SCALE_Z);
+        const posVec = getNodePosition(idx);
         const pX = posVec.x;
         const pY = posVec.y;
         const pZ = posVec.z;
@@ -2855,11 +3044,43 @@
         };
         scene.add(haloMesh);
         haloMeshes.push(haloMesh);
+
+        // C. PLOMADA VERTICAL PERPENDICULAR (Línea hacia el cruce exacto en el damero del fondo)
+        const floorY = -3.48;
+        const dropGeom = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(pX, floorY + 0.015, pZ),
+          new THREE.Vector3(pX, pY, pZ)
+        ]);
+        const dropMat = new THREE.LineDashedMaterial({
+          color: coreColor,
+          dashSize: 0.12,
+          gapSize: 0.08,
+          transparent: true,
+          opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.40) * opacityMult
+        });
+        const dropLine = new THREE.Line(dropGeom, dropMat);
+        dropLine.computeLineDistances();
+        scene.add(dropLine);
+        dropLines.push(dropLine);
+
+        // D. DIANA / HUELLA DEL CRUCE EN EL DAMERO (Cruce exacto en el suelo)
+        const ringGeom = new THREE.RingGeometry(0.06, 0.11, 18);
+        ringGeom.rotateX(-Math.PI / 2);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: coreColor,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: (activeLayerVisibility === 'HALO' ? 0.05 : 0.65) * opacityMult
+        });
+        const footprintMesh = new THREE.Mesh(ringGeom, ringMat);
+        footprintMesh.position.set(pX, floorY + 0.018, pZ);
+        scene.add(footprintMesh);
+        footprintMeshes.push(footprintMesh);
       }
 
       // 2. Renderizar Corrientes de Flujo Diádicas entre nodos visibles
       if (activeLayerVisibility !== 'CORE' && activeLayerVisibility !== 'HALO') {
-        renderDyadicFlows(SCALE_XY, SCALE_Z, effectiveCount);
+        renderDyadicFlows(1.0, 1.0, effectiveCount);
       }
 
       // Actualizar contadores y HUD
@@ -3303,6 +3524,16 @@
       renderSubjectPills();
       renderAquariumState();
       activeDyadIndex = 0;
+      if (activeSubjectIndex !== null) {
+        const isQ = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
+        const count = isQ ? 9 : Math.min(N, 12);
+        const damero = getDameroGridCoords(count);
+        const dIdx = activeSubjectIndex % count;
+        const rIdx = activeSubjectIndex % count;
+        updateDyadPerpendicularGuides(damero.getX(dIdx), damero.getZ(rIdx), damero);
+      } else if (!isDyadScannerRunning) {
+        updateDyadPerpendicularGuides(null, null, null);
+      }
       if (isDyadScannerRunning && isMasterDynamicsRunning) {
         startDyadScanner();
       }
@@ -3970,12 +4201,26 @@
     }
 
     function zoomInCamera() {
-      camera.position.multiplyScalar(0.85);
+      if (!camera || !controls) return;
+      const target = controls.target || new THREE.Vector3(0, -0.5, 0);
+      const offset = camera.position.clone().sub(target);
+      offset.multiplyScalar(0.82);
+      if (offset.length() < (controls.minDistance || 1.8)) {
+        offset.setLength(controls.minDistance || 1.8);
+      }
+      camera.position.copy(target).add(offset);
       controls.update();
     }
 
     function zoomOutCamera() {
-      camera.position.multiplyScalar(1.15);
+      if (!camera || !controls) return;
+      const target = controls.target || new THREE.Vector3(0, -0.5, 0);
+      const offset = camera.position.clone().sub(target);
+      offset.multiplyScalar(1.22);
+      if (offset.length() > (controls.maxDistance || 85)) {
+        offset.setLength(controls.maxDistance || 85);
+      }
+      camera.position.copy(target).add(offset);
       controls.update();
     }
 
@@ -5377,6 +5622,14 @@
       if (probeGap) probeGap.textContent = `Flotabilidad Diádica: ${d.meanZ >= 0 ? '+' : ''}${d.meanZ.toFixed(2)}m`;
       if (probeAmb) probeAmb.textContent = d.figType;
       if (probeHint) probeHint.innerHTML = `⚡ <strong class="text-teal-300">Escáner Diádico en Vivo:</strong> Flujo activo entre Dador <strong>${d.from + 1}d (${d.nameFrom})</strong> y Receptor <strong>${d.to + 1}r (${d.nameTo})</strong>.`;
+
+      // Iluminación del cruce perpendicular diádico exacto en el damero del fondo (p.ej. 1d, 5r)
+      const isQ = (currentAquariumBase === 'QxQ' || currentScenarioKey === 'q81');
+      const count = isQ ? 9 : Math.min(N, 12);
+      const damero = getDameroGridCoords(count);
+      const dyadX = damero.getX(d.from % count);
+      const dyadZ = damero.getZ(d.to % count);
+      updateDyadPerpendicularGuides(dyadX, dyadZ, damero);
     }
 
     function updateAllLeds() {
