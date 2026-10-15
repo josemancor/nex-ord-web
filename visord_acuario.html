@@ -3181,37 +3181,37 @@
 
       if (baseKey === 'QxQ' || baseKey === 'QdxQr' || currentScenarioKey === 'q81') {
         const dIdx = Math.floor(idx / 9);
-        const rIdx = idx % 9;
+        const rIdx = 9 - 1 - (idx % 9);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else if (baseKey === 'GCxT' || baseKey === 'TENSOR') {
         const dIdx = idx % 6;
-        const rIdx = Math.floor(idx / 6) % 3;
+        const rIdx = 3 - 1 - (Math.floor(idx / 6) % 3);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else if (baseKey === 'GxT') {
         const dIdx = idx % 3;
-        const rIdx = Math.floor(idx / 3) % 3;
+        const rIdx = 3 - 1 - (Math.floor(idx / 3) % 3);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else if (baseKey === 'GxC' || baseKey === 'TxC') {
         const dIdx = idx % 3;
-        const rIdx = idx % 2;
+        const rIdx = 2 - 1 - (idx % 2);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else if (baseKey === 'CxC') {
         const dIdx = idx % 2;
-        const rIdx = idx % 2;
+        const rIdx = 2 - 1 - (idx % 2);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else if (baseKey === 'GxG' || baseKey === 'TxT') {
         const dIdx = idx % 3;
-        const rIdx = idx % 3;
+        const rIdx = 3 - 1 - (idx % 3);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       } else {
         const dIdx = idx % countX;
-        const rIdx = idx % countZ;
+        const rIdx = countZ - 1 - (idx % countZ);
         pX = damero.getX(dIdx);
         pZ = damero.getZ(rIdx);
       }
@@ -3372,7 +3372,7 @@
         dropLines.push(dropLine);
 
         // D. DIANA / HUELLA DEL CRUCE EN EL DAMERO (Cruce exacto en el suelo)
-        const ringGeom = new THREE.RingGeometry(0.06, 0.11, 18);
+        const ringGeom = new THREE.RingGeometry(0.06, 0.12, 20);
         ringGeom.rotateX(-Math.PI / 2);
         const ringMat = new THREE.MeshBasicMaterial({
           color: coreColor,
@@ -3384,6 +3384,20 @@
         footprintMesh.position.set(pX, floorY + 0.018, pZ);
         scene.add(footprintMesh);
         footprintMeshes.push(footprintMesh);
+
+        // Punto puntual central canónico "." (exacto como en el damero)
+        const dotGeom = new THREE.CircleGeometry(0.038, 16);
+        dotGeom.rotateX(-Math.PI / 2);
+        const dotMat = new THREE.MeshBasicMaterial({
+          color: 0x00FF87, // Verde neón bioluminiscente
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.95 * opacityMult
+        });
+        const dotMesh = new THREE.Mesh(dotGeom, dotMat);
+        dotMesh.position.set(pX, floorY + 0.020, pZ);
+        scene.add(dotMesh);
+        footprintMeshes.push(dotMesh);
       }
 
       // 2. Renderizar Corrientes de Flujo Diádicas entre nodos visibles
@@ -3837,7 +3851,7 @@
         const count = isQ ? 9 : Math.min(N, 12);
         const damero = getDameroGridCoords(count);
         const dIdx = activeSubjectIndex % count;
-        const rIdx = activeSubjectIndex % count;
+        const rIdx = count - 1 - (activeSubjectIndex % count);
         updateDyadPerpendicularGuides(damero.getX(dIdx), damero.getZ(rIdx), damero);
       } else if (!isDyadScannerRunning) {
         updateDyadPerpendicularGuides(null, null, null);
@@ -6062,7 +6076,7 @@
       const count = isQ ? 9 : Math.min(N, 12);
       const damero = getDameroGridCoords(count);
       const dyadX = damero.getX(d.from % count);
-      const dyadZ = damero.getZ(d.to % count);
+      const dyadZ = damero.getZ(count - 1 - (d.to % count));
       updateDyadPerpendicularGuides(dyadX, dyadZ, damero);
     }
 
