@@ -248,6 +248,31 @@
       border-color: #EF4444 !important;
       box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.4) !important;
     }
+
+    /* BARRA MAESTRA UNIFICADA DE CONTROL (SOCIO CANON) */
+    .aquarium-master-bar {
+      background: rgba(3, 14, 30, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(0, 245, 212, 0.5);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 245, 212, 0.25);
+    }
+    .dropdown-group {
+      position: relative;
+    }
+    .dropdown-trigger {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dropdown-trigger:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 245, 212, 0.25);
+    }
+    .dropdown-menu {
+      background: rgba(3, 12, 28, 0.98);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 245, 212, 0.25);
+    }
   </style>
   <link rel="stylesheet" href="mobile_responsive_engine.css">
   <!-- =======================================================================
@@ -325,7 +350,7 @@
     <!-- =========================================================================
          BANDA IZQUIERDA: CONTROLES DE EJECUCIÓN (330px CON BOTÓN DE OCULTACIÓN)
          ========================================================================= -->
-    <aside id="acuario-sidebar" class="w-full lg:w-[330px] flex-shrink-0 flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-80px)] pr-1 transition-all duration-300">
+    <aside id="acuario-sidebar" class="hidden w-full lg:w-[330px] flex-shrink-0 flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-80px)] pr-1 transition-all duration-300">
 
       <!-- 1. BOTÓN MAESTRO DE ACCIÓN PROMINENTE + BOTÓN COLAPSO LATERAL -->
       <div class="flex flex-col gap-1.5 bg-slate-950/90 p-2 rounded-2xl border-2 border-emerald-500/50 shadow-lg shadow-emerald-500/10">
@@ -768,70 +793,339 @@
         </div>
 
         <!-- =========================================================================
-             BARRA MAESTRA FLOTANTE DE ACCIÓN Y MOVIMIENTO EN EL ACUARIO 3D (SUPER DESTACADA)
+             BARRA MAESTRA UNIFICADA: ACCIÓN + 5 PESTAÑAS DESPLEGABLES BIEN DELIMITADAS (CANON SOCIO)
              ========================================================================= -->
-        <div class="absolute top-3.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto flex-wrap justify-center max-w-[95%]">
-          <button id="btn-master-dynamics" onclick="toggleMasterDynamics()" class="master-action-banner px-4 py-2.5 rounded-2xl font-black text-xs md:text-sm mono text-white flex items-center gap-2.5 cursor-pointer">
-            <span class="led-indicator led-on led-pulse" id="led-master-dynamics"></span>
-            <span id="txt-master-dynamics" class="tracking-wider font-black">⚡ ACTION ! EN MOVIMIENTO</span>
-          </button>
-          
-          <button id="btn-dyad-scanner" onclick="toggleDyadScanner()" class="hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-cyan-200 border-2 border-cyan-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-cyan-200">
-            <span class="led-indicator led-on" id="led-dyad-scanner"></span>
-            <span id="txt-dyad-scanner">SCAN DÍADAS</span>
-          </button>
+        <div class="aquarium-master-bar absolute top-3.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 md:gap-1.5 p-1 rounded-2xl border-2 border-teal-400/60 shadow-2xl backdrop-blur-md max-w-[99%] flex-nowrap whitespace-nowrap justify-center pointer-events-auto select-none">
 
-          <button id="btn-prog-spawn" onclick="startProgressiveSpawn(N)" class="hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-emerald-200 border-2 border-emerald-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-emerald-200" title="Aparición progresiva de los sujetos uno a uno">
-            <span class="led-indicator led-on" id="led-prog-spawn"></span>
-            <span id="txt-prog-spawn">✨ 1 A 1</span>
-          </button>
-
-          <button id="btn-choreography" onclick="startChoreographySequence()" class="hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-amber-200 border-2 border-amber-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-amber-200" title="Ejecutar la secuencia canónica de las 5 fases progresivas">
-            <span class="led-indicator led-on led-pulse" id="led-choreography"></span>
-            <span id="txt-choreography">🎬 5 FASES</span>
-          </button>
-
-          <button id="btn-flip-reverse" onclick="togglePosteriorFlip()" class="hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-purple-200 border-2 border-purple-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-purple-200" title="Voltear hacia la cara posterior con vibración automática suave">
-            <span class="led-indicator led-off" id="led-flip-reverse"></span>
-            <span id="txt-flip-reverse">🔄 VOLTEAR</span>
-          </button>
-
-          <button id="btn-wave-sheet" onclick="toggleRelationalSheet()" class="hud-float px-3 py-2.5 rounded-2xl font-black text-xs mono text-teal-200 border-2 border-teal-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-teal-200" title="Activar/Desactivar la Piel de la Sábana-Ola">
-            <span class="led-indicator led-on" id="led-wave-sheet"></span>
-            <span id="txt-wave-sheet">🌊 SÁBANA-OLA</span>
-          </button>
-
-          <div class="hud-float px-2.5 py-1.5 rounded-xl text-xs mono flex items-center gap-1.5 border border-slate-700">
-            <span class="text-slate-400 text-[10px]">VEL:</span>
-            <button onclick="setDyadSpeed(1)" id="spd-1x" class="px-2 py-0.5 rounded font-black text-teal-300 bg-teal-950 border border-teal-500">1x</button>
-            <button onclick="setDyadSpeed(2)" id="spd-2x" class="px-2 py-0.5 rounded font-bold text-slate-300 hover:text-white">2x</button>
-            <button onclick="setDyadSpeed(4)" id="spd-4x" class="px-2 py-0.5 rounded font-bold text-slate-300 hover:text-white">4x</button>
+          <!-- 0. PESTAÑA DESPLEGABLE: ¡ ACCIÓN ! (Ejecuta la configuración activa + 3 Escenarios Preparados) -->
+          <div class="dropdown-group relative">
+            <div class="flex items-center">
+              <button id="btn-master-dynamics" onclick="toggleMasterDynamics()" class="px-2.5 md:px-3 py-1.5 rounded-l-xl font-black text-xs md:text-sm mono text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,255,135,0.5)] cursor-pointer" title="Lanzar y poner en marcha la configuración activa">
+                <span class="led-indicator led-on led-pulse" id="led-master-dynamics" style="background:#022c22; box-shadow:0 0 8px #00FF87;"></span>
+                <span id="txt-master-dynamics" class="font-black tracking-wider text-slate-950">⚡ ¡ ACCIÓN !</span>
+              </button>
+              <button id="btn-accion-dropdown" onclick="toggleAcuarioDropdown('dropdown-accion', event)" class="px-2 py-1.5 rounded-r-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs border-l border-teal-600 cursor-pointer shadow-sm" title="Desplegar configuraciones preparadas">
+                ▼
+              </button>
+            </div>
+            <!-- Menú Desplegable con 3 Opciones Preparadas Descriptivas -->
+            <div id="dropdown-accion" class="dropdown-menu hidden absolute top-full left-0 mt-2 w-72 rounded-2xl border-2 border-emerald-400/80 p-2 shadow-2xl z-50 flex flex-col gap-1.5">
+              <div class="text-[9px] mono text-emerald-300 font-black px-2 py-0.5 uppercase tracking-wider border-b border-emerald-900/60 flex items-center justify-between">
+                <span>⚡ CONFIGURACIONES PREPARADAS:</span>
+                <span class="text-emerald-400">1-CLIC</span>
+              </div>
+              <button onclick="launchPreparedConfig('CANONICO')" class="text-left p-2 rounded-xl bg-emerald-950/40 hover:bg-emerald-950 border border-emerald-500/40 hover:border-emerald-400 transition cursor-pointer">
+                <div class="font-black text-xs text-emerald-300 flex items-center justify-between">
+                  <span>🌊 1. Canónica Normal: G1·T1·C1</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-900 text-emerald-200 border border-emerald-500/50 font-black">N=6</span>
+                </div>
+                <div class="text-[9.5px] text-slate-300 mt-1 leading-tight">Grupo A en Afinidad, Baricentro SDR y Sábana-Ola 360°</div>
+              </button>
+              <button onclick="launchPreparedConfig('TAREA')" class="text-left p-2 rounded-xl bg-amber-950/40 hover:bg-amber-950 border border-amber-500/40 hover:border-amber-400 transition cursor-pointer">
+                <div class="font-black text-xs text-amber-300 flex items-center justify-between">
+                  <span>⚡ 2. Dinámica de Tarea: G2·T2·C2</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-900 text-amber-200 border border-amber-500/50 font-black">N=6</span>
+                </div>
+                <div class="text-[9.5px] text-slate-300 mt-1 leading-tight">Grupo B en Tarea, Fricción y Chispas Diádicas</div>
+              </button>
+              <button onclick="launchPreparedConfig('GLOBAL')" class="text-left p-2 rounded-xl bg-teal-950/40 hover:bg-teal-950 border border-teal-500/40 hover:border-teal-400 transition cursor-pointer">
+                <div class="font-black text-xs text-teal-300 flex items-center justify-between">
+                  <span>🏛️ 3. Hipertensor G3T3C2 Global</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-teal-900 text-teal-200 border border-teal-500/50 font-black">N=18</span>
+                </div>
+                <div class="text-[9.5px] text-slate-300 mt-1 leading-tight">Los 3 Grupos (A, B, C) en interacción multidimensional simultánea</div>
+              </button>
+            </div>
           </div>
+
+          <div class="h-5 w-px bg-slate-800"></div>
+
+          <!-- 1. PESTAÑA: n(i, j) / n / q(9, 9) / q(9) -->
+          <div class="dropdown-group relative">
+            <button id="btn-tab1-trigger" onclick="toggleAcuarioDropdown('dropdown-tab1', event)" class="dropdown-trigger px-2 md:px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-cyan-400/60 hover:border-cyan-300 text-cyan-200 font-black text-xs mono flex items-center gap-1 cursor-pointer shadow-md">
+              <span class="text-cyan-400">1)</span>
+              <span id="lbl-tab1-val" class="font-black text-cyan-300">n(i, j)</span>
+              <span class="text-[9px] text-slate-400">▼</span>
+            </button>
+            <div id="dropdown-tab1" class="dropdown-menu hidden absolute top-full left-0 mt-2 w-72 rounded-2xl border border-cyan-400/80 p-2 shadow-2xl z-50 flex flex-col gap-1.5 text-xs mono">
+              <div class="text-[9px] text-cyan-400 font-black px-2 py-0.5 uppercase tracking-wider border-b border-cyan-900/60 flex items-center justify-between">
+                <span>1) BASE MATRICIAL & ESCALA:</span>
+                <span class="text-cyan-300">N=6 / Q81</span>
+              </div>
+              <button onclick="selectTab1Base('n_ij')" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300 flex items-center justify-between">
+                  <span>n(i, j) · Diádica N×N</span>
+                  <span class="text-[8px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-700/50 font-black">1d..6d × 6r..1r</span>
+                </div>
+                <div class="text-[9px] text-slate-300 mt-0.5">1d 2d 3d 4d 5d 6d × 6r 5r 4r 3r 2r 1r (Dadores × Receptores)</div>
+              </button>
+              <button onclick="selectTab1Base('n')" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300 flex items-center justify-between">
+                  <span>n · Nodal / Marginal</span>
+                  <span class="text-[8px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-700/50 font-black">1..6 × 6..1</span>
+                </div>
+                <div class="text-[9px] text-slate-300 mt-0.5">1 2 3 4 5 6 × 6 5 4 3 2 1 (Gradiente de estatus baricéntrico)</div>
+              </button>
+              <button onclick="selectTab1Base('q99')" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300 flex items-center justify-between">
+                  <span>q(9, 9) · Cripta Q81</span>
+                  <span class="text-[8px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-700/50 font-black">9d × 9r</span>
+                </div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Cuadrícula 9×9 de las 81 figuras sociométricas canónicas</div>
+              </button>
+              <button onclick="selectTab1Base('q9')" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300 flex items-center justify-between">
+                  <span>q(9) · Macro-Categorías Q9</span>
+                  <span class="text-[8px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-700/50 font-black">9 Sect</span>
+                </div>
+                <div class="text-[9px] text-slate-300 mt-0.5">9 arquetipos agrupados del Eneagrama Sociométrico</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. PESTAÑA: G / T / C / GT / GC / TC / GCxT -->
+          <div class="dropdown-group relative">
+            <button id="btn-tab2-trigger" onclick="toggleAcuarioDropdown('dropdown-tab2', event)" class="dropdown-trigger px-2 md:px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-teal-400/60 hover:border-teal-300 text-teal-200 font-black text-xs mono flex items-center gap-1 cursor-pointer shadow-md">
+              <span class="text-teal-400">2)</span>
+              <span id="lbl-tab2-val" class="font-black text-teal-300">G</span>
+              <span class="text-[9px] text-slate-400">▼</span>
+            </button>
+            <div id="dropdown-tab2" class="dropdown-menu hidden absolute top-full left-0 mt-2 w-84 rounded-2xl border border-teal-400/80 p-2.5 shadow-2xl z-50 flex flex-col gap-2 text-xs mono">
+              <div class="text-[9px] text-teal-400 font-black px-1 uppercase tracking-wider border-b border-teal-900/60 flex items-center justify-between">
+                <span>2) HIPERCUBO NORMAL G3T3C2:</span>
+                <span class="text-teal-300" id="badge-g3t3c2-active">G1 · T1 · C1</span>
+              </div>
+              
+              <!-- Selector de Grupo G1, G2, G3 -->
+              <div>
+                <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold mb-1">
+                  <span>GRUPO EMPÍRICO (G):</span>
+                  <span class="text-teal-300 font-mono text-[8px]">g1 g2 g3 × g3 g2 g1</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1 mb-1">
+                  <button onclick="setNormalG(1)" id="btn-g-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">
+                    <div>G1 (A)</div>
+                    <div class="text-[7.5px] text-teal-400">1A..6A</div>
+                  </button>
+                  <button onclick="setNormalG(2)" id="btn-g-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
+                    <div>G2 (B)</div>
+                    <div class="text-[7.5px] text-slate-400">1B..6B</div>
+                  </button>
+                  <button onclick="setNormalG(3)" id="btn-g-3" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
+                    <div>G3 (C)</div>
+                    <div class="text-[7.5px] text-slate-400">1C..6C</div>
+                  </button>
+                </div>
+                <button onclick="toggleIntergroupCycle()" id="btn-intergroup-cycle" class="w-full py-1 px-2 rounded-lg bg-teal-950/60 hover:bg-teal-900 border border-teal-500/40 text-[9px] text-teal-200 font-bold flex items-center justify-between cursor-pointer">
+                  <span>🔄 Cruce Intergrupal:</span>
+                  <span class="text-teal-400 font-mono font-black">g1 g2 g3 × g3 g2 g1</span>
+                </button>
+              </div>
+
+              <!-- Selector de Tiempo T1, T2, T3 -->
+              <div>
+                <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold mb-1">
+                  <span>TRAYECTORIA TEMPORAL (T):</span>
+                  <span class="text-cyan-300 font-mono text-[8px]">t1 t2 t3 × t3 t2 t1</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1 mb-1">
+                  <button onclick="setNormalT(1)" id="btn-t-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">T1</button>
+                  <button onclick="setNormalT(2)" id="btn-t-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">T2</button>
+                  <button onclick="setNormalT(3)" id="btn-t-3" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">T3</button>
+                </div>
+                <button onclick="toggleTemporalMoviola()" id="btn-temporal-moviola" class="w-full py-1 px-2 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/40 text-[9px] text-cyan-200 font-bold flex items-center justify-between cursor-pointer">
+                  <span>⏱️ Moviola Temporal:</span>
+                  <span class="text-cyan-400 font-mono font-black">t1 t2 t3 × t3 t2 t1</span>
+                </button>
+              </div>
+
+              <!-- Selector de Criterio C1, C2 -->
+              <div>
+                <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold mb-1">
+                  <span>CRITERIO SOCIOMÉTRICO (C):</span>
+                  <span class="text-amber-300 font-mono text-[8px]">c1 × c2</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1">
+                  <button onclick="setNormalC(1)" id="btn-c-1" class="p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer">
+                    <div>C1: Afinidad</div>
+                  </button>
+                  <button onclick="setNormalC(2)" id="btn-c-2" class="p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer">
+                    <div>C2: Tarea</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Cruces de Tensor -->
+              <div class="border-t border-slate-800 pt-1">
+                <div class="text-[9px] text-slate-400 font-bold mb-1">TENSORES COMPUESTOS:</div>
+                <div class="grid grid-cols-3 gap-1 mb-1">
+                  <button onclick="selectTab2Cube('GT')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">GT</button>
+                  <button onclick="selectTab2Cube('GC')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">GC</button>
+                  <button onclick="selectTab2Cube('TC')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-teal-950 text-teal-300 border border-slate-700 text-center font-bold cursor-pointer">TC</button>
+                </div>
+                <button onclick="selectTab2Cube('GCxT')" class="w-full p-2 rounded-xl bg-teal-950/80 hover:bg-teal-900 border border-teal-400 text-teal-200 font-black text-center cursor-pointer">
+                  <div>GCxT · Hipertensor Global (N=18)</div>
+                  <div class="text-[8.5px] text-teal-400 font-normal">G1 (A) + G2 (B) + G3 (C) simultáneos</div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. PESTAÑA: 18D -->
+          <div class="dropdown-group relative">
+            <button id="btn-tab3-trigger" onclick="toggleAcuarioDropdown('dropdown-tab3', event)" class="dropdown-trigger px-2 md:px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-emerald-400/60 hover:border-emerald-300 text-emerald-200 font-black text-xs mono flex items-center gap-1 cursor-pointer shadow-md">
+              <span class="text-emerald-400">3)</span>
+              <span id="lbl-tab3-val" class="font-black text-emerald-300">18D SDR</span>
+              <span class="text-[9px] text-slate-400">▼</span>
+            </button>
+            <div id="dropdown-tab3" class="dropdown-menu hidden absolute top-full left-0 mt-2 w-68 rounded-2xl border border-emerald-400/80 p-2 shadow-2xl z-50 flex flex-col gap-1 text-xs mono">
+              <div class="text-[9px] text-emerald-400 font-black px-2 py-0.5 uppercase tracking-wider border-b border-emerald-900/60">
+                3) ESPACIO & PROYECCIONES 18D:
+              </div>
+              <button onclick="selectTab3Mode('SDR')" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-emerald-300">18D Saldo SDR (Síntesis Total)</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Baricentro socio-termodinámico continuo ±ℝ</div>
+              </button>
+              <button onclick="selectTab3Mode('FACT')" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-emerald-300">18D Fáctico (A2 + A3)</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Hechos, elecciones y rechazos efectivos</div>
+              </button>
+              <button onclick="selectTab3Mode('COGN')" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300">18D Conjetural (A1 + A4)</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Metapercepciones, expectativas y halos</div>
+              </button>
+              <button onclick="selectTab3Mode('BDR')" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-amber-300">18D Densidad BDR (W(k)=2^(1-k))</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Densidad absoluta no lineal de atracción</div>
+              </button>
+              <button onclick="selectTab3Mode('GAP')" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-rose-300">18D Brecha Ontológica (BDF/BDC)</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Diagnóstico de parálisis fáctica y asfixia</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. PESTAÑA: FASES & DINÁMICA -->
+          <div class="dropdown-group relative">
+            <button id="btn-tab4-trigger" onclick="toggleAcuarioDropdown('dropdown-tab4', event)" class="dropdown-trigger px-2 md:px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-amber-400/60 hover:border-amber-300 text-amber-200 font-black text-xs mono flex items-center gap-1 cursor-pointer shadow-md">
+              <span class="text-amber-400">4)</span>
+              <span id="lbl-tab4-val" class="font-black text-amber-300">Dinámica</span>
+              <span class="text-[9px] text-slate-400">▼</span>
+            </button>
+            <div id="dropdown-tab4" class="dropdown-menu hidden absolute top-full left-0 mt-2 w-64 rounded-2xl border border-amber-400/80 p-2 shadow-2xl z-50 flex flex-col gap-1 text-xs mono">
+              <div class="text-[9px] text-amber-400 font-black px-2 py-0.5 uppercase tracking-wider border-b border-amber-900/60">
+                4) DINÁMICA & FASES:
+              </div>
+              <button onclick="startChoreographySequence(); updateTab4Label('5 Fases');" class="p-2 rounded-xl hover:bg-amber-950/70 border border-transparent hover:border-amber-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-amber-300">🎬 5 Fases Progresivas</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Escenario → 1 a 1 → Colectivo → Sábana → Volteo</div>
+              </button>
+              <button onclick="startProgressiveSpawn(N); updateTab4Label('1 a 1');" class="p-2 rounded-xl hover:bg-emerald-950/70 border border-transparent hover:border-emerald-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-emerald-300">✨ Aparición 1 a 1</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Aparición secuencial dejando estela relacional</div>
+              </button>
+              <button onclick="toggleAutoRotate(); updateTab4Label('360°');" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-cyan-300">🔄 Rotación Continua 360°</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Giro orbital cinemático continuo</div>
+              </button>
+              <button onclick="toggleStepAutoPlay(); updateTab4Label('Moviola');" class="p-2 rounded-xl hover:bg-sky-950/70 border border-transparent hover:border-sky-500/40 text-left transition cursor-pointer">
+                <div class="font-black text-sky-300">⏱️ Moviola Diádica</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">Exploración paso a paso de micro-interacciones</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. PESTAÑA: SÁBANA & EFECTOS -->
+          <div class="dropdown-group relative">
+            <button id="btn-tab5-trigger" onclick="toggleAcuarioDropdown('dropdown-tab5', event)" class="dropdown-trigger px-2 md:px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-purple-400/60 hover:border-purple-300 text-purple-200 font-black text-xs mono flex items-center gap-1 cursor-pointer shadow-md">
+              <span class="text-purple-400">5)</span>
+              <span id="lbl-tab5-val" class="font-black text-purple-300">Efectos</span>
+              <span class="text-[9px] text-slate-400">▼</span>
+            </button>
+            <div id="dropdown-tab5" class="dropdown-menu hidden absolute top-full right-0 mt-2 w-72 rounded-2xl border border-purple-400/80 p-2 shadow-2xl z-50 flex flex-col gap-1 text-xs mono">
+              <div class="text-[9px] text-purple-400 font-black px-2 py-0.5 uppercase tracking-wider border-b border-purple-900/60">
+                5) SÁBANA & EFECTOS:
+              </div>
+              <button onclick="toggleRelationalSheet()" id="btn-tab5-sheet" class="p-2 rounded-xl hover:bg-teal-950/70 border border-transparent hover:border-teal-500/40 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-teal-300">🌊 Sábana-Ola (Piel Relacional)</div>
+                  <div class="text-[9px] text-slate-300">Superficie 3D continua de doble cara</div>
+                </div>
+                <span id="led-tab5-sheet" class="led-indicator led-on"></span>
+              </button>
+              <button onclick="togglePosteriorFlip()" id="btn-tab5-flip" class="p-2 rounded-xl hover:bg-purple-950/70 border border-transparent hover:border-purple-500/40 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-purple-300">🔄 Volteo Posterior</div>
+                  <div class="text-[9px] text-slate-300">Revelar la cara latente oculta</div>
+                </div>
+                <span id="led-tab5-flip" class="led-indicator led-off"></span>
+              </button>
+              <button onclick="toggleSoftVibration()" id="btn-tab5-vib" class="p-2 rounded-xl hover:bg-purple-950/70 border border-transparent hover:border-purple-500/40 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-purple-300">〰️ Vibración Armónica Suave</div>
+                  <div class="text-[9px] text-slate-300">Ondulación continua de la sábana</div>
+                </div>
+                <span id="led-tab5-vib" class="led-indicator led-on"></span>
+              </button>
+              <button onclick="toggleCleanSheetMode()" id="btn-tab5-cleansheet" class="p-2 rounded-xl hover:bg-sky-950/70 border border-transparent hover:border-sky-500/40 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-sky-300">🫧 Sábana Limpia (Sin Círculos)</div>
+                  <div class="text-[9px] text-slate-300">Piel pura sin halos circulares gigantes</div>
+                </div>
+                <span id="led-tab5-cleansheet" class="led-indicator led-on"></span>
+              </button>
+              <button onclick="toggleDyadScanner()" id="btn-tab5-scan" class="p-2 rounded-xl hover:bg-cyan-950/70 border border-transparent hover:border-cyan-500/40 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-cyan-300">⚡ Escáner Diádico (Chispas)</div>
+                  <div class="text-[9px] text-slate-300">Haces de luz entre pares diádicos</div>
+                </div>
+                <span id="led-tab5-scan" class="led-indicator led-on"></span>
+              </button>
+              <button onclick="toggleAudio()" id="btn-tab5-audio" class="p-2 rounded-xl hover:bg-slate-900 border border-transparent hover:border-slate-700 text-left flex justify-between items-center transition cursor-pointer">
+                <div>
+                  <div class="font-black text-slate-300">🔇 Audio Hidroacústico</div>
+                  <div class="text-[9px] text-slate-300">Sonificación del clima grupal</div>
+                </div>
+                <span id="led-tab5-audio" class="led-indicator led-off"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="h-5 w-px bg-slate-800"></div>
+
+          <!-- BOTÓN DISCRETO PARA EXPANDIR/COLAPSAR EL PANEL LATERAL DE AJUSTES AVANZADOS -->
+          <button id="btn-sidebar-toggle-master" onclick="toggleSidebar()" class="px-2 md:px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-teal-300 flex items-center gap-1 text-xs font-bold transition cursor-pointer" title="Abrir/Ocultar Panel Lateral de Ajustes">
+            <span>⚙️</span>
+            <span class="hidden md:inline text-[10px] mono">PANEL</span>
+          </button>
         </div>
 
-        <!-- HUD SUPERIOR EN ESCENA: Identificación del Régimen -->
-        <div class="absolute top-3.5 left-3.5 flex items-center gap-2 pointer-events-none z-10 flex-wrap">
-          <div class="hud-float px-3.5 py-2 rounded-xl text-xs mono font-bold">
+        <!-- HUD SUPERIOR EN ESCENA: Identificación del Régimen (Ubicado debajo de la barra maestra) -->
+        <div class="absolute top-16 left-3.5 hidden xl:flex items-center gap-2 pointer-events-none z-10 flex-wrap">
+          <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono font-bold">
             <span class="text-slate-300">RÉGIMEN:</span>
             <span class="font-black text-teal-300 ml-1.5" id="scene-regime-label">GRUPO CANÓNICO (N=5)</span>
           </div>
-          <div class="hud-float px-3 py-2 rounded-xl text-xs mono text-slate-100 font-bold">
+          <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono text-slate-100 font-bold">
             <span id="scene-active-subject-badge">TODOS LOS SUJETOS</span>
           </div>
-          <div class="hud-float px-3 py-2 rounded-xl text-xs mono text-emerald-300 font-extrabold flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#00FF87]"></span>
+          <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono text-emerald-300 font-extrabold flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#00FF87]"></span>
             <span id="scene-phase-badge">ACUARIO ACTIVO</span>
           </div>
         </div>
 
         <!-- SONDA TETRAGRAMÁTICA DIÁDICA (TARJETA HUD FLOTANTE SUPERIOR DERECHA) -->
-        <div id="dyadic-probe-card" class="hud-float absolute top-3.5 right-3.5 max-w-[320px] w-full p-3 rounded-2xl text-xs mono z-10 transition-all duration-300">
-          <div class="flex items-center justify-between border-b-2 border-teal-500/40 pb-1.5 mb-2">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-teal-400 shadow-[0_0_12px_#00F5D4]" id="probe-dot"></span>
-              <span class="font-black text-sm text-white" id="probe-title">SONDA DIÁDICA</span>
+        <div id="dyadic-probe-card" class="hud-float absolute top-16 right-3.5 max-w-[300px] w-full p-2.5 rounded-2xl text-xs mono z-10 transition-all duration-300">
+          <div class="flex items-center justify-between border-b border-teal-500/40 pb-1 mb-1.5">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_10px_#00F5D4]" id="probe-dot"></span>
+              <span class="font-black text-xs text-white" id="probe-title">SONDA DIÁDICA</span>
             </div>
-            <span class="text-xs font-bold text-slate-200" id="probe-stratum-badge">CIELO ABIERTO</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-bold text-slate-300" id="probe-stratum-badge">CIELO ABIERTO</span>
+              <button id="btn-collapse-probe" onclick="toggleProbeBody()" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-teal-300 hover:text-white font-black cursor-pointer pointer-events-auto" title="Minimizar/Expandir Sonda">–</button>
+            </div>
           </div>
 
           <div class="flex flex-col gap-1.5 text-slate-100" id="probe-body">
@@ -1125,6 +1419,120 @@
        1. DEFINICIÓN DE PRESETS CANÓNICOS DE SOCIOMATRICES SMIb
        ========================================================================= */
     const PRESETS = {
+      '1g1t1c': {
+        name: "Grupo A \u00b7 T1 \u00b7 C1 (Afinidad / Elecci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo A \u00b7 T1 \u00b7 C1 (Afinidad / Elecci\u00f3n). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00B0", "AAAA", "aa00", "00D0", "00C0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["00aa", "aabb", "AAcc", "0000", "00dd", "0Bee"], ["0C00", "0000", "AA00", "aa00", "0000", "0BA0"], ["0B00", "0000", "AAC0", "aaA0", "0CB0", "0000"]]
+      },
+      '1g1t2c': {
+        name: "Grupo A \u00b7 T1 \u00b7 C2 (Fricci\u00f3n / Tarea) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo A \u00b7 T1 \u00b7 C2 (Fricci\u00f3n / Tarea). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "0000"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "00B0"], ["AA00", "0000", "0B00", "aaaa", "0C00", "0000"]]
+      },
+      '1g2t1c': {
+        name: "Grupo A \u00b7 T2 \u00b7 C1 (Afinidad / Elecci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo A \u00b7 T2 \u00b7 C1 (Afinidad / Elecci\u00f3n). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "aabb", "AAcc", "0000", "00dd", "00ee"], ["0B00", "0000", "AA00", "aa00", "0000", "0CA0"], ["0B00", "0000", "AAA0", "aa00", "0CB0", "0000"]]
+      },
+      '1g2t2c': {
+        name: "Grupo A \u00b7 T2 \u00b7 C2 (Fricci\u00f3n / Tarea) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo A \u00b7 T2 \u00b7 C2 (Fricci\u00f3n / Tarea). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "00C0"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "0000"], ["AA00", "0C00", "0B00", "aaaa", "0000", "0000"]]
+      },
+      '2g1t1c': {
+        name: "Grupo B \u00b7 T1 \u00b7 C1 (Afinidad / Elecci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo B \u00b7 T1 \u00b7 C1 (Afinidad / Elecci\u00f3n). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "aabb", "AAcc", "0000", "00dd", "00ee"], ["0B00", "0000", "AA00", "aa00", "0000", "0CA0"], ["0B00", "0000", "AAA0", "aa00", "0CB0", "0000"]]
+      },
+      '2g1t2c': {
+        name: "Grupo B \u00b7 T1 \u00b7 C2 (Fricci\u00f3n / Tarea) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo B \u00b7 T1 \u00b7 C2 (Fricci\u00f3n / Tarea). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "00C0"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "0000"], ["AA00", "0C00", "0B00", "aaaa", "0000", "0000"]]
+      },
+      '2g2t1c': {
+        name: "Grupo B \u00b7 T2 \u00b7 C1 (Afinidad / Elecci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo B \u00b7 T2 \u00b7 C1 (Afinidad / Elecci\u00f3n). BDR=0.48, SDR=0.22, Entrop\u00eda=0.35.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aa00", "0000", "00B0"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "00bb", "AAcc", "0000", "aadd", "00ee"], ["0B00", "0000", "AA00", "aaaa", "0000", "0C00"], ["0B00", "0C00", "AAA0", "aa00", "00B0", "0000"]]
+      },
+      '2g2t2c': {
+        name: "Grupo B \u00b7 T2 \u00b7 C2 (Fricci\u00f3n / Tarea) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo B \u00b7 T2 \u00b7 C2 (Fricci\u00f3n / Tarea). BDR=0.42, SDR=0.18, Entrop\u00eda=0.35.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "00C0"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "0000"], ["AA00", "0C00", "0B00", "aaaa", "0000", "0000"]]
+      },
+      '1g3t1c': {
+        name: "Grupo 1 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 1 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n). BDR=0.54, SDR=0.3, Entrop\u00eda=0.29.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "aabb", "AAcc", "0000", "00dd", "00ee"], ["0B00", "0000", "AA00", "aa00", "0000", "0CA0"], ["0B00", "0000", "AAA0", "aa00", "0CB0", "0000"]]
+      },
+      '1g3t2c': {
+        name: "Grupo 1 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 1 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia). BDR=0.44, SDR=0.34, Entrop\u00eda=0.27.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "00C0"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "0000"], ["AA00", "0C00", "0B00", "aaaa", "0000", "0000"]]
+      },
+      '2g3t1c': {
+        name: "Grupo 2 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 2 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n). BDR=0.52, SDR=0.31, Entrop\u00eda=0.3.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aa00", "0000", "00B0"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "00bb", "AAcc", "0000", "aadd", "00ee"], ["0B00", "0000", "AA00", "aaaa", "0000", "0C00"], ["0B00", "0C00", "AAA0", "aa00", "00B0", "0000"]]
+      },
+      '2g3t2c': {
+        name: "Grupo 2 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 2 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia). BDR=0.36, SDR=0.33, Entrop\u00eda=0.25.",
+        subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
+        matrix: [["0000", "00AA", "AABB", "aaCC", "00DD", "00EE"], ["AA00", "0000", "0BA0", "aa00", "00B0", "00C0"], ["AAAA", "0BB0", "0000", "aaC0", "0CD0", "00E0"], ["AAaa", "00bb", "0Bcc", "0000", "00dd", "aaee"], ["AA00", "0C00", "0BA0", "aa00", "0000", "0000"], ["AA00", "0C00", "0B00", "aaaa", "0000", "0000"]]
+      },
+      '3g1t1c': {
+        name: "Grupo 3 \u00b7 T1 \u00b7 C1 (Afinidad / Diagn\u00f3stico) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T1 \u00b7 C1 (Afinidad / Diagn\u00f3stico). BDR=0.44, SDR=0.18, Entrop\u00eda=0.38.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAAA", "AAA0", "AAA0", "AAA0", "0B00"], ["0B00", "0000", "0000", "0000", "bb00", "bb00"], ["aaaa", "aaaa", "0000", "AAA0", "0B00", "0B00"], ["AAAA", "AAA0", "AAA0", "0000", "0B00", "0000"], ["bb00", "0000", "0B00", "AAA0", "0000", "AAAA"], ["0000", "0B00", "AAA0", "AAA0", "AAA0", "0000"]]
+      },
+      '3g1t2c': {
+        name: "Grupo 3 \u00b7 T1 \u00b7 C2 (Tarea / Diagn\u00f3stico) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T1 \u00b7 C2 (Tarea / Diagn\u00f3stico). BDR=0.5, SDR=0.12, Entrop\u00eda=0.42.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAA0", "AAA0", "AAA0", "0B00", "0B00"], ["0B00", "0000", "0000", "bb00", "bb00", "aaaa"], ["aaaa", "aaaa", "0000", "AAAA", "AAA0", "AAA0"], ["0B00", "0000", "bb00", "0000", "bb00", "aaaa"], ["aaaa", "0000", "0B00", "AAA0", "0000", "AAA0"], ["0000", "0B00", "0B00", "AAA0", "AAA0", "0000"]]
+      },
+      '3g2t1c': {
+        name: "Grupo 3 \u00b7 T2 \u00b7 C1 (Afinidad / Intervenci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T2 \u00b7 C1 (Afinidad / Intervenci\u00f3n). BDR=0.52, SDR=0.26, Entrop\u00eda=0.32.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAAA", "AAA0", "AAA0", "AAA0", "AAA0"], ["0B00", "0000", "0000", "bb00", "bb00", "aaaa"], ["AAAA", "AAA0", "0000", "AAA0", "0B00", "0B00"], ["AAAA", "AAA0", "AAA0", "0000", "AAA0", "0000"], ["bb00", "0000", "0B00", "AAA0", "0000", "AAAA"], ["0000", "AAA0", "AAA0", "AAA0", "AAAA", "0000"]]
+      },
+      '3g2t2c': {
+        name: "Grupo 3 \u00b7 T2 \u00b7 C2 (Tarea / Intervenci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T2 \u00b7 C2 (Tarea / Intervenci\u00f3n). BDR=0.56, SDR=0.2, Entrop\u00eda=0.36.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAA0", "AAA0", "AAA0", "0B00", "0B00"], ["0000", "0000", "bb00", "bb00", "bb00", "aaaa"], ["aaaa", "aaaa", "0000", "AAAA", "AAA0", "AAA0"], ["0B00", "0000", "bb00", "0000", "aaaa", "aaaa"], ["0000", "0B00", "AAA0", "AAA0", "0000", "AAAA"], ["0000", "0B00", "AAA0", "AAA0", "AAAA", "0000"]]
+      },
+      '3g3t1c': {
+        name: "Grupo 3 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T3 \u00b7 C1 (Afinidad / Consolidaci\u00f3n). BDR=0.58, SDR=0.34, Entrop\u00eda=0.25.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAAA", "AAAA", "AAA0", "AAA0", "AAA0"], ["AAA0", "0000", "0B00", "0000", "0000", "bb00"], ["AAAA", "AAAA", "0000", "AAA0", "AAA0", "0B00"], ["AAAA", "AAA0", "AAA0", "0000", "AAA0", "0B00"], ["0000", "0000", "AAA0", "AAAA", "0000", "AAAA"], ["0B00", "AAA0", "AAA0", "AAAA", "AAAA", "0000"]]
+      },
+      '3g3t2c': {
+        name: "Grupo 3 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia) (N=6)",
+        desc: "Sociomatriz normal can\u00f3nica G3T3C2: Grupo 3 \u00b7 T3 \u00b7 C2 (Tarea / Eficacia). BDR=0.52, SDR=0.3, Entrop\u00eda=0.28.",
+        subjects: ["1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "AAAA", "AAA0", "AAA0", "AAA0", "0B00"], ["0B00", "0000", "0000", "0000", "bb00", "bb00"], ["aaaa", "aaaa", "0000", "AAAA", "AAA0", "AAA0"], ["AAA0", "0B00", "0000", "0000", "0000", "bb00"], ["0000", "0B00", "AAA0", "AAA0", "0000", "AAAA"], ["0000", "AAA0", "AAA0", "AAA0", "AAAA", "0000"]]
+      },
+      'g3t3c2_global': {
+        name: "Hipertensor Global G3T3C2 (N=18)",
+        desc: "Ecosistema multidimensional completo: 3 grupos can\u00f3nicos simult\u00e1neos (G1: 1A..6A, G2: 1B..6B, G3: 1C..6C, 306 d\u00edadas) con puentes embajadores intergrupales.",
+        subjects: ["1A", "2A", "3A", "4A", "5A", "6A", "1B", "2B", "3B", "4B", "5B", "6B", "1C", "2C", "3C", "4C", "5C", "6C"],
+        matrix: [["0000", "00B0", "AAAA", "aa00", "00D0", "00C0", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["00aa", "aabb", "AAcc", "0000", "00dd", "0Bee", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0C00", "0000", "AA00", "aa00", "0000", "0BA0", "0000", "0000", "0000", "0000", "++++", "0000", "0000", "0000", "0000", "0000", "0++0", "0000"], ["0B00", "0000", "AAC0", "aaA0", "0CB0", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "00B0", "AAAA", "aaC0", "00D0", "00E0", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0B00", "0000", "AAA0", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0Baa", "aabb", "AAcc", "0000", "00dd", "00ee", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "++++", "0000", "0B00", "0000", "AA00", "aa00", "0000", "0CA0", "0000", "0000", "0000", "0000", "+0+0", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0B00", "0000", "AAA0", "aa00", "0CB0", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "AAA0", "AAA0", "AAA0", "0B00"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0B00", "0000", "0000", "0000", "bb00", "bb00"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "aaaa", "0000", "AAA0", "0B00", "0B00"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "AAA0", "AAA0", "0000", "0B00", "0000"], ["0000", "0000", "0000", "0000", "0++0", "0000", "0000", "0000", "0000", "0000", "+0+0", "0000", "bb00", "0000", "0B00", "AAA0", "0000", "AAAA"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0B00", "AAA0", "AAA0", "AAA0", "0000"]]
+      },
       '20x20': {
         "name": "Grupo Can\u00f3nico G1T2C2 (N=20)",
         "desc": "Dataset emp\u00edrico can\u00f3nico: N=20 sujetos, 380 d\u00edadas, Criterio L\u00fadico, T2. Densidad Grupal 10.24% (Saldo -39.76%), Reciprocidad rho=0.784, Inercia de Desgaste I=216.0 (27.20%). 6 Prismas opuestos 2 a 2 e invarianza baric\u00e9ntrica perfecta (SDR=578.0).",
@@ -1750,6 +2158,7 @@
     let isSheetWireframeVisible = false;
     let isPosteriorFlipped = false;
     let isSoftVibrationActive = false;
+    let isCleanSheetMode = true; // Canon Socio: La sábana limpia sin círculos invasivos
     let currentChoreographyPhase = 0; // 0: Reposo, 1: Escenario, 2: Elementos con Trazas, 3: Completo, 4: Sábana-Ola, 5: Volteo + Vibración
     let choreographyTimer = null;
     let isCameraTransitioning = false;
@@ -2356,6 +2765,11 @@
         const qRow = Math.floor(idx / 9) - 4;
         coordX = qCol * 0.22 + st.x * 0.08;
         coordZ = qRow * 0.22 + st.y * 0.08;
+      } else if (currentAquariumBase === 'Q9') {
+        // Dispersión armónica en los 9 arquetipos del Eneagrama Sociométrico
+        const angle = (idx % 9) * (Math.PI * 2 / 9);
+        coordX = Math.cos(angle) * 0.72 + st.x * 0.10;
+        coordZ = Math.sin(angle) * 0.72 + st.y * 0.10;
       } else if (currentAquariumBase === 'TENSOR') {
         const tier = idx % 3;
         coordX = st.x + (tier - 1) * 0.26;
@@ -2456,8 +2870,8 @@
         const pY = posVec.y;
         const pZ = posVec.z;
 
-        // A. NÚCLEO FÁCTICO (Esfera interior densa)
-        const coreRadius = Math.max(0.20, 0.20 + st.BDF * 0.20);
+        // A. NÚCLEO FÁCTICO (Esfera interior densa refinada y compacta - socio: círculos más pequeños)
+        const coreRadius = Math.max(0.09, 0.09 + (st.BDF || 0) * 0.06);
         const coreGeom = new THREE.SphereGeometry(coreRadius, 24, 24);
 
         // Color según signo del Saldo Fáctico (SDF)
@@ -2481,12 +2895,17 @@
         scene.add(coreMesh);
         nodeMeshes.push(coreMesh);
 
-        // NÚMERO DENTRO DEL CÍRCULO (Sin etiquetas exteriores cuadradas, centrado y de menor tamaño)
+        // NÚMERO DENTRO DEL CÍRCULO (Sin etiquetas exteriores cuadradas, centrado y legible)
         const numMatch = (st.code || '').match(/\d+/);
-        const numText = numMatch ? numMatch[0] : String(idx + 1);
+        let numText = numMatch ? numMatch[0] : String(idx + 1);
+        if (currentPerspective === 'DA') {
+          numText = `${numText}d`;
+        } else if (currentPerspective === 'RC') {
+          numText = `${numText}r`;
+        }
         const numSprite = createNodeNumberSprite(numText);
         numSprite.position.set(pX, pY, pZ);
-        const numScale = Math.max(0.20, coreRadius * 1.0);
+        const numScale = Math.max(0.11, coreRadius * 1.05);
         numSprite.scale.set(numScale, numScale, 1);
         numSprite.material.opacity = (activeLayerVisibility === 'HALO' ? 0.05 : 0.98) * opacityMult;
         numSprite.userData = { subjectIndex: idx, type: 'number' };
@@ -2494,25 +2913,29 @@
         nodeMeshes.push(numSprite);
 
         // B. HALO COGNITIVO (Esfera exterior translúcida pulsante)
+        // Socio: la sábana limpia sin los círculos . los círculos pueden ser más pequeños.
         const isAsphyxiated = st.gapRatio < 0.50;
-        const haloRadius = coreRadius + Math.max(0.24, st.BDC * 0.40) * (isAsphyxiated ? 1.45 : 1.0);
-        const haloGeom = new THREE.SphereGeometry(haloRadius, 22, 22);
+        const haloRadius = coreRadius * 1.35; // Ceñido y discreto (círculos más pequeños)
+        const haloGeom = new THREE.SphereGeometry(haloRadius, 20, 20);
 
         let haloColor = 0x00E5FF;
         if (isAsphyxiated) haloColor = 0xC084FC; // Violáceo asfixia
         else if (st.SDC < -0.15) haloColor = 0xFB7185;
 
+        const haloOpacity = isCleanSheetMode ? 0.0 : ((activeLayerVisibility === 'CORE' ? 0.02 : (isAsphyxiated ? 0.30 : 0.16)) * opacityMult);
+
         const haloMat = new THREE.MeshStandardMaterial({
           color: haloColor,
           wireframe: false,
           transparent: true,
-          opacity: (activeLayerVisibility === 'CORE' ? 0.02 : (isAsphyxiated ? 0.42 : 0.25)) * opacityMult,
+          opacity: haloOpacity,
           roughness: 0.35,
           metalness: 0.35
         });
 
         const haloMesh = new THREE.Mesh(haloGeom, haloMat);
         haloMesh.position.set(pX, pY, pZ);
+        haloMesh.visible = !isCleanSheetMode;
         haloMesh.userData = { 
           subjectIndex: idx, 
           type: 'halo', 
@@ -3849,7 +4272,7 @@
 
     function setAquariumBase(base) {
       currentAquariumBase = base;
-      const bases = ['NxN', 'Nda_Nrc', 'QxQ', 'TENSOR'];
+      const bases = ['NxN', 'Nda_Nrc', 'QxQ', 'Q9', 'TENSOR'];
       const map = {
         'NxN': 'btn-base-nxn',
         'Nda_Nrc': 'btn-base-nda-nrc',
@@ -3868,7 +4291,7 @@
       });
       const lbl = document.getElementById('lbl-aquarium-base');
       if (lbl) {
-        lbl.textContent = base === 'NxN' ? 'N × N' : (base === 'Nda_Nrc' ? 'N_da × N_rc' : (base === 'QxQ' ? 'Q × Q (81)' : 'TENSOR G×T'));
+        lbl.textContent = base === 'NxN' ? 'N × N' : (base === 'Nda_Nrc' ? 'N_da × N_rc' : (base === 'QxQ' ? 'Q × Q (81)' : (base === 'Q9' ? 'Q(9) Eneagrama' : 'TENSOR G×T')));
       }
       showSmibToast(`📐 Base del Acuario fijada en ${base}`);
       renderAquariumState(currentSpawnCount);
@@ -3960,6 +4383,17 @@
       }
     }
 
+    function toggleProbeBody() {
+      const b = document.getElementById('probe-body');
+      const h = document.getElementById('probe-hint');
+      const btn = document.getElementById('btn-collapse-probe');
+      if (b) {
+        b.classList.toggle('hidden');
+        if (h) h.classList.toggle('hidden');
+        if (btn) btn.textContent = b.classList.contains('hidden') ? '+' : '–';
+      }
+    }
+
     /* =========================================================================
        12. INTERACCIÓN POR RATÓN / RAYCASTING
        ========================================================================= */
@@ -3996,7 +4430,318 @@
     /* =========================================================================
        MAXIMIZACIÓN DEL ESPACIO VISUAL DEL ACUARIO (COLAPSO DE BARRA & PANTALLA COMPLETA)
        ========================================================================= */
-    let isSidebarVisible = true;
+    let isSidebarVisible = false;
+
+    /* =========================================================================
+       BARRA MAESTRA UNIFICADA: ACCIÓN & 5 PESTAÑAS DESPLEGABLES (SOCIO CANON)
+       ========================================================================= */
+    function toggleAcuarioDropdown(menuId, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const target = document.getElementById(menuId);
+      if (!target) return;
+      const wasHidden = target.classList.contains('hidden');
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      if (wasHidden) {
+        target.classList.remove('hidden');
+      }
+    }
+
+    // Cerrar cualquier desplegable al hacer clic fuera
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown-group')) {
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      }
+    });
+
+    let currentG = 1; // 1, 2, 3
+    let currentT = 1; // 1, 2, 3
+    let currentC = 1; // 1, 2
+
+    function updateG3T3C2Matrix() {
+      const key = `${currentG}g${currentT}t${currentC}c`;
+      if (PRESETS[key]) {
+        loadScenario(key);
+        updateTab2Label(`G${currentG}·T${currentT}·C${currentC}`);
+        const badge = document.getElementById('badge-g3t3c2-active');
+        if (badge) badge.textContent = `G${currentG} · T${currentT} · C${currentC}`;
+        updateTab2Buttons();
+        showSmibToast(`🧊 Sociomatriz Normal Activa: Grupo ${currentG} · T${currentT} · C${currentC}`);
+      }
+    }
+
+    function setNormalG(g) {
+      currentG = g;
+      updateG3T3C2Matrix();
+    }
+
+    function setNormalT(t) {
+      currentT = t;
+      updateG3T3C2Matrix();
+    }
+
+    function setNormalC(c) {
+      currentC = c;
+      updateG3T3C2Matrix();
+    }
+
+    function updateTab2Buttons() {
+      [1, 2, 3].forEach(g => {
+        const btn = document.getElementById(`btn-g-${g}`);
+        if (btn) {
+          if (g === currentG) {
+            btn.className = 'p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer';
+          } else {
+            btn.className = 'p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer';
+          }
+        }
+      });
+      [1, 2, 3].forEach(t => {
+        const btn = document.getElementById(`btn-t-${t}`);
+        if (btn) {
+          if (t === currentT) {
+            btn.className = 'p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer';
+          } else {
+            btn.className = 'p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer';
+          }
+        }
+      });
+      [1, 2].forEach(c => {
+        const btn = document.getElementById(`btn-c-${c}`);
+        if (btn) {
+          if (c === currentC) {
+            btn.className = 'p-1.5 rounded-lg bg-teal-950 text-teal-300 border border-teal-400 font-black text-center cursor-pointer';
+          } else {
+            btn.className = 'p-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 hover:border-teal-400 font-bold text-center cursor-pointer';
+          }
+        }
+      });
+    }
+
+    let intergroupCycleTimer = null;
+    let intergroupCycleDir = 1;
+    function toggleIntergroupCycle() {
+      const btn = document.getElementById('btn-intergroup-cycle');
+      if (intergroupCycleTimer) {
+        clearInterval(intergroupCycleTimer);
+        intergroupCycleTimer = null;
+        if (btn) btn.className = 'w-full py-1 px-2 rounded-lg bg-teal-950/60 hover:bg-teal-900 border border-teal-500/40 text-[9px] text-teal-200 font-bold flex items-center justify-between cursor-pointer';
+        showSmibToast('🧊 Cruce Intergrupal (g1 g2 g3 × g3 g2 g1) Pausado');
+      } else {
+        if (btn) btn.className = 'w-full py-1 px-2 rounded-lg bg-teal-800 text-white border border-teal-300 text-[9px] font-black flex items-center justify-between shadow-[0_0_10px_rgba(0,255,135,0.5)] cursor-pointer';
+        showSmibToast('🧊 Cruce Intergrupal Activo: g1 g2 g3 × g3 g2 g1 (A ↔ B ↔ C)');
+        intergroupCycleTimer = setInterval(() => {
+          let nextG = currentG + intergroupCycleDir;
+          if (nextG > 3) {
+            intergroupCycleDir = -1;
+            nextG = 2;
+          } else if (nextG < 1) {
+            intergroupCycleDir = 1;
+            nextG = 2;
+          }
+          setNormalG(nextG);
+        }, 2800);
+      }
+    }
+
+    let temporalMoviolaTimer = null;
+    let temporalMoviolaDir = 1;
+    function toggleTemporalMoviola() {
+      const btn = document.getElementById('btn-temporal-moviola');
+      if (temporalMoviolaTimer) {
+        clearInterval(temporalMoviolaTimer);
+        temporalMoviolaTimer = null;
+        if (btn) btn.className = 'w-full py-1 px-2 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/40 text-[9px] text-cyan-200 font-bold flex items-center justify-between cursor-pointer';
+        showSmibToast('⏱️ Moviola Temporal (t1 t2 t3 × t3 t2 t1) Pausada');
+      } else {
+        if (btn) btn.className = 'w-full py-1 px-2 rounded-lg bg-cyan-800 text-white border border-cyan-300 text-[9px] font-black flex items-center justify-between shadow-[0_0_10px_rgba(0,229,255,0.5)] cursor-pointer';
+        showSmibToast('⏱️ Moviola Temporal Activa: t1 t2 t3 × t3 t2 t1 en Oscilación');
+        temporalMoviolaTimer = setInterval(() => {
+          let nextT = currentT + temporalMoviolaDir;
+          if (nextT > 3) {
+            temporalMoviolaDir = -1;
+            nextT = 2;
+          } else if (nextT < 1) {
+            temporalMoviolaDir = 1;
+            nextT = 2;
+          }
+          setNormalT(nextT);
+        }, 2400);
+      }
+    }
+
+    // 0. ACCIÓN: Lanzar con configuración preparada (Opción 1, 2 o 3 con nombre descriptivo)
+    function launchPreparedConfig(cfg) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      if (cfg === 'CANONICO') {
+        currentG = 1; currentT = 1; currentC = 1;
+        updateG3T3C2Matrix();
+        setAquariumBase('NxN');
+        setAquariumRegime('DIADIC');
+        setAglutinadorMode('TOTAL');
+        setVerticalProjection('SDR');
+        isRelationalSheetActive = true;
+        if (seaPlaneMesh) seaPlaneMesh.visible = true;
+        if (isPosteriorFlipped) togglePosteriorFlip(false);
+        updateTab1Label('n(i, j)');
+        updateTab3Label('18D SDR');
+        triggerMasterActionLaunch(false);
+        showSmibToast('🌊 1. Canónica Normal G1·T1·C1 en Marcha (N=6)');
+      } else if (cfg === 'TAREA' || cfg === 'CONFLICTO') {
+        currentG = 2; currentT = 2; currentC = 2;
+        updateG3T3C2Matrix();
+        setAquariumBase('NxN');
+        setAquariumRegime('DIADIC');
+        setAglutinadorMode('FACT');
+        setVerticalProjection('BDF');
+        if (isPosteriorFlipped) togglePosteriorFlip(false);
+        updateTab1Label('n(i, j)');
+        updateTab3Label('18D Fáctico');
+        triggerMasterActionLaunch(false);
+        if (!isDyadScannerRunning) toggleDyadScanner();
+        showSmibToast('⚡ 2. Dinámica de Tarea G2·T2·C2 en Marcha (N=6)');
+      } else if (cfg === 'GLOBAL' || cfg === 'BERNARDA') {
+        loadScenario('g3t3c2_global');
+        setAquariumBase('TENSOR');
+        setAquariumRegime('MARGINAL');
+        setAglutinadorMode('TOTAL');
+        setVerticalProjection('SDR');
+        if (isPosteriorFlipped) togglePosteriorFlip(false);
+        updateTab1Label('n');
+        updateTab2Label('GCxT');
+        updateTab3Label('18D SDR');
+        triggerMasterActionLaunch(false);
+        showSmibToast('🏛️ 3. Hipertensor G3T3C2 Global en Marcha (N=18)');
+      }
+    }
+
+    // 1. PESTAÑA 1: n(i, j) / n / q(9, 9) / q(9)
+    function selectTab1Base(baseType) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      if (baseType === 'n_ij') {
+        setAquariumBase('NxN');
+        setAquariumRegime('DIADIC');
+        updateTab1Label('n(i, j)');
+        showSmibToast('📐 Base n(i, j): Matriz Diádica N×N');
+      } else if (baseType === 'n') {
+        setAquariumBase('NxN');
+        setAquariumRegime('MARGINAL');
+        updateTab1Label('n');
+        showSmibToast('📐 Base n: Proyección Nodal / Vectores Marginales');
+      } else if (baseType === 'q99') {
+        setAquariumBase('QxQ');
+        updateTab1Label('q(9, 9)');
+        showSmibToast('🏛️ Base q(9, 9): Cuadrícula 9×9 de las 81 Figuras Q81');
+      } else if (baseType === 'q9') {
+        setAquariumBase('Q9');
+        updateTab1Label('q(9)');
+        showSmibToast('📐 Base q(9): Macro-Categorías Q9 del Eneagrama');
+      }
+      renderAquariumState(currentSpawnCount);
+      updatePreConfigDisplay();
+    }
+
+    function updateTab1Label(txt) {
+      const el = document.getElementById('lbl-tab1-val');
+      if (el) el.textContent = txt;
+    }
+
+    // 2. PESTAÑA 2: G / T / C / GT / GC / TC / GCxT
+    function selectTab2Cube(cubeDim) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      updateTab2Label(cubeDim);
+      if (cubeDim === 'G') {
+        updateG3T3C2Matrix();
+        showSmibToast(`🧊 Hipercubo: Grupo G${currentG} Activo`);
+      } else if (cubeDim === 'T') {
+        updateG3T3C2Matrix();
+        showSmibToast(`⏱️ Hipercubo: Tiempo T${currentT} Activo`);
+      } else if (cubeDim === 'C') {
+        updateG3T3C2Matrix();
+        showSmibToast(`🎯 Hipercubo: Criterio C${currentC} Activo`);
+      } else if (cubeDim === 'GT' || cubeDim === 'GC' || cubeDim === 'TC') {
+        setAquariumBase('TENSOR');
+        showSmibToast(`🧊 Hipercubo Multidimensional: Tensor ${cubeDim}`);
+      } else if (cubeDim === 'GCxT') {
+        loadScenario('g3t3c2_global');
+        setAquariumBase('TENSOR');
+        showSmibToast('🏛️ Hipertensor Global GCxT: Los 3 Grupos (A, B, C) en Acción (N=18)');
+      }
+      renderAquariumState(currentSpawnCount);
+      updatePreConfigDisplay();
+    }
+
+    function updateTab2Label(txt) {
+      const el = document.getElementById('lbl-tab2-val');
+      if (el) el.textContent = txt;
+    }
+
+    // 3. PESTAÑA 3: 18D
+    function selectTab3Mode(mode) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+      if (mode === 'SDR') {
+        setAglutinadorMode('TOTAL');
+        setVerticalProjection('SDR');
+        updateTab3Label('18D SDR');
+      } else if (mode === 'FACT') {
+        setAglutinadorMode('FACT');
+        setVerticalProjection('BDF');
+        updateTab3Label('18D Fáctico');
+      } else if (mode === 'COGN') {
+        setAglutinadorMode('COGN');
+        setVerticalProjection('BDC');
+        updateTab3Label('18D Conjetural');
+      } else if (mode === 'BDR') {
+        setVerticalProjection('BDR');
+        updateTab3Label('18D BDR');
+      } else if (mode === 'GAP') {
+        setVerticalProjection('GAP');
+        updateTab3Label('18D Brecha');
+      }
+      renderAquariumState(currentSpawnCount);
+      updatePreConfigDisplay();
+    }
+
+    function updateTab3Label(txt) {
+      const el = document.getElementById('lbl-tab3-val');
+      if (el) el.textContent = txt;
+    }
+
+    // 4. PESTAÑA 4: Fases & Dinámica
+    function updateTab4Label(txt) {
+      const el = document.getElementById('lbl-tab4-val');
+      if (el) el.textContent = txt;
+    }
+
+    // 5. PESTAÑA 5: Sábana Limpia & Efectos
+    function toggleCleanSheetMode() {
+      isCleanSheetMode = !isCleanSheetMode;
+      renderAquariumState(currentSpawnCount);
+      updateTab5Leds();
+      showSmibToast(`🫧 Sábana Limpia (Sin Círculos): ${isCleanSheetMode ? 'ACTIVADA' : 'DESACTIVADA'}`);
+    }
+
+    function updateTab5Leds() {
+      const ledSheet = document.getElementById('led-tab5-sheet');
+      if (ledSheet) ledSheet.className = isRelationalSheetActive ? 'led-indicator led-on' : 'led-indicator led-off';
+
+      const ledFlip = document.getElementById('led-tab5-flip');
+      if (ledFlip) ledFlip.className = isPosteriorFlipped ? 'led-indicator led-on' : 'led-indicator led-off';
+
+      const ledVib = document.getElementById('led-tab5-vib');
+      if (ledVib) ledVib.className = isSoftVibrationActive ? 'led-indicator led-on' : 'led-indicator led-off';
+
+      const ledClean = document.getElementById('led-tab5-cleansheet');
+      if (ledClean) ledClean.className = isCleanSheetMode ? 'led-indicator led-on' : 'led-indicator led-off';
+
+      const ledScan = document.getElementById('led-tab5-scan');
+      if (ledScan) ledScan.className = isDyadScannerRunning ? 'led-indicator led-on' : 'led-indicator led-off';
+
+      const ledAudio = document.getElementById('led-tab5-audio');
+      if (ledAudio) ledAudio.className = isAudioPlaying ? 'led-indicator led-on' : 'led-indicator led-off';
+    }
 
     function toggleSidebar() {
       isSidebarVisible = !isSidebarVisible;
@@ -4419,6 +5164,7 @@
     }
 
     function triggerMasterActionLaunch(isAuto = false) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
       if (autoActionCountdownTimer) {
         clearInterval(autoActionCountdownTimer);
         autoActionCountdownTimer = null;
@@ -4476,6 +5222,7 @@
     }
 
     function toggleMasterDynamics() {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
       // Si el usuario hace clic durante la cuenta atrás de 2s, activar de inmediato
       if (autoActionCountdownTimer || (autoActionSecondsLeft > 0 && !isMasterDynamicsRunning)) {
         triggerMasterActionLaunch(false);
@@ -4627,17 +5374,17 @@
       const probeAmb = document.getElementById('probe-amb');
       const probeHint = document.getElementById('probe-hint');
 
-      if (probeTitle) probeTitle.textContent = `DÍADA #${idx + 1}/${allDyadList.length}: ${d.nameFrom} ➔ ${d.nameTo}`;
+      if (probeTitle) probeTitle.textContent = `DÍADA #${idx + 1}/${allDyadList.length}: ${d.from + 1}d [${d.nameFrom}] ➔ ${d.to + 1}r [${d.nameTo}]`;
       if (probeStratum) {
         probeStratum.textContent = d.figName;
         probeStratum.className = `text-xs font-bold ${d.figColorClass}`;
       }
       if (probeCoords) probeCoords.textContent = `SMIb: [${d.smib_ij}] / [${d.smib_ji}]`;
-      if (probeMass) probeMass.textContent = `Emisión DA: ${d.da_ij > 0 ? '+1' : (d.da_ij < 0 ? '-1' : '0')} | Rec: ${d.da_ji > 0 ? '+1' : (d.da_ji < 0 ? '-1' : '0')}`;
+      if (probeMass) probeMass.textContent = `Dador ${d.from + 1}d (DA: ${d.da_ij > 0 ? '+1' : (d.da_ij < 0 ? '-1' : '0')}) ➔ Receptor ${d.to + 1}r (RC: ${d.da_ji > 0 ? '+1' : (d.da_ji < 0 ? '-1' : '0')})`;
       if (probeBias) probeBias.textContent = `Conjetura pDA: ${d.pda_ij > 0 ? '+1' : (d.pda_ij < 0 ? '-1' : '0')}`;
       if (probeGap) probeGap.textContent = `Flotabilidad Diádica: ${d.meanZ >= 0 ? '+' : ''}${d.meanZ.toFixed(2)}m`;
       if (probeAmb) probeAmb.textContent = d.figType;
-      if (probeHint) probeHint.innerHTML = `⚡ <strong class="text-teal-300">Escáner Diádico en Vivo:</strong> Flujo activo entre <strong>${d.nameFrom}</strong> y <strong>${d.nameTo}</strong>.`;
+      if (probeHint) probeHint.innerHTML = `⚡ <strong class="text-teal-300">Escáner Diádico en Vivo:</strong> Flujo activo entre Dador <strong>${d.from + 1}d (${d.nameFrom})</strong> y Receptor <strong>${d.to + 1}r (${d.nameTo})</strong>.`;
     }
 
     function updateAllLeds() {
@@ -4693,6 +5440,9 @@
       // 6. Autorotate
       const rLed = document.getElementById('led-autorotate');
       if (rLed && controls) rLed.className = `led-indicator ${controls.autoRotate ? 'led-on' : 'led-off'}`;
+
+      // 7. Pestaña 5 (Sábana & Efectos)
+      if (typeof updateTab5Leds === 'function') updateTab5Leds();
     }
 
     /* =========================================================================
@@ -4791,8 +5541,15 @@
        ========================================================================= */
     document.addEventListener('DOMContentLoaded', () => {
       initThreeScene();
-      loadScenario('20x20');
+      currentG = 1; currentT = 1; currentC = 1;
+      updateG3T3C2Matrix();
+      setAquariumBase('NxN');
+      setAquariumRegime('DIADIC');
       setAglutinadorMode('TOTAL');
+      setVerticalProjection('SDR');
+      updateTab1Label('n(i, j)');
+      updateTab2Label('G1·T1·C1');
+      updateTab3Label('18D SDR');
       showD18Tab('elem');
       updateAllLeds();
       initAquariumAutoAction();
