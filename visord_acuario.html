@@ -465,8 +465,10 @@
             <span class="led-indicator led-off" id="led-step-play"></span>
             <span id="play-step-icon" class="text-sm">⏯</span> <span id="play-step-label">Sujetos Auto</span>
           </button>
-          <button onclick="stepNext()" class="action-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-100 border border-slate-700 hover:border-teal-400 text-xs font-bold" title="Siguiente sujeto">Siguiente ▶</button>
           <button onclick="stepAll()" class="action-btn px-3 py-1.5 rounded-lg bg-sky-950 text-sky-300 border border-sky-500 hover:bg-sky-900 text-xs font-extrabold shadow-sm" title="Ver todos a la vez">Todos</button>
+          <button onclick="startProgressiveSpawn(N)" class="action-btn px-2.5 py-1.5 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500 hover:bg-emerald-900 text-xs font-extrabold shadow-sm flex items-center gap-1" title="Aparición progresiva de sujetos uno a uno">
+            <span>✨</span> <span>1 a 1</span>
+          </button>
         </div>
 
         <!-- Píldoras de Selección Directa de Sujetos: MÁS GRANDES Y VISIBLES -->
@@ -678,6 +680,11 @@
           <button id="btn-dyad-scanner" onclick="toggleDyadScanner()" class="hud-float px-4 py-2.5 rounded-2xl font-black text-xs mono text-cyan-200 border-2 border-cyan-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-cyan-200">
             <span class="led-indicator led-on" id="led-dyad-scanner"></span>
             <span id="txt-dyad-scanner">ACTION ! SCAN DÍADAS</span>
+          </button>
+
+          <button id="btn-prog-spawn" onclick="startProgressiveSpawn(N)" class="hud-float px-4 py-2.5 rounded-2xl font-black text-xs mono text-emerald-200 border-2 border-emerald-400 flex items-center gap-2 cursor-pointer shadow-lg hover:border-emerald-200" title="Aparición progresiva de los sujetos uno a uno">
+            <span class="led-indicator led-on" id="led-prog-spawn"></span>
+            <span id="txt-prog-spawn">✨ APARICIÓN 1 A 1</span>
           </button>
 
           <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono flex items-center gap-1.5 border border-slate-700">
@@ -1892,33 +1899,33 @@
 
     // 2. Fondo Arenoso / Lecho Marino Sólido y Claramente Distinguible
     function createSeabed() {
-      // Suelo de arena marina en Y = -3.55
-      const floorGeom = new THREE.PlaneGeometry(11.0, 11.0, 36, 36);
+      // Suelo de arena marina en Y = -3.55 con relieve sutil de micro-ondulaciones
+      const floorGeom = new THREE.PlaneGeometry(11.0, 11.0, 60, 60);
       floorGeom.rotateX(-Math.PI / 2);
 
-      // Relieve de dunas y ondulaciones marinas suaves
+      // Relieve fino de arena marina suave y ondulada
       const pos = floorGeom.attributes.position;
       for (let i = 0; i < pos.count; i++) {
         const u = pos.getX(i);
         const w = pos.getZ(i);
-        const h = Math.sin(u * 0.85) * Math.cos(w * 0.85) * 0.14 + Math.sin(u * 2.0) * 0.035;
+        const h = Math.sin(u * 1.6) * Math.cos(w * 1.6) * 0.035 + Math.sin(u * 3.8 + w * 2.2) * 0.012;
         pos.setY(i, h);
       }
       floorGeom.computeVertexNormals();
 
-      // Color arena marina cálida / lecho de coral con reflejos dorados y turquesas
+      // Color arena marina cálida / lecho suave con acabado mate
       const floorMat = new THREE.MeshStandardMaterial({
-        color: 0x9DB3A6, // Arena marina visible, luminosa y contrastada con el agua azul
-        roughness: 0.72,
-        metalness: 0.12,
+        color: 0x9DB3A6, // Arena marina suave y contrastada
+        roughness: 0.85,
+        metalness: 0.08,
         flatShading: true
       });
       seabedMesh = new THREE.Mesh(floorGeom, floorMat);
       seabedMesh.position.y = -3.55;
       scene.add(seabedMesh);
 
-      // Cuadrícula batimétrica sobre la arena (DA vs REC)
-      const floorGrid = new THREE.GridHelper(10.6, 10, 0x00F5D4, 0x388AA8);
+      // Cuadrícula batimétrica sobre la arena fina (DA vs REC) con subdivisiones nítidas
+      const floorGrid = new THREE.GridHelper(10.6, 20, 0x00F5D4, 0x1E4A5C);
       floorGrid.position.y = -3.50;
       scene.add(floorGrid);
 
@@ -1997,15 +2004,16 @@
       scene.add(waterVolumeMesh);
     }
 
-    // 4. Burbujas Ascendentes (Efecto Acuario Real Vivo)
+    // 4. Burbujas Ascendentes (Micro-efectos Acuario Real Vivo - Micro-burbujas sutiles)
     function createBubbles() {
-      const bubbleGeom = new THREE.SphereGeometry(0.05, 8, 8);
+      // Micro-burbujas delicadas (mucho más pequeñas para no sobrecargar el espacio visual de los sujetos)
+      const bubbleGeom = new THREE.SphereGeometry(0.012, 8, 8);
       const bubbleMat = new THREE.MeshStandardMaterial({
         color: 0xE8FFFF,
         emissive: 0x00F5D4,
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 0.65,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.70,
         roughness: 0.08,
         metalness: 0.85
       });
@@ -2022,7 +2030,7 @@
         const speed = 0.012 + Math.random() * 0.024;
         const wobbleSpeed = 1.8 + Math.random() * 2.8;
         const wobbleAmp = 0.012 + Math.random() * 0.018;
-        const scale = 0.6 + Math.random() * 1.5;
+        const scale = 0.35 + Math.random() * 0.45;
 
         bubbleData.push({ x, y, z, speed, wobbleSpeed, wobbleAmp, scale, seed: Math.random() * 10 });
         dummy.position.set(x, y, z);
@@ -2094,42 +2102,115 @@
       flowLines = [];
     }
 
-    function createTextSprite(text, colorHex = '#FFFFFF') {
+    let progressiveSpawnTimer = null;
+    let currentSpawnCount = 0;
+
+    function createNodeNumberSprite(numText) {
       const canvas = document.createElement('canvas');
       canvas.width = 128;
-      canvas.height = 64;
+      canvas.height = 128;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'rgba(4, 18, 42, 0.85)';
-      ctx.roundRect ? ctx.roundRect(4, 8, 120, 48, 12) : ctx.rect(4, 8, 120, 48);
-      ctx.fill();
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = colorHex;
-      ctx.stroke();
 
-      ctx.font = 'bold 24px "Roboto Mono", monospace';
-      ctx.fillStyle = colorHex;
+      // Totalmente transparente: SIN etiquetas cuadradas exteriores ni recuadros apelotonados
+      ctx.clearRect(0, 0, 128, 128);
+
+      // Tipografía nítida centrada dentro de la esfera
+      const fontSize = numText.length > 2 ? 44 : (numText.length > 1 ? 52 : 62);
+      ctx.font = `900 ${fontSize}px "Roboto Mono", monospace, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, 64, 32);
+
+      // Sombreado perimetral de contraste sutil para máxima legibilidad sobre cualquier color
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = 'rgba(2, 6, 23, 0.92)';
+      ctx.strokeText(numText, 64, 64);
+
+      // Número interior blanco brillante
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(numText, 64, 64);
 
       const texture = new THREE.CanvasTexture(canvas);
-      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      texture.minFilter = THREE.LinearFilter;
+      const spriteMat = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false
+      });
       const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(1.15, 0.58, 1);
+      sprite.renderOrder = 9999;
       return sprite;
     }
 
-    function renderAquariumState() {
+    function startProgressiveSpawn(targetN = N) {
+      if (progressiveSpawnTimer) {
+        clearInterval(progressiveSpawnTimer);
+        progressiveSpawnTimer = null;
+      }
+      
+      currentSpawnCount = 1;
+      renderAquariumState(currentSpawnCount);
+      
+      progressiveSpawnTimer = setInterval(() => {
+        currentSpawnCount++;
+        if (currentSpawnCount >= targetN) {
+          currentSpawnCount = targetN;
+          clearInterval(progressiveSpawnTimer);
+          progressiveSpawnTimer = null;
+          renderAquariumState(targetN);
+          if (isDyadScannerRunning && isMasterDynamicsRunning) {
+            startDyadScanner();
+          }
+          return;
+        }
+        renderAquariumState(currentSpawnCount);
+      }, 90);
+    }
+
+    function cancelProgressiveSpawn() {
+      if (progressiveSpawnTimer) {
+        clearInterval(progressiveSpawnTimer);
+        progressiveSpawnTimer = null;
+      }
+      currentSpawnCount = N;
+      renderAquariumState(N);
+    }
+
+    function renderAquariumState(limitCount = null) {
       clearSceneObjects();
       computeD18();
 
       const stats = d18State.nodes;
       const numSuj = stats.length;
-      const SCALE_XY = 3.2;
-      const SCALE_Z = 2.8;
 
-      // 1. Renderizar Nodos Bi-Capa (Núcleo + Halo)
-      stats.forEach((st, idx) => {
+      if (limitCount === null || limitCount === undefined) {
+        if (progressiveSpawnTimer) {
+          clearInterval(progressiveSpawnTimer);
+          progressiveSpawnTimer = null;
+        }
+        currentSpawnCount = numSuj;
+      }
+
+      const effectiveCount = (limitCount !== null && limitCount !== undefined)
+        ? Math.min(numSuj, Math.max(1, limitCount))
+        : numSuj;
+
+      // Calibrar dinámicamente factores de escala conforme al canon (evitar apelotonamiento y ocupar el espacio útil)
+      let maxAbsXY = 0.15;
+      let maxAbsZ = 0.15;
+      stats.forEach(st => {
+        if (Math.abs(st.x) > maxAbsXY) maxAbsXY = Math.abs(st.x);
+        if (Math.abs(st.y) > maxAbsXY) maxAbsXY = Math.abs(st.y);
+        if (Math.abs(st.z) > maxAbsZ) maxAbsZ = Math.abs(st.z);
+      });
+
+      const SCALE_XY = Math.min(9.5, Math.max(3.4, 3.8 / maxAbsXY));
+      const SCALE_Z = Math.min(5.5, Math.max(2.8, 2.2 / maxAbsZ));
+
+      // 1. Renderizar Nodos Bi-Capa (Núcleo + Halo) solo hasta effectiveCount
+      for (let idx = 0; idx < effectiveCount; idx++) {
+        const st = stats[idx];
         const isHighlighted = (activeSubjectIndex === null || activeSubjectIndex === idx);
         const opacityMult = isHighlighted ? 1.0 : 0.16;
 
@@ -2163,12 +2244,17 @@
         scene.add(coreMesh);
         nodeMeshes.push(coreMesh);
 
-        // Etiqueta Sprite
-        const sprite = createTextSprite(st.code, coreColor === 0x00FF87 ? '#00FF87' : (coreColor === 0xFF007F ? '#FF007F' : '#FFE600'));
-        sprite.position.set(pX, pY + coreRadius + 0.38, pZ);
-        sprite.material.opacity = opacityMult;
-        scene.add(sprite);
-        nodeMeshes.push(sprite);
+        // NÚMERO DENTRO DEL CÍRCULO (Sin etiquetas exteriores cuadradas, centrado y de menor tamaño)
+        const numMatch = (st.code || '').match(/\d+/);
+        const numText = numMatch ? numMatch[0] : String(idx + 1);
+        const numSprite = createNodeNumberSprite(numText);
+        numSprite.position.set(pX, pY, pZ);
+        const numScale = Math.max(0.20, coreRadius * 1.0);
+        numSprite.scale.set(numScale, numScale, 1);
+        numSprite.material.opacity = (activeLayerVisibility === 'HALO' ? 0.05 : 0.98) * opacityMult;
+        numSprite.userData = { subjectIndex: idx, type: 'number' };
+        scene.add(numSprite);
+        nodeMeshes.push(numSprite);
 
         // B. HALO COGNITIVO (Esfera exterior translúcida pulsante)
         const isAsphyxiated = st.gapRatio < 0.50;
@@ -2199,27 +2285,30 @@
         };
         scene.add(haloMesh);
         haloMeshes.push(haloMesh);
-      });
+      }
 
-      // 2. Renderizar Corrientes de Flujo Diádicas
+      // 2. Renderizar Corrientes de Flujo Diádicas entre nodos visibles
       if (activeLayerVisibility !== 'CORE' && activeLayerVisibility !== 'HALO') {
-        renderDyadicFlows(SCALE_XY, SCALE_Z);
+        renderDyadicFlows(SCALE_XY, SCALE_Z, effectiveCount);
       }
 
       // Actualizar contadores y HUD
-      updateHudAndCounters();
+      updateHudAndCounters(effectiveCount);
       updateD18Display();
     }
 
-    function renderDyadicFlows(scaleXY, scaleZ) {
+    function renderDyadicFlows(scaleXY, scaleZ, effectiveCount = null) {
       const stats = d18State.nodes;
       const numSuj = stats.length;
+      const maxIdx = (effectiveCount !== null && effectiveCount !== undefined) 
+        ? Math.min(numSuj, effectiveCount) 
+        : numSuj;
 
       allDyadList = [];
       let cntEE = 0, cntRR = 0, cntOPP = 0, cntHALO = 0, cntNEU = 0, cntALL = 0;
 
-      for (let i = 0; i < numSuj; i++) {
-        for (let j = i + 1; j < numSuj; j++) {
+      for (let i = 0; i < maxIdx; i++) {
+        for (let j = i + 1; j < maxIdx; j++) {
           cntALL++;
           const cell_ij = currentMatrix[i][j];
           const cell_ji = currentMatrix[j][i];
@@ -2327,7 +2416,7 @@
       updateHudAndCounters();
     }
 
-    function updateHudAndCounters() {
+    function updateHudAndCounters(effectiveCount = null) {
       if (!d18State) return;
       const stats = d18State.nodes;
 
@@ -2335,16 +2424,35 @@
       let waterSurface = 0;
       let submerged = 0;
 
-      stats.forEach(st => {
+      const maxCount = (effectiveCount !== null && effectiveCount !== undefined)
+        ? Math.min(stats.length, effectiveCount)
+        : stats.length;
+
+      for (let i = 0; i < maxCount; i++) {
+        const st = stats[i];
         const diff = st.z - currentSeaLevel;
         if (diff > 0.15) openSky++;
         else if (Math.abs(diff) <= 0.15) waterSurface++;
         else submerged++;
-      });
+      }
 
       document.getElementById('count-open-sky').textContent = openSky;
       document.getElementById('count-water-surface').textContent = waterSurface;
       document.getElementById('count-submerged').textContent = submerged;
+
+      const nBadge = document.getElementById('badge-current-n');
+      if (nBadge) {
+        nBadge.textContent = (progressiveSpawnTimer && currentSpawnCount < N)
+          ? `N = ${currentSpawnCount} / ${N}`
+          : `N = ${N}`;
+      }
+
+      const sceneBadge = document.getElementById('scene-active-subject-badge');
+      if (sceneBadge && activeSubjectIndex === null) {
+        sceneBadge.textContent = (progressiveSpawnTimer && currentSpawnCount < N)
+          ? `EMERGENCIA PROGRESIVA: (${currentSpawnCount}/${N})`
+          : 'PROYECCIÓN GLOBAL COMPLETA';
+      }
 
       // Brecha ontológica global
       const gap = d18State.ontologicas.gap;
@@ -2579,6 +2687,12 @@
     }
 
     function onActiveSubjectChanged() {
+      if (progressiveSpawnTimer) {
+        clearInterval(progressiveSpawnTimer);
+        progressiveSpawnTimer = null;
+      }
+      currentSpawnCount = N;
+
       const badge = document.getElementById('badge-step-status');
       const sceneBadge = document.getElementById('scene-active-subject-badge');
 
@@ -2680,11 +2794,8 @@
       document.getElementById('scene-regime-label').textContent = PRESETS[key].name.toUpperCase();
 
       renderSubjectPills();
-      renderAquariumState();
+      startProgressiveSpawn(N);
       activeDyadIndex = 0;
-      if (isDyadScannerRunning && isMasterDynamicsRunning) {
-        startDyadScanner();
-      }
       updateAllLeds();
     }
 

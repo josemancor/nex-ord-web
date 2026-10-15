@@ -182,6 +182,11 @@
       lblMaster.textContent = isPaused ? d.btn_action_paused : d.btn_action_motion;
     }
 
+    const txtProg = document.getElementById('txt-prog-spawn');
+    if (txtProg) {
+      txtProg.textContent = lang === 'en' ? '✨ 1-BY-1 EMERGENCE' : '✨ APARICIÓN 1 A 1';
+    }
+
     const headerBtns = document.querySelectorAll('header .action-btn');
     headerBtns.forEach(btn => {
       const txt = btn.textContent;
