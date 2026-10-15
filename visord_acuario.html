@@ -335,9 +335,9 @@
            1. BOTÓN MAESTRO DE ACCIÓN PROMINENTE AL PRINCIPIO CON PERFIL POR DEFECTO
            ========================================================================= -->
       <div class="flex flex-col gap-2 bg-slate-950/90 p-2.5 rounded-2xl border-2 border-emerald-500/50 shadow-lg shadow-emerald-500/10">
-        <button id="btn-master-action" onclick="toggleMasterDynamics()" class="w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono text-slate-950 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 shadow-[0_0_20px_rgba(0,255,135,0.45)] border-2 border-emerald-200 hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer">
-          <span class="led-indicator led-on led-pulse" id="led-master-action"></span>
-          <span id="txt-master-action" class="tracking-wider font-black text-slate-950">⚡ ¡ ACCIÓN ! (EN VIVO)</span>
+        <button id="btn-master-action" onclick="toggleMasterDynamics()" class="w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono flex items-center justify-center gap-2.5 bg-slate-900 border-2 border-amber-400/80 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.25)] hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer" title="Clic para activar inmediatamente o esperar auto-inicio">
+          <span class="led-indicator led-on led-pulse" id="led-master-action" style="background:#F59E0B; box-shadow:0 0 10px #F59E0B;"></span>
+          <span id="txt-master-action" class="tracking-wider font-black text-amber-300">⏳ ¡ ACCIÓN ! (EN 2s...)</span>
         </button>
 
         <!-- 2. BOTONES DE EFECTOS INMEDIATOS -->
@@ -2879,6 +2879,12 @@
        ========================================================================= */
     function loadScenario(key) {
       if (!PRESETS[key]) return;
+      if (autoActionCountdownTimer) {
+        clearInterval(autoActionCountdownTimer);
+        autoActionCountdownTimer = null;
+        autoActionSecondsLeft = 0;
+        isMasterDynamicsRunning = true;
+      }
       currentScenarioKey = key;
       currentMatrix = JSON.parse(JSON.stringify(PRESETS[key].matrix));
       currentSubjects = [...PRESETS[key].subjects];
@@ -3910,7 +3916,127 @@
     /* =========================================================================
        CONTROL MAESTRO DE ACCIÓN Y SISTEMA DE LUCES LED UNIVERSAL
        ========================================================================= */
+    let autoActionCountdownTimer = null;
+    let autoActionSecondsLeft = 2;
+
+    function initAquariumAutoAction() {
+      // Estado de espera inicial: Acuario diáfano listo para arrancar en 2s
+      isMasterDynamicsRunning = false;
+      if (controls) controls.autoRotate = false;
+
+      const btnAction = document.getElementById('btn-master-action');
+      const ledAction = document.getElementById('led-master-action');
+      const txtAction = document.getElementById('txt-master-action');
+
+      const btnBanner = document.getElementById('btn-master-dynamics');
+      const ledBanner = document.getElementById('led-master-dynamics');
+      const txtBanner = document.getElementById('txt-master-dynamics');
+
+      const ledTop = document.getElementById('led-master-top');
+      const lblTop = document.getElementById('lbl-master-top');
+
+      if (btnAction) {
+        btnAction.className = 'w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono flex items-center justify-center gap-2.5 bg-slate-900 border-2 border-amber-400/80 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.25)] hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
+      }
+      if (ledAction) {
+        ledAction.className = 'led-indicator led-on led-pulse';
+        ledAction.style.background = '#F59E0B';
+        ledAction.style.boxShadow = '0 0 10px #F59E0B';
+      }
+      if (txtAction) {
+        txtAction.textContent = '⏳ ¡ ACCIÓN ! (EN 2s...)';
+        txtAction.className = 'tracking-wider font-black text-amber-300';
+      }
+
+      if (btnBanner) btnBanner.classList.add('paused');
+      if (ledBanner) { ledBanner.className = 'led-indicator led-off'; }
+      if (txtBanner) txtBanner.textContent = '⏳ INICIANDO ACUARIO EN 2s...';
+
+      if (ledTop) { ledTop.className = 'led-indicator led-off'; }
+      if (lblTop) lblTop.textContent = 'INICIANDO (2s)';
+
+      // Mostrar escenario diáfano inicial
+      renderAquariumState(0);
+
+      autoActionSecondsLeft = 2;
+      if (autoActionCountdownTimer) clearInterval(autoActionCountdownTimer);
+      autoActionCountdownTimer = setInterval(() => {
+        autoActionSecondsLeft--;
+        if (autoActionSecondsLeft === 1) {
+          if (txtAction) txtAction.textContent = '⏳ ¡ ACCIÓN ! (EN 1s...)';
+          if (txtBanner) txtBanner.textContent = '⏳ INICIANDO ACUARIO EN 1s...';
+          if (lblTop) lblTop.textContent = 'INICIANDO (1s)';
+        } else if (autoActionSecondsLeft <= 0) {
+          clearInterval(autoActionCountdownTimer);
+          autoActionCountdownTimer = null;
+          triggerMasterActionLaunch(true);
+        }
+      }, 1000);
+    }
+
+    function triggerMasterActionLaunch(isAuto = false) {
+      if (autoActionCountdownTimer) {
+        clearInterval(autoActionCountdownTimer);
+        autoActionCountdownTimer = null;
+      }
+      autoActionSecondsLeft = 0;
+
+      isMasterDynamicsRunning = true;
+      if (controls) controls.autoRotate = true;
+
+      const btnAction = document.getElementById('btn-master-action');
+      const ledAction = document.getElementById('led-master-action');
+      const txtAction = document.getElementById('txt-master-action');
+
+      const btnBanner = document.getElementById('btn-master-dynamics');
+      const ledBanner = document.getElementById('led-master-dynamics');
+      const txtBanner = document.getElementById('txt-master-dynamics');
+
+      const ledTop = document.getElementById('led-master-top');
+      const lblTop = document.getElementById('lbl-master-top');
+
+      if (btnAction) {
+        btnAction.className = 'w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono text-slate-950 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 shadow-[0_0_20px_rgba(0,255,135,0.45)] border-2 border-emerald-200 hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
+      }
+      if (ledAction) {
+        ledAction.className = 'led-indicator led-on led-pulse';
+        ledAction.style.background = '';
+        ledAction.style.boxShadow = '';
+      }
+      if (txtAction) {
+        txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
+        txtAction.className = 'tracking-wider font-black text-slate-950';
+      }
+
+      if (btnBanner) btnBanner.classList.remove('paused');
+      if (ledBanner) { ledBanner.className = 'led-indicator led-on led-pulse'; }
+      if (txtBanner) txtBanner.textContent = '⚡ ACTION ! ACUARIO EN MOVIMIENTO';
+      
+      if (ledTop) { ledTop.className = 'led-indicator led-on led-pulse'; }
+      if (lblTop) lblTop.textContent = 'ACTION ! EN VIVO';
+
+      // Activar aparición progresiva con trazas hasta completar el colectivo
+      startProgressiveSpawn(N);
+      isRelationalSheetActive = true;
+      if (seaPlaneMesh) seaPlaneMesh.visible = true;
+
+      if (isDyadScannerRunning) startDyadScanner();
+      updateAllLeds();
+      
+      if (isAuto) {
+        showSmibToast('⚡ ¡ ACCIÓN ! Activado automáticamente. Escenario dispuesto para explorar.');
+      } else {
+        showSmibToast('⚡ ¡ ACCIÓN ! Dinámica y rotación 360º activadas');
+      }
+    }
+
     function toggleMasterDynamics() {
+      // Si el usuario hace clic durante la cuenta atrás de 2s, activar de inmediato
+      if (autoActionCountdownTimer || (autoActionSecondsLeft > 0 && !isMasterDynamicsRunning)) {
+        triggerMasterActionLaunch(false);
+        return;
+      }
+
       isMasterDynamicsRunning = !isMasterDynamicsRunning;
       
       const btnAction = document.getElementById('btn-master-action');
@@ -3929,7 +4055,11 @@
         if (btnAction) {
           btnAction.className = 'w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono text-slate-950 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 shadow-[0_0_20px_rgba(0,255,135,0.45)] border-2 border-emerald-200 hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
         }
-        if (ledAction) { ledAction.className = 'led-indicator led-on led-pulse'; }
+        if (ledAction) { 
+          ledAction.className = 'led-indicator led-on led-pulse'; 
+          ledAction.style.background = '';
+          ledAction.style.boxShadow = '';
+        }
         if (txtAction) { txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)'; txtAction.className = 'tracking-wider font-black text-slate-950'; }
 
         if (btnBanner) btnBanner.classList.remove('paused');
@@ -3946,7 +4076,11 @@
         if (btnAction) {
           btnAction.className = 'w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono text-slate-200 flex items-center justify-center gap-2.5 bg-slate-900 border-2 border-slate-700 hover:border-amber-400 shadow-md hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
         }
-        if (ledAction) { ledAction.className = 'led-indicator led-off'; }
+        if (ledAction) { 
+          ledAction.className = 'led-indicator led-off'; 
+          ledAction.style.background = '';
+          ledAction.style.boxShadow = '';
+        }
         if (txtAction) { txtAction.textContent = '⏸ ¡ ACCIÓN ! (PAUSADO)'; txtAction.className = 'tracking-wider font-black text-amber-300'; }
 
         if (btnBanner) btnBanner.classList.add('paused');
@@ -4211,9 +4345,7 @@
       setAglutinadorMode('TOTAL');
       showD18Tab('elem');
       updateAllLeds();
-      if (isDyadScannerRunning && isMasterDynamicsRunning) {
-        startDyadScanner();
-      }
+      initAquariumAutoAction();
     });
   </script>
 <!-- MODAL CANÓNICO DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->
