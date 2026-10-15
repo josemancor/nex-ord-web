@@ -199,208 +199,130 @@ ${inst}`;
 }
 
 /* =========================================================================
-   CONTROLADOR VIDEO HERO 3D (MUDO + SUBTÍTULOS ES/EN/ZH/RU + CONTROLES)
+   CONTROLADOR VIDEO HERO 3D (REPRODUCCIÓN LIMPIA + AUDIO INFALIBLE)
    ========================================================================= */
 function initHeroVideo() {
   const vid = document.getElementById('hero-master-video');
   if (!vid) return;
 
-  const btnPlay = document.getElementById('btn-video-play');
   const btnAudio = document.getElementById('btn-video-audio');
-  const btnSubs = document.getElementById('btn-video-subs');
+  const unmuteBadge = document.getElementById('hero-unmute-badge');
   const btnFs = document.getElementById('btn-video-fs');
-  const playIcon = document.getElementById('video-play-icon');
-  const playLabel = document.getElementById('video-play-label');
   const audioIcon = document.getElementById('video-audio-icon');
   const audioLabel = document.getElementById('video-audio-label');
-  const subsLabel = document.getElementById('video-subs-label');
-  const subsBox = document.getElementById('hero-subtitles-box');
-  const subsText = document.getElementById('hero-subtitles-text');
-  const wrap = document.getElementById('video-hero-block');
+  const playerWrap = document.getElementById('hero-player-wrap');
 
-  const subsData = {
-    es: [
-      { start: 0.5, end: 9.5, text: "En todo grupo humano conviven dos fuerzas invisibles: los lazos de atracción que unen y las tensiones de rechazo que fracturan." },
-      { start: 9.8, end: 21.0, text: "🟢 VERDE NEÓN · Vínculos de Atracción Mutua: Afinidad, sinergia y confianza espontánea. El núcleo gravitatorio que cohesiona al equipo." },
-      { start: 21.3, end: 32.5, text: "🔴 MAGENTA NEÓN · Vínculos de Rechazo y Fricción: Incompatibilidades soterradas y vetos silenciosos que desgastan y fugan talento." },
-      { start: 32.8, end: 44.0, text: "⚪ PERIFERIA · Ostracismo Invisible: Nodos desconectados. El dolor de la exclusión pasiva que los cuestionarios tradicionales jamás detectan." },
-      { start: 44.3, end: 55.5, text: "🧭 METAPERCEPCIÓN CRUZADA: ¿Quién cree que le eligen cuando en realidad le rechazan? El punto ciego donde nace el conflicto grupal." },
-      { start: 55.8, end: 68.5, text: "NEXORD hace visible lo invisible: Diagnóstico socio-termodinámico no punitivo para sanar la convivencia y potenciar al equipo." }
-    ],
-    en: [
-      { start: 0.5, end: 9.5, text: "In every human group, two invisible forces coexist: bonds of attraction that unite, and rejections that fracture." },
-      { start: 9.8, end: 21.0, text: "🟢 NEON GREEN · Mutual Attraction Bonds: Natural affinity, synergy, and trust. The gravitational core holding the team together." },
-      { start: 21.3, end: 32.5, text: "🔴 NEON MAGENTA · Rejection & Friction Bonds: Underground hostility and silent vetos that erode teams from within." },
-      { start: 32.8, end: 44.0, text: "⚪ PERIPHERY · Invisible Ostracism: Disconnected nodes. The silent pain of passive exclusion that traditional surveys miss." },
-      { start: 44.3, end: 55.5, text: "🧭 CROSS METAPERCEPTION: Who believes they are chosen while actually being rejected? The blind spot where group conflict begins." },
-      { start: 55.8, end: 68.5, text: "NEXORD makes the invisible visible: Non-punitive socio-thermodynamic diagnosis to heal coexistence and empower teams." }
-    ],
-    zh: [
-      { start: 0.5, end: 9.5, text: "在任何群体中，存在两股无形力量：凝聚团队的吸引力与撕裂团队的排斥力。" },
-      { start: 9.8, end: 21.0, text: "🟢 荧光绿 · 互选吸引力纽带：自发信任与协同合作。维系群体的引力核心。" },
-      { start: 21.3, end: 32.5, text: "🔴 荧光品红 · 隐蔽排斥力纽带：未表露的敌意与潜意识抵制，悄然破坏团队。" },
-      { start: 32.8, end: 44.0, text: "⚪ 边缘节点 · 隐形排斥与孤立：传统问卷永远无法识别的被动疏离。" },
-      { start: 44.3, end: 55.5, text: "🧭 交叉元知觉：谁以为自己被选择而实际上被排斥？冲突隐患之源。" },
-      { start: 55.8, end: 68.5, text: "NEXORD 令隐形关系透明可见：非惩罚性诊断，赋能组织健康生长。" }
-    ],
-    ru: [
-      { start: 0.5, end: 9.5, text: "В любой группе действуют две скрытые силы: притяжение, которое объединяет, и отторжение, которое разрушает." },
-      { start: 9.8, end: 21.0, text: "🟢 НЕОНОВЫЙ ЗЕЛЕНЫЙ · Взаимное притяжение: сплоченность, доверие и гравитационное ядро команды." },
-      { start: 21.3, end: 32.5, text: "🔴 НЕОНОВЫЙ МАДЖЕНТА · Скрытое отторжение и трение: скрытая неприязнь, разрушающая команду изнутри." },
-      { start: 32.8, end: 44.0, text: "⚪ ПЕРИФЕРИЯ · Невидимый остракизм: изолированные узлы, которые не замечают традиционные тесты." },
-      { start: 44.3, end: 55.5, text: "🧭 КРОСС-МЕТАВОСПРИЯТИЕ: кто уверен, что его выбирают, хотя на деле отвергают? Источник конфликтов." },
-      { start: 55.8, end: 68.5, text: "NEXORD делает невидимое видимым: непокарательная диагностика для исцеления климата группы." }
-    ]
-  };
-
-  let currentSubMode = 'es'; // 'es' | 'en' | 'zh' | 'ru' | 'off'
-
-  // Sincronización continua de subtítulos en milisegundos
-  vid.addEventListener('timeupdate', () => {
-    if (currentSubMode === 'off' || !subsText) {
-      if (subsBox) subsBox.style.display = 'none';
-      return;
-    }
-    const t = vid.currentTime;
-    const cues = subsData[currentSubMode] || [];
-    const activeCue = cues.find(c => t >= c.start && t <= c.end);
-    if (activeCue) {
-      subsText.textContent = activeCue.text;
-      if (subsBox) subsBox.style.display = 'block';
-    } else {
-      if (subsBox) subsBox.style.display = 'none';
-    }
-  });
-
-  // Garantizar silenciado nativo en propiedades DOM para que Android autorice el Autoplay
+  // Asegurar configuración playsinline y silencio inicial para permitir Autoplay nativo en navegadores
   vid.muted = true;
   vid.defaultMuted = true;
   vid.setAttribute('playsinline', '');
   vid.setAttribute('webkit-playsinline', '');
 
-  // Sincronizar iconos con el estado real del reproductor
-  vid.addEventListener('play', () => {
-    if (playIcon) playIcon.textContent = '⏸️';
-    if (playLabel) playLabel.textContent = 'Pausa';
-  });
-  vid.addEventListener('pause', () => {
-    if (playIcon) playIcon.textContent = '▶️';
-    if (playLabel) playLabel.textContent = 'Reproducir';
-  });
-
-  // Play / Pausa manual
-  if (btnPlay) {
-    btnPlay.addEventListener('click', () => {
-      if (vid.paused) {
-        vid.play().catch(() => {});
-      } else {
-        vid.pause();
+  function updateAudioUI(isMuted) {
+    if (isMuted) {
+      if (btnAudio) {
+        btnAudio.classList.remove('audio-active');
       }
-    });
+      if (audioIcon) audioIcon.textContent = '🔇';
+      if (audioLabel) audioLabel.textContent = 'Activar Audio';
+      if (unmuteBadge) unmuteBadge.style.display = 'inline-flex';
+    } else {
+      if (btnAudio) {
+        btnAudio.classList.add('audio-active');
+      }
+      if (audioIcon) audioIcon.textContent = '🔊';
+      if (audioLabel) audioLabel.textContent = 'Silenciar Audio';
+      if (unmuteBadge) unmuteBadge.style.display = 'none';
+    }
   }
 
-  // Arranque seguro de Autoplay en Android / Chrome
-  function launchSafeAutoplay() {
-    vid.muted = true;
+  function activateSound() {
+    vid.muted = false;
+    vid.volume = 1.0;
     const playPromise = vid.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // En Android con ahorro de batería o datos, el navegador requiere interacción previa
-        const unlockOnTouch = () => {
-          vid.muted = true;
-          vid.play().catch(() => {});
-          ['touchstart', 'touchend', 'scroll', 'click'].forEach(evt => {
-            window.removeEventListener(evt, unlockOnTouch);
-          });
-        };
-        ['touchstart', 'touchend', 'scroll', 'click'].forEach(evt => {
-          window.addEventListener(evt, unlockOnTouch, { passive: true, once: true });
-        });
-      });
-    }
-  }
-
-  // Disparar en carga de DOM
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    launchSafeAutoplay();
-  } else {
-    window.addEventListener('DOMContentLoaded', launchSafeAutoplay, { once: true });
-  }
-
-  // Sincronización automática de subtítulos con estado Mute
-  function syncSubsWithMute() {
-    if (vid.muted) {
-      if (currentSubMode === 'off') {
-        const prefLang = (localStorage.getItem('nexord_lang') || 'es').toLowerCase();
-        currentSubMode = prefLang === 'en' ? 'en' : 'es';
-      }
-      if (btnSubs) btnSubs.classList.add('active');
-      if (subsLabel) subsLabel.textContent = `Subtítulos: ${currentSubMode.toUpperCase()}`;
-    }
-  }
-
-  // Audio Mudo / Activar
-  if (btnAudio) {
-    btnAudio.addEventListener('click', () => {
-      vid.muted = !vid.muted;
-      if (vid.muted) {
-        btnAudio.classList.add('active');
-        if (audioIcon) audioIcon.textContent = '🔇';
-        if (audioLabel) audioLabel.textContent = 'Mudo (Activar)';
-        // Regla de Oro: Si mute video -> se activan subtítulos automáticamente
-        syncSubsWithMute();
-      } else {
-        btnAudio.classList.remove('active');
-        if (audioIcon) audioIcon.textContent = '🔊';
-        if (audioLabel) audioLabel.textContent = 'Audio Activo';
+      playPromise.then(() => {
+        updateAudioUI(false);
+      }).catch(err => {
+        console.warn("Video sound activate error:", err);
+        vid.muted = false;
         vid.volume = 1.0;
+        updateAudioUI(false);
+      });
+    } else {
+      updateAudioUI(false);
+    }
+  }
+
+  function toggleAudio(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (vid.muted) {
+      activateSound();
+    } else {
+      vid.muted = true;
+      updateAudioUI(true);
+    }
+  }
+
+  if (btnAudio) {
+    btnAudio.addEventListener('click', toggleAudio);
+  }
+
+  if (unmuteBadge) {
+    unmuteBadge.addEventListener('click', toggleAudio);
+  }
+
+  // Pulsar en cualquier lugar del video también conmuta el audio
+  if (playerWrap) {
+    playerWrap.addEventListener('click', (e) => {
+      if (!e.target.closest('.video-ctrl-btn')) {
+        toggleAudio(e);
       }
     });
   }
 
-  // Evento nativo de cambio de volumen/silencio
   vid.addEventListener('volumechange', () => {
-    if (vid.muted) {
-      syncSubsWithMute();
-      if (btnAudio) btnAudio.classList.add('active');
-      if (audioIcon) audioIcon.textContent = '🔇';
-      if (audioLabel) audioLabel.textContent = 'Mudo (Activar)';
-    }
+    updateAudioUI(vid.muted);
   });
 
-  // Si arranca en mudo (autoplay nativo), forzar subtítulos encendidos
-  if (vid.muted) {
-    syncSubsWithMute();
+  // Autoplay continuo y seguro
+  function startAutoplaySafe() {
+    vid.muted = true;
+    const p = vid.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        // En navegadores móviles con políticas estrictas de ahorro de datos
+        const oneTouch = () => {
+          vid.play().catch(() => {});
+          ['touchstart', 'click'].forEach(ev => window.removeEventListener(ev, oneTouch));
+        };
+        ['touchstart', 'click'].forEach(ev => window.addEventListener(ev, oneTouch, { once: true, passive: true }));
+      });
+    }
+    updateAudioUI(true);
   }
 
-  // Alternar Subtítulos (ES -> EN -> OFF) — ZH/RU preservados en subsData para despliegue en nodos federados
-  if (btnSubs) {
-    btnSubs.addEventListener('click', () => {
-      if (currentSubMode === 'es') {
-        currentSubMode = 'en';
-        if (subsLabel) subsLabel.textContent = 'Subtítulos: EN';
-        btnSubs.classList.add('active');
-      } else if (currentSubMode === 'en') {
-        currentSubMode = 'off';
-        if (subsLabel) subsLabel.textContent = 'Subtítulos: OFF';
-        btnSubs.classList.remove('active');
-        if (subsBox) subsBox.style.display = 'none';
-      } else {
-        currentSubMode = 'es';
-        if (subsLabel) subsLabel.textContent = 'Subtítulos: ES';
-        btnSubs.classList.add('active');
-      }
-    });
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    startAutoplaySafe();
+  } else {
+    window.addEventListener('DOMContentLoaded', startAutoplaySafe, { once: true });
   }
 
   // Pantalla Completa
-  if (btnFs && wrap) {
-    btnFs.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
+  if (btnFs) {
+    btnFs.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wrap = document.getElementById('video-hero-block');
+      if (!wrap) return;
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
         if (wrap.requestFullscreen) wrap.requestFullscreen();
         else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
       } else {
         if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
       }
     });
   }
