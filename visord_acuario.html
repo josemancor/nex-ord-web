@@ -273,6 +273,137 @@
       -webkit-backdrop-filter: blur(24px);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 245, 212, 0.25);
     }
+
+    /* =========================================================================
+       OPTIMIZACIÓN RESPONSIVE AVANZADA PARA SMARTPHONES Y TABLETS (VISORD ACUARIO)
+       ========================================================================= */
+    #three-viewport,
+    #three-viewport canvas,
+    .containment-frame {
+      touch-action: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+    }
+
+    /* En pantallas móviles y tablets (< 1024px) el Acuario 3D sube al primer lugar */
+    @media (max-width: 1023px) {
+      .acuario-center-viewport {
+        order: 1 !important;
+        width: 100% !important;
+      }
+      #acuario-sidebar {
+        order: 2 !important;
+        width: 100% !important;
+        max-height: none !important;
+      }
+      #acuario-profiles-panel {
+        order: 3 !important;
+        width: 100% !important;
+        max-height: none !important;
+      }
+      .containment-frame {
+        height: 54vh !important;
+        min-height: 360px !important;
+        max-height: 560px !important;
+      }
+      .mobile-tab-hidden {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-tab-hidden {
+        display: flex !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .containment-frame {
+        height: 50vh !important;
+        min-height: 330px !important;
+        max-height: 480px !important;
+      }
+      .header-badge-extra {
+        display: none !important;
+      }
+    }
+
+    /* Orientación Horizontal (Landscape) en Smartphones */
+    @media (max-width: 950px) and (orientation: landscape) {
+      .containment-frame {
+        height: 82vh !important;
+        min-height: 280px !important;
+      }
+    }
+
+    /* Fallback Pseudo-Fullscreen para iOS Safari y Navegadores Móviles */
+    .containment-frame.is-pseudo-fullscreen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      min-height: 100% !important;
+      max-height: 100% !important;
+      z-index: 999999 !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      background: #030E1E !important;
+    }
+
+    /* Anticolisión y calibración de HUD en pantallas móviles */
+    @media (max-width: 768px) {
+      #cartelera-proyeccion-3d {
+        top: 6px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        padding: 3px 6px !important;
+        gap: 4px !important;
+        max-width: 96% !important;
+      }
+      #cartelera-proyeccion-3d .cartelera-pill {
+        padding: 2px 5px !important;
+        font-size: 9px !important;
+      }
+      .hud-top-left-mobile {
+        top: 38px !important;
+        left: 6px !important;
+        gap: 4px !important;
+      }
+      .hud-top-left-mobile .hud-float {
+        padding: 2px 6px !important;
+        font-size: 10px !important;
+      }
+      #dyadic-probe-card {
+        top: 38px !important;
+        right: 6px !important;
+        max-width: 200px !important;
+        padding: 6px 8px !important;
+      }
+      .hud-legend-mobile {
+        bottom: 6px !important;
+        left: 6px !important;
+        padding: 4px 8px !important;
+        font-size: 9px !important;
+        gap: 6px !important;
+        max-width: 65% !important;
+      }
+      .hud-canvas-controls-mobile {
+        bottom: 6px !important;
+        right: 6px !important;
+        gap: 4px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hud-legend-mobile {
+        display: none !important;
+      }
+    }
   </style>
   <link rel="stylesheet" href="mobile_responsive_engine.css">
   <!-- =======================================================================
@@ -311,19 +442,19 @@
         </a>
         <div class="flex items-center gap-2 flex-wrap">
           <span class="outfit text-base md:text-lg font-black tracking-wide text-white">NEXORD <span class="text-teal-300">VISORD ACUARIO</span></span>
-          <span class="mono text-[10px] bg-teal-950 border border-teal-400 text-teal-300 px-2 py-0.5 rounded-full font-bold">ECOSISTEMA D18</span>
+          <span class="mono text-[10px] bg-teal-950 border border-teal-400 text-teal-300 px-2 py-0.5 rounded-full font-bold header-badge-extra">ECOSISTEMA D18</span>
           <span class="mono text-[10px] bg-sky-950 border border-sky-400 text-sky-300 px-2 py-0.5 rounded-full font-bold">3D HIDRO</span>
-          <span class="mono text-[10px] bg-emerald-950 border border-emerald-400 text-emerald-300 px-2 py-0.5 rounded-full font-bold">Δ = 0.000000</span>
+          <span class="mono text-[10px] bg-emerald-950 border border-emerald-400 text-emerald-300 px-2 py-0.5 rounded-full font-bold header-badge-extra">Δ = 0.000000</span>
         </div>
       </div>
 
       <!-- Accesos Rápidos de Cabecera -->
       <div class="flex items-center gap-1.5 flex-wrap">
-        <button id="btn-master-top" onclick="toggleMasterDynamics()" class="action-btn px-3 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-sm hover:scale-105" title="Iniciar / Detener Movimiento Dinámico del Acuario">
+        <button id="btn-master-top" onclick="toggleMasterDynamics()" class="action-btn px-3 py-1 rounded-lg text-xs font-black hidden sm:flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-sm hover:scale-105" title="Iniciar / Detener Movimiento Dinámico del Acuario">
           <span class="led-indicator led-on led-pulse" id="led-master-top"></span>
           <span id="lbl-master-top">ACCIÓN: EN MOVIMIENTO</span>
         </button>
-        <button id="btn-top-stop" onclick="togglePauseSimulation()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition" title="STOP: Congelar toda la imagen del Acuario (Barra espaciadora)">
+        <button id="btn-top-stop" onclick="togglePauseSimulation()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-black hidden sm:flex items-center gap-1.5 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition" title="STOP: Congelar toda la imagen del Acuario (Barra espaciadora)">
           <span id="ico-top-stop">⏹</span>
           <span id="lbl-top-stop">STOP</span>
         </button>
@@ -366,6 +497,15 @@
         </button>
       </div>
 
+      <!-- SELECTOR DE PESTAÑAS MÓVIL (EXCLUSIVO SMARTPHONES/TABLETS <= 1023px) -->
+      <div class="mobile-sidebar-tabs lg:hidden flex items-center gap-1 w-full p-1 bg-slate-900/90 border border-teal-500/40 rounded-xl text-xs font-mono font-bold mb-1 shadow-md">
+        <button type="button" onclick="switchMobileSidebarTab('dinamica')" id="tab-btn-dinamica" class="flex-1 py-1.5 px-1 rounded-lg bg-teal-500 text-black font-black text-center transition">🎮 DINÁMICA</button>
+        <button type="button" onclick="switchMobileSidebarTab('18d')" id="tab-btn-18d" class="flex-1 py-1.5 px-1 rounded-lg text-slate-300 hover:text-white text-center transition">📊 MATRIZ 18D</button>
+        <button type="button" onclick="switchMobileSidebarTab('datos')" id="tab-btn-datos" class="flex-1 py-1.5 px-1 rounded-lg text-slate-300 hover:text-white text-center transition">📂 DATOS</button>
+      </div>
+
+      <!-- SECCIÓN 1: DATOS, REGÍMENES Y CARGA DE MATRICES -->
+      <div id="sec-sidebar-datos" class="sidebar-module flex flex-col gap-2 mobile-tab-hidden">
       <!-- FILA DE 3 OPCIONES: Op1 | Op2 | Op3 -->
       <div class="grid grid-cols-3 gap-1.5 w-full text-center mono font-black">
         <button id="btn-op1" onclick="launchPreparedConfig('OP1')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op1: Canónica G1·T1·C1 (N=6)">
@@ -442,6 +582,14 @@
         </button>
       </div>
 
+      <!-- Botón Móvil: Volver al Acuario 3D -->
+      <button type="button" onclick="scrollToAquariumTop()" class="lg:hidden w-full py-2 bg-slate-900 hover:bg-slate-800 text-teal-300 font-mono font-bold text-xs border border-teal-500/40 rounded-xl flex items-center justify-center gap-1.5 mt-1 cursor-pointer">
+        <span>⬆️</span> <span>VOLVER AL ACUARIO 3D</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN 2: MATRIZ 18D Y FONDOS DE PROYECCIÓN -->
+    <div id="sec-sidebar-18d" class="sidebar-module flex flex-col gap-2 mobile-tab-hidden">
       <!-- TABLA 1 (SUPERIOR): MATRIZ DE PROYECCIÓN (FONDO & DENSI - 2 COLUMNAS AMPLIAS) -->
       <div class="w-full border-2 border-black bg-slate-950/90 rounded-2xl shadow-xl p-1 md:p-1.5 mt-1">
         <table class="w-full border-separate border-spacing-1 md:border-spacing-1.5 text-center mono font-black select-none text-xs md:text-[13px]">
@@ -546,6 +694,14 @@
         </table>
       </div>
 
+      <!-- Botón Móvil: Volver al Acuario 3D -->
+      <button type="button" onclick="scrollToAquariumTop()" class="lg:hidden w-full py-2 bg-slate-900 hover:bg-slate-800 text-teal-300 font-mono font-bold text-xs border border-teal-500/40 rounded-xl flex items-center justify-center gap-1.5 mt-1 cursor-pointer">
+        <span>⬆️</span> <span>VOLVER AL ACUARIO 3D</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN 3: CONTROLES Y DINÁMICA DE LA ESCENA -->
+    <div id="sec-sidebar-dinamica" class="sidebar-module flex flex-col gap-2">
       <!-- TABLA 2 (INFERIOR): CONTROLES Y DINÁMICA DE LA ESCENA (MANDOS DE EJECUCIÓN) -->
       <div class="w-full border-2 border-black bg-slate-950/90 rounded-2xl shadow-xl p-1.5 md:p-2 mt-2">
         <div class="text-[10px] font-black text-slate-300 font-mono tracking-wider px-1 py-0.5 text-center uppercase border-b border-slate-800 mb-1 flex items-center justify-center gap-1.5">
@@ -593,7 +749,13 @@
         </table>
       </div>
 
-      <!-- CONTENEDOR OCULTO DE RETROCOMPATIBILIDAD CON SCRIPTS Y SELECTORES PREVIOS -->
+      <!-- Botón Móvil: Volver al Acuario 3D -->
+      <button type="button" onclick="scrollToAquariumTop()" class="lg:hidden w-full py-2 bg-slate-900 hover:bg-slate-800 text-teal-300 font-mono font-bold text-xs border border-teal-500/40 rounded-xl flex items-center justify-center gap-1.5 mt-1 cursor-pointer">
+        <span>⬆️</span> <span>VOLVER AL ACUARIO 3D</span>
+      </button>
+    </div>
+
+    <!-- CONTENEDOR OCULTO DE RETROCOMPATIBILIDAD CON SCRIPTS Y SELECTORES PREVIOS -->
       <div class="hidden" aria-hidden="true" style="display:none !important;">
         <select id="select-fondo-base">
           <option value="NxN">NxN</option><option value="NdxNr">NdxNr</option>
@@ -629,7 +791,7 @@
     <!-- =========================================================================
          ESPACIO DE PROYECCIÓN CENTRAL / DERECHO: RECUADRO DE CONTENCIÓN DEL ACUARIO 3D
          ========================================================================= -->
-    <div class="flex-1 flex flex-col gap-1.5 min-w-0">
+    <div id="acuario-center-container" class="acuario-center-viewport flex-1 flex flex-col gap-1.5 min-w-0">
       
       <!-- RECUADRO DE CONTENCIÓN DEL ACUARIO 3D LUMINOSO MAXIMIZADO -->
       <div class="containment-frame flex-1 min-h-[calc(100vh-140px)] flex flex-col relative select-none">
@@ -696,7 +858,7 @@
         </div>
 
         <!-- TOP HUD FLOTANTE: RÉGIMEN Y FASE (Esquina superior izquierda del Acuario) -->
-        <div class="absolute top-3.5 left-3.5 z-30 flex items-center gap-2 flex-wrap">
+        <div class="hud-top-left-mobile absolute top-3.5 left-3.5 z-30 flex items-center gap-2 flex-wrap">
           <!-- BOTÓN FLOTANTE PARA REABRIR CONTROLES CUANDO ESTÁN OCULTOS -->
           <button id="btn-sidebar-open" onclick="toggleSidebar()" class="hud-float px-3 py-1.5 rounded-xl text-xs font-black mono text-teal-300 border-2 border-teal-400 bg-slate-950/90 shadow-xl hidden flex items-center gap-1.5 cursor-pointer hover:border-teal-200 hover:scale-105 transition" title="Mostrar panel de controles">
             <span>▶</span> <span>CONTROLES</span>
@@ -752,7 +914,7 @@
         </div>
 
         <!-- LEYENDA HUD FLOTANTE INFERIOR DERECHA: ESTRATOS BIEN DIFERENCIADOS -->
-        <div class="absolute bottom-3.5 left-3.5 hud-float px-3.5 py-2 rounded-xl text-xs mono text-slate-100 z-10 pointer-events-none flex flex-wrap items-center gap-3.5">
+        <div class="hud-legend-mobile absolute bottom-3.5 left-3.5 hud-float px-3.5 py-2 rounded-xl text-xs mono text-slate-100 z-10 pointer-events-none flex flex-wrap items-center gap-3.5">
           <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_10px_#FFE600]"></span> <span class="font-black text-amber-200">Fondo Arenoso (Z &lt; Z_mar)</span></div>
           <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#00E5FF]"></span> <span class="font-black text-cyan-200">Superficie Libre (Z_mar)</span></div>
           <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#00FF87]"></span> <span class="font-black text-emerald-200">Cielo Abierto (Z &gt; Z_mar)</span></div>
@@ -760,7 +922,7 @@
         </div>
 
         <!-- CONTROLES RÁPIDOS INFERIORES EN CANVAS CON PANTALLA COMPLETA -->
-        <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1.5 z-10">
+        <div class="hud-canvas-controls-mobile absolute bottom-3.5 right-3.5 flex items-center gap-1.5 z-10">
           <button onclick="toggleRelationalSheet()" id="btn-canvas-sheet" class="hud-float px-2.5 h-8 rounded-xl flex items-center justify-center gap-1 text-xs mono text-teal-200 bg-teal-950/80 border border-teal-400 hover:border-teal-200 font-bold cursor-pointer transition" title="Limpiar / Mostrar Sábana">
             <span id="ico-canvas-sheet">🌊</span> <span id="lbl-canvas-sheet">Sábana</span>
           </button>
@@ -773,6 +935,31 @@
           <button onclick="toggleCanvasFullscreen()" id="btn-fullscreen" class="hud-float w-8 h-8 rounded-xl flex items-center justify-center text-cyan-300 hover:text-white font-black text-sm" title="Pantalla Completa Inmersiva">⛶</button>
         </div>
 
+      </div>
+
+      <!-- BARRA RÁPIDA MÓVIL (EXCLUSIVA PANTALLAS <= 1023px) -->
+      <div id="mobile-quick-toolbar" class="lg:hidden w-full flex items-center justify-between gap-1 p-1.5 bg-slate-950/95 border-2 border-teal-500/50 rounded-xl shadow-xl mono text-xs select-none">
+        <button type="button" onclick="toggleMasterDynamics()" id="btn-quick-action" class="flex-1 py-2 px-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-black text-center text-[11px] sm:text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition" title="Lanzar dinámica">
+          <span>⚡</span> <span id="lbl-quick-action">ACCIÓN!</span>
+        </button>
+        <button type="button" onclick="togglePauseSimulation()" id="btn-quick-stop" class="py-2 px-2.5 rounded-lg bg-rose-950 text-rose-300 border border-rose-500 font-black text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="STOP / PLAY">
+          <span id="ico-quick-stop">⏹</span> <span id="lbl-quick-stop">STOP</span>
+        </button>
+        <button type="button" onclick="setCameraView('angle')" class="py-2 px-2 rounded-lg bg-amber-950/90 text-amber-300 border border-amber-500/70 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Cámara en Ángulo">
+          <span>📐</span> <span>ÁNG</span>
+        </button>
+        <button type="button" onclick="toggleRelationalSheet()" class="py-2 px-2 rounded-lg bg-teal-950/90 text-teal-300 border border-teal-500/70 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Sábana">
+          <span>🌊</span> <span>SÁB</span>
+        </button>
+        <button type="button" onclick="toggleAutoRotate()" id="btn-quick-360" class="py-2 px-2 rounded-lg bg-sky-950/90 text-sky-300 border border-sky-500/70 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Rotación 360°">
+          <span>🔄</span> <span>360</span>
+        </button>
+        <button type="button" onclick="scrollToSidebar('dinamica')" class="py-2 px-2 rounded-lg bg-slate-800 text-teal-200 border border-teal-400/80 font-black text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Ver Mandos y Controles">
+          <span>🎮</span> <span>MANDOS</span>
+        </button>
+        <button type="button" onclick="toggleCanvasFullscreen()" id="btn-quick-full" class="py-2 px-2.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-400 font-black text-xs flex items-center justify-center active:scale-95 transition" title="Pantalla Completa">
+          ⛶
+        </button>
       </div>
 
       <!-- GUÍA PEDAGÓGICA INFERIOR: COLAPSABLE PARA MAXIMIZAR EL ACUARIO -->
@@ -2060,6 +2247,9 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.42; // Mucho más luminoso y nítido
+      renderer.domElement.style.touchAction = 'none';
+      renderer.domElement.style.webkitUserSelect = 'none';
+      renderer.domElement.style.userSelect = 'none';
       container.appendChild(renderer.domElement);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -5575,7 +5765,90 @@
       }
     }
 
+    /* =========================================================================
+       CONTROLADORES RESPONSIVE PARA SMARTPHONES Y TABLETS (VISORD ACUARIO)
+       ========================================================================= */
+    let currentMobileSidebarTab = 'dinamica';
+
+    function switchMobileSidebarTab(tabId) {
+      currentMobileSidebarTab = tabId;
+      const tabBtnDinamica = document.getElementById('tab-btn-dinamica');
+      const tabBtn18d = document.getElementById('tab-btn-18d');
+      const tabBtnDatos = document.getElementById('tab-btn-datos');
+
+      const secDinamica = document.getElementById('sec-sidebar-dinamica');
+      const sec18d = document.getElementById('sec-sidebar-18d');
+      const secDatos = document.getElementById('sec-sidebar-datos');
+
+      const activeBtnClass = 'flex-1 py-1.5 px-1 rounded-lg bg-teal-500 text-black font-black text-center transition';
+      const inactiveBtnClass = 'flex-1 py-1.5 px-1 rounded-lg text-slate-300 hover:text-white text-center transition';
+
+      if (tabBtnDinamica) tabBtnDinamica.className = (tabId === 'dinamica') ? activeBtnClass : inactiveBtnClass;
+      if (tabBtn18d) tabBtn18d.className = (tabId === '18d') ? activeBtnClass : inactiveBtnClass;
+      if (tabBtnDatos) tabBtnDatos.className = (tabId === 'datos') ? activeBtnClass : inactiveBtnClass;
+
+      if (secDinamica) {
+        if (tabId === 'dinamica') secDinamica.classList.remove('mobile-tab-hidden');
+        else secDinamica.classList.add('mobile-tab-hidden');
+      }
+      if (sec18d) {
+        if (tabId === '18d') sec18d.classList.remove('mobile-tab-hidden');
+        else sec18d.classList.add('mobile-tab-hidden');
+      }
+      if (secDatos) {
+        if (tabId === 'datos') secDatos.classList.remove('mobile-tab-hidden');
+        else secDatos.classList.add('mobile-tab-hidden');
+      }
+    }
+
+    function scrollToSidebar(tabId) {
+      if (tabId) switchMobileSidebarTab(tabId);
+      const sidebar = document.getElementById('acuario-sidebar');
+      if (sidebar) {
+        if (sidebar.classList.contains('hidden')) {
+          sidebar.classList.remove('hidden');
+          isSidebarVisible = true;
+          const btnOpen = document.getElementById('btn-sidebar-open');
+          const iconToggle = document.getElementById('icon-sidebar-toggle');
+          if (btnOpen) btnOpen.classList.add('hidden');
+          if (iconToggle) iconToggle.textContent = '◀';
+        }
+        sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function scrollToAquariumTop() {
+      const container = document.getElementById('acuario-center-container') || document.querySelector('.containment-frame');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function initMobileAcuarioLayout() {
+      switchMobileSidebarTab('dinamica');
+      const panel = document.getElementById('acuario-profiles-panel');
+      const iconToggle = document.getElementById('icon-profiles-toggle');
+      if (panel) {
+        panel.classList.add('hidden');
+        isProfilesPanelVisible = false;
+        if (iconToggle) iconToggle.textContent = '◀';
+      }
+    }
+
     function openParallelTabAndSidebar(tabId) {
+      // Soporte directo para dispositivos móviles
+      if (window.innerWidth < 1024) {
+        if (tabId === 'tab1' || tabId === 'tab2_18d') {
+          switchMobileSidebarTab('18d');
+        } else if (tabId === 'tab4' || tabId === 'tab5') {
+          switchMobileSidebarTab('dinamica');
+        } else {
+          switchMobileSidebarTab('datos');
+        }
+        scrollToSidebar();
+        return;
+      }
+
       // Si la barra lateral está oculta, reabrirla primero
       const sidebar = document.getElementById('acuario-sidebar');
       const btnOpen = document.getElementById('btn-sidebar-open');
@@ -6070,6 +6343,22 @@
 
       // 4. Cartelera DIN
       updateCartelera('DIN', isSimulationFrozen ? 'STOP' : 'MOV');
+
+      // 5. Botón de Barra Rápida Móvil
+      const btnQuickStop = document.getElementById('btn-quick-stop');
+      const icoQuickStop = document.getElementById('ico-quick-stop');
+      const lblQuickStop = document.getElementById('lbl-quick-stop');
+      if (btnQuickStop) {
+        if (isSimulationFrozen) {
+          btnQuickStop.className = 'py-2 px-2.5 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500 font-black text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition';
+          if (icoQuickStop) icoQuickStop.textContent = '▶';
+          if (lblQuickStop) lblQuickStop.textContent = 'PLAY';
+        } else {
+          btnQuickStop.className = 'py-2 px-2.5 rounded-lg bg-rose-950 text-rose-300 border border-rose-500 font-black text-[11px] sm:text-xs flex items-center justify-center gap-1 active:scale-95 transition';
+          if (icoQuickStop) icoQuickStop.textContent = '⏹';
+          if (lblQuickStop) lblQuickStop.textContent = 'STOP';
+        }
+      }
     }
 
     function togglePauseSimulation() {
@@ -6979,20 +7268,67 @@
 
     function toggleCanvasFullscreen() {
       const elem = document.querySelector('.containment-frame') || document.getElementById('three-viewport');
-      if (!document.fullscreenElement) {
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
+      if (!elem) return;
+
+      // Si ya está activo el modo pseudo-pantalla completa (fallback móvil/iOS)
+      if (elem.classList.contains('is-pseudo-fullscreen')) {
+        disablePseudoFullscreen(elem);
+        return;
+      }
+
+      const isMobileDevice = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 1024;
+      const hasNativeFullscreen = !isMobileDevice && !!(elem.requestFullscreen || elem.webkitRequestFullscreen);
+
+      if (hasNativeFullscreen) {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          const promise = elem.requestFullscreen ? elem.requestFullscreen() : elem.webkitRequestFullscreen();
+          if (promise && promise.catch) {
+            promise.catch(() => enablePseudoFullscreen(elem));
+          }
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
+        enablePseudoFullscreen(elem);
       }
     }
 
+    function enablePseudoFullscreen(elem) {
+      elem.classList.add('is-pseudo-fullscreen');
+      document.body.style.overflow = 'hidden';
+      const btnFs = document.getElementById('btn-fullscreen');
+      const btnQuickFs = document.getElementById('btn-quick-full');
+      if (btnFs) btnFs.textContent = '✕';
+      if (btnQuickFs) btnQuickFs.textContent = '✕';
+      setTimeout(() => onWindowResize(), 100);
+      showSmibToast('⛶ Pantalla Completa Inmersiva');
+    }
+
+    function disablePseudoFullscreen(elem) {
+      elem.classList.remove('is-pseudo-fullscreen');
+      document.body.style.overflow = '';
+      const btnFs = document.getElementById('btn-fullscreen');
+      const btnQuickFs = document.getElementById('btn-quick-full');
+      if (btnFs) btnFs.textContent = '⛶';
+      if (btnQuickFs) btnQuickFs.textContent = '⛶';
+      setTimeout(() => onWindowResize(), 100);
+    }
+
     document.addEventListener('fullscreenchange', () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const btnFs = document.getElementById('btn-fullscreen');
+      const btnQuickFs = document.getElementById('btn-quick-full');
+      if (btnFs) btnFs.textContent = isFs ? '✕' : '⛶';
+      if (btnQuickFs) btnQuickFs.textContent = isFs ? '✕' : '⛶';
+      setTimeout(() => onWindowResize(), 100);
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const btnFs = document.getElementById('btn-fullscreen');
+      const btnQuickFs = document.getElementById('btn-quick-full');
+      if (btnFs) btnFs.textContent = isFs ? '✕' : '⛶';
+      if (btnQuickFs) btnQuickFs.textContent = isFs ? '✕' : '⛶';
       setTimeout(() => onWindowResize(), 100);
     });
 
@@ -7830,6 +8166,19 @@
       const ledAction = document.getElementById('led-master-action');
       if (ledAction) ledAction.className = `led-indicator ${isMasterDynamicsRunning ? 'led-on led-pulse' : 'led-off'}`;
 
+      // Sincronización del Botón de la Barra Rápida Móvil
+      const btnQuickAct = document.getElementById('btn-quick-action');
+      const lblQuickAct = document.getElementById('lbl-quick-action');
+      if (btnQuickAct) {
+        if (isMasterDynamicsRunning && !isSimulationFrozen) {
+          btnQuickAct.className = 'flex-1 py-2 px-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black text-center text-[11px] sm:text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition';
+          if (lblQuickAct) lblQuickAct.textContent = 'ACCIÓN!';
+        } else {
+          btnQuickAct.className = 'flex-1 py-2 px-1.5 rounded-lg bg-[#FF6600] hover:bg-[#FF7700] text-white font-black text-center text-[11px] sm:text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition';
+          if (lblQuickAct) lblQuickAct.textContent = 'ACCIÓN!';
+        }
+      }
+
       const agluModes = ['fact', 'cogn', 'rol', 'total'];
       agluModes.forEach(m => {
         const l = document.getElementById(`led-aglu-${m}`);
@@ -8294,6 +8643,11 @@
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       if (typeof updateProjectedProfilesList === 'function') updateProjectedProfilesList();
       initAquariumAutoAction();
+
+      // Inicialización adaptada para smartphones y tablets
+      if (window.innerWidth < 1024) {
+        initMobileAcuarioLayout();
+      }
 
       // Atajo de teclado: Barra espaciadora para STOP / PLAY
       window.addEventListener('keydown', (e) => {
