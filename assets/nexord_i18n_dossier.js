@@ -29,7 +29,7 @@
 
       // Sección 1
       s1_title: 'El Activo Científico Transferido (La Dote Tecnológica)',
-      s1_lead: 'El promotor cede formalmente los derechos de custodia, gobernanza académica y operación del ecosistema completo de investigación, desarrollado durante más de dos décadas en el seno de la Facultad de Psicología de la Universitat de Barcelona:',
+      s1_lead: 'El promotor cede formalmente los derechos de custodia, gobernanza académica y operación del ecosistema completo de investigación, desarrollado a lo largo de más de dos décadas de investigación científica independiente:',
       s1_b1_title: '🐍 Motores de Cálculo Nativo en Python',
       s1_b1_desc: 'Pipelines automatizados de ingestión, transcripción de ordenaciones *Breve → Moreno*, matrices de 4 posiciones SMIb ($DA, RC, pDA, pRC$), descomposición factorial Benzécri ($\chi^2$), densidades absolutas (BDR) y saldos relativos continuos ponderados físicamente (SDR, $W(k)=2^{1-k}$).',
       s1_b2_title: '🌐 Ecosistema de Gemelos Digitales 3D/4D',
@@ -37,7 +37,7 @@
       s1_b3_title: '📐 Álgebra Tensorial y Espectral',
       s1_b3_desc: 'Módulos computacionales para proyección en variedades de Grassmann $\\operatorname{Gr}(k, N)$, cálculo del gap espectral y conectividad algebraica de Fiedler ($\\lambda_2$), frustración estructural de Heider y operadores de Estrada ($EE$).',
       s1_b4_title: '📚 Banco Canónico de Datos BSOC &amp; Zenodo',
-      s1_b4_desc: 'Corpus empírico homologado de sociogramas de campo reales, matrices simuladas Monte Carlo y series culturales. Registro permanente en CERN Zenodo: Manifiesto Científico Central (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) y Material Suplementario con 6 Anexos Técnicos (<a href="https://doi.org/10.5281/zenodo.23329054" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329054</a>) con metadatos Google Académico listos.',
+      s1_b4_desc: 'Corpus empírico homologado de sociogramas de campo reales, matrices simuladas Monte Carlo y series culturales. Registro permanente en CERN Zenodo: Manifiesto Científico Central (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) y Material Suplementario con 6 Anexos Técnicos (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329641</a>) con metadatos Google Académico listos.',
 
       // Sección 2
       s2_title: 'Objeto de la Oferta: Custodia Responsable sin Royalties',
@@ -96,8 +96,8 @@
       s5_r4_nat: 'Custodia perpetua, inmutable y auditable como patrimonio abierto de la ciencia relacional.',
 
       // Firma
-      sig_role: 'Profesor Titular de Psicología Social · Universitat de Barcelona',
-      sig_dept: 'Departament de Psicologia Social i Quantitativa · Facultat de Psicologia',
+      sig_role: 'Profesor Titular de Psicología Social (jubilado)',
+      sig_dept: 'NEXORD Research Initiative · Investigación independiente',
       sig_btn_pdf: '🖨️ Descargar Dossier en PDF',
       sig_btn_email: '✉️ Iniciar Tramitación Formal'
     },
@@ -128,7 +128,7 @@
       s1_b3_title: '📐 Tensorial and Spectral Algebra',
       s1_b3_desc: 'Computational modules for projection on Grassmann manifolds $\\operatorname{Gr}(k, N)$, spectral gap evaluation, Fiedler algebraic connectivity ($\\lambda_2$), Heider structural frustration, and Estrada operators ($EE$).',
       s1_b4_title: '📚 BSOC Canonical Dataset &amp; Zenodo Depository',
-      s1_b4_desc: 'Homologated empirical corpus of field sociomatrices, Monte Carlo simulations, and cultural works. Permanent CERN Zenodo records: Core Scientific Manifesto (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) and Supplementary Material with 6 Technical Annexes (<a href="https://doi.org/10.5281/zenodo.23329054" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329054</a>) with full Google Scholar indexing.',
+      s1_b4_desc: 'Homologated empirical corpus of field sociomatrices, Monte Carlo simulations, and cultural works. Permanent CERN Zenodo records: Core Scientific Manifesto (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) and Supplementary Material with 6 Technical Annexes (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329641</a>) with full Google Scholar indexing.',
 
       // Section 2
       s2_title: 'Object of the Offer: Royalty-Free Responsible Custody',

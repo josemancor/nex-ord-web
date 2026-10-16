@@ -115,7 +115,7 @@ function handleCustodiaSubmit(e) {
   const body = encodeURIComponent(
 `A la atención del Dr. José Manuel Cornejo Álvarez
 Plataforma Científica NEXORD / VISORD Engine
-Facultat de Psicologia · Universitat de Barcelona (UB)
+NEXORD Research Initiative · Investigación independiente
 
 Estimado Dr. Cornejo:
 
@@ -157,7 +157,7 @@ function copyCustodiaDraft() {
   const draft = 
 `A la atención del Dr. José Manuel Cornejo Álvarez
 Plataforma Científica NEXORD / VISORD Engine
-Facultat de Psicologia · Universitat de Barcelona (UB)
+NEXORD Research Initiative · Investigación independiente
 
 Estimado Dr. Cornejo:
 

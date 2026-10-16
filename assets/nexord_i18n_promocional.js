@@ -461,7 +461,7 @@
     if (custBtnManEs) custBtnManEs.innerHTML = '<span>📄</span> ' + dict.cust_btn_man_es;
     const custBtnManEn = document.querySelector('a[href*="oct_2026_EN.pdf"]');
     if (custBtnManEn) custBtnManEn.innerHTML = '<span>📄</span> ' + dict.cust_btn_man_en;
-    const custBtnSup = document.querySelector('a[href*="10.5281/zenodo.23329054"]');
+    const custBtnSup = document.querySelector('a[href*="10.5281/zenodo.23329641"]');
     if (custBtnSup) custBtnSup.innerHTML = '<span>📦</span> ' + dict.cust_btn_sup;
 
     // CTA Banner
