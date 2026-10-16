@@ -7421,6 +7421,16 @@
         </button>
       </div>
 
+      <!-- CONMUTADOR DE PERSPECTIVA DUAL (PARALELO vs. CORTINA DESLIZANTE) -->
+      <div class="dual-mode-switch-bar" style="margin:2px auto 8px auto; display:flex; justify-content:center; align-items:center; gap:10px;">
+        <button class="flow-nav-btn active" id="btn-dual-mode-parallel" onclick="setDualVisualizationMode('parallel')" style="font-weight:800; font-size:0.86rem; padding:6px 16px; background:rgba(56,189,248,0.18); border:1.5px solid var(--neon-cyan); color:var(--neon-cyan); border-radius:6px; cursor:pointer; transition:all 0.2s ease;">
+          ⊞ Planos en Paralelo
+        </button>
+        <button class="flow-nav-btn" id="btn-dual-mode-slider" onclick="setDualVisualizationMode('slider')" style="font-weight:800; font-size:0.86rem; padding:6px 16px; background:rgba(15,23,42,0.85); border:1.5px solid rgba(56,189,248,0.35); color:#94A3B8; border-radius:6px; cursor:pointer; transition:all 0.2s ease;">
+          ↔ Cortina Deslizante (Before/After)
+        </button>
+      </div>
+
       <!-- DOBLE PLANO CARTESIANO EN PARALELO (SIN LÍNEAS EN X) -->
       <div class="parallel-planes-wrap" id="parallel-planes-wrap">
         <!-- PLANO 1: FRECUENCIAS (MORENO · 1934) -->
@@ -7638,6 +7648,35 @@
           <div class="plane-footer-note" style="margin-top:6px; font-size:0.86rem;">
             💡 <strong>Diagnóstico en Densidad:</strong> VISORD revela a 3A como el nodo de máxima masa gravitatoria ($BDR=49.9$), que absorbe la tensión sistémica ($\Phi=89.9$), discriminando con precisión al líder hegemónico 1A del contrapoder 4A.
           </div>
+        </div>
+      </div>
+
+      <!-- VISOR COMPARATIVO INTERACTIVO: MORENO vs. VISORD (CORTINA DESLIZANTE) -->
+      <div class="dual-slider-container" id="dual-slider-box" style="display:none;">
+        <!-- Capa 1 (Fondo): Campo Continuo de Densidades VISORD -->
+        <div class="slider-layer layer-visord">
+          <div class="slider-svg-target" id="slider-svg-visord-mount"></div>
+          <div class="slider-badge badge-visord">
+            <span class="badge-dot"></span> VISORD · Campo Continuo de Fuerzas (BDR / SDR)
+          </div>
+        </div>
+
+        <!-- Capa 2 (Superpuesta / Recortada): Sociograma Clásico de Moreno -->
+        <div class="slider-layer layer-moreno" id="layer-moreno-clip">
+          <div class="slider-svg-target" id="slider-svg-moreno-mount"></div>
+          <div class="slider-badge badge-moreno">
+            <span class="badge-dot"></span> MORENO · Frecuencias y Saldo Plano Discreto
+          </div>
+        </div>
+
+        <!-- Tirador / Manija de Control Deslizante -->
+        <div class="slider-handle" id="slider-handle">
+          <div class="handle-line"></div>
+          <div class="handle-button" aria-label="Deslizar para comparar">
+            <span>◀</span>
+            <span>▶</span>
+          </div>
+          <div class="handle-line"></div>
         </div>
       </div>
 
@@ -18479,6 +18518,14 @@
       }
     }
 
+    function syncSliderInnerWidth() {
+      const container = document.getElementById('dual-slider-box');
+      const morenoMount = document.getElementById('slider-svg-moreno-mount');
+      if (container && morenoMount) {
+        morenoMount.style.width = `${container.clientWidth}px`;
+      }
+    }
+
     function mountSliderSvgs() {
       const morenoMount = document.getElementById('slider-svg-moreno-mount');
       const visordMount = document.getElementById('slider-svg-visord-mount');
@@ -18495,6 +18542,7 @@
         clone.id = 'svg-densidad-plane-slider-clone';
         visordMount.appendChild(clone);
       }
+      syncSliderInnerWidth();
     }
 
     // 4. CONTROLADOR DE ARRASTRE DE CORTINA (POINTER EVENTS: MOUSE & TOUCH)
@@ -18543,6 +18591,7 @@
 
         handle.addEventListener('pointerdown', onPointerDown);
         container.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('resize', syncSliderInnerWidth);
       });
     })();
 
