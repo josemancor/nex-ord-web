@@ -494,7 +494,7 @@
             <tr class="h-7.5 md:h-8">
               <td onclick="togglePauseSimulation()" id="btn-matrix-play" class="bg-white hover:bg-rose-50 text-rose-600 font-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="STOP / PLAY: Congelar o reanudar dinámica (Barra espaciadora)">STOP</td>
               <td onclick="resetAndClearAquariumScene()" id="btn-matrix-borrar" class="bg-white hover:bg-slate-100 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Borrar rastro diádico y limpiar sábana">BORRAR</td>
-              <td onclick="resetCamera3D()" id="btn-matrix-3d" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Restablecer Cámara Libre 3D">3D</td>
+              <td onclick="resetCamera3D()" id="btn-matrix-3d" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Perspectiva Óptima: Números en ángulo y fondo levantado para ver puntos sumergidos">3D</td>
             </tr>
             <!-- Fila 2: Ola+ | Ola- | AUD -->
             <tr class="h-7.5 md:h-8">
@@ -1770,8 +1770,8 @@
     let currentChoreographyPhase = 0; // 0: Reposo, 1: Escenario, 2: Elementos con Trazas, 3: Completo, 4: Sábana-Ola, 5: Volteo + Vibración
     let choreographyTimer = null;
     let isCameraTransitioning = false;
-    let cameraTargetPos = new THREE.Vector3(7.5, 6.2, 9.8);
-    let cameraTargetLookAt = new THREE.Vector3(0, 0, 0);
+    let cameraTargetPos = new THREE.Vector3(-9.2, 7.8, 10.6);
+    let cameraTargetLookAt = new THREE.Vector3(0, -0.8, 0);
 
     // Canon socio: Volteo orbital suave que obedece estrictamente al zoom del usuario y no se dispara
     let cameraOrbitTransition = {
@@ -1969,7 +1969,7 @@
     let bubbleInstanced = null;
     let bubbleData = [];
     let axisGroup = null;
-    let isAutoRotating = true;
+    let isAutoRotating = false;
     let raycaster, mouse;
 
     const CONTAINER_ID = 'three-viewport';
@@ -1986,7 +1986,8 @@
       scene.fog = new THREE.FogExp2(0x083C66, 0.015);
 
       camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 250);
-      camera.position.set(-8.8, 7.2, 10.2);
+      // Perspectiva canónica óptima: números en ángulo hacia el usuario y fondo levantado
+      camera.position.set(-9.2, 7.8, 10.6);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(width, height);
@@ -1996,13 +1997,20 @@
       container.appendChild(renderer.domElement);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.target.set(0, -0.5, 0);
+      controls.target.set(0, -0.8, 0);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.autoRotate = true;
+      controls.autoRotate = false;
       controls.autoRotateSpeed = 0.75;
       controls.maxDistance = 85;
       controls.minDistance = 1.8;
+      controls.addEventListener('start', () => {
+        isCameraTransitioning = false;
+        if (cameraOrbitTransition) {
+          cameraOrbitTransition.active = false;
+          cameraOrbitTransition = null;
+        }
+      });
 
       // Iluminación Solar Acuática (Penetración de rayos solares)
       const sunLight = new THREE.DirectionalLight(0xF0FDFF, 2.8);
@@ -2706,9 +2714,10 @@
         emissive: 0x004554,
         emissiveIntensity: 0.42,
         transparent: true,
-        opacity: 0.68,
+        opacity: 0.60,
         roughness: 0.12,
         metalness: 0.55,
+        depthWrite: false, // Transparencia diáfana que revela con total nitidez los puntos sumergidos
         side: THREE.DoubleSide // Canon: Piel de doble cara para voltear a voluntad
       });
       seaPlaneMesh = new THREE.Mesh(surfGeom, surfMat);
@@ -4558,37 +4567,72 @@
       autoCloseSidebarOnMobile();
     }
 
-    function resetCamera3D() {
-      controls.autoRotate = isAutoRotating;
-      if (cameraOrbitTransition) cameraOrbitTransition.active = false;
+    // Canon socio: cuando la sábana cubre la superficie o se restablece la perspectiva,
+    // presentar el acuario con los números en ángulo hacia el usuario y el fondo un poco levantado para ver los puntos sumergidos
+    function setOptimalObservationPerspective(smooth = true) {
+      const targetCamPos = new THREE.Vector3(-9.2, 7.8, 10.6);
+      const targetLookAt = new THREE.Vector3(0, -0.8, 0);
+
+      if (controls) {
+        controls.autoRotate = false;
+      }
+      isAutoRotating = false;
+
+      if (cameraOrbitTransition) {
+        cameraOrbitTransition.active = false;
+        cameraOrbitTransition = null;
+      }
       isPosteriorFlipped = false;
       isSoftVibrationActive = false;
-      camera.position.set(-8.8, 7.2, 10.2);
-      controls.target.set(0, 0, 0);
-      controls.update();
+
       const btnFlip = document.getElementById('btn-flip-reverse');
       const ledFlip = document.getElementById('led-flip-reverse');
       if (btnFlip) btnFlip.className = 'hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-purple-200 border-2 border-purple-400 flex items-center gap-1.5 cursor-pointer shadow-lg hover:border-purple-200';
       if (ledFlip) ledFlip.className = 'led-indicator led-off';
-      if (typeof updateCartelera === 'function') updateCartelera('CAM', '360');
+
+      if (smooth && camera && controls) {
+        cameraTargetPos.copy(targetCamPos);
+        cameraTargetLookAt.copy(targetLookAt);
+        isCameraTransitioning = true;
+      } else if (camera && controls) {
+        camera.position.copy(targetCamPos);
+        controls.target.copy(targetLookAt);
+        controls.update();
+        isCameraTransitioning = false;
+      }
+
+      if (typeof updateCartelera === 'function') updateCartelera('CAM', '3D');
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
+    }
+
+    function resetCamera3D() {
+      setOptimalObservationPerspective(true);
+      showSmibToast('📐 Perspectiva Óptima: Números en ángulo y fondo levantado');
       autoCloseSidebarOnMobile();
     }
 
     function setCameraView(view) {
       controls.autoRotate = false;
-      if (cameraOrbitTransition) cameraOrbitTransition.active = false;
+      isAutoRotating = false;
+      if (cameraOrbitTransition) {
+        cameraOrbitTransition.active = false;
+        cameraOrbitTransition = null;
+      }
+      isPosteriorFlipped = false;
+
       if (view === 'top') {
         camera.position.set(0, 14.5, 0.01);
+        controls.target.set(0, -0.8, 0);
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'CEN');
       } else if (view === 'front') {
-        camera.position.set(0, 0, 14.5);
+        camera.position.set(0, -0.8, 14.5);
+        controls.target.set(0, -0.8, 0);
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'FRO');
       } else if (view === 'side') {
-        camera.position.set(-14.5, 0, 0);
+        camera.position.set(-14.5, -0.8, 0);
+        controls.target.set(0, -0.8, 0);
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'LAT');
       }
-      controls.target.set(0, 0, 0);
       controls.update();
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       autoCloseSidebarOnMobile();
@@ -4750,8 +4794,9 @@
             currentChoreographyPhase = 4;
             isRelationalSheetActive = true;
             if (seaPlaneMesh) seaPlaneMesh.visible = true;
+            setOptimalObservationPerspective(true);
             if (phaseBadge) {
-              phaseBadge.textContent = 'FASE 4/5: GÉNESIS SÁBANA-OLA (PIEL CONTINUA)';
+              phaseBadge.textContent = 'FASE 4/5: GÉNESIS SÁBANA-OLA (PERSPECTIVA SUBMARINA)';
               phaseBadge.className = 'text-amber-300 font-black';
             }
             if (typeof updatePreConfigDisplay === 'function') updatePreConfigDisplay();
@@ -4941,7 +4986,8 @@
       updateSheetButtonsState();
 
       if (isRelationalSheetActive) {
-        showSmibToast('🌊 Sábana-Ola Activada: Piel continua bioluminiscente');
+        setOptimalObservationPerspective(true);
+        showSmibToast('🌊 Sábana Activada: Perspectiva óptima (números en ángulo y fondo levantado)');
       } else {
         showSmibToast('🫧 Sábana Limpiada / Ocultada: Fondo despejado');
       }
@@ -7211,53 +7257,40 @@
         }
         updateSheetButtonsState();
 
+        // CANON SOCIO: Cuando la sábana cubre la superficie, la mejor perspectiva de observación
+        // presenta el acuario con los números en ángulo hacia el usuario y el fondo un poco levantado
+        // para ver los puntos sumergidos con total nitidez.
+        setOptimalObservationPerspective(true);
+
         if (phaseBadge) {
-          phaseBadge.textContent = 'FASE 2/4: SÁBANA-OLA CUBRE EL COLECTIVO';
+          phaseBadge.textContent = 'FASE 2/3: SÁBANA-OLA · PERSPECTIVA SUBMARINA ÓPTIMA';
           phaseBadge.className = 'text-amber-300 font-black animate-pulse';
         }
 
-        // FASE 3: Y SE VOLTEA (paneo orbital inverso mostrando la cara latente)
-        const tFlip = setTimeout(() => {
+        // FASE 3: DINÁMICA DIÁDICA ACTIVA EN VIVO (manteniendo la perspectiva de observación)
+        const tLive = setTimeout(() => {
           if (phaseBadge) {
-            phaseBadge.textContent = 'FASE 3/4: VOLTEO TRIDIMENSIONAL (VISTA LATENTE)';
-            phaseBadge.className = 'text-purple-300 font-black animate-pulse';
+            phaseBadge.textContent = 'FASE 3/3: DINÁMICA DIÁDICA (EN VIVO)';
+            phaseBadge.className = 'text-emerald-300 font-black';
           }
-          togglePosteriorFlip(true);
-
-          // Retorno suave a la perspectiva canónica frontal
-          const tUnflip = setTimeout(() => {
-            togglePosteriorFlip(false);
-
-            // FASE 4: DINÁMICA DIÁDICA ACTIVA EN VIVO
-            const tLive = setTimeout(() => {
-              if (phaseBadge) {
-                phaseBadge.textContent = 'FASE 4/4: DINÁMICA DIÁDICA (EN VIVO)';
-                phaseBadge.className = 'text-emerald-300 font-black';
-              }
-              if (txtAction) {
-                txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
-              }
-              isDyadScannerRunning = true;
-              startDyadScanner();
-              if (controls) controls.autoRotate = true;
-              updateAllLeds();
-            }, 2200);
-            choreographyTimers.push(tLive);
-
-          }, 2800);
-          choreographyTimers.push(tUnflip);
-
-        }, 900);
-        choreographyTimers.push(tFlip);
+          if (txtAction) {
+            txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
+          }
+          isDyadScannerRunning = true;
+          startDyadScanner();
+          // Perspectiva estable para observación serena de los puntos sumergidos (sin giro forzado)
+          updateAllLeds();
+        }, 1800);
+        choreographyTimers.push(tLive);
 
       }, totalAscentTime + 150);
       choreographyTimers.push(tSheet);
 
       const matrixInfo = getActiveSociomatrixInfo();
       if (isAuto) {
-        showSmibToast(`⚡ ¡ ACCIÓN ! [${matrixInfo.code}]: Reinicio desde el fondo, proyección 1 a 1, sábana y volteo`);
+        showSmibToast(`⚡ ¡ ACCIÓN ! [${matrixInfo.code}]: Proyección 1 a 1 y sábana en perspectiva óptima`);
       } else {
-        showSmibToast(`⚡ ¡ ACCIÓN ! [${matrixInfo.code}]: Reinicio desde el fondo, proyección 1 a 1, sábana y volteo`);
+        showSmibToast(`⚡ ¡ ACCIÓN ! [${matrixInfo.code}]: Proyección 1 a 1 y sábana en perspectiva óptima`);
       }
     }
 
@@ -7802,7 +7835,10 @@
         camera.position.lerp(cameraTargetPos, 0.06);
         controls.target.lerp(cameraTargetLookAt, 0.06);
         if (camera.position.distanceTo(cameraTargetPos) < 0.04) {
+          camera.position.copy(cameraTargetPos);
+          controls.target.copy(cameraTargetLookAt);
           isCameraTransitioning = false;
+          controls.update();
         }
       }
 
