@@ -490,11 +490,11 @@
         </div>
         <table class="w-full border-separate border-spacing-1 md:border-spacing-1.5 text-center mono font-black select-none text-xs md:text-[13px]">
           <tbody>
-            <!-- Fila 1: STOP/PLAY | BORRAR | 3D -->
+            <!-- Fila 1: STOP/PLAY | BORRAR | CHIS -->
             <tr class="h-7.5 md:h-8">
               <td onclick="togglePauseSimulation()" id="btn-matrix-play" class="bg-white hover:bg-rose-50 text-rose-600 font-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="STOP / PLAY: Congelar o reanudar dinámica (Barra espaciadora)">STOP</td>
               <td onclick="resetAndClearAquariumScene()" id="btn-matrix-borrar" class="bg-white hover:bg-slate-100 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Borrar rastro diádico y limpiar sábana">BORRAR</td>
-              <td onclick="resetCamera3D()" id="btn-matrix-3d" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Perspectiva Óptima: Números en ángulo y fondo levantado para ver puntos sumergidos">3D</td>
+              <td onclick="toggleDyadScanner()" id="btn-matrix-chis" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Escáner Diádico de Chispas Cuánticas">CHIS</td>
             </tr>
             <!-- Fila 2: Ola+ | Ola- | AUD -->
             <tr class="h-7.5 md:h-8">
@@ -520,11 +520,11 @@
               <td onclick="toggleCleanSheetMode()" id="btn-matrix-limp" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Sábana Limpia (Sin Círculos)">LIMP</td>
               <td onclick="toggleSoftVibration()" id="btn-matrix-vib" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Vibración Armónica del Lecho Marino">VIB</td>
             </tr>
-            <!-- Fila 6: CEN | FRO | CHIS -->
+            <!-- Fila 6: CEN | FRO | ÁNG -->
             <tr class="h-7.5 md:h-8">
-              <td onclick="setCameraView('top')" id="btn-matrix-cen" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Cámara Cenital Superior">CEN</td>
-              <td onclick="setCameraView('front')" id="btn-matrix-fro" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Cámara Frontal">FRO</td>
-              <td onclick="toggleDyadScanner()" id="btn-matrix-chis" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Escáner Diádico de Chispas Cuánticas">CHIS</td>
+              <td onclick="setCameraView('top')" id="btn-matrix-cen" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Cámara Cenital Superior (90°)">CEN</td>
+              <td onclick="setCameraView('front')" id="btn-matrix-fro" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Cámara Frontal (0°)">FRO</td>
+              <td onclick="setCameraView('angle')" id="btn-matrix-ang" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Posición en Ángulo: Acuario ladeado hacia arriba con etiquetas y números a la vista">ÁNG</td>
             </tr>
           </tbody>
         </table>
@@ -700,6 +700,9 @@
         <div class="absolute bottom-3.5 right-3.5 flex items-center gap-1.5 z-10">
           <button onclick="toggleRelationalSheet()" id="btn-canvas-sheet" class="hud-float px-2.5 h-8 rounded-xl flex items-center justify-center gap-1 text-xs mono text-teal-200 bg-teal-950/80 border border-teal-400 hover:border-teal-200 font-bold cursor-pointer transition" title="Limpiar / Mostrar Sábana">
             <span id="ico-canvas-sheet">🌊</span> <span id="lbl-canvas-sheet">Sábana</span>
+          </button>
+          <button onclick="setCameraView('angle')" id="btn-canvas-angle" class="hud-float px-2.5 h-8 rounded-xl flex items-center justify-center gap-1 text-xs mono text-amber-300 bg-amber-950/80 border border-amber-400 hover:border-amber-200 font-bold cursor-pointer transition shadow-md" title="Posición en Ángulo: Acuario ladeado hacia arriba con etiquetas y números a la vista">
+            <span>📐</span> <span>Ángulo</span>
           </button>
           <button onclick="zoomInCamera()" class="hud-float w-8 h-8 rounded-xl flex items-center justify-center text-teal-300 hover:text-white font-black text-base" title="Acercar Zoom">+</button>
           <button onclick="zoomOutCamera()" class="hud-float w-8 h-8 rounded-xl flex items-center justify-center text-teal-300 hover:text-white font-black text-base" title="Alejar Zoom">-</button>
@@ -1770,8 +1773,8 @@
     let currentChoreographyPhase = 0; // 0: Reposo, 1: Escenario, 2: Elementos con Trazas, 3: Completo, 4: Sábana-Ola, 5: Volteo + Vibración
     let choreographyTimer = null;
     let isCameraTransitioning = false;
-    let cameraTargetPos = new THREE.Vector3(-9.2, 7.8, 10.6);
-    let cameraTargetLookAt = new THREE.Vector3(0, -0.8, 0);
+    let cameraTargetPos = new THREE.Vector3(-12.8, 10.2, 14.6);
+    let cameraTargetLookAt = new THREE.Vector3(0, -1.8, 0);
 
     // Canon socio: Volteo orbital suave que obedece estrictamente al zoom del usuario y no se dispara
     let cameraOrbitTransition = {
@@ -1986,8 +1989,8 @@
       scene.fog = new THREE.FogExp2(0x083C66, 0.015);
 
       camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 250);
-      // Perspectiva canónica óptima: números en ángulo hacia el usuario y fondo levantado
-      camera.position.set(-9.2, 7.8, 10.6);
+      // Perspectiva canónica en ángulo: etiquetas a la vista y acuario ladeado hacia arriba
+      camera.position.set(-12.8, 10.2, 14.6);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(width, height);
@@ -1997,7 +2000,7 @@
       container.appendChild(renderer.domElement);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.target.set(0, -0.8, 0);
+      controls.target.set(0, -1.8, 0);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
       controls.autoRotate = false;
@@ -2006,10 +2009,12 @@
       controls.minDistance = 1.8;
       controls.addEventListener('start', () => {
         isCameraTransitioning = false;
+        currentCameraView = 'free';
         if (cameraOrbitTransition) {
           cameraOrbitTransition.active = false;
           cameraOrbitTransition = null;
         }
+        if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       });
 
       // Iluminación Solar Acuática (Penetración de rayos solares)
@@ -4567,50 +4572,9 @@
       autoCloseSidebarOnMobile();
     }
 
-    // Canon socio: cuando la sábana cubre la superficie o se restablece la perspectiva,
-    // presentar el acuario con los números en ángulo hacia el usuario y el fondo un poco levantado para ver los puntos sumergidos
-    function setOptimalObservationPerspective(smooth = true) {
-      const targetCamPos = new THREE.Vector3(-9.2, 7.8, 10.6);
-      const targetLookAt = new THREE.Vector3(0, -0.8, 0);
+    let currentCameraView = 'angle';
 
-      if (controls) {
-        controls.autoRotate = false;
-      }
-      isAutoRotating = false;
-
-      if (cameraOrbitTransition) {
-        cameraOrbitTransition.active = false;
-        cameraOrbitTransition = null;
-      }
-      isPosteriorFlipped = false;
-      isSoftVibrationActive = false;
-
-      const btnFlip = document.getElementById('btn-flip-reverse');
-      const ledFlip = document.getElementById('led-flip-reverse');
-      if (btnFlip) btnFlip.className = 'hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-purple-200 border-2 border-purple-400 flex items-center gap-1.5 cursor-pointer shadow-lg hover:border-purple-200';
-      if (ledFlip) ledFlip.className = 'led-indicator led-off';
-
-      if (smooth && camera && controls) {
-        cameraTargetPos.copy(targetCamPos);
-        cameraTargetLookAt.copy(targetLookAt);
-        isCameraTransitioning = true;
-      } else if (camera && controls) {
-        camera.position.copy(targetCamPos);
-        controls.target.copy(targetLookAt);
-        controls.update();
-        isCameraTransitioning = false;
-      }
-
-      if (typeof updateCartelera === 'function') updateCartelera('CAM', '3D');
-      if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
-    }
-
-    function resetCamera3D() {
-      setOptimalObservationPerspective(true);
-      showSmibToast('📐 Perspectiva Óptima: Números en ángulo y fondo levantado');
-      autoCloseSidebarOnMobile();
-    }
-
+    // Canon socio: botón y posición específica en ángulo, con las etiquetas a la vista y el acuario un poco ladeado hacia arriba
     function setCameraView(view) {
       controls.autoRotate = false;
       isAutoRotating = false;
@@ -4619,23 +4583,51 @@
         cameraOrbitTransition = null;
       }
       isPosteriorFlipped = false;
+      isSoftVibrationActive = false;
+      currentCameraView = view;
 
-      if (view === 'top') {
-        camera.position.set(0, 14.5, 0.01);
-        controls.target.set(0, -0.8, 0);
+      const btnFlip = document.getElementById('btn-flip-reverse');
+      const ledFlip = document.getElementById('led-flip-reverse');
+      if (btnFlip) btnFlip.className = 'hud-float px-3.5 py-2.5 rounded-2xl font-black text-xs mono text-purple-200 border-2 border-purple-400 flex items-center gap-1.5 cursor-pointer shadow-lg hover:border-purple-200';
+      if (ledFlip) ledFlip.className = 'led-indicator led-off';
+
+      if (view === 'angle') {
+        // Posición óptima axonométrica: vértice frontal-izquierdo apuntando al usuario,
+        // acuario ladeado hacia arriba y todas las etiquetas perimetrales (1..N) 100% legibles
+        cameraTargetPos.set(-12.8, 10.2, 14.6);
+        cameraTargetLookAt.set(0, -1.8, 0);
+        isCameraTransitioning = true;
+        if (typeof updateCartelera === 'function') updateCartelera('CAM', 'ÁNG');
+        showSmibToast('📐 Posición en Ángulo: Etiquetas a la vista y acuario ladeado hacia arriba');
+      } else if (view === 'top') {
+        cameraTargetPos.set(0, 16.5, 0.01);
+        cameraTargetLookAt.set(0, -1.8, 0);
+        isCameraTransitioning = true;
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'CEN');
+        showSmibToast('🔝 Cámara Cenital (Vista Superior 90°)');
       } else if (view === 'front') {
-        camera.position.set(0, -0.8, 14.5);
-        controls.target.set(0, -0.8, 0);
+        cameraTargetPos.set(0, -1.8, 16.5);
+        cameraTargetLookAt.set(0, -1.8, 0);
+        isCameraTransitioning = true;
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'FRO');
+        showSmibToast('⏹️ Cámara Frontal (Vista Frontal 0°)');
       } else if (view === 'side') {
-        camera.position.set(-14.5, -0.8, 0);
-        controls.target.set(0, -0.8, 0);
+        cameraTargetPos.set(-16.5, -1.8, 0);
+        cameraTargetLookAt.set(0, -1.8, 0);
+        isCameraTransitioning = true;
         if (typeof updateCartelera === 'function') updateCartelera('CAM', 'LAT');
+        showSmibToast('⏮️ Cámara Lateral (Vista Lateral 90°)');
       }
-      controls.update();
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       autoCloseSidebarOnMobile();
+    }
+
+    function setOptimalObservationPerspective(smooth = true) {
+      setCameraView('angle');
+    }
+
+    function resetCamera3D() {
+      setCameraView('angle');
     }
 
     function zoomInCamera() {
@@ -6337,7 +6329,10 @@
         { id: 'btn-matrix-chis', active: isDyadScannerRunning, activeBg: '#00FF87', activeShadow: 'rgba(0,255,135,0.9)' },
         { id: 'btn-matrix-aud',  active: isAudioPlaying,       activeBg: '#00F5D4', activeShadow: 'rgba(0,245,212,0.9)' },
         { id: 'btn-matrix-360',  active: (controls && controls.autoRotate), activeBg: '#38BDF8', activeShadow: 'rgba(56,189,248,0.9)' },
-        { id: 'btn-matrix-mov',  active: isStepAutoPlaying,    activeBg: '#00FF87', activeShadow: 'rgba(0,255,135,0.9)' }
+        { id: 'btn-matrix-mov',  active: isStepAutoPlaying,    activeBg: '#00FF87', activeShadow: 'rgba(0,255,135,0.9)' },
+        { id: 'btn-matrix-cen',  active: currentCameraView === 'top',   activeBg: '#00FF87', activeShadow: 'rgba(0,255,135,0.9)' },
+        { id: 'btn-matrix-fro',  active: currentCameraView === 'front', activeBg: '#00FF87', activeShadow: 'rgba(0,255,135,0.9)' },
+        { id: 'btn-matrix-ang',  active: currentCameraView === 'angle', activeBg: '#FFE600', activeShadow: 'rgba(255,230,0,0.9)' }
       ];
 
       fxConfigs.forEach(fx => {
@@ -6359,6 +6354,17 @@
           el.style.transform = '';
         }
       });
+
+      const btnCanvasAng = document.getElementById('btn-canvas-angle');
+      if (btnCanvasAng) {
+        if (currentCameraView === 'angle') {
+          btnCanvasAng.classList.add('border-amber-300', 'bg-amber-900/90', 'text-amber-200');
+          btnCanvasAng.classList.remove('border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+        } else {
+          btnCanvasAng.classList.remove('border-amber-300', 'bg-amber-900/90', 'text-amber-200');
+          btnCanvasAng.classList.add('border-amber-400', 'bg-amber-950/80', 'text-amber-300');
+        }
+      }
     }
 
     function selectD18Dimension(dimKey) {
