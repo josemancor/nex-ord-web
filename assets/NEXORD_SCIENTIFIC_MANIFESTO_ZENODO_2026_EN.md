@@ -7,8 +7,8 @@
 * **Author:** Dr. José Manuel Cornejo Álvarez
 * **Academic Affiliation:** Professor Emeritus (Retired) · Social Psychology. Faculty of Psychology, University of Barcelona (UB)
 * **Initiative Role:** Creator of the NEXORD Platform and Scientific Director of the Sociometric Bank (BSOC)
-* **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.18926396](https://doi.org/10.5281/zenodo.18926396)
-* **Homologated Edition DOI:** [10.5281/zenodo.23303953](https://doi.org/10.5281/zenodo.23303953)
+* **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641)
+* **Homologated Edition DOI:** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641)
 * **Official Website and Interactive Platform:** [https://josemancor.github.io/nex-ord-web/](https://josemancor.github.io/nex-ord-web/)
 * **Official Repository and Source Code:** [https://github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web)
 * **Master Ecosystem:** VISORD 3D/4D (Ordinal Sociometric Visualizer)
@@ -571,7 +571,7 @@ Full Euclidean rank interdistance matrix ($d_{	ext{DA}}, d_{	ext{RC}}, \Delta$) 
 
 1. **Cornejo, J. M. (1988).** *Técnicas de investigación social: El análisis de correspondencias*. Barcelona: PPU.
 2. **Vicente, R., Cornejo, J. M., & Barbero, F. (2006).** Análisis de la Actividad Grupal (AAG). *Anuario de Psicología*, 37(3), 299–320.
-3. **Cornejo, J. M. (2026).** *Computational Ordinal Sociometry (NEXORD): An updated mathematical extension of Moreno and Lewin's foundational insights*. Technical Monograph Series, Banco Sociométrico (BSOC). https://doi.org/10.5281/zenodo.23303953
+3. **Cornejo, J. M. (2026).** *Computational Ordinal Sociometry (NEXORD): An updated mathematical extension of Moreno and Lewin's foundational insights*. Technical Monograph Series, Banco Sociométrico (BSOC). https://doi.org/10.5281/zenodo.23329641
 4. **Cornejo Álvarez, J. M., & Morales Domínguez, J. F. (in press).** Sociometría Ordinal Computacional. La Plataforma NEXORD: Hacia una Física de lo Grupal [Computational Ordinal Sociometry. The NEXORD Platform: Towards a Physics of the Group]. *Psicothema*.
 
 ### II. Historical Roots, Group Dynamics, and Field Theory
