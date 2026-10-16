@@ -2,10 +2,10 @@
 
 ## Scientific Manifesto, Theoretical-Methodological Foundations, and Open Science Governance Framework
 ### *«Toward a Physics of the Collective»*
-#### Canonical Homologated Edition v9.0 (2026) — Complete English Text
+#### Official Canonical Edition v9.1.1 (October 2026) — Complete English Text
 
 * **Author:** Dr. José Manuel Cornejo Álvarez
-* **Academic Affiliation:** Professor Emeritus (Retired) · Social Psychology. Faculty of Psychology, University of Barcelona (UB)
+* **Academic Affiliation:** Retired Associate Professor of Social Psychology · Principal Investigator and Creator of the NEXORD Platform
 * **Initiative Role:** Creator of the NEXORD Platform and Scientific Director of the Sociometric Bank (BSOC)
 * **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641)
 * **Homologated Edition DOI:** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641)

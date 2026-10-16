@@ -2,15 +2,15 @@
 ### COMPUTATIONAL ORDINAL SOCIOMETRY (NEXORD)
 
 **Dr. José Manuel Cornejo Álvarez**  
-*Universidad de Barcelona (UB)*
+*Investigador Principal · Creador de la Plataforma NEXORD*
 
 ## SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD)
 ### *«Hacia una Física de la Grupalidad»*
 
-**Edición V9.0 (Octubre, 2026)**
+**Edición Canónica Definitiva v9.1.1 (Octubre, 2026)**
 
 * **Autor:** Dr. José Manuel Cornejo Álvarez
-* **Vinculación Académica:** Profesor Emérito Jubilado · Psicología Social
+* **Vinculación Académica:** Profesor Titular Jubilado de Psicología Social · Investigador Principal y Creador de NEXORD
 * **Rol en la Iniciativa:** Creador de la Plataforma NEXORD y Promotor Científico del Banco Sociométrico (BSOC)
 * **Concept DOI (Zenodo / CERN):** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641) · **DOI de Edición:** [10.5281/zenodo.23329641](https://doi.org/10.5281/zenodo.23329641)
 * **Repositorio Oficial:** [github.com/josemancor/nex-ord-web](https://github.com/josemancor/nex-ord-web) · **Plataforma:** [josemancor.github.io/nex-ord-web](https://josemancor.github.io/nex-ord-web/)
