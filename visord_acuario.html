@@ -284,7 +284,7 @@
   <meta name="citation_online_date" content="2026/01/01">
   <meta name="citation_journal_title" content="Zenodo - CERN">
   <meta name="citation_publisher" content="CERN European Organization for Nuclear Research">
-  <meta name="citation_doi" content="10.5281/zenodo.23303953">
+  <meta name="citation_doi" content="10.5281/zenodo.23404263">
   <meta name="citation_abstract_html_url" content="https://nexord.org/visord_acuario.html">
   <meta name="citation_pdf_url" content="https://nexord.org/assets/MANIFIESTO_CIENTIFICO_NEXORD_ZENODO_oct_2026_ES.pdf">
   <meta name="citation_language" content="es">
@@ -294,7 +294,7 @@
   <meta name="DC.creator" content="Cornejo, J. M.">
   <meta name="DC.date" scheme="W3CDTF" content="2026">
   <meta name="DC.publisher" content="Zenodo">
-  <meta name="DC.identifier" scheme="DOI" content="10.5281/zenodo.23303953">
+  <meta name="DC.identifier" scheme="DOI" content="10.5281/zenodo.23404263">
   <meta name="DC.rights" content="https://creativecommons.org/licenses/by/4.0/">
 
   <link rel="stylesheet" href="nexord_dial_nav.css">
@@ -835,7 +835,7 @@
       <!-- Pie del Modal -->
       <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
         <div class="text-slate-400 font-mono text-[11px]">
-          Plataforma NEXORD / VISORD Engine · Registrado en CERN Zenodo · DOI: 10.5281/zenodo.23303953
+          Plataforma NEXORD / VISORD Engine · Registrado en CERN Zenodo · DOI: 10.5281/zenodo.23404263
         </div>
         <div class="flex items-center gap-2">
           <a id="modal-18d-download-link" href="assets/Figura_18D_Espectrograma_Panoramico_Crema.png" download="Figura_18D_Espectrograma_Panoramico_Crema.png" class="action-btn px-4 py-1.5 rounded-xl bg-teal-500/30 text-teal-300 border border-teal-400 hover:bg-teal-500/50 font-black text-xs flex items-center gap-1">
@@ -899,7 +899,7 @@
         <span class="doi-brand">NEXORD.</span>
         <span class="doi-sep">•</span>
         <span class="doi-label">DOI:</span>
-        <a href="https://doi.org/10.5281/zenodo.23303953" target="_blank" rel="noopener" class="doi-link">10.5281/zenodo.23303953</a>
+        <a href="https://doi.org/10.5281/zenodo.23404263" target="_blank" rel="noopener" class="doi-link">10.5281/zenodo.23404263</a>
         <span class="doi-sep">•</span>
         <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" class="doi-license" title="Creative Commons Atribución 4.0 Internacional">CC-BY-4.0</a>
         <span class="doi-sep">•</span>
@@ -1946,8 +1946,31 @@
       container.addEventListener('pointermove', onCanvasPointerMove);
       window.addEventListener('resize', onWindowResize);
 
-      // Loop de renderizado
-      animateThree();
+      // Pausa Inteligente WebGL al salir del viewport o cambiar de pestaña
+      if (container && 'IntersectionObserver' in window) {
+        const renderObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            isThreeInViewport = entry.isIntersecting;
+            if (isThreeInViewport && !document.hidden) {
+              startThreeAnimation();
+            } else {
+              stopThreeAnimation();
+            }
+          });
+        }, { rootMargin: '60px', threshold: 0.05 });
+        renderObserver.observe(container);
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && isThreeInViewport) {
+          startThreeAnimation();
+        } else {
+          stopThreeAnimation();
+        }
+      });
+
+      // Loop de renderizado inteligente
+      startThreeAnimation();
     }
 
     // 1. Tanque de Cristal de la Pecera (Delimita el Acuario físicamente)
@@ -4156,7 +4179,7 @@
         overlay.classList.add('hidden');
         if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
           if (!checkResearcherAuth()) {
-            showSmibToast("⛔ Carga cancelada: Se requiere contraseña NEX_ORD");
+            showSmibToast("⛔ Carga cancelada: Se requiere clave de autorización NEXORD");
             return;
           }
           const file = e.dataTransfer.files[0];
@@ -4220,7 +4243,7 @@
     
 
     /* =========================================================================
-       14. SISTEMA DE SEGURIDAD Y ACCESO POR CONTRASEÑA 'NEX_ORD'
+       14. SISTEMA DE SEGURIDAD Y ACCESO POR CONTRASEÑA 'NEXORD'
        ========================================================================= */
     function checkResearcherAuth() {
       if (sessionStorage.getItem('nexord_researcher_auth') === 'unlocked') {
@@ -6314,9 +6337,54 @@
        ========================================================================= */
     let audioCtx = null;
     let isAudioPlaying = false;
-    let droneOsc1 = null, droneOsc2 = null, droneGain = null;
+    let droneOsc1 = null, droneOsc2 = null, droneGain = null, droneFilter = null;
 
-    function toggleAudio() {
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        droneGain = audioCtx.createGain();
+        droneGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+
+        // Sonificación Áurea Pitagórica calibrada a 432 Hz (A4 = 432 Hz)
+        // Subarmónico profundo de lecho marino: 108.0 Hz (La) y 162.0 Hz (Mi - Quinta justa 3:2)
+        droneOsc1 = audioCtx.createOscillator();
+        droneOsc1.type = 'sine';
+        droneOsc1.frequency.setValueAtTime(108.0, audioCtx.currentTime);
+
+        droneOsc2 = audioCtx.createOscillator();
+        droneOsc2.type = 'triangle';
+        droneOsc2.frequency.setValueAtTime(162.0, audioCtx.currentTime);
+
+        // Filtro de lecho marino con umbral de corte áureo inicial en 432 Hz
+        droneFilter = audioCtx.createBiquadFilter();
+        droneFilter.type = 'lowpass';
+        droneFilter.frequency.setValueAtTime(432.0, audioCtx.currentTime);
+
+        droneOsc1.connect(droneFilter);
+        droneOsc2.connect(droneFilter);
+        droneFilter.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+
+        droneOsc1.start();
+        droneOsc2.start();
+      }
+    }
+
+    function modulateHydroacousticTone(meanY) {
+      if (!isAudioPlaying || !droneFilter || !audioCtx) return;
+      try {
+        // Modulación continua según la altura hidrostática en la columna de agua:
+        // Fondo arenoso (meanY ≈ -3.48) -> corte profundo a 216 Hz
+        // Superficie libre (meanY ≈ 0) -> corte armónico áureo a 432 Hz
+        // Cielo abierto (meanY > 1.5) -> resonancia abierta hasta 864 Hz
+        const normalizedH = Math.max(0, Math.min(1, (meanY + 3.48) / 5.2));
+        const targetFreq = 216.0 + normalizedH * (864.0 - 216.0);
+        droneFilter.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.15);
+      } catch (e) {}
+    }
+
+    async function toggleAudio() {
       const btn = document.getElementById('btn-audio-toggle');
       const icon = document.getElementById('audio-icon');
       const label = document.getElementById('audio-label');
@@ -6327,47 +6395,31 @@
 
       if (!isAudioPlaying) {
         try {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          droneGain = audioCtx.createGain();
-          droneGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-
-          droneOsc1 = audioCtx.createOscillator();
-          droneOsc1.type = 'sine';
-          droneOsc1.frequency.setValueAtTime(110.0, audioCtx.currentTime); // La 110Hz
-
-          droneOsc2 = audioCtx.createOscillator();
-          droneOsc2.type = 'triangle';
-          droneOsc2.frequency.setValueAtTime(164.81, audioCtx.currentTime); // Mi 164Hz
-
-          // Filtro de lecho marino
-          const filter = audioCtx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(340, audioCtx.currentTime);
-
-          droneOsc1.connect(filter);
-          droneOsc2.connect(filter);
-          filter.connect(droneGain);
-          droneGain.connect(audioCtx.destination);
-
-          droneOsc1.start();
-          droneOsc2.start();
+          initAudio();
+          if (audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+          }
+          // Rampa suave de ganancia para evitar clicks acústicos
+          droneGain.gain.cancelScheduledValues(audioCtx.currentTime);
+          droneGain.gain.linearRampToValueAtTime(0.045, audioCtx.currentTime + 0.15);
 
           isAudioPlaying = true;
           if (icon) icon.textContent = '🔊';
-          if (label) label.textContent = 'AUDIO: ON';
+          if (label) label.textContent = 'AUDIO: 432Hz';
           if (btn) btn.className = 'action-btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-teal-500/30 text-teal-300 border-2 border-teal-400 shadow-[0_0_16px_rgba(0,245,212,0.5)]';
 
           if (iconFx) iconFx.textContent = '🔊';
-          if (labelFx) labelFx.textContent = 'Audio ON';
+          if (labelFx) labelFx.textContent = '432Hz ON';
           if (btnFx) btnFx.className = 'action-btn p-1.5 rounded-lg bg-teal-950/90 text-teal-200 border-2 border-teal-400 text-center font-black flex flex-col items-center gap-0.5 shadow-[0_0_12px_rgba(0,255,135,0.3)]';
-          showSmibToast('🔊 Hidroacústica Activada: Zumbido armónico del lecho marino');
+          showSmibToast('🔊 Hidroacústica 432 Hz Activada: Resonancia áurea del lecho marino');
         } catch (e) {
           console.warn('Audio no disponible:', e);
         }
       } else {
-        if (droneOsc1) droneOsc1.stop();
-        if (droneOsc2) droneOsc2.stop();
-        if (audioCtx) audioCtx.close();
+        if (droneGain && audioCtx) {
+          droneGain.gain.cancelScheduledValues(audioCtx.currentTime);
+          droneGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+        }
         isAudioPlaying = false;
         if (icon) icon.textContent = '🔇';
         if (label) label.textContent = 'AUDIO: OFF';
@@ -6377,11 +6429,11 @@
         if (labelFx) labelFx.textContent = 'Audio';
         if (btnFx) btnFx.className = 'action-btn p-1.5 rounded-lg bg-slate-900 text-slate-200 border-2 border-slate-700 hover:border-teal-400 text-center font-black flex flex-col items-center gap-0.5 shadow-sm';
         showSmibToast('🔇 Audio silenciado');
+      }
       if (typeof updateCartelera === 'function') updateCartelera('SAB', isAudioPlaying ? 'AUD' : 'MUTE');
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       autoCloseSidebarOnMobile();
     }
-
 
     /* =========================================================================
        CONFIGURACIONES ESPECTACULARES DE ACCIÓN (1-CLIC LAUNCH) & PRE-CONFIGURACIÓN
@@ -6875,6 +6927,7 @@
           dyadScannerTimer = null;
         }
         highlightCurrentDyad(null);
+      }
       if (typeof updateCartelera === 'function') updateCartelera('SAB', isDyadScannerRunning ? 'CHIS' : 'NO_C');
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       autoCloseSidebarOnMobile();
@@ -7022,12 +7075,61 @@
     }
 
     /* =========================================================================
-       14. BUCLE DE ANIMACIÓN THREE.JS
+       14. BUCLE DE ANIMACIÓN THREE.JS (OPTIMIZADO CON POOL DE MEMORIA Y PAUSA INTELIGENTE)
        ========================================================================= */
     let clock = new THREE.Clock();
+    let isThreeRenderingActive = false;
+    let isThreeInViewport = true;
+    let threeAnimFrameId = null;
+
+    // Pool de vectores estáticos para evitar recolección de basura (Garbage Collector a 60fps)
+    const _tempVecA = new THREE.Vector3();
+    const _tempVecB = new THREE.Vector3();
+    const _tempVecOrbit = new THREE.Vector3();
+
+    // Cache preasignado de coordenadas para deformación RBF ultrarrápida (0 allocs en bucle)
+    const _MAX_RBF_NODES = 64;
+    const _cachedNodeX = new Float32Array(_MAX_RBF_NODES);
+    const _cachedNodeY = new Float32Array(_MAX_RBF_NODES);
+    const _cachedNodeZ = new Float32Array(_MAX_RBF_NODES);
+
+    // Actualización de líneas in-place en VRAM (0 allocations)
+    function updateLineSegment(lineObj, x0, y0, z0, x1, y1, z1) {
+      if (!lineObj || !lineObj.geometry) return;
+      const posAttr = lineObj.geometry.attributes.position;
+      if (posAttr && posAttr.array && posAttr.array.length >= 6) {
+        const arr = posAttr.array;
+        arr[0] = x0; arr[1] = y0; arr[2] = z0;
+        arr[3] = x1; arr[4] = y1; arr[5] = z1;
+        posAttr.needsUpdate = true;
+        if (lineObj.computeLineDistances) lineObj.computeLineDistances();
+      } else {
+        _tempVecA.set(x0, y0, z0);
+        _tempVecB.set(x1, y1, z1);
+        lineObj.geometry.setFromPoints([_tempVecA, _tempVecB]);
+        if (lineObj.computeLineDistances) lineObj.computeLineDistances();
+      }
+    }
+
+    function startThreeAnimation() {
+      if (!isThreeRenderingActive) {
+        isThreeRenderingActive = true;
+        clock.start();
+        animateThree();
+      }
+    }
+
+    function stopThreeAnimation() {
+      isThreeRenderingActive = false;
+      if (threeAnimFrameId) {
+        cancelAnimationFrame(threeAnimFrameId);
+        threeAnimFrameId = null;
+      }
+    }
 
     function animateThree() {
-      requestAnimationFrame(animateThree);
+      if (!isThreeRenderingActive) return;
+      threeAnimFrameId = requestAnimationFrame(animateThree);
       const elapsedTime = clock.getElapsedTime();
       const now = performance.now();
       const floorY = -3.48;
@@ -7051,17 +7153,18 @@
         const activeName = (activeNodeData && activeNodeData.label) ? activeNodeData.label : `${currentActiveIdx + 1}A`;
         const phaseBadge = document.getElementById('scene-phase-badge');
         if (phaseBadge && elapsedTotal < totalDuration) {
-          phaseBadge.textContent = `FASE 1/4: ELEVANDO PUNTO ${currentActiveIdx + 1}/${numNodes}: ${activeName}`;
-          phaseBadge.className = 'text-cyan-300 font-black animate-pulse';
+          phaseBadge.textContent = `PROYECCIÓN 1 A 1: ELEVANDO NODO ${activeName} (${Math.round(globalProgress * 100)}%)`;
+          phaseBadge.className = 'scene-phase-badge badge-ascending';
         }
 
-        // A. Nodos en Modo Singular
+        // A. Nodos Principales (Cores, Halos y Números)
         visibleCores.forEach((core) => {
           const idx = core.userData.subjectIndex;
           const targetY = core.userData.targetY !== undefined ? core.userData.targetY : 0;
           const pX = core.userData.pX !== undefined ? core.userData.pX : core.position.x;
           const pZ = core.userData.pZ !== undefined ? core.userData.pZ : core.position.z;
 
+          // Retardo progresivo según el índice del sujeto (1..N)
           const nodeDelay = idx * nodeStaggerMs;
           const nodeElapsed = Math.max(0, elapsedTotal - nodeDelay);
           const rawT = (elapsedTotal < nodeDelay) ? 0.0 : Math.min(1.0, nodeElapsed / nodeLiftMs);
@@ -7070,7 +7173,6 @@
           const curY = (floorY + 0.12) + (targetY - (floorY + 0.12)) * easeT;
           core.position.y = curY;
 
-          // Brillo neón activo mientras se eleva para que se vea moverse nítidamente
           const isActivelyAscending = (elapsedTotal >= nodeDelay && elapsedTotal < nodeDelay + nodeLiftMs);
           if (core.material) {
             core.material.emissiveIntensity = isActivelyAscending ? 0.85 : (elapsedTotal < nodeDelay ? 0.15 : 0.45);
@@ -7084,11 +7186,7 @@
 
           const drop = dropLines.find(d => d.userData && d.userData.subjectIndex === idx && d.userData.maxY === undefined);
           if (drop) {
-            drop.geometry.setFromPoints([
-              new THREE.Vector3(pX, floorY + 0.015, pZ),
-              new THREE.Vector3(pX, curY, pZ)
-            ]);
-            drop.computeLineDistances();
+            updateLineSegment(drop, pX, floorY + 0.015, pZ, pX, curY, pZ);
             if (drop.material) {
               drop.material.opacity = (elapsedTotal < nodeDelay) ? 0.05 : (isActivelyAscending ? 0.75 : 0.40);
             }
@@ -7115,11 +7213,7 @@
           } else if (m.userData.type === 'spectrum_fiber') {
             const curMin = (floorY + 0.12) + (m.userData.minY - (floorY + 0.12)) * easeT;
             const curMax = (floorY + 0.12) + (m.userData.maxY - (floorY + 0.12)) * easeT;
-            m.geometry.setFromPoints([
-              new THREE.Vector3(pX, curMin, pZ),
-              new THREE.Vector3(pX, curMax, pZ)
-            ]);
-            if (m.computeLineDistances) m.computeLineDistances();
+            updateLineSegment(m, pX, curMin, pZ, pX, curMax, pZ);
           }
         });
 
@@ -7136,11 +7230,7 @@
             const easeT = 0.5 - 0.5 * Math.cos(Math.PI * rawT);
             const curY = (floorY + 0.12) + (targetY - (floorY + 0.12)) * easeT;
             const isActivelyAscending = (elapsedTotal >= nodeDelay && elapsedTotal < nodeDelay + nodeLiftMs);
-            drop.geometry.setFromPoints([
-              new THREE.Vector3(pX, floorY + 0.015, pZ),
-              new THREE.Vector3(pX, curY, pZ)
-            ]);
-            drop.computeLineDistances();
+            updateLineSegment(drop, pX, floorY + 0.015, pZ, pX, curY, pZ);
             if (drop.material) {
               drop.material.opacity = (elapsedTotal < nodeDelay) ? 0.05 : (isActivelyAscending ? 0.70 : 0.35);
             }
@@ -7167,11 +7257,7 @@
             if (numSpr) numSpr.position.y = targetY;
             const drop = dropLines.find(d => d.userData && d.userData.subjectIndex === idx && d.userData.maxY === undefined);
             if (drop) {
-              drop.geometry.setFromPoints([
-                new THREE.Vector3(pX, floorY + 0.015, pZ),
-                new THREE.Vector3(pX, targetY, pZ)
-              ]);
-              drop.computeLineDistances();
+              updateLineSegment(drop, pX, floorY + 0.015, pZ, pX, targetY, pZ);
               if (drop.material) drop.material.opacity = 0.40;
             }
           });
@@ -7182,11 +7268,7 @@
             if (m.userData.type === 'superposed_marker' || m.userData.type === 'bdr_ring') {
               m.position.y = m.userData.targetY;
             } else if (m.userData.type === 'spectrum_fiber') {
-              m.geometry.setFromPoints([
-                new THREE.Vector3(pX, m.userData.minY, pZ),
-                new THREE.Vector3(pX, m.userData.maxY, pZ)
-              ]);
-              if (m.computeLineDistances) m.computeLineDistances();
+              updateLineSegment(m, pX, m.userData.minY, pZ, pX, m.userData.maxY, pZ);
             }
           });
 
@@ -7194,11 +7276,7 @@
             if (drop.userData && drop.userData.maxY !== undefined) {
               const pX = drop.userData.pX;
               const pZ = drop.userData.pZ;
-              drop.geometry.setFromPoints([
-                new THREE.Vector3(pX, floorY + 0.015, pZ),
-                new THREE.Vector3(pX, drop.userData.targetY, pZ)
-              ]);
-              drop.computeLineDistances();
+              updateLineSegment(drop, pX, floorY + 0.015, pZ, pX, drop.userData.targetY, pZ);
               if (drop.material) drop.material.opacity = 0.35;
             }
           });
@@ -7206,13 +7284,21 @@
           flowLines.forEach(l => {
             if (l.material) l.material.opacity = 0.65;
           });
+
+          if (phaseBadge) {
+            phaseBadge.textContent = 'PROYECCIÓN 1 A 1: POSICIONES FÍSICAS ALCANZADAS';
+            phaseBadge.className = 'scene-phase-badge badge-active';
+            setTimeout(() => {
+              if (phaseBadge && !isAscendingFromFloor) phaseBadge.style.opacity = '0';
+            }, 3500);
+          }
         }
       }
 
-      // Pulsación hidrodinámica del halo conjetural
-      haloMeshes.forEach(mesh => {
-        if (mesh.userData && mesh.userData.baseRadius) {
-          const amb = mesh.userData.ambiguity || 0.1;
+      // Animación suave de flotabilidad en reposo de los nodos (respiración)
+      nodeMeshes.forEach((mesh) => {
+        if (mesh.userData && mesh.userData.type === 'halo') {
+          const amb = mesh.userData.isAmbivalent ? 0.3 : 0.0;
           const freq = mesh.userData.isAsphyxiated ? 4.5 : 2.0;
           const scale = 1.0 + Math.sin(elapsedTime * freq) * (0.05 + amb * 0.08);
           mesh.scale.set(scale, scale, scale);
@@ -7228,27 +7314,51 @@
 
         if (pos) {
           const isVibrating = (isSoftVibrationActive || isPosteriorFlipped || (camera && camera.position.y < -0.2));
-          const visibleNodes = nodeMeshes.filter(m => m.userData && (m.userData.type === 'core' || (m.userData.type === 'superposed_marker' && (m.userData.dimKey === 'D13' || m.userData.dimKey === activeD18Superposition[0]))) && m.parent);
+          
+          // Pre-extracción ultraeficiente de posiciones de nodos visibles fuera del bucle de vértices
+          let numActiveNodes = 0;
+          let nodeSumY = 0;
+          if (isRelationalSheetActive) {
+            for (let mIdx = 0; mIdx < nodeMeshes.length; mIdx++) {
+              const m = nodeMeshes[mIdx];
+              if (m.parent && m.userData && (m.userData.type === 'core' || (m.userData.type === 'superposed_marker' && (m.userData.dimKey === 'D13' || m.userData.dimKey === activeD18Superposition[0])))) {
+                _cachedNodeX[numActiveNodes] = m.position.x;
+                _cachedNodeY[numActiveNodes] = m.position.y;
+                _cachedNodeZ[numActiveNodes] = m.position.z;
+                nodeSumY += m.position.y;
+                numActiveNodes++;
+                if (numActiveNodes >= _MAX_RBF_NODES) break;
+              }
+            }
+          }
 
-          for (let i = 0; i < pos.count; i++) {
+          // Modulación hidroacústica en vivo con la altura media
+          if (numActiveNodes > 0 && isAudioPlaying) {
+            modulateHydroacousticTone(nodeSumY / numActiveNodes);
+          }
+
+          const sigmaSq = 2.8;
+          const invSigmaSq = 1.0 / sigmaSq;
+          const posCount = pos.count;
+          const ampScale = (typeof waveAmplitudeScale === 'number' ? waveAmplitudeScale : 1.0);
+
+          for (let i = 0; i < posCount; i++) {
             const u = pos.getX(i); // Coordenada X del mundo
             const w = pos.getZ(i); // Coordenada Z del mundo (profundidad)
 
             // 1. Onda oceánica ambiente sutil
             let h = Math.sin(u * 0.9 + elapsedTime * 1.4) * Math.cos(w * 0.9 + elapsedTime * 1.1) * 0.05;
 
-            // 2. Modulación RBF continua inducida por los nodos visibles (enrejado de densidades)
-            if (isRelationalSheetActive && visibleNodes.length > 0) {
+            // 2. Modulación RBF continua inducida por los nodos visibles (enrejado de densidades optimizado)
+            if (numActiveNodes > 0) {
               let rbfSum = 0;
               let weightSum = 0;
-              const sigmaSq = 2.8; // Cobertura armónica continua que abraza los nodos
-              for (let k = 0; k < visibleNodes.length; k++) {
-                const nodePos = visibleNodes[k].position;
-                const dx = u - nodePos.x;
-                const dz = w - nodePos.z;
+              for (let k = 0; k < numActiveNodes; k++) {
+                const dx = u - _cachedNodeX[k];
+                const dz = w - _cachedNodeZ[k];
                 const distSq = dx * dx + dz * dz;
-                const weight = Math.exp(-distSq / sigmaSq);
-                rbfSum += nodePos.y * weight;
+                const weight = Math.exp(-distSq * invSigmaSq);
+                rbfSum += _cachedNodeY[k] * weight;
                 weightSum += weight;
               }
               const blend = Math.min(1.0, weightSum * 0.85);
@@ -7262,7 +7372,7 @@
             }
 
             // Modificar la elevación vertical Y del vértice (Sábana-Ola 3D real con escala de amplitud)
-            const scaledH = h * (typeof waveAmplitudeScale === 'number' ? waveAmplitudeScale : 1.0);
+            const scaledH = h * ampScale;
             pos.setY(i, scaledH);
             if (wirePos) wirePos.setY(i, scaledH);
           }
@@ -7270,32 +7380,35 @@
           seaPlaneMesh.geometry.computeVertexNormals();
           if (wirePos) {
             wirePos.needsUpdate = true;
-            relationalSheetWireMesh.geometry.computeVertexNormals();
+            // No se calcula computeVertexNormals en wireframe para ahorrar ciclos de GPU
           }
         }
       }
 
-      // Suave transición orbital esférica de cámara (Canon socio: muy suave, sin disparos y obedece al zoom)
-      if (cameraOrbitTransition && cameraOrbitTransition.active && camera && controls) {
-        const now = performance.now();
-        const elapsed = now - cameraOrbitTransition.startTime;
-        const progress = Math.min(1.0, elapsed / cameraOrbitTransition.duration);
-        // Curva sinusoidal suave (sin aceleraciones bruscas ni disparos)
-        const ease = 0.5 - 0.5 * Math.cos(Math.PI * progress);
+      // Transición cinematográfica suave de la cámara (si está activa)
+      if (isCameraTransitioning && cameraOrbitTransition) {
+        const tElapsed = (now - cameraOrbitTransition.startTime) / cameraOrbitTransition.duration;
+        const tClamped = Math.min(1.0, Math.max(0.0, tElapsed));
+        // Interpolación cúbica suave (ease-in-out)
+        const tSmooth = tClamped < 0.5 
+          ? 4 * tClamped * tClamped * tClamped 
+          : 1 - Math.pow(-2 * tClamped + 2, 3) / 2;
 
-        const curRadius = cameraOrbitTransition.startRadius + (cameraOrbitTransition.targetRadius - cameraOrbitTransition.startRadius) * ease;
-        const curPhi = cameraOrbitTransition.startPhi + (cameraOrbitTransition.targetPhi - cameraOrbitTransition.startPhi) * ease;
-        const curTheta = cameraOrbitTransition.startTheta + (cameraOrbitTransition.targetTheta - cameraOrbitTransition.startTheta) * ease;
+        const curRadius = cameraOrbitTransition.startRadius + (cameraOrbitTransition.targetRadius - cameraOrbitTransition.startRadius) * tSmooth;
+        const curPhi = cameraOrbitTransition.startPhi + (cameraOrbitTransition.targetPhi - cameraOrbitTransition.startPhi) * tSmooth;
+        const curTheta = cameraOrbitTransition.startTheta + (cameraOrbitTransition.targetTheta - cameraOrbitTransition.startTheta) * tSmooth;
 
-        const newPos = new THREE.Vector3().setFromSphericalCoords(curRadius, curPhi, curTheta).add(cameraOrbitTransition.targetLookAt);
+        // Reutilizar vector estático para 0 asignaciones de memoria
+        const newPos = _tempVecOrbit.setFromSphericalCoords(curRadius, curPhi, curTheta).add(cameraOrbitTransition.targetLookAt);
         camera.position.copy(newPos);
-        camera.lookAt(cameraOrbitTransition.targetLookAt);
         controls.target.copy(cameraOrbitTransition.targetLookAt);
 
-        if (progress >= 1.0) {
-          cameraOrbitTransition.active = false;
+        if (tClamped >= 1.0) {
+          isCameraTransitioning = false;
+          cameraOrbitTransition = null;
+          controls.update();
         }
-      } else if (isCameraTransitioning && camera && controls) {
+      } else if (isCameraTransitioning && cameraTargetPos) {
         camera.position.lerp(cameraTargetPos, 0.06);
         controls.target.lerp(cameraTargetLookAt, 0.06);
         if (camera.position.distanceTo(cameraTargetPos) < 0.04) {
@@ -7361,13 +7474,13 @@
   title        = {{NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico}},
   year         = {2026},
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.23303953},
-  url          = {https://doi.org/10.5281/zenodo.23303953},
+  doi          = {10.5281/zenodo.23404263},
+  url          = {https://doi.org/10.5281/zenodo.23404263},
   note         = {Creative Commons Attribution 4.0 International (CC-BY-4.0)}
 }</pre>
 
       <!-- Bloque APA (oculto por defecto) -->
-      <pre id="apa-code-block" class="bibtex-pre" style="display:none; color:#A7F3D0; font-family:'Inter',sans-serif; font-size:0.88rem; line-height:1.6;">Cornejo, J. M. (2026). <em>NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico</em>. Zenodo. https://doi.org/10.5281/zenodo.23303953</pre>
+      <pre id="apa-code-block" class="bibtex-pre" style="display:none; color:#A7F3D0; font-family:'Inter',sans-serif; font-size:0.88rem; line-height:1.6;">Cornejo, J. M. (2026). <em>NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico</em>. Zenodo. https://doi.org/10.5281/zenodo.23404263</pre>
 
       <!-- Bloque RIS (oculto por defecto) -->
       <pre id="ris-code-block" class="bibtex-pre" style="display:none;">TY  - GEN
@@ -7375,13 +7488,13 @@ AU  - Cornejo, J. M.
 TI  - NEXORD / VISORD Engine: Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico
 PY  - 2026
 PB  - Zenodo
-DO  - 10.5281/zenodo.23303953
-UR  - https://doi.org/10.5281/zenodo.23303953
+DO  - 10.5281/zenodo.23404263
+UR  - https://doi.org/10.5281/zenodo.23404263
 ER  - </pre>
 
       <!-- Enlaces complementarios -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:0.78rem; flex-wrap:wrap; gap:8px;">
-        <a href="https://doi.org/10.5281/zenodo.23303953" target="_blank" rel="noopener" style="color:#38BDF8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Ver Manifiesto Científico Central en CERN Zenodo (DOI: 10.5281/zenodo.23303953)">
+        <a href="https://doi.org/10.5281/zenodo.23404263" target="_blank" rel="noopener" style="color:#38BDF8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Ver Manifiesto Científico Central en CERN Zenodo (DOI: 10.5281/zenodo.23404263)">
           <span>🌐</span> Manifiesto CERN Zenodo ↗
         </a>
         <a href="https://doi.org/10.5281/zenodo.23329054" target="_blank" rel="noopener" style="color:#F59E0B; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Ver Material Suplementario y Anexos Técnicos en CERN Zenodo (DOI: 10.5281/zenodo.23329054)">
