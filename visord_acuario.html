@@ -323,6 +323,10 @@
           <span class="led-indicator led-on led-pulse" id="led-master-top"></span>
           <span id="lbl-master-top">ACCIÓN: EN MOVIMIENTO</span>
         </button>
+        <button id="btn-top-stop" onclick="togglePauseSimulation()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition" title="STOP: Congelar toda la imagen del Acuario (Barra espaciadora)">
+          <span id="ico-top-stop">⏹</span>
+          <span id="lbl-top-stop">STOP</span>
+        </button>
         <button id="btn-audio-toggle" onclick="toggleAudio()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-slate-900 text-slate-300 border-2 border-slate-700 hover:bg-slate-800 shadow-sm" title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal">
           <span class="led-indicator led-off" id="led-audio"></span>
           <span id="audio-icon" class="text-xs">🔇</span> <span id="audio-label">AUDIO</span>
@@ -404,9 +408,9 @@
               <td onclick="setFondoBase('QxQ')" id="btn-cell-fondo-QxQ" class="bg-[#0284C7] hover:brightness-110 text-white border border-black cursor-pointer py-0.5" title="QxQ Figuras Sociométricas 9x9">QxQ</td>
               <td onclick="handleD18ButtonClick('D1')" id="btn-cell-densi-D1" class="bg-[#0284C7] hover:brightness-110 text-white border border-black cursor-pointer py-0.5" title="D1: p_DA Expectativa Emisor (A1)">D1</td>
             </tr>
-            <!-- Row 4: PLAY | Q9xQ9 | D2 -->
+            <!-- Row 4: STOP | Q9xQ9 | D2 -->
             <tr class="h-6">
-              <td onclick="togglePauseSimulation()" id="btn-matrix-play" class="bg-white hover:bg-slate-100 text-black border border-black cursor-pointer py-0.5" title="Pausar o reanudar dinámica">PLAY</td>
+              <td onclick="togglePauseSimulation()" id="btn-matrix-play" class="bg-white hover:bg-slate-100 text-rose-600 font-black border border-black cursor-pointer py-0.5" title="STOP: Congelar toda la imagen del Acuario">STOP</td>
               <td onclick="setFondoBase('QdxQr')" id="btn-cell-fondo-QdxQr" class="bg-[#0284C7] hover:brightness-110 text-white border border-black cursor-pointer py-0.5" title="Q9xQ9 Relacional (QdxQr)">Q9xQ9</td>
               <td onclick="handleD18ButtonClick('D2')" id="btn-cell-densi-D2" class="bg-[#0284C7] hover:brightness-110 text-white border border-black cursor-pointer py-0.5" title="D2: DA Preferencia Emisor (A2)">D2</td>
             </tr>
@@ -1636,6 +1640,9 @@
     // VARIABLES DE DINÁMICA, ACCIÓN CONTINUA Y MOVIOLA DIÁDICA
     // =========================================================================
     let isMasterDynamicsRunning = true; // ACCIÓN POR DEFECTO AL ABRIR
+    let isSimulationFrozen = false;     // STOP: CONGELACIÓN TOTAL DE LA ESCENA 3D
+    let animVirtualTime = 0.0;          // TIEMPO VIRTUAL CONTINUO ACUMULADO
+    let lastAnimFrameNow = null;        // TIMESTAMP DEL FRAME ANTERIOR
     let isDyadScannerRunning = true;    // ESCÁNER DE DÍADAS ACTIVO POR DEFECTO
     let dyadScannerTimer = null;
     let dyadScannerSpeed = 1; // 1x, 2x, 4x
@@ -2723,23 +2730,24 @@
       scene.add(bubbleInstanced);
     }
 
-    function updateBubbles(elapsedTime) {
+    function updateBubbles(elapsedTime, isFrozen = false) {
       if (!bubbleInstanced) return;
       const dummy = new THREE.Object3D();
       const maxWaterY = currentSeaLevel * 2.8;
 
       for (let i = 0; i < BUBBLE_COUNT; i++) {
         const b = bubbleData[i];
-        b.y += b.speed;
+        if (!isFrozen) {
+          b.y += b.speed * (SIMULATION_SPEEDS[currentSpeedIdx] || 1.0);
+          // Al tocar la superficie del agua, estalla y vuelve a nacer del lecho
+          if (b.y >= maxWaterY) {
+            b.y = -3.48;
+            b.x = (Math.random() - 0.5) * 9.8;
+            b.z = (Math.random() - 0.5) * 9.8;
+          }
+        }
         const wobbleX = Math.sin(elapsedTime * b.wobbleSpeed + b.seed) * b.wobbleAmp;
         const wobbleZ = Math.cos(elapsedTime * b.wobbleSpeed + b.seed) * b.wobbleAmp;
-
-        // Al tocar la superficie del agua, estalla y vuelve a nacer del lecho
-        if (b.y >= maxWaterY) {
-          b.y = -3.48;
-          b.x = (Math.random() - 0.5) * 9.8;
-          b.z = (Math.random() - 0.5) * 9.8;
-        }
 
         dummy.position.set(b.x + wobbleX, b.y, b.z + wobbleZ);
         dummy.scale.set(b.scale, b.scale, b.scale);
@@ -5472,35 +5480,83 @@
     // =========================================================================
     // CONTROLES DE REPRODUCCIÓN: pause, borrar, velocidad, ...
     // =========================================================================
-    function togglePauseSimulation() {
-      isMasterDynamicsRunning = !isMasterDynamicsRunning;
-      if (controls) controls.autoRotate = isMasterDynamicsRunning;
-      updateCartelera('DIN', isMasterDynamicsRunning ? 'MOV' : 'PAUS');
+    function updateFreezeUI() {
+      // 1. Botón de cabecera STOP / PLAY
+      const btnTopStop = document.getElementById('btn-top-stop');
+      const icoTopStop = document.getElementById('ico-top-stop');
+      const lblTopStop = document.getElementById('lbl-top-stop');
+      if (btnTopStop) {
+        if (isSimulationFrozen) {
+          btnTopStop.className = 'action-btn px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-sm hover:scale-105 transition';
+          btnTopStop.title = 'PLAY: Reanudar dinámica del Acuario (Barra espaciadora)';
+          if (icoTopStop) icoTopStop.textContent = '▶';
+          if (lblTopStop) lblTopStop.textContent = 'PLAY';
+        } else {
+          btnTopStop.className = 'action-btn px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition';
+          btnTopStop.title = 'STOP: Congelar toda la imagen del Acuario (Barra espaciadora)';
+          if (icoTopStop) icoTopStop.textContent = '⏹';
+          if (lblTopStop) lblTopStop.textContent = 'STOP';
+        }
+      }
 
-      const isPaused = !isMasterDynamicsRunning;
-      const ico = document.getElementById('ico-ctrl-pause');
-      const lbl = document.getElementById('lbl-ctrl-pause');
-      const btn = document.getElementById('btn-ctrl-pause');
-      if (ico) ico.textContent = isPaused ? '▶' : '⏸';
-      if (lbl) lbl.textContent = isPaused ? 'reanudar' : 'pause';
-      if (btn) {
-        btn.className = isPaused 
-          ? 'py-1.5 px-1.5 rounded-lg bg-amber-950 border border-amber-400 text-amber-200 font-bold flex items-center justify-center gap-1 cursor-pointer transition shadow-sm'
+      // 2. Celda STOP / PLAY en Matriz 18D (Fila 4, Columna 1)
+      const playBtn = document.getElementById('btn-matrix-play');
+      if (playBtn) {
+        if (isSimulationFrozen) {
+          playBtn.textContent = 'PLAY';
+          playBtn.className = 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-black border border-black cursor-pointer py-0.5';
+          playBtn.title = 'PLAY: Reanudar dinámica del Acuario';
+        } else {
+          playBtn.textContent = 'STOP';
+          playBtn.className = 'bg-white hover:bg-rose-50 text-rose-600 font-black border border-black cursor-pointer py-0.5';
+          playBtn.title = 'STOP: Congelar toda la imagen del Acuario';
+        }
+      }
+
+      // 3. Botón de control de pausa inferior
+      const icoPause = document.getElementById('ico-ctrl-pause');
+      const lblPause = document.getElementById('lbl-ctrl-pause');
+      const btnPause = document.getElementById('btn-ctrl-pause');
+      if (icoPause) icoPause.textContent = isSimulationFrozen ? '▶' : '⏸';
+      if (lblPause) lblPause.textContent = isSimulationFrozen ? 'play' : 'stop';
+      if (btnPause) {
+        btnPause.className = isSimulationFrozen 
+          ? 'py-1.5 px-1.5 rounded-lg bg-emerald-950 border border-emerald-400 text-emerald-200 font-bold flex items-center justify-center gap-1 cursor-pointer transition shadow-sm'
           : 'py-1.5 px-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-300 font-bold flex items-center justify-center gap-1 cursor-pointer transition';
       }
 
-      if (isPaused) {
+      // 4. Cartelera DIN
+      updateCartelera('DIN', isSimulationFrozen ? 'STOP' : 'MOV');
+    }
+
+    function togglePauseSimulation() {
+      isSimulationFrozen = !isSimulationFrozen;
+      isMasterDynamicsRunning = !isSimulationFrozen;
+
+      if (controls) {
+        controls.autoRotate = (!isSimulationFrozen && isAutoRotating);
+      }
+
+      if (isSimulationFrozen) {
         if (dyadScannerTimer) {
           clearInterval(dyadScannerTimer);
           dyadScannerTimer = null;
         }
-        showSmibToast('⏸ Dinámica del Acuario pausada');
+        if (audioCtx && audioCtx.state === 'running') {
+          audioCtx.suspend();
+        }
+        showSmibToast('⏹ STOP: Escena 3D congelada (pulsa PLAY o Espacio para reanudar)');
       } else {
         if (!dyadScannerTimer && isDyadScannerRunning && !isAscendingFromFloor) {
           startDyadScanner();
         }
-        showSmibToast('▶ Dinámica del Acuario reanudada');
+        if (isAudioPlaying && audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        showSmibToast('▶ PLAY: Dinámica del Acuario reanudada');
       }
+
+      updateFreezeUI();
       updateAllLeds();
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       autoCloseSidebarOnMobile();
@@ -5509,6 +5565,7 @@
     function resetAndClearAquariumScene() {
       isAscendingFromFloor = false;
       isMasterDynamicsRunning = false;
+      isSimulationFrozen = true;
       if (controls) controls.autoRotate = false;
       if (dyadScannerTimer) {
         clearInterval(dyadScannerTimer);
@@ -5517,6 +5574,7 @@
       activeSubjectIndex = null;
       activeDyadIndex = 0;
       updateDyadPerpendicularGuides(null, null, null);
+      updateFreezeUI();
 
       // Canon socio: "un control externo que permita limpiar la sábana ya que borrar no lo hace!!"
       // Borrar DEBE limpiar y ocultar incondicionalmente la sábana
@@ -6071,11 +6129,7 @@
       });
 
       // 3. Resaltar Botones de Mando / FX en Columna 1
-      const playBtn = document.getElementById('btn-matrix-play');
-      if (playBtn) {
-        playBtn.textContent = isMasterDynamicsRunning ? 'PAUS' : 'PLAY';
-        playBtn.style.background = isMasterDynamicsRunning ? '#FFFFFF' : '#FEF08A';
-      }
+      updateFreezeUI();
 
       const voltBtn = document.getElementById('btn-matrix-volt');
       if (voltBtn) {
@@ -6768,9 +6822,11 @@
 
       // Restablecer dinámicas y estado diádico al punto cero
       isMasterDynamicsRunning = true;
+      isSimulationFrozen = false;
       activeDyadIndex = 0;
       activeSubjectIndex = null;
       updateDyadPerpendicularGuides(null, null, null);
+      updateFreezeUI();
 
       // CANON SOCIO:
       // 1. Se reinicia todo: se borra SIEMPRE la sábana anterior (malla y alambre)
@@ -7117,6 +7173,7 @@
     function startThreeAnimation() {
       if (!isThreeRenderingActive) {
         isThreeRenderingActive = true;
+        lastAnimFrameNow = performance.now();
         clock.start();
         animateThree();
       }
@@ -7133,8 +7190,18 @@
     function animateThree() {
       if (!isThreeRenderingActive) return;
       threeAnimFrameId = requestAnimationFrame(animateThree);
-      const elapsedTime = clock.getElapsedTime();
       const now = performance.now();
+      if (lastAnimFrameNow === null) lastAnimFrameNow = now;
+      const deltaSec = Math.min(0.1, (now - lastAnimFrameNow) / 1000.0);
+      lastAnimFrameNow = now;
+
+      if (!isSimulationFrozen && isMasterDynamicsRunning) {
+        animVirtualTime += deltaSec * (SIMULATION_SPEEDS[currentSpeedIdx] || 1.0);
+      } else if (isAscendingFromFloor) {
+        // Si está congelado durante la elevación 1 a 1, deslizar ascentStartTime para congelar alturas
+        ascentStartTime += (deltaSec * 1000.0);
+      }
+      const elapsedTime = animVirtualTime;
       const floorY = -3.48;
 
       // =========================================================================
@@ -7427,9 +7494,12 @@
         }
       }
 
-      // Actualizar burbujas ascendentes
-      updateBubbles(elapsedTime);
+      // Actualizar burbujas ascendentes (congeladas si la simulación está en STOP)
+      updateBubbles(elapsedTime, isSimulationFrozen || !isMasterDynamicsRunning);
 
+      if (controls) {
+        controls.autoRotate = (!isSimulationFrozen && isMasterDynamicsRunning) ? isAutoRotating : false;
+      }
       controls.update();
       renderer.render(scene, camera);
     }
@@ -7455,6 +7525,17 @@
       highlightActiveOpButton('OP1');
       if (typeof updateMatrixTableUI === 'function') updateMatrixTableUI();
       initAquariumAutoAction();
+
+      // Atajo de teclado: Barra espaciadora para STOP / PLAY
+      window.addEventListener('keydown', (e) => {
+        const activeEl = document.activeElement;
+        const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
+        if (isInput) return;
+        if (e.code === 'Space') {
+          e.preventDefault();
+          togglePauseSimulation();
+        }
+      });
     });
   </script>
 <!-- MODAL CANÓNICO DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->
