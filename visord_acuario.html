@@ -379,6 +379,69 @@
         </button>
       </div>
 
+      <!-- ACCIONES DE DATOS: CARGAR JSON / GxTyCz | SIMULADOR ALEATORIO -->
+      <div class="grid grid-cols-2 gap-1.5 w-full text-center mono font-black">
+        <button id="btn-trigger-load-json" type="button" onclick="triggerJsonLoadDialog()" class="py-1.5 px-1 bg-[#1E293B] hover:bg-[#334155] active:scale-[0.98] text-[#38BDF8] hover:text-white font-black text-xs md:text-[13px] border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm flex items-center justify-center gap-1.5" title="Cargar cualquier análisis JSON de NEXORD (GxTyCz, SIMUL, matrices cuadradas, SMIb)">
+          <span>📂</span> <span>CARGAR JSON</span>
+        </button>
+        <button id="btn-trigger-random-sim" type="button" onclick="toggleRandomSimPanel()" class="py-1.5 px-1 bg-[#1E293B] hover:bg-[#334155] active:scale-[0.98] text-[#F59E0B] hover:text-[#FDE047] font-black text-xs md:text-[13px] border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm flex items-center justify-center gap-1.5" title="Generar dinámicas y sociomatrices aleatorias (Cohesión, Polarización, Jerarquía)">
+          <span>🎲</span> <span>SIMULAR</span>
+        </button>
+      </div>
+
+      <!-- INPUT OCULTO PARA CARGA DE ARCHIVOS -->
+      <input type="file" id="smib-file-input" accept=".json,.smib,.csv,.txt" style="display:none;" onchange="handleSmibFileLoad(event)">
+
+      <!-- SELECTOR DINÁMICO GxTyCz (visible cuando se ingesta un hypertensor multidimensional) -->
+      <div id="gtc-selector-container" class="hidden flex-col gap-1.5 w-full bg-slate-900/95 border-2 border-[#38BDF8] rounded-xl p-2 text-xs mono shadow-md">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] text-[#38BDF8] font-black tracking-wide flex items-center gap-1"><span>🌐</span> CELDA GxTyCz:</span>
+          <span id="badge-gtc-total-cells" class="text-[9px] bg-[#38BDF8]/20 text-[#38BDF8] px-1.5 py-0.5 rounded font-mono font-bold">0 celdas</span>
+        </div>
+        <select id="select-gtc-cell" onchange="switchGtcCell(this.value)" class="w-full bg-black text-[#00FF87] border border-[#38BDF8]/60 rounded-lg px-2 py-1 text-xs font-mono font-bold cursor-pointer outline-none">
+        </select>
+        <div class="flex items-center justify-between text-[10px] text-slate-300 pt-0.5">
+          <span id="badge-gtc-cell-stats" class="text-[10px] text-emerald-400 font-mono font-bold">BDR: -- | SDR: --</span>
+          <button type="button" onclick="clearGtcSession()" class="text-[9px] text-slate-400 hover:text-rose-400 underline cursor-pointer" title="Cerrar análisis multidimensional">✕ Cerrar</button>
+        </div>
+      </div>
+
+      <!-- PANEL DESPLEGABLE DE SIMULADOR ALEATORIO / SINTÉTICO -->
+      <div id="panel-simulador-aleatorio" class="hidden flex-col gap-2 w-full bg-slate-900/95 border-2 border-[#F59E0B] rounded-xl p-2.5 text-xs mono shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-700/80 pb-1.5">
+          <span class="text-[11px] font-black text-[#F59E0B] flex items-center gap-1"><span>🎲</span> SIMULADOR SINTÉTICO</span>
+          <button type="button" onclick="toggleRandomSimPanel(false)" class="text-slate-400 hover:text-white text-xs px-1 cursor-pointer">✕</button>
+        </div>
+        
+        <!-- Selector de N -->
+        <div class="flex flex-col gap-1">
+          <label class="text-[10px] text-slate-300 font-bold">Tamaño de Grupo (N):</label>
+          <div class="grid grid-cols-5 gap-1 text-center font-bold text-[10px]">
+            <button type="button" onclick="selectSimN(6)" id="btn-sim-n-6" class="btn-sim-n py-1 rounded bg-[#F59E0B] text-black font-black border border-black shadow-sm cursor-pointer">N=6</button>
+            <button type="button" onclick="selectSimN(8)" id="btn-sim-n-8" class="btn-sim-n py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer">N=8</button>
+            <button type="button" onclick="selectSimN(12)" id="btn-sim-n-12" class="btn-sim-n py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer">N=12</button>
+            <button type="button" onclick="selectSimN(16)" id="btn-sim-n-16" class="btn-sim-n py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer">N=16</button>
+            <button type="button" onclick="selectSimN(20)" id="btn-sim-n-20" class="btn-sim-n py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer">N=20</button>
+          </div>
+        </div>
+
+        <!-- Selector de Régimen Socio-Termodinámico -->
+        <div class="flex flex-col gap-1">
+          <label class="text-[10px] text-slate-300 font-bold">Régimen Relacional:</label>
+          <select id="select-sim-regime" class="w-full bg-black text-[#FDE047] border border-slate-600 rounded-lg px-2 py-1 text-xs font-mono font-bold cursor-pointer outline-none">
+            <option value="COHESION">1. Cohesión Canónica (Atracción Mútua)</option>
+            <option value="POLARIZACION">2. Polarización en 2 Facciones</option>
+            <option value="JERARQUIA">3. Jerarquía y Ostracismo (Líder / Chivo)</option>
+            <option value="ALEATORIO">4. Estocástico Puro (Ruido Relacional)</option>
+          </select>
+        </div>
+
+        <!-- Botón de Lanzamiento -->
+        <button type="button" onclick="executeRandomSimulation()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 active:scale-[0.98] text-black font-black text-xs rounded-lg border border-black shadow-md cursor-pointer transition flex items-center justify-center gap-1.5 mt-0.5">
+          <span>🚀</span> <span>GENERAR Y PROYECTAR</span>
+        </button>
+      </div>
+
       <!-- TABLA 1 (SUPERIOR): MATRIZ DE PROYECCIÓN (FONDO & DENSI - 2 COLUMNAS AMPLIAS) -->
       <div class="w-full border-2 border-black bg-slate-950/90 rounded-2xl shadow-xl p-1 md:p-1.5 mt-1">
         <table class="w-full border-separate border-spacing-1 md:border-spacing-1.5 text-center mono font-black select-none text-xs md:text-[13px]">
@@ -4044,6 +4107,11 @@
       }, 4000);
     }
 
+    function triggerJsonLoadDialog() {
+      const inp = document.getElementById('smib-file-input') || document.getElementById('file-input-smib');
+      if (inp) inp.click();
+    }
+
     function handleSmibFileLoad(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -4055,6 +4123,370 @@
       event.target.value = '';
     }
 
+    // Normalizador canónico de matrices SMIb (Cumplimiento estricto Regla 5 y Regla 7)
+    function normalizeAndCleanSmibMatrix(rawMatrix, subjects) {
+      if (!rawMatrix || !Array.isArray(rawMatrix) || rawMatrix.length < 2) {
+        throw new Error("Estructura de matriz no válida");
+      }
+      const n = rawMatrix.length;
+      const clean = [];
+      for (let i = 0; i < n; i++) {
+        const row = [];
+        for (let j = 0; j < n; j++) {
+          if (i === j) {
+            row.push("0000");
+            continue;
+          }
+          let cell = (rawMatrix[i] && rawMatrix[i][j]) ? String(rawMatrix[i][j]).trim() : "0000";
+          if (cell.length === 1) {
+            cell = "0" + cell + "00";
+          } else if (cell.length < 4) {
+            cell = (cell + "0000").slice(0, 4);
+          }
+          row.push(cell.slice(0, 4));
+        }
+        clean.push(row);
+      }
+
+      // Regla Canónica 5: Espejo diádico recíproco si A3 (REC) o A4 (p_REC) vienen vacíos
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          if (i !== j) {
+            let cell_ij = clean[i][j];
+            let cell_ji = clean[j][i];
+            if (cell_ij[2] === '0' && cell_ji[1] !== '0') {
+              cell_ij = cell_ij[0] + cell_ij[1] + cell_ji[1] + cell_ij[3];
+            }
+            if (cell_ij[3] === '0' && cell_ji[0] !== '0') {
+              cell_ij = cell_ij[0] + cell_ij[1] + cell_ij[2] + cell_ji[0];
+            }
+            clean[i][j] = cell_ij;
+          }
+        }
+      }
+
+      let cleanSubs = subjects;
+      if (!cleanSubs || !Array.isArray(cleanSubs) || cleanSubs.length !== n) {
+        cleanSubs = Array.from({length: n}, (_, idx) => `${idx + 1}A`);
+      }
+
+      return { cleanMatrix: clean, cleanSubjects: cleanSubs, N: n };
+    }
+
+    // Almacén de celdas multidimensionales GxTyCz ingestadas
+    let LOADED_GTC_MAP = {};
+    let CURRENT_GTC_KEY = null;
+
+    function handleGtcTensorIngestion(studyName, gtcSource, gtcKeys, topMeta) {
+      LOADED_GTC_MAP = {};
+      const selectEl = document.getElementById('select-gtc-cell');
+      if (selectEl) selectEl.innerHTML = '';
+
+      let firstValidKey = null;
+
+      gtcKeys.forEach((key) => {
+        const cell = gtcSource[key];
+        if (!cell || typeof cell !== 'object') return;
+
+        let cellMatrix = null;
+        let cellSubjects = cell.sujetos || cell.subjects || null;
+
+        if (cell.matrix && Array.isArray(cell.matrix)) {
+          cellMatrix = cell.matrix;
+        } else if (cell.q_map && cellSubjects && Array.isArray(cellSubjects)) {
+          const nSub = cellSubjects.length;
+          const subIdx = {};
+          cellSubjects.forEach((s, i) => { subIdx[s] = i; });
+          cellMatrix = Array.from({length: nSub}, () => Array(nSub).fill("0000"));
+          for (const qk in cell.q_map) {
+            const dyads = cell.q_map[qk];
+            if (Array.isArray(dyads)) {
+              dyads.forEach(d => {
+                const i = subIdx[d.from];
+                const j = subIdx[d.to];
+                if (i !== undefined && j !== undefined && i !== j) {
+                  cellMatrix[i][j] = (d.smib || "0000").slice(0, 4);
+                }
+              });
+            }
+          }
+        }
+
+        if (cellMatrix) {
+          try {
+            const norm = normalizeAndCleanSmibMatrix(cellMatrix, cellSubjects);
+            const bdrVal = (typeof cell.bdr === 'number') ? cell.bdr : (typeof cell.BDR === 'number' ? cell.BDR : 0);
+            const sdrVal = (typeof cell.sdr === 'number') ? cell.sdr : (typeof cell.SDR === 'number' ? cell.SDR : 0);
+            const entVal = (typeof cell.entropia === 'number') ? cell.entropia : 0;
+            const gLabel = cell.g !== undefined ? `G${cell.g}` : '';
+            const tLabel = cell.t !== undefined ? `T${cell.t}` : '';
+            const cLabel = cell.c !== undefined ? `C${cell.c}` : '';
+            const dimStr = [gLabel, tLabel, cLabel].filter(Boolean).join('·');
+            const cellName = `Celda ${key.toUpperCase()} ${dimStr ? '(' + dimStr + ')' : ''} [N=${norm.N}]`;
+
+            const presetObj = {
+              name: cellName,
+              desc: `Hipertensor multidimensional NEXORD "${studyName}". BDR=${bdrVal.toFixed(2)}, SDR=${sdrVal.toFixed(2)}, Entropía=${entVal.toFixed(2)}. N=${norm.N} nodos, ${norm.N * (norm.N - 1)} díadas.`,
+              subjects: norm.cleanSubjects,
+              matrix: norm.cleanMatrix,
+              gtcMeta: {
+                key: key,
+                g: cell.g,
+                t: cell.t,
+                c: cell.c,
+                bdr: bdrVal,
+                sdr: sdrVal,
+                entropia: entVal,
+                n: norm.N
+              }
+            };
+
+            const normKey = key.toLowerCase();
+            const presetKey = 'gtc_' + normKey;
+            PRESETS[presetKey] = presetObj;
+            LOADED_GTC_MAP[normKey] = presetObj;
+
+            if (!firstValidKey) firstValidKey = normKey;
+
+            if (selectEl) {
+              const opt = document.createElement('option');
+              opt.value = normKey;
+              opt.textContent = `${key.toUpperCase()} ${dimStr ? '(' + dimStr + ')' : ''} [N=${norm.N}]`;
+              selectEl.appendChild(opt);
+            }
+          } catch (e) {
+            console.warn(`No se pudo normalizar celda ${key}:`, e);
+          }
+        }
+      });
+
+      const validKeys = Object.keys(LOADED_GTC_MAP);
+      if (validKeys.length === 0 || !firstValidKey) {
+        alert("No se pudieron reconstruir celdas válidas del tensor multidimensional.");
+        return;
+      }
+
+      // Desplegar selector GTC en la consola lateral
+      const gtcContainer = document.getElementById('gtc-selector-container');
+      if (gtcContainer) {
+        gtcContainer.classList.remove('hidden');
+        gtcContainer.classList.add('flex');
+      }
+      const badgeTotal = document.getElementById('badge-gtc-total-cells');
+      if (badgeTotal) badgeTotal.textContent = `${validKeys.length} celdas`;
+
+      // Cargar primera celda inmediatamente
+      switchGtcCell(firstValidKey);
+      showSmibToast(`✅ Hipertensor ingestado: ${validKeys.length} celdas disponibles.`);
+    }
+
+    function switchGtcCell(cellKey) {
+      const normKey = (cellKey || '').toLowerCase();
+      const presetKey = 'gtc_' + normKey;
+      const cellData = LOADED_GTC_MAP[normKey] || PRESETS[presetKey];
+      if (!cellData) return;
+
+      CURRENT_GTC_KEY = normKey;
+      const selectEl = document.getElementById('select-gtc-cell');
+      if (selectEl && selectEl.value !== normKey) {
+        selectEl.value = normKey;
+      }
+
+      // Actualizar badge de telemetría de celda
+      const statsBadge = document.getElementById('badge-gtc-cell-stats');
+      if (statsBadge && cellData.gtcMeta) {
+        const m = cellData.gtcMeta;
+        statsBadge.textContent = `BDR: ${m.bdr.toFixed(2)} | SDR: ${m.sdr >= 0 ? '+' : ''}${m.sdr.toFixed(2)} | N=${m.n}`;
+      }
+
+      // Cargar escenario en el motor del Acuario
+      loadScenario(presetKey);
+
+      // Lanzar dinámica de ascenso de burbujas y proyección hidrostática
+      triggerMasterActionLaunch(false);
+
+      // Actualizar cartelera HUD
+      if (typeof updateCartelera === 'function') {
+        updateCartelera('REG', normKey.toUpperCase());
+        updateCartelera('FON', currentFondoBase || 'NxN');
+        updateCartelera('DIM', currentVerticalD18 || 'SDR');
+      }
+
+      showSmibToast(`🔄 Celda activada: ${normKey.toUpperCase()} (N=${cellData.subjects.length})`);
+    }
+
+    function clearGtcSession() {
+      const gtcContainer = document.getElementById('gtc-selector-container');
+      if (gtcContainer) {
+        gtcContainer.classList.add('hidden');
+        gtcContainer.classList.remove('flex');
+      }
+      LOADED_GTC_MAP = {};
+      CURRENT_GTC_KEY = null;
+      launchPreparedConfig('OP1');
+      showSmibToast("ℹ️ Sesión multidimensional cerrada. Retornando a Op1.");
+    }
+
+    /* =========================================================================
+       12b. SIMULADOR ALEATORIO / SINTÉTICO MULTI-RÉGIMEN (N=6..20)
+       ========================================================================= */
+    let selectedSimN = 6;
+
+    function toggleRandomSimPanel(force) {
+      const panel = document.getElementById('panel-simulador-aleatorio');
+      if (!panel) return;
+      const isHidden = panel.classList.contains('hidden');
+      const show = force !== undefined ? force : isHidden;
+      if (show) {
+        panel.classList.remove('hidden');
+        panel.classList.add('flex');
+      } else {
+        panel.classList.add('hidden');
+        panel.classList.remove('flex');
+      }
+    }
+
+    function selectSimN(n) {
+      selectedSimN = parseInt(n, 10) || 6;
+      const btns = document.querySelectorAll('.btn-sim-n');
+      btns.forEach(b => {
+        const isThis = b.id === `btn-sim-n-${selectedSimN}`;
+        b.className = isThis 
+          ? 'btn-sim-n py-1 rounded bg-[#F59E0B] text-black font-black border border-black shadow-sm cursor-pointer'
+          : 'btn-sim-n py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer';
+      });
+    }
+
+    function generateRandomSocioMatrix(n, regime) {
+      const subjects = [];
+      for (let i = 1; i <= n; i++) {
+        subjects.push(`${i}A`);
+      }
+
+      const matrix = Array.from({length: n}, () => Array(n).fill("0000"));
+      const posPool = ['A', 'B', 'C', 'D'];
+      const negPool = ['a', 'b', 'c', 'd'];
+      const randChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          let da_ij = '0', da_ji = '0';
+          let p_da_ij = '0', p_da_ji = '0';
+
+          if (regime === 'COHESION') {
+            const isMutual = Math.random() < 0.72;
+            if (isMutual) {
+              da_ij = randChoice(['A', 'B', 'C']);
+              da_ji = randChoice(['A', 'B', 'C']);
+              p_da_ij = randChoice(['A', 'B', '0']);
+              p_da_ji = randChoice(['A', 'B', '0']);
+            } else {
+              da_ij = Math.random() < 0.6 ? randChoice(['A', 'B', '0']) : '0';
+              da_ji = Math.random() < 0.6 ? randChoice(['A', 'B', '0']) : '0';
+              p_da_ij = Math.random() < 0.5 ? 'A' : '0';
+              p_da_ji = Math.random() < 0.5 ? 'A' : '0';
+            }
+          } else if (regime === 'POLARIZACION') {
+            const half = Math.floor(n / 2);
+            const sameFaction = (i < half && j < half) || (i >= half && j >= half);
+            if (sameFaction) {
+              da_ij = randChoice(['A', 'B', 'C']);
+              da_ji = randChoice(['A', 'B', 'C']);
+              p_da_ij = randChoice(['A', 'B']);
+              p_da_ji = randChoice(['A', 'B']);
+            } else {
+              da_ij = randChoice(['a', 'b', 'c']);
+              da_ji = randChoice(['a', 'b', 'c']);
+              p_da_ij = randChoice(['a', 'b', '0']);
+              p_da_ji = randChoice(['a', 'b', '0']);
+            }
+          } else if (regime === 'JERARQUIA') {
+            if (j === 0 || i === 0) {
+              const toLeader = (j === 0);
+              da_ij = toLeader ? randChoice(['A', 'B']) : randChoice(['B', 'C', '0']);
+              da_ji = toLeader ? randChoice(['B', 'C', '0']) : randChoice(['A', 'B']);
+              p_da_ij = toLeader ? randChoice(['A', 'B']) : '0';
+              p_da_ji = toLeader ? '0' : randChoice(['A', 'B']);
+            } else if (j === n - 1 || i === n - 1) {
+              const toMargin = (j === n - 1);
+              da_ij = toMargin ? randChoice(['a', 'b', '0']) : randChoice(['A', '0', 'a']);
+              da_ji = toMargin ? randChoice(['A', '0', 'a']) : randChoice(['a', 'b', '0']);
+              p_da_ij = toMargin ? '0' : 'a';
+              p_da_ji = toMargin ? 'a' : '0';
+            } else {
+              da_ij = Math.random() < 0.6 ? randChoice(['A', 'B', '0']) : randChoice(['a', '0']);
+              da_ji = Math.random() < 0.6 ? randChoice(['A', 'B', '0']) : randChoice(['a', '0']);
+              p_da_ij = Math.random() < 0.4 ? 'A' : '0';
+              p_da_ji = Math.random() < 0.4 ? 'A' : '0';
+            }
+          } else {
+            const roll_ij = Math.random();
+            da_ij = roll_ij < 0.35 ? randChoice(posPool) : (roll_ij < 0.65 ? randChoice(negPool) : '0');
+            const roll_ji = Math.random();
+            da_ji = roll_ji < 0.35 ? randChoice(posPool) : (roll_ji < 0.65 ? randChoice(negPool) : '0');
+            p_da_ij = Math.random() < 0.35 ? randChoice(posPool) : (Math.random() < 0.25 ? randChoice(negPool) : '0');
+            p_da_ji = Math.random() < 0.35 ? randChoice(posPool) : (Math.random() < 0.25 ? randChoice(negPool) : '0');
+          }
+
+          matrix[i][j] = p_da_ij + da_ij + da_ji + p_da_ji;
+          matrix[j][i] = p_da_ji + da_ji + da_ij + p_da_ij;
+        }
+      }
+
+      return { matrix, subjects };
+    }
+
+    function executeRandomSimulation() {
+      const n = selectedSimN || 6;
+      const regEl = document.getElementById('select-sim-regime');
+      const regime = regEl ? regEl.value : 'COHESION';
+
+      const regNames = {
+        'COHESION': 'Cohesión Canónica',
+        'POLARIZACION': 'Polarización en 2 Facciones',
+        'JERARQUIA': 'Jerarquía y Ostracismo',
+        'ALEATORIO': 'Estocástico Puro'
+      };
+      const regName = regNames[regime] || regime;
+
+      const simResult = generateRandomSocioMatrix(n, regime);
+      const simKey = 'simul_aleatoria';
+
+      PRESETS[simKey] = {
+        name: `Simulación: ${regName} (N=${n})`,
+        desc: `Dinámica relacional sintetizada bajo régimen "${regName}". N=${n} sujetos, ${n * (n - 1)} díadas evaluadas bajo canon SMIb.`,
+        subjects: simResult.subjects,
+        matrix: simResult.matrix
+      };
+
+      // Ocultar selector GTC si estaba abierto
+      const gtcContainer = document.getElementById('gtc-selector-container');
+      if (gtcContainer) {
+        gtcContainer.classList.add('hidden');
+        gtcContainer.classList.remove('flex');
+      }
+
+      // Cargar escenario en el motor del Acuario
+      loadScenario(simKey);
+
+      // Iniciar dinámica de ascenso y proyección
+      triggerMasterActionLaunch(false);
+
+      // Actualizar cartelera
+      if (typeof updateCartelera === 'function') {
+        const regCodes = { 'COHESION': 'COH', 'POLARIZACION': 'FAC', 'JERARQUIA': 'JER', 'ALEATORIO': 'ALE' };
+        updateCartelera('REG', regCodes[regime] || `N=${n}`);
+        updateCartelera('FON', currentFondoBase || 'NxN');
+        updateCartelera('DIM', currentVerticalD18 || 'SDR');
+      }
+
+      toggleRandomSimPanel(false);
+      showSmibToast(`🎲 SIMULACIÓN GENERADA: ${regName} (N=${n})`);
+    }
+
+    /* =========================================================================
+       12c. PROCESADOR UNIVERSAL DE ARCHIVOS JSON / SMIb / TABULARES
+       ========================================================================= */
     function processSmibFileContent(fileName, textContent) {
       try {
         let parsedMatrix = null;
@@ -4065,22 +4497,58 @@
         if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
           // JSON
           const data = JSON.parse(trimmed);
+
+          // 1. Detección de Hipertensor Multidimensional GxTyCz
+          let gtcSource = null;
+          if (typeof data === 'object' && !Array.isArray(data)) {
+            if (data.cells && typeof data.cells === 'object') gtcSource = data.cells;
+            else if (data.hypertensor && typeof data.hypertensor === 'object') gtcSource = data.hypertensor;
+            else gtcSource = data;
+          }
+
+          if (gtcSource) {
+            const gtcKeys = Object.keys(gtcSource).filter(k => /^[0-9]+g[0-9]+t[0-9]+c$/i.test(k));
+            if (gtcKeys.length > 0) {
+              handleGtcTensorIngestion(studyName, gtcSource, gtcKeys, data.meta || data.metadata);
+              return;
+            }
+          }
+
+          // 2. Detección de formatos de escenario unitario
           if (Array.isArray(data)) {
-            // Matriz pura array de arrays
-            parsedMatrix = data;
+            if (Array.isArray(data[0])) {
+              parsedMatrix = data;
+            }
           } else if (data.matrix && Array.isArray(data.matrix)) {
             parsedMatrix = data.matrix;
             if (data.subjects && Array.isArray(data.subjects)) parsedSubjects = data.subjects;
             if (data.name) studyName = data.name;
-          } else if (data.matrices_cuadradas && data.matrices_cuadradas.G1 && data.matrices_cuadradas.G1.SMIb) {
-            parsedMatrix = data.matrices_cuadradas.G1.SMIb;
+            else if (data.metadata && data.metadata.scenario) studyName = data.metadata.scenario;
+          } else if (data.matrices_cuadradas) {
+            const mc = data.matrices_cuadradas;
+            if (mc.G1 && mc.G1.SMIb) parsedMatrix = mc.G1.SMIb;
+            else if (mc.G2 && mc.G2.SMIb) parsedMatrix = mc.G2.SMIb;
             if (data.metadata && data.metadata.sujetos_G1) parsedSubjects = data.metadata.sujetos_G1;
             if (data.metadata && data.metadata.estudio) studyName = data.metadata.estudio;
+          } else if (data.matrices_smib && Array.isArray(data.matrices_smib)) {
+            if (Array.isArray(data.matrices_smib[0])) {
+              parsedMatrix = data.matrices_smib;
+              if (data.characters && Array.isArray(data.characters)) {
+                parsedSubjects = data.characters.map(c => c.name || c.id);
+              }
+            }
+          } else if (data._DATA_SMIB_ && typeof data._DATA_SMIB_ === 'object') {
+            const tKeys = Object.keys(data._DATA_SMIB_);
+            if (tKeys.length > 0 && Array.isArray(data._DATA_SMIB_[tKeys[0]])) {
+              parsedMatrix = data._DATA_SMIB_[tKeys[0]];
+              if (data._HEADER_METADATA_ && data._HEADER_METADATA_.SUJETOS) {
+                parsedSubjects = data._HEADER_METADATA_.SUJETOS;
+              }
+            }
           } else if (data.SMIb && Array.isArray(data.SMIb)) {
             parsedMatrix = data.SMIb;
             if (data.subjects) parsedSubjects = data.subjects;
           } else if (data.tensor_data && Array.isArray(data.tensor_data)) {
-            // Reconstrucción desde tensor records
             const subsSet = new Set();
             data.tensor_data.forEach(r => { if (r.Emisor) subsSet.add(r.Emisor); if (r.Receptor) subsSet.add(r.Receptor); });
             parsedSubjects = Array.from(subsSet).sort();
@@ -4096,15 +4564,6 @@
                 parsedMatrix[i][j] = "0" + charVal + "00";
               }
             });
-            // Aplicar espejo canónico REC[i,j] = DA[j,i]
-            for (let i = 0; i < nSub; i++) {
-              for (let j = 0; j < nSub; j++) {
-                if (i !== j) {
-                  const da_ji = parsedMatrix[j][i][1];
-                  parsedMatrix[i][j] = parsedMatrix[i][j][0] + parsedMatrix[i][j][1] + da_ji + parsedMatrix[i][j][3];
-                }
-              }
-            }
           }
         } else {
           // CSV / TSV / Texto
@@ -4114,9 +4573,7 @@
             let startRow = 0;
             const firstTokens = lines[0].split(sep).map(t => t.trim());
             
-            // Comprobar si primera fila es cabecera
             if (firstTokens.some(t => t.length !== 4 || isNaN(t[0]))) {
-              // Cabecera detectada
               parsedSubjects = firstTokens.filter(t => t.length > 0 && t.length < 15);
               if (parsedSubjects.length > lines.length) parsedSubjects = parsedSubjects.slice(1);
               startRow = 1;
@@ -4126,7 +4583,6 @@
             for (let r = startRow; r < lines.length; r++) {
               let cols = lines[r].split(sep).map(c => c.trim().replace(/^["']|["']$/g, ''));
               if (cols.length > 1) {
-                // Si la columna 0 es el ID, descartarla si cols.length = N + 1
                 if (cols.length === lines.length - startRow + 1) {
                   cols = cols.slice(1);
                 }
@@ -4138,78 +4594,40 @@
         }
 
         if (!parsedMatrix || !Array.isArray(parsedMatrix) || parsedMatrix.length < 2) {
-          alert("No se pudo detectar una matriz SMIb válida en el archivo.");
+          alert("No se pudo detectar una matriz o análisis SMIb válido en el archivo.");
           return;
         }
 
-        const loadedN = parsedMatrix.length;
-        // Normalizar filas y celdas
-        const cleanMatrix = [];
-        for (let i = 0; i < loadedN; i++) {
-          const row = [];
-          for (let j = 0; j < loadedN; j++) {
-            if (i === j) {
-              row.push("0000");
-              continue;
-            }
-            let cell = (parsedMatrix[i] && parsedMatrix[i][j]) ? String(parsedMatrix[i][j]).trim() : "0000";
-            if (cell.length === 1) {
-              // Expansión simple a tetragrama [0, DA, 0, 0]
-              cell = "0" + cell + "00";
-            } else if (cell.length < 4) {
-              cell = (cell + "0000").slice(0, 4);
-            }
-            row.push(cell.slice(0, 4));
-          }
-          cleanMatrix.push(row);
-        }
+        // Normalizar matriz canónicamente
+        const normalized = normalizeAndCleanSmibMatrix(parsedMatrix, parsedSubjects);
+        const loadedN = normalized.N;
 
-        // Espejo de seguridad canónico A3 (REC) = A2 (DA del partner) si A3 viene vacío
-        for (let i = 0; i < loadedN; i++) {
-          for (let j = 0; j < loadedN; j++) {
-            if (i !== j && cleanMatrix[i][j][2] === '0' && cleanMatrix[j][i][1] !== '0') {
-              const da_partner = cleanMatrix[j][i][1];
-              cleanMatrix[i][j] = cleanMatrix[i][j][0] + cleanMatrix[i][j][1] + da_partner + cleanMatrix[i][j][3];
-            }
-          }
-        }
-
-        if (!parsedSubjects || parsedSubjects.length !== loadedN) {
-          parsedSubjects = Array.from({length: loadedN}, (_, idx) => `S${idx + 1}`);
+        // Ocultar selector GTC si estaba abierto
+        const gtcContainer = document.getElementById('gtc-selector-container');
+        if (gtcContainer) {
+          gtcContainer.classList.add('hidden');
+          gtcContainer.classList.remove('flex');
         }
 
         // Registrar como preset custom
         PRESETS['custom'] = {
           name: studyName.toUpperCase(),
           desc: `Matriz SMIb ingestada factual desde el archivo "${fileName}". N=${loadedN} nodos, ${loadedN * (loadedN - 1)} díadas evaluadas.`,
-          subjects: parsedSubjects,
-          matrix: cleanMatrix
+          subjects: normalized.cleanSubjects,
+          matrix: normalized.cleanMatrix
         };
-
-        // Mostrar botón de matriz custom en UI
-        const btnCust = document.getElementById('btn-scen-custom');
-        const lblCust = document.getElementById('lbl-scen-custom');
-        const badgeCust = document.getElementById('badge-scen-custom');
-        const badgeInfo = document.getElementById('custom-matrix-loaded-badge');
-        const nameLbl = document.getElementById('custom-matrix-name-label');
-        const statsLbl = document.getElementById('custom-matrix-stats-label');
-        const ledCust = document.getElementById('led-custom-smib');
-
-        if (btnCust) btnCust.classList.remove('hidden');
-        if (lblCust) lblCust.textContent = studyName.toUpperCase();
-        if (badgeCust) badgeCust.textContent = `N=${loadedN} • ${loadedN * (loadedN - 1)} Díadas`;
-        if (badgeInfo) badgeInfo.classList.remove('hidden');
-        if (nameLbl) nameLbl.textContent = `MATRIZ: ${studyName.toUpperCase()}`;
-        if (statsLbl) statsLbl.textContent = `N=${loadedN} • ${loadedN * (loadedN - 1)} Díadas`;
-        if (ledCust) ledCust.className = 'led-indicator led-on';
 
         // Cargar escenario custom
         loadScenario('custom');
-        showSmibToast(`✅ MATRIZ SMIb INGESTADA: ${studyName} (N=${loadedN})`);
+
+        // Disparar dinámica hidrostática de proyección
+        triggerMasterActionLaunch(false);
+
+        showSmibToast(`✅ MATRIZ SMIb INGESTADA: ${studyName.toUpperCase()} (N=${loadedN})`);
 
       } catch (err) {
-        console.error("Error al procesar matriz SMIb:", err);
-        alert("Error al procesar el archivo SMIb: " + err.message);
+        console.error("Error al procesar archivo:", err);
+        alert("Error al procesar el archivo: " + err.message);
       }
     }
 
@@ -4292,10 +4710,6 @@
         e.stopPropagation();
         overlay.classList.add('hidden');
         if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          if (!checkResearcherAuth()) {
-            showSmibToast("⛔ Carga cancelada: Se requiere clave de autorización NEXORD");
-            return;
-          }
           const file = e.dataTransfer.files[0];
           const reader = new FileReader();
           reader.onload = function(evt) {
