@@ -3049,8 +3049,9 @@
     // ACTUALIZADORES DE INTERFAZ (UI)
     function updateTemporalUI() {
         const sliderT = document.getElementById('slider-t-time');
-        sliderT.value = STATE.temporalTime.toFixed(2);
-        document.getElementById('val-t-time').innerText = `T${STATE.temporalTime.toFixed(2)}`;
+        if (sliderT) sliderT.value = STATE.temporalTime.toFixed(2);
+        const valT = document.getElementById('val-t-time');
+        if (valT) valT.innerText = `T${STATE.temporalTime.toFixed(2)}`;
 
         const currentStep = Math.min(4, Math.max(1, Math.round(STATE.temporalTime)));
         document.querySelectorAll('.btn-t-step').forEach(btn => {
@@ -3062,8 +3063,9 @@
 
     function updateCriterionUI() {
         const sliderC = document.getElementById('slider-c-time');
-        sliderC.value = STATE.criterionVal.toFixed(2);
-        document.getElementById('val-c-time').innerText = `C${STATE.criterionVal.toFixed(2)}`;
+        if (sliderC) sliderC.value = STATE.criterionVal.toFixed(2);
+        const valC = document.getElementById('val-c-time');
+        if (valC) valC.innerText = `C${STATE.criterionVal.toFixed(2)}`;
 
         const currentCInt = Math.min(3, Math.max(1, Math.round(STATE.criterionVal)));
         document.querySelectorAll('.btn-c-step, #btn-panel-c1, #btn-panel-c2, #btn-panel-c3').forEach(btn => {
@@ -3193,16 +3195,20 @@
 
         // Slider de tiempo T [1.00, 4.00]
         const sliderT = document.getElementById('slider-t-time');
-        sliderT.addEventListener('input', (e) => {
-            setTemporalTime(parseFloat(e.target.value));
-        });
+        if (sliderT) {
+            sliderT.addEventListener('input', (e) => {
+                setTemporalTime(parseFloat(e.target.value));
+            });
+        }
 
         // Slider de criterio C [1.00, 3.00]
         const sliderC = document.getElementById('slider-c-time');
-        sliderC.addEventListener('input', (e) => {
-            if (STATE.isVaivenActive) toggleVaiven();
-            setCriterionTime(parseFloat(e.target.value));
-        });
+        if (sliderC) {
+            sliderC.addEventListener('input', (e) => {
+                if (STATE.isVaivenActive) toggleVaiven();
+                setCriterionTime(parseFloat(e.target.value));
+            });
+        }
 
         // Slider de velocidad del Vaivén
         const sliderVaivenSpeed = document.getElementById('slider-vaiven-speed');

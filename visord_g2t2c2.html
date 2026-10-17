@@ -2022,7 +2022,7 @@
 
             // Vínculos 3D
             activeEdgeDefs = cellData.edges || [];
-            rebuildEdges();
+            rebuildEdges(cellData);
 
             // Actualizar Paneles
             updateLeftPanel(groupNodes, cellData);
@@ -2040,7 +2040,11 @@
             }
         }
 
-        function rebuildEdges() {
+        function rebuildEdges(cellData) {
+            if (!cellData) {
+                const cellKey = getCellKey(currentG, currentT, currentC);
+                cellData = (typeof ACTIVE_DATASET !== 'undefined' && ACTIVE_DATASET && ACTIVE_DATASET.celdas) ? ACTIVE_DATASET.celdas[cellKey] : null;
+            }
             edgeObjects.forEach(eo => {
                 scene.remove(eo.mesh);
                 if (eo.mesh.geometry) eo.mesh.geometry.dispose();
@@ -2256,9 +2260,9 @@
         }
 
         function updateRightPanel(cellData) {
-            const bdr = cellData.bdr || 0;
-            const sdr = cellData.sdr || 0;
-            const entropy = cellData.entropia || 0;
+            const bdr = parseFloat(cellData.bdr) || 0;
+            const sdr = parseFloat(cellData.sdr) || 0;
+            const entropy = parseFloat(cellData.entropia) || 0;
             const grassmann = cellData.grassmann || "Gr(3, 6)";
 
             document.getElementById('metric-bdr-val').textContent = bdr.toFixed(2);
@@ -2438,8 +2442,8 @@
             const oppEdges = edges.filter(e => e.opposition).length;
             const totalActive = posEdges + negEdges + oppEdges;
 
-            const bdr = cellData.bdr || (totalActive / (M_max || 1));
-            const sdr = cellData.sdr || 0;
+            const bdr = parseFloat(cellData.bdr) || (totalActive / (M_max || 1));
+            const sdr = parseFloat(cellData.sdr) || 0;
 
             let html = `
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; color:#CBD5E1; font-size:0.82rem;">

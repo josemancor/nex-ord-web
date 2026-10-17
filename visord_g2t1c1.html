@@ -3328,6 +3328,60 @@
             errDiv.textContent = `JS ERROR: ${msg} (line ${line})`;
             document.body.appendChild(errDiv);
         };
+        
+        function getCharRank(ch) {
+            if (!ch || ch === '0') return 0;
+            let code = ch.charCodeAt(0);
+            if (code >= 65 && code <= 90) return code - 64; // 'A'->1, 'B'->2...
+            if (code >= 97 && code <= 122) return code - 96; // 'a'->1, 'b'->2...
+            return 0;
+        }
+
+        // Matrices Canónicas de Psicothema G2T1C1
+        const G1_ORD_BASE = [
+            [1, 2, 3, 4, 5],
+            [3, 1, 2, 4, 5],
+            [2, 3, 1, 5, 4],
+            [4, 5, 1, 2, 3],
+            [5, 4, 2, 3, 1]
+        ];
+        const G2_ORD_BASE = [
+            [1, 2, 3, 4, 5],
+            [1, 4, 3, 2, 5],
+            [2, 5, 1, 3, 4],
+            [4, 1, 3, 2, 5],
+            [2, 4, 5, 3, 1]
+        ];
+
+        function ordToSmibN5(ordMat) {
+            const n = 5;
+            const r2c = (r) => (r === 1 ? 'A' : (r === 2 ? 'B' : (r === 3 ? '0' : (r === 4 ? 'b' : 'a'))));
+            let smib = [];
+            for (let i = 0; i < n; i++) {
+                let row = [];
+                for (let j = 0; j < n; j++) {
+                    if (i === j) { row.push("0000"); continue; }
+                    let c2 = r2c(ordMat[i][j]);
+                    let c3 = r2c(ordMat[j][i]);
+                    row.push(`${c2}${c2}${c3}${c3}`);
+                }
+                smib.push(row);
+            }
+            return smib;
+        }
+
+        const SMIB_G1 = ordToSmibN5(G1_ORD_BASE);
+        const SMIB_G2 = ordToSmibN5(G2_ORD_BASE);
+
+        const SMIB_INTER10 = Array.from({length: 10}, () => Array(10).fill("0000"));
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                SMIB_INTER10[i][j] = SMIB_G1[i][j];
+                SMIB_INTER10[i+5][j+5] = SMIB_G2[i][j];
+            }
+        }
+        let currentMatrix = SMIB_G1;
+
         // =========================================================================
         // BASE DE DATOS CANÓNICA G2T1C1 (Estudio de Caso Empírico)
         // =========================================================================
@@ -3655,16 +3709,16 @@
         // PENTAGRAMA SOCIO-TERMODINÁMICO DE 10 ESTACIONES (1b.6 G2T1C1 PSICOTHEMA)
         // =========================================================================
         const PENTA_STATIONS = [
-            { id: "bda", code: "BDA", name: "Densidad Bruta Dador", desc: "Masa total emitida (Atracción absoluta)", isTetra: false },
-            { id: "sda", code: "SDA", name: "Densidad Neta Dador", desc: "Balance neto de emisión (+/-)", isTetra: false },
-            { id: "a1",  code: "A1",  name: "A1 = p_DA", desc: "Expectativa que el emisor tiene de lo que hará el partner", isTetra: true, pulse: "1º Pulso", subdesc: "Expectativa Emisor" },
-            { id: "a2",  code: "A2",  name: "A2 = DA", desc: "Preferencia efectiva que el emisor otorga al partner", isTetra: true, pulse: "2º Pulso", subdesc: "Elección Emitida" },
-            { id: "a3",  code: "A3",  name: "A3 = RECIBE", desc: "Preferencia efectiva que el partner otorga al emisor", isTetra: true, pulse: "3º Pulso", subdesc: "Elección Recibida" },
-            { id: "a4",  code: "A4",  name: "A4 = p_RECIBE", desc: "Expectativa que el partner tiene de lo que hará el emisor", isTetra: true, pulse: "4º Pulso", subdesc: "Expectativa Partner" },
-            { id: "src", code: "SRC", name: "Densidad Neta Receptor", desc: "Balance neto de recepción (+/-)", isTetra: false },
-            { id: "brc", code: "BRC", name: "Densidad Bruta Receptor", desc: "Masa total recibida (Atracción recibida)", isTetra: false },
-            { id: "sdr", code: "SDR", name: "Densidad Neta Relacional", desc: "Balance relacional global", isTetra: false },
-            { id: "bdr", code: "BDR", name: "Densidad Bruta Relacional", desc: "Masa invariable total de vínculos", isTetra: false }
+            { id: "bda", simple: "B", code: "BDA", name: "Densidad Bruta Dador", desc: "Masa total emitida (Atracción absoluta)", isTetra: false },
+            { id: "sda", simple: "S", code: "SDA", name: "Densidad Neta Dador", desc: "Balance neto de emisión (+/-)", isTetra: false },
+            { id: "a1",  simple: "1", code: "A1",  name: "A1 = p_DA", desc: "Expectativa que el emisor tiene de lo que hará el partner", isTetra: true, pulse: "1º Pulso", subdesc: "Expectativa Emisor" },
+            { id: "a2",  simple: "2", code: "A2",  name: "A2 = DA", desc: "Preferencia efectiva que el emisor otorga al partner", isTetra: true, pulse: "2º Pulso", subdesc: "Elección Emitida" },
+            { id: "a3",  simple: "3", code: "A3",  name: "A3 = RECIBE", desc: "Preferencia efectiva que el partner otorga al emisor", isTetra: true, pulse: "3º Pulso", subdesc: "Elección Recibida" },
+            { id: "a4",  simple: "4", code: "A4",  name: "A4 = p_RECIBE", desc: "Expectativa que el partner tiene de lo que hará el emisor", isTetra: true, pulse: "4º Pulso", subdesc: "Expectativa Partner" },
+            { id: "src", simple: "s", code: "SRC", name: "Densidad Neta Receptor", desc: "Balance neto de recepción (+/-)", isTetra: false },
+            { id: "brc", simple: "b", code: "BRC", name: "Densidad Bruta Receptor", desc: "Masa total recibida (Atracción recibida)", isTetra: false },
+            { id: "sdr", simple: "Σ", code: "SDR", name: "Densidad Neta Relacional", desc: "Balance relacional global", isTetra: false },
+            { id: "bdr", simple: "Ω", code: "BDR", name: "Densidad Bruta Relacional", desc: "Masa invariable total de vínculos", isTetra: false }
         ];
 
         const PENTA_BASE_CATALOG = [
@@ -3816,12 +3870,13 @@
         }
 
         function getPentaVals(item, isAcc) {
-            const data = isAcc ? item.acc : item.unit;
+            if (!item) return Array(10).fill(0);
+            const data = (isAcc ? item.acc : item.unit) || item.unit || item.acc || {};
             return [
-                data.bda, data.sda,
-                data.a1,  data.a2,  data.a3,  data.a4,
-                data.src, data.brc,
-                data.sdr, data.bdr
+                data.bda || 0, data.sda || 0,
+                data.a1 || 0,  data.a2 || 0,  data.a3 || 0,  data.a4 || 0,
+                data.src || 0, data.brc || 0,
+                data.sdr || 0, data.bdr || 0
             ];
         }
 
@@ -4576,10 +4631,11 @@
             const rowValsB = [...valsB, difB];
 
             const formatCell = (val, isSigned) => {
-                const s = (val > 0 && isSigned) ? ('+' + val.toFixed(2)) : val.toFixed(2);
+                const num = (typeof val === 'number' && !isNaN(val)) ? val : (parseFloat(val) || 0);
+                const s = (num > 0 && isSigned) ? ('+' + num.toFixed(2)) : num.toFixed(2);
                 let col = '#CBD5E1';
-                if (val > 0 && isSigned) col = '#00FF87';
-                else if (val < 0 && isSigned) col = '#FF007F';
+                if (num > 0 && isSigned) col = '#00FF87';
+                else if (num < 0 && isSigned) col = '#FF007F';
                 return `<td style="padding:6px 8px; text-align:right; color:${col}; font-family:'Roboto Mono', monospace;">${s}</td>`;
             };
 
@@ -6672,21 +6728,8 @@
     const Q81_COLS_DADOR = ["<E", "<¿", "<R", "¡E", "¡¿", "¡R", "[E", "[¿", "[R"];
     const Q81_ROWS_RECEPTOR = ["e>", "?>", "r>", "e!", "?!", "r!", "e]", "?]", "r]"];
 
-    // =========================================================================
-    // PENTAGRAMA SOCIO-TERMODINÁMICO DE 10 ESTACIONES (DENSIDAD MÚLTIPLE 10D)
-    // =========================================================================
-    const PENTA_STATIONS = [
-        { id: "bda", simple: "B", code: "BDA", name: "Densidad Bruta Dador", desc: "Masa total emitida (Atracción absoluta)", isTetra: false },
-        { id: "sda", simple: "S", code: "SDA", name: "Densidad Neta Dador", desc: "Balance neto de emisión (+/-)", isTetra: false },
-        { id: "a1",  simple: "1", code: "A1",  name: "A1 = p_DA", desc: "Expectativa que el emisor tiene del partner", isTetra: true, pulse: "1º Pulso", subdesc: "Expectativa Emisor" },
-        { id: "a2",  simple: "2", code: "A2",  name: "A2 = DA", desc: "Preferencia efectiva otorgada al partner", isTetra: true, pulse: "2º Pulso", subdesc: "Elección Emitida" },
-        { id: "a3",  simple: "3", code: "A3",  name: "A3 = RECIBE", desc: "Preferencia efectiva que el partner otorga", isTetra: true, pulse: "3º Pulso", subdesc: "Elección Recibida" },
-        { id: "a4",  simple: "4", code: "A4",  name: "A4 = p_RECIBE", desc: "Expectativa que el partner tiene del emisor", isTetra: true, pulse: "4º Pulso", subdesc: "Expectativa Partner" },
-        { id: "src", simple: "s", code: "SRC", name: "Densidad Neta Receptor", desc: "Balance neto de recepción (+/-)", isTetra: false },
-        { id: "brc", simple: "b", code: "BRC", name: "Densidad Bruta Receptor", desc: "Masa total recibida (Atracción recibida)", isTetra: false },
-        { id: "sdr", simple: "Σ", code: "SDR", name: "Densidad Neta Relacional", desc: "Balance relacional global", isTetra: false },
-        { id: "bdr", simple: "Ω", code: "BDR", name: "Densidad Bruta Relacional", desc: "Masa invariable total de vínculos", isTetra: false }
-    ];
+    // PENTAGRAMA SOCIO-TERMODINÁMICO DE 10 ESTACIONES (declarado globalmente en bloque anterior)
+
 
     let pentaState = {
         mode: "compare_mu_t0",
