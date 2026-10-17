@@ -2286,28 +2286,28 @@
         /* Helper para rotular los 3 ejes y marcas radiales del centro de gravedad */
     function createAxisLabelSprite(text, colorHex) {
       const canvas = document.createElement('canvas');
-      canvas.width = 160;
+      canvas.width = 256;
       canvas.height = 64;
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, 160, 64);
-      ctx.font = 'bold 30px "Roboto Mono", monospace';
+      ctx.clearRect(0, 0, 256, 64);
+      ctx.font = 'bold 32px "Roboto Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.strokeStyle = '#020617';
       ctx.lineWidth = 6;
       ctx.lineJoin = 'round';
-      ctx.strokeText(text, 80, 32);
+      ctx.strokeText(text, 128, 32);
       ctx.fillStyle = typeof colorHex === 'string' ? colorHex : ('#' + Number(colorHex).toString(16).padStart(6, '0'));
-      ctx.fillText(text, 80, 32);
+      ctx.fillText(text, 128, 32);
       const texture = new THREE.CanvasTexture(canvas);
       const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true });
       const sprite = new THREE.Sprite(mat);
-      sprite.scale.set(0.95, 0.42, 1.0);
+      sprite.scale.set(1.15, 0.29, 1.0);
       return sprite;
     }
 
     /* Construcción de los 3 Ejes Coordenados claramente visibles (X, Y, Z) */
-    function buildAxesSystem(maxRadius = 9.5) {
+    function buildAxesSystem(maxRadius = 8.6) {
       while (axesGroup.children.length > 0) axesGroup.remove(axesGroup.children[0]);
 
       const isPca = (currentViewMode === 'pca');
@@ -2406,11 +2406,7 @@
       const crossMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.85 });
       concentricGroup.add(new THREE.LineSegments(crossGeo, crossMat));
 
-      // Rótulo del Centro de Gravedad
-      const cgLabel = createAxisLabelSprite("CG (Baricentro)", 0x00FF87);
-      cgLabel.position.set(0, -0.45, 0.45);
-      cgLabel.scale.set(1.1, 0.45, 1.0);
-      concentricGroup.add(cgLabel);
+      // Centro de Gravedad en (0,0,0) limpio sin etiquetas invasivas
 
       // 2. Las 4 Esferas Concéntricas Canónicas (Isósferas de Radio Baricéntrico d̄)
       const concentricSpheres = [
@@ -2462,11 +2458,7 @@
         meridianMesh.userData = { isConcentricRing: true, baseOpacity: st.opacity * 1.3 };
         concentricGroup.add(meridianMesh);
 
-        // D) Rótulo identificativo de la isósfera en el semieje positivo
-        const rSprite = createAxisLabelSprite(st.label, st.color);
-        rSprite.position.set(st.r, 0.05, 0.40);
-        rSprite.scale.set(0.95, 0.42, 1.0);
-        concentricGroup.add(rSprite);
+        // Esfera e isóferas limpias sin etiquetas invasivas (Regla 17)
       });
     }
 
@@ -2497,7 +2489,7 @@
       buildConcentricSpheres();
 
       // 2. Los 3 Ejes Coordenados Claramente Visibles (X, Y, Z)
-      buildAxesSystem(9.5);
+      buildAxesSystem(8.6);
 
       // 3. Actualizar posiciones de nodos según el modo seleccionado (Esférico vs PCA 3D)
       currentEngine.particles.forEach(p => {
