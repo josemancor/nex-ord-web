@@ -447,13 +447,29 @@
             <span class="text-slate-400">|</span>
             <span id="hud-nodes-count" class="text-teal-300 font-bold">N=6 Actores</span>
           </div>
-          <!-- Selector de Modo de Proyección 3D -->
+          <!-- Selector de Espacio (Esférico vs PCA) -->
           <div class="glass-panel px-2 py-1 rounded-lg text-xs mono pointer-events-auto flex items-center gap-1">
             <button id="btn-mode-spherical" onclick="setViewMode('spherical')" class="btn-view-mode active action-btn px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-200" title="Proyección Esférica con Baricentro Radial">
               Esférico
             </button>
-            <button id="btn-mode-pca" onclick="setViewMode('pca')" class="btn-view-mode action-btn px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-200" title="Espacio Factorial PCA Dual SVD 3D">
-              PCA 3D
+            <button id="btn-mode-pca" onclick="setViewMode('pca')" class="btn-view-mode action-btn px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-200" title="Espacio Factorial PCA Dual SVD">
+              PCA
+            </button>
+          </div>
+          <!-- Selector Dimensional Dinámico 1D / 2D / 3D con Paseo Cinematográfico -->
+          <div class="glass-panel px-2 py-1 rounded-lg text-xs mono pointer-events-auto flex items-center gap-1">
+            <span class="text-[10px] text-teal-300 font-bold mr-0.5">DIM:</span>
+            <button id="btn-dim-1d" onclick="setDimensionMode('1D')" class="btn-dim action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Proyección 1D: Gradiente Lineal Unidimensional">
+              1D
+            </button>
+            <button id="btn-dim-2d" onclick="setDimensionMode('2D')" class="btn-dim action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Proyección 2D: Plano Cartesiano / Biplot Relacional">
+              2D
+            </button>
+            <button id="btn-dim-3d" onclick="setDimensionMode('3D')" class="btn-dim active action-btn px-2 py-0.5 rounded text-[11px] bg-teal-950 border border-teal-400 text-teal-300 font-bold" title="Proyección 3D: Cosmos Nuclear Completo">
+              3D
+            </button>
+            <button id="btn-dim-cycle" onclick="toggleDimensionCycle()" class="action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-indigo-500/70 text-indigo-300 hover:text-white flex items-center gap-1" title="Paseo Dimensional Automático (1D ➔ 2D ➔ 3D)">
+              <span>▶</span> <span id="label-dim-cycle">Paseo</span>
             </button>
           </div>
           <div id="hud-selection-pill" class="glass-panel px-3 py-1.5 rounded-lg text-xs mono pointer-events-auto text-slate-300 hidden">
@@ -2197,6 +2213,9 @@
     let coreLight, raycaster, mouse;
     let currentShellOpacity = 0.35;
     let currentBondFilter = 'all';
+    let currentDimMode = '3D'; // '1D' | '2D' | '3D'
+    let dimCycleInterval = null;
+    let targetCameraPos = null;
 
     function initThree() {
       const container = document.getElementById('three-viewport');
@@ -2326,6 +2345,7 @@
         const cylGeo = new THREE.CylinderGeometry(0.04, 0.04, maxRadius, 16);
         const cylMat = new THREE.MeshBasicMaterial({ color: cfg.color });
         const cyl = new THREE.Mesh(cylGeo, cylMat);
+        cyl.userData = { axis: cfg.axis };
         if (cfg.axis === 'x') {
           cyl.rotation.z = -Math.PI / 2;
           cyl.position.set(maxRadius / 2, 0, 0);
@@ -2341,6 +2361,7 @@
         const coneGeo = new THREE.ConeGeometry(0.18, 0.45, 16);
         const coneMat = new THREE.MeshBasicMaterial({ color: cfg.color });
         const cone = new THREE.Mesh(coneGeo, coneMat);
+        cone.userData = { axis: cfg.axis };
         if (cfg.axis === 'x') {
           cone.rotation.z = -Math.PI / 2;
           cone.position.set(maxRadius + 0.22, 0, 0);
@@ -2360,10 +2381,12 @@
         });
         const negLine = new THREE.Line(negGeo, negMat);
         negLine.computeLineDistances();
+        negLine.userData = { axis: cfg.axis };
         axesGroup.add(negLine);
 
         // Rótulo del eje en el extremo positivo
         const labelSprite = createAxisLabelSprite(cfg.label, cfg.color);
+        labelSprite.userData = { axis: cfg.axis };
         labelSprite.position.copy(cfg.dir.clone().multiplyScalar(maxRadius + 0.85));
         axesGroup.add(labelSprite);
 
@@ -2371,6 +2394,7 @@
         const nlabelSprite = createAxisLabelSprite(cfg.nlabel, cfg.color);
         nlabelSprite.position.copy(cfg.dir.clone().multiplyScalar(-maxRadius - 0.65));
         nlabelSprite.scale.set(0.65, 0.30, 1.0);
+        nlabelSprite.userData = { axis: cfg.axis };
         axesGroup.add(nlabelSprite);
       });
 
@@ -2474,6 +2498,156 @@
       }
     }
 
+    
+    /* Actualizar posiciones objetivo (targets) para animación continua de dimensiones (1D, 2D, 3D) */
+    function updateParticleTargets() {
+      if (!currentEngine || !currentEngine.particles) return;
+
+      currentEngine.particles.forEach(p => {
+        const base3D_x = (currentViewMode === 'pca' ? p.pca_x : p.sph_x);
+        const base3D_y = (currentViewMode === 'pca' ? p.pca_y : p.sph_y);
+        const base3D_z = (currentViewMode === 'pca' ? p.pca_z : p.sph_z);
+
+        if (currentDimMode === '3D') {
+          p.targetX = base3D_x;
+          p.targetY = base3D_y;
+          p.targetZ = base3D_z;
+        } else if (currentDimMode === '2D') {
+          p.targetX = base3D_x;
+          p.targetY = base3D_y;
+          p.targetZ = 0; // Colapsado al plano cartesiano XY
+        } else if (currentDimMode === '1D') {
+          if (currentViewMode === 'pca') {
+            p.targetX = p.pca_x; // Componente principal primaria PC1
+          } else {
+            p.targetX = (p.Vnet >= 0 ? 1 : -1) * p.baricentroD; // Gradiente baricéntrico polarizado
+          }
+          p.targetY = 0;
+          p.targetZ = 0;
+        }
+      });
+    }
+
+    /* Conmutador Dimensional Interactivo (1D / 2D / 3D) */
+    function setDimensionMode(dim, isAuto = false) {
+      if (!isAuto && dimCycleInterval) {
+        clearInterval(dimCycleInterval);
+        dimCycleInterval = null;
+        updateDimCycleButton();
+      }
+
+      currentDimMode = dim;
+
+      ['1d', '2d', '3d'].forEach(d => {
+        const btn = document.getElementById(`btn-dim-${d}`);
+        if (!btn) return;
+        if (d.toUpperCase() === dim) {
+          btn.className = 'btn-dim active action-btn px-2 py-0.5 rounded text-[11px] bg-teal-950 border border-teal-400 text-teal-300 font-bold';
+        } else {
+          btn.className = 'btn-dim action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white';
+        }
+      });
+
+      updateParticleTargets();
+
+      // Ajustes de visibilidad de esferas y ejes según la dimensión
+      if (dim === '1D') {
+        concentricGroup.visible = false;
+        axesGroup.children.forEach(c => {
+          if (c.userData && (c.userData.axis === 'y' || c.userData.axis === 'z')) {
+            c.visible = false;
+          } else {
+            c.visible = true;
+          }
+        });
+        targetCameraPos = new THREE.Vector3(0, 0, 18);
+        controls.autoRotate = false;
+        updateAutoRotateButton();
+      } else if (dim === '2D') {
+        concentricGroup.visible = true;
+        concentricGroup.children.forEach(m => {
+          if (m.userData && m.userData.isConcentricSphere) {
+            m.visible = false;
+          } else if (m.userData && m.userData.isConcentricRing) {
+            m.visible = true;
+          }
+        });
+        axesGroup.children.forEach(c => {
+          if (c.userData && c.userData.axis === 'z') {
+            c.visible = false;
+          } else {
+            c.visible = true;
+          }
+        });
+        targetCameraPos = new THREE.Vector3(0, 0, 20);
+        controls.autoRotate = false;
+        updateAutoRotateButton();
+      } else {
+        concentricGroup.visible = true;
+        concentricGroup.children.forEach(m => {
+          m.visible = true;
+        });
+        axesGroup.children.forEach(c => {
+          c.visible = true;
+        });
+        targetCameraPos = new THREE.Vector3(0, 7.5, 17.5);
+        controls.autoRotate = isAutoRotating;
+        updateAutoRotateButton();
+      }
+    }
+
+    /* Paseo dimensional automático continuo (1D ➔ 2D ➔ 3D) */
+    function toggleDimensionCycle() {
+      if (dimCycleInterval) {
+        clearInterval(dimCycleInterval);
+        dimCycleInterval = null;
+        updateDimCycleButton();
+      } else {
+        const sequence = ['1D', '2D', '3D'];
+        let curIdx = sequence.indexOf(currentDimMode);
+        if (curIdx === -1) curIdx = 0;
+
+        curIdx = (curIdx + 1) % sequence.length;
+        setDimensionMode(sequence[curIdx], true);
+        updateDimCycleButton();
+
+        dimCycleInterval = setInterval(() => {
+          curIdx = (curIdx + 1) % sequence.length;
+          setDimensionMode(sequence[curIdx], true);
+        }, 5500);
+      }
+    }
+
+    function updateDimCycleButton() {
+      const btn = document.getElementById('btn-dim-cycle');
+      const label = document.getElementById('label-dim-cycle');
+      if (!btn || !label) return;
+      if (dimCycleInterval) {
+        btn.className = 'action-btn px-2 py-0.5 rounded text-[11px] bg-rose-950 border border-rose-500 text-rose-300 font-bold flex items-center gap-1 animate-pulse';
+        label.textContent = 'Parar';
+      } else {
+        btn.className = 'action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-indigo-500/70 text-indigo-300 hover:text-white flex items-center gap-1';
+        label.textContent = 'Paseo';
+      }
+    }
+
+    /* Actualizar vértices de filamentos diádicos durante el morphing */
+    function updateBondLines() {
+      if (!bondGroup || !currentEngine || !currentEngine.particles) return;
+      bondGroup.children.forEach(line => {
+        const b = line.userData.bond;
+        if (!b) return;
+        const p1 = currentEngine.particles[b.source];
+        const p2 = currentEngine.particles[b.target];
+        if (!p1 || !p2) return;
+        const posAttr = line.geometry.attributes.position;
+        posAttr.setXYZ(0, p1.x, p1.y, p1.z);
+        posAttr.setXYZ(1, p2.x, p2.y, p2.z);
+        posAttr.needsUpdate = true;
+        if (b.tipo === 'coulomb') line.computeLineDistances();
+      });
+    }
+
     /* =========================================================================
        3. CONSTRUCCIÓN DE ENTIDADES 3D
        ========================================================================= */
@@ -2491,17 +2665,12 @@
       // 2. Los 3 Ejes Coordenados Claramente Visibles (X, Y, Z)
       buildAxesSystem(8.6);
 
-      // 3. Actualizar posiciones de nodos según el modo seleccionado (Esférico vs PCA 3D)
+      // 3. Actualizar coordenadas y targets de nodos según modo y dimensión (1D, 2D, 3D)
+      updateParticleTargets();
       currentEngine.particles.forEach(p => {
-        if (currentViewMode === 'pca') {
-          p.x = p.pca_x;
-          p.y = p.pca_y;
-          p.z = p.pca_z;
-        } else {
-          p.x = p.sph_x;
-          p.y = p.sph_y;
-          p.z = p.sph_z;
-        }
+        p.x = p.targetX;
+        p.y = p.targetY;
+        p.z = p.targetZ;
       });
 
       // 4. Filamentos Diádicos no ordenados (i < j)
@@ -2868,6 +3037,47 @@
     function animate() {
       requestAnimationFrame(animate);
       const time = clock.getElapsedTime();
+
+      // Morphing e interpolación fluida de nodos entre 1D, 2D y 3D
+      let anyParticleMoved = false;
+      if (currentEngine && currentEngine.particles && particleGroup) {
+        currentEngine.particles.forEach((p, idx) => {
+          const sphereMesh = particleGroup.children[idx * 2];
+          const haloMesh = particleGroup.children[idx * 2 + 1];
+          if (!sphereMesh) return;
+
+          const dx = p.targetX - p.x;
+          const dy = p.targetY - p.y;
+          const dz = p.targetZ - p.z;
+
+          if (Math.abs(dx) > 0.001 || Math.abs(dy) > 0.001 || Math.abs(dz) > 0.001) {
+            p.x += dx * 0.085;
+            p.y += dy * 0.085;
+            p.z += dz * 0.085;
+            sphereMesh.position.set(p.x, p.y, p.z);
+            if (haloMesh) haloMesh.position.set(p.x, p.y, p.z);
+            anyParticleMoved = true;
+          }
+        });
+      }
+
+      if (anyParticleMoved) {
+        updateBondLines();
+        if (activeSelectionIndex !== null && labelGroup.children.length > 0) {
+          const activeP = currentEngine.particles[activeSelectionIndex];
+          if (activeP) {
+            const sphereRadius = activeP.tipo === 'electron' ? 0.30 : (activeP.tipo === 'aislado' ? 0.26 : (0.42 + (activeP.masaInercial / 4.0) * 0.20));
+            labelGroup.children[0].position.set(activeP.x, activeP.y + sphereRadius + 0.28, activeP.z);
+          }
+        }
+      }
+
+      if (targetCameraPos) {
+        camera.position.lerp(targetCameraPos, 0.05);
+        if (camera.position.distanceTo(targetCameraPos) < 0.05) {
+          targetCameraPos = null;
+        }
+      }
 
       if (coreLight) {
         coreLight.intensity = 2.2 + 0.6 * Math.sin(time * 2.5);
