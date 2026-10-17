@@ -7936,6 +7936,29 @@
       }
 
       activeLanes.forEach(laneCfg => {
+        // Telemetría dinámica factual del carril (promedio longitudinal T1..T3)
+        const gList = laneCfg.g === '123' ? ['1', '2', '3'] : (laneCfg.g === '1' ? ['1'] : (laneCfg.g === '2' ? ['2'] : ['3']));
+        const cList = laneCfg.c === '12' ? ['1', '2'] : [laneCfg.c];
+        let sumBdr = 0, sumSdr = 0, sumEnt = 0, countMats = 0;
+        gList.forEach(gKey => {
+          cList.forEach(cKey => {
+            for (let t = 1; t <= 3; t++) {
+              const mKey = `${gKey}g${t}t${cKey}c`;
+              const mData = TENSOR_DATA[mKey];
+              if (mData) {
+                sumBdr += (mData.bdr !== undefined ? mData.bdr : 0.48);
+                sumSdr += (mData.sdr !== undefined ? mData.sdr : 0.22);
+                sumEnt += (mData.entropia !== undefined ? mData.entropia : 0.18);
+                countMats++;
+              }
+            }
+          });
+        });
+        const avgBdr = countMats > 0 ? (sumBdr / countMats).toFixed(2) : '0.48';
+        const avgSdrVal = countMats > 0 ? (sumSdr / countMats) : 0.22;
+        const avgSdr = (avgSdrVal >= 0 ? '+' : '') + avgSdrVal.toFixed(2);
+        const avgEnt = countMats > 0 ? (sumEnt / countMats).toFixed(2) : '0.18';
+
         const laneEl = document.createElement('div');
         laneEl.className = 'lane-container';
         laneEl.innerHTML = `
@@ -7945,9 +7968,9 @@
               <span class="lane-desc">${laneCfg.desc}</span>
             </div>
             <div class="lane-telemetry">
-              <span class="telem-pill" style="color:var(--neon-green)">BDR: 0.48</span>
-              <span class="telem-pill" style="color:var(--neon-cyan)">SDR: +0.22</span>
-              <span class="telem-pill" style="color:var(--neon-gold)">Φ: 0.18</span>
+              <span class="telem-pill" style="color:var(--neon-green)">BDR: ${avgBdr}</span>
+              <span class="telem-pill" style="color:var(--neon-cyan)">SDR: ${avgSdr}</span>
+              <span class="telem-pill" style="color:var(--neon-gold)">Φ: ${avgEnt}</span>
             </div>
           </div>
           <div class="lane-canvas-box" id="box-${laneCfg.id}">
