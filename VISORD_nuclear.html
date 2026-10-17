@@ -506,15 +506,21 @@
               <span class="w-3 h-0.5 bg-rose-500 border-b border-dashed border-rose-400"></span>
               <span class="text-rose-300">Tensión Directa [Rr]</span>
             </div>
+            <div class="flex items-center gap-1.5 col-span-2 pt-1 border-t border-slate-700/60 text-[9px] text-slate-300">
+              <span class="text-emerald-400 font-bold">● CG:</span> Centro de Gravedad (0,0,0) · <span class="text-rose-400 font-bold">X</span> (Rojo), <span class="text-emerald-400 font-bold">Y</span> (Verde), <span class="text-cyan-400 font-bold">Z</span> (Azul)
+            </div>
           </div>
         </div>
 
         <!-- CONTROLES RÁPIDOS DE CAPAS INFERIOR DERECHA -->
         <div class="absolute bottom-3 right-3 z-10 glass-panel px-3 py-2 rounded-xl text-xs mono pointer-events-auto flex items-center gap-3">
           <div class="flex items-center gap-2">
-            <span class="text-[10px] text-slate-300">Cascarones:</span>
-            <input type="range" id="slider-shell-opacity" min="0" max="100" value="35" oninput="setShellOpacity(this.value)" class="w-20 cursor-pointer" title="Opacidad de Estratos Concéntricos">
+            <span class="text-[10px] text-slate-300">Círculos:</span>
+            <input type="range" id="slider-shell-opacity" min="0" max="100" value="35" oninput="setShellOpacity(this.value)" class="w-20 cursor-pointer" title="Opacidad de Círculos Concéntricos">
           </div>
+          <button id="btn-toggle-axes" onclick="toggleAxes()" class="action-btn px-2 py-0.5 rounded bg-slate-900 border border-teal-500 text-[10px] mono text-teal-300 font-bold" title="Mostrar u Ocultar los 3 Ejes Coordenados">
+            Ejes: ON
+          </button>
           <div class="flex items-center gap-2">
             <span class="text-[10px] text-slate-300">Filamentos:</span>
             <select id="select-bond-filter" onchange="setBondFilter(this.value)" class="bg-slate-900 border border-slate-700 text-[10px] rounded px-1.5 py-1 text-slate-200">
@@ -2186,7 +2192,8 @@
     let activeSelectionIndex = null;
     let hoveredParticleIndex = null;
 
-    let cosmicGroup, shellGroup, bondGroup, particleGroup, labelGroup;
+    let cosmicGroup, shellGroup, bondGroup, particleGroup, labelGroup, axesGroup, concentricGroup;
+    let isAxesVisible = true;
     let coreLight, raycaster, mouse;
     let currentShellOpacity = 0.35;
     let currentBondFilter = 'all';
@@ -2230,12 +2237,16 @@
       scene.add(dirLight);
 
       cosmicGroup = new THREE.Group();
+      concentricGroup = new THREE.Group();
+      axesGroup = new THREE.Group();
       shellGroup = new THREE.Group();
       bondGroup = new THREE.Group();
       particleGroup = new THREE.Group();
       labelGroup = new THREE.Group();
 
       scene.add(cosmicGroup);
+      scene.add(concentricGroup);
+      scene.add(axesGroup);
       scene.add(shellGroup);
       scene.add(bondGroup);
       scene.add(particleGroup);
@@ -2272,6 +2283,181 @@
       cosmicGroup.add(new THREE.Points(starGeo, starMat));
     }
 
+        /* Helper para rotular los 3 ejes y marcas radiales del centro de gravedad */
+    function createAxisLabelSprite(text, colorHex) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 160;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 160, 64);
+      ctx.font = 'bold 30px "Roboto Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.strokeStyle = '#020617';
+      ctx.lineWidth = 6;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(text, 80, 32);
+      ctx.fillStyle = typeof colorHex === 'string' ? colorHex : ('#' + Number(colorHex).toString(16).padStart(6, '0'));
+      ctx.fillText(text, 80, 32);
+      const texture = new THREE.CanvasTexture(canvas);
+      const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(0.95, 0.42, 1.0);
+      return sprite;
+    }
+
+    /* Construcción de los 3 Ejes Coordenados claramente visibles (X, Y, Z) */
+    function buildAxesSystem(maxRadius = 9.5) {
+      while (axesGroup.children.length > 0) axesGroup.remove(axesGroup.children[0]);
+
+      const isPca = (currentViewMode === 'pca');
+      const labels = isPca 
+        ? { x: '+PC₁', y: '+PC₂', z: '+PC₃', nx: '-PC₁', ny: '-PC₂', nz: '-PC₃' }
+        : { x: '+X (DA)', y: '+Y (RC)', z: '+Z (Auto)', nx: '-X', ny: '-Y', nz: '-Z' };
+
+      const configs = [
+        { axis: 'x', dir: new THREE.Vector3(1, 0, 0), color: 0xFF3366, label: labels.x, nlabel: labels.nx },
+        { axis: 'y', dir: new THREE.Vector3(0, 1, 0), color: 0x00FF87, label: labels.y, nlabel: labels.ny },
+        { axis: 'z', dir: new THREE.Vector3(0, 0, 1), color: 0x00E5FF, label: labels.z, nlabel: labels.nz }
+      ];
+
+      configs.forEach(cfg => {
+        // Cilindro sólido visible para el semieje positivo
+        const cylGeo = new THREE.CylinderGeometry(0.04, 0.04, maxRadius, 16);
+        const cylMat = new THREE.MeshBasicMaterial({ color: cfg.color });
+        const cyl = new THREE.Mesh(cylGeo, cylMat);
+        if (cfg.axis === 'x') {
+          cyl.rotation.z = -Math.PI / 2;
+          cyl.position.set(maxRadius / 2, 0, 0);
+        } else if (cfg.axis === 'y') {
+          cyl.position.set(0, maxRadius / 2, 0);
+        } else if (cfg.axis === 'z') {
+          cyl.rotation.x = Math.PI / 2;
+          cyl.position.set(0, 0, maxRadius / 2);
+        }
+        axesGroup.add(cyl);
+
+        // Flecha / Cono en el extremo positivo
+        const coneGeo = new THREE.ConeGeometry(0.18, 0.45, 16);
+        const coneMat = new THREE.MeshBasicMaterial({ color: cfg.color });
+        const cone = new THREE.Mesh(coneGeo, coneMat);
+        if (cfg.axis === 'x') {
+          cone.rotation.z = -Math.PI / 2;
+          cone.position.set(maxRadius + 0.22, 0, 0);
+        } else if (cfg.axis === 'y') {
+          cone.position.set(0, maxRadius + 0.22, 0);
+        } else if (cfg.axis === 'z') {
+          cone.rotation.x = Math.PI / 2;
+          cone.position.set(0, 0, maxRadius + 0.22);
+        }
+        axesGroup.add(cone);
+
+        // Semieje negativo en línea discontinua
+        const negPts = [new THREE.Vector3(0, 0, 0), cfg.dir.clone().multiplyScalar(-maxRadius)];
+        const negGeo = new THREE.BufferGeometry().setFromPoints(negPts);
+        const negMat = new THREE.LineDashedMaterial({
+          color: cfg.color, dashSize: 0.35, gapSize: 0.25, transparent: true, opacity: 0.50
+        });
+        const negLine = new THREE.Line(negGeo, negMat);
+        negLine.computeLineDistances();
+        axesGroup.add(negLine);
+
+        // Rótulo del eje en el extremo positivo
+        const labelSprite = createAxisLabelSprite(cfg.label, cfg.color);
+        labelSprite.position.copy(cfg.dir.clone().multiplyScalar(maxRadius + 0.85));
+        axesGroup.add(labelSprite);
+
+        // Rótulo discreto en el extremo negativo
+        const nlabelSprite = createAxisLabelSprite(cfg.nlabel, cfg.color);
+        nlabelSprite.position.copy(cfg.dir.clone().multiplyScalar(-maxRadius - 0.65));
+        nlabelSprite.scale.set(0.65, 0.30, 1.0);
+        axesGroup.add(nlabelSprite);
+      });
+
+      axesGroup.visible = isAxesVisible;
+    }
+
+    /* Construcción de Círculos Concéntricos alrededor del Centro de Gravedad (0,0,0) */
+    function buildConcentricSystem() {
+      while (concentricGroup.children.length > 0) concentricGroup.remove(concentricGroup.children[0]);
+
+      // 1. Centro de Gravedad en el origen (0,0,0)
+      const cgGeo = new THREE.SphereGeometry(0.18, 24, 24);
+      const cgMat = new THREE.MeshBasicMaterial({ color: 0x00FF87 });
+      const cgMesh = new THREE.Mesh(cgGeo, cgMat);
+      cgMesh.position.set(0, 0, 0);
+      concentricGroup.add(cgMesh);
+
+      // Halo sutil alrededor del Centro de Gravedad
+      const cgHaloGeo = new THREE.SphereGeometry(0.38, 16, 16);
+      const cgHaloMat = new THREE.MeshBasicMaterial({
+        color: 0x00FF87, transparent: true, opacity: 0.30
+      });
+      concentricGroup.add(new THREE.Mesh(cgHaloGeo, cgHaloMat));
+
+      // Cruz central en el plano de gravedad (Y=0)
+      const crossSize = 0.8;
+      const crossPts = [
+        new THREE.Vector3(-crossSize, 0, 0), new THREE.Vector3(crossSize, 0, 0),
+        new THREE.Vector3(0, 0, -crossSize), new THREE.Vector3(0, 0, crossSize)
+      ];
+      const crossGeo = new THREE.BufferGeometry().setFromPoints(crossPts);
+      const crossMat = new THREE.LineBasicMaterial({ color: 0x00FF87, transparent: true, opacity: 0.85 });
+      concentricGroup.add(new THREE.LineSegments(crossGeo, crossMat));
+
+      // Rótulo del Centro de Gravedad
+      const cgLabel = createAxisLabelSprite("CG (Baricentro)", 0x00FF87);
+      cgLabel.position.set(0, -0.45, 0.45);
+      cgLabel.scale.set(1.1, 0.45, 1.0);
+      concentricGroup.add(cgLabel);
+
+      // 2. Círculos concéntricos en el plano horizontal (Y = 0)
+      const concentricStrata = [
+        { r: 1.5, color: 0x00F5D4, opacity: 0.18, label: "r=1.5" },
+        { r: 3.0, color: 0x00F5D4, opacity: 0.45, label: "r=3 (Núcleo)" },
+        { r: 4.5, color: 0x38BDF8, opacity: 0.20, label: "r=4.5" },
+        { r: 6.0, color: 0x38BDF8, opacity: 0.42, label: "r=6 (Mediación)" },
+        { r: 7.5, color: 0xA855F7, opacity: 0.38, label: "r=7.5 (Periferia)" },
+        { r: 9.0, color: 0xF59E0B, opacity: 0.32, label: "r=9 (Exterior)" }
+      ];
+
+      concentricStrata.forEach(st => {
+        const isMajor = st.label.includes("(");
+        const ringWidth = isMajor ? 0.035 : 0.018;
+        const ringGeo = new THREE.RingGeometry(st.r - ringWidth, st.r + ringWidth, 128);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: st.color,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: st.opacity * (currentShellOpacity / 0.35)
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = Math.PI / 2;
+        ringMesh.userData = { isConcentricRing: true, baseOpacity: st.opacity };
+        concentricGroup.add(ringMesh);
+
+        // Indicador numérico de distancia sobre el semieje X positivo
+        if (isMajor) {
+          const rSprite = createAxisLabelSprite(st.label, st.color);
+          rSprite.position.set(st.r, 0.04, 0.40);
+          rSprite.scale.set(0.85, 0.38, 1.0);
+          concentricGroup.add(rSprite);
+        }
+      });
+    }
+
+    function toggleAxes() {
+      isAxesVisible = !isAxesVisible;
+      if (axesGroup) axesGroup.visible = isAxesVisible;
+      const btn = document.getElementById("btn-toggle-axes");
+      if (btn) {
+        btn.textContent = isAxesVisible ? "Ejes: ON" : "Ejes: OFF";
+        btn.className = isAxesVisible 
+          ? "action-btn px-2 py-0.5 rounded bg-slate-900 border border-teal-500 text-[10px] mono text-teal-300 font-bold"
+          : "action-btn px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] mono text-slate-400 font-bold";
+      }
+    }
+
     /* =========================================================================
        3. CONSTRUCCIÓN DE ENTIDADES 3D
        ========================================================================= */
@@ -2283,32 +2469,13 @@
       while(particleGroup.children.length > 0) particleGroup.remove(particleGroup.children[0]);
       while(labelGroup.children.length > 0) labelGroup.remove(labelGroup.children[0]);
 
-      // 1. Cascarones Cuánticos (solo visibles en modo esférico)
-      if (currentViewMode === 'spherical') {
-        currentEngine.orbitalShells.forEach((sh) => {
-          // Anillo orbital nítido y luminoso
-          const ringGeo = new THREE.RingGeometry(sh.radio - 0.02, sh.radio + 0.02, 96);
-          const ringMat = new THREE.MeshBasicMaterial({
-            color: sh.color, side: THREE.DoubleSide, transparent: true,
-            opacity: sh.opacity * 2.2 * (currentShellOpacity / 0.35)
-          });
-          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-          ringMesh.rotation.x = Math.PI / 2;
-          shellGroup.add(ringMesh);
+      // 1. Círculos Concéntricos alrededor del Centro de Gravedad
+      buildConcentricSystem();
 
-          // Esfera sutil de referencia espacial (baja densidad para no saturar)
-          const geo = new THREE.SphereGeometry(sh.radio, 16, 8);
-          const wireMat = new THREE.MeshBasicMaterial({
-            color: sh.color, wireframe: true, transparent: true,
-            opacity: sh.opacity * 0.30 * (currentShellOpacity / 0.35)
-          });
-          const mesh = new THREE.Mesh(geo, wireMat);
-          mesh.userData = { isShell: true, name: sh.nombre, baseOpacity: sh.opacity * 0.30 };
-          shellGroup.add(mesh);
-        });
-      }
+      // 2. Los 3 Ejes Coordenados Claramente Visibles (X, Y, Z)
+      buildAxesSystem(9.5);
 
-      // Actualizar posiciones de nodos según el modo seleccionado
+      // 3. Actualizar posiciones de nodos según el modo seleccionado (Esférico vs PCA 3D)
       currentEngine.particles.forEach(p => {
         if (currentViewMode === 'pca') {
           p.x = p.pca_x;
@@ -2321,7 +2488,7 @@
         }
       });
 
-      // 2. Filamentos Diádicos no ordenados (i < j)
+      // 4. Filamentos Diádicos no ordenados (i < j)
       currentEngine.bonds.forEach(b => {
         const p1 = currentEngine.particles[b.source];
         const p2 = currentEngine.particles[b.target];
@@ -2358,7 +2525,7 @@
         bondGroup.add(line);
       });
 
-      // 3. Partículas Subatómicas
+      // 5. Partículas Subatómicas (SIN etiquetas de texto permanentes en la escena)
       currentEngine.particles.forEach((p, idx) => {
         const sphereRadius = p.tipo === 'electron' ? 0.30 : (p.tipo === 'aislado' ? 0.26 : (0.42 + (p.masaInercial / 4.0) * 0.20));
         const geo = new THREE.SphereGeometry(sphereRadius, 32, 32);
@@ -2386,12 +2553,6 @@
         const halo = new THREE.Mesh(haloGeo, haloMat);
         halo.position.set(p.x, p.y, p.z);
         particleGroup.add(halo);
-
-        // Etiqueta 2D Sprite limpia (Regla 17: Prohibición de Recuadros Ornamentales bbox)
-        const sprite = createTextSprite(p.id, p.color);
-        sprite.position.set(p.x, p.y + sphereRadius + 0.22, p.z);
-        sprite.userData = { index: idx };
-        labelGroup.add(sprite);
       });
 
       // Foco inicial en el actor con menor baricentro radial (más central)
@@ -2500,6 +2661,13 @@
       const p = currentEngine.particles[idx];
       activeSelectionIndex = idx;
 
+      // Mostrar etiqueta flotante de inspección ÚNICAMENTE para el nodo activo
+      while(labelGroup.children.length > 0) labelGroup.remove(labelGroup.children[0]);
+      const sphereRadius = p.tipo === 'electron' ? 0.30 : (p.tipo === 'aislado' ? 0.26 : (0.42 + (p.masaInercial / 4.0) * 0.20));
+      const activeSprite = createTextSprite(p.id, p.color);
+      activeSprite.position.set(p.x, p.y + sphereRadius + 0.28, p.z);
+      labelGroup.add(activeSprite);
+
       document.getElementById('inspect-subject-id').textContent = p.id;
       document.getElementById('inspect-especie').textContent = p.especie;
       document.getElementById('inspect-especie').style.color = p.color;
@@ -2525,6 +2693,7 @@
 
     function clearSelection() {
       activeSelectionIndex = null;
+      while(labelGroup.children.length > 0) labelGroup.remove(labelGroup.children[0]);
       document.getElementById('hud-selection-pill').classList.add('hidden');
       bondGroup.children.forEach(l => {
         const b = l.userData.bond;
@@ -2584,8 +2753,8 @@
 
     function setShellOpacity(val) {
       currentShellOpacity = Number(val) / 100.0;
-      shellGroup.children.forEach(m => {
-        if (m.userData && m.userData.isShell) {
+      concentricGroup.children.forEach(m => {
+        if (m.userData && m.userData.isConcentricRing) {
           m.material.opacity = m.userData.baseOpacity * (currentShellOpacity / 0.35);
         }
       });
@@ -2692,6 +2861,12 @@
       }
       labelGroup.children.forEach(sp => {
         sp.quaternion.copy(camera.quaternion);
+      });
+      axesGroup.children.forEach(c => {
+        if (c.isSprite) c.quaternion.copy(camera.quaternion);
+      });
+      concentricGroup.children.forEach(c => {
+        if (c.isSprite) c.quaternion.copy(camera.quaternion);
       });
 
       controls.update();
