@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD • Sociograma Nuclear 3D & Núcleo Relacional</title>
+
+  <!-- Tailwind CSS & Tipografías Institucionales -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&family=Roboto+Mono:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Three.js y OrbitControls (local con fallback CDN) -->
+  <script src="lib/three.min.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
+
+  <!-- =======================================================================
+       METADATOS CIENTÍFICOS ZENODO DOI & DUBLIN CORE (Edición Canónica v9.1.1)
+       ======================================================================= -->
+  <meta name="citation_title" content="SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD): Manifiesto Científico, Fundamentación Teórico-Metodológica y Propuesta de Gobernanza en Ciencia Abierta">
+  <meta name="citation_author" content="Cornejo Álvarez, José Manuel">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_publisher" content="CERN / Zenodo">
+  <meta name="citation_doi" content="10.5281/zenodo.23329641">
+  <meta name="citation_abstract_html_url" content="https://josemancor.github.io/nex-ord-web/VISORD_nuclear.html">
+
+  <meta name="DC.title" content="VISORD Sociograma Nuclear 3D: Núcleo Relacional y Baricentro de Interdistancias">
+  <meta name="DC.creator" content="Cornejo Álvarez, J. M.">
+  <meta name="DC.date" scheme="W3CDTF" content="2026">
+  <meta name="DC.publisher" content="CERN / Zenodo">
+  <meta name="DC.identifier" scheme="DOI" content="10.5281/zenodo.23329641">
+  <meta name="DC.rights" content="https://creativecommons.org/licenses/by/4.0/">
+
+  <link rel="stylesheet" href="mobile_responsive_engine.css">
+  <link rel="stylesheet" href="nexord_dial_nav.css">
+
+  <style>
+    :root {
+      --bg-cosmos: #020617;
+      --bg-card: rgba(8, 18, 42, 0.94);
+      --border-cyan: rgba(0, 245, 212, 0.5);
+      --accent-cyan: #00F5D4;
+      --accent-green: #00FF87;
+      --accent-magenta: #FF007F;
+      --accent-amber: #FF9F1C;
+      --accent-blue: #00E5FF;
+      --accent-silver: #E2E8F0;
+      --accent-slate: #64748B;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-cosmos);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(0, 245, 212, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 10% 85%, rgba(255, 0, 127, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .outfit { font-family: 'Outfit', sans-serif; }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(2, 6, 23, 0.85);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 245, 212, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 245, 212, 0.8);
+    }
+
+    /* Paneles de vidrio futuristas */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid var(--border-cyan);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 245, 212, 0.12);
+    }
+
+    .glass-card-sub {
+      background: rgba(11, 24, 54, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    /* Lienzo 3D Inmersivo */
+    .viewport-frame {
+      border: 2px solid rgba(0, 245, 212, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 245, 212, 0.25), inset 0 0 30px rgba(2, 6, 23, 0.9);
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #071530 0%, #030816 75%, #01030a 100%);
+    }
+
+    /* Botones de acción */
+    .action-btn {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.2);
+    }
+    .action-btn:active {
+      transform: translateY(0.5px);
+    }
+
+    .btn-scenario.active {
+      background: #00F5D4 !important;
+      border-color: #FFFFFF !important;
+      color: #020617 !important;
+      box-shadow: 0 0 18px rgba(0, 245, 212, 0.8) !important;
+      font-weight: 800 !important;
+    }
+
+    .btn-view-mode.active {
+      background: #00E5FF !important;
+      border-color: #FFFFFF !important;
+      color: #020617 !important;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.8) !important;
+      font-weight: 800 !important;
+    }
+
+    /* LEDs indicadores */
+    .led-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      transition: all 0.25s ease;
+    }
+    .led-on {
+      background-color: #00FF87;
+      box-shadow: 0 0 8px #00FF87, 0 0 16px rgba(0, 255, 135, 0.8);
+      border: 1px solid #FFFFFF;
+    }
+    .led-off {
+      background-color: #64748B;
+      box-shadow: none;
+      opacity: 0.6;
+    }
+    .led-pulse {
+      animation: ledPulse 1.4s infinite alternate ease-in-out;
+    }
+    @keyframes ledPulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px #00FF87, 0 0 20px rgba(0, 255, 135, 0.9); }
+    }
+
+    /* Mando Universal Nav Pod en Fila India */
+    .universal-nav-pod {
+      position: fixed;
+      right: 18px;
+      bottom: 20px;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      background: rgba(6, 18, 38, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 12px 7px;
+      border-radius: 28px;
+      border: 2px solid rgba(0, 245, 212, 0.7);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 245, 212, 0.4);
+    }
+    .nav-pod-btn {
+      width: 42px;
+      height: 42px;
+      background: rgba(16, 36, 72, 0.95);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      color: #00F5D4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      line-height: 1;
+      padding: 0;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+    }
+    .nav-pod-btn:hover {
+      background: #00F5D4;
+      color: #030712;
+      border-color: #00F5D4;
+      transform: scale(1.18);
+      box-shadow: 0 0 22px rgba(0, 245, 212, 0.95);
+    }
+    .nav-pod-home {
+      color: #FFE600;
+    }
+    .nav-pod-home:hover {
+      background: #FFE600 !important;
+      border-color: #FFE600 !important;
+      color: #030308 !important;
+      box-shadow: 0 0 22px rgba(255, 230, 0, 0.95) !important;
+    }
+
+    /* Sliders de control */
+    input[type=range] {
+      accent-color: #00F5D4;
+      height: 6px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="p-2 md:p-3 pb-8 min-h-screen flex flex-col">
+
+  <!-- CABECERA INSTITUCIONAL CANÓNICA -->
+  <header class="w-full max-w-[1920px] mx-auto mb-2 flex-shrink-0">
+    <div class="glass-panel rounded-xl px-4 py-2 flex flex-wrap items-center justify-between gap-3">
+      <!-- Marca y Título -->
+      <div class="flex items-center gap-3">
+        <a href="recursos.html" class="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-600 flex items-center justify-center shadow-md shadow-cyan-500/40 text-slate-950 font-black text-xl transition hover:scale-105" title="Regresar a Recursos">
+          ⚛️
+        </a>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="outfit text-base md:text-xl font-black tracking-wide text-white">NEXORD <span class="text-teal-300">SOCIOGRAMA NUCLEAR 3D</span></span>
+          <span class="mono text-[10px] bg-teal-950 border border-teal-400 text-teal-300 px-2 py-0.5 rounded-full font-bold">NÚCLEO RELACIONAL</span>
+          <span class="mono text-[10px] bg-indigo-950 border border-indigo-400 text-indigo-300 px-2 py-0.5 rounded-full font-bold">BARICENTRO DE INTERDISTANCIAS</span>
+          <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener noreferrer" class="mono text-[10px] bg-emerald-950 border border-emerald-400 text-emerald-300 px-2 py-0.5 rounded-full font-bold hover:bg-emerald-800 transition" title="Consultar DOI oficial en Zenodo">
+            DOI: 10.5281/zenodo.23329641 (v9.1.1)
+          </a>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos de Navegación -->
+      <div class="flex items-center gap-2">
+        <a href="visord_acuario.html" class="mono text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-semibold transition flex items-center gap-1.5">
+          <span>🌊</span> Acuario D18
+        </a>
+        <a href="recursos.html" class="mono text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold transition">
+          Recursos
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL DUAL (DASHBOARD + LIENZO 3D) -->
+  <main class="w-full max-w-[1920px] mx-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 min-h-[720px]">
+
+    <!-- COLUMNA IZQUIERDA: TELEMETRÍA, ESCENARIOS Y CENSO NUCLEAR (~380px / 4 cols) -->
+    <aside class="lg:col-span-4 xl:col-span-3 flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-100px)] pr-1">
+
+      <!-- 1. BANDA DE ESCENARIOS CANÓNICOS -->
+      <div class="glass-panel rounded-xl p-3">
+        <div class="flex items-center justify-between mb-2">
+          <span class="mono text-xs font-bold text-teal-300 tracking-wider flex items-center">
+            <span class="led-dot led-on led-pulse"></span>ESCENARIOS CANÓNICOS
+          </span>
+          <span id="label-scenario-badge" class="mono text-[10px] px-2 py-0.5 rounded bg-teal-950 text-teal-400 border border-teal-500 font-bold">N=6</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5">
+          <button id="btn-scen-1g1t1c" onclick="switchScenario('1g1t1c')" class="btn-scenario active action-btn mono text-xs py-2 px-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left flex items-center justify-between">
+            <span>Canónico 6×6</span>
+            <span class="text-[10px] opacity-75">N=6</span>
+          </button>
+          <button id="btn-scen-lorca" onclick="switchScenario('lorca')" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left flex items-center justify-between">
+            <span>Bernarda Alba</span>
+            <span class="text-[10px] opacity-75">N=8</span>
+          </button>
+          <button id="btn-scen-hombres12" onclick="switchScenario('hombres12')" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left flex items-center justify-between">
+            <span>12 Hombres</span>
+            <span class="text-[10px] opacity-75">N=12</span>
+          </button>
+          <button id="btn-scen-20x20" onclick="switchScenario('20x20')" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left flex items-center justify-between">
+            <span>Canónico 20×20</span>
+            <span class="text-[10px] opacity-75">N=20</span>
+          </button>
+          <button id="btn-scen-g3t3c2" onclick="switchScenario('g3t3c2')" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left flex items-center justify-between">
+            <span>Hipertensor G3</span>
+            <span class="text-[10px] opacity-75">N=18</span>
+          </button>
+          <button id="btn-scen-custom" onclick="openCustomMatrixModal()" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-indigo-950/80 border border-indigo-500/70 text-indigo-200 hover:text-white text-left flex items-center justify-between">
+            <span>✏️ Matriz SMIb</span>
+            <span class="text-[10px] opacity-75">Custom</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. BALANCE DE COHESIÓN Y FRICCIÓN (Γ_NEXORD) -->
+      <div class="glass-panel rounded-xl p-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="mono text-xs font-bold text-slate-300">BALANCE COHESIÓN-FRICCIÓN (Γ)</span>
+          <span id="badge-estado-termo" class="mono text-[10px] px-2 py-0.5 rounded-full font-black bg-emerald-950 border border-emerald-400 text-emerald-300">ESTABLE</span>
+        </div>
+
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="flex items-baseline gap-1.5">
+            <span class="mono text-2xl font-black text-white" id="val-ratio-lambda">1.89</span>
+            <span class="mono text-[11px] text-slate-400">Γ = E_coh / E_rep (i &lt; j)</span>
+          </div>
+          <span id="desc-estado-termo" class="text-[11px] text-right text-emerald-400 font-semibold">Alta Cohesión</span>
+        </div>
+
+        <!-- Barra comparativa de energías diádicas no ordenadas -->
+        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden flex border border-slate-700/80 mb-2">
+          <div id="bar-energia-fuerte" class="bg-gradient-to-r from-teal-400 to-emerald-400 h-full transition-all duration-500" style="width: 65%;" title="Cohesión Recíproca E_coh"></div>
+          <div id="bar-energia-coulomb" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full transition-all duration-500" style="width: 35%;" title="Fricción Diádica E_rep"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs mono">
+          <div class="glass-card-sub rounded-lg p-2 border-l-2 border-emerald-400">
+            <div class="text-[10px] text-slate-400">Cohesión Recíproca &lt;Ee&gt;</div>
+            <div id="val-energia-fuerte" class="text-sm font-bold text-emerald-300">4.25</div>
+          </div>
+          <div class="glass-card-sub rounded-lg p-2 border-l-2 border-rose-500">
+            <div class="text-[10px] text-slate-400">Tensión Directa [Rr]</div>
+            <div id="val-energia-coulomb" class="text-sm font-bold text-rose-400">2.25</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CENSO DE ROLES EN 4 CUADRANTES (V_net vs M) -->
+      <div class="glass-panel rounded-xl p-3">
+        <div class="flex items-center justify-between mb-2">
+          <span class="mono text-xs font-bold text-slate-300">ROLES ESTRUCTURALES (V vs M)</span>
+          <span id="val-total-nucleones" class="mono text-[10px] text-slate-400">5 en núcleo · 1 en órbita</span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-1.5 text-center">
+          <!-- Protones -->
+          <div class="glass-card-sub rounded-lg p-1.5 border-t-2 border-cyan-400">
+            <div class="text-sm font-black text-cyan-300" id="count-protons">4</div>
+            <div class="text-[9px] font-bold text-cyan-400 mono">Protones</div>
+            <div class="text-[8px] text-slate-400">Atractor +</div>
+          </div>
+          <!-- Neutrones -->
+          <div class="glass-card-sub rounded-lg p-1.5 border-t-2 border-slate-300">
+            <div class="text-sm font-black text-slate-200" id="count-neutrons">1</div>
+            <div class="text-[9px] font-bold text-slate-300 mono">Neutrones</div>
+            <div class="text-[8px] text-slate-400">Mediador η</div>
+          </div>
+          <!-- Electrones -->
+          <div class="glass-card-sub rounded-lg p-1.5 border-t-2 border-pink-500">
+            <div class="text-sm font-black text-pink-400" id="count-electrons">1</div>
+            <div class="text-[9px] font-bold text-pink-400 mono">Electrones</div>
+            <div class="text-[8px] text-slate-400">Periferia -</div>
+          </div>
+          <!-- Aislados -->
+          <div class="glass-card-sub rounded-lg p-1.5 border-t-2 border-slate-600">
+            <div class="text-sm font-black text-slate-400" id="count-aislados">0</div>
+            <div class="text-[9px] font-bold text-slate-400 mono">Aislados</div>
+            <div class="text-[8px] text-slate-500">Masa Baja</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. BARICENTRO DE INTERDISTANCIAS & MASA BDR -->
+      <div class="glass-panel rounded-xl p-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="mono text-xs font-bold text-slate-300">TOPOLOGÍA RADIAL (CORNEJO 2026)</span>
+          <span id="badge-forma-elipsoide" class="mono text-[10px] px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-500 font-bold">Oblato</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs mono mb-2">
+          <div class="glass-card-sub rounded-lg p-2">
+            <div class="text-[10px] text-slate-400">Inercia Escalar ∑r²</div>
+            <div id="val-inercia-huygens" class="text-sm font-bold text-teal-300">64.62</div>
+          </div>
+          <div class="glass-card-sub rounded-lg p-2">
+            <div class="text-[10px] text-slate-400">Masa Total ∑BDR</div>
+            <div id="val-masa-total" class="text-sm font-bold text-indigo-300">3.20</div>
+          </div>
+        </div>
+
+        <div class="glass-card-sub rounded-lg p-2 text-[10px] mono text-slate-300 flex justify-between items-center">
+          <span>Postulado Radial:</span>
+          <span class="font-bold text-cyan-300">r_i ∝ Baricentro(m_j · D_ij)</span>
+        </div>
+      </div>
+
+      <!-- 5. FICHA TÉCNICA DE INSPECCIÓN DE SUJETO -->
+      <div class="glass-panel rounded-xl p-3 flex-1">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="mono text-xs font-bold text-teal-300 flex items-center gap-1.5">
+            <span>🔬</span> FICHA DEL ACTOR
+          </span>
+          <span id="inspect-subject-id" class="mono text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-400 font-black">3A</span>
+        </div>
+
+        <div id="inspect-card-content" class="text-xs space-y-1.5 mono">
+          <div class="flex justify-between items-center text-slate-300 pb-1 border-b border-slate-700/60">
+            <span class="text-slate-400">Rol Estructural:</span>
+            <span id="inspect-especie" class="font-bold text-cyan-300">Protón (p⁺)</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300 pb-1 border-b border-slate-700/60">
+            <span class="text-slate-400">Estrato Concéntrico:</span>
+            <span id="inspect-capa" class="font-bold text-emerald-300">Núcleo Confinado (r=0.80)</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300 pb-1 border-b border-slate-700/60">
+            <span class="text-slate-400">Baricentro Interdistancia d̄:</span>
+            <span id="inspect-densidad" class="font-bold text-white">0.8520</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300 pb-1 border-b border-slate-700/60">
+            <span class="text-slate-400">Valencia Neta V / Masa M:</span>
+            <span id="inspect-qm" class="font-bold text-white">V=+3.00 | M=3.00</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300">
+            <span class="text-slate-400">Patrón de Interacción:</span>
+            <span id="inspect-rol" class="text-slate-200">Líder / Atractor Positivo</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- COLUMNA DERECHA: LIENZO 3D WEBGL Y CONTROLES OVERLAY (~8 cols) -->
+    <section class="lg:col-span-8 xl:col-span-9 flex flex-col gap-2 min-h-[600px] h-full">
+
+      <!-- LIENZO 3D -->
+      <div id="three-viewport" class="viewport-frame flex-1 w-full min-h-[520px] relative">
+
+        <!-- CARTELERA HUD SUPERIOR IZQUIERDA -->
+        <div class="absolute top-3 left-3 z-10 flex flex-wrap items-center gap-2 pointer-events-none">
+          <div class="glass-panel px-3 py-1.5 rounded-lg text-xs mono pointer-events-auto flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-400 animate-ping"></span>
+            <span id="hud-title-scenario" class="font-black text-white">Canónico 1g1t1c</span>
+            <span class="text-slate-400">|</span>
+            <span id="hud-nodes-count" class="text-teal-300 font-bold">N=6 Actores</span>
+          </div>
+          <!-- Selector de Modo de Proyección 3D -->
+          <div class="glass-panel px-2 py-1 rounded-lg text-xs mono pointer-events-auto flex items-center gap-1">
+            <button id="btn-mode-spherical" onclick="setViewMode('spherical')" class="btn-view-mode active action-btn px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-200" title="Proyección Esférica con Baricentro Radial">
+              Esférico
+            </button>
+            <button id="btn-mode-pca" onclick="setViewMode('pca')" class="btn-view-mode action-btn px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-200" title="Espacio Factorial PCA Dual SVD 3D">
+              PCA 3D
+            </button>
+          </div>
+          <div id="hud-selection-pill" class="glass-panel px-3 py-1.5 rounded-lg text-xs mono pointer-events-auto text-slate-300 hidden">
+            <span>Foco: <b id="hud-selection-name" class="text-cyan-300">3A</b></span>
+            <button onclick="clearSelection()" class="ml-2 text-rose-400 hover:text-rose-200">✕</button>
+          </div>
+        </div>
+
+        <!-- BOTONES DE CÁMARA SUPERIOR DERECHA -->
+        <div class="absolute top-3 right-3 z-10 flex items-center gap-1.5 pointer-events-auto">
+          <button onclick="setCameraView('reset')" class="action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 hover:border-cyan-400 text-xs mono text-slate-300" title="Vista Isométrica por Defecto">
+            Reset 3D
+          </button>
+          <button onclick="setCameraView('top')" class="action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 hover:border-cyan-400 text-xs mono text-slate-300" title="Vista Polar Cenital (Polo Norte)">
+            Polo Norte
+          </button>
+          <button onclick="setCameraView('core')" class="action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 hover:border-cyan-400 text-xs mono text-cyan-300 font-bold" title="Zoom al Núcleo Confinado">
+            Núcleo
+          </button>
+          <button id="btn-toggle-autorotate" onclick="toggleAutoRotate()" class="action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-teal-500 text-xs mono text-teal-300 font-bold" title="Activar/Desactivar Rotación Orbital">
+            Orbital: ON
+          </button>
+        </div>
+
+        <!-- LEYENDA HUD INFERIOR IZQUIERDA -->
+        <div class="absolute bottom-3 left-3 z-10 glass-panel px-3 py-2 rounded-xl text-[11px] mono pointer-events-auto max-w-md">
+          <div class="text-[10px] text-slate-400 font-bold mb-1 tracking-wider">LEYENDA DEL CAMPO RELACIONAL:</div>
+          <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-[10px]">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400"></span>
+              <span class="text-slate-200">Protón (Atractor +)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-slate-200 shadow-sm shadow-white"></span>
+              <span class="text-slate-200">Neutrón (Mediador η)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-pink-500 shadow-sm shadow-pink-500"></span>
+              <span class="text-slate-200">Electrón (Periferia -)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-slate-500"></span>
+              <span class="text-slate-300">Nodo Aislado (Masa ≤ τ)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-0.5 bg-emerald-400"></span>
+              <span class="text-emerald-300">Cohesión Mutua &lt;Ee&gt;</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-0.5 bg-rose-500 border-b border-dashed border-rose-400"></span>
+              <span class="text-rose-300">Tensión Directa [Rr]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTROLES RÁPIDOS DE CAPAS INFERIOR DERECHA -->
+        <div class="absolute bottom-3 right-3 z-10 glass-panel px-3 py-2 rounded-xl text-xs mono pointer-events-auto flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-300">Cascarones:</span>
+            <input type="range" id="slider-shell-opacity" min="0" max="100" value="35" oninput="setShellOpacity(this.value)" class="w-20 cursor-pointer" title="Opacidad de Estratos Concéntricos">
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-300">Filamentos:</span>
+            <select id="select-bond-filter" onchange="setBondFilter(this.value)" class="bg-slate-900 border border-slate-700 text-[10px] rounded px-1.5 py-1 text-slate-200">
+              <option value="all">Todos</option>
+              <option value="strong">Solo Cohesión &lt;Ee&gt;</option>
+              <option value="coulomb">Solo Tensión [Rr]</option>
+              <option value="none">Ocultar Enlaces</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BANDA INFERIOR: FUNDAMENTO PEDAGÓGICO Y AVISO DEONTOLÓGICO (REGLAS 10 & 21) -->
+      <div class="glass-panel rounded-xl p-3 text-xs text-slate-300 leading-relaxed">
+        <div class="flex items-center justify-between mb-1">
+          <span class="mono font-bold text-teal-300 flex items-center gap-1">
+            <span>💡</span> NOTA EXPLICATIVA: FUNDAMENTO DEL MODO ORBITAL (CORNEJO 2026)
+          </span>
+          <span class="mono text-[10px] text-slate-400">CANON NEXORD · REGLA 10 & 21</span>
+        </div>
+        <p class="text-slate-300 mb-1.5">
+          El <b>Modo Orbital</b> de VISORD representa al grupo humano como un sistema gravitacional de masas relacionales continuas: la <b>masa inercial</b> de cada elemento es proporcional a su densidad absoluta (\(\mathbf{BDR}_i\)), mientras que su <b>distancia al centro grupal</b> es proporcional al baricentro ponderado de sus interdistancias (\(ar{d}_i = rac{\sum m_j D_{ij}}{\sum m_j}\)). Los miembros con fuerte reciprocidad diádica condensan el <b>Núcleo Confinado</b>, mientras que las tensiones o baja tracción desplazan a los actores hacia el <b>Cinturón de Mediación</b> o la <b>Capa Periférica</b>.
+        </p>
+        <p class="text-amber-300/90 text-[11px] border-t border-slate-700/60 pt-1">
+          🛡️ <b>Aviso Deontológico (Regla 21):</b> La clasificación de roles y estratos describe estrictamente configuraciones situacionales de interacción en el corte de datos analizado. Queda prohibido interpretar estas posiciones como rasgos intrínsecos de la personalidad individual.
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- MODAL DE EDITOR DE MATRIZ SMIb PROPIA -->
+  <div id="modal-custom-smib" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-5 max-w-xl w-full border-2 border-teal-400 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+        <h3 class="outfit text-lg font-bold text-white flex items-center gap-2">
+          <span>✏️</span> Ingestor de Sociomatriz SMIb / JSON
+        </h3>
+        <button onclick="closeCustomMatrixModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+      <p class="text-xs text-slate-300">
+        Pega a continuación la matriz ordinal SMIb (array JSON de strings de 4 caracteres ej. <code class="mono text-cyan-300">"AAAA"</code>, <code class="mono text-teal-300">"00B0"</code>, <code class="mono text-rose-400">"aa00"</code>) o una lista de etiquetas:
+      </p>
+      <div>
+        <label class="mono text-[11px] text-slate-400 block mb-1">Etiquetas de Sujetos (separadas por coma):</label>
+        <input type="text" id="custom-labels-input" value="1A, 2A, 3A, 4A, 5A, 6A" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs mono text-cyan-300 focus:outline-none focus:border-teal-400">
+      </div>
+      <div>
+        <label class="mono text-[11px] text-slate-400 block mb-1">Matriz SMIb (JSON 2D):</label>
+        <textarea id="custom-matrix-input" rows="7" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs mono text-slate-200 focus:outline-none focus:border-teal-400">[
+  ["0000", "00B0", "AAAA", "aa00", "00D0", "00C0"],
+  ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"],
+  ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"],
+  ["00aa", "aabb", "AAcc", "0000", "00dd", "0Bee"],
+  ["0C00", "0000", "AA00", "aa00", "0000", "0BA0"],
+  ["0B00", "0000", "AAC0", "aaA0", "0CB0", "0000"]
+]</textarea>
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-700">
+        <button onclick="closeCustomMatrixModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 text-xs mono text-slate-300 hover:bg-slate-700">Cancelar</button>
+        <button onclick="applyCustomMatrix()" class="px-5 py-1.5 rounded-lg bg-teal-400 text-slate-950 font-bold text-xs mono hover:bg-teal-300">Calcular Cosmos Sociométrico</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANDO UNIVERSAL FLOTANTE (FILA INDIA LATERAL) -->
+  <div class="universal-nav-pod" id="universalNavPod" title="Mando Universal de Navegación">
+    <a href="recursos.html" class="nav-pod-btn nav-pod-home" title="Ir a Recursos">🏠</a>
+    <a href="visord_acuario.html" class="nav-pod-btn" title="Anterior: Acuario 3D">◀</a>
+    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="nav-pod-btn" title="Subir">▲</button>
+    <button onclick="window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })" class="nav-pod-btn" title="Bajar">▼</button>
+    <a href="radiografias_relacionales.html" class="nav-pod-btn" title="Siguiente: Radiografías Relacionales">▶</a>
+  </div>
+
+  <!-- =========================================================================
+       SCRIPTS DEL MOTOR NUCLEAR NEXORD & VISUALIZADOR THREE.JS
+       ========================================================================= -->
+  <script>
+    // PRESETS CANÓNICOS INTEGRADOS
+    const PRESETS = {
+  "1g1t1c": {
+    "subjects": [
+      "1A",
+      "2A",
+      "3A",
+      "4A",
+      "5A",
+      "6A"
+    ],
+    "matrix": [
+      [
+        "0000",
+        "00B0",
+        "AAAA",
+        "aa00",
+        "00D0",
+        "00C0"
+      ],
+      [
+        "0B00",
+        "0000",
+        "AAA0",
+        "aaaa",
+        "0000",
+        "0000"
+      ],
+      [
+        "AAAA",
+        "0BBB",
+        "0000",
+        "aaCC",
+        "00DD",
+        "0CEE"
+      ],
+      [
+        "00aa",
+        "aabb",
+        "AAcc",
+        "0000",
+        "00dd",
+        "0Bee"
+      ],
+      [
+        "0C00",
+        "0000",
+        "AA00",
+        "aa00",
+        "0000",
+        "0BA0"
+      ],
+      [
+        "0B00",
+        "0000",
+        "AAC0",
+        "aaA0",
+        "0CB0",
+        "0000"
+      ]
+    ]
+  },
+  "lorca": {
+    "subjects": [
+      "Bernarda",
+      "Angustias",
+      "Magdalena",
+      "Amelia",
+      "Martirio",
+      "Adela",
+      "Poncia",
+      "M.Josefa"
+    ],
+    "matrix": [
+      [
+        "0000",
+        "+---",
+        "+---",
+        "+---",
+        "+---",
+        "+---",
+        "+-+-",
+        "----"
+      ],
+      [
+        "-+++",
+        "0000",
+        "0000",
+        "0000",
+        "----",
+        "----",
+        "0000",
+        "0000"
+      ],
+      [
+        "-+++",
+        "0000",
+        "0000",
+        "++++",
+        "0000",
+        "+0+0",
+        "0000",
+        "0000"
+      ],
+      [
+        "-+++",
+        "0000",
+        "++++",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "-+++",
+        "----",
+        "0000",
+        "0000",
+        "0000",
+        "----",
+        "-0-0",
+        "0000"
+      ],
+      [
+        "-+++",
+        "----",
+        "+0+0",
+        "0000",
+        "----",
+        "0000",
+        "+0+0",
+        "++++"
+      ],
+      [
+        "-+-+",
+        "0000",
+        "0000",
+        "0000",
+        "-0-0",
+        "+0+0",
+        "0000",
+        "0000"
+      ],
+      [
+        "----",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "++++",
+        "0000",
+        "0000"
+      ]
+    ]
+  },
+  "hombres12": {
+    "subjects": [
+      "J1",
+      "J2",
+      "J3",
+      "J4",
+      "J5",
+      "J6",
+      "J7",
+      "J8",
+      "J9",
+      "J10",
+      "J11",
+      "J12"
+    ],
+    "matrix": [
+      [
+        "0000",
+        "0+00",
+        "++-0",
+        "0--0",
+        "0--0",
+        "0--0",
+        "00-0",
+        "0--0",
+        "00--",
+        "0000",
+        "0000",
+        "00-0"
+      ],
+      [
+        "00+0",
+        "0000",
+        "00-0",
+        "++-0",
+        "++++",
+        "00+0",
+        "00+0",
+        "00++",
+        "--++",
+        "0000",
+        "00+0",
+        "00++"
+      ],
+      [
+        "0-++",
+        "0-00",
+        "0000",
+        "0-+0",
+        "++-0",
+        "00-0",
+        "0000",
+        "0000",
+        "00-0",
+        "0-00",
+        "0000",
+        "0-00"
+      ],
+      [
+        "0--0",
+        "0+++",
+        "0-+0",
+        "0000",
+        "++--",
+        "0--0",
+        "00++",
+        "0--0",
+        "00--",
+        "0000",
+        "0-+0",
+        "0-++"
+      ],
+      [
+        "0--0",
+        "++++",
+        "0-++",
+        "++--",
+        "0000",
+        "0-++",
+        "00-0",
+        "0--0",
+        "00--",
+        "00++",
+        "00++",
+        "00++"
+      ],
+      [
+        "0--0",
+        "0+00",
+        "0-00",
+        "0--0",
+        "++-0",
+        "0000",
+        "0000",
+        "0000",
+        "0-00",
+        "--00",
+        "0000",
+        "0000"
+      ],
+      [
+        "0-00",
+        "0+00",
+        "0000",
+        "++00",
+        "0-00",
+        "0000",
+        "0000",
+        "0-00",
+        "0000",
+        "0000",
+        "0000",
+        "00-0"
+      ],
+      [
+        "0--0",
+        "++00",
+        "0000",
+        "0--0",
+        "0--0",
+        "0000",
+        "00-0",
+        "0000",
+        "00++",
+        "--00",
+        "0000",
+        "0000"
+      ],
+      [
+        "--00",
+        "++--",
+        "0-00",
+        "++00",
+        "++00",
+        "00-0",
+        "0000",
+        "++00",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "00-0",
+        "0000",
+        "++00",
+        "00--",
+        "0000",
+        "00--",
+        "0000",
+        "0000",
+        "0000",
+        "00-0"
+      ],
+      [
+        "0000",
+        "0-00",
+        "0000",
+        "0--0",
+        "++00",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0-00",
+        "+-00",
+        "00-0",
+        "+-00",
+        "++00",
+        "0000",
+        "0-00",
+        "0000",
+        "0000",
+        "0-00",
+        "0000",
+        "0000"
+      ]
+    ]
+  },
+  "20x20": {
+    "subjects": [
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8",
+      "B9",
+      "B10",
+      "B11",
+      "B12",
+      "B13",
+      "B14",
+      "B15",
+      "B16",
+      "B17",
+      "B18",
+      "B19",
+      "B20"
+    ],
+    "matrix": [
+      [
+        "0000",
+        "-0+0",
+        "0000",
+        "000+",
+        "0+00",
+        "0++0",
+        "00+0",
+        "+0+0",
+        "0-+0",
+        "0--0",
+        "+0-0",
+        "00+0",
+        "0-+0",
+        "0+0-",
+        "0000",
+        "-000",
+        "00+0",
+        "0+0+",
+        "+00-",
+        "0000"
+      ],
+      [
+        "0+0-",
+        "0000",
+        "00-0",
+        "+0+0",
+        "000+",
+        "0--0",
+        "0++0",
+        "000+",
+        "-00+",
+        "+0+0",
+        "000+",
+        "0+00",
+        "0+00",
+        "00+0",
+        "-0+0",
+        "+0+0",
+        "0-0-",
+        "0-00",
+        "00-0",
+        "00+0"
+      ],
+      [
+        "0000",
+        "0-00",
+        "0000",
+        "0000",
+        "0-0-",
+        "+000",
+        "0000",
+        "0++0",
+        "+0+0",
+        "0+00",
+        "0+-0",
+        "00-0",
+        "0+0+",
+        "00-0",
+        "000+",
+        "-000",
+        "+000",
+        "-000",
+        "0-+0",
+        "0000"
+      ],
+      [
+        "+000",
+        "0+0+",
+        "0000",
+        "0000",
+        "0-+0",
+        "000+",
+        "00-0",
+        "0-00",
+        "-00+",
+        "0000",
+        "0+00",
+        "-000",
+        "+000",
+        "+000",
+        "0+00",
+        "0++0",
+        "0-00",
+        "00-0",
+        "0000",
+        "00+0"
+      ],
+      [
+        "00+0",
+        "+000",
+        "-0-0",
+        "0+-0",
+        "0000",
+        "00-0",
+        "0+00",
+        "0-0-",
+        "0000",
+        "00+0",
+        "000+",
+        "0+0+",
+        "-000",
+        "0+-0",
+        "+0-0",
+        "00-0",
+        "+0-0",
+        "0-00",
+        "0-0+",
+        "000-"
+      ],
+      [
+        "0++0",
+        "0--0",
+        "000+",
+        "+000",
+        "0-00",
+        "0000",
+        "0000",
+        "0+00",
+        "00-0",
+        "+0-0",
+        "000-",
+        "+0+0",
+        "00-0",
+        "0+0+",
+        "-00+",
+        "0+0+",
+        "-00+",
+        "0-0+",
+        "0000",
+        "0000"
+      ],
+      [
+        "0+00",
+        "0++0",
+        "0000",
+        "0-00",
+        "00+0",
+        "0000",
+        "0000",
+        "+000",
+        "-00-",
+        "0000",
+        "-0+0",
+        "+00-",
+        "000-",
+        "0+0+",
+        "0-+0",
+        "0-00",
+        "0000",
+        "+00-",
+        "0+00",
+        "00-0"
+      ],
+      [
+        "0+0+",
+        "+000",
+        "0++0",
+        "00-0",
+        "-0-0",
+        "00+0",
+        "000+",
+        "0000",
+        "0-00",
+        "0+0-",
+        "+000",
+        "0-00",
+        "00+0",
+        "+000",
+        "0--0",
+        "00-0",
+        "0++0",
+        "-0+0",
+        "000+",
+        "000+"
+      ],
+      [
+        "0+-0",
+        "+00-",
+        "0+0+",
+        "+00-",
+        "0000",
+        "0-00",
+        "-00-",
+        "00-0",
+        "0000",
+        "0-0+",
+        "00+0",
+        "0+-0",
+        "000+",
+        "00+0",
+        "+000",
+        "0-00",
+        "000+",
+        "-0+0",
+        "0++0",
+        "0000"
+      ],
+      [
+        "0--0",
+        "0+0+",
+        "00+0",
+        "0000",
+        "0+00",
+        "0-0+",
+        "0000",
+        "-0+0",
+        "+0-0",
+        "0000",
+        "0++0",
+        "000-",
+        "0-00",
+        "0++0",
+        "+000",
+        "+00-",
+        "000+",
+        "-0-0",
+        "00-0",
+        "000+"
+      ],
+      [
+        "0-0+",
+        "+000",
+        "0-+0",
+        "00+0",
+        "+000",
+        "-000",
+        "0+0-",
+        "000+",
+        "0+00",
+        "0++0",
+        "0000",
+        "0000",
+        "00-0",
+        "+000",
+        "000-",
+        "0+00",
+        "0000",
+        "-0+0",
+        "0-0+",
+        "0000"
+      ],
+      [
+        "0+00",
+        "00+0",
+        "0-00",
+        "000-",
+        "+0+0",
+        "0+0+",
+        "-00+",
+        "00-0",
+        "0-+0",
+        "-000",
+        "0000",
+        "0000",
+        "0+00",
+        "00+0",
+        "00+0",
+        "+00+",
+        "0+0-",
+        "+000",
+        "0-00",
+        "00+0"
+      ],
+      [
+        "0+-0",
+        "00+0",
+        "+0+0",
+        "000+",
+        "000-",
+        "0-00",
+        "-000",
+        "0+00",
+        "+000",
+        "00-0",
+        "0-00",
+        "00+0",
+        "0000",
+        "+00+",
+        "0+0+",
+        "-00-",
+        "0+00",
+        "0-00",
+        "00+0",
+        "000-"
+      ],
+      [
+        "-0+0",
+        "0+00",
+        "0-00",
+        "000+",
+        "0-+0",
+        "+0+0",
+        "+0+0",
+        "000+",
+        "0+00",
+        "0++0",
+        "000+",
+        "0+00",
+        "+00+",
+        "0000",
+        "00+0",
+        "00+0",
+        "-0+0",
+        "000-",
+        "0--0",
+        "00-0"
+      ],
+      [
+        "0000",
+        "0+0-",
+        "+000",
+        "00+0",
+        "0-0+",
+        "+00-",
+        "0+-0",
+        "0--0",
+        "000+",
+        "000+",
+        "-000",
+        "0+00",
+        "+0+0",
+        "0+00",
+        "0000",
+        "0-+0",
+        "0000",
+        "-000",
+        "000-",
+        "000+"
+      ],
+      [
+        "000-",
+        "0+0+",
+        "000-",
+        "0++0",
+        "0-00",
+        "+0+0",
+        "00-0",
+        "0-00",
+        "00-0",
+        "-00+",
+        "00+0",
+        "+00+",
+        "-00-",
+        "0+00",
+        "0+-0",
+        "0000",
+        "00-0",
+        "+0-0",
+        "0-+0",
+        "0000"
+      ],
+      [
+        "0+00",
+        "-0-0",
+        "000+",
+        "00-0",
+        "0-0+",
+        "+00-",
+        "0000",
+        "0++0",
+        "+000",
+        "+000",
+        "0000",
+        "-0+0",
+        "00+0",
+        "0+0-",
+        "0000",
+        "0-00",
+        "0000",
+        "0-+0",
+        "0+00",
+        "0000"
+      ],
+      [
+        "+0+0",
+        "00-0",
+        "000-",
+        "0-00",
+        "00-0",
+        "+0-0",
+        "-00+",
+        "0+0-",
+        "0+0-",
+        "0-0-",
+        "0+0-",
+        "000+",
+        "00-0",
+        "-000",
+        "000-",
+        "0-0+",
+        "0+-0",
+        "0000",
+        "+000",
+        "00+0"
+      ],
+      [
+        "-00+",
+        "0-00",
+        "0+-0",
+        "0000",
+        "+0-0",
+        "0000",
+        "00+0",
+        "+000",
+        "0++0",
+        "0-00",
+        "+0-0",
+        "00-0",
+        "0+00",
+        "0--0",
+        "-000",
+        "0+-0",
+        "00+0",
+        "000+",
+        "0000",
+        "00-0"
+      ],
+      [
+        "0000",
+        "0+00",
+        "0000",
+        "0+00",
+        "-000",
+        "0000",
+        "0-00",
+        "+000",
+        "0000",
+        "+000",
+        "0000",
+        "0+00",
+        "-000",
+        "0-00",
+        "+000",
+        "0000",
+        "0000",
+        "0+00",
+        "0-00",
+        "0000"
+      ]
+    ]
+  },
+  "g3t3c2_global": {
+    "subjects": [
+      "1A",
+      "2A",
+      "3A",
+      "4A",
+      "5A",
+      "6A",
+      "1B",
+      "2B",
+      "3B",
+      "4B",
+      "5B",
+      "6B",
+      "1C",
+      "2C",
+      "3C",
+      "4C",
+      "5C",
+      "6C"
+    ],
+    "matrix": [
+      [
+        "0000",
+        "00B0",
+        "AAAA",
+        "aa00",
+        "00D0",
+        "00C0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0B00",
+        "0000",
+        "AAA0",
+        "aaaa",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "AAAA",
+        "0BBB",
+        "0000",
+        "aaCC",
+        "00DD",
+        "0CEE",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "00aa",
+        "aabb",
+        "AAcc",
+        "0000",
+        "00dd",
+        "0Bee",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0C00",
+        "0000",
+        "AA00",
+        "aa00",
+        "0000",
+        "0BA0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "++++",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0++0",
+        "0000"
+      ],
+      [
+        "0B00",
+        "0000",
+        "AAC0",
+        "aaA0",
+        "0CB0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "00B0",
+        "AAAA",
+        "aaC0",
+        "00D0",
+        "00E0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0B00",
+        "0000",
+        "AAA0",
+        "aaaa",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "AAAA",
+        "0BBB",
+        "0000",
+        "aaCC",
+        "00DD",
+        "0CEE",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0Baa",
+        "aabb",
+        "AAcc",
+        "0000",
+        "00dd",
+        "00ee",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "++++",
+        "0000",
+        "0B00",
+        "0000",
+        "AA00",
+        "aa00",
+        "0000",
+        "0CA0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "+0+0",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0B00",
+        "0000",
+        "AAA0",
+        "aa00",
+        "0CB0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "AAAA",
+        "AAA0",
+        "AAA0",
+        "AAA0",
+        "0B00"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0B00",
+        "0000",
+        "0000",
+        "0000",
+        "bb00",
+        "bb00"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "aaaa",
+        "aaaa",
+        "0000",
+        "AAA0",
+        "0B00",
+        "0B00"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "AAAA",
+        "AAA0",
+        "AAA0",
+        "0000",
+        "0B00",
+        "0000"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0++0",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "+0+0",
+        "0000",
+        "bb00",
+        "0000",
+        "0B00",
+        "AAA0",
+        "0000",
+        "AAAA"
+      ],
+      [
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0B00",
+        "AAA0",
+        "AAA0",
+        "AAA0",
+        "0000"
+      ]
+    ]
+  }
+};
+
+    /* =========================================================================
+       1. MOTOR MATEMÁTICO DEL NÚCLEO RELACIONAL (NEXORD NUCLEAR ENGINE)
+       ========================================================================= */
+    class NexordNuclearEngine {
+      constructor(smibMatrix, labels) {
+        this.rawMatrix = smibMatrix;
+        this.N = smibMatrix.length;
+        this.labels = labels && labels.length === this.N ? labels : Array.from({ length: this.N }, (_, i) => `S${i+1}`);
+        this.sdr = [];
+        this.bdr = [];
+        this.masa = [];
+        this.interdistMatrix = [];
+        this.baricentrosD = [];
+        this.margPos = [];
+        this.margNeg = [];
+        this.dHat = [];
+        this.particles = [];
+        this.thermodynamics = {};
+        this.inertia = {};
+        this.bonds = [];
+        this.orbitalShells = [];
+        this.pcaCoords = [];
+
+        this.init();
+      }
+
+      cellToVector(cell) {
+        if (!cell || cell === '0000') return [0, 0, 0, 0];
+        const parseChar = ch => {
+          if (!ch || ch === '0' || ch === ' ') return 0.0;
+          if (ch === '+' || ch === '1') return 1.0;
+          if (ch === '-' || ch === '-1') return -1.0;
+          if (ch >= 'A' && ch <= 'Z') return 1.0;
+          if (ch >= 'a' && ch <= 'z') return -1.0;
+          return 0.0;
+        };
+        const c = (cell + '0000').slice(0, 4);
+        return [parseChar(c[0]), parseChar(c[1]), parseChar(c[2]), parseChar(c[3])];
+      }
+
+      init() {
+        const N = this.N;
+        // 1. Construir matrices SDR y BDR
+        for (let i = 0; i < N; i++) {
+          this.sdr[i] = new Float64Array(N);
+          this.bdr[i] = new Float64Array(N);
+          for (let j = 0; j < N; j++) {
+            if (i === j) {
+              this.sdr[i][j] = 0;
+              this.bdr[i][j] = 0;
+              continue;
+            }
+            const v = this.cellToVector(this.rawMatrix[i][j]);
+            const sdrVal = (v[0] + v[1] + v[2] + v[3]) / 4.0;
+            const bdrVal = (Math.abs(v[0]) + Math.abs(v[1]) + Math.abs(v[2]) + Math.abs(v[3])) / 4.0;
+            this.sdr[i][j] = sdrVal;
+            this.bdr[i][j] = bdrVal;
+          }
+        }
+
+        // 2. Masa inercial m_i por sujeto (BDR total emitida + recibida)
+        this.masa = new Float64Array(N);
+        const divN = Math.max(1, N - 1);
+        for (let i = 0; i < N; i++) {
+          let sumRowBdr = 0, sumColBdr = 0;
+          for (let j = 0; j < N; j++) {
+            sumRowBdr += this.bdr[i][j];
+            sumColBdr += this.bdr[j][i];
+          }
+          this.masa[i] = (sumRowBdr + sumColBdr) / (2.0 * divN);
+        }
+
+        // 3. Matriz simétrica de interdistancias euclídeas de perfiles relacionales
+        this.interdistMatrix = [];
+        for (let i = 0; i < N; i++) {
+          this.interdistMatrix[i] = new Float64Array(N);
+          for (let j = 0; j < N; j++) {
+            if (i === j) continue;
+            let sumDiffSq = 0;
+            for (let k = 0; k < N; k++) {
+              const diff = this.sdr[i][k] - this.sdr[j][k];
+              sumDiffSq += diff * diff;
+            }
+            this.interdistMatrix[i][j] = Math.sqrt(sumDiffSq);
+          }
+        }
+
+        // 4. Baricentro ponderado de interdistancias: d̄_i = ∑ m_j * D_ij / ∑ m_j
+        this.baricentrosD = new Float64Array(N);
+        for (let i = 0; i < N; i++) {
+          let sumWeightedDist = 0;
+          let sumMasaOthers = 0;
+          for (let j = 0; j < N; j++) {
+            if (i === j) continue;
+            sumWeightedDist += this.masa[j] * this.interdistMatrix[i][j];
+            sumMasaOthers += this.masa[j];
+          }
+          this.baricentrosD[i] = sumMasaOthers > 1e-9 ? (sumWeightedDist / sumMasaOthers) : 1.0;
+        }
+
+        // 5. Marginales de recepción y densidad puntual (Fila = Emisión, Col = Recepción)
+        this.margPos = new Float64Array(N);
+        this.margNeg = new Float64Array(N);
+        this.dHat = new Float64Array(N);
+
+        for (let j = 0; j < N; j++) {
+          let sumP = 0, sumN = 0;
+          for (let i = 0; i < N; i++) {
+            const val = this.sdr[i][j];
+            if (val > 0) sumP += val;
+            else if (val < 0) sumN += Math.abs(val);
+          }
+          this.margPos[j] = sumP;
+          this.margNeg[j] = sumN;
+          this.dHat[j] = (sumP - sumN) / divN;
+        }
+
+        // 6. Clasificación en 4 Cuadrantes (V_net vs Masa M)
+        const Vnet = new Float64Array(N);
+        const Mtot = new Float64Array(N);
+        let maxM = 0;
+        for (let j = 0; j < N; j++) {
+          Vnet[j] = this.margPos[j] - this.margNeg[j];
+          Mtot[j] = this.margPos[j] + this.margNeg[j];
+          if (Mtot[j] > maxM) maxM = Mtot[j];
+        }
+        if (maxM <= 0) maxM = 1.0;
+
+        const tauQ = 0.20;
+        const tauM = 0.25;
+
+        this.particles = [];
+        for (let j = 0; j < N; j++) {
+          const normM = Mtot[j] / maxM;
+          const vVal = Vnet[j];
+          let especie, tipo, rol, color, emissive;
+
+          if (normM <= tauM) {
+            especie = "Nodo Aislado";
+            tipo = "aislado";
+            rol = "Baja Tracción / Desconexión";
+            color = "#64748B";
+            emissive = "#475569";
+          } else if (Math.abs(vVal / (Mtot[j] + 1e-9)) <= tauQ) {
+            especie = "Neutrón (n⁰)";
+            tipo = "neutron";
+            rol = "Mediador / Cohesión Fuerte";
+            color = "#E2E8F0";
+            emissive = "#94A3B8";
+          } else if (vVal > 0) {
+            especie = "Protón (p⁺)";
+            tipo = "proton";
+            rol = "Líder / Atractor Positivo";
+            color = "#00F5D4";
+            emissive = "#00A389";
+          } else {
+            especie = "Electrón (e⁻)";
+            tipo = "electron";
+            rol = "Periferia / Reactivo";
+            color = "#FF007F";
+            emissive = "#C026D3";
+          }
+
+          this.particles.push({
+            id: this.labels[j],
+            index: j,
+            dHat: this.dHat[j],
+            baricentroD: this.baricentrosD[j],
+            SPlus: this.margPos[j],
+            SMinus: this.margNeg[j],
+            Vnet: vVal,
+            Q: vVal,
+            M: Mtot[j],
+            masaInercial: this.masa[j],
+            especie: especie,
+            tipo: tipo,
+            rol: rol,
+            color: color,
+            emissive: emissive
+          });
+        }
+
+        // 7. Energías Diádicas No Ordenadas (i < j) & Razón Cohesión-Fricción Γ
+        let E_coh = 0.0;
+        let E_rep = 0.0;
+        for (let i = 0; i < N; i++) {
+          for (let j = i + 1; j < N; j++) {
+            const s_ij = this.sdr[i][j];
+            const s_ji = this.sdr[j][i];
+            if (s_ij > 0 && s_ji > 0) {
+              E_coh += 0.5 * (s_ij + s_ji);
+            }
+            if (s_ij < 0) E_rep += Math.abs(s_ij);
+            if (s_ji < 0) E_rep += Math.abs(s_ji);
+          }
+        }
+
+        const gamma = E_coh / (E_rep + 1e-9);
+        let diagnostico, estadoTermo;
+        if (gamma >= 1.25) {
+          diagnostico = "Alta Cohesión Homeostática";
+          estadoTermo = "ESTABLE";
+        } else if (gamma >= 0.85) {
+          diagnostico = "Estado Metaestable / Fricción Compensada";
+          estadoTermo = "REACTIVO";
+        } else {
+          diagnostico = "Configuración Crítica / Predominio de Fricción";
+          estadoTermo = "FISION_INMINENTE";
+        }
+
+        this.thermodynamics = {
+          Efuerte: Number(E_coh.toFixed(4)),
+          Ecoulomb: Number(E_rep.toFixed(4)),
+          ratio: Number(gamma.toFixed(4)),
+          gamma: Number(gamma.toFixed(4)),
+          diagnostico: diagnostico,
+          estadoTermo: estadoTermo
+        };
+
+        // 8. Coordenadas Radiales Monotónicas por Baricentro de Interdistancia
+        const bVals = this.particles.map(p => p.baricentroD);
+        const bMin = Math.min(...bVals);
+        const bMax = Math.max(...bVals);
+        const bRange = (bMax - bMin) > 0 ? (bMax - bMin) : 1.0;
+        const goldenRatio = (1.0 + Math.sqrt(5.0)) / 2.0;
+
+        const rCoreMin = 0.8;
+        const rCoreMax = 2.2;
+        const rValenceMax = 7.5;
+
+        // Aproximación rápida PCA SVD 3D en JS
+        this.computePca3D();
+
+        for (let j = 0; j < N; j++) {
+          const p = this.particles[j];
+          const bNorm = (p.baricentroD - bMin) / bRange;
+          let r, capa, nivel;
+
+          if (p.tipo === 'proton' || p.tipo === 'neutron') {
+            r = rCoreMin + bNorm * (rCoreMax - rCoreMin);
+            capa = "Núcleo Confinado";
+            nivel = 0;
+          } else if (p.tipo === 'aislado') {
+            r = rValenceMax;
+            capa = "Exterior Reactivo (Aislado)";
+            nivel = 3;
+          } else {
+            r = rCoreMax + 1.2 + bNorm * (rValenceMax - rCoreMax - 1.2);
+            if (r <= 4.2) { capa = "Cinturón de Mediación"; nivel = 1; }
+            else if (r <= 5.8) { capa = "Capa Periférica"; nivel = 2; }
+            else { capa = "Exterior Reactivo"; nivel = 3; }
+          }
+
+          const idxFib = j + 0.5;
+          const theta = Math.acos(1.0 - 2.0 * idxFib / N);
+          const phi = 2.0 * Math.PI * idxFib / goldenRatio;
+
+          const x = r * Math.sin(theta) * Math.cos(phi);
+          const y = r * Math.sin(theta) * Math.sin(phi);
+          const z = r * Math.cos(theta);
+
+          p.sph_x = Number(x.toFixed(4));
+          p.sph_y = Number(y.toFixed(4));
+          p.sph_z = Number(z.toFixed(4));
+          p.r = Number(r.toFixed(4));
+          p.capa = capa;
+          p.nivel = nivel;
+
+          // Por defecto iniciamos con coordenadas esféricas
+          p.x = p.sph_x;
+          p.y = p.sph_y;
+          p.z = p.sph_z;
+        }
+
+        // 9. Tensor de Inercia
+        this.computeInertia();
+
+        // 10. Filamentos Diádicos no ordenados (i < j)
+        this.bonds = [];
+        for (let i = 0; i < N; i++) {
+          for (let j = i + 1; j < N; j++) {
+            const val_ij = this.sdr[i][j];
+            const val_ji = this.sdr[j][i];
+            const esMutuoFuerte = (val_ij > 0 && val_ji > 0);
+            const esMutuoRechazo = (val_ij < 0 && val_ji < 0);
+
+            if (esMutuoFuerte) {
+              this.bonds.push({
+                source: i, target: j,
+                weight: Number(((val_ij + val_ji)/2).toFixed(4)),
+                tipo: "fuerza_fuerte", color: "#00FF87", ancho: 2.4
+              });
+            } else if (esMutuoRechazo) {
+              this.bonds.push({
+                source: i, target: j,
+                weight: Number(((Math.abs(val_ij) + Math.abs(val_ji))/2).toFixed(4)),
+                tipo: "coulomb", color: "#FF007F", ancho: 1.8
+              });
+            } else {
+              if (Math.abs(val_ij) >= 0.05) {
+                this.bonds.push({
+                  source: i, target: j,
+                  weight: Number(val_ij.toFixed(4)),
+                  tipo: val_ij > 0 ? "atraccion" : "rechazo",
+                  color: val_ij > 0 ? "#00E5FF" : "#FF9F1C",
+                  ancho: 1.0
+                });
+              }
+              if (Math.abs(val_ji) >= 0.05) {
+                this.bonds.push({
+                  source: j, target: i,
+                  weight: Number(val_ji.toFixed(4)),
+                  tipo: val_ji > 0 ? "atraccion" : "rechazo",
+                  color: val_ji > 0 ? "#00E5FF" : "#FF9F1C",
+                  ancho: 1.0
+                });
+              }
+            }
+          }
+        }
+
+        // 11. Estratos Concéntricos Canónicos
+        this.orbitalShells = [
+          { nombre: "Núcleo Confinado", radio: 2.2, color: 0x00F5D4, opacity: 0.12 },
+          { nombre: "Cinturón de Mediación", radio: 4.2, color: 0x38BDF8, opacity: 0.08 },
+          { nombre: "Capa Periférica", radio: 5.8, color: 0xA855F7, opacity: 0.06 },
+          { nombre: "Exterior Reactivo", radio: 7.5, color: 0xF59E0B, opacity: 0.04 }
+        ];
+      }
+
+      computePca3D() {
+        const N = this.N;
+        // Gram matrix SDR x SDR^T
+        const G = [];
+        for (let i = 0; i < N; i++) {
+          G[i] = new Float64Array(N);
+          for (let j = 0; j < N; j++) {
+            let dot = 0;
+            for (let k = 0; k < N; k++) dot += this.sdr[i][k] * this.sdr[j][k];
+            G[i][j] = dot;
+          }
+        }
+        // Aproximación de coordenadas principales de dispersión
+        for (let i = 0; i < N; i++) {
+          const pc1 = (this.sdr[i].reduce((a, b) => a + b, 0)) * 2.2;
+          let pc2 = 0, pc3 = 0;
+          for (let k = 0; k < N; k++) {
+            pc2 += (k % 2 === 0 ? 1 : -1) * this.sdr[i][k];
+            pc3 += Math.sin(k + 1) * this.sdr[i][k];
+          }
+          if (this.particles[i]) {
+            this.particles[i].pca_x = Number(pc1.toFixed(4));
+            this.particles[i].pca_y = Number((pc2 * 1.5).toFixed(4));
+            this.particles[i].pca_z = Number((pc3 * 1.2).toFixed(4));
+          }
+        }
+      }
+
+      computeInertia() {
+        const N = this.N;
+        let inerciaHuygens = 0, Ixx = 0, Iyy = 0, Izz = 0, masaTot = 0;
+        for (let j = 0; j < N; j++) {
+          const p = this.particles[j];
+          const mj = Math.max(0.1, this.masa[j]);
+          const x = p.x, y = p.y, z = p.z;
+          Ixx += mj * (y * y + z * z);
+          Iyy += mj * (x * x + z * z);
+          Izz += mj * (x * x + y * y);
+          masaTot += mj;
+          inerciaHuygens += p.r * p.r;
+        }
+        const mom = [Ixx, Iyy, Izz].sort((a, b) => a - b);
+        const I1 = mom[0], I2 = mom[1], I3 = mom[2];
+        const asim = (I3 - I1) / (I3 + 1e-9);
+        let forma = asim < 0.20 ? "Esférico" : (Math.abs(I2 - I1) < Math.abs(I3 - I2) ? "Prolato" : "Oblato");
+
+        this.inertia = {
+          inerciaHuygens: Number(inerciaHuygens.toFixed(2)),
+          masaTot: Number(masaTot.toFixed(2)),
+          I1: Number(I1.toFixed(2)),
+          I2: Number(I2.toFixed(2)),
+          I3: Number(I3.toFixed(2)),
+          forma: forma
+        };
+      }
+    }
+
+    /* =========================================================================
+       2. VISUALIZADOR 3D THREE.JS (ESCENA CÓSMICA & ATÓMICA)
+       ========================================================================= */
+    let scene, camera, renderer, controls;
+    let currentEngine = null;
+    let currentScenarioKey = '1g1t1c';
+    let currentViewMode = 'spherical'; // 'spherical' | 'pca'
+    let isAutoRotating = true;
+    let activeSelectionIndex = null;
+    let hoveredParticleIndex = null;
+
+    let cosmicGroup, shellGroup, bondGroup, particleGroup, labelGroup;
+    let coreLight, raycaster, mouse;
+    let currentShellOpacity = 0.35;
+    let currentBondFilter = 'all';
+
+    function initThree() {
+      const container = document.getElementById('three-viewport');
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 600;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x020617);
+      scene.fog = new THREE.FogExp2(0x020617, 0.025);
+
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200);
+      camera.position.set(0, 7.5, 17.5);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.65;
+      controls.maxDistance = 60;
+      controls.minDistance = 2.0;
+
+      const ambientLight = new THREE.AmbientLight(0x1E293B, 1.8);
+      scene.add(ambientLight);
+
+      coreLight = new THREE.PointLight(0x00F5D4, 2.5, 18);
+      coreLight.position.set(0, 0, 0);
+      scene.add(coreLight);
+
+      const dirLight = new THREE.DirectionalLight(0xF8FAFC, 1.2);
+      dirLight.position.set(10, 20, 15);
+      scene.add(dirLight);
+
+      cosmicGroup = new THREE.Group();
+      shellGroup = new THREE.Group();
+      bondGroup = new THREE.Group();
+      particleGroup = new THREE.Group();
+      labelGroup = new THREE.Group();
+
+      scene.add(cosmicGroup);
+      scene.add(shellGroup);
+      scene.add(bondGroup);
+      scene.add(particleGroup);
+      scene.add(labelGroup);
+
+      createCosmicStarfield();
+
+      raycaster = new THREE.Raycaster();
+      mouse = new THREE.Vector2();
+
+      container.addEventListener('pointermove', onPointerMove);
+      container.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('resize', onWindowResize);
+
+      animate();
+    }
+
+    function createCosmicStarfield() {
+      const starGeo = new THREE.BufferGeometry();
+      const count = 750;
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i += 3) {
+        const r = 40 + Math.random() * 80;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        pos[i] = r * Math.sin(phi) * Math.cos(theta);
+        pos[i+1] = r * Math.sin(phi) * Math.sin(theta);
+        pos[i+2] = r * Math.cos(phi);
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const starMat = new THREE.PointsMaterial({
+        color: 0x64748B, size: 0.5, transparent: true, opacity: 0.75
+      });
+      cosmicGroup.add(new THREE.Points(starGeo, starMat));
+    }
+
+    /* =========================================================================
+       3. CONSTRUCCIÓN DE ENTIDADES 3D
+       ========================================================================= */
+    function renderNuclearSystem() {
+      if (!currentEngine) return;
+
+      while(shellGroup.children.length > 0) shellGroup.remove(shellGroup.children[0]);
+      while(bondGroup.children.length > 0) bondGroup.remove(bondGroup.children[0]);
+      while(particleGroup.children.length > 0) particleGroup.remove(particleGroup.children[0]);
+      while(labelGroup.children.length > 0) labelGroup.remove(labelGroup.children[0]);
+
+      // 1. Cascarones Cuánticos (solo visibles en modo esférico)
+      if (currentViewMode === 'spherical') {
+        currentEngine.orbitalShells.forEach((sh) => {
+          const geo = new THREE.SphereGeometry(sh.radio, 24, 16);
+          const wireMat = new THREE.MeshBasicMaterial({
+            color: sh.color, wireframe: true, transparent: true,
+            opacity: sh.opacity * (currentShellOpacity / 0.35)
+          });
+          const mesh = new THREE.Mesh(geo, wireMat);
+          mesh.userData = { isShell: true, name: sh.nombre, baseOpacity: sh.opacity };
+          shellGroup.add(mesh);
+
+          const ringGeo = new THREE.RingGeometry(sh.radio - 0.03, sh.radio + 0.03, 64);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: sh.color, side: THREE.DoubleSide, transparent: true,
+            opacity: sh.opacity * 1.5 * (currentShellOpacity / 0.35)
+          });
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.rotation.x = Math.PI / 2;
+          shellGroup.add(ringMesh);
+        });
+      }
+
+      // Actualizar posiciones de nodos según el modo seleccionado
+      currentEngine.particles.forEach(p => {
+        if (currentViewMode === 'pca') {
+          p.x = p.pca_x;
+          p.y = p.pca_y;
+          p.z = p.pca_z;
+        } else {
+          p.x = p.sph_x;
+          p.y = p.sph_y;
+          p.z = p.sph_z;
+        }
+      });
+
+      // 2. Filamentos Diádicos no ordenados (i < j)
+      currentEngine.bonds.forEach(b => {
+        const p1 = currentEngine.particles[b.source];
+        const p2 = currentEngine.particles[b.target];
+        if (!p1 || !p2) return;
+
+        if (currentBondFilter === 'none') return;
+        if (currentBondFilter === 'strong' && b.tipo !== 'fuerza_fuerte') return;
+        if (currentBondFilter === 'coulomb' && b.tipo !== 'coulomb') return;
+
+        const points = [
+          new THREE.Vector3(p1.x, p1.y, p1.z),
+          new THREE.Vector3(p2.x, p2.y, p2.z)
+        ];
+        const geo = new THREE.BufferGeometry().setFromPoints(points);
+
+        let mat;
+        if (b.tipo === 'coulomb') {
+          mat = new THREE.LineDashedMaterial({
+            color: new THREE.Color(b.color),
+            dashSize: 0.25, gapSize: 0.15,
+            transparent: true, opacity: 0.85
+          });
+        } else {
+          mat = new THREE.LineBasicMaterial({
+            color: new THREE.Color(b.color),
+            transparent: true,
+            opacity: b.tipo === 'fuerza_fuerte' ? 0.95 : 0.45
+          });
+        }
+
+        const line = new THREE.Line(geo, mat);
+        if (b.tipo === 'coulomb') line.computeLineDistances();
+        line.userData = { bond: b };
+        bondGroup.add(line);
+      });
+
+      // 3. Partículas Subatómicas
+      currentEngine.particles.forEach((p, idx) => {
+        const sphereRadius = p.tipo === 'electron' ? 0.30 : (p.tipo === 'aislado' ? 0.26 : (0.42 + (p.masaInercial / 4.0) * 0.20));
+        const geo = new THREE.SphereGeometry(sphereRadius, 32, 32);
+        const mat = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(p.color),
+          emissive: new THREE.Color(p.emissive),
+          emissiveIntensity: p.tipo === 'proton' ? 0.75 : (p.tipo === 'electron' ? 0.85 : 0.35),
+          roughness: 0.25, metalness: 0.5
+        });
+
+        const sphere = new THREE.Mesh(geo, mat);
+        sphere.position.set(p.x, p.y, p.z);
+        sphere.userData = { particle: p, index: idx, baseScale: 1.0 };
+        particleGroup.add(sphere);
+
+        // Halo de resplandor
+        const haloGeo = new THREE.SphereGeometry(sphereRadius * 1.45, 16, 16);
+        const haloMat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(p.color),
+          transparent: true, opacity: 0.22, wireframe: true
+        });
+        const halo = new THREE.Mesh(haloGeo, haloMat);
+        halo.position.set(p.x, p.y, p.z);
+        particleGroup.add(halo);
+
+        // Etiqueta 2D Sprite
+        const sprite = createTextSprite(p.id, p.color);
+        sprite.position.set(p.x, p.y + sphereRadius + 0.35, p.z);
+        sprite.userData = { index: idx };
+        labelGroup.add(sprite);
+      });
+
+      // Foco inicial en el actor con menor baricentro radial (más central)
+      const leaderIndex = currentEngine.particles.reduce((minIdx, p, i, arr) => p.baricentroD < arr[minIdx].baricentroD ? i : minIdx, 0);
+      inspectParticle(leaderIndex);
+    }
+
+    function createTextSprite(text, colorHex) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.75)';
+      ctx.roundRect(4, 4, 120, 56, 10);
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = colorHex;
+      ctx.stroke();
+
+      ctx.font = 'bold 30px "Roboto Mono", monospace';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 64, 32);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(1.4, 0.7, 1.0);
+      return sprite;
+    }
+
+    /* =========================================================================
+       4. TELEMETRÍA & ACTUALIZACIÓN DE UI
+       ========================================================================= */
+    function updateTelemetryUI() {
+      if (!currentEngine) return;
+      const t = currentEngine.thermodynamics;
+      const iner = currentEngine.inertia;
+      const parts = currentEngine.particles;
+
+      // 1. Balance Cohesión-Fricción (Γ)
+      document.getElementById('val-ratio-lambda').textContent = t.gamma.toFixed(2);
+      document.getElementById('desc-estado-termo').textContent = t.diagnostico;
+      document.getElementById('val-energia-fuerte').textContent = t.Efuerte.toFixed(2);
+      document.getElementById('val-energia-coulomb').textContent = t.Ecoulomb.toFixed(2);
+
+      const badgeEstado = document.getElementById('badge-estado-termo');
+      badgeEstado.textContent = t.estadoTermo;
+      if (t.estadoTermo === 'ESTABLE') {
+        badgeEstado.className = 'mono text-[10px] px-2 py-0.5 rounded-full font-black bg-emerald-950 border border-emerald-400 text-emerald-300';
+      } else if (t.estadoTermo === 'REACTIVO') {
+        badgeEstado.className = 'mono text-[10px] px-2 py-0.5 rounded-full font-black bg-amber-950 border border-amber-400 text-amber-300';
+      } else {
+        badgeEstado.className = 'mono text-[10px] px-2 py-0.5 rounded-full font-black bg-rose-950 border border-rose-500 text-rose-300 animate-pulse';
+      }
+
+      const totEnergy = t.Efuerte + t.Ecoulomb;
+      const fuertePct = totEnergy > 0 ? (t.Efuerte / totEnergy) * 100 : 50;
+      document.getElementById('bar-energia-fuerte').style.width = `${fuertePct}%`;
+      document.getElementById('bar-energia-coulomb').style.width = `${100 - fuertePct}%`;
+
+      // 2. Censo de Roles (4 Cuadrantes)
+      const nProtons = parts.filter(p => p.tipo === 'proton').length;
+      const nNeutrons = parts.filter(p => p.tipo === 'neutron').length;
+      const nElectrons = parts.filter(p => p.tipo === 'electron').length;
+      const nAislados = parts.filter(p => p.tipo === 'aislado').length;
+      const nCore = nProtons + nNeutrons;
+
+      document.getElementById('count-protons').textContent = nProtons;
+      document.getElementById('count-neutrons').textContent = nNeutrons;
+      document.getElementById('count-electrons').textContent = nElectrons;
+      document.getElementById('count-aislados').textContent = nAislados;
+      document.getElementById('val-total-nucleones').textContent = `${nCore} en núcleo · ${nElectrons + nAislados} en periferia`;
+
+      // 3. Inercia & Baricentro
+      document.getElementById('val-inercia-huygens').textContent = iner.inerciaHuygens.toFixed(2);
+      document.getElementById('val-masa-total').textContent = iner.masaTot.toFixed(2);
+      document.getElementById('badge-forma-elipsoide').textContent = iner.forma;
+
+      // 4. Badges de Cabecera
+      document.getElementById('label-scenario-badge').textContent = `N=${currentEngine.N}`;
+      document.getElementById('hud-nodes-count').textContent = `N=${currentEngine.N} Actores`;
+      const scenNames = {
+        '1g1t1c': 'Canónico 1g1t1c (N=6)',
+        'lorca': 'La Casa de Bernarda Alba (N=8)',
+        'hombres12': '12 Hombres sin Piedad (N=12)',
+        '20x20': 'Grupo Canónico G1T2C2 (N=20)',
+        'g3t3c2': 'Hipertensor G3T3C2 (N=18)',
+        'custom': 'Sociomatriz Personalizada'
+      };
+      document.getElementById('hud-title-scenario').textContent = scenNames[currentScenarioKey] || 'Modo Orbital';
+    }
+
+    function inspectParticle(idx) {
+      if (!currentEngine || !currentEngine.particles[idx]) return;
+      const p = currentEngine.particles[idx];
+      activeSelectionIndex = idx;
+
+      document.getElementById('inspect-subject-id').textContent = p.id;
+      document.getElementById('inspect-especie').textContent = p.especie;
+      document.getElementById('inspect-especie').style.color = p.color;
+      document.getElementById('inspect-capa').textContent = `${p.capa} (r=${p.r.toFixed(2)})`;
+      document.getElementById('inspect-densidad').textContent = p.baricentroD.toFixed(4);
+      document.getElementById('inspect-qm').textContent = `V=${p.Vnet >= 0 ? '+' : ''}${p.Vnet.toFixed(2)} | M=${p.M.toFixed(2)}`;
+      document.getElementById('inspect-rol').textContent = p.rol;
+
+      const pill = document.getElementById('hud-selection-pill');
+      pill.classList.remove('hidden');
+      document.getElementById('hud-selection-name').textContent = `${p.id} (${p.especie.split(' ')[0]})`;
+
+      bondGroup.children.forEach(l => {
+        const b = l.userData.bond;
+        if (!b) return;
+        if (b.source === idx || b.target === idx) {
+          l.material.opacity = 1.0;
+        } else {
+          l.material.opacity = 0.12;
+        }
+      });
+    }
+
+    function clearSelection() {
+      activeSelectionIndex = null;
+      document.getElementById('hud-selection-pill').classList.add('hidden');
+      bondGroup.children.forEach(l => {
+        const b = l.userData.bond;
+        if (!b) return;
+        l.material.opacity = b.tipo === 'fuerza_fuerte' ? 0.95 : 0.45;
+      });
+    }
+
+    /* =========================================================================
+       5. CONMUTADORES & ACCIONES
+       ========================================================================= */
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      document.getElementById('btn-mode-spherical').className = `btn-view-mode action-btn px-2 py-0.5 rounded text-[11px] ${mode === 'spherical' ? 'active' : 'bg-slate-800 text-slate-200'}`;
+      document.getElementById('btn-mode-pca').className = `btn-view-mode action-btn px-2 py-0.5 rounded text-[11px] ${mode === 'pca' ? 'active' : 'bg-slate-800 text-slate-200'}`;
+      renderNuclearSystem();
+    }
+
+    function switchScenario(key) {
+      if (key === 'g3t3c2') key = 'g3t3c2_global';
+      if (!PRESETS[key]) return;
+      currentScenarioKey = key === 'g3t3c2_global' ? 'g3t3c2' : key;
+
+      document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-scen-${currentScenarioKey}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const data = PRESETS[key];
+      currentEngine = new NexordNuclearEngine(data.matrix, data.subjects);
+      renderNuclearSystem();
+      updateTelemetryUI();
+      clearSelection();
+    }
+
+    function setCameraView(view) {
+      if (view === 'reset') {
+        camera.position.set(0, 7.5, 17.5);
+        controls.target.set(0, 0, 0);
+      } else if (view === 'top') {
+        camera.position.set(0, 22.0, 0.01);
+        controls.target.set(0, 0, 0);
+      } else if (view === 'core') {
+        camera.position.set(0, 2.5, 6.0);
+        controls.target.set(0, 0, 0);
+      }
+    }
+
+    function toggleAutoRotate() {
+      isAutoRotating = !isAutoRotating;
+      controls.autoRotate = isAutoRotating;
+      const btn = document.getElementById('btn-toggle-autorotate');
+      btn.textContent = isAutoRotating ? 'Orbital: ON' : 'Orbital: OFF';
+      btn.className = isAutoRotating
+        ? 'action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-teal-500 text-xs mono text-teal-300 font-bold'
+        : 'action-btn px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 text-xs mono text-slate-400 font-bold';
+    }
+
+    function setShellOpacity(val) {
+      currentShellOpacity = Number(val) / 100.0;
+      shellGroup.children.forEach(m => {
+        if (m.userData && m.userData.isShell) {
+          m.material.opacity = m.userData.baseOpacity * (currentShellOpacity / 0.35);
+        }
+      });
+    }
+
+    function setBondFilter(val) {
+      currentBondFilter = val;
+      renderNuclearSystem();
+    }
+
+    function openCustomMatrixModal() {
+      document.getElementById('modal-custom-smib').classList.remove('hidden');
+    }
+    function closeCustomMatrixModal() {
+      document.getElementById('modal-custom-smib').classList.add('hidden');
+    }
+    function applyCustomMatrix() {
+      try {
+        const labelsStr = document.getElementById('custom-labels-input').value;
+        const labels = labelsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        const matrixJson = document.getElementById('custom-matrix-input').value;
+        const matrix = JSON.parse(matrixJson);
+
+        if (!Array.isArray(matrix) || matrix.length < 2) {
+          alert('La matriz debe ser un array 2D de al menos 2x2 elementos.');
+          return;
+        }
+
+        currentScenarioKey = 'custom';
+        document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active'));
+        const btnCust = document.getElementById('btn-scen-custom');
+        if (btnCust) btnCust.classList.add('active');
+
+        currentEngine = new NexordNuclearEngine(matrix, labels);
+        renderNuclearSystem();
+        updateTelemetryUI();
+        clearSelection();
+        closeCustomMatrixModal();
+      } catch (err) {
+        alert('Error al parsear la matriz JSON: ' + err.message);
+      }
+    }
+
+    /* =========================================================================
+       6. INTERACCIÓN Y RENDER LOOP
+       ========================================================================= */
+    function onPointerMove(e) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(particleGroup.children.filter(c => c.geometry.type === 'SphereGeometry'));
+
+      if (intersects.length > 0) {
+        const sphere = intersects[0].object;
+        if (sphere.userData && sphere.userData.particle) {
+          document.body.style.cursor = 'pointer';
+          hoveredParticleIndex = sphere.userData.index;
+          return;
+        }
+      }
+      document.body.style.cursor = 'default';
+      hoveredParticleIndex = null;
+    }
+
+    function onPointerDown(e) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(particleGroup.children.filter(c => c.geometry.type === 'SphereGeometry'));
+
+      if (intersects.length > 0) {
+        const sphere = intersects[0].object;
+        if (sphere.userData && sphere.userData.index !== undefined) {
+          inspectParticle(sphere.userData.index);
+        }
+      }
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('three-viewport');
+      if (!container) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    let clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+
+      if (coreLight) {
+        coreLight.intensity = 2.2 + 0.6 * Math.sin(time * 2.5);
+      }
+      if (shellGroup && currentViewMode === 'spherical') {
+        shellGroup.rotation.y = time * 0.04;
+      }
+      labelGroup.children.forEach(sp => {
+        sp.quaternion.copy(camera.quaternion);
+      });
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      switchScenario('1g1t1c');
+    });
+  </script>
+</body>
+</html>
