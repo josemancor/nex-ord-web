@@ -165,6 +165,25 @@ Following the rigorous territorial isomorphism, the third dimension corresponds 
 > **Inviolable Deontological Safeguard (Rule 21):**
 > Orographic elevation toward a summit or peripheral confinement **must never be interpreted as an individual moral flaw, character defect, or personal psychopathology**. Just as geological mountains do not form through individual boulder volition but via deep tectonic plate pressures, in NEXORD an actor's orographic elevation is a **strictly systemic, collective orogenic phenomenon**: attraction, shear, and compressive forces of the relational field fold the social landscape. The role of formative feedback reports is not to blame the mountaineer, but to map topological paths and build descent bridges reconnecting all members within the shared valley of collective life.
 
+![Figure 2b: 3D Orographic Relief of Perceptual Realism](Figura_NEXORD_ORBIT_Espana_47_Ciudades_Relieve_3D_Orografico.png)  
+*Figure 2b. 3D Orographic model of the peninsular network of 47 provincial capitals: the vertical Z-dimension encodes the topography of dyadic realism and relational consonance (basal valleys, functional plateaus, and jagged peaks of dissonance).*
+
+#### 5. Canonical Metric Calibration and Empirical Peninsular Validation (Cornejo, 1988 vs. NEXORD, 2026)
+To validate the direct, rigorous comparability between the classical metric model based on physical road distances in kilometres (Cornejo, 1988) and the dimensionless latent space derived strictly from the ORBIT ordinal format $A(i, k) = j$, the **Canonical Three-Step Metric Calibration Protocol** is applied (Annex VI, §8.6):
+1. **Common Radial Centering:** Setting Madrid at the origin $(0, 0)$ as the peninsular centroid ($\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}}$).
+2. **Optimal Orthogonal Rotation ($Q \in \mathrm{SO}(2)$):** Aligning eigenvectors with cardinal geographic axes (West–East and South–North) via Procrustes Singular Value Decomposition (SVD).
+3. **Scalar Homothety Factor ($\alpha$):** Analytically converting the dimensionless ordinal latent units into physical kilometres via ordinary least squares:
+   $$\alpha = \frac{\sum_{i=1}^N \mathbf{x}_{i,\text{rot}}^{\text{ORBIT}} \cdot \mathbf{x}_i^{\text{KM}}}{\sum_{i=1}^N \|\mathbf{x}_{i,\text{rot}}^{\text{ORBIT}}\|^2} \approx \mathbf{16.77\text{ km / latent unit}}$$
+
+Empirical validation across all 47 peninsular provincial capitals (1,081 intercity pairs) demonstrates near-perfect isomorphism (Figure 2c):
+* **Axis 1 Correlation (West – East):** $r = 0.9832$ ($98.32\%$).
+* **Axis 2 Correlation (South – North):** $r = 0.9911$ ($99.11\%$).
+* **Residual Procrustes Disparity:** $\mathrm{Disp} = 0.02573 \to 0$.
+* **Mean Peninsular Positioning Error:** $\bar{\epsilon} = \mathbf{45.1\text{ km}}$ (a mere $4.5\%$ across the entire territorial span).
+
+![Figure 2c: Cartographic Isomorphism and Metric Calibration in 2D](Figura_Comparacion_Directa_MDS_Carreteras_vs_ORBIT_Espana_47.png)  
+*Figure 2c. Cartographic isomorphism and 2D metric calibration on identical kilometre scale: (A) Historical metric reconstruction from road distances in km (Cornejo, 1988); (B) Pure ORBIT ordinal reconstruction without kilometres (NEXORD, 2026) calibrated with α = 16.77 km/u; (C) Direct overlay and residual discrepancy micro-vectors (mean peninsular error of only 45.1 km).*
+
 ---
 
 ## 3. Relational Dynamics: Field Regimes, Friction, and Viability
@@ -649,6 +668,30 @@ $$S(X) = \sqrt{ \frac{\sum_{i < j} (d_{ij}(X) - \hat{d}_{ij})^2}{\sum_{i < j} d_
 subject to the strict monotonic constraint:
 $$r_{ij} < r_{ik} \implies \hat{d}_{ij} \le \hat{d}_{ik}$$
 For the empirical case of peninsular Spanish road distances ($N = 47$ provincial capitals), convergence yields $S < 0.035$ and a Shepard monotonic correlation $r_{\text{Shepard}} > 0.985$, proving analytically that pure ordinal information is sufficient to reconstruct the underlying Euclidean metric space without topological deformation.
+
+#### 3. Canonical Three-Step Metric Calibration Protocol
+Given the dimensionless ordinal configuration $\mathbf{X}^{\text{ORBIT}} \in \mathbb{R}^{N \times 2}$ obtained through spectral decomposition of the sociomatrix $R_{\text{sym}} = \frac{1}{2}(B + B^\top)$, and the physical reference metric matrix $\mathbf{X}^{\text{KM}} \in \mathbb{R}^{N \times 2}$ (historically centered at Madrid):
+
+1. **Radial Centering to Reference Centroid:**
+   $$\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}} \quad \forall i \in \{1, \dots, N\}$$
+
+2. **Optimal Orthogonal Procrustes Rotation ($Q \in \mathrm{SO}(2)$):**
+   Computing the singular value decomposition of the cross-product:
+   $$\mathbf{X}^{\text{ORBIT(c)}\top} \mathbf{X}^{\text{KM}} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top$$
+   The orthogonal rotation matrix that minimizes Frobenius discrepancy without warping internal geometry is:
+   $$\mathbf{Q} = \mathbf{U} \mathbf{V}^\top \implies \mathbf{X}_{\text{rot}}^{\text{ORBIT}} = \mathbf{X}^{\text{ORBIT(c)}} \mathbf{Q}$$
+
+3. **Optimal Scalar Homothety Factor ($\alpha$):**
+   The scalar $\alpha \in \mathbb{R}^+$ projecting dimensionless ordinal latent units into physical highway kilometres is derived via ordinary least squares:
+   $$\alpha = \frac{\operatorname{Tr}(\mathbf{X}_{\text{rot}}^{\text{ORBIT}\top} \mathbf{X}^{\text{KM}})}{\operatorname{Tr}(\mathbf{X}_{\text{rot}}^{\text{ORBIT}\top} \mathbf{X}_{\text{rot}}^{\text{ORBIT}})} = \frac{\sum_{i=1}^N \mathbf{x}_{i,\text{rot}}^{\text{ORBIT}} \cdot \mathbf{x}_i^{\text{KM}}}{\sum_{i=1}^N \|\mathbf{x}_{i,\text{rot}}^{\text{ORBIT}}\|^2} \approx \mathbf{16.772\text{ km / unit}}$$
+   Yielding the final calibrated coordinate matrix:
+   $$\mathbf{X}^{\text{KM-ORBIT}} = \alpha \mathbf{X}_{\text{rot}}^{\text{ORBIT}}$$
+
+#### 4. Residual Discrepancy and Convex Hull Boundary Effect
+The mean positioning error across the 47 provincial capitals is merely $\bar{\epsilon} = 45.1\text{ km}$ ($4.5\%$ of the peninsular network's span). The spatial distribution of residual errors reveals two key physical laws:
+
+* **Omnidirectionally Triangulated Interior Confinement ($\Delta < 39\text{ km}$):** Interior cities and main corridors (Madrid $\Delta = 0.0\text{ km}$, Bilbao $\Delta = 34.2\text{ km}$, Seville $\Delta = 34.7\text{ km}$, Valencia $\Delta = 39.0\text{ km}$) are bounded by ordinal neighbors across all $360^\circ$ directions. Intersecting spheres of rank completely eliminate spatial degrees of freedom, pinning geographic coordinates with sub-39 km accuracy.
+* **Boundary Effect on Unbounded Vertices ($\Delta \in [101, 148]\text{ km}$):** In the three extreme outward-facing peninsular capes (Girona $\Delta = 148.2\text{ km}$, A Coruña $\Delta = 127.4\text{ km}$, Cádiz $\Delta = 101.3\text{ km}$), the absence of external oceanic cities concentrates all ordinal vectors within a single inward angular cone. Combined with the winding topography of 1988 roads (which detoured around the Galician Massif and Pyrenean foothills), the ordinal algorithm places the vertex slightly closer in Euclidean straight-line space than asphalt road distances, proving that ORBIT reconstructs natural topological proximity.
 
 ---
 

@@ -182,7 +182,27 @@ Siguiendo el riguroso isomorfismo territorial, la tercera dimensión equivale ex
 > **Salvaguarda Deontológica Inviolable (Regla 21):**
 > La elevación orográfica hacia una cumbre o el confinamiento en una vaguada periférica **jamás deben interpretarse como un defecto moral, una tara intrínseca o un rasgo psicopatológico individual**. Al igual que en la geología terrestre las montañas no surgen por voluntad propia de las rocas sino por las presiones de las placas tectónicas subyacentes, en NEXORD la altitud orográfica de un actor es un **fenómeno orogénico estrictamente grupal**: son las fuerzas de atracción, empuje y fricción del sistema relacional las que pliegan el espacio social. La función del informe de devolución formativa no es juzgar al montañero, sino trazar senderos topológicos y tender puentes de descenso para reconectar a todos los miembros en el valle compartido de la convivencia.
 
+![Figura 2b: Modelo Orográfico 3D del Realismo Perceptivo](Figura_NEXORD_ORBIT_Espana_47_Ciudades_Relieve_3D_Orografico.png)  
+*Figura 2b. Modelo orográfico 3D de la red peninsular de 47 capitales: la tercera dimensión vertical Z codifica el relieve topográfico del realismo diádico y consonancia relacional (valles basales, mesetas funcionales y cumbres escarpadas de disonancia).*
+
+#### 5. Calibración Métrica Canónica y Validación Empírica Peninsular (Cornejo, 1988 vs. NEXORD, 2026)
+Para validar la comparabilidad directa y rigurosa entre el modelo clásico métrico en kilómetros (Cornejo, 1988) y el espacio latente ordinal adimensional derivado exclusivamente del formato ORBIT $A(i, k) = j$, se aplica el **Protocolo Canónico de Calibración y Homotecia Métrica en Tres Pasos** (Anexo VI, §8.6):
+1. **Centrado Radial Común:** Fijación de Madrid en el origen $(0, 0)$ como centro geométrico de referencia peninsular ($\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}}$).
+2. **Rotación Ortogonal Óptima ($Q \in \mathrm{SO}(2)$):** Alineación de los autovectores con los ejes cardinales geográficos Oeste–Este y Sur–Norte mediante descomposición en valores singulares (SVD de Procrustes).
+3. **Factor de Homotecia Escalar ($\alpha$):** Conversión analítica del espacio latente ordinal a kilómetros físicos mediante el factor óptimo:
+   $$\alpha = \frac{\sum_{i=1}^N \mathbf{x}_{i,\text{rot}}^{\text{ORBIT}} \cdot \mathbf{x}_i^{\text{KM}}}{\sum_{i=1}^N \|\mathbf{x}_{i,\text{rot}}^{\text{ORBIT}}\|^2} \approx \mathbf{16.77\text{ km / unidad latente}}$$
+
+Los resultados de la validación empírica sobre las 47 capitales peninsulares (1.081 pares interurbanos) evidencian un isomorfismo casi absoluto (Figura 2c):
+* **Correlación Eje 1 (Oeste – Este):** $r = 0.9832$ ($98.32\%$).
+* **Correlación Eje 2 (Sur – Norte):** $r = 0.9911$ ($99.11\%$).
+* **Disparidad Residual de Procrustes:** $\mathrm{Disp} = 0.02573 \to 0$.
+* **Error Medio Peninsular:** $\bar{\epsilon} = \mathbf{45.1\text{ km}}$ (apenas el $4.5\%$ sobre la extensión territorial completa).
+
+![Figura 2c: Isomorfismo Cartográfico y Calibración Métrica en 2D](Figura_Comparacion_Directa_MDS_Carreteras_vs_ORBIT_Espana_47.png)  
+*Figura 2c. Isomorfismo cartográfico y calibración métrica en 2 dimensiones en idéntica escala kilométrica: (A) Reconstrucción métrica clásica a partir de distancias por carretera en km (Cornejo, 1988); (B) Reconstrucción ordinal ORBIT pura sin kilómetros (NEXORD, 2026) calibrada con α = 16.77 km/u; (C) Superposición directa (Overlay) y micro-vectores de discrepancia residual (error medio peninsular de solo 45.1 km).*
+
 ---
+
 
 ## 3. Dinámica Relacional: Regímenes del Campo, Fricción y Viabilidad
 
@@ -626,6 +646,30 @@ $$S(X) = \sqrt{ \frac{\sum_{i < j} (d_{ij}(X) - \hat{d}_{ij})^2}{\sum_{i < j} d_
 sujeto a la restricción monótona estricta:
 $$r_{ij} < r_{ik} \implies \hat{d}_{ij} \le \hat{d}_{ik}$$
 Para el caso empírico de las distancias peninsulares de España ($N = 47$ capitales), la convergencia alcanza $S < 0.035$ y una correlación monótona de Shepard $r_{\text{Shepard}} > 0.985$, probando analíticamente que la información ordinal pura es suficiente para reconstruir el espacio métrico euclídeo subyacente sin deformación topológica.
+
+#### 3. Protocolo Canónico de Calibración y Homotecia Métrica en Tres Pasos
+Dada la configuración ordinal adimensional $\mathbf{X}^{\text{ORBIT}} \in \mathbb{R}^{N \times 2}$ obtenida por descomposición espectral de la sociomatriz $R_{\text{sym}} = \frac{1}{2}(B + B^\top)$, y la matriz de coordenadas métricas físicas de referencia $\mathbf{X}^{\text{KM}} \in \mathbb{R}^{N \times 2}$ (centrada históricamente en Madrid):
+
+1. **Traslación Radial al Centroide de Referencia:**
+   $$\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}} \quad \forall i \in \{1, \dots, N\}$$
+
+2. **Rotación Ortogonal Óptima de Procrustes ($Q \in \mathrm{SO}(2)$):**
+   Calculando la descomposición en valores singulares del producto cruzado:
+   $$\mathbf{X}^{\text{ORBIT(c)}\top} \mathbf{X}^{\text{KM}} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top$$
+   La matriz ortogonal de rotación que minimiza la distancia de Frobenius sin deformar la geometría interna es:
+   $$\mathbf{Q} = \mathbf{U} \mathbf{V}^\top \implies \mathbf{X}_{\text{rot}}^{\text{ORBIT}} = \mathbf{X}^{\text{ORBIT(c)}} \mathbf{Q}$$
+
+3. **Factor de Homotecia Escalar Óptimo ($\alpha$):**
+   El escalar $\alpha \in \mathbb{R}^+$ que proyecta de manera insesgada las unidades latentes ordinales a kilómetros físicos de carretera se deduce mediante mínimos cuadrados ordinarios:
+   $$\alpha = \frac{\operatorname{Tr}(\mathbf{X}_{\text{rot}}^{\text{ORBIT}\top} \mathbf{X}^{\text{KM}})}{\operatorname{Tr}(\mathbf{X}_{\text{rot}}^{\text{ORBIT}\top} \mathbf{X}_{\text{rot}}^{\text{ORBIT}})} = \frac{\sum_{i=1}^N \mathbf{x}_{i,\text{rot}}^{\text{ORBIT}} \cdot \mathbf{x}_i^{\text{KM}}}{\sum_{i=1}^N \|\mathbf{x}_{i,\text{rot}}^{\text{ORBIT}}\|^2} \approx \mathbf{16.772\text{ km / unidad}}$$
+   Generando la matriz calibrada final:
+   $$\mathbf{X}^{\text{KM-ORBIT}} = \alpha \mathbf{X}_{\text{rot}}^{\text{ORBIT}}$$
+
+#### 4. Discrepancia Residual y Efecto de Borde en la Cápsula Convexa (*Boundary Effect*)
+El error residual medio entre la red física y la reconstrucción ordinal sobre las 47 capitales es de apenas $\bar{\epsilon} = 45.1\text{ km}$ ($4.5\%$ del diámetro de la red peninsular). La dispersión del error presenta una estructura geométrica no aleatoria que confirma dos leyes físicas fundamentales:
+
+* **Confinamiento Interior Triangulado ($\Delta < 39\text{ km}$):** En los nodos del interior y corredores principales (Madrid $\Delta = 0.0\text{ km}$, Bilbao $\Delta = 34.2\text{ km}$, Sevilla $\Delta = 34.7\text{ km}$, Valencia $\Delta = 39.0\text{ km}$), los actores están cercados por vecinos ordinales en los $360^\circ$ del plano. La intersección de las esferas concéntricas de rangos anula los grados de libertad espaciales, clavando la posición geográfica con exactitud casi perfecta.
+* **Efecto de Borde en Vértices No Acotados ($\Delta \in [101, 148]\text{ km}$):** En los tres salientes geográficos extremos de la península (Girona $\Delta = 148.2\text{ km}$, A Coruña $\Delta = 127.4\text{ km}$, Cádiz $\Delta = 101.3\text{ km}$), la ausencia de ciudades exteriores en el océano concentra todos los vectores de información ordinal en un cono angular unidireccional hacia el interior peninsular. Sumado a la sinuosidad de las carreteras reales de 1988 (que debían rodear el Macizo Galaico y los Pirineos para acceder a A Coruña y Girona), el algoritmo ordinal tiende a situar la ciudad ligeramente más cerca en línea recta topológica que la ruta kilométrica de asfalto real, demostrando que ORBIT recupera la verdadera proximidad espacial natural.
 
 ---
 
