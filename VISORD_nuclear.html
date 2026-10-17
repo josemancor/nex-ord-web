@@ -2286,23 +2286,25 @@
       // 1. Cascarones Cuánticos (solo visibles en modo esférico)
       if (currentViewMode === 'spherical') {
         currentEngine.orbitalShells.forEach((sh) => {
-          const geo = new THREE.SphereGeometry(sh.radio, 24, 16);
-          const wireMat = new THREE.MeshBasicMaterial({
-            color: sh.color, wireframe: true, transparent: true,
-            opacity: sh.opacity * (currentShellOpacity / 0.35)
-          });
-          const mesh = new THREE.Mesh(geo, wireMat);
-          mesh.userData = { isShell: true, name: sh.nombre, baseOpacity: sh.opacity };
-          shellGroup.add(mesh);
-
-          const ringGeo = new THREE.RingGeometry(sh.radio - 0.03, sh.radio + 0.03, 64);
+          // Anillo orbital nítido y luminoso
+          const ringGeo = new THREE.RingGeometry(sh.radio - 0.02, sh.radio + 0.02, 96);
           const ringMat = new THREE.MeshBasicMaterial({
             color: sh.color, side: THREE.DoubleSide, transparent: true,
-            opacity: sh.opacity * 1.5 * (currentShellOpacity / 0.35)
+            opacity: sh.opacity * 2.2 * (currentShellOpacity / 0.35)
           });
           const ringMesh = new THREE.Mesh(ringGeo, ringMat);
           ringMesh.rotation.x = Math.PI / 2;
           shellGroup.add(ringMesh);
+
+          // Esfera sutil de referencia espacial (baja densidad para no saturar)
+          const geo = new THREE.SphereGeometry(sh.radio, 16, 8);
+          const wireMat = new THREE.MeshBasicMaterial({
+            color: sh.color, wireframe: true, transparent: true,
+            opacity: sh.opacity * 0.30 * (currentShellOpacity / 0.35)
+          });
+          const mesh = new THREE.Mesh(geo, wireMat);
+          mesh.userData = { isShell: true, name: sh.nombre, baseOpacity: sh.opacity * 0.30 };
+          shellGroup.add(mesh);
         });
       }
 
@@ -2372,19 +2374,22 @@
         sphere.userData = { particle: p, index: idx, baseScale: 1.0 };
         particleGroup.add(sphere);
 
-        // Halo de resplandor
-        const haloGeo = new THREE.SphereGeometry(sphereRadius * 1.45, 16, 16);
+        // Halo de resplandor suave y luminoso (sin jaula wireframe)
+        const haloGeo = new THREE.SphereGeometry(sphereRadius * 1.30, 24, 24);
         const haloMat = new THREE.MeshBasicMaterial({
           color: new THREE.Color(p.color),
-          transparent: true, opacity: 0.22, wireframe: true
+          transparent: true,
+          opacity: 0.14,
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide
         });
         const halo = new THREE.Mesh(haloGeo, haloMat);
         halo.position.set(p.x, p.y, p.z);
         particleGroup.add(halo);
 
-        // Etiqueta 2D Sprite
+        // Etiqueta 2D Sprite limpia (Regla 17: Prohibición de Recuadros Ornamentales bbox)
         const sprite = createTextSprite(p.id, p.color);
-        sprite.position.set(p.x, p.y + sphereRadius + 0.35, p.z);
+        sprite.position.set(p.x, p.y + sphereRadius + 0.22, p.z);
         sprite.userData = { index: idx };
         labelGroup.add(sprite);
       });
@@ -2394,29 +2399,37 @@
       inspectParticle(leaderIndex);
     }
 
+    /* Generación de sprite de texto flotante de alta resolución SIN bbox (Regla 17) */
     function createTextSprite(text, colorHex) {
       const canvas = document.createElement('canvas');
-      canvas.width = 128;
-      canvas.height = 64;
+      canvas.width = 256;
+      canvas.height = 128;
       const ctx = canvas.getContext('2d');
 
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.75)';
-      ctx.roundRect(4, 4, 120, 56, 10);
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = colorHex;
-      ctx.stroke();
+      // 1. Limpieza total - SIN recuadros ornamentales ni marcos invasivos
+      ctx.clearRect(0, 0, 256, 128);
 
-      ctx.font = 'bold 30px "Roboto Mono", monospace';
-      ctx.fillStyle = '#FFFFFF';
+      // 2. Tipografía limpia institucional de alta resolución
+      ctx.font = '900 46px "Roboto Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, 64, 32);
+
+      // 3. Sombreado perimetral sutil oscuro (Regla 17) para garantizar contraste sobre cualquier fondo
+      ctx.strokeStyle = '#020617';
+      ctx.lineWidth = 8;
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.strokeText(text, 128, 64);
+
+      // 4. Relleno blanco nítido y legible
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(text, 128, 64);
 
       const texture = new THREE.CanvasTexture(canvas);
-      const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+      texture.minFilter = THREE.LinearFilter;
+      const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true });
       const sprite = new THREE.Sprite(mat);
-      sprite.scale.set(1.4, 0.7, 1.0);
+      sprite.scale.set(0.95, 0.48, 1.0);
       return sprite;
     }
 
