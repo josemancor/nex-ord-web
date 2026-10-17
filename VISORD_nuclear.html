@@ -515,8 +515,8 @@
         <!-- CONTROLES RÁPIDOS DE CAPAS INFERIOR DERECHA -->
         <div class="absolute bottom-3 right-3 z-10 glass-panel px-3 py-2 rounded-xl text-xs mono pointer-events-auto flex items-center gap-3">
           <div class="flex items-center gap-2">
-            <span class="text-[10px] text-slate-300">Círculos:</span>
-            <input type="range" id="slider-shell-opacity" min="0" max="100" value="35" oninput="setShellOpacity(this.value)" class="w-20 cursor-pointer" title="Opacidad de Círculos Concéntricos">
+            <span class="text-[10px] text-slate-300">Esferas:</span>
+            <input type="range" id="slider-shell-opacity" min="0" max="100" value="35" oninput="setShellOpacity(this.value)" class="w-20 cursor-pointer" title="Opacidad de Esferas Concéntricas (Isósferas)">
           </div>
           <button id="btn-toggle-axes" onclick="toggleAxes()" class="action-btn px-2 py-0.5 rounded bg-slate-900 border border-teal-500 text-[10px] mono text-teal-300 font-bold" title="Mostrar u Ocultar los 3 Ejes Coordenados">
             Ejes: ON
@@ -2377,8 +2377,8 @@
       axesGroup.visible = isAxesVisible;
     }
 
-    /* Construcción de Círculos Concéntricos alrededor del Centro de Gravedad (0,0,0) */
-    function buildConcentricSystem() {
+    /* Construcción de Esferas Concéntricas alrededor del Centro de Gravedad (0,0,0) */
+    function buildConcentricSpheres() {
       while (concentricGroup.children.length > 0) concentricGroup.remove(concentricGroup.children[0]);
 
       // 1. Centro de Gravedad en el origen (0,0,0)
@@ -2388,17 +2388,18 @@
       cgMesh.position.set(0, 0, 0);
       concentricGroup.add(cgMesh);
 
-      // Halo sutil alrededor del Centro de Gravedad
+      // Halo sutil del Centro de Gravedad
       const cgHaloGeo = new THREE.SphereGeometry(0.38, 16, 16);
       const cgHaloMat = new THREE.MeshBasicMaterial({
-        color: 0x00FF87, transparent: true, opacity: 0.30
+        color: 0x00FF87, transparent: true, opacity: 0.32, depthWrite: false
       });
       concentricGroup.add(new THREE.Mesh(cgHaloGeo, cgHaloMat));
 
-      // Cruz central en el plano de gravedad (Y=0)
+      // Cruz de referencia tridimensional en (0,0,0)
       const crossSize = 0.8;
       const crossPts = [
         new THREE.Vector3(-crossSize, 0, 0), new THREE.Vector3(crossSize, 0, 0),
+        new THREE.Vector3(0, -crossSize, 0), new THREE.Vector3(0, crossSize, 0),
         new THREE.Vector3(0, 0, -crossSize), new THREE.Vector3(0, 0, crossSize)
       ];
       const crossGeo = new THREE.BufferGeometry().setFromPoints(crossPts);
@@ -2411,38 +2412,61 @@
       cgLabel.scale.set(1.1, 0.45, 1.0);
       concentricGroup.add(cgLabel);
 
-      // 2. Círculos concéntricos en el plano horizontal (Y = 0)
-      const concentricStrata = [
-        { r: 1.5, color: 0x00F5D4, opacity: 0.18, label: "r=1.5" },
-        { r: 3.0, color: 0x00F5D4, opacity: 0.45, label: "r=3 (Núcleo)" },
-        { r: 4.5, color: 0x38BDF8, opacity: 0.20, label: "r=4.5" },
-        { r: 6.0, color: 0x38BDF8, opacity: 0.42, label: "r=6 (Mediación)" },
-        { r: 7.5, color: 0xA855F7, opacity: 0.38, label: "r=7.5 (Periferia)" },
-        { r: 9.0, color: 0xF59E0B, opacity: 0.32, label: "r=9 (Exterior)" }
+      // 2. Las 4 Esferas Concéntricas Canónicas (Isósferas de Radio Baricéntrico d̄)
+      const concentricSpheres = [
+        { r: 2.2, color: 0x00F5D4, opacity: 0.16, label: "r=2.2 (Núcleo Confinado)" },
+        { r: 4.2, color: 0x38BDF8, opacity: 0.12, label: "r=4.2 (Cinturón de Mediación)" },
+        { r: 6.2, color: 0xA855F7, opacity: 0.09, label: "r=6.2 (Capa Periférica)" },
+        { r: 8.2, color: 0xF59E0B, opacity: 0.07, label: "r=8.2 (Exterior Reactivo)" }
       ];
 
-      concentricStrata.forEach(st => {
-        const isMajor = st.label.includes("(");
-        const ringWidth = isMajor ? 0.035 : 0.018;
-        const ringGeo = new THREE.RingGeometry(st.r - ringWidth, st.r + ringWidth, 128);
+      concentricSpheres.forEach(st => {
+        // A) Esfera volumétrica translúcida con brillo perimetral (Fresnel / BackSide)
+        const sphereGeo = new THREE.SphereGeometry(st.r, 48, 36);
+        const sphereMat = new THREE.MeshBasicMaterial({
+          color: st.color,
+          transparent: true,
+          opacity: st.opacity * (currentShellOpacity / 0.35),
+          depthWrite: false,
+          side: THREE.BackSide,
+          blending: THREE.AdditiveBlending
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+        sphereMesh.userData = { isConcentricSphere: true, baseOpacity: st.opacity };
+        concentricGroup.add(sphereMesh);
+
+        // B) Anillo ecuatorial (gran círculo horizontal Y = 0)
+        const ringGeo = new THREE.RingGeometry(st.r - 0.02, st.r + 0.02, 128);
         const ringMat = new THREE.MeshBasicMaterial({
           color: st.color,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: st.opacity * (currentShellOpacity / 0.35)
+          opacity: st.opacity * 2.2 * (currentShellOpacity / 0.35),
+          depthWrite: false
         });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.rotation.x = Math.PI / 2;
-        ringMesh.userData = { isConcentricRing: true, baseOpacity: st.opacity };
+        ringMesh.userData = { isConcentricRing: true, baseOpacity: st.opacity * 2.2 };
         concentricGroup.add(ringMesh);
 
-        // Indicador numérico de distancia sobre el semieje X positivo
-        if (isMajor) {
-          const rSprite = createAxisLabelSprite(st.label, st.color);
-          rSprite.position.set(st.r, 0.04, 0.40);
-          rSprite.scale.set(0.85, 0.38, 1.0);
-          concentricGroup.add(rSprite);
-        }
+        // C) Anillo meridiano (gran círculo vertical Z = 0)
+        const meridianGeo = new THREE.RingGeometry(st.r - 0.015, st.r + 0.015, 128);
+        const meridianMat = new THREE.MeshBasicMaterial({
+          color: st.color,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: st.opacity * 1.3 * (currentShellOpacity / 0.35),
+          depthWrite: false
+        });
+        const meridianMesh = new THREE.Mesh(meridianGeo, meridianMat);
+        meridianMesh.userData = { isConcentricRing: true, baseOpacity: st.opacity * 1.3 };
+        concentricGroup.add(meridianMesh);
+
+        // D) Rótulo identificativo de la isósfera en el semieje positivo
+        const rSprite = createAxisLabelSprite(st.label, st.color);
+        rSprite.position.set(st.r, 0.05, 0.40);
+        rSprite.scale.set(0.95, 0.42, 1.0);
+        concentricGroup.add(rSprite);
       });
     }
 
@@ -2470,7 +2494,7 @@
       while(labelGroup.children.length > 0) labelGroup.remove(labelGroup.children[0]);
 
       // 1. Círculos Concéntricos alrededor del Centro de Gravedad
-      buildConcentricSystem();
+      buildConcentricSpheres();
 
       // 2. Los 3 Ejes Coordenados Claramente Visibles (X, Y, Z)
       buildAxesSystem(9.5);
@@ -2754,7 +2778,7 @@
     function setShellOpacity(val) {
       currentShellOpacity = Number(val) / 100.0;
       concentricGroup.children.forEach(m => {
-        if (m.userData && m.userData.isConcentricRing) {
+        if (m.userData && (m.userData.isConcentricSphere || m.userData.isConcentricRing)) {
           m.material.opacity = m.userData.baseOpacity * (currentShellOpacity / 0.35);
         }
       });
