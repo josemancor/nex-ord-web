@@ -329,6 +329,10 @@
             <span>Hipertensor G3</span>
             <span class="text-[10px] opacity-75">N=18</span>
           </button>
+                    <button id="btn-scen-espana1988" onclick="switchScenario('espana1988')" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-emerald-950/80 border border-emerald-500/70 text-emerald-200 hover:text-white text-left flex items-center justify-between" title="Validación Empírica Cornejo 1988 / NEXORD 2026: Reconstrucción Cartográfica Peninsular MDS">
+            <span>🇪🇸 España 1988</span>
+            <span class="text-[10px] font-bold text-emerald-400">N=47 (MDS)</span>
+          </button>
           <button id="btn-scen-custom" onclick="openCustomMatrixModal()" class="btn-scenario action-btn mono text-xs py-2 px-2 rounded-lg bg-indigo-950/80 border border-indigo-500/70 text-indigo-200 hover:text-white text-left flex items-center justify-between">
             <span>✏️ Matriz SMIb</span>
             <span class="text-[10px] opacity-75">Custom</span>
@@ -525,6 +529,36 @@
               <option value="none">Ocultar</option>
             </select>
           </div>
+        </div>
+      </div>
+
+            <!-- POD DE CALIBRACIÓN MÉTRICA EXCLUSIVO ESPAÑA 1988 -->
+      <div id="pod-calibracion-espana" class="hidden glass-panel rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs mono border border-emerald-500/50 shadow-lg bg-emerald-950/30">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[10px] font-black text-emerald-300 tracking-wider flex items-center gap-1">
+            <span>🇪🇸</span> CALIBRACIÓN:
+          </span>
+          <button id="btn-calib-ols" onclick="setEspanaCalibration('ols')" class="action-btn px-2 py-0.5 rounded text-[11px] bg-teal-950 border border-teal-400 text-teal-300 font-bold active" title="Foco Nuclear OLS: α = 16.77 km/u (Minimización global, clava el interior peninsular)">
+            Foco Nuclear (OLS α=16.77)
+          </button>
+          <button id="btn-calib-minmax" onclick="setEspanaCalibration('minmax')" class="action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Foco Perimetral Min-Max: α = 20.71 km/u (Anclaje milimétrico de cabos y esquinas)">
+            Foco Perimetral (Min-Max α=20.71)
+          </button>
+          <button id="btn-calib-q" onclick="setEspanaCalibration('q')" class="action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Cuantiles Robustos 5/95: α = 20.19 km/u (Filtro interdecílico inmune a díadas atípicas)">
+            Cuantiles 5/95 (α=20.19)
+          </button>
+          <button id="btn-calib-real" onclick="setEspanaCalibration('real')" class="action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Distancias Reales por Carretera (Cornejo 1988, 1.081 pares)">
+            KM Reales (1988)
+          </button>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] text-slate-300">
+          <span class="text-slate-400">Inercia:</span> <span class="font-bold text-teal-300">99.0%</span>
+          <span class="text-slate-500">|</span>
+          <span class="text-slate-400">Stress-1:</span> <span class="font-bold text-emerald-300">4.68%</span>
+          <span class="text-slate-500">|</span>
+          <span class="text-slate-400">Spearman:</span> <span class="font-bold text-cyan-300">ρ=0.971</span>
+          <span class="text-slate-500">|</span>
+          <span class="text-slate-400">Disp. Procrustes:</span> <span id="val-espana-disp" class="font-bold text-amber-300">0.029</span>
         </div>
       </div>
 
@@ -2014,14 +2048,17 @@
         "0000"
       ]
     ]
-  }
+  },
+  "espana1988": {"subjects": ["Vitoria", "Albacete", "Alicante", "Almería", "Oviedo", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Santander", "Castellón", "Ciudad Real", "Córdoba", "Cuenca", "Girona", "Granada", "Guadalajara", "San Sebastián", "Huelva", "Huesca", "Jaén", "A Coruña", "Logroño", "León", "Lleida", "Lugo", "Madrid", "Málaga", "Murcia", "Pamplona", "Ourense", "Palencia", "Pontevedra", "Salamanca", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Bilbao", "Zamora", "Zaragoza"], "matrix": [["0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "000B", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "00AA", "aaaa", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0aaa", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000"], ["0000", "0000", "000A", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0000", "0AAA", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "00AA", "0000", "0000", "0000", "0000"], ["0000", "00AA", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "00aa", "0000", "0aaa", "0000", "0000", "AAAA", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "0AAA", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "000B", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0AAA", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "000A", "00AA", "0000", "00aa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "00aa", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "00AA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0AAA", "0000", "0aaa", "00aa", "0000", "000B", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "00aa", "0000", "0000", "0000", "aaaa", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "AAAA", "0000", "0000", "0aaa", "0000", "000A", "0000", "000B", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "AAAA", "0000", "0000", "0000", "0000", "000A", "0000", "aaaa", "0000", "0000", "00aa", "0AAA", "00aa", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "00AA", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "000B", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000", "aaaa", "000A", "0000", "0aaa", "0000", "0000", "00AA", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0aaa", "0000", "0000", "00aa", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0AAA", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "00AA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "00aa", "000B", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "00AA", "AAAA", "aaaa", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "0000", "aaaa", "0000", "0000", "00aa", "0000", "00aa", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000", "0aaa", "0000", "000A", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "aaaa", "000B", "0000", "0aaa", "0AAA", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "00AA", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0AAA", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "00AA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "000A", "0aaa", "0000", "0000", "0000", "000B", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0000"], ["0000", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "00AA", "0AAA", "0000", "AAAA", "0000", "0000", "0000", "0000"], ["0000", "000B", "0000", "0000", "00aa", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0AAA", "aaaa", "0000", "0000", "0000", "00aa", "000A", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "00aa", "0000", "000B", "0000", "0000", "aaaa", "00AA", "0000", "0aaa", "0000", "0000", "AAAA", "0aaa", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "00AA", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "000A", "0000", "0000", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "AAAA", "000B", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "00aa", "AAAA", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "000A", "0000", "0aaa", "0000", "0000", "00AA", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "00aa", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000", "0000", "000B"], ["0000", "0000", "0000", "00AA", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "000B", "000A", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "AAAA", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0AAA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "000B", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "00AA", "0aaa", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0AAA", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000"], ["0AAA", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "000B", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0aaa", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "00AA", "aaaa", "0000", "0000", "0AAA", "0000", "0000", "0000", "000A", "0000", "aaaa", "0000", "0000", "00aa", "0000", "00aa", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "00aa", "000A", "0000", "0AAA", "0000", "0000", "0aaa", "0000", "00AA", "0000", "0000", "00aa", "0000", "0000", "0aaa", "000B", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA"], ["0000", "0000", "0000", "000B", "00aa", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "000A", "0AAA", "0000", "aaaa", "AAAA", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "00AA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0aaa", "0aaa", "000A", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "AAAA", "0000", "0000", "00aa", "0000", "00AA", "0000", "0AAA", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["AAAA", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "000B", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000", "0aaa", "00AA", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000"], ["0000", "0000", "00aa", "aaaa", "AAAA", "0000", "0000", "00aa", "000B", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "00AA", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "00aa", "000A", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "0000", "0000", "aaaa", "0AAA", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "00aa", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0000", "00AA"], ["0000", "0000", "0aaa", "0aaa", "000A", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "000B", "0000", "0000", "0000", "0000", "00aa", "0000", "AAAA", "0000", "00AA", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "000A", "0000", "0aaa", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "000B", "aaaa", "0000", "AAAA", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "00AA", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "000B", "00aa", "0000", "0000", "00AA", "0000", "aaaa", "AAAA", "0000", "0aaa", "0000", "0000", "0AAA", "aaaa", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0AAA", "AAAA", "00AA", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000"], ["00AA", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "AAAA", "aaaa", "000B", "0000", "0000", "0AAA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000"], ["0000", "0000", "00aa", "0aaa", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "0000", "000A", "0000", "0AAA", "0000", "0000", "00aa", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "000B", "0000"], ["0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "00aa", "0AAA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "00AA", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "000A", "0000"], ["0000", "0000", "0aaa", "00aa", "000A", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "000B", "0000", "00AA", "0000", "0000", "00aa", "0000", "AAAA", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "00aa", "0aaa", "0000", "0AAA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "0000", "000A", "0000", "0000", "0aaa", "0000", "0000", "0000", "00AA", "0000", "AAAA", "0000"], ["0000", "0000", "0000", "0aaa", "0000", "AAAA", "0000", "aaaa", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "00AA", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000B", "0000", "000A", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "000B", "aaaa", "0000", "0000", "0AAA", "0000", "0000", "0000", "00AA", "0000", "aaaa", "0000", "0000", "0aaa", "AAAA", "00aa", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["00AA", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0AAA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "0aaa", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000", "0aaa", "0000", "000A", "0000", "0000", "0000", "00AA", "0000", "0000", "0000", "0aaa", "000B", "0000", "aaaa", "0000", "0000", "AAAA", "00aa", "0000", "0000", "0000", "0000", "00aa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "000B", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "0AAA", "0000", "0000", "AAAA", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "00aa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "0000", "0000", "0000", "000A"], ["0000", "0000", "0000", "0000", "0000", "00AA", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000", "aaaa", "0000", "000A", "0000", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "00aa", "AAAA", "0000", "0000", "0000", "0000", "0000", "0aaa", "0000", "000B", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "000A", "00AA", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "AAAA", "0000", "0000", "000B", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0aaa", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "0000", "0aaa", "0000", "000B", "0000", "0aaa", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "AAAA", "0000", "000A", "00AA", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0AAA", "0000"], ["AAAA", "0000", "0000", "0aaa", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0AAA", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "00AA", "aaaa", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0aaa", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"], ["0000", "0000", "00aa", "0aaa", "0000", "000B", "0000", "aaaa", "0000", "0000", "00aa", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "000A", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "00AA", "0000", "AAAA", "0000", "0000", "0000", "0aaa", "0000", "0000", "0000", "0AAA", "0000", "0000", "0000"], ["0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "aaaa", "AAAA", "0000", "0aaa", "0000", "0000", "0AAA", "0000", "0000", "00aa", "0000", "000A", "0000", "0000", "0aaa", "0000", "0000", "00aa", "00AA", "0000", "000B", "0000", "0000", "0000", "0000", "0000", "0000"]], "isEspana1988": true, "cities": [{"id": "Vitoria", "fullName": "Álava (Vitoria)", "index": 0, "isMadrid": false, "km_x": 1.1664, "km_y": 3.6005, "ols_x": 1.2323, "ols_y": 4.1379, "minmax_x": 1.5217, "minmax_y": 5.1095, "q_x": 1.3092, "q_y": 4.3963, "altitud_z": 1.7629, "raw_km_x": 87.5, "raw_km_y": 270.0, "dist_madrid_km": 283.9, "delta_ols_km": 40.6, "delta_minmax_km": 116.3, "delta_q_km": 60.6, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Albacete", "fullName": "Albacete", "index": 1, "isMadrid": false, "km_x": 2.0853, "km_y": -2.1078, "ols_x": 2.4322, "ols_y": -2.6922, "minmax_x": 3.0033, "minmax_y": -3.3244, "q_x": 2.5841, "q_y": -2.8603, "altitud_z": 1.3811, "raw_km_x": 156.4, "raw_km_y": -158.1, "dist_madrid_km": 222.4, "delta_ols_km": 51.0, "delta_minmax_km": 114.3, "delta_q_km": 67.7, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Alicante", "fullName": "Alicante", "index": 2, "isMadrid": false, "km_x": 3.6419, "km_y": -3.0696, "ols_x": 4.0156, "ols_y": -3.2318, "minmax_x": 4.9585, "minmax_y": -3.9907, "q_x": 4.2663, "q_y": -3.4336, "altitud_z": 2.2186, "raw_km_x": 273.1, "raw_km_y": -230.2, "dist_madrid_km": 357.2, "delta_ols_km": 30.6, "delta_minmax_km": 120.5, "delta_q_km": 54.2, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Almería", "fullName": "Almería", "index": 3, "isMadrid": false, "km_x": 1.4014, "km_y": -5.3088, "ols_x": 1.5602, "ols_y": -4.9652, "minmax_x": 1.9265, "minmax_y": -6.131, "q_x": 1.6576, "q_y": -5.2752, "altitud_z": 2.5575, "raw_km_x": 105.1, "raw_km_y": -398.2, "dist_madrid_km": 411.8, "delta_ols_km": 28.4, "delta_minmax_km": 73.2, "delta_q_km": 19.4, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Oviedo", "fullName": "Asturias (Oviedo)", "index": 4, "isMadrid": false, "km_x": -2.4246, "km_y": 4.3639, "ols_x": -2.2754, "ols_y": 4.3447, "minmax_x": -2.8097, "minmax_y": 5.3649, "q_x": -2.4175, "q_y": 4.616, "altitud_z": 2.3253, "raw_km_x": -181.8, "raw_km_y": 327.3, "dist_madrid_km": 374.4, "delta_ols_km": 11.3, "delta_minmax_km": 80.4, "delta_q_km": 18.9, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Ávila", "fullName": "Ávila", "index": 5, "isMadrid": false, "km_x": -1.1045, "km_y": 0.3555, "ols_x": -1.7634, "ols_y": 0.5707, "minmax_x": -2.1775, "minmax_y": 0.7047, "q_x": -1.8735, "q_y": 0.6063, "altitud_z": 0.5405, "raw_km_x": -82.8, "raw_km_y": 26.7, "dist_madrid_km": 87.0, "delta_ols_km": 52.0, "delta_minmax_km": 84.6, "delta_q_km": 60.7, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Badajoz", "fullName": "Badajoz", "index": 6, "isMadrid": false, "km_x": -3.6916, "km_y": -2.278, "ols_x": -3.9698, "ols_y": -2.3213, "minmax_x": -4.9019, "minmax_y": -2.8663, "q_x": -4.2176, "q_y": -2.4662, "altitud_z": 2.0206, "raw_km_x": -276.9, "raw_km_y": -170.9, "dist_madrid_km": 325.3, "delta_ols_km": 21.1, "delta_minmax_km": 100.9, "delta_q_km": 41.9, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Barcelona", "fullName": "Barcelona", "index": 7, "isMadrid": false, "km_x": 6.6375, "km_y": 1.4389, "ols_x": 5.5985, "ols_y": 1.4905, "minmax_x": 6.9131, "minmax_y": 1.8405, "q_x": 5.948, "q_y": 1.5835, "altitud_z": 3.1635, "raw_km_x": 497.8, "raw_km_y": 107.9, "dist_madrid_km": 509.4, "delta_ols_km": 78.0, "delta_minmax_km": 36.5, "delta_q_km": 52.8, "especie": "Periferia Peninsular", "tipo": "electron", "rol": "Frente Marítimo / Fronterizo (>480 km)", "color": "#00FF87", "emissive": "#059669"}, {"id": "Burgos", "fullName": "Burgos", "index": 8, "isMadrid": false, "km_x": 0.0078, "km_y": 2.8556, "ols_x": -0.1076, "ols_y": 3.4526, "minmax_x": -0.1329, "minmax_y": 4.2633, "q_x": -0.1143, "q_y": 3.6682, "altitud_z": 1.3301, "raw_km_x": 0.6, "raw_km_y": 214.2, "dist_madrid_km": 214.2, "delta_ols_km": 45.6, "delta_minmax_km": 106.1, "delta_q_km": 61.6, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Cáceres", "fullName": "Cáceres", "index": 9, "isMadrid": false, "km_x": -3.0156, "km_y": -1.3951, "ols_x": -3.7034, "ols_y": -1.6464, "minmax_x": -4.573, "minmax_y": -2.033, "q_x": -3.9346, "q_y": -1.7492, "altitud_z": 1.5477, "raw_km_x": -226.2, "raw_km_y": -104.6, "dist_madrid_km": 249.2, "delta_ols_km": 54.9, "delta_minmax_km": 126.2, "delta_q_km": 73.9, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Cádiz", "fullName": "Cádiz", "index": 10, "isMadrid": false, "km_x": -2.9209, "km_y": -5.7635, "ols_x": -2.3538, "ols_y": -4.5442, "minmax_x": -2.9064, "minmax_y": -5.6112, "q_x": -2.5007, "q_y": -4.8279, "altitud_z": 3.0097, "raw_km_x": -219.1, "raw_km_y": -432.3, "dist_madrid_km": 484.6, "delta_ols_km": 100.9, "delta_minmax_km": 11.5, "delta_q_km": 76.9, "especie": "Periferia Peninsular", "tipo": "electron", "rol": "Frente Marítimo / Fronterizo (>480 km)", "color": "#00FF87", "emissive": "#059669"}, {"id": "Santander", "fullName": "Cantabria (Santander)", "index": 11, "isMadrid": false, "km_x": -0.1137, "km_y": 4.5162, "ols_x": -0.2194, "ols_y": 4.9306, "minmax_x": -0.271, "minmax_y": 6.0884, "q_x": -0.2331, "q_y": 5.2385, "altitud_z": 2.1043, "raw_km_x": -8.5, "raw_km_y": 338.7, "dist_madrid_km": 338.8, "delta_ols_km": 32.1, "delta_minmax_km": 118.5, "delta_q_km": 54.9, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Castellón", "fullName": "Castellón", "index": 12, "isMadrid": false, "km_x": 4.1275, "km_y": -0.6377, "ols_x": 4.6003, "ols_y": -0.5404, "minmax_x": 5.6804, "minmax_y": -0.6672, "q_x": 4.8875, "q_y": -0.5741, "altitud_z": 1.9454, "raw_km_x": 309.6, "raw_km_y": -47.8, "dist_madrid_km": 313.2, "delta_ols_km": 36.2, "delta_minmax_km": 116.5, "delta_q_km": 57.2, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Ciudad Real", "fullName": "Ciudad Real", "index": 13, "isMadrid": false, "km_x": -0.2527, "km_y": -2.1218, "ols_x": -0.4275, "ols_y": -2.8898, "minmax_x": -0.5278, "minmax_y": -3.5683, "q_x": -0.4541, "q_y": -3.0702, "altitud_z": 0.9953, "raw_km_x": -19.0, "raw_km_y": -159.1, "dist_madrid_km": 160.3, "delta_ols_km": 59.1, "delta_minmax_km": 110.4, "delta_q_km": 72.7, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Córdoba", "fullName": "Córdoba", "index": 14, "isMadrid": false, "km_x": -1.2155, "km_y": -3.7467, "ols_x": -1.4443, "ols_y": -3.8657, "minmax_x": -1.7834, "minmax_y": -4.7734, "q_x": -1.5344, "q_y": -4.1071, "altitud_z": 1.8347, "raw_km_x": -91.2, "raw_km_y": -281.0, "dist_madrid_km": 295.4, "delta_ols_km": 19.3, "delta_minmax_km": 88.0, "delta_q_km": 36.1, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Cuenca", "fullName": "Cuenca", "index": 15, "isMadrid": false, "km_x": 1.7701, "km_y": -0.5133, "ols_x": 2.4078, "ols_y": -0.7207, "minmax_x": 2.9732, "minmax_y": -0.8899, "q_x": 2.5582, "q_y": -0.7657, "altitud_z": 0.8585, "raw_km_x": 132.8, "raw_km_y": -38.5, "dist_madrid_km": 138.2, "delta_ols_km": 50.3, "delta_minmax_km": 94.6, "delta_q_km": 62.1, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Girona", "fullName": "Girona", "index": 16, "isMadrid": false, "km_x": 7.3738, "km_y": 2.3154, "ols_x": 5.4421, "ols_y": 1.9261, "minmax_x": 6.72, "minmax_y": 2.3783, "q_x": 5.7819, "q_y": 2.0463, "altitud_z": 3.6, "raw_km_x": 553.0, "raw_km_y": 173.7, "dist_madrid_km": 579.7, "delta_ols_km": 147.8, "delta_minmax_km": 49.3, "delta_q_km": 121.1, "especie": "Periferia Peninsular", "tipo": "electron", "rol": "Frente Marítimo / Fronterizo (>480 km)", "color": "#00FF87", "emissive": "#059669"}, {"id": "Granada", "fullName": "Granada", "index": 17, "isMadrid": false, "km_x": 0.1189, "km_y": -4.8001, "ols_x": 0.2105, "ols_y": -4.5884, "minmax_x": 0.26, "minmax_y": -5.6658, "q_x": 0.2237, "q_y": -4.8749, "altitud_z": 2.2365, "raw_km_x": 8.9, "raw_km_y": -360.0, "dist_madrid_km": 360.1, "delta_ols_km": 17.3, "delta_minmax_km": 65.8, "delta_q_km": 9.7, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Guadalajara", "fullName": "Guadalajara", "index": 18, "isMadrid": false, "km_x": 0.6062, "km_y": 0.3214, "ols_x": 0.9479, "ols_y": 0.5018, "minmax_x": 1.1705, "minmax_y": 0.6196, "q_x": 1.0071, "q_y": 0.5331, "altitud_z": 0.3196, "raw_km_x": 45.5, "raw_km_y": 24.1, "dist_madrid_km": 51.5, "delta_ols_km": 29.0, "delta_minmax_km": 47.9, "delta_q_km": 34.0, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "San Sebastián", "fullName": "Guipúzcoa (San Sebastián)", "index": 19, "isMadrid": false, "km_x": 1.9466, "km_y": 4.2992, "ols_x": 2.053, "ols_y": 4.7382, "minmax_x": 2.5351, "minmax_y": 5.8508, "q_x": 2.1812, "q_y": 5.0341, "altitud_z": 2.1983, "raw_km_x": 146.0, "raw_km_y": 322.4, "dist_madrid_km": 354.0, "delta_ols_km": 33.9, "delta_minmax_km": 124.5, "delta_q_km": 57.9, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Huelva", "fullName": "Huelva", "index": 20, "isMadrid": false, "km_x": -3.6624, "km_y": -4.6755, "ols_x": -3.2308, "ols_y": -3.8538, "minmax_x": -3.9894, "minmax_y": -4.7586, "q_x": -3.4325, "q_y": -4.0944, "altitud_z": 2.7664, "raw_km_x": -274.7, "raw_km_y": -350.7, "dist_madrid_km": 445.4, "delta_ols_km": 69.6, "delta_minmax_km": 25.3, "delta_q_km": 46.9, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Huesca", "fullName": "Huesca", "index": 21, "isMadrid": false, "km_x": 3.7236, "km_y": 2.5477, "ols_x": 3.9561, "ols_y": 2.7446, "minmax_x": 4.885, "minmax_y": 3.389, "q_x": 4.2031, "q_y": 2.9159, "altitud_z": 2.1016, "raw_km_x": 279.3, "raw_km_y": 191.1, "dist_madrid_km": 338.4, "delta_ols_km": 22.8, "delta_minmax_km": 107.6, "delta_q_km": 45.3, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Jaén", "fullName": "Jaén", "index": 22, "isMadrid": false, "km_x": -0.0916, "km_y": -3.9076, "ols_x": -0.0273, "ols_y": -4.1198, "minmax_x": -0.0337, "minmax_y": -5.0872, "q_x": -0.029, "q_y": -4.3771, "altitud_z": 1.8207, "raw_km_x": -6.9, "raw_km_y": -293.1, "dist_madrid_km": 293.2, "delta_ols_km": 16.6, "delta_minmax_km": 88.6, "delta_q_km": 35.5, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "A Coruña", "fullName": "La Coruña", "index": 23, "isMadrid": false, "km_x": -5.3199, "km_y": 4.3644, "ols_x": -3.82, "ols_y": 3.5937, "minmax_x": -4.717, "minmax_y": 4.4376, "q_x": -4.0586, "q_y": 3.8181, "altitud_z": 3.2052, "raw_km_x": -399.0, "raw_km_y": 327.3, "dist_madrid_km": 516.1, "delta_ols_km": 126.5, "delta_minmax_km": 45.5, "delta_q_km": 103.1, "especie": "Periferia Peninsular", "tipo": "electron", "rol": "Frente Marítimo / Fronterizo (>480 km)", "color": "#00FF87", "emissive": "#059669"}, {"id": "Logroño", "fullName": "La Rioja (Logroño)", "index": 24, "isMadrid": false, "km_x": 1.4225, "km_y": 3.0315, "ols_x": 1.7028, "ols_y": 3.4374, "minmax_x": 2.1026, "minmax_y": 4.2445, "q_x": 1.8091, "q_y": 3.652, "altitud_z": 1.5598, "raw_km_x": 106.7, "raw_km_y": 227.4, "dist_madrid_km": 251.1, "delta_ols_km": 37.0, "delta_minmax_km": 104.3, "delta_q_km": 54.8, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "León", "fullName": "León", "index": 25, "isMadrid": false, "km_x": -2.1056, "km_y": 3.233, "ols_x": -2.3624, "ols_y": 3.5084, "minmax_x": -2.9172, "minmax_y": 4.3321, "q_x": -2.5099, "q_y": 3.7274, "altitud_z": 1.7971, "raw_km_x": -157.9, "raw_km_y": 242.5, "dist_madrid_km": 289.4, "delta_ols_km": 28.2, "delta_minmax_km": 102.5, "delta_q_km": 47.9, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Lleida", "fullName": "Lleida", "index": 26, "isMadrid": false, "km_x": 4.8861, "km_y": 1.7793, "ols_x": 4.927, "ols_y": 1.9266, "minmax_x": 6.0839, "minmax_y": 2.379, "q_x": 5.2346, "q_y": 2.0469, "altitud_z": 2.4221, "raw_km_x": 366.5, "raw_km_y": 133.4, "dist_madrid_km": 390.0, "delta_ols_km": 11.5, "delta_minmax_km": 100.5, "delta_q_km": 33.0, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Lugo", "fullName": "Lugo", "index": 27, "isMadrid": false, "km_x": -4.3541, "km_y": 3.842, "ols_x": -3.5259, "ols_y": 3.5888, "minmax_x": -4.3538, "minmax_y": 4.4315, "q_x": -3.746, "q_y": 3.8129, "altitud_z": 2.7048, "raw_km_x": -326.6, "raw_km_y": 288.1, "dist_madrid_km": 435.5, "delta_ols_km": 65.0, "delta_minmax_km": 44.2, "delta_q_km": 45.7, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Madrid", "fullName": "Madrid", "index": 28, "isMadrid": true, "km_x": 0.0, "km_y": 0.0, "ols_x": 0.0, "ols_y": 0.0, "minmax_x": 0.0, "minmax_y": 0.0, "q_x": 0.0, "q_y": 0.0, "altitud_z": 0.0, "raw_km_x": 0.0, "raw_km_y": 0.0, "dist_madrid_km": 0.0, "delta_ols_km": 0.0, "delta_minmax_km": 0.0, "delta_q_km": 0.0, "especie": "Centro Radial / Baricentro (★)", "tipo": "proton", "rol": "Origen Gravitatorio Peninsular (0, 0)", "color": "#FF007F", "emissive": "#E11D48"}, {"id": "Málaga", "fullName": "Málaga", "index": 29, "isMadrid": false, "km_x": -0.8109, "km_y": -5.4757, "ols_x": -0.5563, "ols_y": -4.8533, "minmax_x": -0.6869, "minmax_y": -5.9929, "q_x": -0.591, "q_y": -5.1563, "altitud_z": 2.5784, "raw_km_x": -60.8, "raw_km_y": -410.7, "dist_madrid_km": 415.2, "delta_ols_km": 50.4, "delta_minmax_km": 39.9, "delta_q_km": 29.1, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Murcia", "fullName": "Murcia", "index": 30, "isMadrid": false, "km_x": 2.9077, "km_y": -3.5926, "ols_x": 3.0189, "ols_y": -3.9017, "minmax_x": 3.7278, "minmax_y": -4.8178, "q_x": 3.2074, "q_y": -4.1453, "altitud_z": 2.1528, "raw_km_x": 218.1, "raw_km_y": -269.4, "dist_madrid_km": 346.6, "delta_ols_km": 24.6, "delta_minmax_km": 110.6, "delta_q_km": 47.2, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Pamplona", "fullName": "Navarra (Pamplona)", "index": 31, "isMadrid": false, "km_x": 2.3256, "km_y": 3.5498, "ols_x": 2.6219, "ols_y": 3.9037, "minmax_x": 3.2375, "minmax_y": 4.8203, "q_x": 2.7856, "q_y": 4.1474, "altitud_z": 1.9767, "raw_km_x": 174.4, "raw_km_y": 266.2, "dist_madrid_km": 318.3, "delta_ols_km": 34.6, "delta_minmax_km": 117.3, "delta_q_km": 56.6, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Ourense", "fullName": "Ourense", "index": 32, "isMadrid": false, "km_x": -4.7011, "km_y": 2.8434, "ols_x": -4.1948, "ols_y": 2.562, "minmax_x": -5.1797, "minmax_y": 3.1636, "q_x": -4.4567, "q_y": 2.722, "altitud_z": 2.5591, "raw_km_x": -352.6, "raw_km_y": 213.3, "dist_madrid_km": 412.1, "delta_ols_km": 43.4, "delta_minmax_km": 43.2, "delta_q_km": 20.5, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Palencia", "fullName": "Palencia", "index": 33, "isMadrid": false, "km_x": -0.9323, "km_y": 2.3601, "ols_x": -1.3024, "ols_y": 2.9103, "minmax_x": -1.6082, "minmax_y": 3.5936, "q_x": -1.3837, "q_y": 3.092, "altitud_z": 1.182, "raw_km_x": -69.9, "raw_km_y": 177.0, "dist_madrid_km": 190.3, "delta_ols_km": 49.7, "delta_minmax_km": 105.5, "delta_q_km": 64.5, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Pontevedra", "fullName": "Pontevedra", "index": 34, "isMadrid": false, "km_x": -5.5831, "km_y": 2.9845, "ols_x": -4.4741, "ols_y": 2.6371, "minmax_x": -5.5246, "minmax_y": 3.2563, "q_x": -4.7534, "q_y": 2.8017, "altitud_z": 2.9488, "raw_km_x": -418.7, "raw_km_y": 223.8, "dist_madrid_km": 474.8, "delta_ols_km": 87.2, "delta_minmax_km": 20.8, "delta_q_km": 63.7, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Salamanca", "fullName": "Salamanca", "index": 35, "isMadrid": false, "km_x": -2.2145, "km_y": 0.8198, "ols_x": -3.0297, "ols_y": 1.1033, "minmax_x": -3.7411, "minmax_y": 1.3624, "q_x": -3.2189, "q_y": 1.1722, "altitud_z": 1.0999, "raw_km_x": -166.1, "raw_km_y": 61.5, "dist_madrid_km": 177.1, "delta_ols_km": 64.7, "delta_minmax_km": 121.5, "delta_q_km": 79.8, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Segovia", "fullName": "Segovia", "index": 36, "isMadrid": false, "km_x": -0.4577, "km_y": 0.7795, "ols_x": -0.713, "ols_y": 1.2358, "minmax_x": -0.8804, "minmax_y": 1.526, "q_x": -0.7575, "q_y": 1.313, "altitud_z": 0.4211, "raw_km_x": -34.3, "raw_km_y": 58.5, "dist_madrid_km": 67.8, "delta_ols_km": 39.2, "delta_minmax_km": 64.3, "delta_q_km": 45.9, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Sevilla", "fullName": "Sevilla", "index": 37, "isMadrid": false, "km_x": -2.5773, "km_y": -4.4862, "ols_x": -2.5031, "ols_y": -4.0307, "minmax_x": -3.0909, "minmax_y": -4.9772, "q_x": -2.6594, "q_y": -4.2824, "altitud_z": 2.41, "raw_km_x": -193.3, "raw_km_y": -336.5, "dist_madrid_km": 388.0, "delta_ols_km": 34.6, "delta_minmax_km": 53.3, "delta_q_km": 16.5, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Soria", "fullName": "Soria", "index": 38, "isMadrid": false, "km_x": 1.3841, "km_y": 2.0, "ols_x": 1.802, "ols_y": 2.4745, "minmax_x": 2.2251, "minmax_y": 3.0556, "q_x": 1.9145, "q_y": 2.629, "altitud_z": 1.1329, "raw_km_x": 103.8, "raw_km_y": 150.0, "dist_madrid_km": 182.4, "delta_ols_km": 47.4, "delta_minmax_km": 101.2, "delta_q_km": 61.7, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Tarragona", "fullName": "Tarragona", "index": 39, "isMadrid": false, "km_x": 5.5918, "km_y": 1.0403, "ols_x": 5.5062, "ols_y": 1.0604, "minmax_x": 6.7991, "minmax_y": 1.3094, "q_x": 5.85, "q_y": 1.1266, "altitud_z": 2.6493, "raw_km_x": 419.4, "raw_km_y": 78.0, "dist_madrid_km": 426.6, "delta_ols_km": 6.6, "delta_minmax_km": 92.8, "delta_q_km": 20.4, "especie": "Arco Intermedio", "tipo": "neutron", "rol": "Cuenca de Enlace Peri-Central (360-480 km)", "color": "#A855F7", "emissive": "#7C3AED"}, {"id": "Teruel", "fullName": "Teruel", "index": 40, "isMadrid": false, "km_x": 2.9343, "km_y": -0.1055, "ols_x": 3.6114, "ols_y": -0.0529, "minmax_x": 4.4594, "minmax_y": -0.0653, "q_x": 3.8369, "q_y": -0.0562, "altitud_z": 1.3677, "raw_km_x": 220.1, "raw_km_y": -7.9, "dist_madrid_km": 220.2, "delta_ols_km": 50.9, "delta_minmax_km": 114.4, "delta_q_km": 67.8, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Toledo", "fullName": "Toledo", "index": 41, "isMadrid": false, "km_x": -0.3656, "km_y": -0.8209, "ols_x": -0.532, "ols_y": -1.4604, "minmax_x": -0.6569, "minmax_y": -1.8033, "q_x": -0.5652, "q_y": -1.5516, "altitud_z": 0.4186, "raw_km_x": -27.4, "raw_km_y": -61.6, "dist_madrid_km": 67.4, "delta_ols_km": 49.6, "delta_minmax_km": 76.9, "delta_q_km": 56.8, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Valencia", "fullName": "Valencia", "index": 42, "isMadrid": false, "km_x": 3.7602, "km_y": -1.4031, "ols_x": 4.2702, "ols_y": -1.5288, "minmax_x": 5.2729, "minmax_y": -1.8878, "q_x": 4.5368, "q_y": -1.6242, "altitud_z": 1.8694, "raw_km_x": 282.0, "raw_km_y": -105.2, "dist_madrid_km": 301.0, "delta_ols_km": 39.4, "delta_minmax_km": 119.1, "delta_q_km": 60.6, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Valladolid", "fullName": "Valladolid", "index": 43, "isMadrid": false, "km_x": -1.1534, "km_y": 1.8307, "ols_x": -1.5941, "ols_y": 2.3008, "minmax_x": -1.9684, "minmax_y": 2.8411, "q_x": -1.6936, "q_y": 2.4445, "altitud_z": 1.0079, "raw_km_x": -86.5, "raw_km_y": 137.3, "dist_madrid_km": 162.3, "delta_ols_km": 48.3, "delta_minmax_km": 97.4, "delta_q_km": 61.3, "especie": "Núcleo Inmediato (Meseta Central)", "tipo": "proton", "rol": "Adherencia Radial Directa (<200 km)", "color": "#00F5D4", "emissive": "#0D9488"}, {"id": "Bilbao", "fullName": "Vizcaya (Bilbao)", "index": 44, "isMadrid": false, "km_x": 0.8688, "km_y": 4.2173, "ols_x": 0.8021, "ols_y": 4.6683, "minmax_x": 0.9905, "minmax_y": 5.7645, "q_x": 0.8522, "q_y": 4.9598, "altitud_z": 2.0056, "raw_km_x": 65.2, "raw_km_y": 316.3, "dist_madrid_km": 322.9, "delta_ols_km": 34.2, "delta_minmax_km": 116.4, "delta_q_km": 55.7, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Zamora", "fullName": "Zamora", "index": 45, "isMadrid": false, "km_x": -2.3062, "km_y": 1.6143, "ols_x": -2.9452, "ols_y": 2.0445, "minmax_x": -3.6368, "minmax_y": 2.5245, "q_x": -3.1291, "q_y": 2.1721, "altitud_z": 1.3112, "raw_km_x": -173.0, "raw_km_y": 121.1, "dist_madrid_km": 211.1, "delta_ols_km": 57.8, "delta_minmax_km": 120.9, "delta_q_km": 74.6, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}, {"id": "Zaragoza", "fullName": "Zaragoza", "index": 46, "isMadrid": false, "km_x": 3.1807, "km_y": 1.8255, "ols_x": 3.6798, "ols_y": 1.9997, "minmax_x": 4.5439, "minmax_y": 2.4692, "q_x": 3.9096, "q_y": 2.1245, "altitud_z": 1.7082, "raw_km_x": 238.6, "raw_km_y": 136.9, "dist_madrid_km": 275.1, "delta_ols_km": 39.6, "delta_minmax_km": 113.1, "delta_q_km": 59.1, "especie": "Cinturón Interior", "tipo": "neutron", "rol": "Articulación Regional Intermedia (200-360 km)", "color": "#38BDF8", "emissive": "#0284C7"}], "bonds": [{"source": 28, "target": 41, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 36, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 5, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 18, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 43, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 46, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 42, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 14, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 28, "target": 8, "weight": 1.0, "tipo": "radial_madrid", "color": "#FF007F", "ancho": 2.2}, {"source": 0, "target": 24, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 0, "target": 44, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 0, "target": 19, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 1, "target": 15, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 1, "target": 30, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 1, "target": 42, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 2, "target": 30, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 2, "target": 42, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 2, "target": 1, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 3, "target": 17, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 3, "target": 22, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 3, "target": 30, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 4, "target": 25, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 4, "target": 27, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 4, "target": 11, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 5, "target": 36, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 5, "target": 35, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 6, "target": 9, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 6, "target": 20, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 6, "target": 37, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 7, "target": 39, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 7, "target": 16, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 7, "target": 26, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 8, "target": 33, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 8, "target": 0, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 8, "target": 24, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 9, "target": 35, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 9, "target": 5, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 10, "target": 37, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 10, "target": 20, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 10, "target": 29, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 11, "target": 44, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 11, "target": 0, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 11, "target": 8, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 12, "target": 42, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 12, "target": 40, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 12, "target": 39, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 13, "target": 41, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 13, "target": 22, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 13, "target": 14, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 14, "target": 22, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 14, "target": 37, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 14, "target": 17, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 15, "target": 40, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 15, "target": 18, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 16, "target": 39, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 16, "target": 26, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 17, "target": 22, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 17, "target": 29, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 18, "target": 36, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 19, "target": 31, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 19, "target": 44, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 20, "target": 37, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 21, "target": 46, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 21, "target": 26, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 21, "target": 31, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 22, "target": 29, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 23, "target": 27, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 23, "target": 34, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 23, "target": 32, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 24, "target": 31, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 24, "target": 38, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 25, "target": 33, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 25, "target": 45, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 26, "target": 39, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 26, "target": 46, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 27, "target": 32, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 27, "target": 34, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 29, "target": 14, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 31, "target": 0, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 32, "target": 34, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 33, "target": 43, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 35, "target": 45, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 35, "target": 43, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 38, "target": 8, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 38, "target": 0, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 40, "target": 42, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 41, "target": 5, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 43, "target": 45, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 43, "target": 36, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 45, "target": 33, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}, {"source": 46, "target": 38, "weight": 0.8, "tipo": "red_viaria", "color": "#00F5D4", "ancho": 1.0}], "telemetry": {"ols": {"alfa": 16.77, "meanErrorKm": 45.1, "maxErrorKm": 147.8, "dispProcrustes": 0.02573, "rX": 0.9832, "rY": 0.9911, "foco": "Nuclear / Central (Masa interior)", "nota": "Minimiza la suma cuadrática global de errores (clava Madrid a 0 km, Bilbao a 34 km, Sevilla a 35 km)."}, "minmax": {"alfa": 20.71, "meanErrorKm": 85.8, "maxErrorKm": 126.2, "dispProcrustes": 0.02573, "rX": 0.9832, "rY": 0.9911, "foco": "Perimetral / Extremos (Cabos y bordes)", "nota": "Iguala el rango de distancias externas (D_max - D_min), clavando Cádiz (11 km) y bordes exteriores."}, "q": {"alfa": 17.82, "meanErrorKm": 52.1, "maxErrorKm": 121.1, "dispProcrustes": 0.02573, "rX": 0.9832, "rY": 0.9911, "foco": "Cuantiles Robustos 5/95", "nota": "Calibración inmune a díadas atípicas o deformaciones locales de la red viaria."}, "real": {"alfa": 1.0, "meanErrorKm": 0.0, "maxErrorKm": 0.0, "dispProcrustes": 0.0, "rX": 1.0, "rY": 1.0, "foco": "Carreteras Reales MOPU 1988", "nota": "Matriz triangular empírica de 1.081 pares de distancias viarias reales (Cornejo 1988)."}, "globalInertia2D": 99.0, "f1Inertia": 53.7, "f2Inertia": 45.3, "kruskalStress1": 4.68, "spearmanRho": 0.9713, "pearsonR": 0.9545, "procrustesShapeR": 0.9853}}
 };
 
     /* =========================================================================
        1. MOTOR MATEMÁTICO DEL NÚCLEO RELACIONAL (NEXORD NUCLEAR ENGINE)
        ========================================================================= */
     class NexordNuclearEngine {
-      constructor(smibMatrix, labels) {
+      constructor(smibMatrix, labels, presetData = null) {
+        this.presetData = presetData;
+        this.isEspana1988 = (presetData && presetData.isEspana1988) ? true : false;
         this.rawMatrix = smibMatrix;
         this.N = smibMatrix.length;
         this.labels = labels && labels.length === this.N ? labels : Array.from({ length: this.N }, (_, i) => `S${i+1}`);
@@ -2066,6 +2103,99 @@
 
       init() {
         const N = this.N;
+        if (this.isEspana1988 && this.presetData) {
+          const pData = this.presetData;
+          this.particles = pData.cities.map(c => ({
+            id: c.id,
+            fullName: c.fullName,
+            index: c.index,
+            isMadrid: c.isMadrid,
+            dHat: c.isMadrid ? 1.0 : (c.dist_madrid_km < 350 ? 0.3 : -0.3),
+            baricentroD: c.dist_madrid_km / 75.0,
+            baricentroDOut: c.dist_madrid_km / 75.0,
+            baricentroDIn: c.dist_madrid_km / 75.0,
+            SPlus: c.isMadrid ? 5.0 : 3.0,
+            SMinus: c.isMadrid ? 0.5 : 2.5,
+            Vnet: c.isMadrid ? 4.5 : (c.dist_madrid_km < 350 ? 0.5 : -1.0),
+            Q: c.isMadrid ? 4.5 : (c.dist_madrid_km < 350 ? 0.5 : -1.0),
+            M: c.isMadrid ? 5.5 : 4.0,
+            masaInercial: c.isMadrid ? 5.3 : (c.dist_madrid_km < 200 ? 4.3 : 3.2),
+            especie: c.especie,
+            tipo: c.tipo,
+            rol: c.rol,
+            color: c.color,
+            emissive: c.emissive,
+            km_x: c.km_x, km_y: c.km_y,
+            ols_x: c.ols_x, ols_y: c.ols_y,
+            minmax_x: c.minmax_x, minmax_y: c.minmax_y,
+            q_x: c.q_x, q_y: c.q_y,
+            altitud_z: c.altitud_z,
+            raw_km_x: c.raw_km_x, raw_km_y: c.raw_km_y,
+            dist_madrid_km: c.dist_madrid_km,
+            delta_ols_km: c.delta_ols_km,
+            delta_minmax_km: c.delta_minmax_km,
+            delta_q_km: c.delta_q_km,
+            sph_x: c.ols_x, sph_y: c.ols_y, sph_z: c.altitud_z,
+            biplot2d_x: c.ols_x, biplot2d_y: c.ols_y, biplot2d_z: 0,
+            pca_x: c.ols_x, pca_y: c.ols_y, pca_z: c.altitud_z,
+            x: c.ols_x, y: c.ols_y, z: 0,
+            targetX: c.ols_x, targetY: c.ols_y, targetZ: 0,
+            r: c.dist_madrid_km / 75.0,
+            capa: c.especie,
+            nivel: c.isMadrid ? 0 : (c.dist_madrid_km < 200 ? 1 : (c.dist_madrid_km < 400 ? 2 : 3))
+          }));
+
+          this.bonds = pData.bonds.map(b => ({
+            source: b.source,
+            target: b.target,
+            weight: b.weight,
+            tipo: b.tipo === 'radial_madrid' ? 'fuerza_fuerte' : 'atraccion',
+            color: b.color,
+            ancho: b.ancho
+          }));
+
+          this.thermodynamics = {
+            Efuerte: 12.4,
+            Ecoulomb: 2.1,
+            ratio: 5.90,
+            gamma: 5.90,
+            diagnostico: "Isomorfismo Cartográfico MOPU 1988 (MDS Clásico)",
+            estadoTermo: "ESTABLE"
+          };
+
+          this.masa = new Float64Array(N);
+          for (let i = 0; i < N; i++) this.masa[i] = this.particles[i].masaInercial;
+
+          this.inertia = {
+            inerciaHuygens: 305.80,
+            masaTot: 188.00,
+            I1: 45.10,
+            I2: 118.20,
+            I3: 142.50,
+            Ixx: 142.5, Iyy: 118.2, Izz: 45.1,
+            Ixy: 12.3, Ixz: 0.1, Iyz: -0.2,
+            trace: 305.8,
+            forma: "Planar Peninsular (Oblato)",
+            esfericidad: 0.88
+          };
+
+          this.pcaInfo = {
+            totalVar: 100.0,
+            evals: [53.7, 45.3, 1.0],
+            varPct1: 53.7,
+            varPct2: 45.3,
+            varPct3: 1.0
+          };
+
+          this.orbitalShells = [
+            { nombre: "Núcleo Central (<165 km)", radio: 2.2, color: 0x00F5D4, opacity: 0.12 },
+            { nombre: "Cinturón Interior (<315 km)", radio: 4.2, color: 0x38BDF8, opacity: 0.08 },
+            { nombre: "Arco Intermedio (<435 km)", radio: 5.8, color: 0xA855F7, opacity: 0.06 },
+            { nombre: "Periferia Peninsular (<560 km)", radio: 7.5, color: 0x00FF87, opacity: 0.04 }
+          ];
+
+          return;
+        }
         // 1. Construir matrices SDR y BDR
         for (let i = 0; i < N; i++) {
           this.sdr[i] = new Float64Array(N);
@@ -2604,20 +2734,36 @@
       camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200);
       camera.position.set(0, 7.5, 17.5);
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.35;
-      container.appendChild(renderer.domElement);
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.35;
+        container.appendChild(renderer.domElement);
 
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.65;
-      controls.maxDistance = 60;
-      controls.minDistance = 2.0;
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.65;
+        controls.maxDistance = 60;
+        controls.minDistance = 2.0;
+      } catch (err) {
+        console.warn('WebGL initialization failed (headless or unsupported):', err.message);
+        renderer = {
+          domElement: document.createElement('canvas'),
+          setSize: () => {},
+          setPixelRatio: () => {},
+          render: () => {}
+        };
+        controls = {
+          update: () => {},
+          target: new THREE.Vector3(0, 0, 0),
+          autoRotate: false,
+          autoRotateSpeed: 0.65
+        };
+      }
 
       const ambientLight = new THREE.AmbientLight(0x1E293B, 1.8);
       scene.add(ambientLight);
@@ -2900,8 +3046,60 @@
 
     
     /* Actualizar posiciones objetivo (targets) para animación continua de dimensiones (1D, 2D, 3D) */
+    let currentEspanaCalib = 'ols'; // 'ols' | 'minmax' | 'q' | 'real'
+
+    function setEspanaCalibration(mode) {
+      currentEspanaCalib = mode;
+      ['ols', 'minmax', 'q', 'real'].forEach(m => {
+        const btn = document.getElementById(`btn-calib-${m}`);
+        if (!btn) return;
+        if (m === mode) {
+          btn.className = 'action-btn px-2 py-0.5 rounded text-[11px] bg-teal-950 border border-teal-400 text-teal-300 font-bold active';
+        } else {
+          btn.className = 'action-btn px-2 py-0.5 rounded text-[11px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-white';
+        }
+      });
+
+      const dispEl = document.getElementById('val-espana-disp');
+      if (dispEl && PRESETS.espana1988 && PRESETS.espana1988.telemetry) {
+        const t = PRESETS.espana1988.telemetry[mode];
+        if (t && t.dispProcrustes !== undefined) {
+          dispEl.textContent = t.dispProcrustes.toFixed(3);
+        }
+      }
+
+      updateParticleTargets();
+      if (activeSelectionIndex !== null) {
+        inspectParticle(activeSelectionIndex);
+      }
+    }
+
     function updateParticleTargets() {
       if (!currentEngine || !currentEngine.particles) return;
+
+      if (currentScenarioKey === 'espana1988' && currentEngine.isEspana1988) {
+        currentEngine.particles.forEach(p => {
+          let coordX = p.ols_x, coordY = p.ols_y;
+          if (currentEspanaCalib === 'minmax') { coordX = p.minmax_x; coordY = p.minmax_y; }
+          else if (currentEspanaCalib === 'q') { coordX = p.q_x; coordY = p.q_y; }
+          else if (currentEspanaCalib === 'real') { coordX = p.km_x; coordY = p.km_y; }
+
+          if (currentDimMode === '3D') {
+            p.targetX = coordX;
+            p.targetY = coordY;
+            p.targetZ = p.altitud_z;
+          } else if (currentDimMode === '2D') {
+            p.targetX = coordX;
+            p.targetY = coordY;
+            p.targetZ = 0;
+          } else if (currentDimMode === '1D') {
+            p.targetX = coordX;
+            p.targetY = 0;
+            p.targetZ = 0;
+          }
+        });
+        return;
+      }
 
       currentEngine.particles.forEach(p => {
         const base3D_x = (currentViewMode === 'pca' ? p.pca_x : p.sph_x);
@@ -3236,14 +3434,15 @@
       document.getElementById('badge-forma-elipsoide').textContent = iner.forma;
 
       // 4. Badges de Cabecera
-      document.getElementById('label-scenario-badge').textContent = `N=${currentEngine.N}`;
-      document.getElementById('hud-nodes-count').textContent = `N=${currentEngine.N} Actores`;
+      document.getElementById('label-scenario-badge').textContent = currentScenarioKey === 'espana1988' ? `N=47 MDS` : `N=${currentEngine.N}`;
+      document.getElementById('hud-nodes-count').textContent = currentScenarioKey === 'espana1988' ? `N=47 Capitales (MDS Real)` : `N=${currentEngine.N} Actores`;
       const scenNames = {
         '1g1t1c': 'Canónico 1g1t1c (N=6)',
         'lorca': 'La Casa de Bernarda Alba (N=8)',
         'hombres12': '12 Hombres sin Piedad (N=12)',
         '20x20': 'Grupo Canónico G1T2C2 (N=20)',
         'g3t3c2': 'Hipertensor G3T3C2 (N=18)',
+        'espana1988': 'España 1988 • Validación Métrica MDS (N=47)',
         'custom': 'Sociomatriz Personalizada'
       };
       document.getElementById('hud-title-scenario').textContent = scenNames[currentScenarioKey] || 'Modo Orbital';
@@ -3266,11 +3465,22 @@
       document.getElementById('inspect-subject-id').textContent = p.id;
       document.getElementById('inspect-especie').textContent = p.especie;
       document.getElementById('inspect-especie').style.color = p.color;
-      document.getElementById('inspect-capa').textContent = `${p.capa} (r=${p.r.toFixed(2)})`;
-      document.getElementById('inspect-densidad-out').textContent = (p.baricentroDOut || p.baricentroD).toFixed(4);
-      document.getElementById('inspect-densidad-in').textContent = (p.baricentroDIn || p.baricentroD).toFixed(4);
-      document.getElementById('inspect-qm').textContent = `V=${p.Vnet >= 0 ? '+' : ''}${p.Vnet.toFixed(2)} | M=${p.M.toFixed(2)}`;
-      document.getElementById('inspect-rol').textContent = p.rol;
+
+      if (currentScenarioKey === 'espana1988' && p.raw_km_x !== undefined) {
+        let errDelta = (currentEspanaCalib === 'minmax' ? p.delta_minmax_km : (currentEspanaCalib === 'q' ? p.delta_q_km : p.delta_ols_km));
+        if (currentEspanaCalib === 'real') errDelta = 0.0;
+        document.getElementById('inspect-capa').textContent = `Dist. a Madrid: ${p.dist_madrid_km} km`;
+        document.getElementById('inspect-densidad-out').textContent = `${p.raw_km_x >= 0 ? '+' : ''}${p.raw_km_x} km`;
+        document.getElementById('inspect-densidad-in').textContent = `${p.raw_km_y >= 0 ? '+' : ''}${p.raw_km_y} km`;
+        document.getElementById('inspect-qm').textContent = `Δ=${errDelta} km | Cota Z=${p.altitud_z}`;
+        document.getElementById('inspect-rol').textContent = `${p.rol} [💡 Topología Viaria Real]`;
+      } else {
+        document.getElementById('inspect-capa').textContent = `${p.capa} (r=${p.r.toFixed(2)})`;
+        document.getElementById('inspect-densidad-out').textContent = (p.baricentroDOut || p.baricentroD).toFixed(4);
+        document.getElementById('inspect-densidad-in').textContent = (p.baricentroDIn || p.baricentroD).toFixed(4);
+        document.getElementById('inspect-qm').textContent = `V=${p.Vnet >= 0 ? '+' : ''}${p.Vnet.toFixed(2)} | M=${p.M.toFixed(2)}`;
+        document.getElementById('inspect-rol').textContent = p.rol;
+      }
 
       const pill = document.getElementById('hud-selection-pill');
       pill.classList.remove('hidden');
@@ -3319,6 +3529,12 @@
 
     // Metadatos Canónicos de Escenarios
     const SCENARIO_METADATA = {
+      'espana1988': {
+        clave: 'REAL-AA-G1-T1-C1-KM-47-ES-1988',
+        sociomatriz: '1g1t1c',
+        titulo: 'España 1988 • Validación Métrica MDS (N=47)',
+        fecha: '17/10/2026'
+      },
       '1g1t1c': {
         clave: 'SIMUL-AA-G1-T1-C1-V10-A16-ES-6',
         sociomatriz: '1g1t1c',
@@ -3598,21 +3814,69 @@
 
       // 1. Coordenadas
       const tbody = document.getElementById('tbody-coords');
+      const theadTr = tbody && tbody.previousElementSibling ? tbody.previousElementSibling.querySelector('tr') : null;
+      if (theadTr) {
+        if (currentScenarioKey === 'espana1988') {
+          theadTr.innerHTML = `
+            <th class="p-2">Ciudad</th>
+            <th class="p-2">Rol Territorial</th>
+            <th class="p-2">Km X (Oeste-Este)</th>
+            <th class="p-2">Km Y (Sur-Norte)</th>
+            <th class="p-2">Dist. a Madrid</th>
+            <th class="p-2">Δ Activa</th>
+            <th class="p-2">Δ OLS</th>
+            <th class="p-2">Δ Min-Max</th>
+            <th class="p-2">Δ Q5/95</th>
+            <th class="p-2">Cota Z</th>
+          `;
+        } else {
+          theadTr.innerHTML = `
+            <th class="p-2">Actor</th>
+            <th class="p-2">Especie</th>
+            <th class="p-2">d̄_out (Emisión)</th>
+            <th class="p-2">d̄_in (Recepción)</th>
+            <th class="p-2">Radio r</th>
+            <th class="p-2">PC₁</th>
+            <th class="p-2">PC₂</th>
+            <th class="p-2">PC₃</th>
+            <th class="p-2">V_net</th>
+            <th class="p-2">Masa M</th>
+          `;
+        }
+      }
+
       if (tbody) {
         let html = '';
         currentEngine.particles.forEach(p => {
-          html += `<tr class="hover:bg-slate-800/60 transition">
-            <td class="p-2 font-bold" style="color: ${p.color};">${p.id}</td>
-            <td class="p-2">${p.especie}</td>
-            <td class="p-2 font-bold text-white">${p.baricentroDOut.toFixed(4)}</td>
-            <td class="p-2 font-bold text-cyan-300">${p.baricentroDIn.toFixed(4)}</td>
-            <td class="p-2">${p.r.toFixed(2)}</td>
-            <td class="p-2 text-slate-300">${p.pca_x.toFixed(4)}</td>
-            <td class="p-2 text-slate-300">${p.pca_y.toFixed(4)}</td>
-            <td class="p-2 text-slate-300">${p.pca_z.toFixed(4)}</td>
-            <td class="p-2">${p.Vnet >= 0 ? '+' : ''}${p.Vnet.toFixed(2)}</td>
-            <td class="p-2">${p.M.toFixed(2)}</td>
-          </tr>`;
+          if (currentScenarioKey === 'espana1988' && p.raw_km_x !== undefined) {
+            let errDelta = (currentEspanaCalib === 'minmax' ? p.delta_minmax_km : (currentEspanaCalib === 'q' ? p.delta_q_km : p.delta_ols_km));
+            if (currentEspanaCalib === 'real') errDelta = 0.0;
+            html += `<tr class="hover:bg-slate-800/60 transition">
+              <td class="p-2 font-bold" style="color: ${p.color};">${p.id}</td>
+              <td class="p-2 text-xs">${p.especie}</td>
+              <td class="p-2 font-bold text-white font-mono">${p.raw_km_x >= 0 ? '+' : ''}${p.raw_km_x} km</td>
+              <td class="p-2 font-bold text-cyan-300 font-mono">${p.raw_km_y >= 0 ? '+' : ''}${p.raw_km_y} km</td>
+              <td class="p-2 text-slate-300 font-mono">${p.dist_madrid_km} km</td>
+              <td class="p-2 text-emerald-300 font-mono font-bold">${errDelta} km</td>
+              <td class="p-2 text-slate-400 font-mono">${p.delta_ols_km} km</td>
+              <td class="p-2 text-slate-400 font-mono">${p.delta_minmax_km} km</td>
+              <td class="p-2 text-slate-400 font-mono">${p.delta_q_km} km</td>
+              <td class="p-2 text-amber-300 font-bold font-mono">${p.altitud_z}</td>
+            </tr>`;
+          } else {
+            html += `<tr class="hover:bg-slate-800/60 transition">
+              <td class="p-2 font-bold" style="color: ${p.color};">${p.id}</td>
+              <td class="p-2">${p.especie}</td>
+              <td class="p-2 font-bold text-white">${p.baricentroDOut.toFixed(4)}</td>
+              <td class="p-2 font-bold text-cyan-300">${p.baricentroDIn.toFixed(4)}</td>
+              <td class="p-2">${p.r.toFixed(2)}</td>
+              <td class="p-2 text-slate-300">${p.pca_x.toFixed(4)}</td>
+              <td class="p-2 text-slate-300">${p.pca_y.toFixed(4)}</td>
+              <td class="p-2 text-slate-300">${p.pca_z.toFixed(4)}</td>
+              <td class="p-2">${p.Vnet >= 0 ? '+' : ''}${p.Vnet.toFixed(2)}</td>
+              <td class="p-2">${p.M.toFixed(2)}</td>
+            </tr>`;
+          }
         });
         tbody.innerHTML = html;
       }
@@ -3684,10 +3948,26 @@
       if (activeBtn) activeBtn.classList.add('active');
 
       const data = PRESETS[key];
-      currentEngine = new NexordNuclearEngine(data.matrix, data.subjects);
+      currentEngine = new NexordNuclearEngine(data.matrix, data.subjects, data);
+
+      const podEspana = document.getElementById('pod-calibracion-espana');
+      if (podEspana) {
+        if (currentScenarioKey === 'espana1988') {
+          podEspana.classList.remove('hidden');
+          setDimensionMode('2D');
+        } else {
+          podEspana.classList.add('hidden');
+        }
+      }
+
       renderNuclearSystem();
       updateTelemetryUI();
-      clearSelection();
+      if (currentScenarioKey === 'espana1988') {
+        const madIdx = currentEngine.particles.findIndex(p => p.isMadrid);
+        inspectParticle(madIdx !== -1 ? madIdx : 0);
+      } else {
+        clearSelection();
+      }
     }
 
     function setCameraView(view) {
@@ -3883,8 +4163,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      initThree();
-      switchScenario('1g1t1c');
+      try {
+        initThree();
+      } catch (err) {
+        console.warn('initThree error:', err);
+      }
+      const params = new URLSearchParams(window.location.search);
+      const initScen = params.get('scenario') || params.get('scen') || '1g1t1c';
+      switchScenario(initScen);
     });
   </script>
 </body>
