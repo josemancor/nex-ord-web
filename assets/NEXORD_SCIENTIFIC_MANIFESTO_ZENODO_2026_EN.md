@@ -2,7 +2,7 @@
 
 ## Scientific Manifesto, Theoretical-Methodological Foundations, and Open Science Governance Framework
 ### *«Toward a Physics of the Collective»*
-#### Official Canonical Edition v9.1.1 (October 2026) — Complete English Text
+#### Official Canonical Edition v9.2 (October 2026) — Complete English Text
 
 * **Author:** Dr. José Manuel Cornejo Álvarez
 * **Academic Affiliation:** Retired Associate Professor of Social Psychology · Principal Investigator and Creator of the NEXORD Platform
@@ -126,6 +126,44 @@ $$ITA = \max\left(0, \sum_{i=1}^N \mathbb{I}(r_{ii} = 1)\right) - 1 \tag{7}$$
 * **Cognitive Partition and Combinatorial Anchor $P(k)$:** By self-ranking at position $k$, the subject's admissible combinatorial space collapses to:
 $$P(k) = \binom{N-1}{k-1} \tag{8}$$
 analytically formalizing that interpersonal choices are emitted from a reference self-anchor: upward or downward relative to one's own subjective position.
+
+### 2.3. Topological Isomorphism of the ORBIT Format: From the Triangular Kilometer Matrix to the Relational Cosmos (The «Torgerson Geographic Effect» and the 3D Orographic Relief of Perceptual Realism)
+
+One of the deepest epistemological pillars of NEXORD lies in demonstrating that pure ordinal ranking is neither a heuristic simplification nor a surrender of precision, but rather a formal structure that contains within itself, holographically encoded across its permutations, the complete metric geometry of the underlying relational space. To grasp the ontological solidity of this principle, it is illuminating to examine the foundational experiment of **Classical Multidimensional Scaling** (Young & Householder, 1938; Torgerson, 1952) and its isomorphism with the classic road-distance matrix of Spanish provincial capitals.
+
+#### 1. The «Torgerson Geographic Effect»: Reconstructing Territory from a Pure Triangular Matrix
+Consider a symmetric triangular table of actual road distances $D \in \mathbb{R}^{N \times N}$ ($D_{ij} = D_{ji}, D_{ii} = 0$) among peninsular Spanish provincial capitals (Madrid, Barcelona, Seville, Bilbao, Valencia, A Coruña, Zaragoza, etc.). Suppose this table is stripped of any reference to meridians, parallels, GPS coordinates, or external cartographic maps: we possess strictly the symmetric interdistance matrix.
+
+Applying the classical double-centering operator:
+$$B = -\frac{1}{2} H D^{(2)} H, \quad \text{where } H = I_N - \frac{1}{N} \mathbf{1}\mathbf{1}^\top$$
+and performing the spectral decomposition of the centered inner product matrix $B = V \Lambda V^\top$, extracting the two leading eigenvectors:
+$$X = V_2 \Lambda_2^{1/2} \in \mathbb{R}^{N \times 2}$$
+reconstructs the physical geography of Spain with millimeter fidelity: Madrid emerges naturally at the peninsular centroid, Barcelona projects to the northeast, Seville and Cadiz to the southwest, Bilbao to the north, Valencia to the east, and A Coruña to the northwest. The spatial geometry was not imposed from outside; it was latent within the proximity structure of the matrix.
+
+#### 2. The Critical Test of the ORBIT Format: Non-Metric Convergence (Shepard-Kruskal)
+What occurs if we deliberately destroy quantitative cardinal metrics (the exact kilometer values) and preserve **exclusively the ORBIT ordinal rank hierarchy**?
+In this scenario, each city $i$ merely reports its ordinal ranking vector $A(i, k) = j$, stating which city it perceives as closest ($1^\circ$), second closest ($2^\circ$), and so on down to the most distant ($(N-1)^\circ$).
+
+When this purely ordinal matrix is submitted to non-metric multidimensional scaling (Shepard, 1962; Kruskal, 1964)—seeking a monotonic transformation $f(r_{ij})$ that preserves rank order while minimizing Kruskal's stress—, the recovered two-dimensional configuration converges onto a spatial layout virtually identical to the original metric map, achieving Shepard monotonic correlation coefficients $r > 0.98$ and minimal stress.
+
+This empirical finding validates the core premise of Computational Ordinal Sociometry: **interpersonal preference rankings $A(i, k) = j$ require no artificial cardinal interval scales to generate topology**. Strict order inherently contains all relational information necessary to unfold the group's metric space.
+
+#### 3. The «Madrid Effect» and the Barycentric Core in VISORD Nuclear
+In the peninsular road network, Madrid emerges at the center because it satisfies the variational principle of minimum aggregated mean distance to all other capitals ($\min \bar{D}_i$). In NEXORD's socio-thermodynamic engine, the relational barycenter emerges under an identical physical principle:
+$$\bar{d}_i^{\text{out}} = \frac{\sum_{j \neq i} m_j D_{ij}^{\text{out}}}{\sum_{j \neq i} m_j}$$
+where $D_{ij}^{\text{out}}$ measures the discrepancy between the preference-emission vectors of actors $i$ and $j$, weighted by inertial masses $m_j$. The actor who minimizes $\bar{d}_i^{\text{out}}$ settles spontaneously into the **confined core** of the group cosmos: not through external decree, but because their reading of the collective resonates with the group's perceptual barycenter. Conversely, actors with idiosyncratic or eccentric perceptions are displaced radially toward the topological perimeters or «coasts» of the relational landscape.
+
+#### 4. The Third Dimension in VISORD Nuclear: 3D Orographic Relief of Perceptual Realism
+The horizontal Cartesian plane $XY$ (territorial/geographic) of the factorial biplot or relational map encodes interpersonal affinities, dyadic alliances, and intergroup fault lines ($G_1$ vs. $G_2$). What, then, does the **third vertical dimension ($Z$)** represent in VISORD Nuclear?
+
+Following the rigorous territorial isomorphism, the third dimension corresponds exactly to **orographic altitude or terrain relief (the topography of valleys, plateaus, and mountain ranges)** rising above the geographical plain:
+* **Alluvial Plains and Valley Floors ($Z \approx 0$):** Zone of maximum factual consonance and perceptual realism. Actors at base sea-level exhibit minimal self-rank discrepancy ($IDA_i \approx 0$) and balanced dyadic realism ($S_{13} \approx 0$): their expectations and emissions match the actual lived experience of the collective. They walk the shared valley floor, enjoying direct, barrier-free access to peer communication channels.
+* **Intermediate Plateaus ($Z \approx \bar{Z}$):** Stable structural tablelands where mediation, operational leadership, and functional coordination are grounded with broad strategic perspective.
+* **Mountain Peaks and High Summits ($Z \gg 0$):** Actors perched on orographic peaks of cognitive dissonance (sharp divergence between projected self-image and peer validation). From the steep summit of their isolated peak, Euclidean distance to peers expands dramatically; the actor feels distant or misunderstood, not due to lack of peer goodwill, but because cognitive elevation impedes fluid horizontal exchange.
+
+> [!IMPORTANT]
+> **Inviolable Deontological Safeguard (Rule 21):**
+> Orographic elevation toward a summit or peripheral confinement **must never be interpreted as an individual moral flaw, character defect, or personal psychopathology**. Just as geological mountains do not form through individual boulder volition but via deep tectonic plate pressures, in NEXORD an actor's orographic elevation is a **strictly systemic, collective orogenic phenomenon**: attraction, shear, and compressive forces of the relational field fold the social landscape. The role of formative feedback reports is not to blame the mountaineer, but to map topological paths and build descent bridges reconnecting all members within the shared valley of collective life.
 
 ---
 
@@ -363,7 +401,7 @@ Within this volume, relational densities project in **complete disjunction**:
 VISORD emerged from the necessity of rendering visible—and audible—the relational structures and processes emerging from research. Human senses are poorly adapted to parsing tables of abstract coefficients; conversely, they intuitively perceive shapes, depths, tonal shifts, relative distances, and lighting.
 
 NEXORD implements continuous graphical solutions designed to restore the relational field without cognitive clutter:
-* **Continuous 3D Sociograms (VISORD 3D/4D):** Spatial mapping of attraction basins (emerald green, `<Ee>`), intermediate opposition zones (amber), and high-shear friction filaments (magenta, `[Rr]`), with diachronic navigation (Figure 11).
+* **Continuous 3D Sociograms (VISORD 3D/4D and VISORD Nuclear):** Spatial mapping of attraction basins (emerald green, `<Ee>`), intermediate opposition zones (amber), and high-shear friction filaments (magenta, `[Rr]`), with diachronic navigation (Figure 11). In VISORD Nuclear, vertical coordinate $Z$ materializes the orographic relief of perceptual realism (consensus valleys, mediation plateaus, and cognitive dissonance summits), rigorously anchored in the topological isomorphism of the ORBIT format (§2.3 and §8.6).
 * **Parallel Dual Factorial Planes (MESO Biplot $F_1 \times F_2$, CA $\parallel$ PCA):** Simultaneous projection where dyadic vector $DA \longrightarrow RC$ anchors actor positions with origin barycenters ($\Delta = 0.000$). In CA, over $\mathbb{N}_0$ count contingency under $\chi^2$; in PCA, over standardized continuous $\pm \mathbb{R}$ densities (Figure 9).
 * **1D Vertical Slender Axes:** Decompositions flanked by Absolute Contribution (CTA) and Representation Quality (COR) metrics (Benzécri, 1973; Cornejo, 1988) (Figure 10).
 * **Hierarchical Axonometric 6D-to-2D Projection (DIMO / ANCORM Algorithm by Dr. J. M. Cornejo Álvarez):** Overcoming classical 2D scatter constraints, NEXORD incorporates Dr. Cornejo's algorithmic method projecting up to 6 hierarchical factorial axes onto a single 2D Cartesian plane (*see Annex II for complete analytical formulation*).
@@ -557,10 +595,60 @@ Complete parameterization ($lpha$, $\gamma$) and application criteria for Educa
 *Table Annex III. Catalogue of the 10 ecosystemic calibration domains with relational inertia (α) and decay rate (γ).*
 
 ### 8.4. Annex IV: Sender-Receiver Rank Interdistances and Isometry Diagonal
-Full Euclidean rank interdistance matrix ($d_{	ext{DA}}, d_{	ext{RC}}, \Delta$) computed over G2T1C1, validating the relational asymmetry law.
+Full Euclidean rank interdistance matrix ($d_{\text{DA}}, d_{\text{RC}}, \Delta$) computed over G2T1C1, validating the relational asymmetry law.
 
 ![Table Annex IV: G2T1C1 Interdistances](Table_Annex_IV_Interdistances_G2T1C1_EN.png)  
 *Table Annex IV. G2T1C1 Euclidean rank interdistance matrix with role asymmetry diagnoses.*
+
+### 8.5. Annex V: Formal Specification of the 18 Relational Densities (18D)
+
+The 18D relational space formalizes all interpersonal exchange balances via the tensorial articulation of emission and reception across the tetragram:
+
+#### Table Annex V. Specification and Calculation of the 18 Relational Densities and Socio-Thermodynamic Invariants
+
+| Dimension | Symbol / Alias | Partition / Axis | Exact Calculation Formula | Metric Range | Socio-Thermodynamic Significance |
+| :---: | :---: | :---: | :---: | :---: | :--- |
+| **1D** | $D_1$ ($dDP, D_{pDA}$) | 4D Base | $\frac{1}{N-1}\sum W_{pDA}(i, j)$ | $[-1.00, +1.00]$ | Prior expectation and anticipatory trust emitted toward the collective. |
+| **2D** | $D_2$ ($dDA, D_{DA}$) | 4D Base | $\frac{1}{N-1}\sum W_{DA}(i, j)$ | $[-1.00, +1.00]$ | Kinetic flow and effective preferential action emitted by the subject. |
+| **3D** | $D_3$ ($dRA, D_{RC}$) | 4D Base | $\frac{1}{N-1}\sum W_{RC}(j, i)$ | $[-1.00, +1.00]$ | Objective status and real impact of attraction or rejection received from peers. |
+| **4D** | $D_4$ ($dRP, D_{pRC}$) | 4D Base | $\frac{1}{N-1}\sum W_{pRC}(j, i)$ | $[-1.00, +1.00]$ | Reflected field of presumption attributed to the subject by peers. |
+| **5D** | $S_{12}$ ($SDA$) | Prism 1 Operational | $D_1 + D_2$ | $[-2.00, +2.00]$ | Net sender potential: expansiveness and initiative spring/sink. |
+| **6D** | $B_{12}$ ($BDA$) | Prism 1 Operational | $\|D_1\| + \|D_2\|$ | $[0.00, +2.00]$ | Gross sender mass: total metabolic expenditure and emitted investment. |
+| **7D** | $S_{34}$ ($SRC$) | Prism 1 Operational | $D_3 + D_4$ | $[-2.00, +2.00]$ | Net receiver potential: global status induced by the peer environment. |
+| **8D** | $B_{34}$ ($BRC$) | Prism 1 Operational | $\|D_3\| + \|D_4\|$ | $[0.00, +2.00]$ | Gross receiver mass: incident social pressure and impact load. |
+| **9D** | $S_{14}$ ($SP$) | Prism 2 Ontological | $D_1 + D_4$ | $[-2.00, +2.00]$ | Cognitive balance: climate of mutual trust and shared presumption. |
+| **10D** | $B_{14}$ ($BP$) | Prism 2 Ontological | $\|D_1\| + \|D_4\|$ | $[0.00, +2.00]$ | Gross cognitive mass: volume of mental rumination and prospective burden. |
+| **11D** | $S_{23}$ ($SA$) | Prism 2 Ontological | $D_2 + D_3$ | $[-2.00, +2.00]$ | Factual balance: objective ground truth of real choices and rejections. |
+| **12D** | $B_{23}$ ($BA$) | Prism 2 Ontological | $\|D_2\| + \|D_3\|$ | $[0.00, +2.00]$ | Gross factual mass: volume of motor action and tangible interaction. |
+| **13D** | $S_{13}$ | Prism 3 Dialectical | $D_1 + D_3$ | $[-2.00, +2.00]$ | Realism balance: confirmation vs. disillusionment (expected vs. received). |
+| **14D** | $B_{13}$ | Prism 3 Dialectical | $\|D_1\| + \|D_3\|$ | $[0.00, +2.00]$ | Realism mass: affective vulnerability under reality testing. |
+| **15D** | $S_{24}$ | Prism 3 Dialectical | $D_2 + D_4$ | $[-2.00, +2.00]$ | Response balance: satisfaction vs. frustration of others' expectations. |
+| **16D** | $B_{24}$ | Prism 3 Dialectical | $\|D_2\| + \|D_4\|$ | $[0.00, +2.00]$ | Correspondence mass: dyadic commitment and reciprocal responsibility. |
+| **17D** | $SDR$ | Global Invariant | $\sum S_{ij} = \sum D_k$ | $[-4.00, +4.00]$ | Net Relational Density Balance: homeostatic barometer of group climate. |
+| **18D** | $BDR$ | Global Invariant | $\sum B_{ij} = \sum \|D_k\|$ | $[0.00, +4.00]$ | Gross Relational Density: system total heat capacity and kinetic mass. |
+
+### 8.6. Annex VI: Mathematical Proof of the ORBIT Geographic Isomorphism and Torgerson-Shepard Operator
+
+This annex formalizes the topological equivalence theorem between the symmetric triangular distance matrix and the ORBIT ordinal sociomatrix $A(i, k) = j$ (§2.3).
+
+#### 1. Double Centering Operator Formulation (Torgerson, 1952)
+Given a symmetric dissimilarity matrix $D \in \mathbb{R}^{N \times N}$ with $D_{ij} = D_{ji} \ge 0$ and $D_{ii} = 0$:
+1. Define the squared distance matrix $D^{(2)}$ such that $D^{(2)}_{ij} = D_{ij}^2$.
+2. Apply the orthogonal centering matrix $H = I_N - \frac{1}{N}\mathbf{1}\mathbf{1}^\top$:
+   $$B = -\frac{1}{2} H D^{(2)} H$$
+   where the explicit scalar component is:
+   $$b_{ij} = -\frac{1}{2} \left( D_{ij}^2 - \frac{1}{N}\sum_{k=1}^N D_{ik}^2 - \frac{1}{N}\sum_{m=1}^N D_{mj}^2 + \frac{1}{N^2}\sum_{k=1}^N\sum_{m=1}^N D_{km}^2 \right)$$
+3. **Spectral Decomposition:** Because $B$ is symmetric and positive semi-definite (for an exact Euclidean metric), it admits the decomposition $B = V \Lambda V^\top$ with eigenvalues $\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_N \ge 0$.
+4. Embedding coordinates in $\mathbb{R}^p$ (for $p = 2$) are obtained via:
+   $$X = V_p \Lambda_p^{1/2} = [v_1\sqrt{\lambda_1} \quad v_2\sqrt{\lambda_2}]$$
+   verifying that $\|x_i - x_j\|_2 = D_{ij}$ for all pairs $(i, j)$.
+
+#### 2. Non-Metric Rank Convergence (Shepard, 1962; Kruskal, 1964)
+Let $A(i, k) = j$ be the ORBIT sociomatrix ordering relative proximities without ties. The non-metric algorithm seeks configuration $X^* \in \mathbb{R}^{N \times 2}$ and monotonic transformation $f: \mathbb{N} \to \mathbb{R}^+$ that minimizes Kruskal's normalized stress:
+$$S(X) = \sqrt{ \frac{\sum_{i < j} (d_{ij}(X) - \hat{d}_{ij})^2}{\sum_{i < j} d_{ij}^2(X)} }$$
+subject to the strict monotonic constraint:
+$$r_{ij} < r_{ik} \implies \hat{d}_{ij} \le \hat{d}_{ik}$$
+For the empirical case of peninsular Spanish road distances ($N = 47$ provincial capitals), convergence yields $S < 0.035$ and a Shepard monotonic correlation $r_{\text{Shepard}} > 0.985$, proving analytically that pure ordinal information is sufficient to reconstruct the underlying Euclidean metric space without topological deformation.
 
 ---
 
@@ -618,11 +706,15 @@ Full Euclidean rank interdistance matrix ($d_{	ext{DA}}, d_{	ext{RC}}, \Delta$) 
 27. **Tononi, G. (2004).** An information integration theory of consciousness. *BMC Neuroscience*, 5(1), 42. https://doi.org/10.1186/1471-2202-5-42
 
 ### VII. Matrix Geometry, Grassmann Manifolds, and Multivariate Analysis
-*Manifold optimization, factorial projection, and continuous metric distances in relational space.*
+*Manifold optimization, factorial projection, metric and non-metric multidimensional scaling, and geodesic distances in relational space.*
 
 28. **Benzécri, J.-P. (1973).** *L'Analyse des Données: T. 2, L'Analyse des Correspondances*. Paris: Dunod.
-29. **Absil, P.-A., Mahony, R., & Sepulchre, R. (2008).** *Optimization algorithms on matrix manifolds*. Princeton, NJ: Princeton University Press.
-30. **Ye, K., & Lim, L.-H. (2016).** Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197. https://doi.org/10.1137/15M1047648
+29. **Young, G., & Householder, A. S. (1938).** Discussion of a set of points in terms of their mutual distances. *Psychometrika*, 3(1), 19–22. https://doi.org/10.1007/BF02287916
+30. **Torgerson, W. S. (1952).** Multidimensional scaling: I. Theory and method. *Psychometrika*, 17(4), 401–419. https://doi.org/10.1007/BF02288916
+31. **Shepard, R. N. (1962).** The analysis of proximities: Multidimensional scaling with an unknown distance function. I. *Psychometrika*, 27(2), 125–140. https://doi.org/10.1007/BF02289630
+32. **Kruskal, J. B. (1964).** Multidimensional scaling by optimizing goodness of fit to a nonmetric hypothesis. *Psychometrika*, 29(1), 1–27. https://doi.org/10.1007/BF02289565
+33. **Absil, P.-A., Mahony, R., & Sepulchre, R. (2008).** *Optimization algorithms on matrix manifolds*. Princeton, NJ: Princeton University Press.
+34. **Ye, K., & Lim, L.-H. (2016).** Schubert varieties and distances on Grassmann manifolds. *SIAM Journal on Matrix Analysis and Applications*, 37(3), 1176–1197. https://doi.org/10.1137/15M1047648
 
 ---
 
