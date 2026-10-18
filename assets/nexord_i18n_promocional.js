@@ -2,8 +2,8 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE LA HOME PROMOCIONAL
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
- * localStorage y propagación reactiva en todo el ecosistema.
+ * Soporte bilingüe integral (Español canónico / English) con persistencia en
+ * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
 
@@ -49,19 +49,19 @@
       hero_btn_custody: '🏛️ Custodia Institucional',
       hero_btn_solutions: '💼 Soluciones Sectoriales',
 
-      // Métricas Rápidas Hero
-      stat_1_val: '3 Min',
-      stat_1_desc: 'Tiempo de pasación individual por ordenación (Breve → ORBIT).',
-      stat_2_val: 'Q81',
-      stat_2_desc: 'Figuras Relacionales Sociométricas canónicas computadas en retícula diádica.',
-      stat_3_val: '18D',
-      stat_3_desc: 'Índices de Densidad Relacional en 3 prismas duales (BDR / SDR).',
-      stat_4_val: '5',
-      stat_4_desc: 'VISORD\'s grupales: gemelos digitales 3D/4D de diagnóstico continuo.',
-
-      // Video Hero HUD
+      // Video Hero HUD & Controls
       video_badge: 'VISORD 3D ENGINE IN MOTION · DEMO OFICIAL',
-      video_meta: '⏱️ 01:09 MIN · AUDIO OPCIONAL · SUBTÍTULOS BILINGÜES',
+      video_meta: '⏱️ 01:09 MIN · VISUALIZADOR RELACIONAL 3D',
+      video_btn_play: 'Pausa',
+      video_btn_play_pause: 'Reproducir',
+      video_btn_repeat: 'Repetir',
+      video_btn_audio_on: 'Activar Audio',
+      video_btn_audio_off: 'Silenciar Audio',
+      video_btn_fs: 'Pantalla Completa',
+      video_player_title: 'Pulsa para reproducir o pausar el video',
+      video_btn_play_title: 'Reproducir / Pausar Video',
+      video_btn_audio_title: 'Activar o Silenciar Audio de la Demostración',
+      video_btn_fs_title: 'Pantalla Completa',
       bond_attraction_term: 'Verde:',
       bond_attraction_text: 'Atracción Mutua & Cohesión',
       bond_rejection_term: 'Magenta:',
@@ -69,113 +69,255 @@
       bond_ostracism_term: 'Periferia:',
       bond_ostracism_text: 'Ostracismo Invisible',
       video_sub_initial: 'NEXORD · Plataforma de Sociometría Ordinal Computacional y Socio-Termodinámica 3D',
-      video_btn_play: 'Pausa',
-      video_btn_play_pause: 'Reproducir',
-      video_btn_mute_active: 'Mudo (Activar)',
-      video_btn_mute_sound: 'Sonido Activo',
-      video_btn_subs_es: 'Subtítulos: ES',
-      video_btn_subs_en: 'Subtitles: EN',
-      video_btn_subs_off: 'Subtítulos: OFF',
-      video_btn_fs: 'Pantalla Completa',
       video_cta_pill: '🎮 Manipular Entorno 3D en Vivo',
 
-      // Stats Bar
-      stat_1_val: '4 Posiciones SMIb',
-      stat_1_lbl: 'Dadores y Receptores Fácticos y Cognitivos',
-      stat_2_val: '18 Densidades',
-      stat_2_lbl: 'Descomposición Ortogonal en 3 Prismas Duales',
-      stat_3_val: '7 Niveles',
-      stat_3_lbl: 'De la Intuición 3D a la Topología de Grassmann',
-      stat_4_val: '10 Dominios',
-      stat_4_lbl: 'Ecosistémicos: Empresa, Sanidad, Deporte, Aula',
+      // Anatomía de los Vínculos
+      bonds_tag: 'Física Relacional Visible',
+      bonds_title: 'Qué estás viendo en el simulador: Las 3 Fuerzas que Deciden el Destino del Grupo',
+      bonds_subtitle: 'La sociometría clásica de los años 50 solo dibujaba flechas estáticas. NEXORD captura la tensión viva de atracción y rechazo en tiempo real.',
+      bond_c1_badge: '🟢 LA FUERZA QUE UNE',
+      bond_c1_title: 'Atracción & Elección Mutua',
+      bond_c1_text: 'Haces luminosos en <strong>verde neón</strong>. Afinidad espontánea, reciprocidad afectiva y admiración operativa. Es el pegamento relacional que retiene el talento, crea liderazgos naturales y sostiene al equipo bajo presión.',
+      bond_c1_metric_label: 'Impacto Grupal:',
+      bond_c1_metric_val: 'Resiliencia y Sinergia Colectiva',
+      bond_c2_badge: '🔴 LA FUERZA QUE FRACTURA',
+      bond_c2_title: 'Rechazo & Fricción Latente',
+      bond_c2_text: 'Haces tensos en <strong>magenta neón</strong>. Incompatibilidades soterradas, desconfianza no dicha y vetos cruzados. El 85% de las crisis nunca estallan en público: se incuban aquí en silencio hasta destruir proyectos y desintegrar departamentos.',
+      bond_c2_metric_label: 'Impacto Grupal:',
+      bond_c2_metric_val: 'Fugas de Talento y Boicot Silencioso',
+      bond_c3_badge: '⚪ LA HERIDA INVISIBLE',
+      bond_c3_title: 'Ostracismo & Vacío Pasivo',
+      bond_c3_text: 'Nodos aislados que flotan en la <strong>periferia oscura</strong>. Personas a las que nadie elige ni rechaza abiertamente: la indiferencia absoluta. Destroza la autoestima silenciosamente y es invisible para los tests de clima laboral convencionales.',
+      bond_c3_metric_label: 'Impacto Grupal:',
+      bond_c3_metric_val: 'Aislamiento y Desconexión Profunda',
 
-      // Sección Dolor
-      pain_badge: 'EL DIAGNÓSTICO CIEGO',
-      pain_title: 'La sociometría clásica colapsa ante la complejidad moderna',
-      pain_desc: 'Los cuestionarios tradicionales de simpatía y clima laboral adolecen de limitaciones estructurales que impiden ver la verdadera salud del grupo:',
-      pain_c1_title: 'Empates Artificiales y Pérdida de Jerarquía',
-      pain_c1_desc: 'El formato de elecciones binarias ("elige a 3 compañeros") colapsa en empates artificiales donde todos parecen iguales, borrando la intensidad ordinal de atracción y rechazo.',
-      pain_c2_title: 'Caja Negra sin Fundamentación Matemática',
-      pain_c2_desc: 'Los índices sociométricos clásicos no verifican conservación de energía ni invariantes diádicos, generando diagnósticos no reproducibles y desconectados de leyes formales.',
-      pain_c3_title: 'Ostracismo Invisible y Alianzas Latentes',
-      pain_c3_desc: 'El aislamiento pasivo o la marginación encubierta quedan completamente ocultos en encuestas medias de satisfacción hasta que estallan en crisis irreversibles.',
-      pain_c4_title: 'Riesgo Punitivo y Daño Deontológico',
-      pain_c4_desc: 'Sin salvaguardas éticas por diseño, la sociometría tradicional se ha utilizado con fines punitivos (despidos, señalamientos), dañando la autoestima y la confianza grupal.',
+      // Métricas Rápidas Hero
+      hero_stat_1_val: '3 Min',
+      hero_stat_1_desc: 'Tiempo de pasación individual por ordenación (Breve → ORBIT).',
+      hero_stat_2_val: 'Q81',
+      hero_stat_2_desc: 'Figuras Relacionales Sociométricas canónicas computadas en retícula diádica.',
+      hero_stat_3_val: '18D',
+      hero_stat_3_desc: 'Índices de Densidad Relacional en 3 prismas duales (BDR / SDR).',
+      hero_stat_4_val: '5',
+      hero_stat_4_desc: 'VISORD\'s grupales: gemelos digitales 3D/4D de diagnóstico continuo.',
 
-      // Sección Showroom (4 Joyas)
-      show_badge: 'SHOWROOM INTERACTIVO',
-      show_title: 'VISORD: La Ventana 3D/4D a la Dinámica Grupal',
-      show_desc: 'Cuatro entornos de exploración interactiva con visualización espacial en tiempo real, dinámica hidrodinámica y análisis espectral.',
-      jewel_1_title: '1. VISORD_demo (3D/4D Continuo)',
-      jewel_1_desc: 'Simulador de dinámica grupal continua, transiciones de fase líquida/gas y socio-termodinámica para colectivos de N < 51.',
-      jewel_2_title: '2. VISORD_cultural (Dramaturgia)',
-      jewel_2_desc: 'Sociometría cultural sobre obras maestras sin reactividad (12 Hombres sin Piedad, La Casa de Bernarda Alba).',
-      jewel_3_title: '3. VISORD_radiológico (Ostracismo)',
-      jewel_3_desc: 'Radiografías relacionales (15-27-54), variedades de Grassmann Gr(k,N) y diagnóstico precoz de ostracismo invisible.',
-      jewel_4_title: '4. VISORD_dialéctico (Dilemas)',
-      jewel_4_desc: 'Laboratorio de micro-interacciones, dilemas de Bienes Comunes, anfiteatro de tensiones y Moviola Bales IPA ↔ SMIb.',
-      btn_jewel_launch: 'Explorar Entorno ➔',
+      // Sección 1: Dolor / Contraste
+      pain_tag: 'Diagnóstico de Precisión',
+      pain_title: 'Por qué los métodos tradicionales están ciegos',
+      pain_subtitle: 'Los cuestionarios de clima y los tests habituales capturan opiniones superficiales. NEXORD revela la estructura profunda de atracción y rechazo.',
+      pain_trad_badge: 'Enfoque Clásico (Años 50)',
+      pain_trad_heading: 'Cuestionarios y Sociogramas Planos',
+      pain_trad_item1: '<strong>Sesgo de complacencia:</strong> La gente contesta lo políticamente correcto para no quedar mal.',
+      pain_trad_item2: '<strong>Ceguera ante el ostracismo:</strong> Un miembro ignorado pasivamente pasa totalmente desapercibido.',
+      pain_trad_item3: '<strong>Fotos fijas estáticas:</strong> Muestran un dibujo 2D congelado sin capturar la tensión viva del grupo.',
+      pain_trad_item4: '<strong>Procesos lentos y tediosos:</strong> Cuestionarios densos de 30 minutos que provocan fatiga y respuestas al azar.',
+      pain_nex_badge: 'Ecosistema NEXORD / VISORD',
+      pain_nex_heading: 'Sociometría Ordinal & Física Grupal',
+      pain_nex_item1: '<strong>Sociometría Breve en 3 minutos:</strong> Ordenación intuitiva sin agobio, con aleatorización anti-sesgo.',
+      pain_nex_item2: '<strong>Detección del rechazo sutil:</strong> El algoritmo de hidrostática identifica de inmediato el aislamiento invisible.',
+      pain_nex_item3: '<strong>Gemelo Digital 3D/4D:</strong> Visualización viva de cuencas de atracción, camarillas y liderazgo real en movimiento.',
+      pain_nex_item4: '<strong>Retorno Ético no punitivo:</strong> Enfoque constructivo que preserva siempre la autoestima y la cohesión.',
 
-      // Sección 7 Niveles
-      sol_badge: 'ARQUITECTURA METODOLÓGICA',
-      sol_title: 'Los 7 Niveles de la Sociometría Ordinal',
-      sol_desc: 'Un recorrido escalonado desde la intuición visual inmediata hasta la formalización espectral y la custodia científica permanente.',
-      l1_title: 'Nivel 1: Intuitivo',
-      l1_desc: 'Moviola 3D y campos de fuerza interactivos. La interacción grupal visualizada como fluidos gravitatorios.',
-      l2_title: 'Nivel 2: Básico',
-      l2_desc: 'Matrices diádicas SMIb y descomposición del tetragrama (DA, RC, pDA, pRC). El circuito dar-recibir.',
-      l3_title: 'Nivel 3: Esquema',
-      l3_desc: 'Retícula universal Q81 (9×9) y síntesis canónica de figuras sociométricas en código computable.',
-      l4_title: 'Nivel 4: Aplicaciones',
-      l4_desc: 'Casos forenses de campo y laboratorios presenciales en 10 dominios ecosistémicos reales.',
-      l5_title: 'Nivel 5: Matemático',
-      l5_desc: 'Operadores de Estrada, Laplaciano de Heider, Fiedler λ₂, variedades de Grassmann Gr(k,N) e integración Φ.',
-      l6_title: 'Nivel 6: Informes',
-      l6_desc: 'Generación autónoma de informes forenses expertos, balances diádicos y dosieres individuales no punitivos.',
-      l7_title: 'Nivel 7: Documentación',
-      l7_desc: 'Manifiesto Científico Canónico v9.1, repositorios CERN Zenodo y especificación de Ciencia Abierta.',
-      btn_level_enter: 'Entrar al Nivel ➔',
+      // Sección 2: Showroom (4 Joyas)
+      show_tag: 'Showroom Tecnológico',
+      show_title: 'Las 4 Joyas Interactivas VISORD',
+      show_subtitle: 'Explora directamente nuestros laboratorios en tiempo real. Toca los nodos, rota las órbitas y siente la física de las relaciones.',
+      jewel_1_title: 'Acuario Reactor 3D',
+      jewel_1_subtitle: 'Hidrostática & Ostracismo',
+      jewel_1_desc: 'Física de fluidos y boyado relacional. Detecta en qué estrato flota cada miembro e ilumina el ostracismo pasivo y la sedimentación antes de una crisis de grupo.',
+      jewel_1_btn: 'Abrir Acuario 3D ↗',
+      jewel_2_title: 'VISORD Cultural',
+      jewel_2_subtitle: 'Dramaturgia & Obras Maestras',
+      jewel_2_desc: 'Sociometría viva de hitos dramáticos: <em>12 Hombres sin Piedad</em>, <em>La Casa de Bernarda Alba</em> y <em>El Señor de las Moscas</em>. Comprueba cómo la matemática predice la trama.',
+      jewel_2_btn: 'Explorar Obras ↗',
+      jewel_3_title: 'VISORD Dialéctico',
+      jewel_3_subtitle: 'Tensiones & Micro-Interacciones',
+      jewel_3_desc: 'Anfiteatro experimental de micro-interacciones, Moviola Bales IPA y dilemas cooperativos vs competitivos (bienes comunes y dilema del prisionero).',
+      jewel_3_btn: 'Abrir Dialéctico ↗',
+      jewel_4_title: 'VISORD Demo 3D',
+      jewel_4_subtitle: 'Dinámica Continua N < 51',
+      jewel_4_desc: 'Simulador 3D continuo de transiciones de fase, campos gravitatorios relacionales y cuencas de atracción para grupos de hasta 50 participantes.',
+      jewel_4_btn: 'Lanzar Simulador ↗',
 
-      // Sección Ética y Bóveda
-      ethics_badge: 'DEONTOLOGÍA POR DISEÑO',
-      ethics_title: 'Compromiso Inviolable de No Punición',
-      ethics_desc: 'NEXORD está blindado por diseño para fines exclusivamente formativos, preventivos y de desarrollo grupal saludable. Queda expresamente prohibido su uso para despidos, listas de descarte o clasificación peyorativa.',
-      ethics_item1: '<strong>Privacidad por Diseño:</strong> Anonimización matricial estricta (códigos posicionales 1A1a…5B1a).',
-      ethics_item2: '<strong>Uso Exclusivamente Formativo:</strong> Devolución constructiva orientada al bienestar integral.',
-      ethics_item3: '<strong>Acreditación del Investigador Principal (IP):</strong> Compromiso deontológico explícito y custodia ética.',
+      // Sección 3: Soluciones Sectoriales
+      sol_tag: 'Impacto Aplicado',
+      sol_title: 'Soluciones Especializadas por Sector',
+      sol_subtitle: 'Adaptado a las necesidades específicas de centros educativos, empresas y entornos clínicos.',
+      sol_s1_title: 'Educación & Aulas',
+      sol_s1_prob: '<strong>El Desafío:</strong> El acoso escolar (bullying) ocurre en la sombra. Quien lo sufre calla, y los agresores suelen aparentar popularidad.',
+      sol_s1_sol: '<strong>La Solución NEXORD:</strong> Radiografía en 3 minutos. Identifica inmediatamente al alumno desconectado o en riesgo sin interrogarlo directamente.',
+      sol_s1_b1: 'Detección temprana del aislamiento sutil y silencioso.',
+      sol_s1_b2: 'Optimización de grupos de trabajo y seating pedagógico.',
+      sol_s1_b3: 'Garantía total de no estigmatizar a ningún menor.',
+      sol_s2_title: 'Empresas & Equipos',
+      sol_s2_prob: '<strong>El Desafío:</strong> Organigramas formales que no reflejan quién manda de verdad, silos departamentales y fuga de talento por burnout relacional.',
+      sol_s2_sol: '<strong>La Solución NEXORD:</strong> Identificación del liderazgo informal, camarillas aisladas y cuellos de botella de comunicación interna.',
+      sol_s2_b1: 'Mapeo de la confianza real frente al poder jerárquico formal.',
+      sol_s2_b2: 'Integración ágil en fusiones, adquisiciones y reestructuraciones.',
+      sol_s2_b3: 'Informes de auditoría pericial para comités de dirección.',
+      sol_s3_title: 'Salud & Ámbito Clínico',
+      sol_s3_prob: '<strong>El Desafío:</strong> Resistencias dialécticas, alianzas patológicas y dinámicas tóxicas no declaradas en terapias de grupo y mediación familiar.',
+      sol_s3_sol: '<strong>La Solución NEXORD:</strong> Moviola temporal de micro-interacciones. Mide la evolución sesión a sesión de la alianza terapéutica.',
+      sol_s3_b1: 'Auditoría de reciprocidad en adicciones y grupos de apoyo.',
+      sol_s3_b2: 'Seguimiento longitudinal de la cohesión interpersonal.',
+      sol_s3_b3: 'Retorno reflexivo individualizado que refuerza el compromiso.',
 
-      vault_badge: 'SEGURIDAD CRIPTOGRÁFICA',
-      vault_title: 'Protocolo Clélie & Sellado SHA3-512',
-      vault_desc: 'Toda sociomatriz queda protegida con sellado criptográfico inmutable, verificación de invariantes y custodia descentralizada en el Banco Sociométrico (BSOC).',
+      // Sección 4: Cómo Funciona (3 Pasos)
+      flow_tag: 'Flujo Operativo Simple',
+      flow_title: 'De la recogida al informe en 3 pasos',
+      flow_subtitle: 'Diseñado para que cualquier institución pueda desplegarlo sin fricción tecnológica ni desgaste.',
+      flow_s1_title: 'Pasación Breve (3 min)',
+      flow_s1_desc: 'Cada participante accede desde su móvil o tablet mediante un enlace tokenizado seguro. Ordena a sus compañeros de forma visual sin fatiga cognitiva ni preguntas invasivas.',
+      flow_s2_title: 'Ingestión y Física SMIb',
+      flow_s2_desc: 'El motor VISORD calcula al instante la matriz diádica de emisión y recepción, descomponiendo los 255 indicadores de densidad absoluta (BDR) y relativa (SDR).',
+      flow_s3_title: 'Gemelo 3D e Informe Forense',
+      flow_s3_desc: 'La dirección recibe un informe ejecutivo claro, acompañado de las visualizaciones interactivas en 3D/4D y recomendaciones prácticas de intervención inmediata.',
 
-      // Sección Custodia Institucional & Zenodo
-      cust_badge: 'CIENCIA ABIERTA & REPOSITORIO PERMANENTE',
-      cust_title: 'Custodia Internacional en CERN Zenodo',
-      cust_desc: 'El corpus teórico, metodológico y los anexos técnicos están depositados a perpetuidad en el repositorio oficial del CERN (OpenAIRE) bajo licencia Creative Commons CC BY 4.0.',
-      cust_man_title: 'Manifiesto Científico Central',
-      cust_man_desc: 'Tratado fundacional de Sociometría Ordinal Computacional (Edición Canónica v9.1, Octubre 2026).',
-      cust_sup_title: 'Material Suplementario & Anexos',
-      cust_sup_desc: 'Respuestas a críticas, glosario enciclopédico bilingüe, anexo matemático y tablas canónicas.',
-      cust_btn_man_es: '📄 Manifiesto ES (PDF)',
-      cust_btn_man_en: '📄 Manifiesto EN (PDF)',
-      cust_btn_sup: '📦 Ver en Zenodo (6 Docs) ↗',
-      cust_btn_cite: '📜 Citar en BibTeX / APA / RIS',
+      // Sección 5: Garantía Ética
+      ethics_heading: '<span>🛡️</span> Mandato Deontológico Inviolable',
+      ethics_text_1: 'En NEXORD, la ciencia relacional está al servicio exclusivo del crecimiento humano. Cumplimos con los principios más estrictos de <strong>Privacidad por Diseño (Privacy by Design)</strong> y el mandato ético del Investigador Principal: <em>lo que detectamos son fenómenos termodinámicos estrictamente grupales, nunca defectos intrínsecos de la personalidad</em>. Queda formalmente garantizado el uso no punitivo de los datos para salvaguardar la dignidad y autoestima de cada persona.',
+      ethics_text_2: '✓ Cumplimiento RGPD &bull; Encriptación de extremo a extremo &bull; Destrucción forense de datos efímeros',
+      ethics_btn: 'Ver Portal del Participante ↗',
 
-      // CTA Banner
-      cta_title: '¿Preparado para explorar la Física de lo Grupal?',
-      cta_desc: 'Sumérgete en la Moviola 3D interactiva o accede a la suite metodológica completa.',
-      cta_btn_start: '🚀 Iniciar Nivel 1 (Moviola 3D)',
-      cta_btn_dial: '🧭 Explorar Dial Orbital (9 Sectores)',
+      // Sección 6: Bóveda de Investigación
+      vault_tag: 'Bóveda de Investigación',
+      vault_title: 'Rigor Científico & Documentación',
+      vault_subtitle: 'Para investigadores, psicómetras y auditores técnicos: acceso abierto a toda la arquitectura matemática, manifiesto y niveles de formalización.',
+      v_l1_title: 'Nivel 1: Intuitivo',
+      v_l1_desc: 'Moviola de dinámicas grupales, micro-interacciones y animación de partículas.',
+      v_l1_btn: 'Consultar Nivel 1 →',
+      v_l2_title: 'Nivel 2: Básico',
+      v_l2_desc: 'Matrices elementales de adyacencia, reciprocidad diádica y grafos fundamentales.',
+      v_l2_btn: 'Consultar Nivel 2 →',
+      v_l3_title: 'Nivel 3: Esquema SMIb',
+      v_l3_desc: 'Tetragrama canónico de 4 posiciones: expectativa emisor, preferencia y recepción.',
+      v_l3_btn: 'Consultar Nivel 3 →',
+      v_l4_title: 'Nivel 4: Aplicaciones',
+      v_l4_desc: 'Batería de casos periciales resueltos en contextos escolares, laborales y clínicos.',
+      v_l4_btn: 'Consultar Nivel 4 →',
+      v_l5_title: 'Nivel 5: Matemático',
+      v_l5_desc: 'Variedad de Grassmann Gr(k,N), autovalores de Fiedler λ2 y física de campos tensoriales.',
+      v_l5_btn: 'Consultar Nivel 5 →',
+      v_l6_title: 'Nivel 6: Informes',
+      v_l6_desc: 'Generador y plantillas de informes periciales socio-termodinámicos de alta fidelidad.',
+      v_l6_btn: 'Consultar Nivel 6 →',
+      v_l7_title: 'Nivel 7: Manifiesto',
+      v_l7_desc: 'Manifiesto Científico 2026, DOI Zenodo, licencias académicas y bibliografía.',
+      v_l7_btn: 'Consultar Nivel 7 →',
+      v_glo_title: 'Glosario Canónico',
+      v_glo_desc: 'Diccionario normativo oficial de términos, operadores y métricas NEXORD.',
+      v_glo_btn: 'Abrir Glosario →',
+
+      // Sección 7: Custodia Institucional
+      cust_tag: 'Transferencia Tecnológica & Ciencia Abierta',
+      cust_title: 'Llamamiento a la Custodia Institucional',
+      cust_subtitle: 'Buscamos una universidad, centro de supercomputación o institución científica que asuma la custodia tecnológica y gobernanza a largo plazo del ecosistema NEXORD / VISORD.',
+      cust_banner_title: 'MARCO OFICIAL DE CUSTODIA INSTITUCIONAL Y LEGADO CIENTÍFICO',
+      cust_banner_desc: 'Bases y condiciones de depósito tecnológico universitario: dote de software, asesoría honoraria voluntaria del autor (3 a 5 años), blindaje ético y cláusula de reversión (custodia responsable y no cesión a ciegas).',
+      cust_banner_btn: 'Ver Marco de Custodia (PDF / Web) →',
+
+      // ¿Qué es NEXORD?
+      what_title: '¿QUÉ ES NEXORD?',
+      what_p1: '<strong>1.</strong> Plataforma científica de sociometría ordinal computacional y termodinámica relacional que formaliza la microfísica de los colectivos humanos mediante matrices diádicas continuas SMIb y variedades de Grassmann Gr(k, N).',
+      what_p2: '<strong>2.</strong> Supera el sociograma tradicional mediante una pasación intuitiva de 3 minutos y un motor 3D/4D (VISORD) que revela cuencas gravitatorias de afinidad, liderazgos emergentes y ostracismo invisible en tiempo real.',
+      what_p3: '<strong>3.</strong> Diseñada bajo el principio hipocrático <em>primum non nocere</em>, traduce la energía vincular a tres escalas decisionales (Dirección, Dinámica y Sujeto) garantizando anonimato ciego y uso exclusivamente formativo no punitivo.',
+
+      // Díptico: Ofrece vs Pide
+      offer_title: '¿QUÉ SE OFRECE?',
+      offer_lead: 'Una dote científica completa, operativa, validada empíricamente y lista para su transferencia:',
+      offer_i1: '<strong style="color: #FFF;">Plataforma Integral:</strong> Motores computacionales de sociometría ordinal en Python y el ecosistema visual 3D/4D VISORD (Acuario D18, Dialéctico, Cultural y Demo Moviola).',
+      offer_i2: '<strong style="color: #FFF;">Canon Metodológico:</strong> Formalización axiomática de la matriz de 4 posiciones SMIb (DA, RC, pDA, pRC), retícula universal Q81(9×9), densidades BDR/SDR e invarianza baricéntrica demostrada.',
+      offer_i3: '<strong style="color: #FFF;">Corpus Empírico (BSOC):</strong> Banco de Datos Sociométricos Canónicos con series longitudinales homologadas (matrices de campo reales, simuladas Monte Carlo y de dramaturgia cultural).',
+      offer_i4: '<strong style="color: #FFF;">Identificador Persistente &amp; DOIs:</strong> Registros permanentes en CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">Edición Unificada: DOI 10.5281/zenodo.23329641</a> &bull; <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--cyber-blue); text-decoration: underline;">Manifiesto: 23329641</a> &bull; <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: #F59E0B; text-decoration: underline;">Suplemento: 23329641</a>) indexados en Google Académico con Manifiesto oficial y 6 anexos técnicos bilingües.',
+      offer_i5: '<strong style="color: #FFF;">Comunidad Open Science:</strong> Metodología de código abierto para investigación interuniversitaria en psicología de grupos, sociología relacional y ciencias de redes complejas.',
+      offer_i6: '<strong style="color: #FFF;">Vocación Universal y Transferencia Multilingüe:</strong> Plataforma homologada en Español (canónico) e Inglés para investigación internacional, con arquitectura abierta e idiomas para futuras localizaciones....',
+      offer_note: '💡 Transferencia sin royalties comerciales con fines estrictamente científicos y docentes.',
+
+      req_title: '¿QUÉ SE PIDE A LA INSTITUCIÓN?',
+      req_lead: 'Un marco institucional y técnico que garantice la sostenibilidad, seguridad y solvencia del sistema:',
+      req_i1: '<strong style="color: #FFF;">Custodia Institucional &amp; Gobernanza:</strong> Adopción por una universidad, cátedra o instituto de investigación que asegure la preservación patrimonial y continuidad académica del proyecto.',
+      req_i2: '<strong style="color: #FFF;">Entorno de Accesos Controlados:</strong> Alojamiento en servidores o nube institucional segura que garantice alta disponibilidad, copias de seguridad auditadas y estricta soberanía de los datos.',
+      req_i3: '<strong style="color: #FFF;">Mantenimiento Tecnológico Evolutivo:</strong> Supervisión técnica de dependencias (WebGL/Three.js, Python, navegadores web) y soporte para actualizaciones metodológicas y técnicas.',
+      req_i4: '<strong style="color: #FFF;">Gestión de Credenciales &amp; Deontología:</strong> Habilitación, control y revocación de accesos para Investigadores Principales (IPs) acreditados, velando por el cumplimiento del protocolo deontológico.',
+      req_note: '🏛️ Ideal para departamentos de Psicología Social, Sociología Cuantitativa, Ciencia de Datos o Centros TIC.',
+
+      // Blindaje técnico y legal
+      guard_title: 'GARANTÍAS EXISTENTES DE BLINDAJE TÉCNICO Y LEGAL',
+      guard_b1_title: '🔒 Privacy by Design (Q.GID / T1-T9)',
+      guard_b1_desc: 'Anonimización canónica obligatoria (1A..5A, 1B..5B), tokens ciegos de sesión, disociación nominal absoluta y secreto matemático del voto. Imposible reconstruir delaciones individuales.',
+      guard_b2_title: '📜 Licencia Abierta CC-BY-4.0',
+      guard_b2_desc: 'Licencia Creative Commons Atribución 4.0 Internacional: libertad para compartir, adaptar y desplegar con fines docentes y de investigación, preservando la autoría científica original.',
+      guard_b3_title: '🌐 Depósito CERN Zenodo (Inmutable)',
+      guard_b3_desc: 'DOIs persistentes <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Edición Unificada), <code style="color:var(--cyber-blue);">10.5281/zenodo.23329641</code> (Manifiesto Central) y <code style="color:#F59E0B;">10.5281/zenodo.23329641</code> (Material Suplementario), con archivo de metadatos científicos Highwire Press y Dublin Core.',
+      guard_b4_title: '🔍 Código Auditable &amp; Determinista',
+      guard_b4_desc: 'Matemática exacta verificable (descomposición SVD, Benzécri χ², operadores de Estrada, Grassmann). Sin algoritmos de caja negra no reproducibles.',
+      guard_b5_title: '🌍 Universalidad y Nodos Federados (UNESCO Open Science)',
+      guard_b5_desc: 'Patrimonio Abierto de la Humanidad. Cláusula inviolable de salvaguarda que impide el secuestro territorial o lingüístico: arquitectura desacoplada homologada en Español e Inglés, con idiomas para futuras localizaciones..., garantizando su réplica y despliegue en redes universitarias sin fronteras geopolíticas.',
+
+      // Formulario de Contacto
+      contact_tag: 'CANAL DIRECTO DE CONTACTO',
+      contact_title: 'Proponer Custodia Institucional o Proyecto Piloto',
+      contact_subtitle: 'Envíe su propuesta institucional directamente al equipo promotor o copie el borrador estructurado para tramitación rectoral o departamental.',
+      contact_pi_label: 'INVESTIGADOR PRINCIPAL PROMOTOR:',
+      contact_pi_sub: 'NEXORD Research Initiative · Investigación independiente',
+      form_inst_label: 'Institución / Universidad / Organismo *',
+      form_inst_ph: 'Ej. Universidad Complutense / CSIC / Instituto...',
+      form_rep_label: 'Nombre del Representante / Cargo *',
+      form_rep_ph: 'Ej. Dra. Carmen Morales / Decana, Dir. Dpto.',
+      form_email_label: 'Correo Electrónico Institucional *',
+      form_type_label: 'Modalidad de Interés *',
+      form_type_opt1: 'Custodia y Gobernanza Institucional Permanente',
+      form_type_opt2: 'Alojamiento de Servidores / Infraestructura Segura',
+      form_type_opt3: 'Convenio de Investigación / Adopción de Baterías',
+      form_type_opt4: 'Nodo Federado Internacional / Adopción Lingüística (RU, ZH, EN...)',
+      form_type_opt5: 'Proyecto Piloto de Transferencia en Campo',
+      form_type_opt6: 'Otra propuesta institucional',
+      form_msg_label: 'Mensaje / Alcance de la Propuesta',
+      form_msg_ph: 'Indique brevemente el interés de su entidad, capacidades de alojamiento o marco de colaboración propuesto...',
+      form_btn_pdf: '📄 Ver Marco Canónico (PDF)',
+      form_btn_copy: '📋 Copiar Borrador al Portapapeles',
+      form_btn_send: '📤 Enviar Propuesta (Abrir Correo)',
+
+      // CTA Banner Final
+      cta_title: '¿Listo para ver lo que otros no pueden ver?',
+      cta_subtitle: 'Descubre cómo NEXORD transforma la convivencia, el rendimiento de tus equipos y la prevención del conflicto en tu institución.',
+      cta_btn_demos: '🚀 Lanzar Demostraciones 3D',
+      cta_btn_custody: '🏛️ Propuesta de Custodia Institucional',
 
       // Footer
-      footer_lead: 'Hacia una Física de lo Grupal: Sociometría Ordinal Computacional & Ecosistema VISORD.',
-      footer_rights: '© 2026 Dr. José Manuel Cornejo Álvarez. Todos los derechos reservados bajo Licencia Creative Commons CC BY 4.0.',
-      footer_col_nav: 'Navegación Rápida',
-      footer_col_science: 'Ciencia & Docs',
-      footer_col_legal: 'Ética & Custodia',
-      footer_legal_deont: 'Código Deontológico & RGPD',
-      footer_legal_fair: 'Principios FAIR & Open Science',
-      footer_legal_license: 'Licencia Abierta CC BY 4.0'
+      foot_inicio: 'Inicio',
+      foot_custodia: 'Custodia Institucional',
+      foot_demo: 'VISORD Demo 3D',
+      foot_cultural: 'VISORD Cultural',
+      foot_acuario: 'VISORD Acuario',
+      foot_dialectico: 'VISORD Dialéctico',
+      foot_retorno: 'Portal del Participante',
+      foot_glosario: 'Glosario Oficial',
+      foot_dial: 'Dial Orbital 3-6-9',
+      foot_cite_btn: 'CITAR CON BibTeX',
+      foot_platform_lead: '<strong>NEXORD / VISORD Engine</strong> &copy; 2026 &bull; Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico.',
+      foot_open_science: 'Desarrollado bajo el mandato deontológico de Ciencia Abierta (Open Science). Prohibido el uso punitivo o difamatorio de los datos.',
+      foot_lang_future: 'Idiomas para futuras localizaciones...',
+
+      // Vertical Nav Band Tooltips
+      vnav_tip_inicio: 'Inicio',
+      vnav_tip_dolor: '¿Por qué?',
+      vnav_tip_showroom: 'Joyas 3D',
+      vnav_tip_soluciones: 'Soluciones',
+      vnav_tip_etica: 'Ética',
+      vnav_tip_boveda: 'Ciencia',
+      vnav_tip_custodia: 'Custodia',
+
+      // Modal de Citación
+      modal_title: 'Cita Académica Oficial · NEXORD / VISORD Engine',
+      modal_hint_bibtex: 'Entrada para LaTeX, Overleaf y gestores bibliográficos compatibles:',
+      modal_link_manifesto_web: 'Ver Manifiesto Web ↗',
+      modal_link_supp: 'Material Suplementario (6 Docs) ↗',
+      modal_link_summary_en: 'Summary EN (PDF) ↗',
+      modal_link_man_es: 'Manifiesto ES (PDF) ↗',
+      modal_link_man_en: 'Manifesto EN (PDF) ↗',
+      modal_link_zenodo: 'Repositorio CERN Zenodo ↗',
+      modal_btn_copy: 'Copiar al Portapapeles'
     },
 
     en: {
@@ -211,24 +353,24 @@
       // Hero
       hero_pill: 'SCIENTIFIC PLATFORM FOR COMPUTATIONAL ORDINAL SOCIOMETRY',
       hero_title: 'The 3D Radiography of<br><span class="gradient-text">Human Relationships</span>',
-      hero_subtitle: 'Uncover invisible currents, authentic leadership, latent alliances, and hidden ostracism risks in your group before they become crises. Instantaneous, visual, and 100% non-punitive diagnosis.',
+      hero_subtitle: 'Uncover invisible currents, authentic leadership, latent factions, and hidden ostracism risks in your group before they become crises. Instantaneous, visual, and 100% non-punitive diagnosis.',
       hero_btn_3d: '🚀 Explore the 4 3D Jewels',
       hero_btn_custody: '🏛️ Institutional Stewardship',
       hero_btn_solutions: '💼 Sectoral Solutions',
 
-      // Quick Stats Hero
-      stat_1_val: '3 Min',
-      stat_1_desc: 'Individual completion time via ordinal ranking (Breve → ORBIT).',
-      stat_2_val: 'Q81',
-      stat_2_desc: 'Canonical Sociometric Relational Figures computed in dyadic lattice.',
-      stat_3_val: '18D',
-      stat_3_desc: 'Relational Density Indices across 3 dual prisms (BDR / SDR).',
-      stat_4_val: '5',
-      stat_4_desc: 'Group VISORDs: 3D/4D digital twins for continuous diagnosis.',
-
-      // Video Hero HUD
+      // Video Hero HUD & Controls
       video_badge: 'VISORD 3D ENGINE IN MOTION · OFFICIAL DEMO',
-      video_meta: '⏱️ 01:09 MIN · OPTIONAL AUDIO · BILINGUAL SUBTITLES',
+      video_meta: '⏱️ 01:09 MIN · 3D RELATIONAL VISUALIZER',
+      video_btn_play: 'Pause',
+      video_btn_play_pause: 'Play',
+      video_btn_repeat: 'Replay',
+      video_btn_audio_on: 'Enable Audio',
+      video_btn_audio_off: 'Mute Audio',
+      video_btn_fs: 'Full Screen',
+      video_player_title: 'Click to play or pause the video',
+      video_btn_play_title: 'Play / Pause Video',
+      video_btn_audio_title: 'Enable or Mute Demonstration Audio',
+      video_btn_fs_title: 'Full Screen',
       bond_attraction_term: 'Green:',
       bond_attraction_text: 'Mutual Attraction & Cohesion',
       bond_rejection_term: 'Magenta:',
@@ -236,113 +378,255 @@
       bond_ostracism_term: 'Periphery:',
       bond_ostracism_text: 'Invisible Ostracism',
       video_sub_initial: 'NEXORD · Computational Ordinal Sociometry Platform & 3D Socio-Thermodynamics',
-      video_btn_play: 'Pause',
-      video_btn_play_pause: 'Play',
-      video_btn_mute_active: 'Muted (Enable)',
-      video_btn_mute_sound: 'Sound Active',
-      video_btn_subs_es: 'Subtitles: ES',
-      video_btn_subs_en: 'Subtitles: EN',
-      video_btn_subs_off: 'Subtitles: OFF',
-      video_btn_fs: 'Full Screen',
       video_cta_pill: '🎮 Manipulate Live 3D Environment',
 
-      // Stats Bar
-      stat_1_val: '4 SMIb Positions',
-      stat_1_lbl: 'Factual & Cognitive Senders and Receivers',
-      stat_2_val: '18 Densities',
-      stat_2_lbl: 'Orthogonal Decomposition across 3 Dual Prisms',
-      stat_3_val: '7 Levels',
-      stat_3_lbl: 'From 3D Intuition to Grassmann Topology',
-      stat_4_val: '10 Domains',
-      stat_4_lbl: 'Ecosystemic: Corporate, Clinical, Sports, Education',
+      // Anatomy of Bonds
+      bonds_tag: 'Visible Relational Physics',
+      bonds_title: 'What you are seeing in the simulator: The 3 Forces that Shape Group Destiny',
+      bonds_subtitle: 'Classical 1950s sociometry only drew static arrows. NEXORD captures the living tension of attraction and rejection in real time.',
+      bond_c1_badge: '🟢 THE UNITING FORCE',
+      bond_c1_title: 'Attraction & Mutual Choice',
+      bond_c1_text: 'Luminous beams in <strong>neon green</strong>. Spontaneous affinity, affective reciprocity, and operational admiration. The relational glue that retains talent, fosters natural leadership, and sustains the team under pressure.',
+      bond_c1_metric_label: 'Group Impact:',
+      bond_c1_metric_val: 'Resilience & Collective Synergy',
+      bond_c2_badge: '🔴 THE FRACTURING FORCE',
+      bond_c2_title: 'Rejection & Latent Friction',
+      bond_c2_text: 'Tense beams in <strong>neon magenta</strong>. Covert incompatibilities, unspoken distrust, and cross-vetoes. 85% of crises never erupt in public: they incubate here in silence until destroying projects and fracturing departments.',
+      bond_c2_metric_label: 'Group Impact:',
+      bond_c2_metric_val: 'Talent Drain & Covert Friction',
+      bond_c3_badge: '⚪ THE INVISIBLE WOUND',
+      bond_c3_title: 'Ostracism & Passive Void',
+      bond_c3_text: 'Isolated nodes drifting in the <strong>dark periphery</strong>. Individuals neither openly chosen nor rejected: absolute indifference. It silently erodes self-esteem and remains invisible to conventional climate surveys.',
+      bond_c3_metric_label: 'Group Impact:',
+      bond_c3_metric_val: 'Isolation & Deep Disconnection',
 
-      // Pain Section
-      pain_badge: 'THE BLIND DIAGNOSIS',
-      pain_title: 'Classical sociometry collapses before modern complexity',
-      pain_desc: 'Traditional climate surveys and binary sociograms suffer from structural handicaps that conceal genuine group health:',
-      pain_c1_title: 'Artificial Ties & Loss of Hierarchy',
-      pain_c1_desc: 'Binary election formats ("choose 3 colleagues") collapse into artificial ties where everyone appears identical, obliterating ordinal attraction and rejection intensities.',
-      pain_c2_title: 'Black-Box Analytics Without Mathematical Grounding',
-      pain_c2_desc: 'Classical sociometric metrics fail to verify energy conservation or dyadic invariants, yielding irreproducible diagnostics detached from formal laws.',
-      pain_c3_title: 'Invisible Ostracism & Latent Factions',
-      pain_c3_desc: 'Passive isolation and covert alienation remain completely hidden in average satisfaction surveys until erupting into irreversible group breakdown.',
-      pain_c4_title: 'Punitive Risk & Deontological Harm',
-      pain_c4_desc: 'Without security-by-design ethics, traditional sociometry has been misused for punitive dismissals, harming personal dignity and collective psychological safety.',
+      // Hero Quick Stats
+      hero_stat_1_val: '3 Min',
+      hero_stat_1_desc: 'Individual completion time via ordinal ranking (Breve → ORBIT).',
+      hero_stat_2_val: 'Q81',
+      hero_stat_2_desc: 'Canonical Sociometric Relational Figures computed in dyadic lattice.',
+      hero_stat_3_val: '18D',
+      hero_stat_3_desc: 'Relational Density Indices across 3 dual prisms (BDR / SDR).',
+      hero_stat_4_val: '5',
+      hero_stat_4_desc: 'Group VISORDs: 3D/4D digital twins for continuous diagnosis.',
 
-      // Showroom Section (4 Jewels)
-      show_badge: 'INTERACTIVE SHOWROOM',
-      show_title: 'VISORD: The 3D/4D Window into Group Dynamics',
-      show_desc: 'Four interactive exploration laboratories featuring real-time spatial visualization, hydrodynamic dynamics, and spectral analysis.',
-      jewel_1_title: '1. VISORD_demo (Continuous 3D/4D)',
-      jewel_1_desc: 'Continuous group dynamics simulator, liquid/gas phase transitions, and socio-thermodynamics for cohorts of N < 51.',
-      jewel_2_title: '2. VISORD_cultural (Dramaturgy)',
-      jewel_2_desc: 'Cultural sociometry on masterworks with zero reactivity (12 Angry Men, The House of Bernarda Alba).',
-      jewel_3_title: '3. VISORD_radiological (Ostracism)',
-      jewel_3_desc: 'Relational radiographies (15-27-54), Grassmann manifolds Gr(k,N), and early diagnosis of invisible ostracism.',
-      jewel_4_title: '4. VISORD_dialectical (Dilemmas)',
-      jewel_4_desc: 'Micro-interaction lab, Common Goods dilemmas, tension amphitheater, and Bales IPA ↔ SMIb Moviola.',
-      btn_jewel_launch: 'Explore Environment ➔',
+      // Section 1: Pain / Contrast
+      pain_tag: 'Precision Diagnosis',
+      pain_title: 'Why traditional methods are blind',
+      pain_subtitle: 'Climate surveys and conventional tests capture superficial opinions. NEXORD reveals the deep architecture of attraction and rejection.',
+      pain_trad_badge: 'Classical Approach (1950s)',
+      pain_trad_heading: 'Questionnaires & Flat Sociograms',
+      pain_trad_item1: '<strong>Social desirability bias:</strong> People answer politically correctly to avoid social awkwardness.',
+      pain_trad_item2: '<strong>Blindness to ostracism:</strong> A passively ignored member goes completely undetected.',
+      pain_trad_item3: '<strong>Static snapshots:</strong> They show a frozen 2D diagram without capturing living group tension.',
+      pain_trad_item4: '<strong>Slow & tedious processes:</strong> 30-minute dense surveys causing fatigue and random answers.',
+      pain_nex_badge: 'NEXORD / VISORD Ecosystem',
+      pain_nex_heading: 'Ordinal Sociometry & Group Physics',
+      pain_nex_item1: '<strong>Brief Sociometry in 3 minutes:</strong> Intuitive ranking without stress, with anti-bias randomization.',
+      pain_nex_item2: '<strong>Subtle rejection detection:</strong> Hydrostatic algorithm immediately identifies invisible isolation.',
+      pain_nex_item3: '<strong>3D/4D Digital Twin:</strong> Living visualization of attraction basins, factions, and emergent leadership in motion.',
+      pain_nex_item4: '<strong>Non-punitive Ethical Feedback:</strong> Constructive approach that always preserves self-esteem and cohesion.',
 
-      // 7 Levels Section
-      sol_badge: 'METHODOLOGICAL ARCHITECTURE',
-      sol_title: 'The 7 Levels of Ordinal Sociometry',
-      sol_desc: 'A stepwise itinerary from immediate visual intuition to spectral formalization and permanent scientific stewardship.',
-      l1_title: 'Level 1: Intuitive',
-      l1_desc: 'Interactive 3D Moviola and vector fields. Interpersonal dynamics modeled as gravitational fluids.',
-      l2_title: 'Level 2: Basic',
-      l2_desc: 'SMIb dyadic matrices and tetragram decomposition (DA, RC, pDA, pRC). The give-and-receive circuit.',
-      l3_title: 'Level 3: Schema',
-      l3_desc: 'Universal Q81 (9×9) lattice and canonical synthesis of computable sociometric figures.',
-      l4_title: 'Level 4: Applications',
-      l4_desc: 'Forensic field case studies and live experimental laboratories across 10 ecosystemic domains.',
-      l5_title: 'Level 5: Mathematics',
-      l5_desc: 'Estrada communicability, Heider frustration Laplacian, Fiedler λ₂, Grassmann Gr(k,N) geometry, and Φ integration.',
-      l6_title: 'Level 6: Reports',
-      l6_desc: 'Autonomous expert forensic report engine, dyadic balances, and non-punitive individual dossiers.',
-      l7_title: 'Level 7: Documentation',
-      l7_desc: 'Canonical Scientific Manifesto v9.1, CERN Zenodo repositories, and Open Science specification.',
-      btn_level_enter: 'Enter Level ➔',
+      // Section 2: Showroom (4 Jewels)
+      show_tag: 'Technological Showroom',
+      show_title: 'The 4 Interactive VISORD Jewels',
+      show_subtitle: 'Explore our laboratories directly in real time. Touch the nodes, rotate orbits, and feel the physics of relationships.',
+      jewel_1_title: '3D Reactor Aquarium',
+      jewel_1_subtitle: 'Hydrostatics & Ostracism',
+      jewel_1_desc: 'Fluid physics and relational buoyancy. Detects each member\'s flotation layer and illuminates passive ostracism and sedimentation before group crises.',
+      jewel_1_btn: 'Open 3D Aquarium ↗',
+      jewel_2_title: 'VISORD Cultural',
+      jewel_2_subtitle: 'Dramaturgy & Masterworks',
+      jewel_2_desc: 'Living sociometry of dramatic milestones: <em>12 Angry Men</em>, <em>The House of Bernarda Alba</em>, and <em>Lord of the Flies</em>. See how mathematics predicts narrative plot.',
+      jewel_2_btn: 'Explore Masterworks ↗',
+      jewel_3_title: 'VISORD Dialectical',
+      jewel_3_subtitle: 'Tensions & Micro-Interactions',
+      jewel_3_desc: 'Experimental amphitheater of micro-interactions, Bales IPA Moviola, and cooperative vs competitive dilemmas (Common Goods and Prisoner\'s Dilemma).',
+      jewel_3_btn: 'Open Dialectical ↗',
+      jewel_4_title: 'VISORD Demo 3D',
+      jewel_4_subtitle: 'Continuous Dynamics N < 51',
+      jewel_4_desc: 'Continuous 3D simulator of phase transitions, relational gravitational fields, and attraction basins for groups up to 50 participants.',
+      jewel_4_btn: 'Launch Simulator ↗',
 
-      // Ethics & Vault Section
-      ethics_badge: 'DEONTOLOGY BY DESIGN',
-      ethics_title: 'Inviolable Non-Punitive Commitment',
-      ethics_desc: 'NEXORD is strictly safeguarded by design exclusively for formative, preventive, and healthy group development. Its deployment for layoffs, pejorative screening, or psychological harm is strictly prohibited.',
-      ethics_item1: '<strong>Privacy by Design:</strong> Strict matrix anonymization (positional matrix codes 1A1a…5B1a).',
-      ethics_item2: '<strong>Exclusively Formative Use:</strong> Constructive feedback oriented toward comprehensive collective wellbeing.',
-      ethics_item3: '<strong>Principal Investigator (PI) Accreditation:</strong> Explicit deontological pledge and institutional ethical custody.',
+      // Section 3: Sector Solutions
+      sol_tag: 'Applied Impact',
+      sol_title: 'Specialized Sector Solutions',
+      sol_subtitle: 'Tailored to the specific needs of educational institutions, enterprises, and clinical environments.',
+      sol_s1_title: 'Education & Classrooms',
+      sol_s1_prob: '<strong>The Challenge:</strong> Bullying happens in the shadows. Victims stay silent, while aggressors often project superficial popularity.',
+      sol_s1_sol: '<strong>The NEXORD Solution:</strong> 3-minute radiography. Immediately pinpoints disconnected or at-risk students without direct interrogation.',
+      sol_s1_b1: 'Early detection of subtle, silent isolation.',
+      sol_s1_b2: 'Optimization of study groups and pedagogical seating.',
+      sol_s1_b3: 'Total safeguard against stigmatizing any youth.',
+      sol_s2_title: 'Enterprises & Teams',
+      sol_s2_prob: '<strong>The Challenge:</strong> Formal organizational charts masking actual influence, departmental silos, and talent drain driven by relational burnout.',
+      sol_s2_sol: '<strong>The NEXORD Solution:</strong> Identification of informal leadership, isolated cliques, and internal communication bottlenecks.',
+      sol_s2_b1: 'Mapping genuine trust versus formal hierarchical authority.',
+      sol_s2_b2: 'Agile onboarding and alignment in mergers, acquisitions, and restructuring.',
+      sol_s2_b3: 'Expert forensic audit reports for executive boards.',
+      sol_s3_title: 'Healthcare & Clinical Settings',
+      sol_s3_prob: '<strong>The Challenge:</strong> Dialectical resistance, covert alliances, and undeclared friction in group therapy and mediation.',
+      sol_s3_sol: '<strong>The NEXORD Solution:</strong> Longitudinal Moviola of micro-interactions. Measures session-by-session evolution of the therapeutic alliance.',
+      sol_s3_b1: 'Reciprocity auditing in addiction and support groups.',
+      sol_s3_b2: 'Longitudinal tracking of interpersonal cohesion.',
+      sol_s3_b3: 'Individualized reflective feedback reinforcing engagement.',
 
-      vault_badge: 'CRYPTOGRAPHIC SECURITY',
-      vault_title: 'Clélie Protocol & SHA3-512 Sealing',
-      vault_desc: 'Every sociomatrix is protected via immutable cryptographic timestamping, invariant verification, and decentralized stewardship in the Sociometric Bank (BSOC).',
+      // Section 4: How It Works (3 Steps)
+      flow_tag: 'Simple Operational Workflow',
+      flow_title: 'From data collection to expert report in 3 steps',
+      flow_subtitle: 'Designed for frictionless institutional deployment without technical overhead.',
+      flow_s1_title: 'Brief Assessment (3 min)',
+      flow_s1_desc: 'Each participant accesses via secure tokenized link on mobile or tablet. Rank peers visually without cognitive fatigue or intrusive questions.',
+      flow_s2_title: 'Ingestion & SMIb Physics',
+      flow_s2_desc: 'The VISORD engine instantaneously computes emission and reception dyadic matrices, decomposing relational densities across BDR and SDR.',
+      flow_s3_title: '3D Digital Twin & Forensic Report',
+      flow_s3_desc: 'Leadership receives a clear executive report accompanied by interactive 3D/4D visualizers and actionable immediate recommendations.',
 
-      // Institutional Stewardship & Zenodo Section
-      cust_badge: 'OPEN SCIENCE & PERMANENT REPOSITORY',
-      cust_title: 'International Stewardship at CERN Zenodo',
-      cust_desc: 'The theoretical corpus, methodology, and technical annexes are deposited in perpetuity in CERN\'s official repository (OpenAIRE) under a Creative Commons CC BY 4.0 license.',
-      cust_man_title: 'Central Scientific Manifesto',
-      cust_man_desc: 'Foundational treatise on Computational Ordinal Sociometry (Canonical Edition v9.1, October 2026).',
-      cust_sup_title: 'Supplementary Material & Annexes',
-      cust_sup_desc: 'Responses to critiques, bilingual encyclopedic glossary, mathematical annex, and canonical tables.',
-      cust_btn_man_es: '📄 Manifesto ES (PDF)',
-      cust_btn_man_en: '📄 Manifesto EN (PDF)',
-      cust_btn_sup: '📦 View on Zenodo (6 Docs) ↗',
-      cust_btn_cite: '📜 Cite in BibTeX / APA / RIS',
+      // Section 5: Ethical Safeguards
+      ethics_heading: '<span>🛡️</span> Inviolable Deontological Mandate',
+      ethics_text_1: 'At NEXORD, relational science serves human flourishing exclusively. We adhere to the strictest <strong>Privacy by Design</strong> principles and the Principal Investigator\'s ethical pledge: <em>we identify strictly group thermodynamic phenomena, never intrinsic personality flaws</em>. Non-punitive data use is formally guaranteed to safeguard personal dignity and self-esteem.',
+      ethics_text_2: '✓ GDPR Compliant &bull; End-to-end encryption &bull; Forensic purging of ephemeral data',
+      ethics_btn: 'View Participant Portal ↗',
 
-      // CTA Banner
-      cta_title: 'Ready to Explore the Physics of Groups?',
-      cta_desc: 'Immerse yourself in the interactive 3D Moviola or access the complete methodological suite.',
-      cta_btn_start: '🚀 Launch Level 1 (3D Moviola)',
-      cta_btn_dial: '🧭 Explore Orbital Dial (9 Sectors)',
+      // Section 6: Research Vault
+      vault_tag: 'Research Vault',
+      vault_title: 'Scientific Rigor & Documentation',
+      vault_subtitle: 'For researchers, psychometricians, and technical auditors: open access to full mathematical architecture, manifesto, and formalization levels.',
+      v_l1_title: 'Level 1: Intuitive',
+      v_l1_desc: 'Group dynamic Moviola, micro-interactions, and particle animation.',
+      v_l1_btn: 'Explore Level 1 →',
+      v_l2_title: 'Level 2: Basic',
+      v_l2_desc: 'Elementary adjacency matrices, dyadic reciprocity, and fundamental graphs.',
+      v_l2_btn: 'Explore Level 2 →',
+      v_l3_title: 'Level 3: SMIb Schema',
+      v_l3_desc: 'Canonical 4-position tetragram: sender expectation, preference, and reception.',
+      v_l3_btn: 'Explore Level 3 →',
+      v_l4_title: 'Level 4: Applications',
+      v_l4_desc: 'Forensic case studies solved across school, workplace, and clinical domains.',
+      v_l4_btn: 'Explore Level 4 →',
+      v_l5_title: 'Level 5: Mathematical',
+      v_l5_desc: 'Grassmann manifolds Gr(k,N), Fiedler eigenvalues λ2, and tensor field physics.',
+      v_l5_btn: 'Explore Level 5 →',
+      v_l6_title: 'Level 6: Reports',
+      v_l6_desc: 'High-fidelity socio-thermodynamic expert forensic report templates and generator.',
+      v_l6_btn: 'Explore Level 6 →',
+      v_l7_title: 'Level 7: Manifesto',
+      v_l7_desc: '2026 Scientific Manifesto, Zenodo DOI, academic licensing, and bibliography.',
+      v_l7_btn: 'Explore Level 7 →',
+      v_glo_title: 'Canonical Glossary',
+      v_glo_desc: 'Official normative dictionary of NEXORD terms, operators, and metrics.',
+      v_glo_btn: 'Open Glossary →',
+
+      // Section 7: Institutional Stewardship
+      cust_tag: 'Technology Transfer & Open Science',
+      cust_title: 'Call for Institutional Stewardship',
+      cust_subtitle: 'We invite a university, supercomputing facility, or scientific institution to assume long-term technological stewardship and governance of the NEXORD / VISORD ecosystem.',
+      cust_banner_title: 'OFFICIAL FRAMEWORK FOR INSTITUTIONAL STEWARDSHIP & SCIENTIFIC LEGACY',
+      cust_banner_desc: 'Terms of university technology transfer: software endowment, honorary author advisory (3-5 years), ethical safeguards, and reversion clause (responsible stewardship, no blind assignment).',
+      cust_banner_btn: 'View Stewardship Framework (PDF / Web) →',
+
+      // What is NEXORD?
+      what_title: 'WHAT IS NEXORD?',
+      what_p1: '<strong>1.</strong> Scientific platform for computational ordinal sociometry and relational thermodynamics formalizing human collective microphysics via SMIb continuous dyadic matrices and Grassmann manifolds Gr(k, N).',
+      what_p2: '<strong>2.</strong> Transcends traditional sociograms through an intuitive 3-minute completion and a 3D/4D engine (VISORD) revealing gravitational affinity basins, emergent leadership, and invisible ostracism in real time.',
+      what_p3: '<strong>3.</strong> Engineered under the Hippocratic principle <em>primum non nocere</em>, translating bond energy into three decision tiers (Leadership, Dynamics, and Subject), guaranteeing blind anonymity and strictly formative, non-punitive use.',
+
+      // Diptych: What is offered vs What is requested
+      offer_title: 'WHAT IS OFFERED?',
+      offer_lead: 'A comprehensive, operational, empirically validated scientific endowment ready for transfer:',
+      offer_i1: '<strong style="color: #FFF;">Full Platform:</strong> Computational ordinal sociometry engines in Python and the 3D/4D VISORD visual ecosystem (D18 Aquarium, Dialectical, Cultural, and Demo Moviola).',
+      offer_i2: '<strong style="color: #FFF;">Methodological Canon:</strong> Axiomatic formalization of the 4-position SMIb matrix (DA, RC, pDA, pRC), universal Q81 (9×9) lattice, BDR/SDR densities, and proven barycentric invariance.',
+      offer_i3: '<strong style="color: #FFF;">Empirical Corpus (BSOC):</strong> Canonical Sociometric Database with standardized longitudinal series (real field matrices, Monte Carlo simulations, and cultural dramaturgy series).',
+      offer_i4: '<strong style="color: #FFF;">Persistent Identifier &amp; DOIs:</strong> Permanent records at CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">Unified Edition: DOI 10.5281/zenodo.23329641</a> &bull; <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--cyber-blue); text-decoration: underline;">Manifesto: 23329641</a> &bull; <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: #F59E0B; text-decoration: underline;">Supplement: 23329641</a>) indexed in Google Scholar with official Manifesto and 6 bilingual technical annexes.',
+      offer_i5: '<strong style="color: #FFF;">Open Science Community:</strong> Open methodology for interuniversity research in group psychology, relational sociology, and complex network science.',
+      offer_i6: '<strong style="color: #FFF;">Universal Scope &amp; Multilingual Transfer:</strong> Platform certified in Spanish (canonical) and English for international research, with open architecture and languages for future localizations....',
+      offer_note: '💡 Royalty-free transfer strictly for scientific and educational purposes.',
+
+      req_title: 'WHAT IS REQUESTED FROM THE INSTITUTION?',
+      req_lead: 'An institutional and technical framework ensuring sustainability, security, and systemic robustness:',
+      req_i1: '<strong style="color: #FFF;">Institutional Stewardship &amp; Governance:</strong> Adoption by a university, academic chair, or research institute ensuring heritage preservation and academic continuity of the project.',
+      req_i2: '<strong style="color: #FFF;">Controlled Access Infrastructure:</strong> Hosting on secure institutional servers or cloud ensuring high availability, audited backups, and strict European data sovereignty.',
+      req_i3: '<strong style="color: #FFF;">Evolutionary Technical Maintenance:</strong> Technical supervision of dependencies (WebGL/Three.js, Python, modern web standards) and support for methodological updates.',
+      req_i4: '<strong style="color: #FFF;">Credential Management &amp; Deontology:</strong> Provisioning, auditing, and revocation of credentials for accredited Principal Investigators (PIs), upholding deontological protocols.',
+      req_note: '🏛️ Ideal for departments of Social Psychology, Quantitative Sociology, Data Science, or IT Centers.',
+
+      // Technical & legal safeguards
+      guard_title: 'EXISTING TECHNICAL & LEGAL SAFEGUARDS',
+      guard_b1_title: '🔒 Privacy by Design (Q.GID / T1-T9)',
+      guard_b1_desc: 'Mandatory canonical anonymization (1A..5A, 1B..5B), blind session tokens, absolute nominal dissociation, and mathematical secrecy of choices. Individual cross-identification is impossible.',
+      guard_b2_title: '📜 Open License CC-BY-4.0',
+      guard_b2_desc: 'Creative Commons Attribution 4.0 International License: freedom to share, adapt, and deploy for educational and research purposes while preserving original scientific authorship.',
+      guard_b3_title: '🌐 CERN Zenodo Repository (Immutable)',
+      guard_b3_desc: 'Persistent DOIs <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Unified Edition), <code style="color:var(--cyber-blue);">10.5281/zenodo.23329641</code> (Central Manifesto), and <code style="color:#F59E0B;">10.5281/zenodo.23329641</code> (Supplementary Material), with Highwire Press and Dublin Core scientific metadata archiving.',
+      guard_b4_title: '🔍 Auditable &amp; Deterministic Code',
+      guard_b4_desc: 'Exact verifiable mathematics (SVD decomposition, Benzécri χ², Estrada communicability, Grassmann manifolds). Free from non-reproducible black-box heuristics.',
+      guard_b5_title: '🌍 Universality &amp; Federated Nodes (UNESCO Open Science)',
+      guard_b5_desc: 'Global Open Heritage. Inviolable safeguard clause preventing territorial or linguistic capture: decoupled architecture certified in Spanish and English, with languages for future localizations..., ensuring seamless replication and deployment across university networks across borders.',
+
+      // Contact Form
+      contact_tag: 'DIRECT CONTACT CHANNEL',
+      contact_title: 'Propose Institutional Stewardship or Pilot Project',
+      contact_subtitle: 'Submit your institutional proposal directly to the promoter team or copy the structured draft for rectoral or departmental processing.',
+      contact_pi_label: 'LEAD RESEARCHER & PROMOTER:',
+      contact_pi_sub: 'NEXORD Research Initiative · Independent Research',
+      form_inst_label: 'Institution / University / Organization *',
+      form_inst_ph: 'E.g., Complutense University / Research Institute...',
+      form_rep_label: 'Representative Name / Title *',
+      form_rep_ph: 'E.g., Dr. Jane Doe / Dean, Department Chair',
+      form_email_label: 'Institutional Email *',
+      form_type_label: 'Interest Track *',
+      form_type_opt1: 'Permanent Institutional Stewardship & Governance',
+      form_type_opt2: 'Secure Server Hosting & Infrastructure',
+      form_type_opt3: 'Research Agreement & Methodology Adoption',
+      form_type_opt4: 'International Federated Node / Linguistic Localization (RU, ZH, EN...)',
+      form_type_opt5: 'Field Pilot Transfer Project',
+      form_type_opt6: 'Other institutional proposal',
+      form_msg_label: 'Message / Proposal Scope',
+      form_msg_ph: 'Briefly outline your entity\'s interest, hosting capabilities, or proposed collaboration framework...',
+      form_btn_pdf: '📄 View Canonical Framework (PDF)',
+      form_btn_copy: '📋 Copy Draft to Clipboard',
+      form_btn_send: '📤 Submit Proposal (Open Email)',
+
+      // Final CTA Banner
+      cta_title: 'Ready to see what others cannot see?',
+      cta_subtitle: 'Discover how NEXORD elevates group cohesion, team performance, and proactive conflict prevention in your institution.',
+      cta_btn_demos: '🚀 Launch 3D Demonstrations',
+      cta_btn_custody: '🏛️ Institutional Stewardship Proposal',
 
       // Footer
-      footer_lead: 'Towards a Physics of the Group: Computational Ordinal Sociometry & VISORD Ecosystem.',
-      footer_rights: '© 2026 Dr. José Manuel Cornejo Álvarez. All rights reserved under Creative Commons CC BY 4.0 License.',
-      footer_col_nav: 'Quick Navigation',
-      footer_col_science: 'Science & Docs',
-      footer_col_legal: 'Ethics & Stewardship',
-      footer_legal_deont: 'Deontological Code & GDPR',
-      footer_legal_fair: 'FAIR Principles & Open Science',
-      footer_legal_license: 'Open License CC BY 4.0'
+      foot_inicio: 'Home',
+      foot_custodia: 'Institutional Stewardship',
+      foot_demo: 'VISORD Demo 3D',
+      foot_cultural: 'VISORD Cultural',
+      foot_acuario: 'VISORD Aquarium',
+      foot_dialectico: 'VISORD Dialectical',
+      foot_retorno: 'Participant Portal',
+      foot_glosario: 'Official Glossary',
+      foot_dial: 'Orbital Dial 3-6-9',
+      foot_cite_btn: 'CITE WITH BibTeX',
+      foot_platform_lead: '<strong>NEXORD / VISORD Engine</strong> &copy; 2026 &bull; Scientific Platform for Computational Ordinal Sociometry and Socio-Thermodynamic Diagnosis.',
+      foot_open_science: 'Developed under the ethical mandate of Open Science. Punitive or defamatory data usage is strictly prohibited.',
+      foot_lang_future: 'Languages for future localizations...',
+
+      // Vertical Nav Band Tooltips
+      vnav_tip_inicio: 'Home',
+      vnav_tip_dolor: 'Why?',
+      vnav_tip_showroom: '3D Jewels',
+      vnav_tip_soluciones: 'Solutions',
+      vnav_tip_etica: 'Ethics',
+      vnav_tip_boveda: 'Science',
+      vnav_tip_custodia: 'Custody',
+
+      // Citation Modal
+      modal_title: 'Official Academic Citation · NEXORD / VISORD Engine',
+      modal_hint_bibtex: 'Entry for LaTeX, Overleaf, and compatible citation managers:',
+      modal_link_manifesto_web: 'View Web Manifesto ↗',
+      modal_link_supp: 'Supplementary Material (6 Docs) ↗',
+      modal_link_summary_en: 'Summary EN (PDF) ↗',
+      modal_link_man_es: 'Manifesto ES (PDF) ↗',
+      modal_link_man_en: 'Manifesto EN (PDF) ↗',
+      modal_link_zenodo: 'CERN Zenodo Repository ↗',
+      modal_btn_copy: 'Copy to Clipboard'
     }
   };
 
@@ -360,7 +644,9 @@
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', dict.meta_desc);
 
-    // Navbar
+    // =========================================================================
+    // 1. NAVBAR
+    // =========================================================================
     const sub = document.querySelector('.brand-sub');
     if (sub) sub.textContent = dict.nav_brand_sub;
 
@@ -381,7 +667,7 @@
     const navCta = document.querySelector('.nav-cta');
     if (navCta) navCta.textContent = dict.nav_cta;
 
-    // Dropdown items
+    // Dropdown items (11 elementos)
     const dropItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
     if (dropItems.length >= 11) {
       dropItems[0].textContent = dict.drop_l1;
@@ -397,7 +683,9 @@
       dropItems[10].textContent = dict.drop_dial;
     }
 
-    // Hero
+    // =========================================================================
+    // 2. HERO
+    // =========================================================================
     const heroPill = document.querySelector('.hero-pill');
     if (heroPill) heroPill.innerHTML = '<span class="hero-pill-dot"></span>' + dict.hero_pill;
     const heroTitle = document.querySelector('.hero-title');
@@ -412,27 +700,41 @@
     const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
     if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
 
-    // Métricas Rápidas Hero
-    const statCards = document.querySelectorAll('.hero-stats-grid .stat-card');
-    if (statCards.length >= 4) {
-      if (dict.stat_1_val) {
-        statCards[0].querySelector('.stat-number').textContent = dict.stat_1_val;
-        statCards[0].querySelector('.stat-desc').textContent = dict.stat_1_desc;
-        statCards[1].querySelector('.stat-number').textContent = dict.stat_2_val;
-        statCards[1].querySelector('.stat-desc').textContent = dict.stat_2_desc;
-        statCards[2].querySelector('.stat-number').textContent = dict.stat_3_val;
-        statCards[2].querySelector('.stat-desc').textContent = dict.stat_3_desc;
-        statCards[3].querySelector('.stat-number').textContent = dict.stat_4_val;
-        statCards[3].querySelector('.stat-desc').textContent = dict.stat_4_desc;
-      }
-    }
-
-    // Video HUD
+    // Video Hero HUD & Controls
     const vBadge = document.querySelector('.video-hero-badge span:last-child');
     if (vBadge) vBadge.textContent = dict.video_badge;
     const vMeta = document.querySelector('.video-hero-meta span');
     if (vMeta) vMeta.textContent = dict.video_meta;
 
+    const vPlayLabel = document.getElementById('video-play-label');
+    if (vPlayLabel) {
+      const vid = document.getElementById('hero-master-video');
+      if (vid && !vid.paused && !vid.ended) {
+        vPlayLabel.textContent = dict.video_btn_play;
+      } else if (vid && vid.ended) {
+        vPlayLabel.textContent = dict.video_btn_repeat;
+      } else {
+        vPlayLabel.textContent = dict.video_btn_play_pause;
+      }
+    }
+    const vAudioLabel = document.getElementById('video-audio-label');
+    if (vAudioLabel) {
+      const vid = document.getElementById('hero-master-video');
+      vAudioLabel.textContent = (vid && !vid.muted) ? dict.video_btn_audio_off : dict.video_btn_audio_on;
+    }
+    const vFsBtn = document.querySelector('#btn-video-fs span:last-child');
+    if (vFsBtn) vFsBtn.textContent = dict.video_btn_fs;
+
+    const heroWrap = document.getElementById('hero-player-wrap');
+    if (heroWrap) heroWrap.setAttribute('title', dict.video_player_title);
+    const btnPlayEl = document.getElementById('btn-video-play');
+    if (btnPlayEl) btnPlayEl.setAttribute('title', dict.video_btn_play_title);
+    const btnAudioEl = document.getElementById('btn-video-audio');
+    if (btnAudioEl) btnAudioEl.setAttribute('title', dict.video_btn_audio_title);
+    const btnFsEl = document.getElementById('btn-video-fs');
+    if (btnFsEl) btnFsEl.setAttribute('title', dict.video_btn_fs_title);
+
+    // Decoder Pills
     const bondPills = document.querySelectorAll('.video-bonds-decoder-hud .bond-pill');
     if (bondPills.length >= 3) {
       bondPills[0].innerHTML = '<span class="bond-dot dot-green"></span><strong class="bond-term">' + dict.bond_attraction_term + '</strong> ' + dict.bond_attraction_text;
@@ -445,75 +747,544 @@
     const vCtaPill = document.querySelector('.video-cta-pill span:first-child');
     if (vCtaPill) vCtaPill.textContent = dict.video_cta_pill;
 
-    // Pain section
-    const painBadge = document.querySelector('#dolor .section-badge');
-    if (painBadge) painBadge.textContent = dict.pain_badge;
-    const painTitle = document.querySelector('#dolor .section-title');
-    if (painTitle) painTitle.textContent = dict.pain_title;
-    const painDesc = document.querySelector('#dolor .section-subtitle');
-    if (painDesc) painDesc.textContent = dict.pain_desc;
+    // =========================================================================
+    // 3. ANATOMÍA DE LOS VÍNCULOS GRUPALES
+    // =========================================================================
+    const bondsStrip = document.getElementById('vinculos-insight');
+    if (bondsStrip) {
+      const bTag = bondsStrip.querySelector('.section-tag');
+      if (bTag) bTag.textContent = dict.bonds_tag;
+      const bTitle = bondsStrip.querySelector('.bonds-strip-title');
+      if (bTitle) bTitle.textContent = dict.bonds_title;
+      const bSub = bondsStrip.querySelector('.bonds-strip-subtitle');
+      if (bSub) bSub.textContent = dict.bonds_subtitle;
 
-    // Showroom section
-    const showBadge = document.querySelector('#showroom .section-badge');
-    if (showBadge) showBadge.textContent = dict.show_badge;
-    const showTitle = document.querySelector('#showroom .section-title');
-    if (showTitle) showTitle.textContent = dict.show_title;
-    const showDesc = document.querySelector('#showroom .section-subtitle');
-    if (showDesc) showDesc.textContent = dict.show_desc;
+      // Card 1: Atracción
+      const cardAtt = bondsStrip.querySelector('.card-attraction');
+      if (cardAtt) {
+        const badge = cardAtt.querySelector('.bond-card-badge');
+        if (badge) badge.textContent = dict.bond_c1_badge;
+        const title = cardAtt.querySelector('.bond-card-title');
+        if (title) title.textContent = dict.bond_c1_title;
+        const text = cardAtt.querySelector('.bond-card-text');
+        if (text) text.innerHTML = dict.bond_c1_text;
+        const mLabel = cardAtt.querySelector('.metric-label');
+        if (mLabel) mLabel.textContent = dict.bond_c1_metric_label;
+        const mVal = cardAtt.querySelector('.metric-val');
+        if (mVal) mVal.textContent = dict.bond_c1_metric_val;
+      }
 
-    // Soluciones (7 Niveles)
-    const solBadge = document.querySelector('#soluciones .section-badge');
-    if (solBadge) solBadge.textContent = dict.sol_badge;
-    const solTitle = document.querySelector('#soluciones .section-title');
-    if (solTitle) solTitle.textContent = dict.sol_title;
-    const solDesc = document.querySelector('#soluciones .section-subtitle');
-    if (solDesc) solDesc.textContent = dict.sol_desc;
+      // Card 2: Rechazo
+      const cardRej = bondsStrip.querySelector('.card-rejection');
+      if (cardRej) {
+        const badge = cardRej.querySelector('.bond-card-badge');
+        if (badge) badge.textContent = dict.bond_c2_badge;
+        const title = cardRej.querySelector('.bond-card-title');
+        if (title) title.textContent = dict.bond_c2_title;
+        const text = cardRej.querySelector('.bond-card-text');
+        if (text) text.innerHTML = dict.bond_c2_text;
+        const mLabel = cardRej.querySelector('.metric-label');
+        if (mLabel) mLabel.textContent = dict.bond_c2_metric_label;
+        const mVal = cardRej.querySelector('.metric-val');
+        if (mVal) mVal.textContent = dict.bond_c2_metric_val;
+      }
 
-    // Ética & Bóveda
-    const ethBadge = document.querySelector('#etica .section-badge');
-    if (ethBadge) ethBadge.textContent = dict.ethics_badge;
-    const ethTitle = document.querySelector('#etica .section-title');
-    if (ethTitle) ethTitle.textContent = dict.ethics_title;
-    const ethDesc = document.querySelector('#etica .section-subtitle');
-    if (ethDesc) ethDesc.textContent = dict.ethics_desc;
+      // Card 3: Ostracismo
+      const cardOst = bondsStrip.querySelector('.card-ostracism');
+      if (cardOst) {
+        const badge = cardOst.querySelector('.bond-card-badge');
+        if (badge) badge.textContent = dict.bond_c3_badge;
+        const title = cardOst.querySelector('.bond-card-title');
+        if (title) title.textContent = dict.bond_c3_title;
+        const text = cardOst.querySelector('.bond-card-text');
+        if (text) text.innerHTML = dict.bond_c3_text;
+        const mLabel = cardOst.querySelector('.metric-label');
+        if (mLabel) mLabel.textContent = dict.bond_c3_metric_label;
+        const mVal = cardOst.querySelector('.metric-val');
+        if (mVal) mVal.textContent = dict.bond_c3_metric_val;
+      }
+    }
 
-    const vltBadge = document.querySelector('#boveda .section-badge');
-    if (vltBadge) vltBadge.textContent = dict.vault_badge;
-    const vltTitle = document.querySelector('#boveda .section-title');
-    if (vltTitle) vltTitle.textContent = dict.vault_title;
-    const vltDesc = document.querySelector('#boveda .section-subtitle');
-    if (vltDesc) vltDesc.textContent = dict.vault_desc;
+    // =========================================================================
+    // 4. MÉTRICAS RÁPIDAS HERO
+    // =========================================================================
+    const statCards = document.querySelectorAll('.hero-stats-grid .stat-card');
+    if (statCards.length >= 4) {
+      statCards[0].querySelector('.stat-number').textContent = dict.hero_stat_1_val;
+      statCards[0].querySelector('.stat-desc').textContent = dict.hero_stat_1_desc;
+      statCards[1].querySelector('.stat-number').textContent = dict.hero_stat_2_val;
+      statCards[1].querySelector('.stat-desc').textContent = dict.hero_stat_2_desc;
+      statCards[2].querySelector('.stat-number').textContent = dict.hero_stat_3_val;
+      statCards[2].querySelector('.stat-desc').textContent = dict.hero_stat_3_desc;
+      statCards[3].querySelector('.stat-number').textContent = dict.hero_stat_4_val;
+      statCards[3].querySelector('.stat-desc').textContent = dict.hero_stat_4_desc;
+    }
 
-    // Custodia
-    const custBadge = document.querySelector('#custodia .section-badge');
-    if (custBadge) custBadge.textContent = dict.cust_badge;
-    const custTitle = document.querySelector('#custodia .section-title');
-    if (custTitle) custTitle.textContent = dict.cust_title;
-    const custDesc = document.querySelector('#custodia .section-subtitle');
-    if (custDesc) custDesc.textContent = dict.cust_desc;
+    // =========================================================================
+    // 5. SECCIÓN 1: EL DOLOR INVISIBLE (#dolor)
+    // =========================================================================
+    const dolorSec = document.getElementById('dolor');
+    if (dolorSec) {
+      const pTag = dolorSec.querySelector('.section-tag');
+      if (pTag) pTag.textContent = dict.pain_tag;
+      const pTitle = dolorSec.querySelector('.section-title');
+      if (pTitle) pTitle.textContent = dict.pain_title;
+      const pSub = dolorSec.querySelector('.section-subtitle');
+      if (pSub) pSub.textContent = dict.pain_subtitle;
 
-    const custBtnManEs = document.querySelector('a[href*="oct_2026_ES.pdf"]');
-    if (custBtnManEs) custBtnManEs.innerHTML = '<span>📄</span> ' + dict.cust_btn_man_es;
-    const custBtnManEn = document.querySelector('a[href*="oct_2026_EN.pdf"]');
-    if (custBtnManEn) custBtnManEn.innerHTML = '<span>📄</span> ' + dict.cust_btn_man_en;
-    const custBtnSup = document.querySelector('a[href*="10.5281/zenodo.23329641"]');
-    if (custBtnSup) custBtnSup.innerHTML = '<span>📦</span> ' + dict.cust_btn_sup;
+      // Card Tradicional
+      const cardTrad = dolorSec.querySelector('.comparison-card.traditional');
+      if (cardTrad) {
+        const badge = cardTrad.querySelector('.card-badge');
+        if (badge) badge.textContent = dict.pain_trad_badge;
+        const heading = cardTrad.querySelector('.card-heading');
+        if (heading) heading.textContent = dict.pain_trad_heading;
+        const items = cardTrad.querySelectorAll('.feature-list .feature-item div');
+        if (items.length >= 4) {
+          items[0].innerHTML = dict.pain_trad_item1;
+          items[1].innerHTML = dict.pain_trad_item2;
+          items[2].innerHTML = dict.pain_trad_item3;
+          items[3].innerHTML = dict.pain_trad_item4;
+        }
+      }
 
-    // CTA Banner
-    const ctaTitle = document.querySelector('.cta-banner h2');
-    if (ctaTitle) ctaTitle.textContent = dict.cta_title;
-    const ctaDesc = document.querySelector('.cta-banner p');
-    if (ctaDesc) ctaDesc.textContent = dict.cta_desc;
-    const ctaBtn1 = document.querySelector('.cta-banner a[href*="nivel1"]');
-    if (ctaBtn1) ctaBtn1.textContent = dict.cta_btn_start;
-    const ctaBtn2 = document.querySelector('.cta-banner a[href*="dial_orbital"]');
-    if (ctaBtn2) ctaBtn2.textContent = dict.cta_btn_dial;
+      // Card NEXORD
+      const cardNex = dolorSec.querySelector('.comparison-card.nexord');
+      if (cardNex) {
+        const badge = cardNex.querySelector('.card-badge');
+        if (badge) badge.textContent = dict.pain_nex_badge;
+        const heading = cardNex.querySelector('.card-heading');
+        if (heading) heading.textContent = dict.pain_nex_heading;
+        const items = cardNex.querySelectorAll('.feature-list .feature-item div');
+        if (items.length >= 4) {
+          items[0].innerHTML = dict.pain_nex_item1;
+          items[1].innerHTML = dict.pain_nex_item2;
+          items[2].innerHTML = dict.pain_nex_item3;
+          items[3].innerHTML = dict.pain_nex_item4;
+        }
+      }
+    }
 
-    // Footer
-    const footRights = document.querySelector('.footer-bottom p');
-    if (footRights) footRights.textContent = dict.footer_rights;
+    // =========================================================================
+    // 6. SECCIÓN 2: SHOWROOM INTERACTIVO (#showroom)
+    // =========================================================================
+    const showSec = document.getElementById('showroom');
+    if (showSec) {
+      const sTag = showSec.querySelector('.section-tag');
+      if (sTag) sTag.textContent = dict.show_tag;
+      const sTitle = showSec.querySelector('.section-title');
+      if (sTitle) sTitle.textContent = dict.show_title;
+      const sSub = showSec.querySelector('.section-subtitle');
+      if (sSub) sSub.textContent = dict.show_subtitle;
 
-    // Actualizar botones de selector
+      const jewels = showSec.querySelectorAll('.jewel-card');
+      if (jewels.length >= 4) {
+        // Joya 1 (Acuario)
+        jewels[0].querySelector('.jewel-title').textContent = dict.jewel_1_title;
+        jewels[0].querySelector('.jewel-subtitle').textContent = dict.jewel_1_subtitle;
+        jewels[0].querySelector('.jewel-desc').innerHTML = dict.jewel_1_desc;
+        jewels[0].querySelector('.btn-jewel').textContent = dict.jewel_1_btn;
+
+        // Joya 2 (Cultural)
+        jewels[1].querySelector('.jewel-title').textContent = dict.jewel_2_title;
+        jewels[1].querySelector('.jewel-subtitle').textContent = dict.jewel_2_subtitle;
+        jewels[1].querySelector('.jewel-desc').innerHTML = dict.jewel_2_desc;
+        jewels[1].querySelector('.btn-jewel').textContent = dict.jewel_2_btn;
+
+        // Joya 3 (Dialéctico)
+        jewels[2].querySelector('.jewel-title').textContent = dict.jewel_3_title;
+        jewels[2].querySelector('.jewel-subtitle').textContent = dict.jewel_3_subtitle;
+        jewels[2].querySelector('.jewel-desc').innerHTML = dict.jewel_3_desc;
+        jewels[2].querySelector('.btn-jewel').textContent = dict.jewel_3_btn;
+
+        // Joya 4 (Demo 3D)
+        jewels[3].querySelector('.jewel-title').textContent = dict.jewel_4_title;
+        jewels[3].querySelector('.jewel-subtitle').textContent = dict.jewel_4_subtitle;
+        jewels[3].querySelector('.jewel-desc').innerHTML = dict.jewel_4_desc;
+        jewels[3].querySelector('.btn-jewel').textContent = dict.jewel_4_btn;
+      }
+    }
+
+    // =========================================================================
+    // 7. SECCIÓN 3: SOLUCIONES SECTORIALES (#soluciones)
+    // =========================================================================
+    const solSec = document.getElementById('soluciones');
+    if (solSec) {
+      const sTag = solSec.querySelector('.section-tag');
+      if (sTag) sTag.textContent = dict.sol_tag;
+      const sTitle = solSec.querySelector('.section-title');
+      if (sTitle) sTitle.textContent = dict.sol_title;
+      const sSub = solSec.querySelector('.section-subtitle');
+      if (sSub) sSub.textContent = dict.sol_subtitle;
+
+      const sectors = solSec.querySelectorAll('.sector-card');
+      if (sectors.length >= 3) {
+        // Sector 1: Educación
+        sectors[0].querySelector('.sector-name').textContent = dict.sol_s1_title;
+        sectors[0].querySelector('.sector-problem').innerHTML = dict.sol_s1_prob;
+        sectors[0].querySelector('.sector-solution').innerHTML = dict.sol_s1_sol;
+        const b1 = sectors[0].querySelectorAll('.sector-bullets li');
+        if (b1.length >= 3) {
+          b1[0].textContent = dict.sol_s1_b1;
+          b1[1].textContent = dict.sol_s1_b2;
+          b1[2].textContent = dict.sol_s1_b3;
+        }
+
+        // Sector 2: Empresas
+        sectors[1].querySelector('.sector-name').textContent = dict.sol_s2_title;
+        sectors[1].querySelector('.sector-problem').innerHTML = dict.sol_s2_prob;
+        sectors[1].querySelector('.sector-solution').innerHTML = dict.sol_s2_sol;
+        const b2 = sectors[1].querySelectorAll('.sector-bullets li');
+        if (b2.length >= 3) {
+          b2[0].textContent = dict.sol_s2_b1;
+          b2[1].textContent = dict.sol_s2_b2;
+          b2[2].textContent = dict.sol_s2_b3;
+        }
+
+        // Sector 3: Clínica
+        sectors[2].querySelector('.sector-name').textContent = dict.sol_s3_title;
+        sectors[2].querySelector('.sector-problem').innerHTML = dict.sol_s3_prob;
+        sectors[2].querySelector('.sector-solution').innerHTML = dict.sol_s3_sol;
+        const b3 = sectors[2].querySelectorAll('.sector-bullets li');
+        if (b3.length >= 3) {
+          b3[0].textContent = dict.sol_s3_b1;
+          b3[1].textContent = dict.sol_s3_b2;
+          b3[2].textContent = dict.sol_s3_b3;
+        }
+      }
+    }
+
+    // =========================================================================
+    // 8. SECCIÓN 4: CÓMO FUNCIONA (#como-funciona)
+    // =========================================================================
+    const flowSec = document.getElementById('como-funciona');
+    if (flowSec) {
+      const fTag = flowSec.querySelector('.section-tag');
+      if (fTag) fTag.textContent = dict.flow_tag;
+      const fTitle = flowSec.querySelector('.section-title');
+      if (fTitle) fTitle.textContent = dict.flow_title;
+      const fSub = flowSec.querySelector('.section-subtitle');
+      if (fSub) fSub.textContent = dict.flow_subtitle;
+
+      const steps = flowSec.querySelectorAll('.step-card');
+      if (steps.length >= 3) {
+        steps[0].querySelector('.step-title').textContent = dict.flow_s1_title;
+        steps[0].querySelector('.step-desc').textContent = dict.flow_s1_desc;
+        steps[1].querySelector('.step-title').textContent = dict.flow_s2_title;
+        steps[1].querySelector('.step-desc').textContent = dict.flow_s2_desc;
+        steps[2].querySelector('.step-title').textContent = dict.flow_s3_title;
+        steps[2].querySelector('.step-desc').textContent = dict.flow_s3_desc;
+      }
+    }
+
+    // =========================================================================
+    // 9. SECCIÓN 5: GARANTÍA ÉTICA (#etica)
+    // =========================================================================
+    const ethSec = document.getElementById('etica');
+    if (ethSec) {
+      const eHead = ethSec.querySelector('.ethics-heading');
+      if (eHead) eHead.innerHTML = dict.ethics_heading;
+      const eTexts = ethSec.querySelectorAll('.ethics-text');
+      if (eTexts.length >= 2) {
+        eTexts[0].innerHTML = dict.ethics_text_1;
+        eTexts[1].innerHTML = dict.ethics_text_2;
+      }
+      const eBtn = ethSec.querySelector('.ethics-cta a');
+      if (eBtn) eBtn.textContent = dict.ethics_btn;
+    }
+
+    // =========================================================================
+    // 10. SECCIÓN 6: BÓVEDA CIENTÍFICA (#boveda)
+    // =========================================================================
+    const vltSec = document.getElementById('boveda');
+    if (vltSec) {
+      const vTag = vltSec.querySelector('.section-tag');
+      if (vTag) vTag.textContent = dict.vault_tag;
+      const vTitle = vltSec.querySelector('.section-title');
+      if (vTitle) vTitle.textContent = dict.vault_title;
+      const vSub = vltSec.querySelector('.section-subtitle');
+      if (vSub) vSub.textContent = dict.vault_subtitle;
+
+      const vCards = vltSec.querySelectorAll('.vault-card');
+      if (vCards.length >= 8) {
+        // Nivel 1
+        vCards[0].querySelector('.vault-card-title').textContent = dict.v_l1_title;
+        vCards[0].querySelector('.vault-card-desc').textContent = dict.v_l1_desc;
+        vCards[0].querySelector('.vault-card-arrow').textContent = dict.v_l1_btn;
+        // Nivel 2
+        vCards[1].querySelector('.vault-card-title').textContent = dict.v_l2_title;
+        vCards[1].querySelector('.vault-card-desc').textContent = dict.v_l2_desc;
+        vCards[1].querySelector('.vault-card-arrow').textContent = dict.v_l2_btn;
+        // Nivel 3
+        vCards[2].querySelector('.vault-card-title').textContent = dict.v_l3_title;
+        vCards[2].querySelector('.vault-card-desc').textContent = dict.v_l3_desc;
+        vCards[2].querySelector('.vault-card-arrow').textContent = dict.v_l3_btn;
+        // Nivel 4
+        vCards[3].querySelector('.vault-card-title').textContent = dict.v_l4_title;
+        vCards[3].querySelector('.vault-card-desc').textContent = dict.v_l4_desc;
+        vCards[3].querySelector('.vault-card-arrow').textContent = dict.v_l4_btn;
+        // Nivel 5
+        vCards[4].querySelector('.vault-card-title').textContent = dict.v_l5_title;
+        vCards[4].querySelector('.vault-card-desc').textContent = dict.v_l5_desc;
+        vCards[4].querySelector('.vault-card-arrow').textContent = dict.v_l5_btn;
+        // Nivel 6
+        vCards[5].querySelector('.vault-card-title').textContent = dict.v_l6_title;
+        vCards[5].querySelector('.vault-card-desc').textContent = dict.v_l6_desc;
+        vCards[5].querySelector('.vault-card-arrow').textContent = dict.v_l6_btn;
+        // Nivel 7
+        vCards[6].querySelector('.vault-card-title').textContent = dict.v_l7_title;
+        vCards[6].querySelector('.vault-card-desc').textContent = dict.v_l7_desc;
+        vCards[6].querySelector('.vault-card-arrow').textContent = dict.v_l7_btn;
+        // Glosario
+        vCards[7].querySelector('.vault-card-title').textContent = dict.v_glo_title;
+        vCards[7].querySelector('.vault-card-desc').textContent = dict.v_glo_desc;
+        vCards[7].querySelector('.vault-card-arrow').textContent = dict.v_glo_btn;
+      }
+    }
+
+    // =========================================================================
+    // 11. SECCIÓN 7: LLAMAMIENTO A LA CUSTODIA INSTITUCIONAL (#custodia)
+    // =========================================================================
+    const custSec = document.getElementById('custodia');
+    if (custSec) {
+      const cTag = custSec.querySelector('.section-tag');
+      if (cTag) cTag.textContent = dict.cust_tag;
+      const cTitle = custSec.querySelector('.section-title');
+      if (cTitle) cTitle.textContent = dict.cust_title;
+      const cSub = custSec.querySelector('.section-subtitle');
+      if (cSub) cSub.textContent = dict.cust_subtitle;
+
+      // Banner Marco Oficial
+      const marcoBanner = document.getElementById('custodia-marco-banner');
+      if (marcoBanner) {
+        const h3 = marcoBanner.querySelector('h3');
+        if (h3) h3.textContent = dict.cust_banner_title;
+        const p = marcoBanner.querySelector('p');
+        if (p) p.textContent = dict.cust_banner_desc;
+        const btnSpan = marcoBanner.querySelector('a span:last-child');
+        if (btnSpan) btnSpan.textContent = dict.cust_banner_btn;
+      }
+
+      // Bloque ¿Qué es NEXORD?
+      const queEsBlock = document.getElementById('que-es-nexord-block');
+      if (queEsBlock) {
+        const h3 = queEsBlock.querySelector('h3');
+        if (h3) h3.textContent = dict.what_title;
+        const ps = queEsBlock.querySelectorAll('p');
+        if (ps.length >= 3) {
+          ps[0].innerHTML = dict.what_p1;
+          ps[1].innerHTML = dict.what_p2;
+          ps[2].innerHTML = dict.what_p3;
+        }
+      }
+
+      // Díptico: ¿Qué se ofrece?
+      const ofrBlock = document.getElementById('custodia-diptico-ofrece');
+      if (ofrBlock) {
+        const h3 = ofrBlock.querySelector('h3');
+        if (h3) h3.textContent = dict.offer_title;
+        const lead = ofrBlock.querySelector('p');
+        if (lead) lead.textContent = dict.offer_lead;
+        const lis = ofrBlock.querySelectorAll('ul li div');
+        if (lis.length >= 6) {
+          lis[0].innerHTML = dict.offer_i1;
+          lis[1].innerHTML = dict.offer_i2;
+          lis[2].innerHTML = dict.offer_i3;
+          lis[3].innerHTML = dict.offer_i4;
+          lis[4].innerHTML = dict.offer_i5;
+          lis[5].innerHTML = dict.offer_i6;
+        }
+        const note = ofrBlock.querySelector('div[style*="dashed"]');
+        if (note) note.textContent = dict.offer_note;
+      }
+
+      // Díptico: ¿Qué se pide?
+      const reqBlock = document.getElementById('custodia-diptico-pide');
+      if (reqBlock) {
+        const h3 = reqBlock.querySelector('h3');
+        if (h3) h3.textContent = dict.req_title;
+        const lead = reqBlock.querySelector('p');
+        if (lead) lead.textContent = dict.req_lead;
+        const lis = reqBlock.querySelectorAll('ul li div');
+        if (lis.length >= 4) {
+          lis[0].innerHTML = dict.req_i1;
+          lis[1].innerHTML = dict.req_i2;
+          lis[2].innerHTML = dict.req_i3;
+          lis[3].innerHTML = dict.req_i4;
+        }
+        const note = reqBlock.querySelector('div[style*="dashed"]');
+        if (note) note.textContent = dict.req_note;
+      }
+
+      // Bloque de Garantías Existentes
+      const garBlock = document.getElementById('custodia-garantias-block');
+      if (garBlock) {
+        const h3 = garBlock.querySelector('h3');
+        if (h3) h3.textContent = dict.guard_title;
+        const boxes = garBlock.querySelectorAll('div[style*="background: rgba(0,0,0,0.3)"]');
+        if (boxes.length >= 5) {
+          // Box 1 (Privacy by Design)
+          boxes[0].children[0].textContent = dict.guard_b1_title;
+          boxes[0].children[1].textContent = dict.guard_b1_desc;
+          // Box 2 (Licencia CC-BY-4.0)
+          boxes[1].children[0].textContent = dict.guard_b2_title;
+          boxes[1].children[1].textContent = dict.guard_b2_desc;
+          // Box 3 (Zenodo)
+          boxes[2].children[0].textContent = dict.guard_b3_title;
+          boxes[2].children[1].innerHTML = dict.guard_b3_desc;
+          // Box 4 (Auditable)
+          boxes[3].children[0].textContent = dict.guard_b4_title;
+          boxes[3].children[1].textContent = dict.guard_b4_desc;
+          // Box 5 (Universalidad UNESCO)
+          boxes[4].children[0].textContent = dict.guard_b5_title;
+          boxes[4].children[1].textContent = dict.guard_b5_desc;
+        }
+      }
+
+      // Formulario de Contacto
+      const cForm = document.getElementById('custodia-contact-form');
+      if (cForm) {
+        const formWrap = cForm.parentElement;
+        if (formWrap) {
+          const tag = formWrap.querySelector('span[style*="CANAL DIRECTO"]');
+          if (tag) tag.textContent = dict.contact_tag;
+          const h3 = formWrap.querySelector('h3');
+          if (h3) h3.textContent = dict.contact_title;
+          const sub = formWrap.querySelector('p');
+          if (sub) sub.textContent = dict.contact_subtitle;
+
+          // Info PI
+          const piLabel = formWrap.querySelector('div[style*="font-size: 0.76rem"]');
+          if (piLabel) piLabel.textContent = dict.contact_pi_label;
+          const piSub = formWrap.querySelector('div[style*="font-size: 0.78rem"]');
+          if (piSub) piSub.textContent = dict.contact_pi_sub;
+        }
+
+        // Labels y Placeholders
+        const labels = cForm.querySelectorAll('label');
+        if (labels.length >= 5) {
+          labels[0].textContent = dict.form_inst_label;
+          labels[1].textContent = dict.form_rep_label;
+          labels[2].textContent = dict.form_email_label;
+          labels[3].textContent = dict.form_type_label;
+          labels[4].textContent = dict.form_msg_label;
+        }
+
+        const inputInst = document.getElementById('cust-institution');
+        if (inputInst) inputInst.placeholder = dict.form_inst_ph;
+        const inputRep = document.getElementById('cust-representative');
+        if (inputRep) inputRep.placeholder = dict.form_rep_ph;
+        const inputMsg = document.getElementById('cust-message');
+        if (inputMsg) inputMsg.placeholder = dict.form_msg_ph;
+
+        const selectType = document.getElementById('cust-type');
+        if (selectType && selectType.options.length >= 6) {
+          selectType.options[0].textContent = dict.form_type_opt1;
+          selectType.options[1].textContent = dict.form_type_opt2;
+          selectType.options[2].textContent = dict.form_type_opt3;
+          selectType.options[3].textContent = dict.form_type_opt4;
+          selectType.options[4].textContent = dict.form_type_opt5;
+          selectType.options[5].textContent = dict.form_type_opt6;
+        }
+
+        // Botones del formulario
+        const btnPdf = cForm.querySelector('a.btn-secondary');
+        if (btnPdf) btnPdf.textContent = dict.form_btn_pdf;
+        const btnCopy = cForm.querySelector('button[onclick*="copyCustodiaDraft"]');
+        if (btnCopy) btnCopy.textContent = dict.form_btn_copy;
+        const btnSubmit = cForm.querySelector('button[type="submit"]');
+        if (btnSubmit) btnSubmit.textContent = dict.form_btn_send;
+      }
+    }
+
+    // =========================================================================
+    // 12. CALL TO ACTION FINAL
+    // =========================================================================
+    const ctaBanner = document.querySelector('.cta-banner');
+    if (ctaBanner) {
+      const h2 = ctaBanner.querySelector('.cta-title');
+      if (h2) h2.textContent = dict.cta_title;
+      const sub = ctaBanner.querySelector('.cta-subtitle');
+      if (sub) sub.textContent = dict.cta_subtitle;
+      const btn1 = ctaBanner.querySelector('a.btn-primary');
+      if (btn1) btn1.textContent = dict.cta_btn_demos;
+      const btn2 = ctaBanner.querySelector('a.btn-secondary');
+      if (btn2) btn2.textContent = dict.cta_btn_custody;
+    }
+
+    // =========================================================================
+    // 13. FOOTER
+    // =========================================================================
+    const fLinks = document.querySelectorAll('.footer-links .footer-link');
+    if (fLinks.length >= 9) {
+      fLinks[0].textContent = dict.foot_inicio;
+      fLinks[1].textContent = dict.foot_custodia;
+      fLinks[2].textContent = dict.foot_demo;
+      fLinks[3].textContent = dict.foot_cultural;
+      fLinks[4].textContent = dict.foot_acuario;
+      fLinks[5].textContent = dict.foot_dialectico;
+      fLinks[6].textContent = dict.foot_retorno;
+      fLinks[7].textContent = dict.foot_glosario;
+      fLinks[8].textContent = dict.foot_dial;
+    }
+
+    const btnBibTrigger = document.querySelector('.btn-bibtex-trigger');
+    if (btnBibTrigger) {
+      btnBibTrigger.innerHTML = '<span class="bibtex-icon">📑</span> ' + dict.foot_cite_btn;
+    }
+
+    const footPs = document.querySelectorAll('.footer p');
+    if (footPs.length >= 3) {
+      footPs[0].innerHTML = dict.foot_platform_lead;
+      footPs[1].textContent = dict.foot_open_science;
+      footPs[2].textContent = dict.foot_lang_future;
+    }
+
+    // =========================================================================
+    // 14. VERTICAL NAV BAND TOOLTIPS
+    // =========================================================================
+    const vDots = document.querySelectorAll('.vnav-dots .vnav-dot');
+    if (vDots.length >= 7) {
+      const tips = [
+        dict.vnav_tip_inicio,
+        dict.vnav_tip_dolor,
+        dict.vnav_tip_showroom,
+        dict.vnav_tip_soluciones,
+        dict.vnav_tip_etica,
+        dict.vnav_tip_boveda,
+        dict.vnav_tip_custodia
+      ];
+      vDots.forEach((d, idx) => {
+        const tipEl = d.querySelector('.vnav-dot-tooltip');
+        if (tipEl && tips[idx]) tipEl.textContent = tips[idx];
+      });
+    }
+
+    // =========================================================================
+    // 15. MODAL DE CITACIÓN
+    // =========================================================================
+    const mTitle = document.querySelector('.bibtex-modal-title');
+    if (mTitle) mTitle.innerHTML = '<span>📑</span> ' + dict.modal_title;
+    const mHint = document.getElementById('citation-format-hint');
+    if (mHint && (!mHint.getAttribute('data-fmt') || mHint.getAttribute('data-fmt') === 'bibtex')) {
+      mHint.textContent = dict.modal_hint_bibtex;
+    }
+    const mBtnCopy = document.getElementById('bibtex-copy-text');
+    if (mBtnCopy) mBtnCopy.textContent = dict.modal_btn_copy;
+
+    const mLinks = document.querySelectorAll('.bibtex-modal-body a');
+    if (mLinks.length >= 6) {
+      mLinks[0].innerHTML = '<span>📜</span> ' + dict.modal_link_manifesto_web;
+      mLinks[1].innerHTML = '<span>📦</span> ' + dict.modal_link_supp;
+      mLinks[2].innerHTML = '<span>⚡</span> ' + dict.modal_link_summary_en;
+      mLinks[3].innerHTML = '<span>📄</span> ' + dict.modal_link_man_es;
+      mLinks[4].innerHTML = '<span>📄</span> ' + dict.modal_link_man_en;
+      mLinks[5].innerHTML = '<span>🏛️</span> ' + dict.modal_link_zenodo;
+    }
+
+    // =========================================================================
+    // 16. BOTONES DE SELECCIÓN DE IDIOMA
+    // =========================================================================
     const btnEs = document.getElementById('btn-promo-lang-es');
     const btnEn = document.getElementById('btn-promo-lang-en');
     if (btnEs) {

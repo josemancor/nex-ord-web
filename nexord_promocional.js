@@ -31,15 +31,30 @@ function switchCitationFormat(fmt) {
   if (fmt === 'bibtex') {
     if (tabBib) { tabBib.style.borderBottomColor = 'var(--neon-green)'; tabBib.style.color = 'var(--neon-green)'; }
     if (blockBib) blockBib.style.display = 'block';
-    if (hint) hint.innerText = 'Entrada para LaTeX, Overleaf y gestores bibliográficos compatibles:';
+    if (hint) {
+      hint.setAttribute('data-fmt', 'bibtex');
+      hint.innerText = (document.documentElement.lang === 'en')
+        ? 'Entry for LaTeX, Overleaf, and compatible citation managers:'
+        : 'Entrada para LaTeX, Overleaf y gestores bibliográficos compatibles:';
+    }
   } else if (fmt === 'apa') {
     if (tabApa) { tabApa.style.borderBottomColor = 'var(--neon-green)'; tabApa.style.color = 'var(--neon-green)'; }
     if (blockApa) blockApa.style.display = 'block';
-    if (hint) hint.innerText = 'Cita en formato estándar APA 7ª Edición para informes y tesis:';
+    if (hint) {
+      hint.setAttribute('data-fmt', 'apa');
+      hint.innerText = (document.documentElement.lang === 'en')
+        ? 'Citation in standard APA 7th Edition format for reports and theses:'
+        : 'Cita en formato estándar APA 7ª Edición para informes y tesis:';
+    }
   } else if (fmt === 'ris') {
     if (tabRis) { tabRis.style.borderBottomColor = 'var(--neon-green)'; tabRis.style.color = 'var(--neon-green)'; }
     if (blockRis) blockRis.style.display = 'block';
-    if (hint) hint.innerText = 'Formato RIS estándar para importación directa en Zotero, Mendeley y EndNote:';
+    if (hint) {
+      hint.setAttribute('data-fmt', 'ris');
+      hint.innerText = (document.documentElement.lang === 'en')
+        ? 'Standard RIS format for direct import into Zotero, Mendeley, and EndNote:'
+        : 'Formato RIS estándar para importación directa en Zotero, Mendeley y EndNote:';
+    }
   }
 }
 
@@ -80,13 +95,18 @@ function copyActiveCitation() {
   const status = document.getElementById('bibtex-copy-status');
   if (!targetBlock) return;
   
+  const isEn = (document.documentElement.lang === 'en');
+  const copiedLabel = isEn ? 'Copied!' : '¡Copiado!';
+  const defaultLabel = isEn ? 'Copy to Clipboard' : 'Copiar al Portapapeles';
+  const statusLabel = isEn ? `Citation (${activeCitationFormat.toUpperCase()}) copied` : `Cita (${activeCitationFormat.toUpperCase()}) copiada`;
+
   const text = targetBlock.innerText || targetBlock.textContent;
   navigator.clipboard.writeText(text).then(() => {
-    if (btnText) btnText.innerText = '¡Copiado!';
+    if (btnText) btnText.innerText = copiedLabel;
     if (btnIcon) btnIcon.innerText = '✅';
-    if (status) status.innerText = `Cita (${activeCitationFormat.toUpperCase()}) copiada`;
+    if (status) status.innerText = statusLabel;
     setTimeout(() => {
-      if (btnText) btnText.innerText = 'Copiar al Portapapeles';
+      if (btnText) btnText.innerText = defaultLabel;
       if (btnIcon) btnIcon.innerText = '📋';
       if (status) status.innerText = '';
     }, 2500);
@@ -97,8 +117,8 @@ function copyActiveCitation() {
     window.getSelection().addRange(range);
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
-    if (btnText) btnText.innerText = '¡Copiado!';
-    setTimeout(() => { if (btnText) btnText.innerText = 'Copiar al Portapapeles'; }, 2500);
+    if (btnText) btnText.innerText = copiedLabel;
+    setTimeout(() => { if (btnText) btnText.innerText = defaultLabel; }, 2500);
   });
 }
 
@@ -110,9 +130,13 @@ function handleCustodiaSubmit(e) {
   const type = document.getElementById('cust-type').value;
   const msg = document.getElementById('cust-message').value.trim();
   const status = document.getElementById('cust-status');
+  const isEn = (document.documentElement.lang === 'en');
 
-  const subject = encodeURIComponent(`[NEXORD] Propuesta de Custodia Institucional - ${inst}`);
-  const body = encodeURIComponent(
+  const subject = isEn
+    ? encodeURIComponent(`[NEXORD] Institutional Stewardship Proposal - ${inst}`)
+    : encodeURIComponent(`[NEXORD] Propuesta de Custodia Institucional - ${inst}`);
+
+  const bodyEs = 
 `A la atención del Dr. José Manuel Cornejo Álvarez
 Plataforma Científica NEXORD / VISORD Engine
 NEXORD Research Initiative · Investigación independiente
@@ -134,27 +158,54 @@ Agradecemos de antemano su atención y quedamos a su disposición para coordinar
 
 Atentamente,
 ${rep}
-${inst}`
-  );
+${inst}`;
 
+  const bodyEn = 
+`To the attention of Dr. José Manuel Cornejo Álvarez
+NEXORD Scientific Platform / VISORD Engine
+NEXORD Research Initiative · Independent Research
+
+Dear Dr. Cornejo:
+
+We hereby contact the promoter team of the NEXORD Platform regarding the Call for Institutional Stewardship and Technology Transfer.
+
+ENTITY / CONTACT DETAILS:
+- Institution: ${inst}
+- Representative / Title: ${rep}
+- Institutional Email: ${email}
+- Interest Track: ${type}
+
+PROPOSAL DETAILS / MOTIVATION:
+${msg || 'We wish to explore terms of stewardship, institutional infrastructure hosting, and long-term governance of NEXORD software.'}
+
+Thank you in advance for your consideration. We remain available to coordinate a technical briefing or institutional presentation.
+
+Sincerely,
+${rep}
+${inst}`;
+
+  const body = encodeURIComponent(isEn ? bodyEn : bodyEs);
   const mailtoUrl = `mailto:josmancor@gmail.com?cc=info@nex-ord.org&subject=${subject}&body=${body}`;
   window.location.href = mailtoUrl;
 
   if (status) {
-    status.innerText = '✅ Cliente de correo abierto con la propuesta preformateada. También puede escribir directamente a info@nex-ord.org';
+    status.innerText = isEn
+      ? '✅ Email client opened with the preformatted proposal. You may also write directly to info@nex-ord.org'
+      : '✅ Cliente de correo abierto con la propuesta preformateada. También puede escribir directamente a info@nex-ord.org';
     setTimeout(() => { status.innerText = ''; }, 6000);
   }
 }
 
 function copyCustodiaDraft() {
-  const inst = (document.getElementById('cust-institution') ? document.getElementById('cust-institution').value.trim() : '') || '[Institución/Universidad]';
-  const rep = (document.getElementById('cust-representative') ? document.getElementById('cust-representative').value.trim() : '') || '[Nombre y Cargo]';
-  const email = (document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '') || '[email institucional]';
-  const type = document.getElementById('cust-type') ? document.getElementById('cust-type').value : 'Custodia y Gobernanza Institucional';
-  const msg = (document.getElementById('cust-message') ? document.getElementById('cust-message').value.trim() : '') || 'Interés formal en la custodia y alojamiento del software NEXORD.';
+  const isEn = (document.documentElement.lang === 'en');
+  const inst = (document.getElementById('cust-institution') ? document.getElementById('cust-institution').value.trim() : '') || (isEn ? '[Institution/University]' : '[Institución/Universidad]');
+  const rep = (document.getElementById('cust-representative') ? document.getElementById('cust-representative').value.trim() : '') || (isEn ? '[Name & Title]' : '[Nombre y Cargo]');
+  const email = (document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '') || (isEn ? '[institutional email]' : '[email institucional]');
+  const type = document.getElementById('cust-type') ? document.getElementById('cust-type').value : (isEn ? 'Permanent Institutional Stewardship' : 'Custodia y Gobernanza Institucional');
+  const msg = (document.getElementById('cust-message') ? document.getElementById('cust-message').value.trim() : '') || (isEn ? 'Formal interest in stewardship and institutional hosting of NEXORD software.' : 'Interés formal en la custodia y alojamiento del software NEXORD.');
   const status = document.getElementById('cust-status');
 
-  const draft = 
+  const draftEs = 
 `A la atención del Dr. José Manuel Cornejo Álvarez
 Plataforma Científica NEXORD / VISORD Engine
 NEXORD Research Initiative · Investigación independiente
@@ -178,9 +229,36 @@ Atentamente,
 ${rep}
 ${inst}`;
 
+  const draftEn = 
+`To the attention of Dr. José Manuel Cornejo Álvarez
+NEXORD Scientific Platform / VISORD Engine
+NEXORD Research Initiative · Independent Research
+
+Dear Dr. Cornejo:
+
+We hereby contact the promoter team of the NEXORD Platform regarding the Call for Institutional Stewardship and Technology Transfer.
+
+ENTITY / CONTACT DETAILS:
+- Institution: ${inst}
+- Representative / Title: ${rep}
+- Institutional Email: ${email}
+- Interest Track: ${type}
+
+PROPOSAL DETAILS / MOTIVATION:
+${msg}
+
+Thank you in advance for your consideration. We remain available to coordinate a technical briefing or institutional presentation.
+
+Sincerely,
+${rep}
+${inst}`;
+
+  const draft = isEn ? draftEn : draftEs;
+  const successMsg = isEn ? '📋 Draft copied to clipboard. Ready to paste into your email.' : '📋 Borrador copiado al portapapeles. Listo para pegar en su correo.';
+
   navigator.clipboard.writeText(draft).then(() => {
     if (status) {
-      status.innerText = '📋 Borrador copiado al portapapeles. Listo para pegar en su correo.';
+      status.innerText = successMsg;
       setTimeout(() => { status.innerText = ''; }, 4000);
     }
   }).catch(() => {
@@ -192,7 +270,7 @@ ${inst}`;
     document.execCommand('copy');
     document.body.removeChild(tempDiv);
     if (status) {
-      status.innerText = '📋 Borrador copiado al portapapeles. Listo para pegar en su correo.';
+      status.innerText = successMsg;
       setTimeout(() => { status.innerText = ''; }, 4000);
     }
   });
@@ -223,18 +301,19 @@ function initHeroVideo() {
   vid.removeAttribute('loop');
 
   function updateAudioUI(isMuted) {
+    const isEn = (document.documentElement.lang === 'en');
     if (isMuted) {
       if (btnAudio) {
         btnAudio.classList.remove('audio-active');
       }
       if (audioIcon) audioIcon.textContent = '🔇';
-      if (audioLabel) audioLabel.textContent = 'Activar Audio';
+      if (audioLabel) audioLabel.textContent = isEn ? 'Enable Audio' : 'Activar Audio';
     } else {
       if (btnAudio) {
         btnAudio.classList.add('audio-active');
       }
       if (audioIcon) audioIcon.textContent = '🔊';
-      if (audioLabel) audioLabel.textContent = 'Silenciar Audio';
+      if (audioLabel) audioLabel.textContent = isEn ? 'Mute Audio' : 'Silenciar Audio';
     }
   }
 
@@ -308,21 +387,24 @@ function initHeroVideo() {
 
   // Sincronizar botones e iconos con el estado real del reproductor
   vid.addEventListener('play', () => {
+    const isEn = (document.documentElement.lang === 'en');
     if (playIcon) playIcon.textContent = '⏸️';
-    if (playLabel) playLabel.textContent = 'Pausa';
+    if (playLabel) playLabel.textContent = isEn ? 'Pause' : 'Pausa';
     if (btnPlay) btnPlay.classList.add('playing');
   });
 
   vid.addEventListener('pause', () => {
+    const isEn = (document.documentElement.lang === 'en');
     if (playIcon) playIcon.textContent = '▶️';
-    if (playLabel) playLabel.textContent = 'Reproducir';
+    if (playLabel) playLabel.textContent = isEn ? 'Play' : 'Reproducir';
     if (btnPlay) btnPlay.classList.remove('playing');
   });
 
   vid.addEventListener('ended', () => {
     // Al concluir la reproducción única (sin bucle)
+    const isEn = (document.documentElement.lang === 'en');
     if (playIcon) playIcon.textContent = '🔄';
-    if (playLabel) playLabel.textContent = 'Repetir';
+    if (playLabel) playLabel.textContent = isEn ? 'Replay' : 'Repetir';
     if (btnPlay) btnPlay.classList.remove('playing');
   });
 
