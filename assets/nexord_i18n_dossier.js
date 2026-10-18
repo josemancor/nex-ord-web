@@ -70,7 +70,7 @@
       s3_li3: 'Resolución de dudas sobre el pipeline de simulación cinemática y generación de informes forenses.',
 
       // Sección 4
-      s4_title: 'Cláusula Inviolable de Reversión Ética (Regla 21 &amp; Privacidad)',
+      s4_title: 'Cláusula de Reversión Ética (Regla 21 &amp; Privacidad)',
       s4_lead: 'La cesión no constituye una renuncia a ciegas. El depósito queda formalmente sujeto a una <strong>condición resolutoria expresa de reversión automática</strong> para blindar el destino ético del proyecto:',
       s4_causes_title: '⚖️ Causales de Reversión Automática',
       s4_c1: '<strong>Uso Punitivo de los Datos (Regla 21):</strong> Empleo de las sociomatrices para sanciones, despidos, señalamientos o daño a la autoestima personal.',
@@ -166,7 +166,7 @@
       s3_li3: 'Advisory on the kinematic simulation pipeline and expert forensic reporting.',
 
       // Section 4
-      s4_title: 'Inviolable Ethical Reversion Clause (Rule 21 &amp; Privacy)',
+      s4_title: 'Ethical Reversion Clause (Rule 21 &amp; Privacy)',
       s4_lead: 'The transfer is not an uncritical surrender. The deposit is subject to an <strong>express resolutory condition of automatic reversion</strong> to shield the ethical mission of the project:',
       s4_causes_title: '⚖️ Causes of Automatic Reversion',
       s4_c1: '<strong>Punitive Use of Data (Rule 21):</strong> Employing sociomatrices for sanctions, dismissals, public shaming, or damage to personal self-esteem.',

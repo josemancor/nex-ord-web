@@ -35,7 +35,7 @@
 
       personal_title: 'Tu Ficha de Autoconocimiento y Fortalezas',
       personal_intro: 'Esta sección es estrictamente confidencial. Refleja tu huella positiva y las percepciones compartidas que enriquecen tu desarrollo personal dentro del colectivo.',
-      ethical_title: '🛡️ Garantía Deontológica Inviolable (Regla 21):',
+      ethical_title: '🛡️ Garantía Deontológica (Regla 21):',
       ethical_text: 'Los datos sociométricos se procesan con fines exclusivamente formativos y no punitivos. Queda terminantemente proscrito cualquier uso disciplinario o lesivo de la autoestima personal.'
     },
 
@@ -63,7 +63,7 @@
 
       personal_title: 'Your Self-Knowledge & Strengths Profile',
       personal_intro: 'This section is strictly confidential. It highlights your positive imprint and shared strengths that nurture your growth within the collective.',
-      ethical_title: '🛡️ Inviolable Deontological Guarantee (Rule 21):',
+      ethical_title: '🛡️ Deontological Guarantee (Rule 21):',
       ethical_text: 'Sociometric data is processed exclusively for formative, non-punitive development. Any disciplinary usage or damage to individual self-esteem is strictly prohibited.'
     }
   };

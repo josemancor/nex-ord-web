@@ -23,14 +23,14 @@
 
       hero_pill: '🛡️ MARCO ÉTICO, DEONTOLÓGICO Y REGULATORIO CANÓNICO',
       hero_title: 'Código Deontológico, Privacidad por Diseño<br><span style="background: linear-gradient(135deg, #38BDF8, #00FF87); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">& Cumplimiento RGPD</span>',
-      hero_subtitle: 'Garantías inviolables del Investigador Principal (Regla 21), arquitectura de protección de datos personales (<em>Privacy by Design</em>) y condiciones de licencia abierta para la adopción institucional de NEXORD.',
+      hero_subtitle: 'Garantías del Investigador Principal (Regla 21), arquitectura de protección de datos personales (<em>Privacy by Design</em>) y condiciones de licencia abierta para la adopción institucional de NEXORD.',
 
       tab_deonto: '🛡️ 1. Código Deontológico PI (Regla 21)',
       tab_rgpd: '🔒 2. Privacidad por Diseño & RGPD',
       tab_legal: '📜 3. Aviso Legal & Licencia CC-BY-4.0',
 
       // Pestaña 1
-      p1_title: 'Canon Deontológico Inviolable del Investigador Principal (Regla 21)',
+      p1_title: 'Canon Deontológico del Investigador Principal (Regla 21)',
       p1_highlight_title: 'Declaración Oficial Homologada (Regla Canónica 21 de NEXORD)',
       p1_highlight_text: '«En su aplicación a estudios de campo con personas reales, NEXORD garantiza un <strong>uso exclusivamente formativo, no punitivo</strong>, de los datos. Esta exigencia salvaguarda la <strong>privacidad por diseño (<em>Privacy by Design</em>)</strong> y exige la acreditación profesional e institucional así como el compromiso explícito del Investigador Principal (IP) conforme a los principios de la Ciencia Abierta, de <strong>no dañar jamás con sus informes la autoestima personal ni la reputación social de los participantes</strong>, dando por características intrínsecas de la personalidad individual lo que son fenómenos termodinámicos estrictamente grupales.»',
       p1_lead: 'El ecosistema NEXORD no es una herramienta de clasificación penal, selección punitiva o etiquetado psiquiátrico de sujetos. Es un sistema físico-matemático orientado a comprender la arquitectura de tensiones y equilibrios de un colectivo. Toda entidad (colegio, instituto, empresa, hospital o universidad) que implemente la plataforma suscribe formalmente los siguientes cuatro principios directores:',
@@ -101,14 +101,14 @@
 
       hero_pill: '🛡️ CANONICAL ETHICAL, DEONTOLOGICAL & REGULATORY FRAMEWORK',
       hero_title: 'Deontological Code, Privacy by Design<br><span style="background: linear-gradient(135deg, #38BDF8, #00FF87); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">& GDPR Compliance</span>',
-      hero_subtitle: 'Inviolable guarantees of the Principal Investigator (Rule 21), personal data protection architecture (<em>Privacy by Design</em>), and open license terms for institutional adoption of NEXORD.',
+      hero_subtitle: 'Guarantees of the Principal Investigator (Rule 21), personal data protection architecture (<em>Privacy by Design</em>), and open license terms for institutional adoption of NEXORD.',
 
       tab_deonto: '🛡️ 1. PI Deontological Code (Rule 21)',
       tab_rgpd: '🔒 2. Privacy by Design & GDPR',
       tab_legal: '📜 3. Legal Notice & CC-BY-4.0 License',
 
       // Tab 1
-      p1_title: 'Inviolable Deontological Canon of the Principal Investigator (Rule 21)',
+      p1_title: 'Deontological Canon of the Principal Investigator (Rule 21)',
       p1_highlight_title: 'Official Homologated Declaration (NEXORD Canonical Rule 21)',
       p1_highlight_text: '«In its application to field studies with real human participants, NEXORD guarantees an <strong>exclusively formative, non-punitive use</strong> of data. This mandate safeguards <strong>privacy by design (<em>Privacy by Design</em>)</strong> and requires institutional and professional accreditation as well as the explicit commitment of the Principal Investigator (PI) under Open Science principles, to <strong>never damage personal self-esteem or social reputation of participants with diagnostic reports</strong>, attributing to intrinsic traits of individual personality what are strictly group-level thermodynamic phenomena.»',
       p1_lead: 'The NEXORD ecosystem is not an instrument for punitive screening, sanctioning, or psychiatric labeling of individuals. It is a physical-mathematical system designed to decipher the architecture of tensions and equilibria within human collectives. Any entity (school, institute, corporation, hospital, or university) deploying the platform formally endorses the following four governing principles:',

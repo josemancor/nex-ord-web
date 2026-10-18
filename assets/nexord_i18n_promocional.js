@@ -252,7 +252,7 @@
       guard_b4_title: '🔍 Código Auditable &amp; Determinista',
       guard_b4_desc: 'Matemática verificable (descomposición SVD, χ², operadores de Estrada, Grassmann). Sin algoritmos de caja negra no reproducibles.',
       guard_b5_title: '🌍 Universalidad y Nodos Federados (UNESCO Open Science)',
-      guard_b5_desc: 'Patrimonio Abierto de la Humanidad. Cláusula inviolable de salvaguarda que impide el secuestro territorial o lingüístico: arquitectura desacoplada homologada en Español e Inglés, con idiomas para futuras localizaciones..., garantizando su réplica y despliegue en redes universitarias sin fronteras geopolíticas.',
+      guard_b5_desc: 'Patrimonio Abierto de la Humanidad. Cláusula de salvaguarda que impide el secuestro territorial o lingüístico: arquitectura desacoplada homologada en Español e Inglés, con idiomas para futuras localizaciones..., garantizando su réplica y despliegue en redes universitarias sin fronteras geopolíticas.',
 
       // Formulario de Contacto
       contact_tag: 'CANAL DIRECTO DE CONTACTO',
@@ -561,7 +561,7 @@
       guard_b4_title: '🔍 Auditable &amp; Deterministic Code',
       guard_b4_desc: 'Verifiable mathematics (SVD decomposition, χ², Estrada communicability, Grassmann manifolds). Free from non-reproducible black-box heuristics.',
       guard_b5_title: '🌍 Universality &amp; Federated Nodes (UNESCO Open Science)',
-      guard_b5_desc: 'Global Open Heritage. Inviolable safeguard clause preventing territorial or linguistic capture: decoupled architecture certified in Spanish and English, with languages for future localizations..., ensuring seamless replication and deployment across university networks across borders.',
+      guard_b5_desc: 'Global Open Heritage. Safeguard clause preventing territorial or linguistic capture: decoupled architecture certified in Spanish and English, with languages for future localizations..., ensuring seamless replication and deployment across university networks across borders.',
 
       // Contact Form
       contact_tag: 'DIRECT CONTACT CHANNEL',
