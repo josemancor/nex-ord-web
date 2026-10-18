@@ -502,6 +502,29 @@
       border-left: 1px solid rgba(255, 230, 0, 0.28) !important;
     }
 
+    .layout-todo-group {
+      border-left: 1px solid rgba(0, 255, 135, 0.35) !important;
+    }
+
+    .btn-layout-todo {
+      background: rgba(0, 255, 135, 0.12);
+      border-color: rgba(0, 255, 135, 0.45);
+      color: var(--neon-green);
+      font-weight: 800;
+    }
+    .btn-layout-todo:hover {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: #FFFFFF;
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
+    }
+    .btn-layout-todo.active {
+      background: rgba(0, 255, 135, 0.3);
+      border-color: var(--neon-green);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
+    }
+
     /* Contenedor de Varios Carriles (Stack) */
     .multicarril-stack-container {
       position: relative;
@@ -1356,6 +1379,10 @@
               <button class="btn-layout" id="btn-multi-cruz-gt" onclick="setLayoutMode('varios_carriles', 'cruzado_gt')" title="Carriles Cruzados G × T: Grupos y Tiempos">⮂ G × T</button>
               <button class="btn-layout" id="btn-multi-cruz-gc" onclick="setLayoutMode('varios_carriles', 'cruzado_gc')" title="Carriles Cruzados G × C: Grupos y Criterios">⮂ G × C</button>
               <button class="btn-layout" id="btn-multi-cruz-tc" onclick="setLayoutMode('varios_carriles', 'cruzado_tc')" title="Carriles Cruzados T × C: Tiempos y Criterios">⮂ T × C</button>
+            </div>
+            <div class="layout-multi-group layout-todo-group">
+              <span class="layout-multi-label" style="color:var(--neon-green)">TODO:</span>
+              <button class="btn-layout btn-layout-todo" id="btn-layout-todo-gcz-ty" onclick="setLayoutMode('varios_carriles', 'todo_gxcz_ty')" title="TODO: Grupos y Criterios por Tiempos (GxCz - Ty)">🌐 GxCz - Ty</button>
             </div>
           </div>
 
@@ -9620,6 +9647,7 @@
       document.getElementById('btn-multi-cruz-gt')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_gt');
       document.getElementById('btn-multi-cruz-gc')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_gc');
       document.getElementById('btn-multi-cruz-tc')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_tc');
+      document.getElementById('btn-layout-todo-gcz-ty')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'todo_gxcz_ty');
 
       const hudLayout = document.getElementById('hud-layout');
       if (hudLayout) {
@@ -9633,7 +9661,8 @@
             criterios: 'Varios (Criterios C1-C2)',
             cruzado_gt: 'Cruzados (G × T)',
             cruzado_gc: 'Cruzados (G × C)',
-            cruzado_tc: 'Cruzados (T × C)'
+            cruzado_tc: 'Cruzados (T × C)',
+            todo_gxcz_ty: 'TODO (GxCz - Ty)'
           };
           hudLayout.textContent = splitLabels[multicarrilSplit] || 'Varios Carriles';
           hudLayout.style.color = 'var(--neon-gold)';
@@ -9657,6 +9686,7 @@
         else if (multicarrilSplit === 'cruzado_gt') splitMsg = '⮂ Carriles Cruzados: Grupos × Tiempos (G × T)';
         else if (multicarrilSplit === 'cruzado_gc') splitMsg = '⮂ Carriles Cruzados: Grupos × Criterios (G × C)';
         else if (multicarrilSplit === 'cruzado_tc') splitMsg = '⮂ Carriles Cruzados: Tiempos × Criterios (T × C)';
+        else if (multicarrilSplit === 'todo_gxcz_ty') splitMsg = '🌐 TODO: Grupos y Criterios por Tiempos (GxCz - Ty)';
         showLimitToast(splitMsg, 2200);
       }
 
@@ -9679,6 +9709,12 @@
           masterPadState.tensor.t = ['1', '3'];
           masterPadState.tensor.c = ['1', '2'];
           setTensorViewMode('tc');
+        }
+        else if (multicarrilSplit === 'todo_gxcz_ty') {
+          masterPadState.tensor.g = ['1', '2'];
+          masterPadState.tensor.c = ['1', '2'];
+          masterPadState.tensor.t = ['1', '2', '3'];
+          setTensorViewMode('all');
         }
       }
 
@@ -9811,6 +9847,31 @@
             { id: 'gc_1_2', title: 'CARRIL CRUZADO 2: GRUPO A (G1) · C2 TAREA', g: '1', t: tShared, c: '2', color: '#FFE600' }
           ];
         }
+      } else if (multicarrilSplit === 'todo_gxcz_ty') {
+        // TODO: GxCz - Ty (Grupos y Criterios en carriles paralelos con evolución temporal Ty)
+        const gActive = masterPadState.tensor.g.length > 0 ? masterPadState.tensor.g.slice(0, 2) : ['1', '2'];
+        const cActive = masterPadState.tensor.c.length > 0 ? masterPadState.tensor.c : ['1', '2'];
+        const groupLabels = { '1': 'GRUPO A (G1)', '2': 'GRUPO B (G2)', '3': 'GRUPO C (G3)' };
+        const critLabels = { '1': 'C1 AFINIDAD', '2': 'C2 TAREA' };
+        const palette = ['#38BDF8', '#FFE600', '#FF007F', '#00FF87'];
+        let idx = 0;
+        lanes = [];
+        gActive.forEach(gVal => {
+          cActive.forEach(cVal => {
+            if (lanes.length < 4) {
+              lanes.push({
+                id: `todo_gcz_${gVal}_${cVal}`,
+                title: `CARRIL ${idx + 1}: ${groupLabels[gVal] || 'G' + gVal} · ${critLabels[cVal] || 'C' + cVal} · [T1 ➔ T2 ➔ T3]`,
+                g: gVal,
+                t: 'multi',
+                c: cVal,
+                color: palette[idx % palette.length],
+                isTodoTy: true
+              });
+              idx++;
+            }
+          });
+        });
       } else if (multicarrilSplit === 'cruzado_tc') {
         // CARRILES CRUZADOS T × C (Tiempos cruzados con Criterios)
         const tActive = masterPadState.tensor.t.length > 0 ? masterPadState.tensor.t : ['1', '3'];
@@ -9964,6 +10025,89 @@
           }
         }
 
+        if (lane.isTodoTy) {
+          // ===================================================================
+          // RENDERIZADO TODO: GxCz - Ty (Evolución temporal T1 ➔ T2 ➔ T3 en cada carril)
+          // ===================================================================
+          const times = ['1', '2', '3'];
+          const tColors = ['#38BDF8', '#FF9F1C', '#00FF87'];
+          const tLabels = ['T1 Inicial', 'T2 Intermedio', 'T3 Consolidado'];
+          const allTimeCurves = [];
+
+          times.forEach((tVal, tIdx) => {
+            const matK = lane.g + 'g' + tVal + 't' + lane.c + 'c';
+            const mData = TENSOR_DATA[matK];
+            const pts = [];
+            for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+              const stLane = getLaneStation(sIdx, lane);
+              const x = padL + sIdx * xStep;
+              const tetra = getStationRawTetragram(stLane, mData);
+              const val = computeDensityValue(tetra, currentDensity);
+              pts.push({ x, y: scaleY(val), val });
+            }
+            const segs = useCurva ? getCubicBezierSegments(pts) : null;
+            allTimeCurves.push({ tVal, color: tColors[tIdx], label: tLabels[tIdx], pts, segs });
+          });
+
+          // Banda de deriva temporal entre T1 y T3
+          if (allTimeCurves.length >= 3) {
+            const p1 = allTimeCurves[0].pts, p3 = allTimeCurves[2].pts;
+            const s1 = allTimeCurves[0].segs, s3 = allTimeCurves[2].segs;
+            ctx.fillStyle = 'rgba(0, 255, 135, 0.08)';
+            ctx.beginPath();
+            ctx.moveTo(p1[0].x, p1[0].y);
+            if (useCurva) {
+              traceCurvedPathForward(ctx, s1);
+              ctx.lineTo(p3[totalStations - 1].x, p3[totalStations - 1].y);
+              traceCurvedPathReverse(ctx, s3);
+            } else {
+              for (let i = 1; i < totalStations; i++) ctx.lineTo(p1[i].x, p1[i].y);
+              for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(p3[i].x, p3[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          // Trazar cada curva temporal T1, T2, T3
+          allTimeCurves.forEach(tCrv => {
+            ctx.strokeStyle = tCrv.color;
+            ctx.lineWidth = 1.9;
+            ctx.shadowColor = tCrv.color;
+            ctx.shadowBlur = 4;
+            ctx.beginPath();
+            ctx.moveTo(tCrv.pts[0].x, tCrv.pts[0].y);
+            if (useCurva) traceCurvedPathForward(ctx, tCrv.segs);
+            else for (let i = 1; i < totalStations; i++) ctx.lineTo(tCrv.pts[i].x, tCrv.pts[i].y);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            for (let i = 0; i < totalStations; i++) {
+              const isSel = (i === activeStationIndex);
+              ctx.fillStyle = isSel ? '#FFFFFF' : tCrv.color;
+              ctx.beginPath(); ctx.arc(tCrv.pts[i].x, tCrv.pts[i].y, isSel ? 5.2 : 2.5, 0, Math.PI * 2); ctx.fill();
+            }
+          });
+
+          // Telemetría temporal en la cabecera del carril
+          const vT1 = (allTimeCurves[0].pts[activeStationIndex]?.val) || 0;
+          const vT2 = (allTimeCurves[1].pts[activeStationIndex]?.val) || 0;
+          const vT3 = (allTimeCurves[2].pts[activeStationIndex]?.val) || 0;
+          const deltaT = vT3 - vT1;
+
+          const bdrEl = document.getElementById('lane-bdr-' + laneIdx);
+          const sdrEl = document.getElementById('lane-sdr-' + laneIdx);
+          const fricEl = document.getElementById('lane-fric-' + laneIdx);
+          const valEl = document.getElementById('lane-val-' + laneIdx);
+
+          if (bdrEl) { bdrEl.textContent = 'T1: ' + (vT1 >= 0 ? '+' : '') + vT1.toFixed(2); bdrEl.style.color = '#38BDF8'; }
+          if (sdrEl) { sdrEl.textContent = 'T2: ' + (vT2 >= 0 ? '+' : '') + vT2.toFixed(2); sdrEl.style.color = '#FF9F1C'; }
+          if (fricEl) { fricEl.textContent = 'T3: ' + (vT3 >= 0 ? '+' : '') + vT3.toFixed(2); fricEl.style.color = '#00FF87'; }
+          if (valEl) {
+            valEl.textContent = (deltaT >= 0 ? '+' : '') + deltaT.toFixed(2);
+            valEl.style.color = deltaT > 0 ? 'var(--neon-green)' : (deltaT < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+          }
+
+        } else {
         const activeMets = masterPadState.metrics;
         const is3ViasDARC = (carrilTrackMode === '3vias_da_rc' || (activeMets.length === 2 && activeMets.includes('D2') && activeMets.includes('D3')));
         const is3ViasExpect = (carrilTrackMode === '3vias_expect' || (activeMets.length === 2 && activeMets.includes('D1') && activeMets.includes('D4')));
@@ -10175,6 +10319,7 @@
             if (sIdx >= 0 && sIdx < totalStations) updateActiveStation(sIdx, true);
           }
         };
+        } // Fin if/else lane.isTodoTy
       });
     }
 
