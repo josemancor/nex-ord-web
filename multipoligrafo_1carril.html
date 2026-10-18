@@ -2239,12 +2239,12 @@
 
       <!-- 3 OPCIONES PREDETERMINADAS POR VERSIÓN -->
       <div class="nav-sub-selectors" id="nav-sub-selectors">
-        <!-- 3 Preajustes para Versión 1 -->
+        <!-- 3 Preajustes para Versión 1: Graduación 1 (Sencilla) a 3-4 (Completa) -->
         <div class="sub-group" id="sub-group-1carril">
-          <span class="sub-lbl">OPCIONES:</span>
-          <button class="btn-sub active" id="btn-sub-1c-1" onclick="applyContextualPreset(1)">1. SDR</button>
-          <button class="btn-sub" id="btn-sub-1c-2" onclick="applyContextualPreset(2)">2. Tríada</button>
-          <button class="btn-sub" id="btn-sub-1c-3" onclick="applyContextualPreset(3)">3. Tetragrama</button>
+          <span class="sub-lbl">GRADUACIÓN:</span>
+          <button class="btn-sub active" id="btn-sub-1c-1" onclick="applyContextualPreset(1)" title="1 Canal: Base Monádica SDR (Sencilla)">1. 1 Canal (SDR)</button>
+          <button class="btn-sub" id="btn-sub-1c-2" onclick="applyContextualPreset(2)" title="2 Canales: Tríada Dialéctica DA ⇄ RC + Baricentro (Intermedia)">2. 2 Canales (DA-RC)</button>
+          <button class="btn-sub" id="btn-sub-1c-3" onclick="applyContextualPreset(3)" title="4 Canales: Tetragrama Completo D1..D4 (Completa)">3. 4 Canales (Tetra)</button>
         </div>
 
         <!-- 3 Preajustes para Versión 2 -->
@@ -2618,10 +2618,10 @@
             <button class="btn-carril-mode" id="btn-geom-quebrada" onclick="setLineInterpolation('quebrada')" title="Línea quebrada clásica">Quebrada</button>
           </div>
           <div class="carril-presets-deck">
-            <span class="presets-deck-label">PREAJUSTES:</span>
-            <button class="btn-preset active" id="btn-preset-1" onclick="applyContextualPreset(1)" title="Opción 1 Predeterminada">1. SDR</button>
-            <button class="btn-preset" id="btn-preset-2" onclick="applyContextualPreset(2)" title="Opción 2 Predeterminada">2. Tríada</button>
-            <button class="btn-preset" id="btn-preset-3" onclick="applyContextualPreset(3)" title="Opción 3 Predeterminada">3. Tetragrama</button>
+            <span class="presets-deck-label">GRADUACIÓN:</span>
+            <button class="btn-preset active" id="btn-preset-1" onclick="applyContextualPreset(1)" title="1 Canal: Base Monádica SDR (Sencilla)">1. 1 Canal (SDR)</button>
+            <button class="btn-preset" id="btn-preset-2" onclick="applyContextualPreset(2)" title="2 Canales: Tríada Dialéctica DA ⇄ RC (Intermedia)">2. 2 Canales (DA-RC)</button>
+            <button class="btn-preset" id="btn-preset-3" onclick="applyContextualPreset(3)" title="4 Canales: Tetragrama SMIb Completo (Completa)">3. 4 Canales (Tetra)</button>
           </div>
         </div>
       </div>
@@ -9915,6 +9915,10 @@
         showLimitToast('🎯 Opción 3: Tetragrama Completo D1·D2·D3·D4 (4 Canales)', 2200);
       }
 
+      document.getElementById('btn-mode-3vias-darc')?.classList.toggle('active', carrilTrackMode === '3vias_da_rc');
+      document.getElementById('btn-mode-3vias-expect')?.classList.toggle('active', carrilTrackMode === '3vias_expect');
+      document.getElementById('btn-mode-single18d')?.classList.toggle('active', carrilTrackMode === 'single_18d');
+
       updateMasterPadUI();
       updateHeaderBadges();
       drawCarril();
@@ -10785,9 +10789,9 @@
     // DEFINICIÓN CANÓNICA DE LAS 3 OPCIONES PREDETERMINADAS POR VERSIÓN
     const PRESETS_BY_VERSION = {
       '1carril': [
-        { id: 1, label: '1. SDR', full: 'Opción 1: Base SDR' },
-        { id: 2, label: '2. Tríada', full: 'Opción 2: Tríada DA ⇄ RC' },
-        { id: 3, label: '3. Tetragrama', full: 'Opción 3: Tetragrama' }
+        { id: 1, label: '1. 1 Canal (SDR)', full: 'Opción 1 (Sencilla): 1 Canal · Base SDR' },
+        { id: 2, label: '2. 2 Canales (DA-RC)', full: 'Opción 2 (Intermedia): 2 Canales · Tríada DA ⇄ RC' },
+        { id: 3, label: '3. 4 Canales (Tetra)', full: 'Opción 3 (Completa): 4 Canales · Tetragrama D1..D4' }
       ],
       'varios_carriles': [
         { id: 1, label: '1. Grupos', full: 'Opción 1: Por Grupos' },
@@ -12945,8 +12949,14 @@
         document.getElementById('carril-heading-title').textContent = `G${currentGroup} · T${currentTime} · C${currentCriterion} · Expectativas: pDA ⇄ pRC ⇄ S14`;
         document.getElementById('carril-heading-formula').textContent = 'S14 = (pDA + pRC) / 2';
       } else {
-        document.getElementById('carril-heading-title').textContent = `G${currentGroup} · T${currentTime} · C${currentCriterion} · ${currentDensity}`;
-        document.getElementById('carril-heading-formula').textContent = getMetricFormula(currentDensity);
+        const nCan = masterPadState.metrics.length;
+        if (nCan === 4) {
+          document.getElementById('carril-heading-title').textContent = `G${currentGroup} · T${currentTime} · C${currentCriterion} · Tetragrama D1..D4 (4 Canales)`;
+          document.getElementById('carril-heading-formula').textContent = 'Tetragrama SMIb Completo (4D)';
+        } else {
+          document.getElementById('carril-heading-title').textContent = `G${currentGroup} · T${currentTime} · C${currentCriterion} · Base ${currentDensity} (1 Canal)`;
+          document.getElementById('carril-heading-formula').textContent = getMetricFormula(currentDensity);
+        }
       }
 
       // Telemetría de la sociomatriz activa
