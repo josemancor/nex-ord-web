@@ -61,7 +61,7 @@
       p2_box3_text: 'Los conjuntos de datos procesados en entornos controlados cuentan con expiración por tiempo de vida (<em>Time-To-Live</em>). Cuando concluye el periodo de intervención pactado, el sistema ejecuta una sobreescritura binaria con ceros (<code>0x00</code>) garantizando la imposibilidad de recuperación forense.',
       
       p2_box4_title: '📑 Derechos ARCO y Delegado de Protección de Datos',
-      p2_box4_text: 'Cualquier participante o tutor legal puede ejercer en cualquier momento sus derechos de Acceso, Rectificación, Supresión, Oposición y Limitación del tratamiento comunicándolo directamente a la dirección del Investigador Principal o al Delegado de Protección de Datos institucional: <code>info@nexord.org</code>.',
+      p2_box4_text: 'Cualquier participante o tutor legal puede ejercer en cualquier momento sus derechos de Acceso, Rectificación, Supresión, Oposición y Limitación del tratamiento comunicándolo directamente a la dirección del Investigador Principal o al Delegado de Protección de Datos institucional: <code>info@nex-ord.org</code>.',
 
       // Pestaña 3
       p3_title: 'Aviso Legal, Propiedad Intelectual y Licencia Internacional',
@@ -136,7 +136,7 @@
       p2_box3_text: 'Datasets processed in controlled environments include strict Time-To-Live (TTL) expiration. Upon conclusion of the agreed intervention cycle, the system executes a binary overwrite with zeros (<code>0x00</code>), ensuring forensic unrecoverability.',
       
       p2_box4_title: '📑 ARCO Rights & Data Protection Officer',
-      p2_box4_text: 'Any participant or legal guardian may at any time exercise their rights of Access, Rectification, Erasure, Objection, and Restriction of processing by contacting the Principal Investigator or institutional Data Protection Officer at: <code>info@nexord.org</code>.',
+      p2_box4_text: 'Any participant or legal guardian may at any time exercise their rights of Access, Rectification, Erasure, Objection, and Restriction of processing by contacting the Principal Investigator or institutional Data Protection Officer at: <code>info@nex-ord.org</code>.',
 
       // Tab 3
       p3_title: 'Legal Notice, Intellectual Property & International License',

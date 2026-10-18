@@ -137,11 +137,11 @@ ${rep}
 ${inst}`
   );
 
-  const mailtoUrl = `mailto:josmancor@gmail.com?cc=info@nexord.org&subject=${subject}&body=${body}`;
+  const mailtoUrl = `mailto:josmancor@gmail.com?cc=info@nex-ord.org&subject=${subject}&body=${body}`;
   window.location.href = mailtoUrl;
 
   if (status) {
-    status.innerText = '✅ Cliente de correo abierto con la propuesta preformateada. También puede escribir directamente a info@nexord.org';
+    status.innerText = '✅ Cliente de correo abierto con la propuesta preformateada. También puede escribir directamente a info@nex-ord.org';
     setTimeout(() => { status.innerText = ''; }, 6000);
   }
 }
