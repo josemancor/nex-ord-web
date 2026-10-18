@@ -1920,8 +1920,8 @@
     .master-keypad-panel {
       width: 190px;
       min-width: 190px;
-      max-height: 560px;
-      min-height: 480px;
+      max-height: 720px;
+      min-height: 600px;
       overflow-y: auto;
       border-right: 1.5px solid rgba(255, 255, 255, 0.12);
     }
@@ -1934,13 +1934,14 @@
       background: #040714;
       position: relative;
       overflow: hidden;
+      min-height: 600px;
     }
 
     .canvas-container {
       position: relative;
       flex: 1;
       width: 100%;
-      min-height: 480px;
+      min-height: 600px;
       height: 100%;
       background: #040714;
     }
@@ -1954,8 +1955,8 @@
       width: 360px;
       min-width: 350px;
       max-width: 380px;
-      max-height: 560px;
-      min-height: 480px;
+      max-height: 720px;
+      min-height: 600px;
       overflow-y: auto;
       background: #060B1C;
       display: flex;
@@ -2277,14 +2278,14 @@
       <div class="carril-header">
         <div class="carril-title-group">
           <span class="carril-badge-num">CARRIL 1</span>
-          <span class="carril-main-title" id="carril-heading-title">Grupo A · T1 · C1 · 3 Vías Paralelas: DA ⇄ RC ⇄ (DA+RC)/2</span>
-          <span class="carril-metric-formula" id="carril-heading-formula">Baricentro S23 = (DA + RC) / 2</span>
+          <span class="carril-main-title" id="carril-heading-title">G1 · T1 · C1 · Señal Base SDR</span>
+          <span class="carril-metric-formula" id="carril-heading-formula">SDR = (D1 + D2 + D3 + D4) / 4</span>
         </div>
         <div class="carril-mode-selector">
           <!-- SELECTOR DE VÍAS -->
-          <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas continuas: DA, RC y (DA+RC)/2">3 Vías</button>
+          <button class="btn-carril-mode" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas continuas: DA, RC y (DA+RC)/2">3 Vías</button>
           <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y S14">Expectativas</button>
-          <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de las 18 densidades">Señal</button>
+          <button class="btn-carril-mode active" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de las 18 densidades">Señal</button>
         </div>
         <div class="carril-telemetry">
           <div class="telem-box"><span>CAN:</span><strong id="telem-channels" style="color:var(--neon-gold)">1 / 4</strong></div>
@@ -2327,7 +2328,7 @@
             <div class="pad-row">
               <span class="pad-row-num">2</span>
               <button class="pad-cell active-amber" id="pcell-gt-g1" onclick="toggleTensorCell('g', '1')">G1</button>
-              <button class="pad-cell" id="pcell-gt-t1" onclick="toggleTensorCell('t', '1')">T1</button>
+              <button class="pad-cell active-amber" id="pcell-gt-t1" onclick="toggleTensorCell('t', '1')">T1</button>
             </div>
             <div class="pad-row">
               <span class="pad-row-num"></span>
@@ -2346,7 +2347,7 @@
             <div class="pad-row">
               <span class="pad-row-num">2</span>
               <button class="pad-cell active-amber" id="pcell-gc-g1" onclick="toggleTensorCell('g', '1')">G1</button>
-              <button class="pad-cell" id="pcell-gc-c1" onclick="toggleTensorCell('c', '1')">C1</button>
+              <button class="pad-cell active-amber" id="pcell-gc-c1" onclick="toggleTensorCell('c', '1')">C1</button>
             </div>
             <div class="pad-row">
               <span class="pad-row-num"></span>
@@ -2364,8 +2365,8 @@
           <div class="pad-block" id="pad-block-tc">
             <div class="pad-row">
               <span class="pad-row-num">2</span>
-              <button class="pad-cell" id="pcell-tc-t1" onclick="toggleTensorCell('t', '1')">T1</button>
-              <button class="pad-cell" id="pcell-tc-c1" onclick="toggleTensorCell('c', '1')">C1</button>
+              <button class="pad-cell active-amber" id="pcell-tc-t1" onclick="toggleTensorCell('t', '1')">T1</button>
+              <button class="pad-cell active-amber" id="pcell-tc-c1" onclick="toggleTensorCell('c', '1')">C1</button>
             </div>
             <div class="pad-row">
               <span class="pad-row-num"></span>
@@ -2626,9 +2627,18 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 4: GUÍA DIDÁCTICA Y NOTA CANÓNICA -->
-    <section class="didactic-box">
-      <h2>📖 Guía Pedagógica del Sistema de 18 Densidades</h2>
+    <!-- SECCIÓN 4: GUÍA DIDÁCTICA EN SORDINA (2º PLANO COLAPSABLE) -->
+    <section class="didactic-box sordina-drawer" id="didactic-box" style="margin-top:14px; border:1px solid rgba(255,255,255,0.1); border-radius:8px; background:rgba(6,11,26,0.92); overflow:hidden;">
+      <div class="sordina-header" onclick="toggleSordinaGuide()" style="padding:10px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; background:rgba(11,20,42,0.85); user-select:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:var(--font-mono); font-size:9px; font-weight:900; background:rgba(255,159,28,0.2); color:var(--neon-gold); border:1px solid var(--neon-gold); padding:2px 6px; border-radius:3px;">SORDINA · 2º PLANO</span>
+          <span style="font-family:var(--font-mono); font-size:12px; font-weight:800; color:#FFFFFF;">📖 Guía Pedagógica del Sistema de 18 Densidades & Mandato Canónico</span>
+        </div>
+        <button id="btn-sordina-toggle" style="font-family:var(--font-mono); font-size:10px; font-weight:800; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#38BDF8; padding:4px 10px; border-radius:4px; cursor:pointer;">Desplegar ▾</button>
+      </div>
+
+      <div class="sordina-body" id="sordina-body" style="display:none; padding:14px 18px; border-top:1px solid rgba(255,255,255,0.08);">
+        
       <p style="color:var(--text-dim); font-size:13px;">
         El sistema de 18 Densidades de NEXORD descompone la complejidad relacional de cada díada a partir de las 4 posiciones del tetragrama canónico <em>(A1, A2, A3, A4)</em>. Permite evaluar tanto el signo direccional (atracción versus rechazo) como la masa fáctica absoluta (implicación versus indiferencia).
       </p>
@@ -2734,6 +2744,8 @@
       <!-- MANDATO DE INTERPRETACIÓN CANÓNICA -->
       <div class="note-pedagogica">
         <strong>💡 Mandato Canónico de Interpretación:</strong> El Multipolígrafo de 1-Carril ofrece un oscilograma limpio para observar las ondas de densidad socio-termodinámica sin la congestión perceptual de múltiples carriles simultáneos. En el modo <strong>n×n</strong>, la onda recorre las 36 interacciones de cada grupo fila a fila, revelando en cada pico positivo áreas de cohesión y reciprocidad, y en cada valle negativo la fractura y el rechazo. Al activar el modo <strong>Juntos</strong>, las trayectorias temporales (T1, T2, T3) o criteriales (C1, C2) se superponen en el mismo lienzo con sus respectivos colores neón, permitiendo constatar en una sola mirada el desplazamiento histórico y la congruencia dialéctica de los vínculos. El trazado por <strong>Curvatura Spline Continua</strong> (interpolación cúbica Catmull-Rom a Bézier) respeta con fidelidad matemática exacta el valor empírico de cada estación \((x_i, y_i)\) sin distorsionar picos ni valles, eliminando las aristas quebradas artificiales para proyectar el flujo energético continuo del grupo.
+      </div>
+    
       </div>
     </section>
 
@@ -11778,8 +11790,8 @@
       const cv = document.getElementById('carrilCanvas');
       if (!cv) return;
       const box = cv.parentElement;
-      const w = box.clientWidth;
-      const h = box.clientHeight;
+      const w = Math.max(box.clientWidth || 0, 700);
+      const h = Math.max(box.clientHeight || 0, 560);
       cv.width = w * window.devicePixelRatio;
       cv.height = h * window.devicePixelRatio;
       const ctx = cv.getContext('2d');
@@ -13125,14 +13137,36 @@
     });
 
     // INICIALIZACIÓN ONLOAD (DE ENTRADA: OPCIÓN 1 PREDETERMINADA)
-    window.onload = () => {
+    
+    function toggleSordinaGuide() {
+      const body = document.getElementById('sordina-body');
+      const btn = document.getElementById('btn-sordina-toggle');
+      if (!body || !btn) return;
+      const isHidden = (body.style.display === 'none' || body.style.display === '');
+      body.style.display = isHidden ? 'block' : 'none';
+      btn.textContent = isHidden ? 'Plegar ▴' : 'Desplegar ▾';
+      btn.style.color = isHidden ? 'var(--neon-gold)' : '#38BDF8';
+    }
+
+    function initApp() {
       setResolution('condensado');
       setLineInterpolation('curva');
       applyContextualPreset(1);
       updateVersionNavUI();
       updateCompositionBanner();
       renderBackingTable();
-    };
+      requestAnimationFrame(() => {
+        drawCarril();
+      });
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(initApp, 30);
+    } else {
+      document.addEventListener('DOMContentLoaded', initApp);
+      window.addEventListener('load', initApp);
+    }
+
   </script>
 </body>
 </html>
