@@ -2840,7 +2840,17 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             </div>
         </div>
 
-        <!-- HORIZONTE TERMODINÁMICO -->
+                <!-- SELECTOR DE SUBGRUPOS / GRUMOS -->
+        <div style="background:#070C1E; padding:7px 9px; border-radius:6px; margin-bottom:7px; border:1px solid #1E293B;">
+            <label style="font-size: 9.5px; color:#38BDF8; font-weight:bold; display:block; margin-bottom:3px;">🧩 SUBGRUPOS / GRUMOS DE ORIGEN</label>
+            <select id="ctrl-grumos" style="width:100%; background:#0F172A; border:1px solid #334155; color:#38BDF8; padding:4px; border-radius:4px; font-size:10px; font-weight:bold;">
+                <option value="1" selected>1 Grumo (Monolítico · Cohesión Unitaria)</option>
+                <option value="2">2 Grumos (Bipolar · 2 Facciones Enfrentadas)</option>
+                <option value="3">3 Grumos (Triádico · 3 Cúmulos Relacionales)</option>
+                <option value="4">4 Grumos (Cuarteto · Red Celular Multigrumo)</option>
+            </select>
+        </div>
+<!-- HORIZONTE TERMODINÁMICO -->
         <div style="background:#070C1E; padding:7px 9px; border-radius:6px; margin-bottom:7px; border:1px solid #1E293B;">
             <label style="font-size: 9.5px; color:#94A3B8; font-weight:bold; display:block; margin-bottom:3px;">HORIZONTE TERMODINÁMICO</label>
             <select id="ctrl-horizonte" style="width:100%; background:#0F172A; border:1px solid #334155; color:#38BDF8; padding:4px; border-radius:4px; font-size:10px; font-weight:bold;" onchange="forceEvolutionToHorizon()">
@@ -6533,32 +6543,36 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             formationCycle++;
             let progress = formationCycle / formationMaxCycles;
             let faseElem = document.getElementById('fase-texto');
+            let bannerElem = document.getElementById('banner-auto-formacion');
             let faseText = '';
             
             let matrix = engine.getMatriz();
-            let injectPhase = 'PHASE1';
+            let injectPhase = 'FORMING';
             
             if (progress < 0.25) {
-                faseText = '1. Exploración / Deshielo';
-                injectPhase = 'PHASE1';
+                faseText = '🌱 1. FORMING · Formación Inicial & Tanteo de Vínculos';
+                injectPhase = 'FORMING';
+                if (formationCycle % 3 === 0 && typeof NEXORD_AudioEngine !== 'undefined') NEXORD_AudioEngine.playBond('pos');
             } else if (progress < 0.50) {
-                faseText = '2. Tormenta (Conflicto)';
-                injectPhase = 'PHASE2';
-            } else if (progress < 0.85) {
-                faseText = '3. Normalización';
-                injectPhase = 'PHASE3';
-            } else if (progress <= 1.0) {
-                faseText = '4. Cristalización';
-                injectPhase = 'ALL';
+                faseText = '⚡ 2. STORMING · Tormenta & Fricción de Roles';
+                injectPhase = 'STORMING';
+                if (formationCycle % 3 === 0 && typeof NEXORD_AudioEngine !== 'undefined') NEXORD_AudioEngine.playBond('neg');
+            } else if (progress < 0.80) {
+                faseText = '⚖️ 3. NORMING · Normatización & Calibración aE / oE';
+                injectPhase = 'NORMING';
+                if (formationCycle % 3 === 0 && typeof NEXORD_AudioEngine !== 'undefined') NEXORD_AudioEngine.playBond('pos');
+            } else {
+                faseText = '💎 4. PERFORMING · Desempeño & Cohesión Plena';
+                injectPhase = 'PERFORMING';
+                if (formationCycle % 3 === 0 && typeof NEXORD_AudioEngine !== 'undefined') NEXORD_AudioEngine.playBond('pos');
             }
             
-            // Limit changes per cycle to keep animation smooth
-            let numChanges = Math.max(1, Math.floor(n_nodes * n_nodes * 0.05)); 
+            let numChanges = Math.max(1, Math.floor(n_nodes * n_nodes * 0.04)); 
             let changesMade = 0;
             
             let cellsToVisit = [];
-            for(let i=0; i<n_nodes; i++) {
-                for(let j=0; j<n_nodes; j++) {
+            for (let i = 0; i < n_nodes; i++) {
+                for (let j = 0; j < n_nodes; j++) {
                     if (i !== j && matrix[i][j] !== targetExternalMatrix[i][j]) {
                         cellsToVisit.push({i, j});
                     }
@@ -6566,19 +6580,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
             cellsToVisit.sort(() => Math.random() - 0.5);
             
-            for(let cell of cellsToVisit) {
+            for (let cell of cellsToVisit) {
                 if (changesMade >= numChanges) break;
                 let targetCode = targetExternalMatrix[cell.i][cell.j];
+                let p2_target = targetCode[1]; // Elección efectiva
                 
                 let shouldInject = false;
-                if (injectPhase === 'ALL') {
+                if (injectPhase === 'PERFORMING') {
                     shouldInject = true;
-                } else if (injectPhase === 'PHASE1') {
-                    if (!/[<>\[\]¿?¡!]/.test(targetCode)) shouldInject = true;
-                } else if (injectPhase === 'PHASE2') {
-                    if (/[\[\]¿?¡!]/.test(targetCode)) shouldInject = true;
-                } else if (injectPhase === 'PHASE3') {
-                    if (/[<>]/.test(targetCode)) shouldInject = true;
+                } else if (injectPhase === 'FORMING') {
+                    if (p2_target >= 'A' && p2_target <= 'Z') shouldInject = true;
+                } else if (injectPhase === 'STORMING') {
+                    if (p2_target >= 'a' && p2_target <= 'z') shouldInject = true;
+                } else if (injectPhase === 'NORMING') {
+                    shouldInject = true;
                 }
                 
                 if (shouldInject) {
@@ -6588,31 +6603,21 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
             
             engine.setMatriz(matrix);
-            faseElem.innerText = faseText;
-            document.getElementById('banner-auto-formacion').innerText = `⚙️ RECONSTRUCCIÓN AUTOMÁTICA: ${faseText}`;
+            if (faseElem) faseElem.innerText = faseText;
+            if (bannerElem) bannerElem.innerText = `⚙️ ETAPA TUCKMAN: ${faseText}`;
             
-            // Set visuals for dials (fake targets to match phase vibe)
-            let tvS=50, tvF=50;
-            if (injectPhase==='PHASE1') { tvS=45; tvF=15; }
-            else if (injectPhase==='PHASE2') { tvS=30; tvF=85; }
-            else if (injectPhase==='PHASE3') { tvS=80; tvF=10; }
-            else { tvS=90; tvF=5; }
-            
-            document.getElementById('ctrl-sinergia').value = tvS;
-            document.getElementById('ctrl-friccion').value = tvF;
-            document.getElementById('val-sinergia').innerText = tvS + '%';
-            document.getElementById('val-friccion').innerText = tvF + '%';
-            document.getElementById('val-neutro').innerText = Math.max(0, 100 - tvS - tvF) + '%';
-
             if (formationCycle >= formationMaxCycles || cellsToVisit.length === 0) {
                 isExternalFormation = false;
-                engine.setMatriz(targetExternalMatrix); // Guarantee perfection
-                faseElem.innerText = 'Matriz Reconstruida';
+                engine.setMatriz(targetExternalMatrix);
+                if (faseElem) faseElem.innerText = '💎 Cristalización Completada (Performing)';
                 setTimeout(() => {
-                    document.getElementById('disp-fase').style.display = 'none';
-                    document.getElementById('banner-auto-formacion').style.display = 'none';
-                    document.getElementById('btn-formacion').innerText = '🔄 INICIAR DESDE CERO';
-                    document.getElementById('btn-formacion').style.background = '#00A2FF';
+                    if (document.getElementById('disp-fase')) document.getElementById('disp-fase').style.display = 'none';
+                    if (document.getElementById('banner-auto-formacion')) document.getElementById('banner-auto-formacion').style.display = 'none';
+                    let btnF = document.getElementById('btn-formacion');
+                    if (btnF) {
+                        btnF.innerText = '🔄 INICIAR FORMACIÓN PASO A PASO';
+                        btnF.style.background = 'linear-gradient(135deg, #00FF87, #00A2FF)';
+                    }
                 }, 1500);
             }
         } else if (isGuidedFormation) {
@@ -6800,38 +6805,148 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         if (!isPlaying) togglePlay();
     }
 
+    
+    // =========================================================================
+    // PRE-GENERACIÓN CANÓNICA DE SMIb CON GRUMOS Y MODULADORES (TUCKMAN ENGINE)
+    // =========================================================================
+    function pregenerarSMIbCanonica(n = 12, horizonte = 'LIQUIDO', nGrumos = 1, modPoder = 'HORIZONTAL', modSintonia = 'ALTA', modAislado = '0') {
+        const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const alpha = "abcdefghijklmnopqrstuvwxyz";
+        
+        let grumoOf = Array.from({length: n}, (_, i) => Math.floor(i / (n / nGrumos)));
+        let A2 = Array.from({length: n}, () => Array(n).fill('0'));
+        let isolatedIdx = (modAislado === '1' || modAislado === '2') ? (n - 1) : -1;
+        
+        for (let i = 0; i < n; i++) {
+            if (modAislado === '2' && i === isolatedIdx) continue; // Aislado total
+            
+            let posRank = 0;
+            let negRank = 0;
+            
+            for (let j = 0; j < n; j++) {
+                if (i === j) continue;
+                if (modAislado === '2' && j === isolatedIdx) continue;
+                if (modAislado === '1' && j === isolatedIdx) continue; // No recibe
+                
+                let sameGrumo = (grumoOf[i] === grumoOf[j]);
+                
+                // Líder Alfa en Piramidal
+                if (modPoder === 'PIRAMIDAL' && j === 0 && i !== 0) {
+                    A2[i][j] = ALPHA[posRank % 26];
+                    posRank++;
+                    continue;
+                }
+                
+                if (sameGrumo) {
+                    // Elección intragrumo
+                    let maxElec = nGrumos > 1 ? 3 : 4;
+                    if (posRank < maxElec) {
+                        A2[i][j] = ALPHA[posRank % 26];
+                        posRank++;
+                    } else {
+                        A2[i][j] = '0';
+                    }
+                } else {
+                    // Inter-grumo: polarización o fricción
+                    if (horizonte === 'CAOS' || modPoder === 'BIPOLAR' || nGrumos >= 2) {
+                        let maxRech = (modPoder === 'BIPOLAR' || horizonte === 'CAOS') ? 3 : 1;
+                        if (negRank < maxRech) {
+                            A2[i][j] = alpha[negRank % 26];
+                            negRank++;
+                        } else {
+                            A2[i][j] = '0';
+                        }
+                    } else if (horizonte === 'SOLIDO') {
+                        A2[i][j] = '0';
+                    } else { // LIQUIDO
+                        if (negRank < 1 && Math.random() < 0.4) {
+                            A2[i][j] = alpha[negRank % 26];
+                            negRank++;
+                        } else {
+                            A2[i][j] = '0';
+                        }
+                    }
+                }
+            }
+            
+            // Aislado parcial: emite 1 enlace débil hacia el centro
+            if (modAislado === '1' && i === isolatedIdx) {
+                A2[i] = Array(n).fill('0');
+                A2[i][0] = 'C';
+            }
+        }
+        
+        // Preferencia A3 recibida: A3[i][j] = A2[j][i]
+        let A3 = Array.from({length: n}, () => Array(n).fill('0'));
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (i !== j) A3[i][j] = A2[j][i];
+            }
+        }
+        
+        // Expectativa A1 de i sobre lo que j le dará (y A4 simétrica)
+        let A1 = Array.from({length: n}, () => Array(n).fill('0'));
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (i === j) continue;
+                let realRecv = A3[i][j];
+                if (modSintonia === 'ALTA') {
+                    A1[i][j] = realRecv; // Lucidez perfecta
+                } else if (modSintonia === 'DISONANTE') {
+                    // Invertir expectativa
+                    if (realRecv >= 'A' && realRecv <= 'Z') A1[i][j] = realRecv.toLowerCase();
+                    else if (realRecv >= 'a' && realRecv <= 'z') A1[i][j] = realRecv.toUpperCase();
+                    else A1[i][j] = (i % 2 === 0) ? 'A' : 'a';
+                } else { // MEDIA
+                    A1[i][j] = (i + j) % 2 === 0 ? realRecv : '0';
+                }
+            }
+        }
+        
+        let A4 = Array.from({length: n}, () => Array(n).fill('0'));
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (i !== j) A4[i][j] = A1[j][i];
+            }
+        }
+        
+        // Ensamblar tetragramas SMIb [A1, A2, A3, A4]
+        let SMIb = Array.from({length: n}, () => Array(n).fill('0000'));
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (i !== j) {
+                    SMIb[i][j] = A1[i][j] + A2[i][j] + A3[i][j] + A4[i][j];
+                }
+            }
+        }
+        return SMIb;
+    }
+
     function toggleFormacionGuiada() {
-        if (isGuidedFormation) {
-            // Cancel current formation
+        if (isExternalFormation || isGuidedFormation) {
+            isExternalFormation = false;
             isGuidedFormation = false;
             document.getElementById('disp-fase').style.display = 'none';
             document.getElementById('banner-auto-formacion').style.display = 'none';
-            document.getElementById('btn-formacion').innerText = '🔄 INICIAR DESDE CERO';
-            document.getElementById('btn-formacion').style.background = '#00A2FF';
+            document.getElementById('btn-formacion').innerText = '🔄 INICIAR FORMACIÓN PASO A PASO';
+            document.getElementById('btn-formacion').style.background = 'linear-gradient(135deg, #00FF87, #00A2FF)';
             if (isPlaying) togglePlay();
             return;
         }
         
         let targetN = parseInt(document.getElementById('ctrl-n').value) || 12;
-        n_nodes = targetN;        
-        isGuidedFormation = true;
-        formationCycle = 0;
-        formationMaxCycles = 120; // Damos más tiempo a la auto-formación
-        
-        // Horizonte fijo en LIQUIDO para evitar confusiones en la simulación automática
         let horizonSelect = document.getElementById('ctrl-horizonte');
         targetHorizon = horizonSelect ? horizonSelect.value : 'LIQUIDO';
+        let nGrumos = document.getElementById('ctrl-grumos') ? parseInt(document.getElementById('ctrl-grumos').value) : 1;
+        let modPoder = document.getElementById('mod-poder') ? document.getElementById('mod-poder').value : 'HORIZONTAL';
+        let modSintonia = document.getElementById('mod-sintonia') ? document.getElementById('mod-sintonia').value : 'ALTA';
+        let modAislado = document.getElementById('isolated-count') ? document.getElementById('isolated-count').value : '0';
         
-        document.getElementById('disp-fase').style.display = 'block';
-        document.getElementById('banner-auto-formacion').style.display = 'block';
+        // Pre-generar SMIb objetivo con todos los ingredientes
+        let targetSMIb = pregenerarSMIbCanonica(targetN, targetHorizon, nGrumos, modPoder, modSintonia, modAislado);
         
-        let tN = parseInt(document.getElementById('ctrl-n').value) || 12;
-        n_nodes = tN;
-        document.getElementById('btn-formacion').innerText = '⏹️ CANCELAR FORMACIÓN';
-        document.getElementById('btn-formacion').style.background = '#FF0055';
-        document.getElementById('fase-texto').innerText = '1. Exploración / Deshielo';
-        setAppMode('advanced');
-        initSimulation();
+        // Iniciar administración progresiva por Etapas de Tuckman
+        startExternalFormation(targetSMIb);
     }
 
     function startExternalFormation(matrix) {
