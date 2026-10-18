@@ -385,6 +385,134 @@
       visibility: hidden;
     }
 
+    /* Selector de Arquitectura: 1 Carril vs Varios Carriles */
+    .carril-layout-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
+    }
+
+    .btn-layout {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-layout:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .btn-layout.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38BDF8;
+      color: #38BDF8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+
+    .layout-multi-group {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding-left: 4px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .layout-multi-label {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 900;
+      color: #38BDF8;
+      letter-spacing: 0.5px;
+    }
+
+    /* Contenedor de Varios Carriles (Stack) */
+    .multicarril-stack-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 380px;
+      background: #040714;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px 6px;
+    }
+
+    .lane-box {
+      flex: 1;
+      background: rgba(6, 11, 28, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s ease;
+    }
+
+    .lane-box:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .lane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lane-title {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .lane-telemetry {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lane-pill {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: var(--text-dim);
+    }
+
+    .lane-pill strong {
+      color: #FFFFFF;
+    }
+
+    .lane-canvas-wrap {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 85px;
+    }
+
+    .lane-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     /* 3 Opciones Predeterminadas de Aprendizaje Rápido */
     .carril-presets-bar {
       display: flex;
@@ -1110,6 +1238,7 @@
     </div>
 
     <div class="header-status-pills">
+      <span class="status-pill">ARQUITECTURA: <strong id="hud-layout" style="color:var(--neon-green)">1-Carril</strong></span>
       <span class="status-pill">RESOLUCIÓN: <strong id="hud-space" style="color:var(--neon-green)">Condensado (i,·) (·,j)</strong></span>
       <span class="status-pill">CORTE: <strong id="hud-coords" style="color:var(--neon-cyan)">G1 · T1 · C1</strong></span>
       <span class="status-pill">MODO: <strong id="hud-mode" style="color:var(--neon-gold)">Canal Único</strong></span>
@@ -1151,6 +1280,17 @@
           <span class="carril-metric-formula" id="carril-heading-formula">Baricentro S23 = (DA + RC) / 2</span>
         </div>
         <div class="carril-mode-selector">
+          <!-- SELECTOR DE ARQUITECTURA: 1 CARRIL vs VARIOS CARRILES -->
+          <div class="carril-layout-selector" title="Conmutar entre 1 carril unificado o varios carriles paralelos">
+            <button class="btn-layout active" id="btn-layout-1carril" onclick="setLayoutMode('1carril')">1 Carril</button>
+            <div class="layout-multi-group">
+              <span class="layout-multi-label">VARIOS:</span>
+              <button class="btn-layout" id="btn-multi-grupos" onclick="setLayoutMode('varios_carriles', 'grupos')" title="Varios Carriles por Grupos: G1 (Grupo A) · G2 (Grupo B) · G3 (Grupo C)">👥 Grupos (G1-G3)</button>
+              <button class="btn-layout" id="btn-multi-tiempos" onclick="setLayoutMode('varios_carriles', 'tiempos')" title="Varios Carriles por Tiempos: T1 (Inicial) · T2 (Intermedio) · T3 (Consolidado)">⏳ Tiempos (T1-T3)</button>
+              <button class="btn-layout" id="btn-multi-criterios" onclick="setLayoutMode('varios_carriles', 'criterios')" title="Varios Carriles por Criterios: C1 (Afinidad) · C2 (Tarea)">🎯 Criterios (C1-C2)</button>
+            </div>
+          </div>
+
           <!-- 3 OPCIONES PREDETERMINADAS (APRENDIZAJE GUIADO) -->
           <div class="carril-presets-bar" title="Opciones predeterminadas de aprendizaje (1, 2 o 4 canales)">
             <span class="presets-label">PREAJUSTES:</span>
@@ -1309,10 +1449,15 @@
           </div>
         </aside>
 
-        <!-- Lienzo Canvas -->
+        <!-- Lienzo Canvas 1-Carril -->
         <div class="canvas-container" id="canvas-container">
           <div id="carril-toast" class="carril-toast" style="display:none;"></div>
           <canvas id="carrilCanvas"></canvas>
+        </div>
+
+        <!-- Contenedor Varios Carriles (Paralelos Apilados) -->
+        <div class="multicarril-stack-container" id="multicarril-stack-container" style="display:none;">
+          <!-- Generado dinámicamente según 'grupos' (3), 'tiempos' (3) o 'criterios' (2) -->
         </div>
 
       </div>
@@ -8648,6 +8793,8 @@
     let currentDensity = 'SDR';           // 'D1'..'D4', 'SDR', 'BDR', 'S12', 'B12', etc.
     let carrilTrackMode = '3vias_da_rc';  // '3vias_da_rc' | '3vias_expect' | 'single_18d'
     let lineInterpolation = 'curva';      // 'curva' (spline suave) | 'quebrada' (poligonal)
+    let layoutMode = '1carril';           // '1carril' | 'varios_carriles'
+    let multicarrilSplit = 'grupos';      // 'grupos' (G1, G2, G3) | 'tiempos' (T1, T2, T3) | 'criterios' (C1, C2)
 
     let activeStationIndex = 0;
     let totalStations = 6;
@@ -9324,7 +9471,468 @@
       return combos;
     }
 
+    // =========================================================================
+    // CONTROL DE ARQUITECTURA: 1 CARRIL vs VARIOS CARRILES PARALELOS
+    // =========================================================================
+    function setLayoutMode(mode, split = null) {
+      layoutMode = mode;
+      if (split) multicarrilSplit = split;
+
+      document.getElementById('btn-layout-1carril')?.classList.toggle('active', mode === '1carril');
+      document.getElementById('btn-multi-grupos')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'grupos');
+      document.getElementById('btn-multi-tiempos')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'tiempos');
+      document.getElementById('btn-multi-criterios')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'criterios');
+
+      const hudLayout = document.getElementById('hud-layout');
+      if (hudLayout) {
+        if (mode === '1carril') {
+          hudLayout.textContent = '1-Carril';
+          hudLayout.style.color = 'var(--neon-green)';
+        } else {
+          const splitLabels = {
+            grupos: 'Varios (Grupos G1-G3)',
+            tiempos: 'Varios (Tiempos T1-T3)',
+            criterios: 'Varios (Criterios C1-C2)'
+          };
+          hudLayout.textContent = splitLabels[multicarrilSplit] || 'Varios Carriles';
+          hudLayout.style.color = 'var(--neon-gold)';
+        }
+      }
+
+      const singleContainer = document.getElementById('canvas-container');
+      const multiContainer = document.getElementById('multicarril-stack-container');
+
+      if (mode === '1carril') {
+        if (singleContainer) singleContainer.style.display = 'block';
+        if (multiContainer) multiContainer.style.display = 'none';
+        showLimitToast('📍 Modo: 1-Carril Unificado', 1800);
+      } else {
+        if (singleContainer) singleContainer.style.display = 'none';
+        if (multiContainer) multiContainer.style.display = 'flex';
+        const splitMsg = multicarrilSplit === 'grupos'
+          ? '👥 Varios Carriles: Por Grupos (G1 · G2 · G3)'
+          : (multicarrilSplit === 'tiempos'
+            ? '⏳ Varios Carriles: Por Tiempos (T1 · T2 · T3)'
+            : '🎯 Varios Carriles: Por Criterios (C1 · C2)');
+        showLimitToast(splitMsg, 2200);
+      }
+
+      // Sincronizar selección en Master Keypad para reflejar la dimensión desglosada
+      if (mode === 'varios_carriles') {
+        if (multicarrilSplit === 'grupos') masterPadState.tensor.g = ['1', '2', '3'];
+        else if (multicarrilSplit === 'tiempos') masterPadState.tensor.t = ['1', '2', '3'];
+        else if (multicarrilSplit === 'criterios') masterPadState.tensor.c = ['1', '2'];
+      }
+
+      updateMasterPadUI();
+      updateHeaderBadges();
+      renderAllCarriles();
+      updateActiveStation(activeStationIndex, false);
+    }
+
+    function renderAllCarriles() {
+      if (layoutMode === '1carril') {
+        drawCarril();
+      } else {
+        drawVariosCarriles();
+      }
+    }
+
+    // OBTENER ESTACIÓN ESPECÍFICA PARA UN CARRIL DADO (G, T, C)
+    function getLaneStation(sIdx, lane) {
+      const gId = lane.g || (currentGroup === 'juntos' ? '1' : currentGroup);
+      if (currentResolution === 'condensado') {
+        const subjs = SUBJECTS_BY_GROUP[gId] || SUBJECTS_BY_GROUP['1'];
+        const s = subjs[sIdx] || subjs[0];
+        return {
+          type: 'subject',
+          id: s,
+          label: s,
+          coordLabel: s,
+          row: sIdx + 1,
+          col: sIdx + 1,
+          isDiagonal: false
+        };
+      } else if (currentResolution === 'completo') {
+        const traversal = getSubjectTraversalForGroup(gId);
+        return traversal[sIdx] || traversal[0];
+      } else {
+        return TRAVERSAL_9X9[sIdx] || TRAVERSAL_9X9[0];
+      }
+    }
+
+    // =========================================================================
+    // RENDERIZADO DE VARIOS CARRILES PARALELOS (GRUPOS, TIEMPOS, CRITERIOS)
+    // =========================================================================
+    let currentRenderedSplit = null;
+
+    function drawVariosCarriles() {
+      const container = document.getElementById('multicarril-stack-container');
+      if (!container) return;
+
+      let lanes = [];
+      const gShared = (currentGroup === 'juntos') ? '1' : currentGroup;
+      const tShared = (currentTime === 'juntos') ? '1' : currentTime;
+      const cShared = (currentCriterion === 'juntos') ? '1' : currentCriterion;
+
+      if (multicarrilSplit === 'grupos') {
+        lanes = [
+          { id: 'g1', title: 'CARRIL 1: GRUPO A (G1)', g: '1', t: tShared, c: cShared, color: '#38BDF8' },
+          { id: 'g2', title: 'CARRIL 2: GRUPO B (G2)', g: '2', t: tShared, c: cShared, color: '#FF007F' },
+          { id: 'g3', title: 'CARRIL 3: GRUPO C (G3)', g: '3', t: tShared, c: cShared, color: '#00FF87' }
+        ];
+      } else if (multicarrilSplit === 'tiempos') {
+        lanes = [
+          { id: 't1', title: 'CARRIL 1: TIEMPO 1 · INICIAL (T1)', g: gShared, t: '1', c: cShared, color: '#38BDF8' },
+          { id: 't2', title: 'CARRIL 2: TIEMPO 2 · INTERMEDIO (T2)', g: gShared, t: '2', c: cShared, color: '#FF9F1C' },
+          { id: 't3', title: 'CARRIL 3: TIEMPO 3 · CONSOLIDADO (T3)', g: gShared, t: '3', c: cShared, color: '#00FF87' }
+        ];
+      } else if (multicarrilSplit === 'criterios') {
+        lanes = [
+          { id: 'c1', title: 'CARRIL 1: CRITERIO 1 · AFINIDAD SOCIO-AFECTIVA (C1)', g: gShared, t: tShared, c: '1', color: '#38BDF8' },
+          { id: 'c2', title: 'CARRIL 2: CRITERIO 2 · TAREA FUNCIONAL / EFICACIA (C2)', g: gShared, t: tShared, c: '2', color: '#FFE600' }
+        ];
+      }
+
+      if (currentRenderedSplit !== multicarrilSplit || container.children.length !== lanes.length) {
+        container.innerHTML = lanes.map((lane, idx) => `
+          <div class="lane-box" id="lane-box-${idx}">
+            <div class="lane-header">
+              <span class="lane-title" style="color: ${lane.color};">${lane.title}</span>
+              <div class="lane-telemetry">
+                <span class="lane-pill">BDR: <strong id="lane-bdr-${idx}" style="color:var(--neon-gold)">--</strong></span>
+                <span class="lane-pill">SDR: <strong id="lane-sdr-${idx}" style="color:var(--neon-cyan)">--</strong></span>
+                <span class="lane-pill">Fricción: <strong id="lane-fric-${idx}" style="color:var(--neon-magenta)">--</strong></span>
+                <span class="lane-pill">Est. <span id="lane-stnum-${idx}">${activeStationIndex + 1}</span>: <strong id="lane-val-${idx}">--</strong></span>
+              </div>
+            </div>
+            <div class="lane-canvas-wrap">
+              <canvas class="lane-canvas" id="lane-canvas-${idx}"></canvas>
+            </div>
+          </div>
+        `).join('');
+        currentRenderedSplit = multicarrilSplit;
+      }
+
+      const stations = getCurrentStations();
+      totalStations = stations.length;
+      const scrubber = document.getElementById('scrubber-range');
+      if (scrubber) scrubber.max = totalStations - 1;
+
+      const padL = 60;
+      const padR = 40;
+      const padY = 16;
+      const useCurva = (lineInterpolation === 'curva');
+      const isMass = currentDensity.startsWith('B');
+
+      lanes.forEach((lane, laneIdx) => {
+        const cv = document.getElementById('lane-canvas-' + laneIdx);
+        if (!cv) return;
+        const box = cv.parentElement;
+        const w = box.clientWidth || 600;
+        const h = box.clientHeight || 110;
+        cv.width = w * window.devicePixelRatio;
+        cv.height = h * window.devicePixelRatio;
+        const ctx = cv.getContext('2d');
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+        const plotW = w - padL - padR;
+        const plotH = h - padY * 2;
+        const yZero = padY + plotH / 2;
+
+        ctx.fillStyle = '#040714';
+        ctx.fillRect(0, 0, w, h);
+
+        const scaleY = (val) => {
+          if (isMass) {
+            return (padY + plotH) - Math.max(0.0, Math.min(1.0, val)) * plotH;
+          } else {
+            return yZero - Math.max(-1.0, Math.min(1.0, val)) * (plotH / 2);
+          }
+        };
+
+        const gridVals = isMass ? [0.0, 0.5, 1.0] : [-1.0, 0.0, 1.0];
+        gridVals.forEach(v => {
+          const y = scaleY(v);
+          const isZero = Math.abs(v) < 0.01;
+          ctx.strokeStyle = isZero ? 'rgba(255, 230, 0, 0.45)' : 'rgba(56, 189, 248, 0.09)';
+          ctx.lineWidth = isZero ? 1.4 : 1;
+          if (isZero) ctx.setLineDash([4, 3]); else ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.font = isZero ? 'bold 9.5px Roboto Mono' : '8.5px Roboto Mono';
+          ctx.textAlign = 'right';
+          ctx.fillStyle = isZero ? '#FFE600' : (v > 0 ? '#00FF87' : '#FF007F');
+          ctx.fillText((v > 0 && !isMass ? '+' : '') + v.toFixed(1), padL - 8, y + 3.5);
+        });
+
+        const xStep = totalStations > 1 ? (plotW / (totalStations - 1)) : plotW;
+        for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+          const stLane = getLaneStation(sIdx, lane);
+          const x = padL + sIdx * xStep;
+          if (currentResolution === 'condensado' || totalStations <= 16) {
+            const isSelected = (sIdx === activeStationIndex);
+            ctx.strokeStyle = isSelected ? 'rgba(255, 230, 0, 0.45)' : 'rgba(56, 189, 248, 0.12)';
+            ctx.lineWidth = isSelected ? 1.5 : 1;
+            ctx.setLineDash(isSelected ? [3, 2] : [1, 3]);
+            ctx.beginPath();
+            ctx.moveTo(x, padY); ctx.lineTo(x, padY + plotH);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (laneIdx === lanes.length - 1) {
+              ctx.fillStyle = isSelected ? '#FFE600' : '#FFFFFF';
+              ctx.font = isSelected ? 'bold 11px Roboto Mono' : '9.5px Roboto Mono';
+              ctx.textAlign = 'center';
+              ctx.fillText(stLane.id || stLane.coordLabel, x, padY + plotH + 13);
+            }
+          }
+        }
+
+        const matKey = lane.g + 'g' + lane.t + 't' + lane.c + 'c';
+        const mat = TENSOR_DATA[matKey];
+
+        if (mat) {
+          const bdrEl = document.getElementById('lane-bdr-' + laneIdx);
+          const sdrEl = document.getElementById('lane-sdr-' + laneIdx);
+          const fricEl = document.getElementById('lane-fric-' + laneIdx);
+          const stNumEl = document.getElementById('lane-stnum-' + laneIdx);
+          const valEl = document.getElementById('lane-val-' + laneIdx);
+          if (bdrEl) bdrEl.textContent = (mat.bdr !== undefined) ? mat.bdr.toFixed(2) : '--';
+          if (sdrEl) sdrEl.textContent = (mat.sdr !== undefined) ? ((mat.sdr >= 0 ? '+' : '') + mat.sdr.toFixed(2)) : '--';
+          if (fricEl) fricEl.textContent = (mat.entropia !== undefined) ? mat.entropia.toFixed(2) : '--';
+          if (stNumEl) stNumEl.textContent = activeStationIndex + 1;
+          if (valEl) {
+            const curTetra = getStationRawTetragram(getLaneStation(activeStationIndex, lane), mat);
+            const curVal = computeDensityValue(curTetra, currentDensity);
+            valEl.textContent = (curVal >= 0 && !isMass ? '+' : '') + Number(curVal).toFixed(2);
+            valEl.style.color = curVal > 0 ? 'var(--neon-green)' : (curVal < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+          }
+        }
+
+        const activeMets = masterPadState.metrics;
+        const is3ViasDARC = (carrilTrackMode === '3vias_da_rc' || (activeMets.length === 2 && activeMets.includes('D2') && activeMets.includes('D3')));
+        const is3ViasExpect = (carrilTrackMode === '3vias_expect' || (activeMets.length === 2 && activeMets.includes('D1') && activeMets.includes('D4')));
+
+        if (is3ViasDARC) {
+          const ptsDA = [], ptsRC = [], ptsBAR = [];
+          for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+            const stLane = getLaneStation(sIdx, lane);
+            const x = padL + sIdx * xStep;
+            const tetra = getStationRawTetragram(stLane, mat);
+            const da = tetra.d2, rc = tetra.d3, bar = (da + rc) / 2;
+            ptsDA.push({ x, y: scaleY(da), val: da });
+            ptsRC.push({ x, y: scaleY(rc), val: rc });
+            ptsBAR.push({ x, y: scaleY(bar), val: bar });
+          }
+          const segsDA = useCurva ? getCubicBezierSegments(ptsDA) : null;
+          const segsRC = useCurva ? getCubicBezierSegments(ptsRC) : null;
+          const segsBAR = useCurva ? getCubicBezierSegments(ptsBAR) : null;
+
+          ctx.fillStyle = 'rgba(255, 159, 28, 0.09)';
+          ctx.beginPath();
+          ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
+          if (useCurva) {
+            traceCurvedPathForward(ctx, segsDA);
+            ctx.lineTo(ptsRC[totalStations - 1].x, ptsRC[totalStations - 1].y);
+            traceCurvedPathReverse(ctx, segsRC);
+          } else {
+            for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+            for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+          }
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = '#38BDF8'; ctx.lineWidth = 1.8; ctx.beginPath();
+          ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsDA); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#FF9F1C'; ctx.lineWidth = 1.8; ctx.beginPath();
+          ctx.moveTo(ptsRC[0].x, ptsRC[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsRC); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#00FF87'; ctx.lineWidth = 2.4; ctx.beginPath();
+          ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsBAR); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+          ctx.stroke();
+
+          for (let i = 0; i < totalStations; i++) {
+            const isSel = (i === activeStationIndex);
+            ctx.fillStyle = isSel ? '#FFFFFF' : '#00FF87';
+            ctx.beginPath(); ctx.arc(ptsBAR[i].x, ptsBAR[i].y, isSel ? 5.5 : 2.8, 0, Math.PI * 2); ctx.fill();
+          }
+
+        } else if (is3ViasExpect) {
+          const ptsPDA = [], ptsPRC = [], ptsBAR = [];
+          for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+            const stLane = getLaneStation(sIdx, lane);
+            const x = padL + sIdx * xStep;
+            const tetra = getStationRawTetragram(stLane, mat);
+            const pda = tetra.d1, prc = tetra.d4, bar = (pda + prc) / 2;
+            ptsPDA.push({ x, y: scaleY(pda), val: pda });
+            ptsPRC.push({ x, y: scaleY(prc), val: prc });
+            ptsBAR.push({ x, y: scaleY(bar), val: bar });
+          }
+          const segsPDA = useCurva ? getCubicBezierSegments(ptsPDA) : null;
+          const segsPRC = useCurva ? getCubicBezierSegments(ptsPRC) : null;
+          const segsBAR = useCurva ? getCubicBezierSegments(ptsBAR) : null;
+
+          ctx.fillStyle = 'rgba(192, 132, 252, 0.09)';
+          ctx.beginPath();
+          ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
+          if (useCurva) {
+            traceCurvedPathForward(ctx, segsPDA);
+            ctx.lineTo(ptsPRC[totalStations - 1].x, ptsPRC[totalStations - 1].y);
+            traceCurvedPathReverse(ctx, segsPRC);
+          } else {
+            for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+            for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+          }
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = '#38BDF8'; ctx.lineWidth = 1.8; ctx.beginPath();
+          ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsPDA); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#C084FC'; ctx.lineWidth = 1.8; ctx.beginPath();
+          ctx.moveTo(ptsPRC[0].x, ptsPRC[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsPRC); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 2.4; ctx.beginPath();
+          ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
+          if (useCurva) traceCurvedPathForward(ctx, segsBAR); else for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+          ctx.stroke();
+
+          for (let i = 0; i < totalStations; i++) {
+            const isSel = (i === activeStationIndex);
+            ctx.fillStyle = isSel ? '#FFFFFF' : '#FFE600';
+            ctx.beginPath(); ctx.arc(ptsBAR[i].x, ptsBAR[i].y, isSel ? 5.5 : 2.8, 0, Math.PI * 2); ctx.fill();
+          }
+
+        } else {
+          const curveList = activeMets.map((m) => ({
+            m,
+            color: activeMets.length > 1 ? getMetricColor(m) : lane.color
+          }));
+
+          const allCurvePts = [];
+          curveList.forEach(crv => {
+            const pts = [];
+            for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+              const stLane = getLaneStation(sIdx, lane);
+              const x = padL + sIdx * xStep;
+              const tetra = getStationRawTetragram(stLane, mat);
+              const val = computeDensityValue(tetra, crv.m);
+              pts.push({ x, y: scaleY(val), val });
+            }
+            const segs = useCurva ? getCubicBezierSegments(pts) : null;
+            allCurvePts.push({ crv, pts, segs });
+          });
+
+          if (allCurvePts.length === 2) {
+            const p1 = allCurvePts[0].pts, p2 = allCurvePts[1].pts;
+            const s1 = allCurvePts[0].segs, s2 = allCurvePts[1].segs;
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+            ctx.beginPath();
+            ctx.moveTo(p1[0].x, p1[0].y);
+            if (useCurva) {
+              traceCurvedPathForward(ctx, s1);
+              ctx.lineTo(p2[totalStations - 1].x, p2[totalStations - 1].y);
+              traceCurvedPathReverse(ctx, s2);
+            } else {
+              for (let i = 1; i < totalStations; i++) ctx.lineTo(p1[i].x, p1[i].y);
+              for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(p2[i].x, p2[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          if (allCurvePts.length === 1) {
+            const pts = allCurvePts[0].pts;
+            const segs = allCurvePts[0].segs;
+            const grad = ctx.createLinearGradient(0, scaleY(1), 0, scaleY(-1));
+            grad.addColorStop(0, 'rgba(0, 255, 135, 0.18)');
+            grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+            grad.addColorStop(1, 'rgba(255, 0, 127, 0.18)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, scaleY(0));
+            ctx.lineTo(pts[0].x, pts[0].y);
+            if (useCurva) traceCurvedPathForward(ctx, segs); else for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[pts.length - 1].x, scaleY(0));
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          allCurvePts.forEach(item => {
+            const pts = item.pts;
+            const segs = item.segs;
+            ctx.strokeStyle = item.crv.color;
+            ctx.lineWidth = 2.0;
+            ctx.shadowColor = item.crv.color;
+            ctx.shadowBlur = 6;
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            if (useCurva) traceCurvedPathForward(ctx, segs); else for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            pts.forEach((pt, pIdx) => {
+              const isSel = (pIdx === activeStationIndex);
+              ctx.fillStyle = isSel ? '#FFFFFF' : item.crv.color;
+              ctx.beginPath(); ctx.arc(pt.x, pt.y, isSel ? 5.0 : 2.5, 0, Math.PI * 2); ctx.fill();
+            });
+          });
+        }
+
+        const activeX = padL + activeStationIndex * xStep;
+        ctx.strokeStyle = 'rgba(255, 230, 0, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(activeX, padY);
+        ctx.lineTo(activeX, padY + plotH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        cv.onmousemove = (e) => {
+          const rect = cv.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          if (mx < padL || mx > padL + plotW) { hideTooltip(); return; }
+          const sIdx = Math.round((mx - padL) / xStep);
+          if (sIdx >= 0 && sIdx < totalStations) {
+            updateActiveStation(sIdx, false);
+            showTooltip(e.clientX, e.clientY, sIdx, getLaneStation(sIdx, lane));
+          }
+        };
+
+        cv.onmouseleave = () => { hideTooltip(); };
+
+        cv.onclick = (e) => {
+          const rect = cv.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          if (mx >= padL && mx <= padL + plotW) {
+            const sIdx = Math.round((mx - padL) / xStep);
+            if (sIdx >= 0 && sIdx < totalStations) updateActiveStation(sIdx, true);
+          }
+        };
+      });
+    }
+
+
     function drawCarril() {
+      if (layoutMode === 'varios_carriles') {
+        drawVariosCarriles();
+        return;
+      }
       const cv = document.getElementById('carrilCanvas');
       if (!cv) return;
       const box = cv.parentElement;
