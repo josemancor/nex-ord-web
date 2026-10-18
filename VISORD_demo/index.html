@@ -5951,6 +5951,17 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 }
             }
             
+            // CANON DIAGONAL REFLEXIVA: A1(Auto-expectativa), A2(Auto-aprecio), A3(aE Cenit), A4(oE Nadir)
+            for (let i = 0; i < n_nodes; i++) {
+                let a1_self = (currentStats.roles[i] === 'ALPHA') ? 'A' : ((currentStats.roles[i] === 'OMEGA') ? 'c' : 'B');
+                let a2_self = 'A';
+                let a3_aE = currentStats.aE_self[i] ? 'A' : '0';
+                let a4_oE = currentStats.oE_self[i] ? 'r' : '0';
+                if (currentMatrix && currentMatrix[i]) {
+                    currentMatrix[i][i] = a1_self + a2_self + a3_aE + a4_oE;
+                }
+            }
+            
             document.getElementById('hud-lideres').innerText = counts.ALPHA;
             document.getElementById('hud-friccion').innerText = counts.OMEGA;
             document.getElementById('hud-satelites').innerText = counts.SATELITE;
@@ -6286,7 +6297,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 html += `<tr><th style="background:rgba(255,255,255,0.05)">S${i+1}</th>`;
                 for (let j = 0; j < n_nodes; j++) {
                     if (i === j) {
-                        html += '<td style="background:rgba(255,255,255,0.1)">-</td>';
+                        let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : '0000';
+                        html += `<td title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE, A4=oE]: ${diagStr}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; border:1px solid rgba(255,230,0,0.3); cursor:help;">${diagStr}</td>`;
                     } else {
                         let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
                         let smiaStr = smibToSmia(cellData);
@@ -6330,7 +6342,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 html += `<tr><th style="background:rgba(255,255,255,0.05)">S${i+1}</th>`;
                 for (let j of nodesArray) {
                     if (i === j) {
-                        html += '<td style="background:rgba(255,255,255,0.1)">-</td>';
+                        let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : '0000';
+                        html += `<td title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE, A4=oE]: ${diagStr}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; border:1px solid rgba(255,230,0,0.3); cursor:help;">${diagStr}</td>`;
                     } else {
                         let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
                         let smiaStr = smibToSmia(cellData);
@@ -6983,6 +6996,15 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             for (let j = 0; j < n; j++) {
                 if (i !== j) {
                     SMIb[i][j] = A1[i][j] + A2[i][j] + A3[i][j] + A4[i][j];
+                } else {
+                    // CANON DIAGONAL REFLEXIVA (AUTONOMÍA Y SONDA DE LOS EXTREMOS):
+                    // Al ser emisor=receptor, A3 y A4 quedan liberados de su espejo tautológico
+                    // A1: Auto-expectativa | A2: Auto-aprecio | A3: aE Cenit | A4: oE Nadir
+                    let a1_diag = (modSintonia === 'DISONANTE') ? 'c' : 'A';
+                    let a2_diag = 'A';
+                    let a3_diag = (modSintonia === 'ALTA' && i === 0) ? 'A' : ((modSintonia === 'DISONANTE') ? 'A' : '0');
+                    let a4_diag = (modSintonia === 'DISONANTE') ? 'r' : '0';
+                    SMIb[i][i] = a1_diag + a2_diag + a3_diag + a4_diag;
                 }
             }
         }
@@ -9054,7 +9076,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 
             for (let j = 0; j < n; j++) {
                 if (i === j) {
-                    html += `<td class="diagonal">X</td>`;
+                    let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : '0000';
+                    html += `<td class="diagonal" title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE, A4=oE]: ${diagStr}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-family:monospace; font-weight:bold; font-size:10px; cursor:help;">${diagStr}</td>`;
                 } else {
                     let rawVal = currentMatrix[i][j];
                     let smiaStr = smibToSmia(rawVal);
@@ -11372,7 +11395,12 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             html += `<tr><th class="s-left bg-dark">${i + 1}</th>`;
             for (let j = 0; j < n; j++) {
                 if (i === j) {
-                    html += `<td class="diagonal">X</td>`;
+                    if (type === 'SMIb' && mat && mat[i] && mat[i][i]) {
+                        let diagStr = mat[i][i];
+                        html += `<td class="diagonal" title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE(Cenit), A4=oE(Nadir)]: ${diagStr}" style="background:rgba(255,230,0,0.18); color:#FFE600; font-weight:bold; font-family:monospace; cursor:help;">${diagStr}</td>`;
+                    } else {
+                        html += `<td class="diagonal">X</td>`;
+                    }
                 } else {
                     let val = mat[i][j];
                     let color = '#FFF';
@@ -11854,7 +11882,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             html += `<tr><th>${i+1}</th>`;
             for (let j=0; j<n_nodes; j++) {
                 if (i === j) {
-                    html += `<td class="diagonal"></td>`;
+                    let val = (currentMatrix && currentMatrix[i] && currentMatrix[i][j]) ? currentMatrix[i][j] : '0000';
+                    html += `<td class="diagonal" title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE, A4=oE]: ${val}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-family:monospace; font-size:10px; font-weight:bold; text-align:center;">${val}</td>`;
                 } else {
                     let val = (currentMatrix && currentMatrix[i] && currentMatrix[i][j]) ? currentMatrix[i][j] : '0000';
                     let displayVal = (manualViewMode === 'SMIa') ? smibToSmia(val) : val;
@@ -13353,6 +13382,28 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             }
             newMatrix.push(row);
         }
+
+        // Población Canónica de la Diagonal Liberada [A1=Auto-Exp, A2=Auto-Val, A3=aE(Cenit), A4=oE(Nadir)]
+        for (let i = 0; i < n_nodes; i++) {
+            let rowWeightSum = 0;
+            let netScores = [];
+            for (let k = 0; k < n_nodes; k++) {
+                if (k === i) continue;
+                let c = newMatrix[i][k];
+                let w = (c[1] === 'E' ? 1.0 : (c[1] === 'e' ? 0.5 : (c[1] === 'r' ? -0.5 : (c[1] === 'R' ? -1.0 : 0))));
+                netScores.push({ idx: k, val: w });
+                rowWeightSum += w;
+            }
+            netScores.sort((a, b) => b.val - a.val);
+            let cenitIdx = netScores[0] ? netScores[0].idx : i;
+            let nadirIdx = netScores[netScores.length - 1] ? netScores[netScores.length - 1].idx : i;
+            let a1 = (rowWeightSum >= 0.5) ? 'A' : (rowWeightSum <= -0.5 ? 'a' : '0');
+            let a2 = (rowWeightSum >= 0) ? 'A' : 'a';
+            let a3 = (cenitIdx === i || Math.random() > 0.4) ? 'A' : '0';
+            let a4 = (nadirIdx === i || Math.random() < 0.25) ? 'r' : '0';
+            newMatrix[i][i] = `${a1}${a2}${a3}${a4}`;
+        }
+
         currentMatrix = newMatrix;
         loadMatrixIntoHistory(currentMatrix);
         
@@ -13623,7 +13674,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 html += `<tr><th>S${i+1}</th>`;
                 for (let j = 0; j < n_nodes; j++) {
                     if (i === j) {
-                        html += '<td style="background:rgba(255,255,255,0.06); color:#64748B;">—</td>';
+                        let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : '0000';
+                        html += `<td title="Diagonal Liberada S${i+1} [A1=Auto-Exp, A2=Auto-Val, A3=aE(Cenit), A4=oE(Nadir)]: ${diagStr}" style="background:rgba(255,230,0,0.18); color:#FFE600; font-weight:bold; font-family:monospace; border:1px solid rgba(255,230,0,0.3); cursor:help;">${diagStr}</td>`;
                     } else {
                         let smia = smibToSmia(currentMatrix[i][j]);
                         let col = getSMIaColor(smia);
