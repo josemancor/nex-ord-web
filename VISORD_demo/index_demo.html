@@ -2965,11 +2965,11 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             <button class="bond-pill" id="bp-pR" onclick="toggleBondFilter('pR', this)" title="Expectativa de Rechazo ([)">
                 <span>[ pR ] Espera (-)</span><span style="color:#FF9F1C;">[</span>
             </button>
-            <button class="bond-pill" id="bp-aE" onclick="toggleBondFilter('aE', this)" title="Concordancia Auto-perceptual (Realismo)">
-                <span>[ aE ] Auto-percep</span><span style="color:#FFE600;">🎯</span>
+            <button class="bond-pill" id="bp-aE" onclick="toggleBondFilter('aE', this)" title="Sonda de los Extremos: Elección atribuida al 1º (Cenit aE)">
+                <span>[ aE ] Sonda 1º</span><span style="color:#FFE600;">🎯</span>
             </button>
-            <button class="bond-pill" id="bp-oE" onclick="toggleBondFilter('oE', this)" title="Concordancia Hetero-perceptual (Transparencia)">
-                <span>[ oE ] Hetero-percep</span><span style="color:#A855F7;">👁️</span>
+            <button class="bond-pill" id="bp-oE" onclick="toggleBondFilter('oE', this)" title="Sonda de los Extremos: Elección atribuida al Último (Nadir oE)">
+                <span>[ oE ] Sonda Últ</span><span style="color:#A855F7;">👁️</span>
             </button>
         </div>
 
@@ -2998,7 +2998,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                 <span id="card-node-role" style="color:#00FF87; font-size:9.5px; font-weight:bold;">-</span>
             </div>
             <div id="card-node-body" style="color:#94A3B8; font-size:10px; line-height:1.45;">
-                💡 Haz clic en cualquier esfera 3D o en el timeline para inspeccionar sus vínculos factuales y cognitivos (\(aE\) y \(oE\)).
+                💡 Haz clic en cualquier nodo 3D o en el timeline para inspeccionar sus vínculos factuales y su Sonda de los Extremos (Cenit \(aE\) y Nadir \(oE\)).
             </div>
         </div>
     </div>
@@ -5847,60 +5847,107 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
             
             // =========================================================================
-            // COGNICIÓN SOCIAL CANÓNICA: CÁLCULO DE aE Y oE (REGLA 12)
+            // COGNICIÓN SOCIAL CANÓNICA: SONDA METAPERCEPTIVA DE LOS EXTREMOS (aE / oE)
+            // DOCTRINA DR. JOSÉ MANUEL CORNEJO: PERCEPCIONES TRIÁDICAS CENIT Y NADIR
+            // «¿A quiénes crees que habrá elegido tu primero (j1) y tu último (jN)?»
             // =========================================================================
+            currentStats.cenit = Array(n_nodes).fill(-1);
+            currentStats.nadir = Array(n_nodes).fill(-1);
+            currentStats.aE_target = Array(n_nodes).fill(-1);
+            currentStats.oE_target = Array(n_nodes).fill(-1);
+            currentStats.aE_self = Array(n_nodes).fill(false);
+            currentStats.oE_self = Array(n_nodes).fill(false);
+            currentStats.aE_hit = Array(n_nodes).fill(false);
             currentStats.aE = Array(n_nodes).fill(1.0);
             currentStats.oE = Array(n_nodes).fill(1.0);
-            currentStats.aE_diag = Array(n_nodes).fill('Muy Calibrado');
-            currentStats.oE_diag = Array(n_nodes).fill('Transparente');
+            currentStats.aE_diag = Array(n_nodes).fill('');
+            currentStats.oE_diag = Array(n_nodes).fill('');
             
+            let modSintoniaVal = document.getElementById('mod-sintonia') ? document.getElementById('mod-sintonia').value : 'ALTA';
+
+            // 1. Identificar Cenit (1º) y Nadir (último) factual para cada sujeto emisor
             for (let i = 0; i < n_nodes; i++) {
-                let pE_emit = 0, pE_hits = 0;
-                let oE_hits = 0;
-                let e_recv = 0;
+                let bestJ = -1, bestRank = 999;
+                let worstJ = -1, worstRank = -999;
                 
                 for (let j = 0; j < n_nodes; j++) {
                     if (i === j) continue;
-                    let celda = currentMatrix[i][j];
-                    let p1 = celda[0]; // A1 (expectativa)
-                    let p2 = celda[1]; // A2 (preferencia emitida)
-                    let p3 = celda[2]; // A3 (preferencia recibida)
-                    let p4 = celda[3]; // A4 (expectativa de j)
-                    
-                    if (p1 >= 'A' && p1 <= 'Z') {
-                        pE_emit++;
-                        if (p3 >= 'A' && p3 <= 'Z') pE_hits++;
+                    let da = currentMatrix[i][j][1]; // Posición A2 (preferencia emitida)
+                    if (da >= 'A' && da <= 'Z') {
+                        let rank = da.charCodeAt(0) - 65; // A=0, B=1, ...
+                        if (rank < bestRank) {
+                            bestRank = rank;
+                            bestJ = j;
+                        }
                     }
-                    if (p3 >= 'A' && p3 <= 'Z') e_recv++;
-                    
-                    let j_espera_pos = (p4 >= 'A' && p4 <= 'Z');
-                    let i_dio_pos = (p2 >= 'A' && p2 <= 'Z');
-                    let j_espera_neg = (p4 >= 'a' && p4 <= 'z');
-                    let i_dio_neg = (p2 >= 'a' && p2 <= 'z');
-                    if ((j_espera_pos && i_dio_pos) || (j_espera_neg && i_dio_neg) || (p4 === '0' && p2 === '0')) {
-                        oE_hits++;
+                    if (da >= 'a' && da <= 'z') {
+                        let rank = da.charCodeAt(0) - 97;
+                        if (rank > worstRank) {
+                            worstRank = rank;
+                            worstJ = j;
+                        }
                     }
                 }
                 
-                let ratio_aE = pE_emit > 0 ? (pE_hits / pE_emit) : (e_recv === 0 ? 1.0 : 0.4);
-                let ratio_oE = (oE_hits / Math.max(1, n_nodes - 1));
-                currentStats.aE[i] = ratio_aE;
-                currentStats.oE[i] = ratio_oE;
+                if (bestJ === -1) bestJ = (i + 1) % n_nodes;
+                if (worstJ === -1) worstJ = (i + n_nodes - 1) % n_nodes;
                 
-                if (e_recv >= pE_emit + 2 && ratio_aE < 0.6) {
-                    currentStats.aE_diag[i] = 'Inseguridad / Impostor (Más querido de lo que cree)';
-                } else if (pE_emit >= e_recv + 2 && ratio_aE < 0.5) {
-                    currentStats.aE_diag[i] = 'Sobreestimación / Puntos Ciegos';
-                } else {
-                    currentStats.aE_diag[i] = 'Muy Calibrado / Realista';
+                currentStats.cenit[i] = bestJ;
+                currentStats.nadir[i] = worstJ;
+            }
+            
+            // 2. Procesar atribución de la Sonda según sintonía y teoría de la mente
+            for (let i = 0; i < n_nodes; i++) {
+                let j_cenit = currentStats.cenit[i];
+                let j_nadir = currentStats.nadir[i];
+                
+                let real_cenit_choice = currentStats.cenit[j_cenit];
+                let real_nadir_choice = currentStats.cenit[j_nadir];
+                
+                let target_aE = -1;
+                let target_oE = -1;
+                
+                if (modSintoniaVal === 'ALTA') {
+                    target_aE = real_cenit_choice;
+                    target_oE = (real_nadir_choice !== i) ? real_nadir_choice : ((j_nadir + 2) % n_nodes);
+                } else if (modSintoniaVal === 'DISONANTE') {
+                    // Disonancia / Falsa expectativa: cree que su 1º le prefiere a él
+                    target_aE = (real_cenit_choice !== i) ? i : ((i + 2) % n_nodes);
+                    target_oE = i; // Culpa vincular o persecución imaginada
+                } else { // MEDIA
+                    target_aE = ((i + j_cenit) % 2 === 0) ? real_cenit_choice : i;
+                    target_oE = (i % 3 === 0) ? i : real_nadir_choice;
                 }
                 
-                if (ratio_oE >= 0.70) {
-                    currentStats.oE_diag[i] = 'Muy Transparente / Predecible';
-                } else if (ratio_oE >= 0.45) {
-                    currentStats.oE_diag[i] = 'Transparencia Media';
+                currentStats.aE_target[i] = target_aE;
+                currentStats.oE_target[i] = target_oE;
+                currentStats.aE_self[i] = (target_aE === i);
+                currentStats.oE_self[i] = (target_oE === i);
+                
+                let hit = (target_aE === real_cenit_choice);
+                currentStats.aE_hit[i] = hit;
+                currentStats.aE[i] = hit ? 1.0 : 0.0;
+                currentStats.oE[i] = (target_oE !== i) ? 1.0 : 0.2;
+                
+                // Diagnósticos doctrinarios de la Sonda
+                if (target_aE === i) {
+                    if (real_cenit_choice === i) {
+                        currentStats.aE_diag[i] = 'Alta Autovalía & Reciprocidad Simétrica Real';
+                    } else {
+                        currentStats.aE_diag[i] = 'Fantasía Narcisista / Auto-inclusión no correspondida';
+                    }
                 } else {
-                    currentStats.oE_diag[i] = 'Hermético / Enigmático';
+                    if (hit) {
+                        currentStats.aE_diag[i] = `Descentralización Lúcida (Sabe que S${j_cenit+1} admira a S${target_aE+1})`;
+                    } else {
+                        currentStats.aE_diag[i] = `Punto Ciego Cognitivo (Atribución errónea sobre su 1º)`;
+                    }
+                }
+                
+                if (target_oE === i) {
+                    currentStats.oE_diag[i] = 'Alerta de Culpa Vincular / Atracción Unilateral Entrante';
+                } else {
+                    currentStats.oE_diag[i] = `Distancia Aséptica (Asume que su último orbita hacia S${target_oE+1})`;
                 }
             }
             
@@ -6143,14 +6190,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             if (selArr.length === 1) {
                 let ego = selArr[0];
                 let rol = (currentStats && currentStats.roles) ? currentStats.roles[ego] : 'SATELITE';
-                let aE_pct = (currentStats && currentStats.aE) ? Math.round(currentStats.aE[ego] * 100) : 100;
-                let oE_pct = (currentStats && currentStats.oE) ? Math.round(currentStats.oE[ego] * 100) : 100;
+                let cenitIdx = (currentStats && currentStats.cenit) ? currentStats.cenit[ego] : -1;
+                let nadirIdx = (currentStats && currentStats.nadir) ? currentStats.nadir[ego] : -1;
+                let aE_target = (currentStats && currentStats.aE_target) ? currentStats.aE_target[ego] : -1;
+                let oE_target = (currentStats && currentStats.oE_target) ? currentStats.oE_target[ego] : -1;
                 let aE_lbl = (currentStats && currentStats.aE_diag) ? currentStats.aE_diag[ego] : 'Calibrado';
-                let oE_lbl = (currentStats && currentStats.oE_diag) ? currentStats.oE_diag[ego] : 'Transparente';
+                let oE_lbl = (currentStats && currentStats.oE_diag) ? currentStats.oE_diag[ego] : 'Distancia Aséptica';
+                
+                let cenitStr = (cenitIdx >= 0) ? `S${cenitIdx+1}` : 'N/A';
+                let nadirStr = (nadirIdx >= 0) ? `S${nadirIdx+1}` : 'N/A';
+                let aE_targetStr = (aE_target === ego) ? '<span style="color:#00FF87; font-weight:bold;">A MÍ MISMO</span>' : `S${aE_target+1}`;
+                let oE_targetStr = (oE_target === ego) ? '<span style="color:#FF0055; font-weight:bold;">A MÍ MISMO</span>' : `S${oE_target+1}`;
                 
                 let e_given = [], r_given = [];
                 let e_recv = [], r_recv = [];
-                let pe_exp = [], pr_exp = [];
                 for (let j = 0; j < n_nodes; j++) {
                     if (ego === j) continue;
                     let c = currentMatrix[ego][j];
@@ -6158,8 +6211,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                     if (c[1] >= 'a' && c[1] <= 'z') r_given.push(`S${j+1}`);
                     if (c[2] >= 'A' && c[2] <= 'Z') e_recv.push(`S${j+1}`);
                     if (c[2] >= 'a' && c[2] <= 'z') r_recv.push(`S${j+1}`);
-                    if (c[0] >= 'A' && c[0] <= 'Z') pe_exp.push(`S${j+1}`);
-                    if (c[0] >= 'a' && c[0] <= 'z') pr_exp.push(`S${j+1}`);
                 }
                 
                 cardName.innerText = `👤 SUJETO ${ego+1} (ID: ${ego+1}A)`;
@@ -6173,19 +6224,35 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                         <span style="color:#00A2FF; font-weight:bold;">● Elecciones recibidas (e):</span> ${e_recv.length > 0 ? e_recv.join(', ') : 'Ninguna'}<br/>
                         <span style="color:#FF9F1C; font-weight:bold;">● Rechazos recibidos (r):</span> ${r_recv.length > 0 ? r_recv.join(', ') : 'Ninguno'}
                     </div>
-                    <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:5px; border-left:3px solid #FFE600; margin-bottom:4px;">
-                        <strong style="color:#FFE600;">🎯 Auto-percepción (aE): ${aE_pct}%</strong><br/>
-                        <span style="color:#FFF;">${aE_lbl}</span> (Espera elección de: ${pe_exp.length > 0 ? pe_exp.join(', ') : 'nadie'})
+                    <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:5px; border-left:3px solid #FFE600; margin-bottom:5px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:#FFE600; font-size:10px;">🎯 SONDA CENIT (aE · 1º: ${cenitStr})</strong>
+                            <span style="font-size:8.5px; color:#94A3B8;">Tríada: S${ego+1} &rarr; ${cenitStr} &rarr; ?</span>
+                        </div>
+                        <div style="color:#FFF; font-size:9.5px; margin-top:2px;">
+                            Cree que ${cenitStr} eligió a: <strong>${aE_targetStr}</strong>
+                        </div>
+                        <div style="color:#CBD5E1; font-size:9px; font-style:italic; margin-top:2px;">
+                            ● ${aE_lbl}
+                        </div>
                     </div>
                     <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:5px; border-left:3px solid #A855F7;">
-                        <strong style="color:#C084FC;">👁️ Hetero-percepción (oE): ${oE_pct}%</strong><br/>
-                        <span style="color:#FFF;">${oE_lbl}</span> (Previsibilidad social ante el grupo)
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:#C084FC; font-size:10px;">👁️ SONDA NADIR (oE · Últ: ${nadirStr})</strong>
+                            <span style="font-size:8.5px; color:#94A3B8;">Tríada: S${ego+1} &rarr; ${nadirStr} &rarr; ?</span>
+                        </div>
+                        <div style="color:#FFF; font-size:9.5px; margin-top:2px;">
+                            Cree que ${nadirStr} eligió a: <strong>${oE_targetStr}</strong>
+                        </div>
+                        <div style="color:#CBD5E1; font-size:9px; font-style:italic; margin-top:2px;">
+                            ● ${oE_lbl}
+                        </div>
                     </div>
                 `;
             } else if (selArr.length === 0) {
                 cardName.innerText = '👤 SELECCIÓN DE NODO';
                 cardRole.innerText = '-';
-                cardBody.innerHTML = '💡 Haz clic en cualquier esfera 3D o en el timeline para inspeccionar sus vínculos factuales y cognitivos (aE y oE).';
+                cardBody.innerHTML = '💡 Haz clic en cualquier nodo 3D o en el timeline para inspeccionar sus vínculos factuales y su Sonda de los Extremos (Cenit aE y Nadir oE).';
             }
         }
         
@@ -13764,9 +13831,13 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         censo.forEach(r => { if (counts[r] !== undefined) counts[r]++; });
         
         let avg_aE = 0, avg_oE = 0;
+        let auto_inc_pct = 0;
         if (currentStats && currentStats.aE && currentStats.oE) {
             avg_aE = (currentStats.aE.reduce((a,b)=>a+b, 0) / Math.max(1, n) * 100).toFixed(1);
-            avg_oE = (currentStats.oE.reduce((a,b)=>a+b, 0) / Math.max(1, n) * 100).toFixed(1);
+            let asepticCount = currentStats.oE_self ? currentStats.oE_self.filter(s => !s).length : n;
+            avg_oE = (asepticCount / Math.max(1, n) * 100).toFixed(1);
+            let selfCount = currentStats.aE_self ? currentStats.aE_self.filter(s => s).length : 0;
+            auto_inc_pct = (selfCount / Math.max(1, n) * 100).toFixed(1);
         }
         
         let sdr_global = document.getElementById('disp-densidad') ? document.getElementById('disp-densidad').innerText : '0.00';
@@ -13803,11 +13874,12 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
 
             <!-- AUTOCONCIENCIA Y COGNICIÓN SOCIAL -->
             <div class="report-section" style="border-left-color: #A855F7;">
-                <div class="report-section-title" style="color: #A855F7;">🧠 COGNICIÓN SOCIAL &amp; LUCIDEZ METAPERCEPTUAL (aE / oE)</div>
+                <div class="report-section-title" style="color: #A855F7;">🧠 COGNICIÓN SOCIAL &amp; SONDA DE LOS EXTREMOS (DOCTRINA DR. CORNEJO)</div>
                 <div>
-                    ● <strong>Realismo Auto-perceptual Medio (aE): ${avg_aE}%</strong>. Indica el grado de acierto del grupo respecto a cómo son percibidos por sus compañeros.<br/>
-                    ● <strong>Transparencia Social Media (oE): ${avg_oE}%</strong>. Refleja la legibilidad y coherencia de las señales de los sujetos hacia el colectivo.<br/>
-                    <em>Recomendación formativa:</em> Trabajar la asertividad y la clarificación de expectativas diádicas para disolver malentendidos sutiles.
+                    ● <strong>Lucidez de Teoría de la Mente (Acierto aE): ${avg_aE}%</strong>. Proporción del grupo que predice con exactitud a quién ha preferido realmente su Cenit ($1º$).<br/>
+                    ● <strong>Tasa de Auto-inclusión en el Cenit: ${auto_inc_pct}%</strong>. Participantes con alta seguridad vincular que esperan reciprocidad simétrica de su referente directo.<br/>
+                    ● <strong>Distancia Aséptica en el Nadir (oE): ${avg_oE}%</strong>. Proporción que asume con naturalidad que su último opera en otra órbita sin culpa vincular.<br/>
+                    <em>Recomendación formativa:</em> Promover dinámicas de clarificación de expectativas y feedback bidireccional para desarticular puntos ciegos relacionales.
                 </div>
             </div>
 
