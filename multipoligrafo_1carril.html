@@ -837,6 +837,7 @@
       <span class="status-pill">CORTE: <strong id="hud-coords" style="color:var(--neon-cyan)">G1 · T1 · C1</strong></span>
       <span class="status-pill">MODO: <strong id="hud-mode" style="color:var(--neon-gold)">Por Separado</strong></span>
       <span class="status-pill">SEÑAL: <strong id="hud-metric" style="color:#00F0FF">SDR</strong></span>
+      <span class="status-pill">TRAZADO: <strong id="hud-trazado" style="color:var(--neon-green)">Curvatura</strong></span>
     </div>
 
     <div style="display:flex; gap:8px; align-items:center;">
@@ -882,6 +883,11 @@
           <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas continuas: DA, RC y (DA+RC)/2">🔱 3 Vías Paralelas</button>
           <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y S14">👁️ Expectativas</button>
           <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de las 18 densidades">📈 Señal 18D</button>
+          <!-- CONMUTADOR DE TRAZADO: CURVATURA vs QUEBRADA -->
+          <div style="display:flex; gap:3px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
+            <button class="btn-carril-mode active" id="btn-geom-curva" onclick="setLineInterpolation('curva')" title="Curvatura spline continua: interpolación cúbica Catmull-Rom con paso exacto por cada estación">〰️ Curvatura</button>
+            <button class="btn-carril-mode" id="btn-geom-quebrada" onclick="setLineInterpolation('quebrada')" title="Línea quebrada poligonal clásica">📐 Quebrada</button>
+          </div>
         </div>
         <div class="carril-telemetry">
           <div class="telem-box"><span>BDR:</span><strong id="telem-bdr" style="color:var(--neon-gold)">0.48</strong></div>
@@ -1252,7 +1258,7 @@
 
       <!-- MANDATO DE INTERPRETACIÓN CANÓNICA -->
       <div class="note-pedagogica">
-        <strong>💡 Mandato Canónico de Interpretación:</strong> El Multipolígrafo de 1-Carril ofrece un oscilograma limpio para observar las ondas de densidad socio-termodinámica sin la congestión perceptual de múltiples carriles simultáneos. En el modo <strong>n×n</strong>, la onda recorre las 36 interacciones de cada grupo fila a fila, revelando en cada pico positivo áreas de cohesión y reciprocidad, y en cada valle negativo la fractura y el rechazo. Al activar el modo <strong>Juntos</strong>, las trayectorias temporales (T1, T2, T3) o criteriales (C1, C2) se superponen en el mismo lienzo con sus respectivos colores neón, permitiendo constatar en una sola mirada el desplazamiento histórico y la congruencia dialéctica de los vínculos.
+        <strong>💡 Mandato Canónico de Interpretación:</strong> El Multipolígrafo de 1-Carril ofrece un oscilograma limpio para observar las ondas de densidad socio-termodinámica sin la congestión perceptual de múltiples carriles simultáneos. En el modo <strong>n×n</strong>, la onda recorre las 36 interacciones de cada grupo fila a fila, revelando en cada pico positivo áreas de cohesión y reciprocidad, y en cada valle negativo la fractura y el rechazo. Al activar el modo <strong>Juntos</strong>, las trayectorias temporales (T1, T2, T3) o criteriales (C1, C2) se superponen en el mismo lienzo con sus respectivos colores neón, permitiendo constatar en una sola mirada el desplazamiento histórico y la congruencia dialéctica de los vínculos. El trazado por <strong>Curvatura Spline Continua</strong> (interpolación cúbica Catmull-Rom a Bézier) respeta con fidelidad matemática exacta el valor empírico de cada estación \((x_i, y_i)\) sin distorsionar picos ni valles, eliminando las aristas quebradas artificiales para proyectar el flujo energético continuo del grupo.
       </div>
     </section>
 
@@ -8230,6 +8236,7 @@
     let currentCriterion = '1';           // '1' | '2' | 'juntos'
     let currentDensity = 'SDR';           // 'D1'..'D4', 'SDR', 'BDR', 'S12', 'B12', etc.
     let carrilTrackMode = '3vias_da_rc';  // '3vias_da_rc' | '3vias_expect' | 'single_18d'
+    let lineInterpolation = 'curva';      // 'curva' (spline suave) | 'quebrada' (poligonal)
 
     let activeStationIndex = 0;
     let totalStations = 6;
@@ -8476,6 +8483,91 @@
     }
 
     // =========================================================================
+    // INTERPOLACIÓN SPLINE CATMULL-ROM A BÉZIER CÚBICA (PASO EXACTO)
+    // =========================================================================
+    function getCubicBezierSegments(pts) {
+      const n = pts.length;
+      if (n <= 1) return [];
+      const segments = [];
+
+      if (n === 2) {
+        const p0 = pts[0], p1 = pts[1];
+        const dx = (p1.x - p0.x) / 3;
+        const dy = (p1.y - p0.y) / 3;
+        segments.push({
+          p1: p0,
+          cp1: { x: p0.x + dx, y: p0.y + dy },
+          cp2: { x: p1.x - dx, y: p1.y - dy },
+          p2: p1
+        });
+        return segments;
+      }
+
+      for (let i = 0; i < n - 1; i++) {
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+
+        let cp1, cp2;
+
+        if (i === 0) {
+          // Primer segmento: pendiente natural en p1 guiada por p2, p3
+          const p3 = pts[i + 2];
+          cp1 = {
+            x: p1.x + (p2.x - p1.x) / 3,
+            y: p1.y + (p2.y - p1.y) / 3
+          };
+          cp2 = {
+            x: p2.x - (p3.x - p1.x) / 6,
+            y: p2.y - (p3.y - p1.y) / 6
+          };
+        } else if (i === n - 2) {
+          // Último segmento: pendiente natural en p2 guiada por p0, p1
+          const p0 = pts[i - 1];
+          cp1 = {
+            x: p1.x + (p2.x - p0.x) / 6,
+            y: p1.y + (p2.y - p0.y) / 6
+          };
+          cp2 = {
+            x: p2.x - (p2.x - p1.x) / 3,
+            y: p2.y - (p2.y - p1.y) / 3
+          };
+        } else {
+          // Segmento interior estándar Catmull-Rom
+          const p0 = pts[i - 1];
+          const p3 = pts[i + 2];
+          cp1 = {
+            x: p1.x + (p2.x - p0.x) / 6,
+            y: p1.y + (p2.y - p0.y) / 6
+          };
+          cp2 = {
+            x: p2.x - (p3.x - p1.x) / 6,
+            y: p2.y - (p3.y - p1.y) / 6
+          };
+        }
+
+        segments.push({ p1, cp1, cp2, p2 });
+      }
+
+      return segments;
+    }
+
+    function traceCurvedPathForward(ctx, segments) {
+      if (!segments || segments.length === 0) return;
+      for (let i = 0; i < segments.length; i++) {
+        const seg = segments[i];
+        ctx.bezierCurveTo(seg.cp1.x, seg.cp1.y, seg.cp2.x, seg.cp2.y, seg.p2.x, seg.p2.y);
+      }
+    }
+
+    function traceCurvedPathReverse(ctx, segments) {
+      if (!segments || segments.length === 0) return;
+      for (let i = segments.length - 1; i >= 0; i--) {
+        const seg = segments[i];
+        ctx.bezierCurveTo(seg.cp2.x, seg.cp2.y, seg.cp1.x, seg.cp1.y, seg.p1.x, seg.p1.y);
+      }
+    }
+
+    // =========================================================================
     // RENDERIZADO DEL CARRIL EN CANVAS 2D
     // =========================================================================
     function drawCarril() {
@@ -8495,6 +8587,7 @@
       const plotW = w - padL - padR;
       const plotH = h - padY * 2;
       const yZero = padY + plotH / 2;
+      const useCurva = (lineInterpolation === 'curva');
 
       // 1. Fondo Oscuro
       ctx.fillStyle = '#040714';
@@ -8625,12 +8718,22 @@
           ptsBAR.push({ x, y: scaleY(bar), val: bar, st });
         }
 
-        // 1. Banda translúcida de fricción entre DA y RC
+        const segsDA = useCurva ? getCubicBezierSegments(ptsDA) : null;
+        const segsRC = useCurva ? getCubicBezierSegments(ptsRC) : null;
+        const segsBAR = useCurva ? getCubicBezierSegments(ptsBAR) : null;
+
+        // 1. Banda translúcida de fricción entre DA y RC (Trazado curvilíneo bidireccional)
         ctx.fillStyle = 'rgba(255, 159, 28, 0.09)';
         ctx.beginPath();
         ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
-        for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsDA);
+          ctx.lineTo(ptsRC[totalStations - 1].x, ptsRC[totalStations - 1].y);
+          traceCurvedPathReverse(ctx, segsRC);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+          for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        }
         ctx.closePath();
         ctx.fill();
 
@@ -8644,34 +8747,46 @@
           ctx.stroke();
         }
 
-        // 3. VÍA 1: LÍNEA CONTINUA DA (Emisión Efectiva, D2) - Cian
+        // 3. VÍA 1: LÍNEA CONTINUA DA (Emisión Efectiva, D2) - Cian con curvatura spline
         ctx.strokeStyle = '#38BDF8';
         ctx.lineWidth = 2.2;
         ctx.shadowColor = '#38BDF8';
         ctx.shadowBlur = 6;
         ctx.beginPath();
         ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsDA);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+        }
         ctx.stroke();
 
-        // 4. VÍA 2: LÍNEA CONTINUA RC (Recepción Efectiva, D3) - Naranja
+        // 4. VÍA 2: LÍNEA CONTINUA RC (Recepción Efectiva, D3) - Naranja con curvatura spline
         ctx.strokeStyle = '#FF9F1C';
         ctx.lineWidth = 2.2;
         ctx.shadowColor = '#FF9F1C';
         ctx.shadowBlur = 6;
         ctx.beginPath();
         ctx.moveTo(ptsRC[0].x, ptsRC[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsRC);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        }
         ctx.stroke();
 
-        // 5. VÍA 3: LÍNEA CONTINUA BARICENTRO (DA+RC)/2 (S23) - Verde Neón
+        // 5. VÍA 3: LÍNEA CONTINUA BARICENTRO (DA+RC)/2 (S23) - Verde Neón con curvatura spline
         ctx.strokeStyle = '#00FF87';
         ctx.lineWidth = 2.8;
         ctx.shadowColor = '#00FF87';
         ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsBAR);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+        }
         ctx.stroke();
         ctx.shadowBlur = 0;
 
@@ -8733,16 +8848,26 @@
           ptsBAR.push({ x, y: scaleY(bar), val: bar, st });
         }
 
-        // Banda
+        const segsPDA = useCurva ? getCubicBezierSegments(ptsPDA) : null;
+        const segsPRC = useCurva ? getCubicBezierSegments(ptsPRC) : null;
+        const segsBAR = useCurva ? getCubicBezierSegments(ptsBAR) : null;
+
+        // 1. Banda translúcida de desacople de expectativas (p_DA vs p_RC)
         ctx.fillStyle = 'rgba(192, 132, 252, 0.09)';
         ctx.beginPath();
         ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
-        for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsPDA);
+          ctx.lineTo(ptsPRC[totalStations - 1].x, ptsPRC[totalStations - 1].y);
+          traceCurvedPathReverse(ctx, segsPRC);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+          for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        }
         ctx.closePath();
         ctx.fill();
 
-        // Cuerdas
+        // 2. Cuerdas verticales de desacople en cada estación
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
         ctx.lineWidth = 1.0;
         for (let i = 0; i < totalStations; i++) {
@@ -8752,31 +8877,43 @@
           ctx.stroke();
         }
 
-        // Vía 1: p_DA (Cian)
+        // 3. Vía 1: p_DA (Cian) con curvatura spline
         ctx.strokeStyle = '#38BDF8';
         ctx.lineWidth = 2.2;
         ctx.shadowColor = '#38BDF8'; ctx.shadowBlur = 6;
         ctx.beginPath();
         ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsPDA);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+        }
         ctx.stroke();
 
-        // Vía 2: p_RC (Púrpura)
+        // 4. Vía 2: p_RC (Púrpura) con curvatura spline
         ctx.strokeStyle = '#C084FC';
         ctx.lineWidth = 2.2;
         ctx.shadowColor = '#C084FC'; ctx.shadowBlur = 6;
         ctx.beginPath();
         ctx.moveTo(ptsPRC[0].x, ptsPRC[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsPRC);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        }
         ctx.stroke();
 
-        // Vía 3: (p_DA+p_RC)/2 (Oro)
+        // 5. Vía 3: (p_DA+p_RC)/2 (Oro) con curvatura spline
         ctx.strokeStyle = '#FFE600';
         ctx.lineWidth = 2.8;
         ctx.shadowColor = '#FFE600'; ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
-        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+        if (useCurva) {
+          traceCurvedPathForward(ctx, segsBAR);
+        } else {
+          for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+        }
         ctx.stroke();
         ctx.shadowBlur = 0;
 
@@ -8831,6 +8968,8 @@
             points.push({ x, y: scaleY(val), val, isDiagonal: st.isDiagonal, qid: st.id });
           }
 
+          const segs = useCurva ? getCubicBezierSegments(points) : null;
+
           if (curvesToDraw.length === 1) {
             const grad = ctx.createLinearGradient(0, scaleY(1), 0, scaleY(-1));
             grad.addColorStop(0, 'rgba(0, 255, 135, 0.20)');
@@ -8840,7 +8979,12 @@
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.moveTo(points[0].x, scaleY(0));
-            for (let i = 0; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+            ctx.lineTo(points[0].x, points[0].y);
+            if (useCurva) {
+              traceCurvedPathForward(ctx, segs);
+            } else {
+              for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+            }
             ctx.lineTo(points[points.length - 1].x, scaleY(0));
             ctx.closePath();
             ctx.fill();
@@ -8851,9 +8995,11 @@
           ctx.shadowColor = crv.color;
           ctx.shadowBlur = 8;
           ctx.beginPath();
-          for (let i = 0; i < points.length; i++) {
-            if (i === 0) ctx.moveTo(points[i].x, points[i].y);
-            else ctx.lineTo(points[i].x, points[i].y);
+          ctx.moveTo(points[0].x, points[0].y);
+          if (useCurva) {
+            traceCurvedPathForward(ctx, segs);
+          } else {
+            for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
           }
           ctx.stroke();
           ctx.shadowBlur = 0;
@@ -8977,7 +9123,7 @@
     // CONMUTAR MODO DE VÍAS DEL CARRIL
     function setCarrilTrackMode(mode) {
       carrilTrackMode = mode;
-      document.querySelectorAll('.btn-carril-mode').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#btn-mode-3vias-darc, #btn-mode-3vias-expect, #btn-mode-single18d').forEach(b => b.classList.remove('active'));
       if (mode === '3vias_da_rc') {
         document.getElementById('btn-mode-3vias-darc')?.classList.add('active');
         document.getElementById('hud-metric').textContent = currentResolution === 'condensado' ? '3 Vías ((i,·)·(·,j)·Bar)' : '3 Vías (DA·RC·Bar)';
@@ -8997,6 +9143,19 @@
       updateHeaderBadges();
       drawCarril();
       updateActiveStation(activeStationIndex, false);
+    }
+
+    // CONMUTAR TRAZADO: CURVATURA vs QUEBRADA
+    function setLineInterpolation(mode) {
+      lineInterpolation = mode;
+      document.getElementById('btn-geom-curva')?.classList.toggle('active', mode === 'curva');
+      document.getElementById('btn-geom-quebrada')?.classList.toggle('active', mode === 'quebrada');
+      const hudTrazado = document.getElementById('hud-trazado');
+      if (hudTrazado) {
+        hudTrazado.textContent = mode === 'curva' ? 'Curvatura' : 'Quebrada';
+        hudTrazado.style.color = mode === 'curva' ? 'var(--neon-green)' : 'var(--neon-cyan)';
+      }
+      drawCarril();
     }
 
     // ACTUALIZAR LEYENDA SUPERIOR PARA CURVAS SUPERPUESTAS
@@ -9693,6 +9852,7 @@
     window.onload = () => {
       setResolution('condensado');
       setCarrilTrackMode('3vias_da_rc');
+      setLineInterpolation('curva');
     };
   </script>
 </body>
