@@ -284,9 +284,125 @@
       gap: 6px;
     }
 
+    /* Workspace con Master Keypad Dock y Lienzo */
+    .carril-workspace {
+      display: flex;
+      align-items: stretch;
+      background: #040714;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .master-keypad-panel {
+      width: 175px;
+      min-width: 175px;
+      background: #060B1C;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      user-select: none;
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .pad-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 4px;
+    }
+
+    .pad-row {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .pad-row-num {
+      width: 15px;
+      min-width: 15px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      text-align: center;
+    }
+
+    .pad-cell {
+      flex: 1;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 3px;
+      border: 1px solid #1E293B;
+      background: #FFFFFF;
+      color: #0F172A;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      padding: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .pad-cell:hover {
+      filter: brightness(0.92);
+      transform: translateY(-1px);
+    }
+
+    /* ESTADOS ACTIVOS (ESTILO EXACTO CAPTURAS USUARIO) */
+    .pad-cell.active-amber {
+      background: #FDE68A !important;
+      color: #B45309 !important;
+      border-color: #D97706 !important;
+      box-shadow: 0 0 6px rgba(217, 119, 6, 0.35);
+    }
+
+    .pad-cell.active-green {
+      background: #4ADE80 !important;
+      color: #064E3B !important;
+      border-color: #10B981 !important;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.35);
+    }
+
+    .pad-cell.active-cyan {
+      background: #0284C7 !important;
+      color: #FFFFFF !important;
+      border-color: #38BDF8 !important;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.45);
+    }
+
+    .pad-cell-empty {
+      flex: 1;
+      height: 24px;
+      visibility: hidden;
+    }
+
+    @media (max-width: 950px) {
+      .carril-workspace {
+        flex-direction: column;
+      }
+      .master-keypad-panel {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.12);
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+
     /* Canvas Wrapper */
     .canvas-container {
       position: relative;
+      flex: 1;
       width: 100%;
       height: 380px;
       background: #040714;
@@ -901,9 +1017,118 @@
         <!-- Renderizado dinámico de leyenda -->
       </div>
 
-      <!-- Lienzo Canvas -->
-      <div class="canvas-container" id="canvas-container">
-        <canvas id="carrilCanvas"></canvas>
+      <!-- WORKSPACE CON MASTER KEYPAD Y LIENZO -->
+      <div class="carril-workspace">
+
+        <!-- MASTER KEYPAD DOCK (7 BLOQUES CANÓNICOS) -->
+        <aside class="master-keypad-panel" id="master-keypad-panel">
+          <!-- BLOQUE 1: HIPERTENSOR (G, T, C) - 1 a 3 celdas activables -->
+          <div class="pad-block" id="pad-block-tensor" title="Hipertensor: 1 a 3 opciones activables por dimensión (por defecto 1)">
+            <div class="pad-row">
+              <span class="pad-row-num">1</span>
+              <button class="pad-cell active-amber" id="pcell-g1" onclick="toggleTensorCell('g', '1')" title="Grupo A (G1)">G1</button>
+              <button class="pad-cell active-green" id="pcell-t1" onclick="toggleTensorCell('t', '1')" title="T1 Inicial">T1</button>
+              <button class="pad-cell active-cyan" id="pcell-c1" onclick="toggleTensorCell('c', '1')" title="C1 Afinidad">C1</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num">2</span>
+              <button class="pad-cell" id="pcell-g2" onclick="toggleTensorCell('g', '2')" title="Grupo B (G2)">G2</button>
+              <button class="pad-cell" id="pcell-t2" onclick="toggleTensorCell('t', '2')" title="T2 Intermedio">T2</button>
+              <button class="pad-cell" id="pcell-c2" onclick="toggleTensorCell('c', '2')" title="C2 Tarea">C2</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num">3</span>
+              <button class="pad-cell" id="pcell-g3" onclick="toggleTensorCell('g', '3')" title="Grupo C (G3)">G3</button>
+              <button class="pad-cell" id="pcell-t3" onclick="toggleTensorCell('t', '3')" title="T3 Consolidado">T3</button>
+              <span class="pad-cell-empty"></span>
+            </div>
+          </div>
+
+          <!-- BLOQUE 2: RESOLUCIÓN Y ESPACIO (1 a 4 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-res" title="Resolución: 1 opción activa por defecto (N, N*N, Q, Q*Q)">
+            <div class="pad-row">
+              <span class="pad-row-num">1</span>
+              <button class="pad-cell active-amber" id="pcell-res-n" onclick="toggleResCell('N')" title="N: Marginales por sujeto (i,·) y (·,j)">N</button>
+              <button class="pad-cell" id="pcell-res-nn" onclick="toggleResCell('N*N')" title="N*N: Díadas celda a celda (36)">N*N</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-res-q" onclick="toggleResCell('Q')" title="Q: Figuras canónicas">Q</button>
+              <button class="pad-cell" id="pcell-res-qq" onclick="toggleResCell('Q*Q')" title="Q*Q: Espacio universal Q81">Q*Q</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 3: TETRAGRAMA MONÁDICO (1 a 4 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-d" title="Tetragrama: 4 opciones elementales (1 por defecto)">
+            <div class="pad-row">
+              <span class="pad-row-num">4</span>
+              <button class="pad-cell active-amber" id="pcell-d1" onclick="toggleDensityCell('d', 'D1')" title="D1: Expectativa del Emisor (p_DA)">D1</button>
+              <button class="pad-cell" id="pcell-d2" onclick="toggleDensityCell('d', 'D2')" title="D2: Elección Real del Emisor (DA)">D2</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-d3" onclick="toggleDensityCell('d', 'D3')" title="D3: Elección Real Recibida (RC)">D3</button>
+              <button class="pad-cell" id="pcell-d4" onclick="toggleDensityCell('d', 'D4')" title="D4: Expectativa Recibida (p_RC)">D4</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 4: DENSIDADES GLOBALES (1 a 2 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-globals" title="Densidades Globales: 2 opciones (1 por defecto)">
+            <div class="pad-row">
+              <span class="pad-row-num">2</span>
+              <button class="pad-cell active-amber" id="pcell-sdr" onclick="toggleDensityCell('globals', 'SDR')" title="SDR: Saldo de Densidad Relativa (±ℝ)">SDR</button>
+              <button class="pad-cell" id="pcell-bdr" onclick="toggleDensityCell('globals', 'BDR')" title="BDR: Densidad Absoluta Bruta / Masa (+ℝ)">BDR</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 5: PAR 12 - 34 (1 a 4 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-p1234" title="Par Emisión vs Recepción: 4 opciones (1 por defecto)">
+            <div class="pad-row">
+              <span class="pad-row-num">4</span>
+              <button class="pad-cell active-amber" id="pcell-s12" onclick="toggleDensityCell('p1234', 'S12')" title="S12: Emisión Dadora (±ℝ)">S12</button>
+              <button class="pad-cell" id="pcell-b12" onclick="toggleDensityCell('p1234', 'B12')" title="B12: Masa Emisión (+ℝ)">B12</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-s34" onclick="toggleDensityCell('p1234', 'S34')" title="S34: Recepción Receptora (±ℝ)">S34</button>
+              <button class="pad-cell" id="pcell-b34" onclick="toggleDensityCell('p1234', 'B34')" title="B34: Masa Recepción (+ℝ)">B34</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 6: PAR 13 - 24 (1 a 4 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-p1324" title="Par Espejos Directo vs Inverso: 4 opciones (1 por defecto)">
+            <div class="pad-row">
+              <span class="pad-row-num">4</span>
+              <button class="pad-cell active-amber" id="pcell-s13" onclick="toggleDensityCell('p1324', 'S13')" title="S13: Espejo Directo (±ℝ)">S13</button>
+              <button class="pad-cell" id="pcell-b13" onclick="toggleDensityCell('p1324', 'B13')" title="B13: Masa Espejo Directo (+ℝ)">B13</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-s24" onclick="toggleDensityCell('p1324', 'S24')" title="S24: Espejo Inverso (±ℝ)">S24</button>
+              <button class="pad-cell" id="pcell-b24" onclick="toggleDensityCell('p1324', 'B24')" title="B24: Masa Espejo Inverso (+ℝ)">B24</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 7: PAR 14 - 23 (1 a 4 celdas, 1 por defecto) -->
+          <div class="pad-block" id="pad-block-p1423" title="Par Cruzado vs Fáctico Mutuo: 4 opciones (1 por defecto)">
+            <div class="pad-row">
+              <span class="pad-row-num">4</span>
+              <button class="pad-cell active-amber" id="pcell-s14" onclick="toggleDensityCell('p1423', 'S14')" title="S14: Expectativas Cruzadas (±ℝ)">S14</button>
+              <button class="pad-cell" id="pcell-b14" onclick="toggleDensityCell('p1423', 'B14')" title="B14: Masa Expectativas (+ℝ)">B14</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-s23" onclick="toggleDensityCell('p1423', 'S23')" title="S23: Fáctico Mutuo / Baricentro (±ℝ)">S23</button>
+              <button class="pad-cell" id="pcell-b23" onclick="toggleDensityCell('p1423', 'B23')" title="B23: Masa Fáctico Mutuo (+ℝ)">B23</button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Lienzo Canvas -->
+        <div class="canvas-container" id="canvas-container">
+          <canvas id="carrilCanvas"></canvas>
+        </div>
+
       </div>
 
       <!-- Barra de Scrubber & Moviola -->
@@ -8245,6 +8470,164 @@
     let audioEnabled = false;
     let audioCtx = null;
 
+    // =========================================================================
+    // ESTADO CANÓNICO DEL MASTER KEYPAD (POR DEFECTO 1 CELDA ACTIVA POR BLOQUE)
+    // =========================================================================
+    const masterPadState = {
+      tensor: {
+        g: ['1'], // G1 por defecto
+        t: ['1'], // T1 por defecto
+        c: ['1']  // C1 por defecto
+      },
+      res: 'N',   // N por defecto
+      activeFamily: 'p1423', // 'd' | 'globals' | 'p1234' | 'p1324' | 'p1423'
+      activeDensities: {
+        d: ['D1'],
+        globals: ['SDR'],
+        p1234: ['S12'],
+        p1324: ['S13'],
+        p1423: ['S23']
+      }
+    };
+
+    function toggleTensorCell(dim, val) {
+      const list = masterPadState.tensor[dim];
+      const idx = list.indexOf(val);
+      if (idx !== -1) {
+        if (list.length > 1) list.splice(idx, 1);
+      } else {
+        const maxOpts = (dim === 'c') ? 2 : 3;
+        if (list.length < maxOpts) list.push(val);
+      }
+      currentGroup = masterPadState.tensor.g.length === 1 ? masterPadState.tensor.g[0] : 'juntos';
+      currentTime = masterPadState.tensor.t.length === 1 ? masterPadState.tensor.t[0] : 'juntos';
+      currentCriterion = masterPadState.tensor.c.length === 1 ? masterPadState.tensor.c[0] : 'juntos';
+      superMode = (masterPadState.tensor.g.length > 1 || masterPadState.tensor.t.length > 1 || masterPadState.tensor.c.length > 1) ? 'juntos' : 'separado';
+
+      updateMasterPadUI();
+      drawCarril();
+      updateActiveStation(activeStationIndex, false);
+    }
+
+    function toggleResCell(val) {
+      masterPadState.res = val;
+      if (val === 'N') setResolution('condensado');
+      else if (val === 'N*N') setResolution('completo');
+      else if (val === 'Q') setResolution('condensado');
+      else if (val === 'Q*Q') setResolution('qxq');
+      updateMasterPadUI();
+    }
+
+    function toggleDensityCell(family, metric) {
+      masterPadState.activeFamily = family;
+      const list = masterPadState.activeDensities[family];
+      const idx = list.indexOf(metric);
+
+      if (idx !== -1) {
+        if (list.length > 1) {
+          list.splice(idx, 1);
+        }
+      } else {
+        if (list.length < 4) {
+          list.push(metric);
+        }
+      }
+
+      currentDensity = list[0];
+      if (family === 'd' && list.includes('D2') && list.includes('D3')) {
+        carrilTrackMode = '3vias_da_rc';
+      } else if (family === 'd' && list.includes('D1') && list.includes('D4')) {
+        carrilTrackMode = '3vias_expect';
+      } else {
+        carrilTrackMode = 'single_18d';
+      }
+
+      updateMasterPadUI();
+      drawCarril();
+      updateActiveStation(activeStationIndex, false);
+    }
+
+    function updateMasterPadUI() {
+      // 1. Bloque Tensor (G, T, C)
+      ['1', '2', '3'].forEach(v => {
+        const btnG = document.getElementById('pcell-g' + v);
+        if (btnG) {
+          const act = masterPadState.tensor.g.includes(v);
+          btnG.className = 'pad-cell' + (act ? (v === '1' ? ' active-amber' : (v === '2' ? ' active-green' : ' active-cyan')) : '');
+        }
+        const btnT = document.getElementById('pcell-t' + v);
+        if (btnT) {
+          const act = masterPadState.tensor.t.includes(v);
+          btnT.className = 'pad-cell' + (act ? (v === '1' ? ' active-green' : (v === '2' ? ' active-amber' : ' active-cyan')) : '');
+        }
+        if (v !== '3') {
+          const btnC = document.getElementById('pcell-c' + v);
+          if (btnC) {
+            const act = masterPadState.tensor.c.includes(v);
+            btnC.className = 'pad-cell' + (act ? (v === '1' ? ' active-cyan' : ' active-amber') : '');
+          }
+        }
+      });
+
+      // 2. Bloque Resolución
+      const resMap = { 'N': 'n', 'N*N': 'nn', 'Q': 'q', 'Q*Q': 'qq' };
+      Object.keys(resMap).forEach(r => {
+        const btn = document.getElementById('pcell-res-' + resMap[r]);
+        if (btn) {
+          const act = (masterPadState.res === r);
+          btn.className = 'pad-cell' + (act ? ' active-amber' : '');
+        }
+      });
+
+      // 3. Bloques de Densidades
+      const allDensities = [
+        { fam: 'd', ids: ['d1', 'd2', 'd3', 'd4'], keys: ['D1', 'D2', 'D3', 'D4'] },
+        { fam: 'globals', ids: ['sdr', 'bdr'], keys: ['SDR', 'BDR'] },
+        { fam: 'p1234', ids: ['s12', 'b12', 's34', 'b34'], keys: ['S12', 'B12', 'S34', 'B34'] },
+        { fam: 'p1324', ids: ['s13', 'b13', 's24', 'b24'], keys: ['S13', 'B13', 'S24', 'B24'] },
+        { fam: 'p1423', ids: ['s14', 'b14', 's23', 'b23'], keys: ['S14', 'B14', 'S23', 'B23'] }
+      ];
+
+      allDensities.forEach(group => {
+        const isFamActive = (masterPadState.activeFamily === group.fam);
+        group.ids.forEach((id, idx) => {
+          const btn = document.getElementById('pcell-' + id);
+          if (btn) {
+            const key = group.keys[idx];
+            const isSelected = masterPadState.activeDensities[group.fam].includes(key);
+            if (isFamActive && isSelected) {
+              btn.className = 'pad-cell active-amber';
+              btn.style.opacity = '1';
+            } else if (isSelected) {
+              btn.className = 'pad-cell active-amber';
+              btn.style.opacity = '0.55';
+            } else {
+              btn.className = 'pad-cell';
+              btn.style.opacity = '1';
+            }
+          }
+        });
+      });
+
+      // Sincronizar badges HUD
+      const hudCoords = document.getElementById('hud-coords');
+      if (hudCoords) {
+        const gStr = masterPadState.tensor.g.map(x => 'G' + x).join('+');
+        const tStr = masterPadState.tensor.t.map(x => 'T' + x).join('+');
+        const cStr = masterPadState.tensor.c.map(x => 'C' + x).join('+');
+        hudCoords.textContent = `${gStr} · ${tStr} · ${cStr}`;
+      }
+      const hudMode = document.getElementById('hud-mode');
+      if (hudMode) {
+        hudMode.textContent = superMode === 'juntos' ? 'Superpuesto' : 'Por Separado';
+      }
+      const hudMetric = document.getElementById('hud-metric');
+      if (hudMetric) {
+        const list = masterPadState.activeDensities[masterPadState.activeFamily] || ['SDR'];
+        hudMetric.textContent = list.join(' · ');
+      }
+    }
+
     // MAPAS DE CONFIGURACIÓN Y TRAVERSAL
     const SUBJECTS_BY_GROUP = {
       '1': ['1A', '2A', '3A', '4A', '5A', '6A'],
@@ -8935,23 +9318,33 @@
       // =======================================================================
       } else {
         const curvesToDraw = [];
+        const activeMets = (masterPadState && masterPadState.activeDensities && masterPadState.activeDensities[masterPadState.activeFamily]) ? masterPadState.activeDensities[masterPadState.activeFamily] : [currentDensity];
+
         if (superMode === 'juntos') {
           if (currentTime === 'juntos') {
-            curvesToDraw.push({ name: 'T1 (Inicial)', color: '#38BDF8', matKey: g + 'g1t' + c + 'c' });
-            curvesToDraw.push({ name: 'T2 (Intermedio)', color: '#FF9F1C', matKey: g + 'g2t' + c + 'c' });
-            curvesToDraw.push({ name: 'T3 (Consolidado)', color: '#00FF87', matKey: g + 'g3t' + c + 'c' });
+            curvesToDraw.push({ name: 'T1 (Inicial)', color: '#38BDF8', matKey: g + 'g1t' + c + 'c', metric: activeMets[0] });
+            curvesToDraw.push({ name: 'T2 (Intermedio)', color: '#FF9F1C', matKey: g + 'g2t' + c + 'c', metric: activeMets[0] });
+            curvesToDraw.push({ name: 'T3 (Consolidado)', color: '#00FF87', matKey: g + 'g3t' + c + 'c', metric: activeMets[0] });
           } else if (currentCriterion === 'juntos') {
-            curvesToDraw.push({ name: 'C1 (Afinidad)', color: '#38BDF8', matKey: g + 'g' + t + 't1c' });
-            curvesToDraw.push({ name: 'C2 (Tarea)', color: '#FFE600', matKey: g + 'g' + t + 't2c' });
-          } else if (currentGroup === 'juntos' && currentSpace === 'qxq') {
-            curvesToDraw.push({ name: 'Grupo A (G1)', color: '#38BDF8', matKey: '1g' + t + 't' + c + 'c' });
-            curvesToDraw.push({ name: 'Grupo B (G2)', color: '#FF007F', matKey: '2g' + t + 't' + c + 'c' });
-            curvesToDraw.push({ name: 'Grupo C (G3)', color: '#00FF87', matKey: '3g' + t + 't' + c + 'c' });
+            curvesToDraw.push({ name: 'C1 (Afinidad)', color: '#38BDF8', matKey: g + 'g' + t + 't1c', metric: activeMets[0] });
+            curvesToDraw.push({ name: 'C2 (Tarea)', color: '#FFE600', matKey: g + 'g' + t + 't2c', metric: activeMets[0] });
+          } else if (currentGroup === 'juntos') {
+            curvesToDraw.push({ name: 'Grupo A (G1)', color: '#38BDF8', matKey: '1g' + t + 't' + c + 'c', metric: activeMets[0] });
+            curvesToDraw.push({ name: 'Grupo B (G2)', color: '#FF007F', matKey: '2g' + t + 't' + c + 'c', metric: activeMets[0] });
+            curvesToDraw.push({ name: 'Grupo C (G3)', color: '#00FF87', matKey: '3g' + t + 't' + c + 'c', metric: activeMets[0] });
           } else {
-            curvesToDraw.push({ name: 'Canal Único', color: '#00FF87', matKey: currentMatKey });
+            curvesToDraw.push({ name: 'Canal Único', color: '#00FF87', matKey: currentMatKey, metric: activeMets[0] });
           }
         } else {
-          curvesToDraw.push({ name: currentMatKey, color: getMetricColor(currentDensity), matKey: currentMatKey });
+          // Multi-activación de densidades en la familia activa (1 a 4 celdas)
+          activeMets.forEach(m => {
+            curvesToDraw.push({
+              name: m,
+              color: getMetricColor(m),
+              matKey: currentMatKey,
+              metric: m
+            });
+          });
         }
 
         updateLegendBar(curvesToDraw);
@@ -8964,7 +9357,7 @@
             const st = stations[sIdx];
             const x = padL + sIdx * xStep;
             const tetra = getStationRawTetragram(st, cMat);
-            const val = computeDensityValue(tetra, currentDensity);
+            const val = computeDensityValue(tetra, crv.metric || currentDensity);
             points.push({ x, y: scaleY(val), val, isDiagonal: st.isDiagonal, qid: st.id });
           }
 
@@ -9068,12 +9461,27 @@
 
     // COLOR DE MÉTRICA
     function getMetricColor(metric) {
-      if (metric === 'SDR') return '#00FF87';
-      if (metric === 'BDR') return '#FFE600';
-      if (metric.startsWith('D')) return '#38BDF8';
-      if (metric.startsWith('S')) return '#38BDF8';
-      if (metric.startsWith('B')) return '#FF9F1C';
-      return '#00FF87';
+      switch(metric) {
+        case 'D1': return '#38BDF8'; // Cian (p_DA)
+        case 'D2': return '#00FF87'; // Verde Neón (DA)
+        case 'D3': return '#FF9F1C'; // Naranja (RC)
+        case 'D4': return '#C084FC'; // Púrpura (p_RC)
+        case 'SDR': return '#00FF87'; // Verde Neón
+        case 'BDR': return '#FFE600'; // Oro
+        case 'S12': return '#38BDF8'; // Cian
+        case 'B12': return '#FFE600'; // Oro
+        case 'S34': return '#FF9F1C'; // Naranja
+        case 'B34': return '#F59E0B'; // Ámbar
+        case 'S13': return '#38BDF8'; // Cian
+        case 'B13': return '#FFE600'; // Oro
+        case 'S24': return '#C084FC'; // Púrpura
+        case 'B24': return '#E879F9'; // Magenta
+        case 'S14': return '#38BDF8'; // Cian
+        case 'B14': return '#C084FC'; // Púrpura
+        case 'S23': return '#00FF87'; // Verde Neón (Baricentro)
+        case 'B23': return '#FFE600'; // Oro
+        default: return '#00FF87';
+      }
     }
 
     // ACTUALIZAR LEYENDA EN MODO 3 VÍAS PARALELAS
@@ -9853,6 +10261,7 @@
       setResolution('condensado');
       setCarrilTrackMode('3vias_da_rc');
       setLineInterpolation('curva');
+      updateMasterPadUI();
     };
   </script>
 </body>
