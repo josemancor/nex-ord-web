@@ -49,6 +49,16 @@
       hero_btn_custody: '🏛️ Custodia Institucional',
       hero_btn_solutions: '💼 Soluciones Sectoriales',
 
+      // Métricas Rápidas Hero
+      stat_1_val: '3 Min',
+      stat_1_desc: 'Tiempo de pasación individual por ordenación (Breve → ORBIT).',
+      stat_2_val: 'Q81',
+      stat_2_desc: 'Figuras Relacionales Sociométricas canónicas computadas en retícula diádica.',
+      stat_3_val: '18D',
+      stat_3_desc: 'Índices de Densidad Relacional en 3 prismas duales (BDR / SDR).',
+      stat_4_val: '5',
+      stat_4_desc: 'VISORD\'s grupales: gemelos digitales 3D/4D de diagnóstico continuo.',
+
       // Video Hero HUD
       video_badge: 'VISORD 3D ENGINE IN MOTION · DEMO OFICIAL',
       video_meta: '⏱️ 01:09 MIN · AUDIO OPCIONAL · SUBTÍTULOS BILINGÜES',
@@ -205,6 +215,16 @@
       hero_btn_3d: '🚀 Explore the 4 3D Jewels',
       hero_btn_custody: '🏛️ Institutional Stewardship',
       hero_btn_solutions: '💼 Sectoral Solutions',
+
+      // Quick Stats Hero
+      stat_1_val: '3 Min',
+      stat_1_desc: 'Individual completion time via ordinal ranking (Breve → ORBIT).',
+      stat_2_val: 'Q81',
+      stat_2_desc: 'Canonical Sociometric Relational Figures computed in dyadic lattice.',
+      stat_3_val: '18D',
+      stat_3_desc: 'Relational Density Indices across 3 dual prisms (BDR / SDR).',
+      stat_4_val: '5',
+      stat_4_desc: 'Group VISORDs: 3D/4D digital twins for continuous diagnosis.',
 
       // Video Hero HUD
       video_badge: 'VISORD 3D ENGINE IN MOTION · OFFICIAL DEMO',
@@ -391,6 +411,21 @@
     if (heroBtnCust) heroBtnCust.textContent = dict.hero_btn_custody;
     const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
     if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
+
+    // Métricas Rápidas Hero
+    const statCards = document.querySelectorAll('.hero-stats-grid .stat-card');
+    if (statCards.length >= 4) {
+      if (dict.stat_1_val) {
+        statCards[0].querySelector('.stat-number').textContent = dict.stat_1_val;
+        statCards[0].querySelector('.stat-desc').textContent = dict.stat_1_desc;
+        statCards[1].querySelector('.stat-number').textContent = dict.stat_2_val;
+        statCards[1].querySelector('.stat-desc').textContent = dict.stat_2_desc;
+        statCards[2].querySelector('.stat-number').textContent = dict.stat_3_val;
+        statCards[2].querySelector('.stat-desc').textContent = dict.stat_3_desc;
+        statCards[3].querySelector('.stat-number').textContent = dict.stat_4_val;
+        statCards[3].querySelector('.stat-desc').textContent = dict.stat_4_desc;
+      }
+    }
 
     // Video HUD
     const vBadge = document.querySelector('.video-hero-badge span:last-child');
