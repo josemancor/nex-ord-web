@@ -1,7 +1,2157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-      <!-- TITULAR SUPERIOR VISIBLE DE LA COMPOSICIÓN PROYECTADA -->
+  <!-- =========================================================================
+       NEXORD CANONICAL CLEAN BOOT & ANTI-CACHE RESET
+       ========================================================================= -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    (function() {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      try {
+        sessionStorage.clear();
+      } catch(e) {}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        }).catch(function(){});
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
+        }).catch(function(){});
+      }
+      window.addEventListener('pageshow', function(ev) {
+        if (ev.persisted) {
+          window.location.reload();
+        }
+      });
+    })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD · Multipolígrafo 1-Carril (GxTyCz · n×n / q×q · 18D)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #050B18;
+      --bg-surface: #0B132B;
+      --bg-card: rgba(11, 19, 43, 0.88);
+      --border-subtle: rgba(56, 189, 248, 0.18);
+      --border-focus: #38BDF8;
+      --neon-green: #00FF87;
+      --neon-cyan: #38BDF8;
+      --neon-orange: #FF9F1C;
+      --neon-gold: #FFE600;
+      --neon-magenta: #FF007F;
+      --neon-purple: #C084FC;
+      --neon-blue: #60A5FA;
+      --text-main: #F8FAFC;
+      --text-dim: #94A3B8;
+      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Roboto Mono', monospace;
+    }
+
+    *, *:before, *:after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Cabecera HUD */
+    .header-hud {
+      background: rgba(3, 8, 20, 0.95);
+      border-bottom: 1.5px solid var(--border-subtle);
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: 1px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-logo span { color: var(--neon-cyan); }
+
+    .badge-lane {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-status-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status-pill strong { color: #FFFFFF; }
+
+    .btn-nav-action {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 5px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(56, 189, 248, 0.10);
+      color: var(--neon-cyan);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-nav-action:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--neon-cyan);
+      transform: translateY(-1px);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1560px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 24px 60px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Sección Título & Subtítulo */
+    .hero-title-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-text h1 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-text h1 span {
+      color: var(--neon-cyan);
+    }
+
+    .hero-text p {
+      color: var(--text-dim);
+      font-size: 13.5px;
+      margin-top: 4px;
+      max-width: 900px;
+    }
+
+    .hero-badges-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* =========================================================================
+       DECK MAESTRO DE LAS 4 ALTERNATIVAS AL PRINCIPIO DE LA PÁGINA
+       ========================================================================= */
+    .master-4-alternatives-deck {
+      background: linear-gradient(180deg, rgba(8, 14, 34, 0.95) 0%, rgba(4, 8, 22, 0.98) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .deck-header {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 10px;
+    }
+
+    .deck-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      letter-spacing: 0.8px;
+    }
+
+    .deck-subtitle {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .deck-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .deck-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .deck-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+      position: relative;
+    }
+
+    .deck-card:hover {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .deck-card.active {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.35);
+    }
+
+    .deck-card.active#card-alt-4 {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.45);
+    }
+
+    .deck-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .deck-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      color: #FFFFFF;
+      transition: all 0.2s ease;
+    }
+
+    .deck-card.active .deck-badge {
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+      color: #040816;
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.5);
+    }
+
+    .deck-card-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+    }
+
+    .deck-card.active .deck-card-name {
+      color: var(--neon-green);
+    }
+
+    .deck-card-desc {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: #94A3B8;
+      margin: 0;
+    }
+
+    .deck-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .deck-pill {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: #CBD5E1;
+    }
+
+    .deck-card.active .deck-pill {
+      border-color: rgba(0, 255, 135, 0.35);
+      background: rgba(0, 255, 135, 0.1);
+    }
+
+    /* =========================================================================
+       TABLA NUMÉRICA DE RESPALDO EN SORDINA (SDR & BDR)
+       ========================================================================= */
+    .backing-table-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      margin-top: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .backing-table-header {
+      background: rgba(5, 12, 28, 0.95);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+
+    .backing-table-header:hover {
+      background: rgba(8, 18, 42, 0.98);
+    }
+
+    .backing-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .backing-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      background: rgba(255, 230, 0, 0.15);
+      border: 1px solid rgba(255, 230, 0, 0.4);
+      color: var(--neon-gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .backing-title {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+    }
+
+    .backing-subtitle {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--neon-cyan);
+    }
+
+    .backing-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .backing-stats-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .backing-pill {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .backing-pill strong {
+      font-weight: 800;
+    }
+
+    .btn-backing-toggle {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-backing-toggle:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .backing-table-drawer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: #040816;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .backing-drawer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .backing-filter-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .btn-bk-tab {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94A3B8;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-bk-tab:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: #FFFFFF;
+      border-color: #38BDF8;
+    }
+
+    .btn-bk-tab.active {
+      background: rgba(0, 255, 135, 0.2);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.25);
+    }
+
+    .backing-export-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-bk-action {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #CBD5E1;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-bk-action:hover {
+      background: rgba(255, 230, 0, 0.2);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+    }
+
+    .backing-table-scroll-wrap {
+      max-height: 290px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      background: #060B1C;
+    }
+
+    .backing-table-scroll-wrap::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .backing-table-scroll-wrap::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .backing-table-scroll-wrap::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 3px;
+    }
+
+    .backing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      text-align: left;
+    }
+
+    .backing-table th {
+      position: sticky;
+      top: 0;
+      background: #0B1428;
+      color: #94A3B8;
+      font-weight: 800;
+      font-size: 9px;
+      padding: 6px 10px;
+      border-bottom: 1.5px solid rgba(56, 189, 248, 0.3);
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      z-index: 2;
+    }
+
+    .backing-table td {
+      padding: 5px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      white-space: nowrap;
+      transition: background 0.1s ease;
+    }
+
+    .backing-table tr {
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+
+    .backing-table tr:hover {
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .backing-table tr.row-active {
+      background: rgba(255, 230, 0, 0.16) !important;
+      font-weight: 800;
+    }
+    .backing-table tr.row-active td:first-child {
+      border-left: 3px solid var(--neon-gold);
+    }
+
+    .backing-footer-note {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--text-dim);
+      padding-top: 4px;
+    }
+
+    /* EL CARRIL ÚNICO (HEART VIEWPORT) */
+    .carril-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carril-header {
+      background: rgba(5, 12, 28, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .carril-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .carril-badge-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      background: var(--neon-cyan);
+      color: #040814;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .carril-main-title {
+      font-weight: 800;
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+
+    .carril-metric-formula {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--neon-gold);
+      background: rgba(255, 230, 0, 0.10);
+      border: 1px solid rgba(255, 230, 0, 0.25);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .carril-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .telem-box {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Workspace con Master Keypad Dock y Lienzo */
+    .carril-workspace {
+      display: flex;
+      align-items: stretch;
+      background: #040714;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .master-keypad-panel {
+      width: 175px;
+      min-width: 175px;
+      background: #060B1C;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      user-select: none;
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .pad-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 4px;
+    }
+
+    .pad-row {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .pad-row-num {
+      width: 15px;
+      min-width: 15px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      text-align: center;
+    }
+
+    .pad-cell {
+      flex: 1;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 3px;
+      border: 1px solid #1E293B;
+      background: #FFFFFF;
+      color: #0F172A;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      padding: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .pad-cell:hover {
+      filter: brightness(0.92);
+      transform: translateY(-1px);
+    }
+
+    /* ESTADOS ACTIVOS (ESTILO EXACTO CAPTURAS USUARIO) */
+    .pad-cell.active-amber {
+      background: #FDE68A !important;
+      color: #B45309 !important;
+      border-color: #D97706 !important;
+      box-shadow: 0 0 6px rgba(217, 119, 6, 0.35);
+    }
+
+    .pad-cell.active-green {
+      background: #4ADE80 !important;
+      color: #064E3B !important;
+      border-color: #10B981 !important;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.35);
+    }
+
+    .pad-cell.active-cyan {
+      background: #0284C7 !important;
+      color: #FFFFFF !important;
+      border-color: #38BDF8 !important;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.45);
+    }
+
+    .pad-cell-empty {
+      flex: 1;
+      height: 24px;
+      visibility: hidden;
+    }
+
+    /* Pestañas de Vista Tensorial 2D (Ver 3 vs G·T, G·C, T·C) */
+    .pad-tensor-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-bottom: 2px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-tensor-tab {
+      flex: 1;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 2px 0;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-tensor-tab:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-tensor-tab.active {
+      background: rgba(255, 159, 28, 0.25);
+      border-color: #FF9F1C;
+      color: #FF9F1C;
+    }
+
+    /* Scrollbar estilizada para el panel de teclado maestro */
+    .master-keypad-panel {
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+
+    .master-keypad-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    .master-keypad-panel::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    .master-keypad-panel::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 2px;
+    }
+    .master-keypad-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.7);
+    }
+
+    /* Selector de Arquitectura: 1 Carril vs Varios Carriles */
+    .carril-layout-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
+    }
+
+    .btn-layout {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-layout:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .btn-layout.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38BDF8;
+      color: #38BDF8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+
+    .layout-multi-group {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding-left: 4px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .layout-multi-label {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 900;
+      color: #38BDF8;
+      letter-spacing: 0.5px;
+    }
+
+    .layout-cruzados-group {
+      border-left: 1px solid rgba(255, 230, 0, 0.28) !important;
+    }
+
+    .layout-todo-group {
+      border-left: 1px solid rgba(0, 255, 135, 0.35) !important;
+    }
+
+    .btn-layout-todo {
+      background: rgba(0, 255, 135, 0.12);
+      border-color: rgba(0, 255, 135, 0.45);
+      color: var(--neon-green);
+      font-weight: 800;
+    }
+    .btn-layout-todo:hover {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: #FFFFFF;
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
+    }
+    .btn-layout-todo.active {
+      background: rgba(0, 255, 135, 0.3);
+      border-color: var(--neon-green);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
+    }
+
+    /* Contenedor de Varios Carriles (Stack) */
+    .multicarril-stack-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 380px;
+      background: #040714;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px 6px;
+    }
+
+    .lane-box {
+      flex: 1;
+      background: rgba(6, 11, 28, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s ease;
+    }
+
+    .lane-box:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .lane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lane-title {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .lane-telemetry {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lane-pill {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: var(--text-dim);
+    }
+
+    .lane-pill strong {
+      color: #FFFFFF;
+    }
+
+    .lane-canvas-wrap {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 85px;
+    }
+
+    .lane-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* 3 Opciones Predeterminadas de Aprendizaje Rápido */
+    .carril-presets-bar {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 230, 0, 0.35);
+      box-shadow: 0 0 10px rgba(255, 230, 0, 0.12);
+    }
+
+    .presets-label {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      margin-right: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-preset {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-preset:hover {
+      background: rgba(255, 230, 0, 0.15);
+      border-color: var(--neon-gold);
+      color: #FFFFFF;
+    }
+
+    .btn-preset.active {
+      background: rgba(255, 230, 0, 0.22);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 8px rgba(255, 230, 0, 0.35);
+    }
+
+    .pad-btn-preset {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pad-btn-preset:hover {
+      background: rgba(255, 230, 0, 0.2);
+      border-color: var(--neon-gold);
+      color: #FFFFFF;
+    }
+
+    .pad-btn-preset.active {
+      background: var(--neon-gold);
+      border-color: var(--neon-gold);
+      color: #0F172A;
+      font-weight: 900;
+      box-shadow: 0 0 6px rgba(255, 230, 0, 0.5);
+    }
+
+    /* Master Keypad Dock Header & Reset Button */
+    .pad-dock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1px 2px 4px 2px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1px;
+    }
+
+    .pad-dock-title {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #94A3B8;
+      text-transform: uppercase;
+    }
+
+    .pad-btn-reset {
+      background: rgba(255, 230, 0, 0.10);
+      border: 1px solid rgba(255, 230, 0, 0.35);
+      color: var(--neon-gold);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pad-btn-reset:hover {
+      background: rgba(255, 230, 0, 0.25);
+      box-shadow: 0 0 6px rgba(255, 230, 0, 0.4);
+    }
+
+    /* Master Keypad Dock Bottom Combination Badge (K <= 4) */
+    .pad-combos-dock-badge {
+      margin-top: 3px;
+      padding: 4px 6px;
+      background: rgba(11, 19, 43, 0.85);
+      border: 1px solid rgba(255, 230, 0, 0.35);
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+    }
+
+    /* Toast Notificador de Límite (K <= 4) */
+    .carril-toast {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 19, 43, 0.96);
+      border: 1.5px solid var(--neon-gold);
+      box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
+      color: #FFFFFF;
+      padding: 7px 15px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      z-index: 100;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-channel-tag {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 900;
+      margin-right: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    @media (max-width: 950px) {
+      .carril-workspace {
+        flex-direction: column;
+      }
+      .master-keypad-panel {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.12);
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+
+    /* Canvas Wrapper */
+    .canvas-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 380px;
+      background: #040714;
+    }
+
+    canvas#carrilCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* Barra de Leyenda de Curvas Superpuestas */
+    .carril-legend-bar {
+      background: rgba(5, 12, 28, 0.90);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 6px 18px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    .legend-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Barra de Scrubber & Moviola */
+    .carril-controls-bar {
+      background: rgba(4, 10, 24, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .moviola-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-moviola {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .btn-moviola:hover {
+      background: rgba(56, 189, 248, 0.20);
+      border-color: var(--neon-cyan);
+    }
+    .btn-moviola.active {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+    }
+
+    .scrubber-group {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+    }
+
+    .scrubber-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    .scrubber-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 8px var(--neon-cyan);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .scrubber-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    .station-readout {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      min-width: 180px;
+      text-align: right;
+    }
+
+    /* TARJETA DE DIAGNÓSTICO RELACIONAL (HUMAN INSPECTOR) */
+    .inspector-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: 1.1fr 1.3fr 1.6fr;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 1100px) {
+      .inspector-card { grid-template-columns: 1fr; }
+    }
+
+    .insp-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .insp-col-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      padding-bottom: 4px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .insp-pair-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .insp-pair-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+    }
+
+    .insp-pair-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(0, 255, 135, 0.15);
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    .insp-tetra-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .tetra-cell {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .tetra-pos {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .tetra-val {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .insp-metric-spotlight {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .spotlight-val {
+      font-size: 26px;
+      font-weight: 900;
+      font-family: var(--font-mono);
+    }
+
+    .spotlight-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .gauge-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      position: relative;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      transition: width 0.2s, left 0.2s;
+    }
+
+    .insp-diagnosis-text {
+      background: rgba(4, 10, 26, 0.85);
+      border-left: 3px solid var(--neon-green);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: #E2E8F0;
+      margin-top: 6px;
+    }
+
+    /* CONTROL DECK (DISTRIBUIDO EN 3 MÓDULOS) */
+    .control-deck {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr 1.8fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 1280px) {
+      .control-deck { grid-template-columns: 1fr; }
+    }
+
+    .deck-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+
+    .deck-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--neon-cyan);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 6px;
+    }
+
+    /* Botoneras Generales */
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-toggle {
+      flex: 1;
+      min-width: 75px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 10px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: #94A3B8;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-toggle:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: #FFFFFF;
+      border-color: var(--neon-cyan);
+    }
+    .btn-toggle.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--neon-cyan);
+      color: #FFFFFF;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+    }
+    .btn-toggle.active-green {
+      background: rgba(0, 255, 135, 0.25);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.35);
+    }
+    .btn-toggle.active-gold {
+      background: rgba(255, 230, 0, 0.25);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+      box-shadow: 0 0 8px rgba(255, 230, 0, 0.35);
+    }
+
+    /* Botonera de Permutaciones Rápidas */
+    .fast-permutations {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .btn-perm {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 5px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-perm:hover {
+      background: rgba(255, 230, 0, 0.15);
+      border-color: var(--neon-gold);
+      color: #FFFFFF;
+    }
+    .btn-perm.active {
+      background: rgba(255, 230, 0, 0.22);
+      border-color: var(--neon-gold);
+      color: var(--neon-gold);
+    }
+
+    /* BOTONERA CANÓNICA 18D */
+    .grid-18d {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .grid-4cardinals {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+    .grid-4cardinals .btn-toggle {
+      padding: 7px 4px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .grid-2globals {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+    }
+    .grid-2globals .btn-toggle {
+      padding: 7.5px 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .row-2col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+    }
+    .row-2col .btn-toggle {
+      padding: 7px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .divider-18d {
+      height: 1px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.22);
+      margin: 2px 0;
+    }
+
+    /* Tooltip Flotante de Inspección */
+    #carril-tooltip {
+      position: fixed;
+      display: none;
+      pointer-events: none;
+      background: rgba(5, 12, 28, 0.96);
+      border: 1.5px solid var(--neon-cyan);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(56, 189, 248, 0.3);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      z-index: 2000;
+      max-width: 320px;
+    }
+
+    /* SECCIÓN PEDAGÓGICA Y NOTA CANÓNICA */
+    .didactic-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .didactic-box h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-densities {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .table-densities th {
+      text-align: left;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .table-densities td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #E2E8F0;
+    }
+    .table-densities tr:hover td {
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    .note-pedagogica {
+      background: rgba(11, 19, 43, 0.7);
+      border-left: 3.5px solid var(--neon-gold);
+      padding: 12px 18px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+    .note-pedagogica strong {
+      color: #FFFFFF;
+    }
+
+    /* Modo 3 Vías Paralelas */
+    .carril-mode-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-carril-mode {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-carril-mode:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: #FFFFFF;
+      border-color: var(--neon-cyan);
+    }
+    .btn-carril-mode.active {
+      background: rgba(0, 255, 135, 0.20);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.25);
+    }
+    .btn-carril-mode.active-cyan {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+
+    /* =========================================================================
+       CABINA UNIFICADA MULTIPOLÍGRAFO: BANNER COMPOSICIÓN & MENÚ GENERAL
+       ========================================================================= */
+    .composition-banner {
+      background: linear-gradient(90deg, rgba(8, 14, 34, 0.98) 0%, rgba(6, 12, 28, 0.95) 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      padding: 7px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    .comp-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .comp-lbl {
+      color: var(--neon-gold);
+      font-weight: 900;
+      letter-spacing: 0.6px;
+    }
+
+    .comp-item strong {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .master-versions-nav {
+      background: rgba(6, 11, 26, 0.96);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-versions-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-versions-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 900;
+      color: #38BDF8;
+      letter-spacing: 0.6px;
+    }
+
+    .nav-versions-buttons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-version {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #CBD5E1;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn-version:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .btn-version.active {
+      background: rgba(0, 255, 135, 0.22);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.35);
+    }
+
+    .btn-version .ver-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .btn-version.active .ver-num {
+      background: var(--neon-green);
+      color: #040816;
+    }
+
+    .nav-sub-selectors {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sub-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sub-lbl {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      letter-spacing: 0.5px;
+    }
+
+    .btn-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #CBD5E1;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sub:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .btn-sub.active {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38BDF8;
+      color: #38BDF8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+    }
+
+    /* WORKSPACE 3 COLUMNAS */
+    .carril-workspace {
+      display: flex;
+      align-items: stretch;
+      background: #040714;
+      position: relative;
+      gap: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .master-keypad-panel {
+      width: 175px;
+      min-width: 175px;
+      max-height: 560px;
+      min-height: 480px;
+      overflow-y: auto;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .master-center-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 440px;
+      background: #040714;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .canvas-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 480px;
+      height: 100%;
+      background: #040714;
+    }
+
+    .multicarril-stack-container {
+      max-height: 560px;
+      overflow-y: auto;
+    }
+
+    .master-right-panel {
+      width: 360px;
+      min-width: 350px;
+      max-width: 380px;
+      max-height: 560px;
+      min-height: 480px;
+      overflow-y: auto;
+      background: #060B1C;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 12px;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.12);
+      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.45);
+    }
+
+    .master-right-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    .master-right-panel::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 2px;
+    }
+
+    .right-station-card {
+      background: rgba(11, 20, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .right-station-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .right-station-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .right-tetra-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+    }
+
+    .right-tetra-cell {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      padding: 2px 4px;
+      text-align: center;
+    }
+
+    .right-tetra-lbl {
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      color: var(--text-dim);
+      display: block;
+    }
+
+    .right-tetra-val {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .right-audit-card {
+      background: rgba(11, 20, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .right-audit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .right-audit-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      letter-spacing: 0.5px;
+    }
+
+    .right-audit-tabs {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-right-tab {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      padding: 2px 5px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn-right-tab.active {
+      background: rgba(0, 255, 135, 0.2);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    .right-audit-scroll {
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      background: #040816;
+    }
+
+    .right-audit-scroll::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .right-audit-scroll::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 2px;
+    }
+
+    .carril-presets-deck {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 8px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .presets-deck-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 900;
+      color: var(--neon-gold);
+      letter-spacing: 0.5px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- CABECERA SUPERIOR HUD -->
+  <header class="header-hud">
+    <div class="brand-box">
+      <a href="recursos.html" style="text-decoration:none; font-size:18px;" title="Volver a Recursos">⚡</a>
+      <div class="brand-logo">NEXORD <span>1-CARRIL</span></div>
+      <span class="badge-lane">MULTIPOLÍGRAFO DISTRIBUIDO</span>
+    </div>
+
+    <div class="header-status-pills">
+      <span class="status-pill">ARQUITECTURA: <strong id="hud-layout" style="color:var(--neon-green)">1-Carril</strong></span>
+      <span class="status-pill">RESOLUCIÓN: <strong id="hud-space" style="color:var(--neon-green)">Condensado (i,·) (·,j)</strong></span>
+      <span class="status-pill">CORTE: <strong id="hud-coords" style="color:var(--neon-cyan)">G1 · T1 · C1</strong></span>
+      <span class="status-pill">MODO: <strong id="hud-mode" style="color:var(--neon-gold)">Canal Único</strong></span>
+      <span class="status-pill">SEÑAL: <strong id="hud-metric" style="color:#00F0FF">SDR</strong></span>
+      <span class="status-pill">CANALES: <strong id="hud-channels" style="color:var(--neon-gold)">1 / 4</strong></span>
+      <span class="status-pill">TRAZADO: <strong id="hud-trazado" style="color:var(--neon-green)">Curvatura</strong></span>
+    </div>
+
+    <div style="display:flex; gap:8px; align-items:center;">
+      <a href="visord_acuario.html" class="btn-nav-action" title="Abrir Acuario 3D">🌊 Acuario 3D</a>
+      <a href="multipoligrafo_multicarril_q81.html" class="btn-nav-action" title="Ver Multi-Carril 6×V">📊 Multi-Carril</a>
+      <a href="recursos.html" class="btn-nav-action" style="border-color:var(--neon-green); color:var(--neon-green);" title="Ir a Recursos">🏠 Recursos</a>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main>
+
+    <!-- TÍTULO & DESCRIPCIÓN -->
+    <div class="hero-title-box">
+      <div class="hero-text">
+        <h1>MULTIPOLÍGRAFO SOCIO-TERMODINÁMICO · <span>1-CARRIL</span></h1>
+        <p>
+          Exploración de alta visibilidad en un único carril continuo sin congestión visual. Selecciona coordenadas del Hipertensor <strong>(GxTyCz)</strong>, conmuta entre díadas factuales <strong>(n×n)</strong> y figuras canónicas <strong>(q×q)</strong>, y proyecta las 18 Densidades Relacionales con inspección humana instantánea.
+        </p>
+      </div>
+      <div class="hero-badges-bar">
+        <span class="status-pill">DOI: <strong>10.5281/zenodo.23329641</strong></span>
+        <span class="status-pill">MOTOR: <strong>VISORD v9.1</strong></span>
+      </div>
+    </div>
+
+        <!-- TITULAR SUPERIOR VISIBLE DE LA COMPOSICIÓN PROYECTADA -->
     <div class="composition-banner" id="composition-banner">
       <div class="comp-item comp-archivo">
         <span class="comp-lbl">📁 ARCHIVO:</span>
@@ -22,6 +2172,10 @@
       <div class="comp-item comp-den">
         <span class="comp-lbl">⚡ DENSIDAD:</span>
         <strong id="comp-val-den">SDR: Saldo de Densidad Relativa (±ℝ)</strong>
+      </div>
+      <div class="comp-item comp-preset">
+        <span class="comp-lbl">🎯 PREAJUSTE:</span>
+        <strong id="comp-val-preset">Opción 1: Base SDR</strong>
       </div>
     </div>
 
@@ -49,33 +2203,43 @@
         </div>
       </div>
 
-      <!-- SUB-SELECTORES CONTEXTUALES DE LA VERSIÓN ACTIVA -->
+      <!-- 3 OPCIONES PREDETERMINADAS POR VERSIÓN (APRENDIZAJE GUIADO) -->
       <div class="nav-sub-selectors" id="nav-sub-selectors">
-        <!-- Sub-selector para Versión 2: Varios Carriles 1D -->
+        <!-- 3 Preajustes para Versión 1: 1 Carril Unificado -->
+        <div class="sub-group" id="sub-group-1carril">
+          <span class="sub-lbl">3 OPCIONES:</span>
+          <button class="btn-sub active" id="btn-sub-1c-1" onclick="applyContextualPreset(1)" title="Opción 1: Señal Base Monádica SDR (1 Canal)">1. Base SDR</button>
+          <button class="btn-sub" id="btn-sub-1c-2" onclick="applyContextualPreset(2)" title="Opción 2: Tríada DA ⇄ RC + Baricentro (2 Canales)">2. Tríada DA-RC</button>
+          <button class="btn-sub" id="btn-sub-1c-3" onclick="applyContextualPreset(3)" title="Opción 3: Tetragrama SMIb Completo D1..D4 (4 Canales)">3. Tetragrama 4D</button>
+        </div>
+
+        <!-- 3 Preajustes para Versión 2: Varios Carriles 1D -->
         <div class="sub-group" id="sub-group-varios" style="display:none;">
-          <span class="sub-lbl">DESGLOSE 1D:</span>
-          <button class="btn-sub active" id="btn-sub-grupos" onclick="setVariosSplit('grupos')">👥 Grupos (G1-G3)</button>
-          <button class="btn-sub" id="btn-sub-tiempos" onclick="setVariosSplit('tiempos')">⏳ Tiempos (T1-T3)</button>
-          <button class="btn-sub" id="btn-sub-criterios" onclick="setVariosSplit('criterios')">🎯 Criterios (C1-C2)</button>
+          <span class="sub-lbl">3 OPCIONES:</span>
+          <button class="btn-sub active" id="btn-sub-grupos" onclick="applyContextualPreset(1)" title="Opción 1: 3 Carriles por Grupos (G1 · G2 · G3)">1. Por Grupos (G1-G3)</button>
+          <button class="btn-sub" id="btn-sub-tiempos" onclick="applyContextualPreset(2)" title="Opción 2: 3 Carriles por Tiempos (T1 · T2 · T3)">2. Por Tiempos (T1-T3)</button>
+          <button class="btn-sub" id="btn-sub-criterios" onclick="applyContextualPreset(3)" title="Opción 3: 2 Carriles por Criterios (C1 · C2)">3. Por Criterios (C1-C2)</button>
         </div>
 
-        <!-- Sub-selector para Versión 3: Carriles Cruzados 2D -->
+        <!-- 3 Preajustes para Versión 3: Carriles Cruzados 2D -->
         <div class="sub-group" id="sub-group-cruzados" style="display:none;">
-          <span class="sub-lbl">PAR CRUZADO 2D:</span>
-          <button class="btn-sub active" id="btn-sub-gt" onclick="setCruzadoSplit('cruzado_gt')">⮂ G × T</button>
-          <button class="btn-sub" id="btn-sub-gc" onclick="setCruzadoSplit('cruzado_gc')">⮂ G × C</button>
-          <button class="btn-sub" id="btn-sub-tc" onclick="setCruzadoSplit('cruzado_tc')">⮂ T × C</button>
+          <span class="sub-lbl">3 OPCIONES:</span>
+          <button class="btn-sub active" id="btn-sub-gt" onclick="applyContextualPreset(1)" title="Opción 1: Grupos × Tiempos">1. G × T</button>
+          <button class="btn-sub" id="btn-sub-gc" onclick="applyContextualPreset(2)" title="Opción 2: Grupos × Criterios">2. G × C</button>
+          <button class="btn-sub" id="btn-sub-tc" onclick="applyContextualPreset(3)" title="Opción 3: Tiempos × Criterios">3. T × C</button>
         </div>
 
-        <!-- Sub-indicador para Versión 4: TODO GxCz - Ty -->
+        <!-- 3 Preajustes para Versión 4: TODO GxCz - Ty -->
         <div class="sub-group" id="sub-group-todo" style="display:none;">
-          <span class="sub-lbl" style="color:var(--neon-green);">TODO:</span>
-          <span class="sub-info-pill">Filas: Grupos &times; Criterios (GxCz) &middot; Curvas: Evolución Temporal (T1 ➔ T2 ➔ T3)</span>
+          <span class="sub-lbl">3 OPCIONES:</span>
+          <button class="btn-sub active" id="btn-sub-todo-1" onclick="applyContextualPreset(1)" title="Opción 1: Evolución Temporal Completa T1 ➔ T2 ➔ T3">1. Trayectoria T1➔T3</button>
+          <button class="btn-sub" id="btn-sub-todo-2" onclick="applyContextualPreset(2)" title="Opción 2: Tríada Fáctica DA ⇄ RC en 6 Carriles">2. Tríada DA-RC</button>
+          <button class="btn-sub" id="btn-sub-todo-3" onclick="applyContextualPreset(3)" title="Opción 3: Saldo Relativo Continuo SDR en 6 Carriles">3. Saldo SDR</button>
         </div>
       </div>
     </nav>
 
-    <!-- SECCIÓN 1: EL CARRIL PRINCIPAL -->
+    <!-- SECCIÓN 1: EL CARRIL PRINCIPAL -->    <!-- SECCIÓN 1: EL CARRIL PRINCIPAL -->
     <section class="carril-card">
       <div class="carril-header">
         <div class="carril-title-group">
@@ -110,9 +2274,9 @@
           <div class="pad-dock-header">
             <span class="pad-dock-title">TECLADO MAESTRO</span>
             <div style="display:flex; gap:3px;">
-              <button class="pad-btn-preset active" id="pad-preset-1" onclick="applyPreset(1)" title="Opción 1: Base SDR (1 Canal)">1</button>
-              <button class="pad-btn-preset" id="pad-preset-2" onclick="applyPreset(2)" title="Opción 2: Tríada DA-RC (2 Canales)">2</button>
-              <button class="pad-btn-preset" id="pad-preset-3" onclick="applyPreset(3)" title="Opción 3: Tetragrama 4D (4 Canales)">3</button>
+              <button class="pad-btn-preset active" id="pad-preset-1" onclick="applyContextualPreset(1)" title="Opción 1: Base SDR (1 Canal)">1</button>
+              <button class="pad-btn-preset" id="pad-preset-2" onclick="applyContextualPreset(2)" title="Opción 2: Tríada DA-RC (2 Canales)">2</button>
+              <button class="pad-btn-preset" id="pad-preset-3" onclick="applyContextualPreset(3)" title="Opción 3: Tetragrama 4D (4 Canales)">3</button>
               <button class="pad-btn-reset" onclick="resetMasterKeypad()" title="Restablecer a 1 combinación canónica">↺</button>
             </div>
           </div>
@@ -394,16 +2558,17 @@
           <div class="station-readout" id="station-readout">Estación: 1 / 36 (1A ➔ 1A)</div>
         </div>
 
-        <!-- MODULADORES RÁPIDOS (CURVATURA Y PREAJUSTES 1, 2, 3) -->
+        <!-- MODULADORES RÁPIDOS (CURVATURA Y SIEMPRE 3 OPCIONES PREDETERMINADAS) -->
         <div style="display:flex; align-items:center; gap:6px;">
           <div style="display:flex; gap:2px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.08);">
             <button class="btn-carril-mode active" id="btn-geom-curva" onclick="setLineInterpolation('curva')" title="Curvatura spline Catmull-Rom">〰️ Curva</button>
             <button class="btn-carril-mode" id="btn-geom-quebrada" onclick="setLineInterpolation('quebrada')" title="Línea quebrada clásica">📐 Quebrada</button>
           </div>
-          <div style="display:flex; gap:2px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.08);">
-            <button class="btn-preset active" id="btn-preset-1" onclick="applyPreset(1)" title="Preajuste 1: Base SDR (1 Canal)">1</button>
-            <button class="btn-preset" id="btn-preset-2" onclick="applyPreset(2)" title="Preajuste 2: Tríada DA-RC (2 Canales)">2</button>
-            <button class="btn-preset" id="btn-preset-3" onclick="applyPreset(3)" title="Preajuste 3: Tetragrama 4D (4 Canales)">3</button>
+          <div class="carril-presets-deck">
+            <span class="presets-deck-label">3 PREAJUSTES:</span>
+            <button class="btn-preset active" id="btn-preset-1" onclick="applyContextualPreset(1)" title="Opción 1 Predeterminada">1. Base SDR</button>
+            <button class="btn-preset" id="btn-preset-2" onclick="applyContextualPreset(2)" title="Opción 2 Predeterminada">2. Tríada DA-RC</button>
+            <button class="btn-preset" id="btn-preset-3" onclick="applyContextualPreset(3)" title="Opción 3 Predeterminada">3. Tetragrama 4D</button>
           </div>
         </div>
       </div>
@@ -7690,6 +9855,9 @@
       updateHeaderBadges();
       drawCarril();
       updateActiveStation(activeStationIndex, false);
+      currentContextualPreset = presetId;
+      if (typeof updatePresetButtonsUI === 'function') updatePresetButtonsUI(presetId);
+      if (typeof updateCompositionBanner === 'function') updateCompositionBanner();
     }
 
     let tensorViewMode = 'all'; // 'all' (los 3 apilados) | 'gt' | 'gc' | 'tc'
@@ -8435,13 +10603,40 @@
     // CONTROL DE ARQUITECTURA: 1 CARRIL vs VARIOS CARRILES PARALELOS
     // =========================================================================
         // =========================================================================
-    // MENÚ GENERAL ÚNICO PARA LAS 4 VERSIONES & TITULAR DE COMPOSICIÓN
+    // ARQUITECTURA DE 4 VERSIONES CON 3 OPCIONES PREDETERMINADAS SIEMPRE
     // =========================================================================
+    let currentContextualPreset = 1;
+    let currentTodoPreset = 1;
+
+    // DEFINICIÓN CANÓNICA DE LAS 3 OPCIONES PREDETERMINADAS POR VERSIÓN
+    const PRESETS_BY_VERSION = {
+      '1carril': [
+        { id: 1, label: '1. Base SDR', full: 'Opción 1: Señal Base Monádica SDR (1 Canal)' },
+        { id: 2, label: '2. Tríada DA-RC', full: 'Opción 2: Tríada Dialéctica DA ⇄ RC + Baricentro (2 Canales)' },
+        { id: 3, label: '3. Tetragrama 4D', full: 'Opción 3: Tetragrama SMIb Completo D1..D4 (4 Canales)' }
+      ],
+      'varios_carriles': [
+        { id: 1, label: '1. Por Grupos', full: 'Opción 1: 3 Carriles Paralelos por Grupos (G1 · G2 · G3)' },
+        { id: 2, label: '2. Por Tiempos', full: 'Opción 2: 3 Carriles Paralelos por Tiempos (T1 · T2 · T3)' },
+        { id: 3, label: '3. Por Criterios', full: 'Opción 3: 2 Carriles Paralelos por Criterios (C1 · C2)' }
+      ],
+      'cruzados': [
+        { id: 1, label: '1. G × T', full: 'Opción 1: Carriles Cruzados Grupos × Tiempos (G × T)' },
+        { id: 2, label: '2. G × C', full: 'Opción 2: Carriles Cruzados Grupos × Criterios (G × C)' },
+        { id: 3, label: '3. T × C', full: 'Opción 3: Carriles Cruzados Tiempos × Criterios (T × C)' }
+      ],
+      'todo': [
+        { id: 1, label: '1. Trayectoria T1➔T3', full: 'Opción 1: Evolución Temporal Longitudinal T1➔T2➔T3 en 6 Carriles GxCz' },
+        { id: 2, label: '2. Tríada DA-RC', full: 'Opción 2: Tríada Fáctica DA ⇄ RC en 6 Carriles GxCz' },
+        { id: 3, label: '3. Saldo SDR', full: 'Opción 3: Saldo Relativo Continuo SDR en 6 Carriles GxCz' }
+      ]
+    };
+
     function selectMasterVersion(ver) {
       if (ver === '1carril') {
         setLayoutMode('1carril');
       } else if (ver === 'varios_carriles') {
-        const split = (multicarrilSplit && (multicarrilSplit.startsWith('cruzado') || multicarrilSplit === 'todo_gxcz_ty')) ? 'grupos' : (multicarrilSplit || 'grupos');
+        const split = (multicarrilSplit && (multicarrilSplit === 'grupos' || multicarrilSplit === 'tiempos' || multicarrilSplit === 'criterios')) ? multicarrilSplit : 'grupos';
         setLayoutMode('varios_carriles', split);
       } else if (ver === 'cruzados') {
         const split = (multicarrilSplit && multicarrilSplit.startsWith('cruzado')) ? multicarrilSplit : 'cruzado_gt';
@@ -8449,52 +10644,156 @@
       } else if (ver === 'todo') {
         setLayoutMode('varios_carriles', 'todo_gxcz_ty');
       }
-      updateVersionNavUI();
-      updateCompositionBanner();
+
+      // Por defecto siempre opción 1 al cambiar de versión
+      applyContextualPreset(1);
     }
 
     function setVariosSplit(split) {
       setLayoutMode('varios_carriles', split);
-      updateVersionNavUI();
+      const pId = split === 'grupos' ? 1 : (split === 'tiempos' ? 2 : 3);
+      currentContextualPreset = pId;
+      updatePresetButtonsUI(pId);
       updateCompositionBanner();
     }
 
     function setCruzadoSplit(split) {
       setLayoutMode('varios_carriles', split);
-      updateVersionNavUI();
+      const pId = split === 'cruzado_gt' ? 1 : (split === 'cruzado_gc' ? 2 : 3);
+      currentContextualPreset = pId;
+      updatePresetButtonsUI(pId);
       updateCompositionBanner();
     }
 
+    function setTodoPreset(pId) {
+      currentTodoPreset = pId;
+      currentContextualPreset = pId;
+      if (pId === 1) {
+        masterPadState.tensor.g = ['1', '2'];
+        masterPadState.tensor.c = ['1', '2'];
+        masterPadState.tensor.t = ['1', '2', '3'];
+        carrilTrackMode = 'single_18d';
+        currentDensity = 'SDR';
+        showLimitToast('🎯 TODO Opción 1: Trayectoria Temporal Longitudinal T1➔T2➔T3', 2000);
+      } else if (pId === 2) {
+        masterPadState.tensor.g = ['1', '2'];
+        masterPadState.tensor.c = ['1', '2'];
+        masterPadState.tensor.t = ['1'];
+        carrilTrackMode = '3vias_da_rc';
+        masterPadState.metrics = ['D2', 'D3'];
+        showLimitToast('🎯 TODO Opción 2: Tríada Fáctica DA ⇄ RC en 6 Carriles', 2000);
+      } else if (pId === 3) {
+        masterPadState.tensor.g = ['1', '2'];
+        masterPadState.tensor.c = ['1', '2'];
+        masterPadState.tensor.t = ['1'];
+        carrilTrackMode = 'single_18d';
+        currentDensity = 'SDR';
+        masterPadState.metrics = ['SDR'];
+        showLimitToast('🎯 TODO Opción 3: Saldo Relativo Continuo SDR en 6 Carriles', 2000);
+      }
+      updateMasterPadUI();
+      updateVersionNavUI();
+      updateCompositionBanner();
+      renderAllCarriles();
+      updateActiveStation(activeStationIndex, false);
+    }
+
+    // APLICAR CONTEXTUALMENTE UNA DE LAS 3 OPCIONES PREDETERMINADAS (1, 2 o 3)
+    function applyContextualPreset(id) {
+      currentContextualPreset = id;
+      if (layoutMode === '1carril') {
+        applyPreset(id);
+      } else if (layoutMode === 'varios_carriles') {
+        if (multicarrilSplit === 'grupos' || multicarrilSplit === 'tiempos' || multicarrilSplit === 'criterios') {
+          if (id === 1) setVariosSplit('grupos');
+          else if (id === 2) setVariosSplit('tiempos');
+          else if (id === 3) setVariosSplit('criterios');
+        } else if (multicarrilSplit.startsWith('cruzado')) {
+          if (id === 1) setCruzadoSplit('cruzado_gt');
+          else if (id === 2) setCruzadoSplit('cruzado_gc');
+          else if (id === 3) setCruzadoSplit('cruzado_tc');
+        } else if (multicarrilSplit === 'todo_gxcz_ty') {
+          setTodoPreset(id);
+        }
+      }
+      updatePresetButtonsUI(id);
+      updateCompositionBanner();
+    }
+
+    function getActiveVersionKey() {
+      if (layoutMode === '1carril') return '1carril';
+      if (multicarrilSplit === 'todo_gxcz_ty') return 'todo';
+      if (multicarrilSplit.startsWith('cruzado')) return 'cruzados';
+      return 'varios_carriles';
+    }
+
+    function updatePresetButtonsUI(activeId = currentContextualPreset) {
+      const verKey = getActiveVersionKey();
+      const presets = PRESETS_BY_VERSION[verKey] || PRESETS_BY_VERSION['1carril'];
+
+      // 1. Actualizar textos y clase activa en la barra de moduladores inferior
+      [1, 2, 3].forEach(num => {
+        const btn = document.getElementById('btn-preset-' + num);
+        const pObj = presets[num - 1];
+        if (btn && pObj) {
+          btn.textContent = pObj.label;
+          btn.title = pObj.full;
+          btn.classList.toggle('active', num === activeId);
+        }
+
+        // Keypad dock buttons (1, 2, 3)
+        const padBtn = document.getElementById('pad-preset-' + num);
+        if (padBtn) {
+          padBtn.classList.toggle('active', num === activeId);
+          if (pObj) padBtn.title = pObj.full;
+        }
+      });
+
+      // 2. Sub-selectores de la cabecera superior
+      const is1C = (verKey === '1carril');
+      const isVarios = (verKey === 'varios_carriles');
+      const isCruz = (verKey === 'cruzados');
+      const isTodo = (verKey === 'todo');
+
+      if (is1C) {
+        document.getElementById('btn-sub-1c-1')?.classList.toggle('active', activeId === 1);
+        document.getElementById('btn-sub-1c-2')?.classList.toggle('active', activeId === 2);
+        document.getElementById('btn-sub-1c-3')?.classList.toggle('active', activeId === 3);
+      } else if (isVarios) {
+        document.getElementById('btn-sub-grupos')?.classList.toggle('active', activeId === 1);
+        document.getElementById('btn-sub-tiempos')?.classList.toggle('active', activeId === 2);
+        document.getElementById('btn-sub-criterios')?.classList.toggle('active', activeId === 3);
+      } else if (isCruz) {
+        document.getElementById('btn-sub-gt')?.classList.toggle('active', activeId === 1);
+        document.getElementById('btn-sub-gc')?.classList.toggle('active', activeId === 2);
+        document.getElementById('btn-sub-tc')?.classList.toggle('active', activeId === 3);
+      } else if (isTodo) {
+        document.getElementById('btn-sub-todo-1')?.classList.toggle('active', activeId === 1);
+        document.getElementById('btn-sub-todo-2')?.classList.toggle('active', activeId === 2);
+        document.getElementById('btn-sub-todo-3')?.classList.toggle('active', activeId === 3);
+      }
+    }
+
     function updateVersionNavUI() {
-      const is1C = (layoutMode === '1carril');
-      const isVarios = (layoutMode === 'varios_carriles' && (multicarrilSplit === 'grupos' || multicarrilSplit === 'tiempos' || multicarrilSplit === 'criterios'));
-      const isCruz = (layoutMode === 'varios_carriles' && (multicarrilSplit === 'cruzado_gt' || multicarrilSplit === 'cruzado_gc' || multicarrilSplit === 'cruzado_tc'));
-      const isTodo = (layoutMode === 'varios_carriles' && multicarrilSplit === 'todo_gxcz_ty');
+      const verKey = getActiveVersionKey();
 
-      document.getElementById('btn-ver-1carril')?.classList.toggle('active', is1C);
-      document.getElementById('btn-ver-varios')?.classList.toggle('active', isVarios);
-      document.getElementById('btn-ver-cruzados')?.classList.toggle('active', isCruz);
-      document.getElementById('btn-ver-todo')?.classList.toggle('active', isTodo);
+      document.getElementById('btn-ver-1carril')?.classList.toggle('active', verKey === '1carril');
+      document.getElementById('btn-ver-varios')?.classList.toggle('active', verKey === 'varios_carriles');
+      document.getElementById('btn-ver-cruzados')?.classList.toggle('active', verKey === 'cruzados');
+      document.getElementById('btn-ver-todo')?.classList.toggle('active', verKey === 'todo');
 
-      // Sub-selectores contextuales
+      // Sub-selectores contextuales: mostrar únicamente los 3 preajustes de la versión activa
+      const sub1C = document.getElementById('sub-group-1carril');
       const subVarios = document.getElementById('sub-group-varios');
       const subCruzados = document.getElementById('sub-group-cruzados');
       const subTodo = document.getElementById('sub-group-todo');
 
-      if (subVarios) subVarios.style.display = isVarios ? 'flex' : 'none';
-      if (subCruzados) subCruzados.style.display = isCruz ? 'flex' : 'none';
-      if (subTodo) subTodo.style.display = isTodo ? 'flex' : 'none';
+      if (sub1C) sub1C.style.display = (verKey === '1carril') ? 'flex' : 'none';
+      if (subVarios) subVarios.style.display = (verKey === 'varios_carriles') ? 'flex' : 'none';
+      if (subCruzados) subCruzados.style.display = (verKey === 'cruzados') ? 'flex' : 'none';
+      if (subTodo) subTodo.style.display = (verKey === 'todo') ? 'flex' : 'none';
 
-      if (isVarios) {
-        document.getElementById('btn-sub-grupos')?.classList.toggle('active', multicarrilSplit === 'grupos');
-        document.getElementById('btn-sub-tiempos')?.classList.toggle('active', multicarrilSplit === 'tiempos');
-        document.getElementById('btn-sub-criterios')?.classList.toggle('active', multicarrilSplit === 'criterios');
-      }
-      if (isCruz) {
-        document.getElementById('btn-sub-gt')?.classList.toggle('active', multicarrilSplit === 'cruzado_gt');
-        document.getElementById('btn-sub-gc')?.classList.toggle('active', multicarrilSplit === 'cruzado_gc');
-        document.getElementById('btn-sub-tc')?.classList.toggle('active', multicarrilSplit === 'cruzado_tc');
-      }
+      updatePresetButtonsUI(currentContextualPreset);
     }
 
     function updateCompositionBanner() {
@@ -8562,17 +10861,26 @@
           elDen.textContent = `${currentDensity} (${activeCombos.length > 1 ? activeCombos.length + ' canales' : '1 canal'})`;
         }
       }
+
+      // 6. Preajuste activo
+      const elPreset = document.getElementById('comp-val-preset');
+      if (elPreset) {
+        const verKey = getActiveVersionKey();
+        const pList = PRESETS_BY_VERSION[verKey] || PRESETS_BY_VERSION['1carril'];
+        const pObj = pList[currentContextualPreset - 1] || pList[0];
+        elPreset.textContent = pObj.label;
+      }
     }
 
     function selectAlternative(altNum) {
       if (altNum === 1) {
-        setLayoutMode('1carril');
+        selectMasterVersion('1carril');
       } else if (altNum === 2) {
-        setLayoutMode('varios_carriles', 'grupos');
+        selectMasterVersion('varios_carriles');
       } else if (altNum === 3) {
-        setLayoutMode('varios_carriles', 'cruzado_gt');
+        selectMasterVersion('cruzados');
       } else if (altNum === 4) {
-        setLayoutMode('varios_carriles', 'todo_gxcz_ty');
+        selectMasterVersion('todo');
       }
     }
 
@@ -10609,14 +12917,14 @@
 
     // RESIZE LISTENER
     window.addEventListener('resize', () => {
-      drawCarril();
+      renderAllCarriles();
     });
 
     // INICIALIZACIÓN ONLOAD (DE ENTRADA: OPCIÓN 1 PREDETERMINADA)
     window.onload = () => {
       setResolution('condensado');
       setLineInterpolation('curva');
-      applyPreset(1);
+      applyContextualPreset(1);
       updateVersionNavUI();
       updateCompositionBanner();
       renderBackingTable();
