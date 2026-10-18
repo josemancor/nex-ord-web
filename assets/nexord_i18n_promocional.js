@@ -250,7 +250,7 @@
       guard_b3_title: '🌐 Depósito CERN Zenodo (Inmutable)',
       guard_b3_desc: 'DOI persistente <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Edición Canónica: Manifiesto Central y Material Suplementario), con archivo de metadatos científicos Highwire Press y Dublin Core.',
       guard_b4_title: '🔍 Código Auditable &amp; Determinista',
-      guard_b4_desc: 'Matemática exacta verificable (descomposición SVD, Benzécri χ², operadores de Estrada, Grassmann). Sin algoritmos de caja negra no reproducibles.',
+      guard_b4_desc: 'Matemática verificable (descomposición SVD, χ², operadores de Estrada, Grassmann). Sin algoritmos de caja negra no reproducibles.',
       guard_b5_title: '🌍 Universalidad y Nodos Federados (UNESCO Open Science)',
       guard_b5_desc: 'Patrimonio Abierto de la Humanidad. Cláusula inviolable de salvaguarda que impide el secuestro territorial o lingüístico: arquitectura desacoplada homologada en Español e Inglés, con idiomas para futuras localizaciones..., garantizando su réplica y despliegue en redes universitarias sin fronteras geopolíticas.',
 
@@ -559,7 +559,7 @@
       guard_b3_title: '🌐 CERN Zenodo Repository (Immutable)',
       guard_b3_desc: 'Persistent DOI <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Canonical Edition: Central Manifesto and Supplementary Material), with Highwire Press and Dublin Core scientific metadata archiving.',
       guard_b4_title: '🔍 Auditable &amp; Deterministic Code',
-      guard_b4_desc: 'Exact verifiable mathematics (SVD decomposition, Benzécri χ², Estrada communicability, Grassmann manifolds). Free from non-reproducible black-box heuristics.',
+      guard_b4_desc: 'Verifiable mathematics (SVD decomposition, χ², Estrada communicability, Grassmann manifolds). Free from non-reproducible black-box heuristics.',
       guard_b5_title: '🌍 Universality &amp; Federated Nodes (UNESCO Open Science)',
       guard_b5_desc: 'Global Open Heritage. Inviolable safeguard clause preventing territorial or linguistic capture: decoupled architecture certified in Spanish and English, with languages for future localizations..., ensuring seamless replication and deployment across university networks across borders.',
 
