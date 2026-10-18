@@ -9800,7 +9800,7 @@
       masterPadState.res = val;
       if (val === 'N') setResolution('condensado');
       else if (val === 'N*N') setResolution('completo');
-      else if (val === 'Q') setResolution('condensado');
+      else if (val === 'Q') setResolution('q_marginal');
       else if (val === 'Q*Q') setResolution('qxq');
       updateMasterPadUI();
     }
@@ -10050,10 +10050,23 @@
       '3': ['1C', '2C', '3C', '4C', '5C', '6C']
     };
 
+    // DEFINICIÓN DE LAS 9 FIGURAS MARGINALES DE Q81 (Q)
+    const Q_MARGINAL_STATIONS = [
+      { type: 'q_marginal', id: 1, k: 1, sym: '<Ee>', label: 'Q1 <Ee>', coordLabel: 'Q1 <Ee>', def: 'Elección total mutua / fuerte', u: 1, v: 1 },
+      { type: 'q_marginal', id: 2, k: 2, sym: '<¿?>', label: 'Q2 <¿?>', coordLabel: 'Q2 <¿?>', def: 'Expectativa positiva con indiferencia', u: 2, v: 2 },
+      { type: 'q_marginal', id: 3, k: 3, sym: '<Rr>', label: 'Q3 <Rr>', coordLabel: 'Q3 <Rr>', def: 'Expectativa positiva con rechazo', u: 3, v: 3 },
+      { type: 'q_marginal', id: 4, k: 4, sym: '¡Ee!>', label: 'Q4 ¡Ee!>', coordLabel: 'Q4 ¡Ee!>', def: 'Elección mutua con expectativa neutra', u: 4, v: 4 },
+      { type: 'q_marginal', id: 5, k: 5, sym: '¡¿?!>', label: 'Q5 ¡¿?!>', coordLabel: 'Q5 ¡¿?!>', def: 'Indiferencia absoluta (Centro Neutro)', u: 5, v: 5 },
+      { type: 'q_marginal', id: 6, k: 6, sym: '¡Rr!>', label: 'Q6 ¡Rr!>', coordLabel: 'Q6 ¡Rr!>', def: 'Rechazo mutuo con expectativa neutra', u: 6, v: 6 },
+      { type: 'q_marginal', id: 7, k: 7, sym: '[Ee]', label: 'Q7 [Ee]', coordLabel: 'Q7 [Ee]', def: 'Elección con expectativa negativa', u: 7, v: 7 },
+      { type: 'q_marginal', id: 8, k: 8, sym: '[¿?]', label: 'Q8 [¿?]', coordLabel: 'Q8 [¿?]', def: 'Expectativa negativa con indiferencia', u: 8, v: 8 },
+      { type: 'q_marginal', id: 9, k: 9, sym: '[Rr]', label: 'Q9 [Rr]', coordLabel: 'Q9 [Rr]', def: 'Rechazo recíproco total / fuerte', u: 9, v: 9 }
+    ];
+    const MATRIX_9X9_LOOKUP = {};
     const MATRIX_TRANSPOSE_MAP = {};
     const TRAVERSAL_9X9 = [];
     (function init9x9Data() {
-      const lookup = {};
+      const lookup = MATRIX_9X9_LOOKUP;
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           const idx = r * 9 + c;
@@ -10106,6 +10119,8 @@
         }));
       } else if (currentResolution === 'completo') {
         return getSubjectTraversalForGroup(gId);
+      } else if (currentResolution === 'q_marginal') {
+        return Q_MARGINAL_STATIONS;
       } else {
         return TRAVERSAL_9X9;
       }
@@ -10213,11 +10228,94 @@
       };
     }
 
+    // CALCULAR MARGINALES DE LAS 9 FIGURAS DE Q81 (PROMEDIO DE DENSIDADES ELEMENTALES)
+    function getQMarginalTetragram(station, mat) {
+      const k = station.k || station.id || 1; // 1 a 9
+      const qmap = (mat && mat.q_map) ? mat.q_map : {};
+
+      // 1. Fila k (Recepción: d3 = RC, d4 = pRC) - cells (k, c) para c=1..9
+      const rowLinks = [];
+      for (let c = 1; c <= 9; c++) {
+        const fig = MATRIX_9X9_LOOKUP[k + ',' + c];
+        if (fig && qmap[String(fig.id)]) {
+          rowLinks.push(...qmap[String(fig.id)]);
+        }
+      }
+
+      // 2. Columna k (Emisión: d1 = pDA, d2 = DA) - cells (r, k) para r=1..9
+      const colLinks = [];
+      for (let r = 1; r <= 9; r++) {
+        const fig = MATRIX_9X9_LOOKUP[r + ',' + k];
+        if (fig && qmap[String(fig.id)]) {
+          colLinks.push(...qmap[String(fig.id)]);
+        }
+      }
+
+      // 3. Promedio elemental de densidades (no promedio simple de celdas)
+      let d1 = 0, d2 = 0, d3 = 0, d4 = 0;
+      let hasData = false;
+
+      // Emisión (Columna k)
+      if (colLinks.length > 0) {
+        d1 = colLinks.reduce((acc, l) => acc + (l.d1 !== undefined ? l.d1 : 0), 0) / colLinks.length;
+        d2 = colLinks.reduce((acc, l) => acc + (l.d2 !== undefined ? l.d2 : 0), 0) / colLinks.length;
+        hasData = true;
+      } else {
+        let s1 = 0, s2 = 0;
+        for (let r = 1; r <= 9; r++) {
+          const fig = MATRIX_9X9_LOOKUP[r + ',' + k];
+          if (fig) { s1 += fig.d1; s2 += fig.d2; }
+        }
+        d1 = s1 / 9;
+        d2 = s2 / 9;
+      }
+
+      // Recepción (Fila k)
+      if (rowLinks.length > 0) {
+        d3 = rowLinks.reduce((acc, l) => acc + (l.d3 !== undefined ? l.d3 : 0), 0) / rowLinks.length;
+        d4 = rowLinks.reduce((acc, l) => acc + (l.d4 !== undefined ? l.d4 : 0), 0) / rowLinks.length;
+        hasData = true;
+      } else {
+        let s3 = 0, s4 = 0;
+        for (let c = 1; c <= 9; c++) {
+          const fig = MATRIX_9X9_LOOKUP[k + ',' + c];
+          if (fig) { s3 += fig.d3; s4 += fig.d4; }
+        }
+        d3 = s3 / 9;
+        d4 = s4 / 9;
+      }
+
+      const bar = (d2 + d3) / 2;
+      const fric = Math.abs(d2 - d3);
+
+      return {
+        d1: d1,
+        d2: d2,
+        d3: d3,
+        d4: d4,
+        smib: station.sym || ('Q' + k),
+        daMarginal: d2,
+        rcMarginal: d3,
+        pdaMarginal: d1,
+        prcMarginal: d4,
+        baricentro: bar,
+        friction: fric,
+        hasData: hasData,
+        isMarginal: true,
+        rowLinksCount: rowLinks.length,
+        colLinksCount: colLinks.length
+      };
+    }
+
     // =========================================================================
     // CÁLCULO FACTUAL DE DENSIDADES PARA UNA ESTACIÓN
     // =========================================================================
     function getStationRawTetragram(station, mat) {
       if (!mat || !station) return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: false };
+
+      if (currentResolution === 'q_marginal' || station.type === 'q_marginal') {
+        return getQMarginalTetragram(station, mat);
+      }
 
       if (currentResolution === 'condensado' || station.type === 'subject') {
         return getSubjectMarginals(station.id || station.label || station.from, mat);
@@ -10896,6 +10994,8 @@
           elForm.textContent = 'N';
         } else if (currentResolution === 'completo') {
           elForm.textContent = 'N×N';
+        } else if (currentResolution === 'q_marginal') {
+          elForm.textContent = 'Q';
         } else {
           elForm.textContent = 'Q×Q';
         }
@@ -12351,7 +12451,27 @@
       const fmt = (v) => (v >= 0 ? '+' : '') + Number(v).toFixed(2);
 
       // 1. Columna 1: Sujeto / Díada / Figura
-      if (currentResolution === 'condensado') {
+      if (currentResolution === 'q_marginal' || st.type === 'q_marginal') {
+        const da = tetra.d2;
+        const rc = tetra.d3;
+        const bar = (da + rc) / 2;
+        const fric = Math.abs(da - rc);
+
+        document.getElementById('station-readout').textContent = `${sIdx + 1} / ${totalStations} (${st.coordLabel})`;
+        document.getElementById('insp-space-tag').textContent = 'Q (9 Figuras Marginales)';
+        document.getElementById('insp-pair-name').textContent = `${st.label}`;
+
+        const smibBadge = document.getElementById('insp-smib-badge');
+        smibBadge.textContent = st.sym;
+        smibBadge.style.color = 'var(--neon-gold)';
+        smibBadge.style.borderColor = 'var(--neon-gold)';
+
+        document.getElementById('insp-actors-sub').innerHTML = `Arquetipo: <strong>${st.def}</strong>`;
+        document.getElementById('insp-link-type').textContent = tetra.hasData
+          ? `Corpus factual: ${tetra.colLinksCount} emisión / ${tetra.rowLinksCount} recepción`
+          : 'Centroide Teórico Invariante';
+
+      } else if (currentResolution === 'condensado') {
         const da = tetra.d2;
         const rc = tetra.d3;
         const bar = (da + rc) / 2;
@@ -12610,7 +12730,7 @@
     // =========================================================================
     function setResolution(res) {
       currentResolution = res;
-      if (res === 'qxq') {
+      if (res === 'qxq' || res === 'q_marginal') {
         currentSpace = 'qxq';
       } else {
         currentSpace = 'nxn';
