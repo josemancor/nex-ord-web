@@ -16078,6 +16078,16 @@
       }
     };
 
+    function escapeSmibHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function getSmibCellDetails(val, isSelf, currentMode, dsKey) {
       if (isSelf) {
         return {
@@ -16090,7 +16100,8 @@
       }
       const ds = SMIB_SMIA_DATASETS[dsKey];
       const densInfo = ds.densMap ? ds.densMap(val, false) : { text: "0.00", desc: "" };
-      const content = currentMode === 'density' ? densInfo.text : val;
+      const rawContent = currentMode === 'density' ? densInfo.text : val;
+      const content = escapeSmibHtml(rawContent);
 
       if (val === "AAAA" || val === "0++0") {
         return { content, bg: "#E3FCEF", color: "#00875A", desc: "Máxima Elección / Atracción Intensa", tooltip: "Atracción consolidada e indiscutible." };
@@ -16120,25 +16131,26 @@
           tooltip: "Eje diagonal reflexivo: díada reflexiva neutral."
         };
       }
+      const safeContent = escapeSmibHtml(val);
       if (val === "<Ee>" || val === "¡Ee!") {
-        return { content: val, bg: "#D1FAE5", color: "#047857", desc: "Elección Recíproca / Mutua (<Ee>, Fig. 81 Q81)", tooltip: "Díada de máxima energía atractiva y sintonía." };
+        return { content: safeContent, bg: "#D1FAE5", color: "#047857", desc: "Elección Recíproca / Mutua (&lt;Ee&gt;, Fig. 81 Q81)", tooltip: "Díada de máxima energía atractiva y sintonía." };
       }
       if (val === "[Rr]" || val === "¡Rr!") {
-        return { content: val, bg: "#FFE4E6", color: "#BE123C", desc: "Rechazo Recíproco / Mutuo ([Rr], Fig. 01 Q81)", tooltip: "Díada de máxima fricción y oposición manifiesta." };
+        return { content: safeContent, bg: "#FFE4E6", color: "#BE123C", desc: "Rechazo Recíproco / Mutuo ([Rr], Fig. 01 Q81)", tooltip: "Díada de máxima fricción y oposición manifiesta." };
       }
       if (val === "¡¿?!") {
-        return { content: val, bg: "#F0F9FF", color: "#0284C7", desc: "Indiferencia Mutua (¡¿?!, Fig. 41 Q81 Central)", tooltip: "Díada en el punto medio de equilibrio termodinámico." };
+        return { content: safeContent, bg: "#F0F9FF", color: "#0284C7", desc: "Indiferencia Mutua (¡¿?!, Fig. 41 Q81 Central)", tooltip: "Díada en el punto medio de equilibrio termodinámico." };
       }
       if (val.includes("<Er]") || val.includes("[Re>") || val.includes("Er") || val.includes("Re")) {
-        return { content: val, bg: "#FEF3C7", color: "#B45309", desc: "Oposición Afectiva / Asimetría (<Er] / [Re>)", tooltip: "Discrepancia polar: un polo elige y el otro rechaza." };
+        return { content: safeContent, bg: "#FEF3C7", color: "#B45309", desc: "Oposición Afectiva / Asimetría (&lt;Er] / [Re&gt;)", tooltip: "Discrepancia polar: un polo elige y el otro rechaza." };
       }
       if (val.includes("E") || val.includes("e")) {
-        return { content: val, bg: "#E0F2FE", color: "#0369A1", desc: "Atracción Asimétrica / Expectativa (<E!> / ¡Ae!)", tooltip: "Preferencia unidireccional o expectativa abierta." };
+        return { content: safeContent, bg: "#E0F2FE", color: "#0369A1", desc: "Atracción Asimétrica / Expectativa (&lt;E!&gt; / ¡Ae!)", tooltip: "Preferencia unidireccional o expectativa abierta." };
       }
       if (val.includes("R") || val.includes("r")) {
-        return { content: val, bg: "#FEE2E2", color: "#991B1B", desc: "Rechazo Asimétrico / Tensión ([Ra! / ¡Ar!)", tooltip: "Tensión unidireccional o expectativa de descarte." };
+        return { content: safeContent, bg: "#FEE2E2", color: "#991B1B", desc: "Rechazo Asimétrico / Tensión ([Ra! / ¡Ar!)", tooltip: "Tensión unidireccional o expectativa de descarte." };
       }
-      return { content: val, bg: "#F8FAFC", color: "#334155", desc: "Figura Sociométrica Q81", tooltip: "Figura relacional Q81." };
+      return { content: safeContent, bg: "#F8FAFC", color: "#334155", desc: "Figura Sociométrica Q81", tooltip: "Figura relacional Q81." };
     }
 
     function renderSmibWorkbench(containerId, options = {}) {
