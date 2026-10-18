@@ -68,7 +68,7 @@
       p3_lead: 'La marca maestra <strong>VISORD</strong> y la plataforma <strong>NEXORD</strong> constituyen un ecosistema de investigación y diagnóstico científico impulsado desde el ámbito universitario:',
       
       p3_attr_title: '🏛️ Atribución Académica e Investigador Principal',
-      p3_attr_text: '<strong>Investigador Principal (IP):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Filiación Institucional:</strong> NEXORD Research Initiative · Investigación independiente.<br><strong>Depósito Científico Oficial:</strong> CERN Zenodo · Manifiesto: <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline;">DOI 10.5281/zenodo.23329641</a> &bull; Suplemento: <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: #F59E0B; text-decoration: underline;">DOI 10.5281/zenodo.23329641</a>.',
+      p3_attr_text: '<strong>Investigador Principal (IP):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Filiación Institucional:</strong> NEXORD Research Initiative · Investigación independiente.<br><strong>Depósito Científico Oficial:</strong> CERN Zenodo · Edición Canónica Unificada (Manifiesto y Suplemento): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
       
       p3_lic_title: 'Régimen de Protección: Doble Vía & Licencia CC-BY-4.0',
       p3_lic_text: 'El ecosistema NEXORD / VISORD opera bajo un régimen formal articulado en dos esferas estrictamente diferenciadas y complementarias:<br><br>' +
@@ -146,7 +146,7 @@
       p3_lead: 'The master brand <strong>VISORD</strong> and the platform <strong>NEXORD</strong> constitute a scientific research and diagnostic ecosystem originated in the academic sphere:',
       
       p3_attr_title: '🏛️ Academic Attribution & Principal Investigator',
-      p3_attr_text: '<strong>Principal Investigator (PI):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Institutional Affiliation:</strong> NEXORD Research Initiative · Independent Research.<br><strong>Official Scientific Deposit:</strong> CERN Zenodo · Manifesto: <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline;">DOI 10.5281/zenodo.23329641</a> &bull; Supplement: <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: #F59E0B; text-decoration: underline;">DOI 10.5281/zenodo.23329641</a>.',
+      p3_attr_text: '<strong>Principal Investigator (PI):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Institutional Affiliation:</strong> NEXORD Research Initiative · Independent Research.<br><strong>Official Scientific Deposit:</strong> CERN Zenodo · Unified Canonical Edition (Manifesto & Supplement): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
       
       p3_lic_title: 'Double-Track Protection Regime & CC-BY-4.0 License',
       p3_lic_text: 'The NEXORD / VISORD ecosystem operates under a formal regime structured into two strictly differentiated, complementary spheres:<br><br>' +

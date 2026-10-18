@@ -37,7 +37,7 @@
       s1_b3_title: '📐 Álgebra Tensorial y Espectral',
       s1_b3_desc: 'Módulos computacionales para proyección en variedades de Grassmann $\\operatorname{Gr}(k, N)$, cálculo del gap espectral y conectividad algebraica de Fiedler ($\\lambda_2$), frustración estructural de Heider y operadores de Estrada ($EE$).',
       s1_b4_title: '📚 Banco Canónico de Datos BSOC &amp; Zenodo',
-      s1_b4_desc: 'Corpus empírico homologado de sociogramas de campo reales, matrices simuladas Monte Carlo y series culturales. Registro permanente en CERN Zenodo: Manifiesto Científico Central (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) y Material Suplementario con 6 Anexos Técnicos (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329641</a>) con metadatos Google Académico listos.',
+      s1_b4_desc: 'Corpus empírico homologado de sociogramas de campo reales, matrices simuladas Monte Carlo y series culturales. Registro permanente en CERN Zenodo: Manifiesto Científico Central y Material Suplementario (6 Anexos Técnicos) bajo <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-green); text-decoration:underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a> con metadatos Google Académico listos.',
 
       // Sección 2
       s2_title: 'Objeto de la Oferta: Custodia Responsable sin Royalties',
@@ -133,7 +133,7 @@
       s1_b3_title: '📐 Tensorial and Spectral Algebra',
       s1_b3_desc: 'Computational modules for projection on Grassmann manifolds $\\operatorname{Gr}(k, N)$, spectral gap evaluation, Fiedler algebraic connectivity ($\\lambda_2$), Heider structural frustration, and Estrada operators ($EE$).',
       s1_b4_title: '📚 BSOC Canonical Dataset &amp; Zenodo Depository',
-      s1_b4_desc: 'Homologated empirical corpus of field sociomatrices, Monte Carlo simulations, and cultural works. Permanent CERN Zenodo records: Core Scientific Manifesto (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-cyan);">DOI: 10.5281/zenodo.23329641</a>) and Supplementary Material with 6 Technical Annexes (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:#F59E0B;">DOI: 10.5281/zenodo.23329641</a>) with full Google Scholar indexing.',
+      s1_b4_desc: 'Homologated empirical corpus of field sociomatrices, Monte Carlo simulations, and cultural works. Permanent CERN Zenodo record: Core Scientific Manifesto and Supplementary Material (6 Technical Annexes) under <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-green); text-decoration:underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a> with full Google Scholar indexing.',
 
       // Section 2
       s2_title: 'Object of the Offer: Royalty-Free Responsible Custody',
