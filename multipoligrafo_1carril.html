@@ -777,6 +777,44 @@
     .note-pedagogica strong {
       color: #FFFFFF;
     }
+
+    /* Modo 3 Vías Paralelas */
+    .carril-mode-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-carril-mode {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-carril-mode:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: #FFFFFF;
+      border-color: var(--neon-cyan);
+    }
+    .btn-carril-mode.active {
+      background: rgba(0, 255, 135, 0.20);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.25);
+    }
+    .btn-carril-mode.active-cyan {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
   </style>
 </head>
 <body>
@@ -825,8 +863,13 @@
       <div class="carril-header">
         <div class="carril-title-group">
           <span class="carril-badge-num">CARRIL 1</span>
-          <span class="carril-main-title" id="carril-heading-title">Grupo A · T1 · C1 (Afinidad) · SDR (Saldo Relativo)</span>
-          <span class="carril-metric-formula" id="carril-heading-formula">SDR = (D1 + D2 + D3 + D4) / 4</span>
+          <span class="carril-main-title" id="carril-heading-title">Grupo A · T1 · C1 · 3 Vías Paralelas: DA ⇄ RC ⇄ (DA+RC)/2</span>
+          <span class="carril-metric-formula" id="carril-heading-formula">Baricentro S23 = (DA + RC) / 2</span>
+        </div>
+        <div class="carril-mode-selector">
+          <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas: DA, RC y (DA+RC)/2 continuas">🔱 3 Vías: DA · RC · (DA+RC)/2</button>
+          <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y (p_DA+p_RC)/2">👁️ 3 Vías: p_DA · p_RC · S14</button>
+          <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de cualquiera de las 18 densidades canónicas">📊 Señal Única 18D</button>
         </div>
         <div class="carril-telemetry">
           <div class="telem-box"><span>BDR:</span><strong id="telem-bdr" style="color:var(--neon-gold)">0.48</strong></div>
@@ -1008,6 +1051,13 @@
         <div class="deck-title">
           <span>🎛️ BOTONERA CANÓNICA 18 DENSIDADES</span>
           <span style="color:var(--neon-cyan)">18D</span>
+        </div>
+
+        <!-- ACCESO DIRECTO A 3 VÍAS PARALELAS CONTINUAS -->
+        <div class="btn-row" style="margin-bottom: 2px;">
+          <button class="btn-toggle active" id="btn-cardc-3vias" onclick="setCarrilTrackMode('3vias_da_rc')" style="background:rgba(0,255,135,0.18); border-color:var(--neon-green); color:var(--neon-green); font-weight:800;" title="Activar 3 vías continuas: DA (Cian), RC (Naranja) y Baricentro (Verde)">
+            🔱 3 Vías Paralelas: DA · RC · (DA+RC)/2
+          </button>
         </div>
 
         <div class="grid-18d">
@@ -8142,6 +8192,7 @@
     let currentTime = '1';             // '1' | '2' | '3' | 'juntos'
     let currentCriterion = '1';        // '1' | '2' | 'juntos'
     let currentDensity = 'SDR';        // 'D1'..'D4', 'SDR', 'BDR', 'S12', 'B12', etc.
+    let carrilTrackMode = '3vias_da_rc'; // '3vias_da_rc' | '3vias_expect' | 'single_18d' | 'super'
 
     let activeStationIndex = 0;
     let totalStations = 36;
@@ -8374,53 +8425,16 @@
 
       const xStep = plotW / (totalStations - 1);
 
-      // Determinar curvas a dibujar (según JUNTOS o POR SEPARADO)
-      const curvesToDraw = [];
-
-      if (superMode === 'juntos') {
-        if (currentTime === 'juntos') {
-          // 3 curvas para T1, T2, T3
-          const g = currentGroup === 'juntos' ? '1' : currentGroup;
-          const c = currentCriterion === 'juntos' ? '1' : currentCriterion;
-          curvesToDraw.push({ name: 'T1 (Inicial)', color: '#38BDF8', matKey: g + 'g1t' + c + 'c' });
-          curvesToDraw.push({ name: 'T2 (Intermedio)', color: '#FF9F1C', matKey: g + 'g2t' + c + 'c' });
-          curvesToDraw.push({ name: 'T3 (Consolidado)', color: '#00FF87', matKey: g + 'g3t' + c + 'c' });
-        } else if (currentCriterion === 'juntos') {
-          // 2 curvas para C1 y C2
-          const g = currentGroup === 'juntos' ? '1' : currentGroup;
-          const t = currentTime;
-          curvesToDraw.push({ name: 'C1 (Afinidad)', color: '#38BDF8', matKey: g + 'g' + t + 't1c' });
-          curvesToDraw.push({ name: 'C2 (Tarea)', color: '#FFE600', matKey: g + 'g' + t + 't2c' });
-        } else if (currentGroup === 'juntos' && currentSpace === 'qxq') {
-          // 3 curvas para G1, G2, G3
-          const t = currentTime;
-          const c = currentCriterion;
-          curvesToDraw.push({ name: 'Grupo A (G1)', color: '#38BDF8', matKey: '1g' + t + 't' + c + 'c' });
-          curvesToDraw.push({ name: 'Grupo B (G2)', color: '#FF007F', matKey: '2g' + t + 't' + c + 'c' });
-          curvesToDraw.push({ name: 'Grupo C (G3)', color: '#00FF87', matKey: '3g' + t + 't' + c + 'c' });
-        } else {
-          // Fallback a curva individual
-          const g = currentGroup === 'juntos' ? '1' : currentGroup;
-          const t = currentTime === 'juntos' ? '1' : currentTime;
-          const c = currentCriterion === 'juntos' ? '1' : currentCriterion;
-          curvesToDraw.push({ name: 'Canal Único', color: '#00FF87', matKey: g + 'g' + t + 't' + c + 'c' });
-        }
-      } else {
-        // Curva individual
-        const g = currentGroup === 'juntos' ? '1' : currentGroup;
-        const t = currentTime === 'juntos' ? '1' : currentTime;
-        const c = currentCriterion === 'juntos' ? '1' : currentCriterion;
-        curvesToDraw.push({ name: g + 'g' + t + 't' + c + 'c', color: getMetricColor(currentDensity), matKey: g + 'g' + t + 't' + c + 'c' });
-      }
-
-      // Actualizar leyenda si hay más de 1 curva
-      updateLegendBar(curvesToDraw);
+      const g = currentGroup === 'juntos' ? '1' : currentGroup;
+      const t = currentTime === 'juntos' ? '1' : currentTime;
+      const c = currentCriterion === 'juntos' ? '1' : currentCriterion;
+      const currentMatKey = g + 'g' + t + 't' + c + 'c';
+      const mat = TENSOR_DATA[currentMatKey];
 
       // Marcas y etiquetas en eje X
       for (let sIdx = 0; sIdx < totalStations; sIdx++) {
         const st = stations[sIdx];
         const x = padL + sIdx * xStep;
-
         const isMarked = (currentSpace === 'nxn' ? (sIdx % 6 === 0 || st.isDiagonal) : (sIdx % 9 === 0 || st.id === 41));
 
         if (isMarked) {
@@ -8438,71 +8452,281 @@
         }
       }
 
-      // 4. Dibujar las curvas
-      curvesToDraw.forEach(crv => {
-        const mat = TENSOR_DATA[crv.matKey];
-        const points = [];
+      // =======================================================================
+      // CASO A: 3 VÍAS PARALELAS CONTINUAS (DA ⇄ RC ⇄ (DA+RC)/2)
+      // =======================================================================
+      if (carrilTrackMode === '3vias_da_rc') {
+        updateLegend3Vias('da_rc');
+
+        const ptsDA = [];
+        const ptsRC = [];
+        const ptsBAR = [];
 
         for (let sIdx = 0; sIdx < totalStations; sIdx++) {
           const st = stations[sIdx];
           const x = padL + sIdx * xStep;
           const tetra = getStationRawTetragram(st, mat);
-          const val = computeDensityValue(tetra, currentDensity);
-          const y = scaleY(val);
-          points.push({ x, y, val, isDiagonal: st.isDiagonal, qid: st.id });
+          const da = tetra.d2;
+          const rc = tetra.d3;
+          const bar = (da + rc) / 2;
+
+          ptsDA.push({ x, y: scaleY(da), val: da, st });
+          ptsRC.push({ x, y: scaleY(rc), val: rc, st });
+          ptsBAR.push({ x, y: scaleY(bar), val: bar, st });
         }
 
-        // Si es 1 sola curva, pintar gradiente suave hacia el eje 0
-        if (curvesToDraw.length === 1) {
-          const grad = ctx.createLinearGradient(0, scaleY(1), 0, scaleY(-1));
-          grad.addColorStop(0, 'rgba(0, 255, 135, 0.20)');
-          grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
-          grad.addColorStop(1, 'rgba(255, 0, 127, 0.20)');
-
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.moveTo(points[0].x, scaleY(0));
-          for (let i = 0; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
-          }
-          ctx.lineTo(points[points.length - 1].x, scaleY(0));
-          ctx.closePath();
-          ctx.fill();
-        }
-
-        // Trazo de la línea
-        ctx.strokeStyle = crv.color;
-        ctx.lineWidth = 2.4;
-        ctx.shadowColor = crv.color;
-        ctx.shadowBlur = 8;
+        // 1. Banda translúcida de fricción entre DA y RC
+        ctx.fillStyle = 'rgba(255, 159, 28, 0.09)';
         ctx.beginPath();
-        for (let i = 0; i < points.length; i++) {
-          if (i === 0) ctx.moveTo(points[i].x, points[i].y);
-          else ctx.lineTo(points[i].x, points[i].y);
+        ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+        for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        ctx.closePath();
+        ctx.fill();
+
+        // 2. Cuerdas verticales de tensión entre DA y RC en cada estación
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+        ctx.lineWidth = 1.0;
+        for (let i = 0; i < totalStations; i++) {
+          ctx.beginPath();
+          ctx.moveTo(ptsDA[i].x, ptsDA[i].y);
+          ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+          ctx.stroke();
         }
+
+        // 3. VÍA 1: LÍNEA CONTINUA DA (Emisión Efectiva, D2) - Cian
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = '#38BDF8';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(ptsDA[0].x, ptsDA[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsDA[i].x, ptsDA[i].y);
+        ctx.stroke();
+
+        // 4. VÍA 2: LÍNEA CONTINUA RC (Recepción Efectiva, D3) - Naranja
+        ctx.strokeStyle = '#FF9F1C';
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = '#FF9F1C';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(ptsRC[0].x, ptsRC[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsRC[i].x, ptsRC[i].y);
+        ctx.stroke();
+
+        // 5. VÍA 3: LÍNEA CONTINUA BARICENTRO (DA+RC)/2 (S23) - Verde Neón
+        ctx.strokeStyle = '#00FF87';
+        ctx.lineWidth = 2.8;
+        ctx.shadowColor = '#00FF87';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Puntos circulares
-        points.forEach((pt, pIdx) => {
-          const isSelected = (pIdx === activeStationIndex);
-          if (pt.isDiagonal || pt.qid === 41) {
+        // 6. Puntos unidos sobre las 3 vías
+        for (let i = 0; i < totalStations; i++) {
+          const isSelected = (i === activeStationIndex);
+          const isSpecial = (ptsDA[i].st.isDiagonal || ptsDA[i].st.id === 41);
+
+          if (isSpecial) {
             // Ancla especial en Oro
             ctx.fillStyle = '#FFE600';
             ctx.beginPath();
-            ctx.arc(pt.x, pt.y, isSelected ? 6.5 : 4.0, 0, Math.PI * 2);
+            ctx.arc(ptsBAR[i].x, ptsBAR[i].y, isSelected ? 7.0 : 4.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 1.5;
             ctx.stroke();
           } else {
-            ctx.fillStyle = isSelected ? '#FFFFFF' : crv.color;
+            // Punto DA (Cian)
+            ctx.fillStyle = isSelected ? '#FFFFFF' : '#38BDF8';
             ctx.beginPath();
-            ctx.arc(pt.x, pt.y, isSelected ? 5.5 : 2.5, 0, Math.PI * 2);
+            ctx.arc(ptsDA[i].x, ptsDA[i].y, isSelected ? 5.5 : 3.0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Punto RC (Naranja)
+            ctx.fillStyle = isSelected ? '#FFFFFF' : '#FF9F1C';
+            ctx.beginPath();
+            ctx.arc(ptsRC[i].x, ptsRC[i].y, isSelected ? 5.5 : 3.0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Punto Baricentro (Verde Neón)
+            ctx.fillStyle = isSelected ? '#FFFFFF' : '#00FF87';
+            ctx.beginPath();
+            ctx.arc(ptsBAR[i].x, ptsBAR[i].y, isSelected ? 6.5 : 3.8, 0, Math.PI * 2);
             ctx.fill();
           }
+        }
+
+      // =======================================================================
+      // CASO B: 3 VÍAS DE EXPECTATIVAS (p_DA ⇄ p_RC ⇄ (p_DA+p_RC)/2)
+      // =======================================================================
+      } else if (carrilTrackMode === '3vias_expect') {
+        updateLegend3Vias('expect');
+
+        const ptsPDA = [];
+        const ptsPRC = [];
+        const ptsBAR = [];
+
+        for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+          const st = stations[sIdx];
+          const x = padL + sIdx * xStep;
+          const tetra = getStationRawTetragram(st, mat);
+          const pda = tetra.d1;
+          const prc = tetra.d4;
+          const bar = (pda + prc) / 2;
+
+          ptsPDA.push({ x, y: scaleY(pda), val: pda, st });
+          ptsPRC.push({ x, y: scaleY(prc), val: prc, st });
+          ptsBAR.push({ x, y: scaleY(bar), val: bar, st });
+        }
+
+        // Banda
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.09)';
+        ctx.beginPath();
+        ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+        for (let i = totalStations - 1; i >= 0; i--) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Cuerdas
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+        ctx.lineWidth = 1.0;
+        for (let i = 0; i < totalStations; i++) {
+          ctx.beginPath();
+          ctx.moveTo(ptsPDA[i].x, ptsPDA[i].y);
+          ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+          ctx.stroke();
+        }
+
+        // Vía 1: p_DA (Cian)
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = '#38BDF8'; ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(ptsPDA[0].x, ptsPDA[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPDA[i].x, ptsPDA[i].y);
+        ctx.stroke();
+
+        // Vía 2: p_RC (Púrpura)
+        ctx.strokeStyle = '#C084FC';
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = '#C084FC'; ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(ptsPRC[0].x, ptsPRC[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsPRC[i].x, ptsPRC[i].y);
+        ctx.stroke();
+
+        // Vía 3: (p_DA+p_RC)/2 (Oro)
+        ctx.strokeStyle = '#FFE600';
+        ctx.lineWidth = 2.8;
+        ctx.shadowColor = '#FFE600'; ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(ptsBAR[0].x, ptsBAR[0].y);
+        for (let i = 1; i < totalStations; i++) ctx.lineTo(ptsBAR[i].x, ptsBAR[i].y);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Puntos
+        for (let i = 0; i < totalStations; i++) {
+          const isSelected = (i === activeStationIndex);
+          ctx.fillStyle = isSelected ? '#FFFFFF' : '#38BDF8';
+          ctx.beginPath(); ctx.arc(ptsPDA[i].x, ptsPDA[i].y, isSelected ? 5.5 : 3.0, 0, Math.PI * 2); ctx.fill();
+
+          ctx.fillStyle = isSelected ? '#FFFFFF' : '#C084FC';
+          ctx.beginPath(); ctx.arc(ptsPRC[i].x, ptsPRC[i].y, isSelected ? 5.5 : 3.0, 0, Math.PI * 2); ctx.fill();
+
+          ctx.fillStyle = isSelected ? '#FFFFFF' : '#FFE600';
+          ctx.beginPath(); ctx.arc(ptsBAR[i].x, ptsBAR[i].y, isSelected ? 6.5 : 3.8, 0, Math.PI * 2); ctx.fill();
+        }
+
+      // =======================================================================
+      // CASO C: SEÑAL ÚNICA 18D O SUPERPOSICIÓN DE TRAYECTORIAS
+      // =======================================================================
+      } else {
+        const curvesToDraw = [];
+        if (superMode === 'juntos') {
+          if (currentTime === 'juntos') {
+            curvesToDraw.push({ name: 'T1 (Inicial)', color: '#38BDF8', matKey: g + 'g1t' + c + 'c' });
+            curvesToDraw.push({ name: 'T2 (Intermedio)', color: '#FF9F1C', matKey: g + 'g2t' + c + 'c' });
+            curvesToDraw.push({ name: 'T3 (Consolidado)', color: '#00FF87', matKey: g + 'g3t' + c + 'c' });
+          } else if (currentCriterion === 'juntos') {
+            curvesToDraw.push({ name: 'C1 (Afinidad)', color: '#38BDF8', matKey: g + 'g' + t + 't1c' });
+            curvesToDraw.push({ name: 'C2 (Tarea)', color: '#FFE600', matKey: g + 'g' + t + 't2c' });
+          } else if (currentGroup === 'juntos' && currentSpace === 'qxq') {
+            curvesToDraw.push({ name: 'Grupo A (G1)', color: '#38BDF8', matKey: '1g' + t + 't' + c + 'c' });
+            curvesToDraw.push({ name: 'Grupo B (G2)', color: '#FF007F', matKey: '2g' + t + 't' + c + 'c' });
+            curvesToDraw.push({ name: 'Grupo C (G3)', color: '#00FF87', matKey: '3g' + t + 't' + c + 'c' });
+          } else {
+            curvesToDraw.push({ name: 'Canal Único', color: '#00FF87', matKey: currentMatKey });
+          }
+        } else {
+          curvesToDraw.push({ name: currentMatKey, color: getMetricColor(currentDensity), matKey: currentMatKey });
+        }
+
+        updateLegendBar(curvesToDraw);
+
+        curvesToDraw.forEach(crv => {
+          const cMat = TENSOR_DATA[crv.matKey];
+          const points = [];
+
+          for (let sIdx = 0; sIdx < totalStations; sIdx++) {
+            const st = stations[sIdx];
+            const x = padL + sIdx * xStep;
+            const tetra = getStationRawTetragram(st, cMat);
+            const val = computeDensityValue(tetra, currentDensity);
+            points.push({ x, y: scaleY(val), val, isDiagonal: st.isDiagonal, qid: st.id });
+          }
+
+          if (curvesToDraw.length === 1) {
+            const grad = ctx.createLinearGradient(0, scaleY(1), 0, scaleY(-1));
+            grad.addColorStop(0, 'rgba(0, 255, 135, 0.20)');
+            grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+            grad.addColorStop(1, 'rgba(255, 0, 127, 0.20)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, scaleY(0));
+            for (let i = 0; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+            ctx.lineTo(points[points.length - 1].x, scaleY(0));
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          ctx.strokeStyle = crv.color;
+          ctx.lineWidth = 2.4;
+          ctx.shadowColor = crv.color;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          for (let i = 0; i < points.length; i++) {
+            if (i === 0) ctx.moveTo(points[i].x, points[i].y);
+            else ctx.lineTo(points[i].x, points[i].y);
+          }
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          points.forEach((pt, pIdx) => {
+            const isSelected = (pIdx === activeStationIndex);
+            if (pt.isDiagonal || pt.qid === 41) {
+              ctx.fillStyle = '#FFE600';
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, isSelected ? 6.5 : 4.0, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.strokeStyle = '#FFFFFF';
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            } else {
+              ctx.fillStyle = isSelected ? '#FFFFFF' : crv.color;
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, isSelected ? 5.5 : 2.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          });
         });
-      });
+      }
 
       // 5. Cursor vertical iluminado en activeStationIndex
       const activeX = padL + activeStationIndex * xStep;
@@ -8554,6 +8778,74 @@
       if (metric.startsWith('S')) return '#38BDF8';
       if (metric.startsWith('B')) return '#FF9F1C';
       return '#00FF87';
+    }
+
+    // ACTUALIZAR LEYENDA EN MODO 3 VÍAS PARALELAS
+    function updateLegend3Vias(mode) {
+      const bar = document.getElementById('carril-legend-bar');
+      bar.style.display = 'flex';
+      if (mode === 'da_rc') {
+        bar.innerHTML = `
+          <div class="legend-chip" style="color:#38BDF8">
+            <span class="legend-dot" style="background:#38BDF8"></span>
+            <span>DA: Preferencia Emisor (D2)</span>
+          </div>
+          <div class="legend-chip" style="color:#FF9F1C">
+            <span class="legend-dot" style="background:#FF9F1C"></span>
+            <span>RC: Preferencia Recibida (D3)</span>
+          </div>
+          <div class="legend-chip" style="color:#00FF87">
+            <span class="legend-dot" style="background:#00FF87; box-shadow:0 0 6px #00FF87;"></span>
+            <span>(DA + RC) / 2: Baricentro Medio Diádico (S23)</span>
+          </div>
+          <div class="legend-chip" style="color:var(--text-dim); margin-left:auto;">
+            <span style="font-size:10.5px;">Banda Fricción: |DA &minus; RC|</span>
+          </div>
+        `;
+      } else {
+        bar.innerHTML = `
+          <div class="legend-chip" style="color:#38BDF8">
+            <span class="legend-dot" style="background:#38BDF8"></span>
+            <span>p_DA: Expectativa Emisor (D1)</span>
+          </div>
+          <div class="legend-chip" style="color:#C084FC">
+            <span class="legend-dot" style="background:#C084FC"></span>
+            <span>p_RC: Expectativa Recibida (D4)</span>
+          </div>
+          <div class="legend-chip" style="color:#FFE600">
+            <span class="legend-dot" style="background:#FFE600; box-shadow:0 0 6px #FFE600;"></span>
+            <span>(p_DA + p_RC) / 2: Baricentro Expectativas (S14)</span>
+          </div>
+          <div class="legend-chip" style="color:var(--text-dim); margin-left:auto;">
+            <span style="font-size:10.5px;">Banda Desacople: |p_DA &minus; p_RC|</span>
+          </div>
+        `;
+      }
+    }
+
+    // CONMUTAR MODO DE VÍAS DEL CARRIL
+    function setCarrilTrackMode(mode) {
+      carrilTrackMode = mode;
+      document.querySelectorAll('.btn-carril-mode').forEach(b => b.classList.remove('active'));
+      if (mode === '3vias_da_rc') {
+        document.getElementById('btn-mode-3vias-darc')?.classList.add('active');
+        document.getElementById('hud-metric').textContent = '3 Vías (DA·RC·Bar)';
+      } else if (mode === '3vias_expect') {
+        document.getElementById('btn-mode-3vias-expect')?.classList.add('active');
+        document.getElementById('hud-metric').textContent = '3 Vías (pDA·pRC·S14)';
+      } else if (mode === 'single_18d') {
+        document.getElementById('btn-mode-single18d')?.classList.add('active');
+        document.getElementById('hud-metric').textContent = currentDensity;
+      }
+      if (mode !== 'single_18d') {
+        document.querySelectorAll('.grid-18d .btn-toggle').forEach(b => {
+          b.classList.remove('active', 'active-green', 'active-gold', 'active-magenta');
+        });
+      }
+      document.getElementById('btn-cardc-3vias')?.classList.toggle('active', mode === '3vias_da_rc');
+      updateHeaderBadges();
+      drawCarril();
+      updateActiveStation(activeStationIndex, false);
     }
 
     // ACTUALIZAR LEYENDA SUPERIOR
@@ -8625,12 +8917,33 @@
       document.getElementById('insp-d4').style.color = tetra.d4 > 0 ? 'var(--neon-green)' : (tetra.d4 < 0 ? 'var(--neon-magenta)' : 'var(--text-dim)');
 
       // 3. Columna 3: Métrica y Diagnóstico
-      document.getElementById('insp-metric-code').textContent = currentDensity;
-      document.getElementById('insp-metric-val').textContent = (val >= 0 && !currentDensity.startsWith('B') ? '+' : '') + Number(val).toFixed(3);
-      document.getElementById('insp-metric-name').textContent = getMetricFullName(currentDensity);
+      if (carrilTrackMode === '3vias_da_rc') {
+        const da = tetra.d2;
+        const rc = tetra.d3;
+        const bar = (da + rc) / 2;
+        const fric = Math.abs(da - rc);
 
-      const colorVal = val > 0 ? 'var(--neon-green)' : (val < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
-      document.getElementById('insp-metric-val').style.color = colorVal;
+        document.getElementById('insp-metric-code').textContent = '3 VÍAS (DA · RC · Bar)';
+        document.getElementById('insp-metric-val').textContent = (bar >= 0 ? '+' : '') + bar.toFixed(3);
+        document.getElementById('insp-metric-name').innerHTML = `DA: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong> &middot; RC: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong> &middot; Fricción: <strong style="color:var(--neon-magenta)">${fric.toFixed(2)}</strong>`;
+        document.getElementById('insp-metric-val').style.color = bar > 0 ? 'var(--neon-green)' : (bar < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+      } else if (carrilTrackMode === '3vias_expect') {
+        const pda = tetra.d1;
+        const prc = tetra.d4;
+        const bar = (pda + prc) / 2;
+        const desac = Math.abs(pda - prc);
+
+        document.getElementById('insp-metric-code').textContent = '3 VÍAS (pDA · pRC · S14)';
+        document.getElementById('insp-metric-val').textContent = (bar >= 0 ? '+' : '') + bar.toFixed(3);
+        document.getElementById('insp-metric-name').innerHTML = `p_DA: <strong style="color:#38BDF8">${(pda>=0?'+':'')+pda.toFixed(2)}</strong> &middot; p_RC: <strong style="color:#C084FC">${(prc>=0?'+':'')+prc.toFixed(2)}</strong> &middot; Desacople: <strong style="color:var(--neon-gold)">${desac.toFixed(2)}</strong>`;
+        document.getElementById('insp-metric-val').style.color = bar > 0 ? 'var(--neon-green)' : (bar < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+      } else {
+        document.getElementById('insp-metric-code').textContent = currentDensity;
+        document.getElementById('insp-metric-val').textContent = (val >= 0 && !currentDensity.startsWith('B') ? '+' : '') + Number(val).toFixed(3);
+        document.getElementById('insp-metric-name').textContent = getMetricFullName(currentDensity);
+        const colorVal = val > 0 ? 'var(--neon-green)' : (val < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+        document.getElementById('insp-metric-val').style.color = colorVal;
+      }
 
       // Barra de Gauge
       const isMass = currentDensity.startsWith('B');
@@ -8789,6 +9102,10 @@
 
     function setDensity(d) {
       currentDensity = d;
+      carrilTrackMode = 'single_18d';
+      document.querySelectorAll('.btn-carril-mode').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-mode-single18d')?.classList.add('active');
+      document.getElementById('btn-cardc-3vias')?.classList.remove('active');
       // Actualizar botones 18D
       document.querySelectorAll('.grid-18d .btn-toggle').forEach(b => {
         b.classList.remove('active', 'active-green', 'active-gold', 'active-magenta');
@@ -8852,8 +9169,16 @@
       const cStr = currentCriterion === 'juntos' ? 'C̄12' : ('C' + currentCriterion);
 
       document.getElementById('hud-coords').textContent = `${gStr} · ${tStr} · ${cStr}`;
-      document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · ${getMetricFullName(currentDensity)}`;
-      document.getElementById('carril-heading-formula').textContent = getMetricFormula(currentDensity);
+      if (carrilTrackMode === '3vias_da_rc') {
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías Paralelas: DA ⇄ RC ⇄ (DA+RC)/2`;
+        document.getElementById('carril-heading-formula').textContent = 'Baricentro S23 = (DA + RC) / 2';
+      } else if (carrilTrackMode === '3vias_expect') {
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías de Expectativas: p_DA ⇄ p_RC ⇄ S14`;
+        document.getElementById('carril-heading-formula').textContent = 'Expectativas S14 = (p_DA + p_RC) / 2';
+      } else {
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · ${getMetricFullName(currentDensity)}`;
+        document.getElementById('carril-heading-formula').textContent = getMetricFormula(currentDensity);
+      }
 
       // Telemetría de la sociomatriz activa
       const g = currentGroup === 'juntos' ? '1' : currentGroup;
@@ -8973,16 +9298,52 @@
       const tetra = getStationRawTetragram(station, mat);
       const val = computeDensityValue(tetra, currentDensity);
 
+      let metricRow = `
+        <div style="display:flex; justify-content:space-between; gap:12px;">
+          <span>${currentDensity}:</span>
+          <strong style="color:var(--neon-green)">${(val >= 0 ? '+' : '') + val.toFixed(3)}</strong>
+        </div>`;
+
+      if (carrilTrackMode === '3vias_da_rc') {
+        const da = tetra.d2;
+        const rc = tetra.d3;
+        const bar = (da + rc) / 2;
+        const fric = Math.abs(da - rc);
+        metricRow = `
+          <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;">
+            <span>DA: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong></span>
+            <span>RC: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:2px;">
+            <span>Baricentro (DA+RC)/2:</span>
+            <strong style="color:var(--neon-green)">${(bar>=0?'+':'')+bar.toFixed(3)}</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:8px; font-size:10px; color:var(--neon-magenta); margin-top:1px;">
+            <span>Fricción |DA - RC|:</span>
+            <strong>${fric.toFixed(2)}</strong>
+          </div>`;
+      } else if (carrilTrackMode === '3vias_expect') {
+        const pda = tetra.d1;
+        const prc = tetra.d4;
+        const bar = (pda + prc) / 2;
+        metricRow = `
+          <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;">
+            <span>p_DA: <strong style="color:#38BDF8">${(pda>=0?'+':'')+pda.toFixed(2)}</strong></span>
+            <span>p_RC: <strong style="color:#C084FC">${(prc>=0?'+':'')+prc.toFixed(2)}</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:2px;">
+            <span>Baricentro S14:</span>
+            <strong style="color:var(--neon-gold)">${(bar>=0?'+':'')+bar.toFixed(3)}</strong>
+          </div>`;
+      }
+
       tt.innerHTML = `
         <div style="font-weight:900; color:var(--neon-gold); font-size:12px; margin-bottom:3px;">
           ${station.coordLabel} &middot; ${currentSpace === 'nxn' ? (station.from + ' ➔ ' + station.to) : ('Q' + station.id + ' ' + station.sym)}
         </div>
-        <div style="display:flex; justify-content:space-between; gap:12px;">
-          <span>${currentDensity}:</span>
-          <strong style="color:var(--neon-green)">${(val >= 0 ? '+' : '') + val.toFixed(3)}</strong>
-        </div>
-        <div style="font-size:10px; color:var(--text-dim); margin-top:2px;">
-          D1:${tetra.d1} | D2:${tetra.d2} | D3:${tetra.d3} | D4:${tetra.d4}
+        ${metricRow}
+        <div style="font-size:9.5px; color:var(--text-dim); margin-top:4px; border-top:1px solid rgba(255,255,255,0.08); padding-top:2px;">
+          Tetragrama: D1:${tetra.d1} | D2:${tetra.d2} | D3:${tetra.d3} | D4:${tetra.d4}
         </div>
       `;
     }
@@ -8998,9 +9359,7 @@
 
     // INICIALIZACIÓN ONLOAD
     window.onload = () => {
-      updateHeaderBadges();
-      drawCarril();
-      updateActiveStation(0, false);
+      setCarrilTrackMode('3vias_da_rc');
     };
   </script>
 </body>
