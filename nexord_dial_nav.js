@@ -162,23 +162,6 @@
   else if (filename.includes('index_promocional') || filename === 'index.html' || filename === '') { activeKey = 'portal'; currentBreadcrumbName = 'Portal Institucional'; }
   else if (filename.includes('dial_orbital')) { activeKey = 'dial'; currentBreadcrumbName = 'Dial Orbital'; }
 
-  // Geometría polar para el Dial SVG
-  function polarToCartesian(cx, cy, r, angleDeg) {
-    const rad = ((angleDeg - 90) * Math.PI) / 180.0;
-    return {
-      x: cx + r * Math.cos(rad),
-      y: cy + r * Math.sin(rad)
-    };
-  }
-
-  function createSectorPath(cx, cy, rIn, rOut, startAngle, endAngle) {
-    const p1 = polarToCartesian(cx, cy, rOut, startAngle);
-    const p2 = polarToCartesian(cx, cy, rOut, endAngle);
-    const p3 = polarToCartesian(cx, cy, rIn, endAngle);
-    const p4 = polarToCartesian(cx, cy, rIn, startAngle);
-    return `M ${p1.x.toFixed(2)} ${p1.y.toFixed(2)} A ${rOut} ${rOut} 0 0 1 ${p2.x.toFixed(2)} ${p2.y.toFixed(2)} L ${p3.x.toFixed(2)} ${p3.y.toFixed(2)} A ${rIn} ${rIn} 0 0 0 ${p4.x.toFixed(2)} ${p4.y.toFixed(2)} Z`;
-  }
-
   // Función constructora del HTML de navegación
   function injectPersistentNav() {
     // Si ya existe la barra, no duplicar
@@ -194,7 +177,7 @@
 
     nav.innerHTML = `
       <div class="pnav-left">
-        <button type="button" class="pnav-dial-btn" id="btn-open-zenith-dial" title="Abrir Dial Orbital Cenital (Tecla D)">
+        <button type="button" class="pnav-dial-btn" id="btn-open-zenith-dial" title="Abrir Dial Orbital (Tecla D)">
           <span>🧭</span> <span>DIAL ORBITAL</span>
         </button>
         <div class="pnav-breadcrumb">
@@ -213,7 +196,7 @@
         <a href="${rootPrefix}nivel6_informes.html" class="pnav-lvl-pill ${activeKey === 'nivel6' ? 'active' : ''}" title="Nivel 6: Informes Forenses">6·Inf</a>
         <a href="${rootPrefix}nivel7_documentacion.html" class="pnav-lvl-pill ${activeKey === 'nivel7' ? 'active' : ''}" title="Nivel 7: Documentación & Zenodo">7·Doc</a>
         <a href="${rootPrefix}recursos.html" class="pnav-lvl-pill ${activeKey === 'recursos' ? 'active' : ''}" title="Nivel 8: Recursos (Experiencia VISORD)">8·Rec</a>
-        <a href="${rootPrefix}fundamentos.html" class="pnav-lvl-pill ${activeKey === 'fundamentos' ? 'active' : ''}" title="Nivel 9: Fundamentos (Cenit Epistemológico)">9·Fun</a>
+        <a href="${rootPrefix}fundamentos.html" class="pnav-lvl-pill ${activeKey === 'fundamentos' ? 'active' : ''}" title="Nivel 9: Fundamentos (Epistemología)">9·Fun</a>
       </div>
 
       <div class="pnav-right">
@@ -234,76 +217,45 @@
 
     document.body.insertAdjacentElement('afterbegin', nav);
 
-    // 2. CONSTRUCCIÓN GEOMÉTRICA DE LA RUEDA SVG (DIAL 3-6-9)
-    const CX = 200, CY = 200, R_IN = 70, R_OUT = 185;
-    const ANGLE_STEP = 40.0;
-
-    let slicesSvg = '';
-    DIAL_SECTORS.forEach((sec, i) => {
-      const startAngle = i * ANGLE_STEP - ANGLE_STEP / 2;
-      const endAngle = startAngle + ANGLE_STEP;
-      const midAngle = (startAngle + endAngle) / 2;
-      const pathD = createSectorPath(CX, CY, R_IN, R_OUT, startAngle, endAngle);
-      const labelPos = polarToCartesian(CX, CY, (R_IN + R_OUT) / 2, midAngle);
-
-      slicesSvg += `
-        <path d="${pathD}"
-              class="zenith-slice ${sec.key === activeKey ? 'active' : ''}"
-              data-idx="${sec.idx}"
-              data-num="${sec.num}"
-              fill="${sec.color}"
-              role="button"
-              tabindex="0"
-              aria-label="Sector ${sec.num}: ${sec.title}">
-        </path>
-        <text x="${labelPos.x.toFixed(1)}" y="${(labelPos.y + 3).toFixed(1)}" class="zenith-slice-text">
-          ${sec.num}·${sec.short}
-        </text>
-      `;
-    });
-
-    // Vértices del Triángulo de Resonancia 3-6-9 (0° Sector 9, 120° Sector 3, 240° Sector 6)
-    const rTri = 145;
-    const p9 = polarToCartesian(CX, CY, rTri, 0);
-    const p3 = polarToCartesian(CX, CY, rTri, 120);
-    const p6 = polarToCartesian(CX, CY, rTri, 240);
-
-    // Fichas alternativas (ordenadas numéricamente 1..9)
-    const cardsSorted = [...DIAL_SECTORS].sort((a, b) => parseInt(a.num) - parseInt(b.num));
-    let sectorsCardsHtml = '';
-    cardsSorted.forEach(sec => {
+    // 2. CONSTRUCCIÓN DEL MENÚ LATERAL SIMPLIFICADO 1-9
+    const sortedLevels = [...DIAL_SECTORS].sort((a, b) => parseInt(a.num) - parseInt(b.num));
+    let sidebarMenuHtml = '';
+    sortedLevels.forEach(sec => {
       const isSecActive = sec.key === activeKey;
-      sectorsCardsHtml += `
-        <a href="${sec.url}" class="zenith-sector-card ${isSecActive ? 'active' : ''}">
-          <div>
-            <div class="zenith-card-num">SECTOR ${sec.num} · CANON</div>
-            <div class="zenith-card-title">${sec.title}</div>
-            <div class="zenith-card-desc">${sec.desc}</div>
+      sidebarMenuHtml += `
+        <button type="button"
+                class="zenith-menu-item ${isSecActive ? 'is-active-page' : ''}"
+                data-idx="${sec.idx}"
+                data-num="${sec.num}"
+                role="tab"
+                aria-selected="false"
+                title="${sec.title} · ${sec.subtitle}">
+          <span class="zenith-menu-num" style="border-color:${sec.color}; color:${sec.color};">${sec.num}</span>
+          <div class="zenith-menu-info">
+            <div class="zenith-menu-title">${sec.title}</div>
+            <div class="zenith-menu-sub">${sec.subtitle}</div>
           </div>
-          <div class="zenith-card-action">
-            <span>${isSecActive ? '📍 Estás aquí' : 'Acceder'}</span>
-            <span>→</span>
-          </div>
-        </a>
+          <span class="zenith-menu-arrow">➔</span>
+        </button>
       `;
     });
 
-    // 3. MODAL DEL DIAL CENITAL 3-6-9
+    // 3. MODAL DEL DIAL ORBITAL (MENÚ LATERAL 1-9 + INSPECTOR)
     const modal = document.createElement('div');
     modal.id = 'nexord-zenith-modal';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Selector Cenital Dial 3-6-9');
+    modal.setAttribute('aria-label', 'Dial Orbital 3-6-9');
 
     modal.innerHTML = `
       <div class="zenith-box">
         <div class="zenith-header">
           <div class="zenith-title">
             <span>🧭</span>
-            <span>DIAL ORBITAL CENITAL · NAVEGACIÓN UNIVERSAL</span>
+            <span>DIAL ORBITAL · NAVEGACIÓN UNIVERSAL</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <a href="${rootPrefix}dial_orbital.html" class="zenith-btn-fullscreen" title="Abrir Dial 3-6-9 en Pantalla Completa" style="padding: 4px 10px; font-size: 0.74rem;">
+            <a href="${rootPrefix}dial_orbital.html" class="zenith-btn-fullscreen" title="Abrir Dial Orbital en Pantalla Completa" style="padding: 4px 10px; font-size: 0.74rem;">
               ⛶ Pantalla Completa ↗
             </a>
             <button type="button" class="zenith-close-btn" id="btn-close-zenith-dial" title="Cerrar modal (Esc)">
@@ -312,27 +264,16 @@
           </div>
         </div>
 
-        <!-- VISTA CANÓNICA: RUEDA SVG INTERACTIVA (DIAL) -->
+        <!-- VISTA CANÓNICA: MENÚ LATERAL SIMPLIFICADO 1-9 + INSPECTOR -->
         <div class="zenith-dial-container">
-          <div class="zenith-wheel-col">
-            <svg class="zenith-wheel-svg" viewBox="0 0 400 400" aria-label="Rueda Orbital Dial 3-6-9">
-              <defs>
-                <radialGradient id="hubGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#0E1A38" />
-                  <stop offset="100%" stop-color="#070C1C" />
-                </radialGradient>
-              </defs>
-              <!-- Triángulo de Resonancia 3-6-9 -->
-              <polygon points="${p9.x.toFixed(1)},${p9.y.toFixed(1)} ${p3.x.toFixed(1)},${p3.y.toFixed(1)} ${p6.x.toFixed(1)},${p6.y.toFixed(1)}"
-                       fill="rgba(0, 240, 255, 0.06)" stroke="#00F0FF" stroke-width="1.8" stroke-dasharray="4 3" />
-              <!-- 9 Sectores SVG -->
-              ${slicesSvg}
-              <!-- Centro Hub -->
-              <circle cx="200" cy="200" r="66" fill="url(#hubGrad)" stroke="#00F0FF" stroke-width="2" />
-              <circle cx="200" cy="200" r="62" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" stroke-dasharray="2 3" />
-              <text x="200" y="194" fill="#00FF87" font-family="'Roboto Mono', monospace" font-size="11" font-weight="900" letter-spacing="1.5" text-anchor="middle">NEXORD</text>
-              <text x="200" y="210" fill="#38BDF8" font-family="'Roboto Mono', monospace" font-size="8.5" font-weight="700" letter-spacing="1" text-anchor="middle">DIAL 3·6·9</text>
-            </svg>
+          <div class="zenith-sidebar-col" role="tablist" aria-label="Menú Lateral de Niveles 1-9">
+            <div class="zenith-sidebar-header">
+              <span>📑 MENÚ DE NIVELES 1–9</span>
+              <span class="zenith-sidebar-tag">CANON NEXORD</span>
+            </div>
+            <div class="zenith-sidebar-menu">
+              ${sidebarMenuHtml}
+            </div>
           </div>
 
           <!-- Inspector Dinámico de Sector -->
@@ -357,13 +298,7 @@
           </div>
         </div>
 
-        <!-- VISTA ALTERNATIVA: LISTA DE FICHAS (OCULTA POR DEFECTO) -->
-        <div class="zenith-body" style="display: none;">
-          ${sectorsCardsHtml}
-        </div>
-
         <div class="zenith-footer">
-          <button type="button" class="zenith-toggle-view" id="zinsp-toggle-view">📋 Ver como Lista</button>
           <span class="zenith-footer-hint">⌨ Teclas 1-9 seleccionan nivel · Enter o Clic accede · Tecla D o Esc cierran</span>
         </div>
       </div>
@@ -371,8 +306,8 @@
 
     document.body.appendChild(modal);
 
-    // 4. CONTROLADOR DEL INSPECTOR Y EVENTOS DEL DIAL
-    let currentSelectedIndex = 1; // Por defecto Sector 1 (o sector activo)
+    // 4. CONTROLADOR DEL INSPECTOR Y EVENTOS DEL MENÚ LATERAL
+    let currentSelectedIndex = 1; // Por defecto Sector 1 (o nivel activo)
     const matchedSector = DIAL_SECTORS.find(s => s.key === activeKey);
     if (matchedSector) {
       currentSelectedIndex = matchedSector.idx;
@@ -402,30 +337,32 @@
         btnFs.href = `${rootPrefix}dial_orbital.html?sector=${sec.num}`;
       }
 
-      // Resaltar porción activa en el SVG
-      const slices = modal.querySelectorAll('.zenith-slice');
-      slices.forEach((sl) => {
-        if (parseInt(sl.dataset.idx) === idx) {
-          sl.classList.add('active');
+      // Resaltar elemento seleccionado en el menú lateral
+      const menuItems = modal.querySelectorAll('.zenith-menu-item');
+      menuItems.forEach((item) => {
+        if (parseInt(item.dataset.idx) === idx) {
+          item.classList.add('selected');
+          item.setAttribute('aria-selected', 'true');
         } else {
-          sl.classList.remove('active');
+          item.classList.remove('selected');
+          item.setAttribute('aria-selected', 'false');
         }
       });
     }
 
-    // Interacción con porciones SVG
-    const slices = modal.querySelectorAll('.zenith-slice');
-    slices.forEach((sl) => {
-      const idx = parseInt(sl.dataset.idx);
-      sl.addEventListener('mouseenter', () => updateInspector(idx));
-      sl.addEventListener('click', () => {
+    // Interacción con los botones del menú lateral 1-9
+    const menuItems = modal.querySelectorAll('.zenith-menu-item');
+    menuItems.forEach((item) => {
+      const idx = parseInt(item.dataset.idx);
+      item.addEventListener('mouseenter', () => updateInspector(idx));
+      item.addEventListener('click', () => {
         updateInspector(idx);
         const sec = DIAL_SECTORS[idx];
         if (sec && sec.url) {
           window.location.href = sec.url;
         }
       });
-      sl.addEventListener('keydown', (e) => {
+      item.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           const sec = DIAL_SECTORS[idx];
@@ -433,27 +370,6 @@
         }
       });
     });
-
-    // Alternar entre Vista Rueda y Vista Lista
-    const toggleBtn = document.getElementById('zinsp-toggle-view');
-    const dialView = modal.querySelector('.zenith-dial-container');
-    const listView = modal.querySelector('.zenith-body');
-    let isDialView = true;
-
-    if (toggleBtn && dialView && listView) {
-      toggleBtn.addEventListener('click', () => {
-        isDialView = !isDialView;
-        if (isDialView) {
-          dialView.style.display = 'flex';
-          listView.style.display = 'none';
-          toggleBtn.textContent = '📋 Ver como Lista';
-        } else {
-          dialView.style.display = 'none';
-          listView.style.display = 'grid';
-          toggleBtn.textContent = '🧭 Ver como Rueda';
-        }
-      });
-    }
 
     // Apertura y Cierre del Modal
     const btnOpen = document.getElementById('btn-open-zenith-dial');
