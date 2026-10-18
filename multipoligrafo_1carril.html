@@ -1,1844 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- =========================================================================
-       NEXORD CANONICAL CLEAN BOOT & ANTI-CACHE RESET
-       ========================================================================= -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <script>
-    (function() {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      try {
-        sessionStorage.clear();
-      } catch(e) {}
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          for (var i = 0; i < regs.length; i++) regs[i].unregister();
-        }).catch(function(){});
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(keys) {
-          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
-        }).catch(function(){});
-      }
-      window.addEventListener('pageshow', function(ev) {
-        if (ev.persisted) {
-          window.location.reload();
-        }
-      });
-    })();
-  </script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXORD · Multipolígrafo 1-Carril (GxTyCz · n×n / q×q · 18D)</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg-dark: #050B18;
-      --bg-surface: #0B132B;
-      --bg-card: rgba(11, 19, 43, 0.88);
-      --border-subtle: rgba(56, 189, 248, 0.18);
-      --border-focus: #38BDF8;
-      --neon-green: #00FF87;
-      --neon-cyan: #38BDF8;
-      --neon-orange: #FF9F1C;
-      --neon-gold: #FFE600;
-      --neon-magenta: #FF007F;
-      --neon-purple: #C084FC;
-      --neon-blue: #60A5FA;
-      --text-main: #F8FAFC;
-      --text-dim: #94A3B8;
-      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'Roboto Mono', monospace;
-    }
-
-    *, *:before, *:after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-ui);
-      font-size: 13.5px;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* Cabecera HUD */
-    .header-hud {
-      background: rgba(3, 8, 20, 0.95);
-      border-bottom: 1.5px solid var(--border-subtle);
-      padding: 10px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(10px);
-    }
-
-    .brand-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo {
-      font-family: var(--font-mono);
-      font-weight: 900;
-      font-size: 15px;
-      letter-spacing: 1px;
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .brand-logo span { color: var(--neon-cyan); }
-
-    .badge-lane {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 800;
-      background: rgba(0, 255, 135, 0.15);
-      color: var(--neon-green);
-      border: 1px solid var(--neon-green);
-      padding: 3px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .header-status-pills {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .status-pill {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-dim);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .status-pill strong { color: #FFFFFF; }
-
-    .btn-nav-action {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 5px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(56, 189, 248, 0.10);
-      color: var(--neon-cyan);
-      text-decoration: none;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    .btn-nav-action:hover {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: var(--neon-cyan);
-      transform: translateY(-1px);
-    }
-
-    /* Main Container */
-    main {
-      flex: 1;
-      max-width: 1560px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 20px 24px 60px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-    }
-
-    /* Sección Título & Subtítulo */
-    .hero-title-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero-text h1 {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .hero-text h1 span {
-      color: var(--neon-cyan);
-    }
-
-    .hero-text p {
-      color: var(--text-dim);
-      font-size: 13.5px;
-      margin-top: 4px;
-      max-width: 900px;
-    }
-
-    .hero-badges-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    /* =========================================================================
-       DECK MAESTRO DE LAS 4 ALTERNATIVAS AL PRINCIPIO DE LA PÁGINA
-       ========================================================================= */
-    .master-4-alternatives-deck {
-      background: linear-gradient(180deg, rgba(8, 14, 34, 0.95) 0%, rgba(4, 8, 22, 0.98) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .deck-header {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      margin-bottom: 10px;
-    }
-
-    .deck-title {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      color: var(--neon-gold);
-      letter-spacing: 0.8px;
-    }
-
-    .deck-subtitle {
-      font-family: var(--font-sans);
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .deck-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    @media (max-width: 900px) {
-      .deck-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 520px) {
-      .deck-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .deck-card {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
-      padding: 10px 12px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
-      transition: all 0.2s ease;
-      user-select: none;
-      position: relative;
-    }
-
-    .deck-card:hover {
-      background: rgba(56, 189, 248, 0.08);
-      border-color: rgba(56, 189, 248, 0.45);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-    }
-
-    .deck-card.active {
-      background: rgba(56, 189, 248, 0.14);
-      border-color: var(--neon-green);
-      box-shadow: 0 0 14px rgba(0, 255, 135, 0.35);
-    }
-
-    .deck-card.active#card-alt-4 {
-      border-color: var(--neon-green);
-      box-shadow: 0 0 16px rgba(0, 255, 135, 0.45);
-    }
-
-    .deck-card-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .deck-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      color: #FFFFFF;
-      transition: all 0.2s ease;
-    }
-
-    .deck-card.active .deck-badge {
-      background: var(--neon-green);
-      border-color: var(--neon-green);
-      color: #040816;
-      box-shadow: 0 0 8px rgba(0, 255, 135, 0.5);
-    }
-
-    .deck-card-name {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      color: #FFFFFF;
-      letter-spacing: 0.5px;
-    }
-
-    .deck-card.active .deck-card-name {
-      color: var(--neon-green);
-    }
-
-    .deck-card-desc {
-      font-family: var(--font-sans);
-      font-size: 10.5px;
-      line-height: 1.35;
-      color: #94A3B8;
-      margin: 0;
-    }
-
-    .deck-card-footer {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-
-    .deck-pill {
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1px 5px;
-      border-radius: 3px;
-      color: #CBD5E1;
-    }
-
-    .deck-card.active .deck-pill {
-      border-color: rgba(0, 255, 135, 0.35);
-      background: rgba(0, 255, 135, 0.1);
-    }
-
-    /* =========================================================================
-       TABLA NUMÉRICA DE RESPALDO EN SORDINA (SDR & BDR)
-       ========================================================================= */
-    .backing-table-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      margin-top: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .backing-table-header {
-      background: rgba(5, 12, 28, 0.95);
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s ease;
-    }
-
-    .backing-table-header:hover {
-      background: rgba(8, 18, 42, 0.98);
-    }
-
-    .backing-title-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .backing-badge {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 900;
-      background: rgba(255, 230, 0, 0.15);
-      border: 1px solid rgba(255, 230, 0, 0.4);
-      color: var(--neon-gold);
-      padding: 2px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .backing-title {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 900;
-      color: #FFFFFF;
-      letter-spacing: 0.5px;
-    }
-
-    .backing-subtitle {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--neon-cyan);
-    }
-
-    .backing-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .backing-stats-pills {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .backing-pill {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      color: var(--text-dim);
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 2px 7px;
-      border-radius: 4px;
-    }
-
-    .backing-pill strong {
-      font-weight: 800;
-    }
-
-    .btn-backing-toggle {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 800;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: #38BDF8;
-      padding: 4px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-backing-toggle:hover {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: #38BDF8;
-      color: #FFFFFF;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-    }
-
-    .backing-table-drawer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: #040816;
-      padding: 12px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .backing-drawer-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .backing-filter-tabs {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .btn-bk-tab {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #94A3B8;
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-bk-tab:hover {
-      background: rgba(56, 189, 248, 0.15);
-      color: #FFFFFF;
-      border-color: #38BDF8;
-    }
-
-    .btn-bk-tab.active {
-      background: rgba(0, 255, 135, 0.2);
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-      box-shadow: 0 0 8px rgba(0, 255, 135, 0.25);
-    }
-
-    .backing-export-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-bk-action {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #CBD5E1;
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-bk-action:hover {
-      background: rgba(255, 230, 0, 0.2);
-      border-color: var(--neon-gold);
-      color: var(--neon-gold);
-    }
-
-    .backing-table-scroll-wrap {
-      max-height: 290px;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      background: #060B1C;
-    }
-
-    .backing-table-scroll-wrap::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    .backing-table-scroll-wrap::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.3);
-    }
-    .backing-table-scroll-wrap::-webkit-scrollbar-thumb {
-      background: rgba(56, 189, 248, 0.35);
-      border-radius: 3px;
-    }
-
-    .backing-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      text-align: left;
-    }
-
-    .backing-table th {
-      position: sticky;
-      top: 0;
-      background: #0B1428;
-      color: #94A3B8;
-      font-weight: 800;
-      font-size: 9px;
-      padding: 6px 10px;
-      border-bottom: 1.5px solid rgba(56, 189, 248, 0.3);
-      white-space: nowrap;
-      letter-spacing: 0.5px;
-      z-index: 2;
-    }
-
-    .backing-table td {
-      padding: 5px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      white-space: nowrap;
-      transition: background 0.1s ease;
-    }
-
-    .backing-table tr {
-      cursor: pointer;
-      transition: background 0.12s ease;
-    }
-
-    .backing-table tr:hover {
-      background: rgba(56, 189, 248, 0.08);
-    }
-
-    .backing-table tr.row-active {
-      background: rgba(255, 230, 0, 0.16) !important;
-      font-weight: 800;
-    }
-    .backing-table tr.row-active td:first-child {
-      border-left: 3px solid var(--neon-gold);
-    }
-
-    .backing-footer-note {
-      font-family: var(--font-sans);
-      font-size: 10px;
-      color: var(--text-dim);
-      padding-top: 4px;
-    }
-
-    /* EL CARRIL ÚNICO (HEART VIEWPORT) */
-    .carril-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .carril-header {
-      background: rgba(5, 12, 28, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .carril-title-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .carril-badge-num {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      background: var(--neon-cyan);
-      color: #040814;
-      padding: 3px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .carril-main-title {
-      font-weight: 800;
-      font-size: 14px;
-      color: #FFFFFF;
-    }
-
-    .carril-metric-formula {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--neon-gold);
-      background: rgba(255, 230, 0, 0.10);
-      border: 1px solid rgba(255, 230, 0, 0.25);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .carril-telemetry {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .telem-box {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 3px 8px;
-      border-radius: 4px;
-      display: flex;
-      gap: 6px;
-    }
-
-    /* Workspace con Master Keypad Dock y Lienzo */
-    .carril-workspace {
-      display: flex;
-      align-items: stretch;
-      background: #040714;
-      position: relative;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .master-keypad-panel {
-      width: 175px;
-      min-width: 175px;
-      background: #060B1C;
-      border-right: 1.5px solid rgba(255, 255, 255, 0.12);
-      padding: 10px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      user-select: none;
-      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.45);
-      z-index: 5;
-    }
-
-    .pad-block {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 4px;
-    }
-
-    .pad-row {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .pad-row-num {
-      width: 15px;
-      min-width: 15px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      color: var(--neon-gold);
-      text-align: center;
-    }
-
-    .pad-cell {
-      flex: 1;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 800;
-      border-radius: 3px;
-      border: 1px solid #1E293B;
-      background: #FFFFFF;
-      color: #0F172A;
-      cursor: pointer;
-      transition: all 0.12s ease;
-      padding: 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    }
-
-    .pad-cell:hover {
-      filter: brightness(0.92);
-      transform: translateY(-1px);
-    }
-
-    /* ESTADOS ACTIVOS (ESTILO EXACTO CAPTURAS USUARIO) */
-    .pad-cell.active-amber {
-      background: #FDE68A !important;
-      color: #B45309 !important;
-      border-color: #D97706 !important;
-      box-shadow: 0 0 6px rgba(217, 119, 6, 0.35);
-    }
-
-    .pad-cell.active-green {
-      background: #4ADE80 !important;
-      color: #064E3B !important;
-      border-color: #10B981 !important;
-      box-shadow: 0 0 6px rgba(16, 185, 129, 0.35);
-    }
-
-    .pad-cell.active-cyan {
-      background: #0284C7 !important;
-      color: #FFFFFF !important;
-      border-color: #38BDF8 !important;
-      box-shadow: 0 0 6px rgba(56, 189, 248, 0.45);
-    }
-
-    .pad-cell-empty {
-      flex: 1;
-      height: 24px;
-      visibility: hidden;
-    }
-
-    /* Pestañas de Vista Tensorial 2D (Ver 3 vs G·T, G·C, T·C) */
-    .pad-tensor-tabs {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      margin-bottom: 2px;
-      background: rgba(0, 0, 0, 0.45);
-      padding: 2px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .btn-tensor-tab {
-      flex: 1;
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      font-weight: 800;
-      padding: 2px 0;
-      border-radius: 3px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-
-    .btn-tensor-tab:hover {
-      color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .btn-tensor-tab.active {
-      background: rgba(255, 159, 28, 0.25);
-      border-color: #FF9F1C;
-      color: #FF9F1C;
-    }
-
-    /* Scrollbar estilizada para el panel de teclado maestro */
-    .master-keypad-panel {
-      max-height: calc(100vh - 200px);
-      overflow-y: auto;
-    }
-
-    .master-keypad-panel::-webkit-scrollbar {
-      width: 4px;
-    }
-    .master-keypad-panel::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.25);
-    }
-    .master-keypad-panel::-webkit-scrollbar-thumb {
-      background: rgba(56, 189, 248, 0.35);
-      border-radius: 2px;
-    }
-    .master-keypad-panel::-webkit-scrollbar-thumb:hover {
-      background: rgba(56, 189, 248, 0.7);
-    }
-
-    /* Selector de Arquitectura: 1 Carril vs Varios Carriles */
-    .carril-layout-selector {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(0, 0, 0, 0.45);
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
-    }
-
-    .btn-layout {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #CBD5E1;
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .btn-layout:hover {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: #38BDF8;
-      color: #FFFFFF;
-    }
-
-    .btn-layout.active {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: #38BDF8;
-      color: #38BDF8;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
-    }
-
-    .layout-multi-group {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      padding-left: 4px;
-      border-left: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .layout-multi-label {
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      font-weight: 900;
-      color: #38BDF8;
-      letter-spacing: 0.5px;
-    }
-
-    .layout-cruzados-group {
-      border-left: 1px solid rgba(255, 230, 0, 0.28) !important;
-    }
-
-    .layout-todo-group {
-      border-left: 1px solid rgba(0, 255, 135, 0.35) !important;
-    }
-
-    .btn-layout-todo {
-      background: rgba(0, 255, 135, 0.12);
-      border-color: rgba(0, 255, 135, 0.45);
-      color: var(--neon-green);
-      font-weight: 800;
-    }
-    .btn-layout-todo:hover {
-      background: rgba(0, 255, 135, 0.25);
-      border-color: var(--neon-green);
-      color: #FFFFFF;
-      box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
-    }
-    .btn-layout-todo.active {
-      background: rgba(0, 255, 135, 0.3);
-      border-color: var(--neon-green);
-      color: #FFFFFF;
-      box-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
-    }
-
-    /* Contenedor de Varios Carriles (Stack) */
-    .multicarril-stack-container {
-      position: relative;
-      flex: 1;
-      width: 100%;
-      min-height: 380px;
-      background: #040714;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      padding: 4px 6px;
-    }
-
-    .lane-box {
-      flex: 1;
-      background: rgba(6, 11, 28, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      transition: border-color 0.2s ease;
-    }
-
-    .lane-box:hover {
-      border-color: rgba(56, 189, 248, 0.4);
-    }
-
-    .lane-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 3px 10px;
-      background: rgba(0, 0, 0, 0.45);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .lane-title {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .lane-telemetry {
-      display: flex;
-      gap: 8px;
-    }
-
-    .lane-pill {
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      color: var(--text-dim);
-    }
-
-    .lane-pill strong {
-      color: #FFFFFF;
-    }
-
-    .lane-canvas-wrap {
-      position: relative;
-      flex: 1;
-      width: 100%;
-      min-height: 85px;
-    }
-
-    .lane-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* 3 Opciones Predeterminadas de Aprendizaje Rápido */
-    .carril-presets-bar {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      background: rgba(0, 0, 0, 0.45);
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 230, 0, 0.35);
-      box-shadow: 0 0 10px rgba(255, 230, 0, 0.12);
-    }
-
-    .presets-label {
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      font-weight: 900;
-      color: var(--neon-gold);
-      margin-right: 2px;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-preset {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #CBD5E1;
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .btn-preset:hover {
-      background: rgba(255, 230, 0, 0.15);
-      border-color: var(--neon-gold);
-      color: #FFFFFF;
-    }
-
-    .btn-preset.active {
-      background: rgba(255, 230, 0, 0.22);
-      border-color: var(--neon-gold);
-      color: var(--neon-gold);
-      box-shadow: 0 0 8px rgba(255, 230, 0, 0.35);
-    }
-
-    .pad-btn-preset {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #CBD5E1;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .pad-btn-preset:hover {
-      background: rgba(255, 230, 0, 0.2);
-      border-color: var(--neon-gold);
-      color: #FFFFFF;
-    }
-
-    .pad-btn-preset.active {
-      background: var(--neon-gold);
-      border-color: var(--neon-gold);
-      color: #0F172A;
-      font-weight: 900;
-      box-shadow: 0 0 6px rgba(255, 230, 0, 0.5);
-    }
-
-    /* Master Keypad Dock Header & Reset Button */
-    .pad-dock-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1px 2px 4px 2px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 1px;
-    }
-
-    .pad-dock-title {
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: #94A3B8;
-      text-transform: uppercase;
-    }
-
-    .pad-btn-reset {
-      background: rgba(255, 230, 0, 0.10);
-      border: 1px solid rgba(255, 230, 0, 0.35);
-      color: var(--neon-gold);
-      font-family: var(--font-mono);
-      font-size: 9px;
-      font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .pad-btn-reset:hover {
-      background: rgba(255, 230, 0, 0.25);
-      box-shadow: 0 0 6px rgba(255, 230, 0, 0.4);
-    }
-
-    /* Master Keypad Dock Bottom Combination Badge (K <= 4) */
-    .pad-combos-dock-badge {
-      margin-top: 3px;
-      padding: 4px 6px;
-      background: rgba(11, 19, 43, 0.85);
-      border: 1px solid rgba(255, 230, 0, 0.35);
-      border-radius: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      color: var(--text-dim);
-    }
-
-    /* Toast Notificador de Límite (K <= 4) */
-    .carril-toast {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(11, 19, 43, 0.96);
-      border: 1.5px solid var(--neon-gold);
-      box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
-      color: #FFFFFF;
-      padding: 7px 15px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      z-index: 100;
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .legend-channel-tag {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 1px 4px;
-      border-radius: 3px;
-      font-size: 9px;
-      font-weight: 900;
-      margin-right: 2px;
-      letter-spacing: 0.3px;
-    }
-
-    @media (max-width: 950px) {
-      .carril-workspace {
-        flex-direction: column;
-      }
-      .master-keypad-panel {
-        width: 100%;
-        min-width: 100%;
-        border-right: none;
-        border-bottom: 1.5px solid rgba(255, 255, 255, 0.12);
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-    }
-
-    /* Canvas Wrapper */
-    .canvas-container {
-      position: relative;
-      flex: 1;
-      width: 100%;
-      height: 380px;
-      background: #040714;
-    }
-
-    canvas#carrilCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      cursor: crosshair;
-    }
-
-    /* Barra de Leyenda de Curvas Superpuestas */
-    .carril-legend-bar {
-      background: rgba(5, 12, 28, 0.90);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 6px 18px;
-      display: none;
-      align-items: center;
-      gap: 16px;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-    }
-
-    .legend-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-    }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    /* Barra de Scrubber & Moviola */
-    .carril-controls-bar {
-      background: rgba(4, 10, 24, 0.96);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .moviola-buttons {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-moviola {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #FFFFFF;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
-    }
-    .btn-moviola:hover {
-      background: rgba(56, 189, 248, 0.20);
-      border-color: var(--neon-cyan);
-    }
-    .btn-moviola.active {
-      background: rgba(0, 255, 135, 0.25);
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-      box-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
-    }
-
-    .scrubber-group {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 260px;
-    }
-
-    .scrubber-slider {
-      flex: 1;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.15);
-      outline: none;
-      cursor: pointer;
-    }
-    .scrubber-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--neon-cyan);
-      box-shadow: 0 0 8px var(--neon-cyan);
-      cursor: pointer;
-      transition: transform 0.1s;
-    }
-    .scrubber-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.3);
-    }
-
-    .station-readout {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--neon-cyan);
-      min-width: 180px;
-      text-align: right;
-    }
-
-    /* TARJETA DE DIAGNÓSTICO RELACIONAL (HUMAN INSPECTOR) */
-    .inspector-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: 1.1fr 1.3fr 1.6fr;
-      gap: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-
-    @media (max-width: 1100px) {
-      .inspector-card { grid-template-columns: 1fr; }
-    }
-
-    .insp-col {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .insp-col-title {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-dim);
-      padding-bottom: 4px;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .insp-pair-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .insp-pair-name {
-      font-size: 22px;
-      font-weight: 900;
-      color: #FFFFFF;
-      font-family: var(--font-mono);
-    }
-
-    .insp-pair-tag {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 4px;
-      background: rgba(0, 255, 135, 0.15);
-      border: 1px solid var(--neon-green);
-      color: var(--neon-green);
-    }
-
-    .insp-tetra-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .tetra-cell {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 8px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .tetra-pos {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .tetra-val {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .insp-metric-spotlight {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .spotlight-val {
-      font-size: 26px;
-      font-weight: 900;
-      font-family: var(--font-mono);
-    }
-
-    .spotlight-name {
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    .gauge-track {
-      width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      position: relative;
-      margin-top: 6px;
-      overflow: hidden;
-    }
-
-    .gauge-fill {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      transition: width 0.2s, left 0.2s;
-    }
-
-    .insp-diagnosis-text {
-      background: rgba(4, 10, 26, 0.85);
-      border-left: 3px solid var(--neon-green);
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: 12.5px;
-      line-height: 1.45;
-      color: #E2E8F0;
-      margin-top: 6px;
-    }
-
-    /* CONTROL DECK (DISTRIBUIDO EN 3 MÓDULOS) */
-    .control-deck {
-      display: grid;
-      grid-template-columns: 1fr 1.6fr 1.8fr;
-      gap: 18px;
-    }
-
-    @media (max-width: 1280px) {
-      .control-deck { grid-template-columns: 1fr; }
-    }
-
-    .deck-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-    }
-
-    .deck-title {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--neon-cyan);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 6px;
-    }
-
-    /* Botoneras Generales */
-    .btn-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .btn-toggle {
-      flex: 1;
-      min-width: 75px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 8px 10px;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
-      color: #94A3B8;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-    .btn-toggle:hover {
-      background: rgba(56, 189, 248, 0.15);
-      color: #FFFFFF;
-      border-color: var(--neon-cyan);
-    }
-    .btn-toggle.active {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: var(--neon-cyan);
-      color: #FFFFFF;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
-    }
-    .btn-toggle.active-green {
-      background: rgba(0, 255, 135, 0.25);
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-      box-shadow: 0 0 8px rgba(0, 255, 135, 0.35);
-    }
-    .btn-toggle.active-gold {
-      background: rgba(255, 230, 0, 0.25);
-      border-color: var(--neon-gold);
-      color: var(--neon-gold);
-      box-shadow: 0 0 8px rgba(255, 230, 0, 0.35);
-    }
-
-    /* Botonera de Permutaciones Rápidas */
-    .fast-permutations {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-    .btn-perm {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 5px 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-perm:hover {
-      background: rgba(255, 230, 0, 0.15);
-      border-color: var(--neon-gold);
-      color: #FFFFFF;
-    }
-    .btn-perm.active {
-      background: rgba(255, 230, 0, 0.22);
-      border-color: var(--neon-gold);
-      color: var(--neon-gold);
-    }
-
-    /* BOTONERA CANÓNICA 18D */
-    .grid-18d {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .grid-4cardinals {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
-    }
-    .grid-4cardinals .btn-toggle {
-      padding: 7px 4px;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .grid-2globals {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 5px;
-    }
-    .grid-2globals .btn-toggle {
-      padding: 7.5px 6px;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .row-2col {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 5px;
-    }
-    .row-2col .btn-toggle {
-      padding: 7px 6px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .divider-18d {
-      height: 1px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.22);
-      margin: 2px 0;
-    }
-
-    /* Tooltip Flotante de Inspección */
-    #carril-tooltip {
-      position: fixed;
-      display: none;
-      pointer-events: none;
-      background: rgba(5, 12, 28, 0.96);
-      border: 1.5px solid var(--neon-cyan);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(56, 189, 248, 0.3);
-      border-radius: 6px;
-      padding: 8px 12px;
-      color: #FFFFFF;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      z-index: 2000;
-      max-width: 320px;
-    }
-
-    /* SECCIÓN PEDAGÓGICA Y NOTA CANÓNICA */
-    .didactic-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .didactic-box h2 {
-      font-size: 16px;
-      font-weight: 800;
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .table-densities {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-    .table-densities th {
-      text-align: left;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--neon-cyan);
-      font-family: var(--font-mono);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .table-densities td {
-      padding: 8px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #E2E8F0;
-    }
-    .table-densities tr:hover td {
-      background: rgba(56, 189, 248, 0.06);
-    }
-
-    .note-pedagogica {
-      background: rgba(11, 19, 43, 0.7);
-      border-left: 3.5px solid var(--neon-gold);
-      padding: 12px 18px;
-      border-radius: 4px;
-      font-size: 12.5px;
-      color: var(--text-dim);
-      line-height: 1.55;
-    }
-    .note-pedagogica strong {
-      color: #FFFFFF;
-    }
-
-    /* Modo 3 Vías Paralelas */
-    .carril-mode-selector {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .btn-carril-mode {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 5px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-carril-mode:hover {
-      background: rgba(56, 189, 248, 0.15);
-      color: #FFFFFF;
-      border-color: var(--neon-cyan);
-    }
-    .btn-carril-mode.active {
-      background: rgba(0, 255, 135, 0.20);
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-      box-shadow: 0 0 10px rgba(0, 255, 135, 0.25);
-    }
-    .btn-carril-mode.active-cyan {
-      background: rgba(56, 189, 248, 0.22);
-      border-color: var(--neon-cyan);
-      color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
-    }
-
-  </style>
-</head>
-<body>
-
-  <!-- CABECERA SUPERIOR HUD -->
-  <header class="header-hud">
-    <div class="brand-box">
-      <a href="recursos.html" style="text-decoration:none; font-size:18px;" title="Volver a Recursos">⚡</a>
-      <div class="brand-logo">NEXORD <span>1-CARRIL</span></div>
-      <span class="badge-lane">MULTIPOLÍGRAFO DISTRIBUIDO</span>
-    </div>
-
-    <div class="header-status-pills">
-      <span class="status-pill">ARQUITECTURA: <strong id="hud-layout" style="color:var(--neon-green)">1-Carril</strong></span>
-      <span class="status-pill">RESOLUCIÓN: <strong id="hud-space" style="color:var(--neon-green)">Condensado (i,·) (·,j)</strong></span>
-      <span class="status-pill">CORTE: <strong id="hud-coords" style="color:var(--neon-cyan)">G1 · T1 · C1</strong></span>
-      <span class="status-pill">MODO: <strong id="hud-mode" style="color:var(--neon-gold)">Canal Único</strong></span>
-      <span class="status-pill">SEÑAL: <strong id="hud-metric" style="color:#00F0FF">SDR</strong></span>
-      <span class="status-pill">CANALES: <strong id="hud-channels" style="color:var(--neon-gold)">1 / 4</strong></span>
-      <span class="status-pill">TRAZADO: <strong id="hud-trazado" style="color:var(--neon-green)">Curvatura</strong></span>
-    </div>
-
-    <div style="display:flex; gap:8px; align-items:center;">
-      <a href="visord_acuario.html" class="btn-nav-action" title="Abrir Acuario 3D">🌊 Acuario 3D</a>
-      <a href="multipoligrafo_multicarril_q81.html" class="btn-nav-action" title="Ver Multi-Carril 6×V">📊 Multi-Carril</a>
-      <a href="recursos.html" class="btn-nav-action" style="border-color:var(--neon-green); color:var(--neon-green);" title="Ir a Recursos">🏠 Recursos</a>
-    </div>
-  </header>
-
-  <!-- CONTENEDOR PRINCIPAL -->
-  <main>
-
-    <!-- TÍTULO & DESCRIPCIÓN -->
-    <div class="hero-title-box">
-      <div class="hero-text">
-        <h1>MULTIPOLÍGRAFO SOCIO-TERMODINÁMICO · <span>1-CARRIL</span></h1>
-        <p>
-          Exploración de alta visibilidad en un único carril continuo sin congestión visual. Selecciona coordenadas del Hipertensor <strong>(GxTyCz)</strong>, conmuta entre díadas factuales <strong>(n×n)</strong> y figuras canónicas <strong>(q×q)</strong>, y proyecta las 18 Densidades Relacionales con inspección humana instantánea.
-        </p>
+      <!-- TITULAR SUPERIOR VISIBLE DE LA COMPOSICIÓN PROYECTADA -->
+    <div class="composition-banner" id="composition-banner">
+      <div class="comp-item comp-archivo">
+        <span class="comp-lbl">📁 ARCHIVO:</span>
+        <strong id="comp-val-archivo">SIMUL-AA-G3-T3-C2-V10-A16-ES-6</strong>
       </div>
-      <div class="hero-badges-bar">
-        <span class="status-pill">DOI: <strong>10.5281/zenodo.23329641</strong></span>
-        <span class="status-pill">MOTOR: <strong>VISORD v9.1</strong></span>
+      <div class="comp-item comp-sujetos">
+        <span class="comp-lbl">👤 N SUJETOS:</span>
+        <strong id="comp-val-sujetos">N = 6 Sujetos</strong>
+      </div>
+      <div class="comp-item comp-gtc">
+        <span class="comp-lbl">🧭 COORDENADAS GTC:</span>
+        <strong id="comp-val-gtc">Grupo A (G1) · T1 (Inicial) · C1 (Afinidad)</strong>
+      </div>
+      <div class="comp-item comp-formato">
+        <span class="comp-lbl">📐 FORMATO:</span>
+        <strong id="comp-val-formato">N (Marginales (i,·) (·,j))</strong>
+      </div>
+      <div class="comp-item comp-den">
+        <span class="comp-lbl">⚡ DENSIDAD:</span>
+        <strong id="comp-val-den">SDR: Saldo de Densidad Relativa (±ℝ)</strong>
       </div>
     </div>
 
-    <!-- =========================================================================
-         DECK MAESTRO: LAS 4 ALTERNATIVAS AL PRINCIPIO PARA ELEGIR
-         ========================================================================= -->
-    <section class="master-4-alternatives-deck" id="master-4-alternatives-deck">
-      <div class="deck-header">
-        <span class="deck-title">⚡ ARQUITECTURA DEL MULTIPOLÍGRAFO · SELECCIONA TU ALTERNATIVA DE EXPLORACIÓN:</span>
-        <span class="deck-subtitle">Conmutación instantánea entre 1 Carril Unificado, Varios Carriles (1D), Carriles Cruzados (2D) y el Macro-Mapa Integral TODO (GxCz - Ty)</span>
-      </div>
-      <div class="deck-grid">
-        <!-- ALTERNATIVA 1 -->
-        <div class="deck-card active" id="card-alt-1" onclick="selectAlternative(1)" title="Alternativa 1: 1 Carril Unificado">
-          <div class="deck-card-top">
-            <span class="deck-badge">1</span>
-            <span class="deck-card-name">1 CARRIL UNIFICADO</span>
-          </div>
-          <p class="deck-card-desc">Lienzo único continuo con superposición multi-curva (K &le; 4) o Tríada 3 Vías (DA &harr; RC &harr; Baricentro).</p>
-          <div class="deck-card-footer">
-            <span class="deck-pill">Lienzo único</span>
-            <span class="deck-pill">3 Vías</span>
-            <span class="deck-pill">Superposición</span>
-          </div>
-        </div>
-
-        <!-- ALTERNATIVA 2 -->
-        <div class="deck-card" id="card-alt-2" onclick="selectAlternative(2)" title="Alternativa 2: Varios Carriles Simples (1D)">
-          <div class="deck-card-top">
-            <span class="deck-badge">2</span>
-            <span class="deck-card-name">VARIOS CARRILES (1D)</span>
-          </div>
-          <p class="deck-card-desc">Carriles paralelos apilados y sincronizados por dimensión simple: Grupos (3), Tiempos (3) o Criterios (2).</p>
-          <div class="deck-card-footer">
-            <span class="deck-pill">👥 Grupos (G1-G3)</span>
-            <span class="deck-pill">⏳ Tiempos (T1-T3)</span>
-            <span class="deck-pill">🎯 Criterios</span>
-          </div>
-        </div>
-
-        <!-- ALTERNATIVA 3 -->
-        <div class="deck-card" id="card-alt-3" onclick="selectAlternative(3)" title="Alternativa 3: Carriles Cruzados Bidimensionales (2D)">
-          <div class="deck-card-top">
-            <span class="deck-badge">3</span>
-            <span class="deck-card-name">CARRILES CRUZADOS (2D)</span>
-          </div>
-          <p class="deck-card-desc">Carriles paralelos por pares tensoriales cruzados: G&times;T (Grupos&times;Tiempos), G&times;C o T&times;C sincronizados.</p>
-          <div class="deck-card-footer">
-            <span class="deck-pill">⮂ G &times; T</span>
-            <span class="deck-pill">⮂ G &times; C</span>
-            <span class="deck-pill">⮂ T &times; C</span>
-          </div>
-        </div>
-
-        <!-- ALTERNATIVA 4 -->
-        <div class="deck-card" id="card-alt-4" onclick="selectAlternative(4)" title="Alternativa 4: TODO: Grupos y Criterios por Tiempos (GxCz - Ty)">
-          <div class="deck-card-top">
-            <span class="deck-badge">4</span>
-            <span class="deck-card-name">TODO: GxCz - Ty</span>
-          </div>
-          <p class="deck-card-desc">Matriz longitudinal integral: carriles de condiciones Grupo &times; Criterio con trayectoria temporal T1 &rarr; T2 &rarr; T3.</p>
-          <div class="deck-card-footer">
-            <span class="deck-pill" style="color:var(--neon-green)">Evolución T1➔T3</span>
-            <span class="deck-pill" style="color:var(--neon-green)">Deriva &Delta;T</span>
-          </div>
+    <!-- MENÚ GENERAL ÚNICO PARA LAS 4 VERSIONES -->
+    <nav class="master-versions-nav" id="master-versions-nav">
+      <div class="nav-versions-left">
+        <span class="nav-versions-label">ARQUITECTURA MULTIPOLÍGRAFO:</span>
+        <div class="nav-versions-buttons">
+          <button class="btn-version active" id="btn-ver-1carril" onclick="selectMasterVersion('1carril')" title="Versión 1: 1 Carril Unificado">
+            <span class="ver-num">1</span>
+            <span class="ver-text">1 CARRIL UNIFICADO</span>
+          </button>
+          <button class="btn-version" id="btn-ver-varios" onclick="selectMasterVersion('varios_carriles')" title="Versión 2: Varios Carriles simples (1D)">
+            <span class="ver-num">2</span>
+            <span class="ver-text">VARIOS CARRILES (1D)</span>
+          </button>
+          <button class="btn-version" id="btn-ver-cruzados" onclick="selectMasterVersion('cruzados')" title="Versión 3: Carriles Cruzados bidimensionales (2D)">
+            <span class="ver-num">3</span>
+            <span class="ver-text">CARRILES CRUZADOS (2D)</span>
+          </button>
+          <button class="btn-version" id="btn-ver-todo" onclick="selectMasterVersion('todo')" title="Versión 4: TODO: Grupos y Criterios por Tiempos (GxCz - Ty)">
+            <span class="ver-num">4</span>
+            <span class="ver-text">TODO: GxCz - Ty</span>
+          </button>
         </div>
       </div>
-    </section>
+
+      <!-- SUB-SELECTORES CONTEXTUALES DE LA VERSIÓN ACTIVA -->
+      <div class="nav-sub-selectors" id="nav-sub-selectors">
+        <!-- Sub-selector para Versión 2: Varios Carriles 1D -->
+        <div class="sub-group" id="sub-group-varios" style="display:none;">
+          <span class="sub-lbl">DESGLOSE 1D:</span>
+          <button class="btn-sub active" id="btn-sub-grupos" onclick="setVariosSplit('grupos')">👥 Grupos (G1-G3)</button>
+          <button class="btn-sub" id="btn-sub-tiempos" onclick="setVariosSplit('tiempos')">⏳ Tiempos (T1-T3)</button>
+          <button class="btn-sub" id="btn-sub-criterios" onclick="setVariosSplit('criterios')">🎯 Criterios (C1-C2)</button>
+        </div>
+
+        <!-- Sub-selector para Versión 3: Carriles Cruzados 2D -->
+        <div class="sub-group" id="sub-group-cruzados" style="display:none;">
+          <span class="sub-lbl">PAR CRUZADO 2D:</span>
+          <button class="btn-sub active" id="btn-sub-gt" onclick="setCruzadoSplit('cruzado_gt')">⮂ G × T</button>
+          <button class="btn-sub" id="btn-sub-gc" onclick="setCruzadoSplit('cruzado_gc')">⮂ G × C</button>
+          <button class="btn-sub" id="btn-sub-tc" onclick="setCruzadoSplit('cruzado_tc')">⮂ T × C</button>
+        </div>
+
+        <!-- Sub-indicador para Versión 4: TODO GxCz - Ty -->
+        <div class="sub-group" id="sub-group-todo" style="display:none;">
+          <span class="sub-lbl" style="color:var(--neon-green);">TODO:</span>
+          <span class="sub-info-pill">Filas: Grupos &times; Criterios (GxCz) &middot; Curvas: Evolución Temporal (T1 ➔ T2 ➔ T3)</span>
+        </div>
+      </div>
+    </nav>
 
     <!-- SECCIÓN 1: EL CARRIL PRINCIPAL -->
     <section class="carril-card">
@@ -1849,49 +84,10 @@
           <span class="carril-metric-formula" id="carril-heading-formula">Baricentro S23 = (DA + RC) / 2</span>
         </div>
         <div class="carril-mode-selector">
-          <!-- SELECTOR DE ARQUITECTURA: 1 CARRIL vs VARIOS CARRILES -->
-          <div class="carril-layout-selector" title="Conmutar entre 1 carril unificado o varios carriles paralelos">
-            <button class="btn-layout active" id="btn-layout-1carril" onclick="setLayoutMode('1carril')">1 Carril</button>
-            <div class="layout-multi-group">
-              <span class="layout-multi-label">VARIOS:</span>
-              <button class="btn-layout" id="btn-multi-grupos" onclick="setLayoutMode('varios_carriles', 'grupos')" title="Varios Carriles por Grupos: G1 (Grupo A) · G2 (Grupo B) · G3 (Grupo C)">👥 Grupos</button>
-              <button class="btn-layout" id="btn-multi-tiempos" onclick="setLayoutMode('varios_carriles', 'tiempos')" title="Varios Carriles por Tiempos: T1 (Inicial) · T2 (Intermedio) · T3 (Consolidado)">⏳ Tiempos</button>
-              <button class="btn-layout" id="btn-multi-criterios" onclick="setLayoutMode('varios_carriles', 'criterios')" title="Varios Carriles por Criterios: C1 (Afinidad) · C2 (Tarea)">🎯 Criterios</button>
-            </div>
-            <div class="layout-multi-group layout-cruzados-group">
-              <span class="layout-multi-label" style="color:var(--neon-gold)">CRUZADOS:</span>
-              <button class="btn-layout" id="btn-multi-cruz-gt" onclick="setLayoutMode('varios_carriles', 'cruzado_gt')" title="Carriles Cruzados G × T: Grupos y Tiempos">⮂ G × T</button>
-              <button class="btn-layout" id="btn-multi-cruz-gc" onclick="setLayoutMode('varios_carriles', 'cruzado_gc')" title="Carriles Cruzados G × C: Grupos y Criterios">⮂ G × C</button>
-              <button class="btn-layout" id="btn-multi-cruz-tc" onclick="setLayoutMode('varios_carriles', 'cruzado_tc')" title="Carriles Cruzados T × C: Tiempos y Criterios">⮂ T × C</button>
-            </div>
-            <div class="layout-multi-group layout-todo-group">
-              <span class="layout-multi-label" style="color:var(--neon-green)">TODO:</span>
-              <button class="btn-layout btn-layout-todo" id="btn-layout-todo-gcz-ty" onclick="setLayoutMode('varios_carriles', 'todo_gxcz_ty')" title="TODO: Grupos y Criterios por Tiempos (GxCz - Ty)">🌐 GxCz - Ty</button>
-            </div>
-          </div>
-
-          <!-- 3 OPCIONES PREDETERMINADAS (APRENDIZAJE GUIADO) -->
-          <div class="carril-presets-bar" title="Opciones predeterminadas de aprendizaje (1, 2 o 4 canales)">
-            <span class="presets-label">PREAJUSTES:</span>
-            <button class="btn-preset active" id="btn-preset-1" onclick="applyPreset(1)" title="Opción 1: Señal Base Monádica (1 Canal · SDR)">1. Base SDR</button>
-            <button class="btn-preset" id="btn-preset-2" onclick="applyPreset(2)" title="Opción 2: Tríada Dialéctica Diádica (2 Canales · DA ⇄ RC + Baricentro)">2. Tríada DA-RC</button>
-            <button class="btn-preset" id="btn-preset-3" onclick="applyPreset(3)" title="Opción 3: Tetragrama SMIb Completo (4 Canales · D1·D2·D3·D4)">3. Tetragrama 4D</button>
-          </div>
-          <!-- CONMUTADOR DE RESOLUCIÓN: CONDENSADO vs COMPLETO -->
-          <div style="display:flex; gap:3px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
-            <button class="btn-carril-mode active" id="btn-res-cond" onclick="setResolution('condensado')" title="Condensado: (i,·) (·,j) marginales y promedio por sujeto">📊 Condensado (i,·)(·,j)</button>
-            <button class="btn-carril-mode" id="btn-res-comp" onclick="setResolution('completo')" title="Completo: (i,j) díadas celda a celda de la sociomatriz">🔬 Completo (i,j)</button>
-            <button class="btn-carril-mode" id="btn-res-qxq" onclick="setResolution('qxq')" title="Espacio universal Q81 (81 figuras)">🏛️ Q81 (q×q)</button>
-          </div>
           <!-- SELECTOR DE VÍAS -->
           <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas continuas: DA, RC y (DA+RC)/2">🔱 3 Vías Paralelas</button>
           <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y S14">👁️ Expectativas</button>
           <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de las 18 densidades">📈 Señal 18D</button>
-          <!-- CONMUTADOR DE TRAZADO: CURVATURA vs QUEBRADA -->
-          <div style="display:flex; gap:3px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
-            <button class="btn-carril-mode active" id="btn-geom-curva" onclick="setLineInterpolation('curva')" title="Curvatura spline continua: interpolación cúbica Catmull-Rom con paso exacto por cada estación">〰️ Curvatura</button>
-            <button class="btn-carril-mode" id="btn-geom-quebrada" onclick="setLineInterpolation('quebrada')" title="Línea quebrada poligonal clásica">📐 Quebrada</button>
-          </div>
         </div>
         <div class="carril-telemetry">
           <div class="telem-box"><span>CANALES:</span><strong id="telem-channels" style="color:var(--neon-gold)">1 / 4</strong></div>
@@ -2071,20 +267,118 @@
           </div>
         </aside>
 
-        <!-- Lienzo Canvas 1-Carril -->
-        <div class="canvas-container" id="canvas-container">
-          <div id="carril-toast" class="carril-toast" style="display:none;"></div>
-          <canvas id="carrilCanvas"></canvas>
+        <!-- COLUMNA 2: VIEWPORT GRÁFICO (EN EL CENTRO) -->
+        <div class="master-center-viewport" id="master-center-viewport">
+          <!-- Lienzo Canvas 1-Carril -->
+          <div class="canvas-container" id="canvas-container">
+            <div id="carril-toast" class="carril-toast" style="display:none;"></div>
+            <canvas id="carrilCanvas"></canvas>
+          </div>
+
+          <!-- Contenedor Varios Carriles (Paralelos Apilados) -->
+          <div class="multicarril-stack-container" id="multicarril-stack-container" style="display:none;">
+            <!-- Generado dinámicamente según 'grupos' (3), 'tiempos' (3) o 'criterios' (2) -->
+          </div>
         </div>
 
-        <!-- Contenedor Varios Carriles (Paralelos Apilados) -->
-        <div class="multicarril-stack-container" id="multicarril-stack-container" style="display:none;">
-          <!-- Generado dinámicamente según 'grupos' (3), 'tiempos' (3) o 'criterios' (2) -->
-        </div>
+        <!-- COLUMNA 3: NÚMEROS E INFORMACIONES ÚTILES (A LA DERECHA) -->
+        <aside class="master-right-panel" id="master-right-panel">
+          
+          <!-- FICHA ACTIVA DE ESTACIÓN / SUJETO / DÍADA -->
+          <div class="right-station-card">
+            <div class="right-station-header">
+              <span class="right-station-title" id="insp-pair-name">1A ➔ 2A</span>
+              <span class="insp-pair-tag" id="insp-smib-badge">00B0</span>
+              <span class="deck-pill" id="insp-space-tag" style="font-size:8px; color:var(--neon-green)">n×n Factual</span>
+            </div>
+            
+            <div style="font-size:10px; color:var(--text-dim);" id="insp-actors-sub">
+              Emisor: <strong>1A</strong> &middot; Receptor: <strong>2A</strong>
+            </div>
+            <div style="font-size:9.5px; color:var(--neon-cyan);" id="insp-link-type">
+              Vínculo Asimétrico Unilateral
+            </div>
+
+            <!-- TETRAGRAMA CANÓNICO A1..A4 EN VIVO -->
+            <div class="right-tetra-grid">
+              <div class="right-tetra-cell">
+                <span class="right-tetra-lbl">A1 (p_DA)</span>
+                <span class="right-tetra-val" id="insp-d1" style="color:var(--neon-cyan)">0.00</span>
+              </div>
+              <div class="right-tetra-cell">
+                <span class="right-tetra-lbl">A2 (DA)</span>
+                <span class="right-tetra-val" id="insp-d2" style="color:var(--neon-green)">0.00</span>
+              </div>
+              <div class="right-tetra-cell">
+                <span class="right-tetra-lbl">A3 (RC)</span>
+                <span class="right-tetra-val" id="insp-d3" style="color:var(--neon-orange)">+0.50</span>
+              </div>
+              <div class="right-tetra-cell">
+                <span class="right-tetra-lbl">A4 (p_RC)</span>
+                <span class="right-tetra-val" id="insp-d4" style="color:var(--neon-purple)">0.00</span>
+              </div>
+            </div>
+
+            <!-- MÉTRICA Y DIAGNÓSTICO CLÍNICO -->
+            <div style="display:flex; align-items:baseline; justify-content:space-between; margin-top:2px;">
+              <span style="font-family:var(--font-mono); font-size:9px; color:var(--neon-gold); font-weight:800;" id="insp-metric-code">SDR</span>
+              <div style="font-family:var(--font-mono); font-size:14px; font-weight:900; color:var(--neon-green);" id="insp-metric-val">+0.125</div>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-dim);" id="insp-metric-name">Saldo de Densidad Relativa (±ℝ)</div>
+            <div class="gauge-track" style="height:4px; margin:2px 0;">
+              <div class="gauge-fill" id="gauge-fill" style="left:50%; width:6.25%; background:var(--neon-green);"></div>
+            </div>
+            <div style="font-size:9.5px; color:#CBD5E1; line-height:1.35; background:rgba(0,0,0,0.3); padding:4px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);" id="insp-diagnosis-text">
+              Atracción unilateral moderada: El emisor permanece neutro mientras el partner le otorga elección positiva de segundo orden.
+            </div>
+          </div>
+
+          <!-- TABLA NUMÉRICA DE RESPALDO & AUDITORÍA EN SORDINA (SDR & BDR) -->
+          <div class="right-audit-card" id="backing-table-card">
+            <div class="right-audit-header">
+              <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-size:8.5px; background:rgba(255,159,28,0.2); color:var(--neon-gold); border:1px solid var(--neon-gold); padding:1px 4px; border-radius:3px; font-weight:900;">SORDINA</span>
+                <span class="right-audit-title">📋 AUDITORÍA SDR & BDR</span>
+              </div>
+              <div class="right-audit-tabs">
+                <button class="btn-right-tab active" id="btn-bk-filter-sdrbdr" onclick="setBackingTableFilter('sdr_bdr')">SDR/BDR</button>
+                <button class="btn-right-tab" id="btn-bk-filter-triad" onclick="setBackingTableFilter('triada')">Tríada</button>
+                <button class="btn-right-tab" id="btn-bk-filter-tetra" onclick="setBackingTableFilter('tetra')">D1-D4</button>
+                <button class="btn-right-tab" id="btn-bk-filter-all" onclick="setBackingTableFilter('all')">18D</button>
+              </div>
+            </div>
+
+            <!-- PILLS DE ESTADÍSTICAS -->
+            <div style="display:flex; justify-content:space-between; gap:4px; font-family:var(--font-mono); font-size:8px; padding:2px 0;">
+              <span class="backing-pill" style="padding:1px 4px; font-size:8px;">SDR: <strong id="bk-stat-sdr" style="color:var(--neon-cyan)">--</strong></span>
+              <span class="backing-pill" style="padding:1px 4px; font-size:8px;">BDR: <strong id="bk-stat-bdr" style="color:var(--neon-gold)">--</strong></span>
+              <span class="backing-pill" style="padding:1px 4px; font-size:8px;">Φ: <strong id="bk-stat-fric" style="color:var(--neon-magenta)">--</strong></span>
+            </div>
+
+            <!-- SCROLL CON TABLA DE DATOS NUMÉRICOS -->
+            <div class="right-audit-scroll">
+              <table class="backing-table" id="backing-table" style="width:100%; font-size:9px;">
+                <thead>
+                  <tr id="backing-table-thead-tr"></tr>
+                </thead>
+                <tbody id="backing-table-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- ACCIONES DE EXPORTACIÓN Y SORDINA -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:4px; margin-top:2px;">
+              <span style="font-size:7.5px; color:var(--text-dim);" id="backing-matrix-tag">G1 · T1 · C1</span>
+              <div style="display:flex; gap:3px;">
+                <button class="btn-right-tab" onclick="copyBackingTableTSV()" title="Copiar TSV para Excel">📋 Excel</button>
+                <button class="btn-right-tab" onclick="downloadBackingTableCSV()" title="Descargar CSV">📥 CSV</button>
+              </div>
+            </div>
+          </div>
+        </aside>
 
       </div>
 
-      <!-- Barra de Scrubber & Moviola -->
+      <!-- BARRA INFERIOR DE MODULADORES OCUPANDO TODA LA PANTALLA (100% WIDTH) -->
       <div class="carril-controls-bar">
         <div class="moviola-buttons">
           <button class="btn-moviola" onclick="jumpToStation(0)" title="Ir a la primera estación">⏮</button>
@@ -2099,288 +393,20 @@
           <input type="range" class="scrubber-slider" id="scrubber-range" min="0" max="35" value="0" oninput="onScrubberInput(this.value)">
           <div class="station-readout" id="station-readout">Estación: 1 / 36 (1A ➔ 1A)</div>
         </div>
-      </div>
-    </section>
 
-    <!-- SECCIÓN 2: TARJETA DE DIAGNÓSTICO RELACIONAL (HUMAN INSPECTOR) -->
-    <section class="inspector-card">
-      <!-- Columna 1: Díada o Figura -->
-      <div class="insp-col">
-        <div class="insp-col-title">
-          <span>👥 DÍADA RELACIONAL</span>
-          <span id="insp-space-tag" style="color:var(--neon-green)">n×n Factual</span>
-        </div>
-        <div class="insp-pair-badge">
-          <div class="insp-pair-name" id="insp-pair-name">1A ➔ 2A</div>
-          <span class="insp-pair-tag" id="insp-smib-badge">00B0</span>
-        </div>
-        <div style="font-size:12px; color:var(--text-dim);" id="insp-actors-sub">
-          Emisor: <strong>1A</strong> &middot; Receptor: <strong>2A</strong>
-        </div>
-        <div style="font-size:11.5px; color:var(--neon-cyan); margin-top:4px;" id="insp-link-type">
-          Vínculo Asimétrico Unilateral
-        </div>
-      </div>
-
-      <!-- Columna 2: Las 4 Posiciones del Tetragrama -->
-      <div class="insp-col">
-        <div class="insp-col-title">
-          <span>📐 TETRAGRAMA CANÓNICO</span>
-          <span style="color:var(--neon-gold)">A1 .. A4</span>
-        </div>
-        <div class="insp-tetra-grid">
-          <div class="tetra-cell">
-            <span class="tetra-pos">A1 (D1) &middot; p_DA (Expectativa)</span>
-            <span class="tetra-val" id="insp-d1" style="color:var(--neon-cyan)">0.00</span>
+        <!-- MODULADORES RÁPIDOS (CURVATURA Y PREAJUSTES 1, 2, 3) -->
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="display:flex; gap:2px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.08);">
+            <button class="btn-carril-mode active" id="btn-geom-curva" onclick="setLineInterpolation('curva')" title="Curvatura spline Catmull-Rom">〰️ Curva</button>
+            <button class="btn-carril-mode" id="btn-geom-quebrada" onclick="setLineInterpolation('quebrada')" title="Línea quebrada clásica">📐 Quebrada</button>
           </div>
-          <div class="tetra-cell">
-            <span class="tetra-pos">A2 (D2) &middot; DA (Elección Real)</span>
-            <span class="tetra-val" id="insp-d2" style="color:var(--neon-green)">0.00</span>
-          </div>
-          <div class="tetra-cell">
-            <span class="tetra-pos">A3 (D3) &middot; RC (Elección Recibida)</span>
-            <span class="tetra-val" id="insp-d3" style="color:var(--neon-orange)">+0.50</span>
-          </div>
-          <div class="tetra-cell">
-            <span class="tetra-pos">A4 (D4) &middot; p_RC (Expectativa Recibida)</span>
-            <span class="tetra-val" id="insp-d4" style="color:var(--neon-purple)">0.00</span>
+          <div style="display:flex; gap:2px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:4px; border:1px solid rgba(255,255,255,0.08);">
+            <button class="btn-preset active" id="btn-preset-1" onclick="applyPreset(1)" title="Preajuste 1: Base SDR (1 Canal)">1</button>
+            <button class="btn-preset" id="btn-preset-2" onclick="applyPreset(2)" title="Preajuste 2: Tríada DA-RC (2 Canales)">2</button>
+            <button class="btn-preset" id="btn-preset-3" onclick="applyPreset(3)" title="Preajuste 3: Tetragrama 4D (4 Canales)">3</button>
           </div>
         </div>
       </div>
-
-      <!-- Columna 3: Diagnóstico Clínico & Métrica -->
-      <div class="insp-col">
-        <div class="insp-col-title">
-          <span>🩺 DIAGNÓSTICO & SEÑAL ACTIVA</span>
-          <span id="insp-metric-code" style="color:var(--neon-gold)">SDR</span>
-        </div>
-        <div class="insp-metric-spotlight">
-          <div class="spotlight-val" id="insp-metric-val" style="color:var(--neon-green)">+0.125</div>
-          <div class="spotlight-name" id="insp-metric-name">Saldo de Densidad Relativa (±ℝ)</div>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-fill" style="left:50%; width:6.25%; background:var(--neon-green);"></div>
-        </div>
-        <div class="insp-diagnosis-text" id="insp-diagnosis-text">
-          Atracción unilateral moderada: El emisor permanece neutro mientras el partner le otorga elección positiva de segundo orden. Tensión latente asimétrica.
-        </div>
-      </div>
-    </section>
-
-    <!-- SECCIÓN DE RESPALDO: TABLA NUMÉRICA EN SORDINA (SDR & BDR) -->
-    <section class="backing-table-card" id="backing-table-card">
-      <div class="backing-table-header" onclick="toggleBackingTable()">
-        <div class="backing-title-group">
-          <span class="backing-badge">SORDINA</span>
-          <span class="backing-title">📋 TABLA NUMÉRICA DE RESPALDO &middot; AUDITORÍA SDR & BDR</span>
-          <span class="backing-subtitle" id="backing-matrix-tag">Grupo A · T1 · C1 · Condensado</span>
-        </div>
-        <div class="backing-actions">
-          <div class="backing-stats-pills" id="backing-stats-pills">
-            <span class="backing-pill">SDR Medio: <strong id="bk-stat-sdr" style="color:var(--neon-cyan)">--</strong></span>
-            <span class="backing-pill">BDR Global: <strong id="bk-stat-bdr" style="color:var(--neon-gold)">--</strong></span>
-            <span class="backing-pill">Fricción: <strong id="bk-stat-fric" style="color:var(--neon-magenta)">--</strong></span>
-          </div>
-          <button class="btn-backing-toggle" id="btn-backing-toggle" onclick="event.stopPropagation(); toggleBackingTable();">
-            <span id="backing-toggle-icon">▼</span> <span id="backing-toggle-text">Desplegar Tabla</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- CONTENIDO DESPLEGABLE EN SORDINA (OCULTO POR DEFECTO) -->
-      <div class="backing-table-drawer" id="backing-table-drawer" style="display:none;">
-        <div class="backing-drawer-toolbar">
-          <div class="backing-filter-tabs">
-            <button class="btn-bk-tab active" id="btn-bk-filter-sdrbdr" onclick="setBackingTableFilter('sdr_bdr')">Solo SDR & BDR</button>
-            <button class="btn-bk-tab" id="btn-bk-filter-triad" onclick="setBackingTableFilter('triada')">Tríada DA ⇄ RC ⇄ Baricentro</button>
-            <button class="btn-bk-tab" id="btn-bk-filter-tetra" onclick="setBackingTableFilter('tetra')">Tetragrama SMIb (D1..D4)</button>
-            <button class="btn-bk-tab" id="btn-bk-filter-all" onclick="setBackingTableFilter('all')">Auditoría Completa (18D)</button>
-          </div>
-          <div class="backing-export-actions">
-            <button class="btn-bk-action" onclick="copyBackingTableTSV()" title="Copiar datos al portapapeles en formato TSV (para pegar en Excel)">📋 Copiar Excel</button>
-            <button class="btn-bk-action" onclick="downloadBackingTableCSV()" title="Descargar como archivo CSV">📥 Exportar CSV</button>
-          </div>
-        </div>
-
-        <!-- CONTENEDOR CON SCROLL DE LA TABLA -->
-        <div class="backing-table-scroll-wrap">
-          <table class="backing-table" id="backing-table">
-            <thead>
-              <tr id="backing-table-thead-tr">
-                <!-- Encabezados generados dinámicamente -->
-              </tr>
-            </thead>
-            <tbody id="backing-table-tbody">
-              <!-- Filas generadas dinámicamente -->
-            </tbody>
-          </table>
-        </div>
-        <div class="backing-footer-note">
-          <span>💡 <em>Nota Canónica (Reglas 10 y 17):</em> Valores numéricos de respaldo presentados fuera del lienzo gráfico en sordina. Haz clic sobre cualquier fila para saltar la estación al cursor. Datos verificados con métrica Benzécri &chi;&sup2; y SVD ortogonal.</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECCIÓN 3: CONTROL DECK DISTRIBUIDO -->
-    <section class="control-deck">
-
-      <!-- MÓDULO A: RESOLUCIÓN SOCIOMÉTRICA (CONDENSADO VS COMPLETO) -->
-      <div class="deck-card">
-        <div class="deck-title">
-          <span>📐 RESOLUCIÓN SOCIOMÉTRICA</span>
-          <span style="color:var(--neon-green)">CONDENSADO / COMPLETO</span>
-        </div>
-        <div class="btn-row">
-          <button class="btn-toggle active" id="btn-deck-cond" onclick="setResolution('condensado')" style="font-size:10.5px; padding:7px 6px;">
-            📊 Condensado: (i,·) (·,j) Marginales
-          </button>
-          <button class="btn-toggle" id="btn-deck-comp" onclick="setResolution('completo')" style="font-size:10.5px; padding:7px 6px;">
-            🔬 Completo: (i,j) Díadas Celda
-          </button>
-        </div>
-        <div class="btn-row">
-          <button class="btn-toggle" id="btn-deck-qxq" onclick="setResolution('qxq')" style="font-size:10.5px; padding:5px 6px;">
-            🏛️ Universal Q81: (q×q) 81 Figuras
-          </button>
-        </div>
-        <div style="font-size:11.5px; color:var(--text-dim); line-height:1.45;">
-          <strong>Condensado:</strong> Muestra los marginales de cada sujeto: emisión <code>(i,·)</code>, recepción <code>(·,j)</code> y su promedio baricéntrico.<br>
-          <strong>Completo:</strong> Despliega el micro-detalle de las 36 díadas celda a celda <code>(i,j)</code>.
-        </div>
-      </div>
-
-      <!-- MÓDULO B: HIPERTENSOR GxTyCz (JUNTOS O POR SEPARADO) -->
-      <div class="deck-card">
-        <div class="deck-title">
-          <span>🌐 HIPERTENSOR GxTyCz</span>
-          <span style="color:var(--neon-gold)">JUNTOS O SEPARADOS</span>
-        </div>
-
-        <!-- Modo Juntos vs Separados -->
-        <div class="btn-row">
-          <button class="btn-toggle active" id="btn-mode-sep" onclick="setSuperMode('separado')">
-            🔹 Por Separado
-          </button>
-          <button class="btn-toggle" id="btn-mode-juntos" onclick="setSuperMode('juntos')">
-            🌐 Juntos (Superpuestos)
-          </button>
-        </div>
-
-        <!-- Permutaciones Rápidas -->
-        <div class="sub-section-lbl">Atajos Canónicos:</div>
-        <div class="fast-permutations">
-          <button class="btn-perm" onclick="applyPermutation('G1')">G1</button>
-          <button class="btn-perm" onclick="applyPermutation('T1')">T1</button>
-          <button class="btn-perm" onclick="applyPermutation('C1')">C1</button>
-          <button class="btn-perm" onclick="applyPermutation('G1T1')">G1T1</button>
-          <button class="btn-perm" onclick="applyPermutation('G1C1')">G1C1</button>
-          <button class="btn-perm" onclick="applyPermutation('T1C1')">T1C1</button>
-          <button class="btn-perm active" onclick="applyPermutation('G1T1C1')">G1T1C1</button>
-        </div>
-
-        <!-- Selectores Detallados -->
-        <div class="sub-section-lbl">Dimensiones Activas:</div>
-        <div class="btn-row">
-          <button class="btn-toggle active" id="btn-g1" onclick="setGroup('1')">xG1</button>
-          <button class="btn-toggle" id="btn-g2" onclick="setGroup('2')">xG2</button>
-          <button class="btn-toggle" id="btn-g3" onclick="setGroup('3')">xG3</button>
-          <button class="btn-toggle" id="btn-g-juntos" onclick="setGroup('juntos')" title="Superponer G1+G2+G3 (solo en q*q)">G Juntos</button>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn-toggle active" id="btn-t1" onclick="setTime('1')">xT1</button>
-          <button class="btn-toggle" id="btn-t2" onclick="setTime('2')">xT2</button>
-          <button class="btn-toggle" id="btn-t3" onclick="setTime('3')">xT3</button>
-          <button class="btn-toggle" id="btn-t-juntos" onclick="setTime('juntos')" title="Superponer T1+T2+T3 en 3 curvas">T Juntos</button>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn-toggle active" id="btn-c1" onclick="setCriterion('1')">xC1 (Afinidad)</button>
-          <button class="btn-toggle" id="btn-c2" onclick="setCriterion('2')">xC2 (Tarea)</button>
-          <button class="btn-toggle" id="btn-c-juntos" onclick="setCriterion('juntos')" title="Superponer C1 y C2 en 2 curvas">C Juntos</button>
-        </div>
-      </div>
-
-      <!-- MÓDULO C: BOTONERA CANÓNICA 18D (LAYOUT EXACTO SOLICITADO) -->
-      <div class="deck-card">
-        <div class="deck-title">
-          <span>🎛️ BOTONERA CANÓNICA 18 DENSIDADES</span>
-          <span style="color:var(--neon-cyan)">18D</span>
-        </div>
-
-        <!-- ACCESO DIRECTO A 3 VÍAS PARALELAS CONTINUAS -->
-        <div class="btn-row" style="margin-bottom: 2px;">
-          <button class="btn-toggle active" id="btn-cardc-3vias" onclick="setCarrilTrackMode('3vias_da_rc')" style="background:rgba(0,255,135,0.18); border-color:var(--neon-green); color:var(--neon-green); font-weight:800;" title="Activar 3 vías continuas: DA (Cian), RC (Naranja) y Baricentro (Verde)">
-            🔱 3 Vías Paralelas: DA · RC · (DA+RC)/2
-          </button>
-        </div>
-
-        <div class="grid-18d">
-          <!-- D1 D2 D3 D4 -->
-          <div class="grid-4cardinals">
-            <button class="btn-toggle" id="btn-d1" onclick="setDensity('D1')" title="D1: Expectativa del Emisor (p_DA)">D1</button>
-            <button class="btn-toggle" id="btn-d2" onclick="setDensity('D2')" title="D2: Elección Efectiva del Emisor (DA)">D2</button>
-            <button class="btn-toggle" id="btn-d3" onclick="setDensity('D3')" title="D3: Elección Efectiva Recibida (RC)">D3</button>
-            <button class="btn-toggle" id="btn-d4" onclick="setDensity('D4')" title="D4: Expectativa Recibida (p_RC)">D4</button>
-          </div>
-
-          <!-- SDR BDR -->
-          <div class="grid-2globals">
-            <button class="btn-toggle active active-green" id="btn-sdr" onclick="setDensity('SDR')" title="SDR: Saldo de Densidad Relativa (±ℝ)">SDR</button>
-            <button class="btn-toggle" id="btn-bdr" onclick="setDensity('BDR')" title="BDR: Densidad Absoluta Bruta / Masa (+ℝ)">BDR</button>
-          </div>
-
-          <!-- ----------- -->
-          <div class="divider-18d"></div>
-
-          <!-- S12 B12 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s12" onclick="setDensity('S12')" title="S12: Emisión Dadora (D1 + D2)/2 (±ℝ)">S12</button>
-            <button class="btn-toggle" id="btn-b12" onclick="setDensity('B12')" title="B12: Masa Emisión (|D1| + |D2|)/2 (+ℝ)">B12</button>
-          </div>
-
-          <!-- S34 B34 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s34" onclick="setDensity('S34')" title="S34: Recepción Receptora (D3 + D4)/2 (±ℝ)">S34</button>
-            <button class="btn-toggle" id="btn-b34" onclick="setDensity('B34')" title="B34: Masa Recepción (|D3| + |D4|)/2 (+ℝ)">B34</button>
-          </div>
-
-          <!-- ----------- -->
-          <div class="divider-18d"></div>
-
-          <!-- S13 B13 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s13" onclick="setDensity('S13')" title="S13: Espejo Directo (D1 + D3)/2 (±ℝ)">S13</button>
-            <button class="btn-toggle" id="btn-b13" onclick="setDensity('B13')" title="B13: Masa Espejo Directo (|D1| + |D3|)/2 (+ℝ)">B13</button>
-          </div>
-
-          <!-- S24 B24 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s24" onclick="setDensity('S24')" title="S24: Espejo Inverso (D2 + D4)/2 (±ℝ)">S24</button>
-            <button class="btn-toggle" id="btn-b24" onclick="setDensity('B24')" title="B24: Masa Espejo Inverso (|D2| + |D4|)/2 (+ℝ)">B24</button>
-          </div>
-
-          <!-- ----------- -->
-          <div class="divider-18d"></div>
-
-          <!-- S14 B14 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s14" onclick="setDensity('S14')" title="S14: Expectativas Cruzadas (D1 + D4)/2 (±ℝ)">S14</button>
-            <button class="btn-toggle" id="btn-b14" onclick="setDensity('B14')" title="B14: Masa Expectativas Cruzadas (|D1| + |D4|)/2 (+ℝ)">B14</button>
-          </div>
-
-          <!-- S23 B23 -->
-          <div class="row-2col">
-            <button class="btn-toggle" id="btn-s23" onclick="setDensity('S23')" title="S23: Efectivo Fáctico Mutuo (D2 + D3)/2 (±ℝ)">S23</button>
-            <button class="btn-toggle" id="btn-b23" onclick="setDensity('B23')" title="B23: Masa Efectivo Mutuo (|D2| + |D3|)/2 (+ℝ)">B23</button>
-          </div>
-
-          <!-- ----------- -->
-          <div class="divider-18d"></div>
-        </div>
-
-      </div>
-
     </section>
 
     <!-- SECCIÓN 4: GUÍA DIDÁCTICA Y NOTA CANÓNICA -->
@@ -9792,6 +7818,7 @@
         document.getElementById('btn-preset-' + id)?.classList.toggle('active', act);
         document.getElementById('pad-preset-' + id)?.classList.toggle('active', act);
       });
+      if (typeof updateCompositionBanner === 'function') updateCompositionBanner();
     }
 
 
@@ -10175,7 +8202,7 @@
     // =========================================================================
     // TABLA NUMÉRICA DE RESPALDO EN SORDINA (SDR & BDR)
     // =========================================================================
-    let backingTableOpen = false;
+    let backingTableOpen = true;
     let backingTableFilter = 'sdr_bdr'; // 'sdr_bdr' | 'triada' | 'tetra' | 'all'
 
     function toggleBackingTable() {
@@ -10407,6 +8434,136 @@
 
     // CONTROL DE ARQUITECTURA: 1 CARRIL vs VARIOS CARRILES PARALELOS
     // =========================================================================
+        // =========================================================================
+    // MENÚ GENERAL ÚNICO PARA LAS 4 VERSIONES & TITULAR DE COMPOSICIÓN
+    // =========================================================================
+    function selectMasterVersion(ver) {
+      if (ver === '1carril') {
+        setLayoutMode('1carril');
+      } else if (ver === 'varios_carriles') {
+        const split = (multicarrilSplit && (multicarrilSplit.startsWith('cruzado') || multicarrilSplit === 'todo_gxcz_ty')) ? 'grupos' : (multicarrilSplit || 'grupos');
+        setLayoutMode('varios_carriles', split);
+      } else if (ver === 'cruzados') {
+        const split = (multicarrilSplit && multicarrilSplit.startsWith('cruzado')) ? multicarrilSplit : 'cruzado_gt';
+        setLayoutMode('varios_carriles', split);
+      } else if (ver === 'todo') {
+        setLayoutMode('varios_carriles', 'todo_gxcz_ty');
+      }
+      updateVersionNavUI();
+      updateCompositionBanner();
+    }
+
+    function setVariosSplit(split) {
+      setLayoutMode('varios_carriles', split);
+      updateVersionNavUI();
+      updateCompositionBanner();
+    }
+
+    function setCruzadoSplit(split) {
+      setLayoutMode('varios_carriles', split);
+      updateVersionNavUI();
+      updateCompositionBanner();
+    }
+
+    function updateVersionNavUI() {
+      const is1C = (layoutMode === '1carril');
+      const isVarios = (layoutMode === 'varios_carriles' && (multicarrilSplit === 'grupos' || multicarrilSplit === 'tiempos' || multicarrilSplit === 'criterios'));
+      const isCruz = (layoutMode === 'varios_carriles' && (multicarrilSplit === 'cruzado_gt' || multicarrilSplit === 'cruzado_gc' || multicarrilSplit === 'cruzado_tc'));
+      const isTodo = (layoutMode === 'varios_carriles' && multicarrilSplit === 'todo_gxcz_ty');
+
+      document.getElementById('btn-ver-1carril')?.classList.toggle('active', is1C);
+      document.getElementById('btn-ver-varios')?.classList.toggle('active', isVarios);
+      document.getElementById('btn-ver-cruzados')?.classList.toggle('active', isCruz);
+      document.getElementById('btn-ver-todo')?.classList.toggle('active', isTodo);
+
+      // Sub-selectores contextuales
+      const subVarios = document.getElementById('sub-group-varios');
+      const subCruzados = document.getElementById('sub-group-cruzados');
+      const subTodo = document.getElementById('sub-group-todo');
+
+      if (subVarios) subVarios.style.display = isVarios ? 'flex' : 'none';
+      if (subCruzados) subCruzados.style.display = isCruz ? 'flex' : 'none';
+      if (subTodo) subTodo.style.display = isTodo ? 'flex' : 'none';
+
+      if (isVarios) {
+        document.getElementById('btn-sub-grupos')?.classList.toggle('active', multicarrilSplit === 'grupos');
+        document.getElementById('btn-sub-tiempos')?.classList.toggle('active', multicarrilSplit === 'tiempos');
+        document.getElementById('btn-sub-criterios')?.classList.toggle('active', multicarrilSplit === 'criterios');
+      }
+      if (isCruz) {
+        document.getElementById('btn-sub-gt')?.classList.toggle('active', multicarrilSplit === 'cruzado_gt');
+        document.getElementById('btn-sub-gc')?.classList.toggle('active', multicarrilSplit === 'cruzado_gc');
+        document.getElementById('btn-sub-tc')?.classList.toggle('active', multicarrilSplit === 'cruzado_tc');
+      }
+    }
+
+    function updateCompositionBanner() {
+      // 1. Archivo
+      const elArch = document.getElementById('comp-val-archivo');
+      if (elArch) elArch.textContent = 'SIMUL-AA-G3-T3-C2-V10-A16-ES-6';
+
+      // 2. N Sujetos
+      const elSuj = document.getElementById('comp-val-sujetos');
+      if (elSuj) {
+        if (currentResolution === 'condensado') {
+          elSuj.textContent = 'N = 6 Sujetos (1A..6A)';
+        } else if (currentResolution === 'completo') {
+          elSuj.textContent = 'N = 6 Sujetos (36 Díadas)';
+        } else {
+          elSuj.textContent = 'Espacio Q81 (81 Figuras)';
+        }
+      }
+
+      // 3. Coordenadas GTC
+      const elGtc = document.getElementById('comp-val-gtc');
+      if (elGtc) {
+        if (layoutMode === '1carril') {
+          const gName = currentGroup === '1' ? 'Grupo A (G1)' : (currentGroup === '2' ? 'Grupo B (G2)' : (currentGroup === '3' ? 'Grupo C (G3)' : 'G Juntos'));
+          const tName = 'T' + currentTime;
+          const cName = currentCriterion === '1' ? 'C1 (Afinidad)' : 'C2 (Tarea)';
+          elGtc.textContent = `${gName} · ${tName} · ${cName}`;
+        } else if (multicarrilSplit === 'grupos') {
+          elGtc.textContent = `Varios: Grupos G1 · G2 · G3 (T${currentTime} · C${currentCriterion})`;
+        } else if (multicarrilSplit === 'tiempos') {
+          elGtc.textContent = `Varios: Tiempos T1 · T2 · T3 (G${currentGroup} · C${currentCriterion})`;
+        } else if (multicarrilSplit === 'criterios') {
+          elGtc.textContent = `Varios: Criterios C1 · C2 (G${currentGroup} · T${currentTime})`;
+        } else if (multicarrilSplit === 'cruzado_gt') {
+          elGtc.textContent = `Cruzados 2D: (G1..G3) × (T1..T3)`;
+        } else if (multicarrilSplit === 'cruzado_gc') {
+          elGtc.textContent = `Cruzados 2D: (G1..G3) × (C1..C2)`;
+        } else if (multicarrilSplit === 'cruzado_tc') {
+          elGtc.textContent = `Cruzados 2D: (T1..T3) × (C1..C2)`;
+        } else if (multicarrilSplit === 'todo_gxcz_ty') {
+          elGtc.textContent = `TODO: GxCz (6 Carriles) × Ty (T1➔T2➔T3)`;
+        }
+      }
+
+      // 4. Formato
+      const elForm = document.getElementById('comp-val-formato');
+      if (elForm) {
+        if (currentResolution === 'condensado') {
+          elForm.textContent = 'N (Marginales (i,·) (·,j))';
+        } else if (currentResolution === 'completo') {
+          elForm.textContent = 'N×N (36 Díadas celda a celda)';
+        } else {
+          elForm.textContent = 'Q×Q (Universal 81 Figuras)';
+        }
+      }
+
+      // 5. Densidad
+      const elDen = document.getElementById('comp-val-den');
+      if (elDen) {
+        if (carrilTrackMode === '3vias_da_rc') {
+          elDen.textContent = '3 Vías: DA ⇄ RC ⇄ (DA+RC)/2';
+        } else if (carrilTrackMode === '3vias_expect') {
+          elDen.textContent = 'Expectativas: p_DA ⇄ p_RC ⇄ S14';
+        } else {
+          elDen.textContent = `${currentDensity} (${activeCombos.length > 1 ? activeCombos.length + ' canales' : '1 canal'})`;
+        }
+      }
+    }
+
     function selectAlternative(altNum) {
       if (altNum === 1) {
         setLayoutMode('1carril');
@@ -10516,6 +8673,8 @@
       updateHeaderBadges();
       renderAllCarriles();
       updateActiveStation(activeStationIndex, false);
+      updateVersionNavUI();
+      updateCompositionBanner();
     }
 
     function renderAllCarriles() {
@@ -12458,6 +10617,9 @@
       setResolution('condensado');
       setLineInterpolation('curva');
       applyPreset(1);
+      updateVersionNavUI();
+      updateCompositionBanner();
+      renderBackingTable();
     };
   </script>
 </body>
