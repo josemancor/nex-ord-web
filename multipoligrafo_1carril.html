@@ -828,7 +828,7 @@
     </div>
 
     <div class="header-status-pills">
-      <span class="status-pill">ESPACIO: <strong id="hud-space" style="color:var(--neon-green)">n×n (36 Díadas)</strong></span>
+      <span class="status-pill">RESOLUCIÓN: <strong id="hud-space" style="color:var(--neon-green)">Condensado (i,·) (·,j)</strong></span>
       <span class="status-pill">CORTE: <strong id="hud-coords" style="color:var(--neon-cyan)">G1 · T1 · C1</strong></span>
       <span class="status-pill">MODO: <strong id="hud-mode" style="color:var(--neon-gold)">Por Separado</strong></span>
       <span class="status-pill">SEÑAL: <strong id="hud-metric" style="color:#00F0FF">SDR</strong></span>
@@ -867,9 +867,16 @@
           <span class="carril-metric-formula" id="carril-heading-formula">Baricentro S23 = (DA + RC) / 2</span>
         </div>
         <div class="carril-mode-selector">
-          <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas: DA, RC y (DA+RC)/2 continuas">🔱 3 Vías: DA · RC · (DA+RC)/2</button>
-          <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y (p_DA+p_RC)/2">👁️ 3 Vías: p_DA · p_RC · S14</button>
-          <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de cualquiera de las 18 densidades canónicas">📊 Señal Única 18D</button>
+          <!-- CONMUTADOR DE RESOLUCIÓN: CONDENSADO vs COMPLETO -->
+          <div style="display:flex; gap:3px; background:rgba(0,0,0,0.35); padding:2px 4px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
+            <button class="btn-carril-mode active" id="btn-res-cond" onclick="setResolution('condensado')" title="Condensado: (i,·) (·,j) marginales y promedio por sujeto">📊 Condensado (i,·)(·,j)</button>
+            <button class="btn-carril-mode" id="btn-res-comp" onclick="setResolution('completo')" title="Completo: (i,j) díadas celda a celda de la sociomatriz">🔬 Completo (i,j)</button>
+            <button class="btn-carril-mode" id="btn-res-qxq" onclick="setResolution('qxq')" title="Espacio universal Q81 (81 figuras)">🏛️ Q81 (q×q)</button>
+          </div>
+          <!-- SELECTOR DE VÍAS -->
+          <button class="btn-carril-mode active" id="btn-mode-3vias-darc" onclick="setCarrilTrackMode('3vias_da_rc')" title="Carril con 3 vías paralelas continuas: DA, RC y (DA+RC)/2">🔱 3 Vías Paralelas</button>
+          <button class="btn-carril-mode" id="btn-mode-3vias-expect" onclick="setCarrilTrackMode('3vias_expect')" title="Carril con 3 vías de expectativas: p_DA, p_RC y S14">👁️ Expectativas</button>
+          <button class="btn-carril-mode" id="btn-mode-single18d" onclick="setCarrilTrackMode('single_18d')" title="Onda individual de las 18 densidades">📈 Señal 18D</button>
         </div>
         <div class="carril-telemetry">
           <div class="telem-box"><span>BDR:</span><strong id="telem-bdr" style="color:var(--neon-gold)">0.48</strong></div>
@@ -974,23 +981,28 @@
     <!-- SECCIÓN 3: CONTROL DECK DISTRIBUIDO -->
     <section class="control-deck">
 
-      <!-- MÓDULO A: ESPACIO COORDENADO -->
+      <!-- MÓDULO A: RESOLUCIÓN SOCIOMÉTRICA (CONDENSADO VS COMPLETO) -->
       <div class="deck-card">
         <div class="deck-title">
-          <span>📐 ESPACIO COORDENADO</span>
-          <span style="color:var(--neon-green)">nxn / qxq</span>
+          <span>📐 RESOLUCIÓN SOCIOMÉTRICA</span>
+          <span style="color:var(--neon-green)">CONDENSADO / COMPLETO</span>
         </div>
         <div class="btn-row">
-          <button class="btn-toggle active" id="btn-space-nxn" onclick="setSpace('nxn')">
-            👥 n×n (36 Díadas)
+          <button class="btn-toggle active" id="btn-deck-cond" onclick="setResolution('condensado')" style="font-size:10.5px; padding:7px 6px;">
+            📊 Condensado: (i,·) (·,j) Marginales
           </button>
-          <button class="btn-toggle" id="btn-space-qxq" onclick="setSpace('qxq')">
-            🏛️ q×q (81 Figuras Q81)
+          <button class="btn-toggle" id="btn-deck-comp" onclick="setResolution('completo')" style="font-size:10.5px; padding:7px 6px;">
+            🔬 Completo: (i,j) Díadas Celda
+          </button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-toggle" id="btn-deck-qxq" onclick="setResolution('qxq')" style="font-size:10.5px; padding:5px 6px;">
+            🏛️ Universal Q81: (q×q) 81 Figuras
           </button>
         </div>
         <div style="font-size:11.5px; color:var(--text-dim); line-height:1.45;">
-          <strong>n×n:</strong> Recorrido factual celda a celda de los sujetos (1A..6A) con anclas diagonales.<br>
-          <strong>q×q:</strong> Espacio universal de las 81 figuras sociométricas con centro neutro en celda 41.
+          <strong>Condensado:</strong> Muestra los marginales de cada sujeto: emisión <code>(i,·)</code>, recepción <code>(·,j)</code> y su promedio baricéntrico.<br>
+          <strong>Completo:</strong> Despliega el micro-detalle de las 36 díadas celda a celda <code>(i,j)</code>.
         </div>
       </div>
 
@@ -8186,16 +8198,19 @@
     // =========================================================================
     // ESTADO GLOBAL DE LA APLICACIÓN
     // =========================================================================
-    let currentSpace = 'nxn';          // 'nxn' | 'qxq'
-    let superMode = 'separado';        // 'separado' | 'juntos'
-    let currentGroup = '1';            // '1' | '2' | '3' | 'juntos'
-    let currentTime = '1';             // '1' | '2' | '3' | 'juntos'
-    let currentCriterion = '1';        // '1' | '2' | 'juntos'
-    let currentDensity = 'SDR';        // 'D1'..'D4', 'SDR', 'BDR', 'S12', 'B12', etc.
-    let carrilTrackMode = '3vias_da_rc'; // '3vias_da_rc' | '3vias_expect' | 'single_18d' | 'super'
+    // ESTADO GLOBAL DEL MULTIPOLÍGRAFO 1-CARRIL
+    // =========================================================================
+    let currentSpace = 'nxn';             // 'nxn' | 'qxq'
+    let currentResolution = 'condensado'; // 'condensado' (i,·)(·,j) | 'completo' (i,j) | 'qxq'
+    let superMode = 'separado';           // 'separado' | 'juntos'
+    let currentGroup = '1';               // '1' | '2' | '3' | 'juntos'
+    let currentTime = '1';                // '1' | '2' | '3' | 'juntos'
+    let currentCriterion = '1';           // '1' | '2' | 'juntos'
+    let currentDensity = 'SDR';           // 'D1'..'D4', 'SDR', 'BDR', 'S12', 'B12', etc.
+    let carrilTrackMode = '3vias_da_rc';  // '3vias_da_rc' | '3vias_expect' | 'single_18d'
 
     let activeStationIndex = 0;
-    let totalStations = 36;
+    let totalStations = 6;
     let isPlaying = false;
     let playInterval = null;
     let audioEnabled = false;
@@ -8248,7 +8263,28 @@
       }
     })();
 
-    // GENERAR LISTA DE ESTACIONES PARA NXN
+    // OBTENER LISTA DE ESTACIONES SEGÚN RESOLUCIÓN
+    function getCurrentStations() {
+      const gId = currentGroup === 'juntos' ? '1' : currentGroup;
+      if (currentResolution === 'condensado') {
+        const subjs = SUBJECTS_BY_GROUP[gId] || SUBJECTS_BY_GROUP['1'];
+        return subjs.map((s, idx) => ({
+          type: 'subject',
+          id: s,
+          label: s,
+          coordLabel: s,
+          row: idx + 1,
+          col: idx + 1,
+          isDiagonal: false
+        }));
+      } else if (currentResolution === 'completo') {
+        return getSubjectTraversalForGroup(gId);
+      } else {
+        return TRAVERSAL_9X9;
+      }
+    }
+
+    // GENERAR LISTA DE ESTACIONES PARA NXN COMPLETO (36 Díadas)
     function getSubjectTraversalForGroup(gId) {
       const subjs = SUBJECTS_BY_GROUP[gId] || SUBJECTS_BY_GROUP['1'];
       const list = [];
@@ -8256,6 +8292,7 @@
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
           list.push({
+            type: 'dyad',
             from: subjs[i],
             to: subjs[j],
             isDiagonal: (i === j),
@@ -8268,66 +8305,121 @@
       return list;
     }
 
-    // =========================================================================
-    // CÁLCULO FACTUAL DE DENSIDADES PARA UNA ESTACIÓN
-    // =========================================================================
-    function getStationRawTetragram(station, mat) {
+    // BUSCAR VÍNCULO DIÁDICO FÁCTICO (FROM -> TO) EN UNA SOCIOMATRIZ
+    function getDyadRawTetragram(from, to, mat) {
       if (!mat) return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: false };
-
-      if (currentSpace === 'nxn') {
-        const from = station.from;
-        const to = station.to;
-        if (station.isDiagonal) {
-          // Diagonal: Auto-identidad neutra
-          return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: true, isDiag: true };
-        }
-
-        // Buscar en q_map el vínculo
-        let link = null;
+      if (from === to) {
+        return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: true, isDiag: true };
+      }
+      if (mat.q_map) {
         for (const qid in mat.q_map) {
           const list = mat.q_map[qid];
           for (let i = 0; i < list.length; i++) {
             if (list[i].from === from && list[i].to === to) {
-              link = list[i];
-              break;
-            }}
-          if (link) break;
+              return {
+                d1: list[i].d1 !== undefined ? list[i].d1 : 0,
+                d2: list[i].d2 !== undefined ? list[i].d2 : 0,
+                d3: list[i].d3 !== undefined ? list[i].d3 : 0,
+                d4: list[i].d4 !== undefined ? list[i].d4 : 0,
+                smib: list[i].smib || '0000',
+                hasData: true
+              };
+            }
+          }
         }
+      }
+      return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: false };
+    }
 
-        if (link) {
-          return {
-            d1: link.d1 !== undefined ? link.d1 : 0,
-            d2: link.d2 !== undefined ? link.d2 : 0,
-            d3: link.d3 !== undefined ? link.d3 : 0,
-            d4: link.d4 !== undefined ? link.d4 : 0,
-            smib: link.smib || '0000',
-            hasData: true
-          };
-        }
-        return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: false };
+    // CALCULAR MARGINALES DE UN SUJETO: (i,·) Emisión, (·,j) Recepción y Baricentro
+    function getSubjectMarginals(subj, mat) {
+      if (!mat) {
+        return {
+          d1: 0, d2: 0, d3: 0, d4: 0, smib: 'MARG',
+          daMarginal: 0, rcMarginal: 0, pdaMarginal: 0, prcMarginal: 0,
+          baricentro: 0, friction: 0, hasData: false, isMarginal: true, subj: subj
+        };
+      }
 
+      const allSubjs = mat.sujetos || SUBJECTS_BY_GROUP[mat.g === 'A' ? '1' : (mat.g === 'B' ? '2' : '3')] || ['1A', '2A', '3A', '4A', '5A', '6A'];
+      const others = allSubjs.filter(s => s !== subj);
+      const n = others.length;
+      if (n === 0) {
+        return {
+          d1: 0, d2: 0, d3: 0, d4: 0, smib: 'MARG',
+          daMarginal: 0, rcMarginal: 0, pdaMarginal: 0, prcMarginal: 0,
+          baricentro: 0, friction: 0, hasData: false, isMarginal: true, subj: subj
+        };
+      }
+
+      let sumD1 = 0, sumD2 = 0, sumD3 = 0, sumD4 = 0;
+      for (let i = 0; i < n; i++) {
+        const link = getDyadRawTetragram(subj, others[i], mat);
+        sumD1 += link.d1;
+        sumD2 += link.d2;
+        sumD3 += link.d3;
+        sumD4 += link.d4;
+      }
+
+      const pdaMarg = sumD1 / n;
+      const daMarg = sumD2 / n;
+      const rcMarg = sumD3 / n;
+      const prcMarg = sumD4 / n;
+      const bar = (daMarg + rcMarg) / 2;
+      const fric = Math.abs(daMarg - rcMarg);
+
+      return {
+        d1: pdaMarg,
+        d2: daMarg,
+        d3: rcMarg,
+        d4: prcMarg,
+        smib: 'MARG',
+        daMarginal: daMarg,
+        rcMarginal: rcMarg,
+        pdaMarginal: pdaMarg,
+        prcMarginal: prcMarg,
+        baricentro: bar,
+        friction: fric,
+        hasData: true,
+        isMarginal: true,
+        subj: subj
+      };
+    }
+
+    // =========================================================================
+    // CÁLCULO FACTUAL DE DENSIDADES PARA UNA ESTACIÓN
+    // =========================================================================
+    function getStationRawTetragram(station, mat) {
+      if (!mat || !station) return { d1: 0, d2: 0, d3: 0, d4: 0, smib: '0000', hasData: false };
+
+      if (currentResolution === 'condensado' || station.type === 'subject') {
+        return getSubjectMarginals(station.id || station.label || station.from, mat);
+      }
+
+      if (currentResolution === 'completo' || station.type === 'dyad' || currentSpace === 'nxn') {
+        return getDyadRawTetragram(station.from, station.to, mat);
+      }
+
+      // ESPACIO QXQ (81 figuras)
+      const qid = station.id;
+      const transInfo = MATRIX_TRANSPOSE_MAP[qid] || { transQid: qid, isDiagonal: true };
+      const transQid = transInfo.transQid;
+
+      const linksA = (mat.q_map && mat.q_map[String(qid)]) ? mat.q_map[String(qid)] : [];
+      const linksB = (mat.q_map && mat.q_map[String(transQid)]) ? mat.q_map[String(transQid)] : [];
+
+      if (linksA.length > 0) {
+        const l = linksA[0];
+        return {
+          d1: l.d1, d2: l.d2, d3: l.d3, d4: l.d4,
+          smib: l.smib, hasData: true, count: linksA.length
+        };
       } else {
-        // ESPACIO QXQ (81 figuras)
-        const qid = station.id;
-        const transInfo = MATRIX_TRANSPOSE_MAP[qid] || { transQid: qid, isDiagonal: true };
-        const transQid = transInfo.transQid;
-
-        const linksA = (mat.q_map && mat.q_map[String(qid)]) ? mat.q_map[String(qid)] : [];
-        const linksB = (mat.q_map && mat.q_map[String(transQid)]) ? mat.q_map[String(transQid)] : [];
-
-        if (linksA.length > 0) {
-          const l = linksA[0];
-          return {
-            d1: l.d1, d2: l.d2, d3: l.d3, d4: l.d4,
-            smib: l.smib, hasData: true, count: linksA.length
-          };
-        } else {
-          // Fallback canónico de la figura
-          return {
-            d1: station.d1, d2: station.d2, d3: station.d3, d4: station.d4,
-            smib: station.sym, hasData: false, count: 0
-          };
-        }
+        // Fallback canónico de la figura
+        return {
+          d1: station.d1, d2: station.d2, d3: station.d3, d4: station.d4,
+          smib: station.sym, hasData: false, count: 0
+        };
       }
     }
 
@@ -8418,12 +8510,12 @@
         ctx.fillText((v > 0 && !isMass ? '+' : '') + v.toFixed(2), padL - 8, y + 3.5);
       });
 
-      // 3. Estaciones según espacio
-      const stations = currentSpace === 'nxn' ? getSubjectTraversalForGroup(currentGroup === 'juntos' ? '1' : currentGroup) : TRAVERSAL_9X9;
+      // 3. Estaciones según resolución y espacio
+      const stations = getCurrentStations();
       totalStations = stations.length;
       document.getElementById('scrubber-range').max = totalStations - 1;
 
-      const xStep = plotW / (totalStations - 1);
+      const xStep = totalStations > 1 ? (plotW / (totalStations - 1)) : plotW;
 
       const g = currentGroup === 'juntos' ? '1' : currentGroup;
       const t = currentTime === 'juntos' ? '1' : currentTime;
@@ -8435,20 +8527,56 @@
       for (let sIdx = 0; sIdx < totalStations; sIdx++) {
         const st = stations[sIdx];
         const x = padL + sIdx * xStep;
-        const isMarked = (currentSpace === 'nxn' ? (sIdx % 6 === 0 || st.isDiagonal) : (sIdx % 9 === 0 || st.id === 41));
 
-        if (isMarked) {
-          const isSpecial = (currentSpace === 'nxn' && st.isDiagonal) || (currentSpace === 'qxq' && st.id === 41);
-          ctx.strokeStyle = isSpecial ? 'rgba(255, 230, 0, 0.4)' : 'rgba(255, 255, 255, 0.08)';
-          ctx.lineWidth = isSpecial ? 1.5 : 1;
+        if (currentResolution === 'condensado') {
+          const isSelected = (sIdx === activeStationIndex);
+          ctx.strokeStyle = isSelected ? 'rgba(255, 230, 0, 0.50)' : 'rgba(56, 189, 248, 0.18)';
+          ctx.lineWidth = isSelected ? 1.5 : 1;
+          ctx.setLineDash(isSelected ? [4, 3] : [2, 4]);
           ctx.beginPath();
           ctx.moveTo(x, padY); ctx.lineTo(x, padY + plotH);
           ctx.stroke();
+          ctx.setLineDash([]);
 
-          ctx.fillStyle = isSpecial ? '#FFE600' : 'rgba(255, 255, 255, 0.5)';
-          ctx.font = isSpecial ? 'bold 9.5px Roboto Mono' : '8.5px Roboto Mono';
+          ctx.fillStyle = isSelected ? '#FFE600' : '#FFFFFF';
+          ctx.font = isSelected ? 'bold 12.5px Roboto Mono' : 'bold 11px Roboto Mono';
           ctx.textAlign = 'center';
-          ctx.fillText(st.coordLabel || (sIdx + 1), x, padY + plotH + 15);
+          ctx.fillText(st.id || st.coordLabel, x, padY + plotH + 18);
+
+          ctx.fillStyle = isSelected ? '#00FF87' : 'rgba(255, 255, 255, 0.45)';
+          ctx.font = '9px Roboto Mono';
+          ctx.fillText('S' + (sIdx + 1), x, padY + plotH + 30);
+
+        } else if (currentResolution === 'completo') {
+          const isMarked = (sIdx % 6 === 0 || st.isDiagonal);
+          if (isMarked) {
+            const isSpecial = st.isDiagonal;
+            ctx.strokeStyle = isSpecial ? 'rgba(255, 230, 0, 0.4)' : 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = isSpecial ? 1.5 : 1;
+            ctx.beginPath();
+            ctx.moveTo(x, padY); ctx.lineTo(x, padY + plotH);
+            ctx.stroke();
+
+            ctx.fillStyle = isSpecial ? '#FFE600' : 'rgba(255, 255, 255, 0.5)';
+            ctx.font = isSpecial ? 'bold 9.5px Roboto Mono' : '8.5px Roboto Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText(st.coordLabel || (sIdx + 1), x, padY + plotH + 15);
+          }
+        } else {
+          const isMarked = (sIdx % 9 === 0 || st.id === 41);
+          if (isMarked) {
+            const isSpecial = (st.id === 41);
+            ctx.strokeStyle = isSpecial ? 'rgba(255, 230, 0, 0.4)' : 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = isSpecial ? 1.5 : 1;
+            ctx.beginPath();
+            ctx.moveTo(x, padY); ctx.lineTo(x, padY + plotH);
+            ctx.stroke();
+
+            ctx.fillStyle = isSpecial ? '#FFE600' : 'rgba(255, 255, 255, 0.5)';
+            ctx.font = isSpecial ? 'bold 9.5px Roboto Mono' : '8.5px Roboto Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText(st.coordLabel || (sIdx + 1), x, padY + plotH + 15);
+          }
         }
       }
 
@@ -8784,40 +8912,41 @@
     function updateLegend3Vias(mode) {
       const bar = document.getElementById('carril-legend-bar');
       bar.style.display = 'flex';
+      const isCond = (currentResolution === 'condensado');
       if (mode === 'da_rc') {
         bar.innerHTML = `
           <div class="legend-chip" style="color:#38BDF8">
             <span class="legend-dot" style="background:#38BDF8"></span>
-            <span>DA: Preferencia Emisor (D2)</span>
+            <span>${isCond ? '(i,·) Emisión Marginal DA (D2)' : 'DA: Preferencia Emisor (D2)'}</span>
           </div>
           <div class="legend-chip" style="color:#FF9F1C">
             <span class="legend-dot" style="background:#FF9F1C"></span>
-            <span>RC: Preferencia Recibida (D3)</span>
+            <span>${isCond ? '(·,j) Recepción Marginal RC (D3)' : 'RC: Preferencia Recibida (D3)'}</span>
           </div>
           <div class="legend-chip" style="color:#00FF87">
             <span class="legend-dot" style="background:#00FF87; box-shadow:0 0 6px #00FF87;"></span>
-            <span>(DA + RC) / 2: Baricentro Medio Diádico (S23)</span>
+            <span>${isCond ? 'Promedio Baricéntrico: ((i,·) + (·,j)) / 2 (S23)' : '(DA + RC) / 2: Baricentro Medio Diádico (S23)'}</span>
           </div>
           <div class="legend-chip" style="color:var(--text-dim); margin-left:auto;">
-            <span style="font-size:10.5px;">Banda Fricción: |DA &minus; RC|</span>
+            <span style="font-size:10.5px;">${isCond ? 'Fricción / Asimetría: |(i,·) − (·,j)|' : 'Banda Fricción: |DA &minus; RC|'}</span>
           </div>
         `;
       } else {
         bar.innerHTML = `
           <div class="legend-chip" style="color:#38BDF8">
             <span class="legend-dot" style="background:#38BDF8"></span>
-            <span>p_DA: Expectativa Emisor (D1)</span>
+            <span>${isCond ? '(i,·) Expectativa Emisor p_DA (D1)' : 'p_DA: Expectativa Emisor (D1)'}</span>
           </div>
           <div class="legend-chip" style="color:#C084FC">
             <span class="legend-dot" style="background:#C084FC"></span>
-            <span>p_RC: Expectativa Recibida (D4)</span>
+            <span>${isCond ? '(·,j) Expectativa Recibida p_RC (D4)' : 'p_RC: Expectativa Recibida (D4)'}</span>
           </div>
           <div class="legend-chip" style="color:#FFE600">
             <span class="legend-dot" style="background:#FFE600; box-shadow:0 0 6px #FFE600;"></span>
-            <span>(p_DA + p_RC) / 2: Baricentro Expectativas (S14)</span>
+            <span>${isCond ? 'Promedio Expectativas: ((i,·) + (·,j)) / 2 (S14)' : '(p_DA + p_RC) / 2: Baricentro Expectativas (S14)'}</span>
           </div>
           <div class="legend-chip" style="color:var(--text-dim); margin-left:auto;">
-            <span style="font-size:10.5px;">Banda Desacople: |p_DA &minus; p_RC|</span>
+            <span style="font-size:10.5px;">${isCond ? 'Desacople: |p_DA − p_RC|' : 'Banda Desacople: |p_DA &minus; p_RC|'}</span>
           </div>
         `;
       }
@@ -8829,10 +8958,10 @@
       document.querySelectorAll('.btn-carril-mode').forEach(b => b.classList.remove('active'));
       if (mode === '3vias_da_rc') {
         document.getElementById('btn-mode-3vias-darc')?.classList.add('active');
-        document.getElementById('hud-metric').textContent = '3 Vías (DA·RC·Bar)';
+        document.getElementById('hud-metric').textContent = currentResolution === 'condensado' ? '3 Vías ((i,·)·(·,j)·Bar)' : '3 Vías (DA·RC·Bar)';
       } else if (mode === '3vias_expect') {
         document.getElementById('btn-mode-3vias-expect')?.classList.add('active');
-        document.getElementById('hud-metric').textContent = '3 Vías (pDA·pRC·S14)';
+        document.getElementById('hud-metric').textContent = currentResolution === 'condensado' ? '3 Vías (pDA·pRC·S14)' : '3 Vías (pDA·pRC·S14)';
       } else if (mode === 'single_18d') {
         document.getElementById('btn-mode-single18d')?.classList.add('active');
         document.getElementById('hud-metric').textContent = currentDensity;
@@ -8848,7 +8977,7 @@
       updateActiveStation(activeStationIndex, false);
     }
 
-    // ACTUALIZAR LEYENDA SUPERIOR
+    // ACTUALIZAR LEYENDA SUPERIOR PARA CURVAS SUPERPUESTAS
     function updateLegendBar(curves) {
       const bar = document.getElementById('carril-legend-bar');
       if (curves.length <= 1) {
@@ -8868,15 +8997,20 @@
     // ACTUALIZACIÓN DE ESTACIÓN ACTIVA E INSPECTOR
     // =========================================================================
     function updateActiveStation(sIdx, triggerSound = true) {
+      const stations = getCurrentStations();
+      totalStations = stations.length;
+      if (sIdx < 0) sIdx = 0;
+      if (sIdx >= totalStations) sIdx = totalStations - 1;
       activeStationIndex = sIdx;
-      document.getElementById('scrubber-range').value = sIdx;
 
-      const stations = currentSpace === 'nxn' ? getSubjectTraversalForGroup(currentGroup === 'juntos' ? '1' : currentGroup) : TRAVERSAL_9X9;
+      const scrubber = document.getElementById('scrubber-range');
+      if (scrubber) {
+        scrubber.max = totalStations - 1;
+        scrubber.value = sIdx;
+      }
+
       const st = stations[sIdx];
       if (!st) return;
-
-      // Lectura de Scrubber
-      document.getElementById('station-readout').textContent = `Estación: ${sIdx + 1} / ${totalStations} ${st.coordLabel}`;
 
       // Obtener datos de la sociomatriz activa
       const g = currentGroup === 'juntos' ? '1' : currentGroup;
@@ -8888,23 +9022,63 @@
       const tetra = getStationRawTetragram(st, mat);
       const val = computeDensityValue(tetra, currentDensity);
 
-      // 1. Columna 1: Díada
-      if (currentSpace === 'nxn') {
-        document.getElementById('insp-space-tag').textContent = 'n×n Factual';
+      // Formateador
+      const fmt = (v) => (v >= 0 ? '+' : '') + Number(v).toFixed(2);
+
+      // 1. Columna 1: Sujeto / Díada / Figura
+      if (currentResolution === 'condensado') {
+        const da = tetra.d2;
+        const rc = tetra.d3;
+        const bar = (da + rc) / 2;
+        const fric = Math.abs(da - rc);
+
+        document.getElementById('station-readout').textContent = `Estación: ${sIdx + 1} / ${totalStations} Sujeto ${st.id} (Marginales)`;
+        document.getElementById('insp-space-tag').textContent = 'Condensado (i,·) (·,j)';
+        document.getElementById('insp-pair-name').textContent = `Sujeto ${st.id}`;
+
+        // Badge de rol sociométrico
+        let badgeText = 'Equilibrado';
+        let badgeColor = 'var(--neon-green)';
+        if (rc >= 0.25 && da > 0.05) { badgeText = 'Líder Sociométrico'; badgeColor = 'var(--neon-green)'; }
+        else if (rc >= 0.20 && da <= 0.05) { badgeText = 'Atracción Pasiva'; badgeColor = 'var(--neon-cyan)'; }
+        else if (rc <= -0.20 && da >= 0) { badgeText = 'Rechazo Grupal'; badgeColor = 'var(--neon-magenta)'; }
+        else if (rc <= -0.15 && da < 0) { badgeText = 'Desvinculación'; badgeColor = 'var(--neon-magenta)'; }
+        else if (da >= 0.12 && rc >= 0.10) { badgeText = 'Cohesión Activa'; badgeColor = 'var(--neon-green)'; }
+        else if (da > rc + 0.15) { badgeText = 'Sobreesfuerzo'; badgeColor = 'var(--neon-gold)'; }
+        else if (Math.abs(rc) < 0.06 && Math.abs(da) < 0.06) { badgeText = 'Periferia / Neutro'; badgeColor = 'var(--text-dim)'; }
+
+        const smibBadge = document.getElementById('insp-smib-badge');
+        smibBadge.textContent = badgeText;
+        smibBadge.style.color = badgeColor;
+        smibBadge.style.borderColor = badgeColor;
+
+        document.getElementById('insp-actors-sub').innerHTML = `Sujeto Focal: <strong>${st.id}</strong> &middot; Grupo ${currentGroup === 'juntos' ? 'A (G1)' : (currentGroup === '1' ? 'A' : (currentGroup === '2' ? 'B' : 'C'))}`;
+        document.getElementById('insp-link-type').textContent = getSubjectRoleDescription(da, rc, bar, fric);
+
+      } else if (currentResolution === 'completo') {
+        document.getElementById('station-readout').textContent = `Estación: ${sIdx + 1} / ${totalStations} ${st.coordLabel}`;
+        document.getElementById('insp-space-tag').textContent = 'n×n Completo (i,j)';
         document.getElementById('insp-pair-name').textContent = `${st.from} ➔ ${st.to}`;
-        document.getElementById('insp-smib-badge').textContent = tetra.smib || '0000';
+        const smibBadge = document.getElementById('insp-smib-badge');
+        smibBadge.textContent = tetra.smib || '0000';
+        smibBadge.style.color = 'var(--neon-green)';
+        smibBadge.style.borderColor = 'var(--neon-green)';
         document.getElementById('insp-actors-sub').innerHTML = `Emisor: <strong>${st.from}</strong> &middot; Receptor: <strong>${st.to}</strong>`;
         document.getElementById('insp-link-type').textContent = st.isDiagonal ? 'Auto-Ancla Canónica de Identidad' : (tetra.d2 > 0 && tetra.d3 > 0 ? 'Elección Mutua Bilateral' : (tetra.d2 > 0 || tetra.d3 > 0 ? 'Vínculo Asimétrico Unilateral' : 'Indiferencia o Rechazo'));
-      } else {
+
+      } else { // qxq
+        document.getElementById('station-readout').textContent = `Estación: ${sIdx + 1} / ${totalStations} ${st.coordLabel}`;
         document.getElementById('insp-space-tag').textContent = 'q×q Universal Q81';
         document.getElementById('insp-pair-name').textContent = `Figura #${st.id} ${st.sym}`;
-        document.getElementById('insp-smib-badge').textContent = `(${st.u},${st.v})`;
+        const smibBadge = document.getElementById('insp-smib-badge');
+        smibBadge.textContent = `(${st.u},${st.v})`;
+        smibBadge.style.color = 'var(--neon-gold)';
+        smibBadge.style.borderColor = 'var(--neon-gold)';
         document.getElementById('insp-actors-sub').innerHTML = `Definición: <strong>${st.def || ''}</strong>`;
         document.getElementById('insp-link-type').textContent = (tetra.count && tetra.count > 0) ? `Presente en corpus: ${tetra.count} vínculo(s)` : 'Arquetipo Teórico Invariante';
       }
 
       // 2. Columna 2: Tetragrama
-      const fmt = (v) => (v >= 0 ? '+' : '') + Number(v).toFixed(2);
       document.getElementById('insp-d1').textContent = fmt(tetra.d1);
       document.getElementById('insp-d2').textContent = fmt(tetra.d2);
       document.getElementById('insp-d3').textContent = fmt(tetra.d3);
@@ -8923,50 +9097,75 @@
         const bar = (da + rc) / 2;
         const fric = Math.abs(da - rc);
 
-        document.getElementById('insp-metric-code').textContent = '3 VÍAS (DA · RC · Bar)';
+        document.getElementById('insp-metric-code').textContent = currentResolution === 'condensado' ? '3 VÍAS ((i,·)·(·,j)·Prom)' : '3 VÍAS (DA · RC · Bar)';
         document.getElementById('insp-metric-val').textContent = (bar >= 0 ? '+' : '') + bar.toFixed(3);
-        document.getElementById('insp-metric-name').innerHTML = `DA: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong> &middot; RC: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong> &middot; Fricción: <strong style="color:var(--neon-magenta)">${fric.toFixed(2)}</strong>`;
+        const daLbl = currentResolution === 'condensado' ? '(i,·)' : 'DA';
+        const rcLbl = currentResolution === 'condensado' ? '(·,j)' : 'RC';
+        document.getElementById('insp-metric-name').innerHTML = `${daLbl}: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong> &middot; ${rcLbl}: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong> &middot; Fricción: <strong style="color:var(--neon-magenta)">${fric.toFixed(2)}</strong>`;
         document.getElementById('insp-metric-val').style.color = bar > 0 ? 'var(--neon-green)' : (bar < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+
+        if (currentResolution === 'condensado') {
+          document.getElementById('insp-diagnosis-text').textContent = generateSubjectDiagnosis(da, rc, bar, fric, st);
+        } else {
+          document.getElementById('insp-diagnosis-text').textContent = generateDiagnosis(tetra, val, currentDensity, st);
+        }
+
       } else if (carrilTrackMode === '3vias_expect') {
         const pda = tetra.d1;
         const prc = tetra.d4;
         const bar = (pda + prc) / 2;
         const desac = Math.abs(pda - prc);
 
-        document.getElementById('insp-metric-code').textContent = '3 VÍAS (pDA · pRC · S14)';
+        document.getElementById('insp-metric-code').textContent = currentResolution === 'condensado' ? '3 VÍAS (pDA · pRC · S14)' : '3 VÍAS (pDA · pRC · S14)';
         document.getElementById('insp-metric-val').textContent = (bar >= 0 ? '+' : '') + bar.toFixed(3);
         document.getElementById('insp-metric-name').innerHTML = `p_DA: <strong style="color:#38BDF8">${(pda>=0?'+':'')+pda.toFixed(2)}</strong> &middot; p_RC: <strong style="color:#C084FC">${(prc>=0?'+':'')+prc.toFixed(2)}</strong> &middot; Desacople: <strong style="color:var(--neon-gold)">${desac.toFixed(2)}</strong>`;
         document.getElementById('insp-metric-val').style.color = bar > 0 ? 'var(--neon-green)' : (bar < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
+
+        if (currentResolution === 'condensado') {
+          document.getElementById('insp-diagnosis-text').textContent = generateSubjectExpectationDiagnosis(pda, prc, bar, desac, st);
+        } else {
+          document.getElementById('insp-diagnosis-text').textContent = generateDiagnosis(tetra, val, currentDensity, st);
+        }
+
       } else {
         document.getElementById('insp-metric-code').textContent = currentDensity;
         document.getElementById('insp-metric-val').textContent = (val >= 0 && !currentDensity.startsWith('B') ? '+' : '') + Number(val).toFixed(3);
-        document.getElementById('insp-metric-name').textContent = getMetricFullName(currentDensity);
+        document.getElementById('insp-metric-name').textContent = getMetricFullName(currentDensity) + (currentResolution === 'condensado' ? ' (Marginal)' : '');
         const colorVal = val > 0 ? 'var(--neon-green)' : (val < 0 ? 'var(--neon-magenta)' : 'var(--neon-gold)');
         document.getElementById('insp-metric-val').style.color = colorVal;
+
+        if (currentResolution === 'condensado') {
+          const da = tetra.d2;
+          const rc = tetra.d3;
+          const bar = (da + rc) / 2;
+          const fric = Math.abs(da - rc);
+          document.getElementById('insp-diagnosis-text').textContent = generateSubjectDiagnosis(da, rc, bar, fric, st);
+        } else {
+          document.getElementById('insp-diagnosis-text').textContent = generateDiagnosis(tetra, val, currentDensity, st);
+        }
       }
 
       // Barra de Gauge
       const isMass = currentDensity.startsWith('B');
       const gauge = document.getElementById('gauge-fill');
-      if (isMass) {
-        gauge.style.left = '0%';
-        gauge.style.width = `${Math.max(0, Math.min(100, val * 100))}%`;
-        gauge.style.background = 'var(--neon-gold)';
-      } else {
-        const pct = Math.abs(val) * 50;
-        if (val >= 0) {
-          gauge.style.left = '50%';
-          gauge.style.width = `${pct}%`;
-          gauge.style.background = 'var(--neon-green)';
+      if (gauge) {
+        if (isMass) {
+          gauge.style.left = '0%';
+          gauge.style.width = `${Math.max(0, Math.min(100, val * 100))}%`;
+          gauge.style.background = 'var(--neon-gold)';
         } else {
-          gauge.style.left = `${50 - pct}%`;
-          gauge.style.width = `${pct}%`;
-          gauge.style.background = 'var(--neon-magenta)';
+          const pct = Math.abs(val) * 50;
+          if (val >= 0) {
+            gauge.style.left = '50%';
+            gauge.style.width = `${pct}%`;
+            gauge.style.background = 'var(--neon-green)';
+          } else {
+            gauge.style.left = `${50 - pct}%`;
+            gauge.style.width = `${pct}%`;
+            gauge.style.background = 'var(--neon-magenta)';
+          }
         }
       }
-
-      // Texto de Diagnóstico
-      document.getElementById('insp-diagnosis-text').textContent = generateDiagnosis(tetra, val, currentDensity, st);
 
       // Repintar Canvas para mover el cursor
       drawCarril();
@@ -8974,6 +9173,57 @@
       if (triggerSound && audioEnabled) {
         playClickSound(val);
       }
+    }
+
+    function getSubjectRoleDescription(da, rc, bar, fric) {
+      if (rc >= 0.25 && da > 0.05) return "Líder Sociométrico Cohesivo (Alto estatus y alta expansividad)";
+      if (rc >= 0.20 && da <= 0.05) return "Líder Receptivo Pasivo (Atracción recibida con contención emisora)";
+      if (rc <= -0.20 && da >= 0) return "Sujeto Rechazado / Tensión Severa (Saldo neto negativo del grupo)";
+      if (rc <= -0.15 && da < 0) return "Desvinculación y Oposición Recíproca con el Grupo";
+      if (da >= 0.12 && rc >= 0.10) return "Vínculo Sinergético Armónico de Cohesión Bilateral";
+      if (da > rc + 0.15) return "Emisor Hiperactivo / Sobreesfuerzo no Correspondido";
+      if (Math.abs(rc) < 0.06 && Math.abs(da) < 0.06) return "Periferia Indiferente / Posición Neutra";
+      return "Posición Sociométrica Intermedia";
+    }
+
+    function generateSubjectDiagnosis(da, rc, bar, fric, st) {
+      const id = st.id || st.label || 'Sujeto';
+      if (rc >= 0.25 && da > 0.05) {
+        return `Líder sociométrico nuclear (${id}): Máxima atracción positiva recibida del grupo (+${rc.toFixed(3)}) correspondida con una expansividad proactiva (+${da.toFixed(3)}). Posición de alto estatus relacional y referencia directiva indiscutida.`;
+      }
+      if (rc >= 0.20 && da <= 0.05) {
+        return `Atracción receptiva pasiva (${id}): El grupo le confiere un alto reconocimiento (+${rc.toFixed(3)}), si bien el sujeto mantiene una actitud emisora de contención o reserva (+${da.toFixed(3)}). Asimetría favorable.`;
+      }
+      if (rc <= -0.20 && da >= 0) {
+        return `Fractura y tensión sociométrica severa (${id}): El sujeto busca vincularse positivamente con el grupo (+${da.toFixed(3)}), pero recibe un fuerte rechazo sociométrico (-${Math.abs(rc).toFixed(3)}). Máxima fricción térmica acumulada (${fric.toFixed(3)}).`;
+      }
+      if (rc <= -0.15 && da < 0) {
+        return `Rechazo y desvinculación recíproca (${id}): Oposición mutua entre el sujeto y el grupo. Emisión negativa (-${Math.abs(da).toFixed(3)}) con recepción también negativa (-${Math.abs(rc).toFixed(3)}). Aislamiento o marginación manifiesta.`;
+      }
+      if (da >= 0.12 && rc >= 0.10) {
+        return `Integración sinérgica equilibrada (${id}): Correspondencia armónica entre emisión (+${da.toFixed(3)}) y recepción (+${rc.toFixed(3)}) con baja fricción disonante (${fric.toFixed(3)}). Red relacional constructiva y estable.`;
+      }
+      if (Math.abs(rc) < 0.06 && Math.abs(da) < 0.06) {
+        return `Posición neutra o periférica (${id}): Nivel muy reducido de interacción sociométrica, con valores marginales cercanos a cero tanto en emisión como en recepción.`;
+      }
+      if (da > rc + 0.15) {
+        return `Sobreesfuerzo relacional no correspondido (${id}): El sujeto entrega mayor grado de preferencia al grupo (+${da.toFixed(3)}) del que le es devuelto (+${rc.toFixed(3)}). Desbalance de reciprocidad con potencial fatiga afectiva.`;
+      }
+      return `Posición sociométrica intermedia (${id}): Balance relacional con baricentro de ${(bar >= 0 ? '+' : '') + bar.toFixed(3)} y fricción moderada de ${fric.toFixed(3)}. Dinámica integrada dentro de los parámetros estándar del grupo.`;
+    }
+
+    function generateSubjectExpectationDiagnosis(pda, prc, bar, desac, st) {
+      const id = st.id || st.label || 'Sujeto';
+      if (pda > 0 && prc > 0) {
+        return `Expectativas positivas alineadas (${id}): El sujeto anticipa buena acogida de sus pares (+${pda.toFixed(3)}) y el grupo anticipa a su vez receptividad (+${prc.toFixed(3)}). Bajo desacople cognitivo (${desac.toFixed(3)}).`;
+      }
+      if (pda > 0 && prc < 0) {
+        return `Ingenuidad cognitiva o sobreestimación (${id}): El sujeto espera alta consideración del grupo (+${pda.toFixed(3)}) mientras que el grupo espera rechazo o frialdad (-${Math.abs(prc).toFixed(3)}). Elevado desacople perceptual (${desac.toFixed(3)}).`;
+      }
+      if (pda < 0 && prc > 0) {
+        return `Inseguridad defensiva / Cautela (${id}): El sujeto anticipa rechazo grupal (-${Math.abs(pda).toFixed(3)}), si bien el grupo aguarda elecciones favorables (+${prc.toFixed(3)}).`;
+      }
+      return `Expectativas intermedias (${id}): Percepción moderada con baricentro de expectativas de ${(bar >= 0 ? '+' : '') + bar.toFixed(3)}.`;
     }
 
     function getMetricFullName(metric) {
@@ -9032,17 +9282,55 @@
     // =========================================================================
     // INTERACCIÓN DE CONTROLES (HANDLERS)
     // =========================================================================
-    function setSpace(space) {
-      currentSpace = space;
-      document.getElementById('btn-space-nxn').classList.toggle('active', space === 'nxn');
-      document.getElementById('btn-space-qxq').classList.toggle('active', space === 'qxq');
-      document.getElementById('hud-space').textContent = space === 'nxn' ? 'n×n (36 Díadas)' : 'q×q (81 Figuras)';
+    function setResolution(res) {
+      currentResolution = res;
+      if (res === 'qxq') {
+        currentSpace = 'qxq';
+      } else {
+        currentSpace = 'nxn';
+      }
 
-      // Reset estación a 0
+      // Actualizar botones de resolución en cabecera y deck A
+      ['cond', 'comp', 'qxq'].forEach(k => {
+        const match = (k === 'cond' && res === 'condensado') ||
+                      (k === 'comp' && res === 'completo') ||
+                      (k === 'qxq' && res === 'qxq');
+        document.getElementById('btn-res-' + k)?.classList.toggle('active', match);
+        document.getElementById('btn-deck-' + k)?.classList.toggle('active', match);
+      });
+
+      const hudSpace = document.getElementById('hud-space');
+      if (hudSpace) {
+        if (res === 'condensado') hudSpace.textContent = 'Condensado (i,·) (·,j)';
+        else if (res === 'completo') hudSpace.textContent = 'Completo (i,j)';
+        else hudSpace.textContent = 'q×q (81 Figuras)';
+      }
+
       activeStationIndex = 0;
-      updateActiveStation(0, false);
+      const stations = getCurrentStations();
+      totalStations = stations.length;
+      const scrubber = document.getElementById('scrubber-range');
+      if (scrubber) {
+        scrubber.min = 0;
+        scrubber.max = totalStations - 1;
+        scrubber.value = 0;
+      }
+
       updateHeaderBadges();
       drawCarril();
+      updateActiveStation(0, false);
+    }
+
+    function setSpace(space) {
+      if (space === 'qxq') {
+        setResolution('qxq');
+      } else {
+        if (currentResolution === 'qxq') {
+          setResolution('condensado');
+        } else {
+          setResolution(currentResolution);
+        }
+      }
     }
 
     function setSuperMode(mode) {
@@ -9052,7 +9340,6 @@
       document.getElementById('hud-mode').textContent = mode === 'separado' ? 'Por Separado' : 'Juntos (Superpuesto)';
 
       if (mode === 'juntos') {
-        // Si no hay ninguna dimensión en 'juntos', poner Tiempo por defecto
         if (currentTime !== 'juntos' && currentCriterion !== 'juntos' && currentGroup !== 'juntos') {
           setTime('juntos');
         }
@@ -9070,7 +9357,15 @@
       currentGroup = g;
       if (g === 'juntos') {
         superMode = 'juntos';
-        if (currentSpace !== 'qxq') setSpace('qxq'); // G juntos solo en qxq
+        if (currentSpace !== 'qxq') setResolution('qxq');
+      }
+      const stations = getCurrentStations();
+      totalStations = stations.length;
+      const scrubber = document.getElementById('scrubber-range');
+      if (scrubber) {
+        scrubber.max = totalStations - 1;
+        if (activeStationIndex >= totalStations) activeStationIndex = 0;
+        scrubber.value = activeStationIndex;
       }
       refreshButtonsState();
       updateHeaderBadges();
@@ -9169,14 +9464,18 @@
       const cStr = currentCriterion === 'juntos' ? 'C̄12' : ('C' + currentCriterion);
 
       document.getElementById('hud-coords').textContent = `${gStr} · ${tStr} · ${cStr}`;
+      const resTag = currentResolution === 'condensado' ? 'Condensado (i,·)(·,j)' : (currentResolution === 'completo' ? 'Completo (i,j)' : 'Q81');
+
       if (carrilTrackMode === '3vias_da_rc') {
-        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías Paralelas: DA ⇄ RC ⇄ (DA+RC)/2`;
+        const v1Name = currentResolution === 'condensado' ? '(i,·)' : 'DA';
+        const v2Name = currentResolution === 'condensado' ? '(·,j)' : 'RC';
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías Paralelas: ${v1Name} ⇄ ${v2Name} ⇄ Promedio [${resTag}]`;
         document.getElementById('carril-heading-formula').textContent = 'Baricentro S23 = (DA + RC) / 2';
       } else if (carrilTrackMode === '3vias_expect') {
-        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías de Expectativas: p_DA ⇄ p_RC ⇄ S14`;
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · 3 Vías de Expectativas: p_DA ⇄ p_RC ⇄ S14 [${resTag}]`;
         document.getElementById('carril-heading-formula').textContent = 'Expectativas S14 = (p_DA + p_RC) / 2';
       } else {
-        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · ${getMetricFullName(currentDensity)}`;
+        document.getElementById('carril-heading-title').textContent = `Grupo ${currentGroup} · T${currentTime} · C${currentCriterion} · ${getMetricFullName(currentDensity)} [${resTag}]`;
         document.getElementById('carril-heading-formula').textContent = getMetricFormula(currentDensity);
       }
 
@@ -9271,7 +9570,6 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        // Frecuencia modulada por el valor: de 240Hz (val=-1) a 680Hz (val=+1)
         const freq = 440 + val * 220;
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
@@ -9298,6 +9596,15 @@
       const tetra = getStationRawTetragram(station, mat);
       const val = computeDensityValue(tetra, currentDensity);
 
+      let titleLabel = '';
+      if (currentResolution === 'condensado') {
+        titleLabel = `Sujeto ${station.id} &middot; Perfil Marginal (i,·) y (·,j)`;
+      } else if (currentResolution === 'completo') {
+        titleLabel = `${station.coordLabel} &middot; ${station.from} ➔ ${station.to}`;
+      } else {
+        titleLabel = `${station.coordLabel} &middot; Figura #${station.id} ${station.sym}`;
+      }
+
       let metricRow = `
         <div style="display:flex; justify-content:space-between; gap:12px;">
           <span>${currentDensity}:</span>
@@ -9309,18 +9616,20 @@
         const rc = tetra.d3;
         const bar = (da + rc) / 2;
         const fric = Math.abs(da - rc);
+        const daLbl = currentResolution === 'condensado' ? '(i,·) Emisión' : 'DA';
+        const rcLbl = currentResolution === 'condensado' ? '(·,j) Recepción' : 'RC';
         metricRow = `
           <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px;">
-            <span>DA: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong></span>
-            <span>RC: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong></span>
+            <span>${daLbl}: <strong style="color:#38BDF8">${(da>=0?'+':'')+da.toFixed(2)}</strong></span>
+            <span>${rcLbl}: <strong style="color:#FF9F1C">${(rc>=0?'+':'')+rc.toFixed(2)}</strong></span>
           </div>
           <div style="display:flex; justify-content:space-between; gap:8px; font-size:10.5px; margin-top:2px;">
-            <span>Baricentro (DA+RC)/2:</span>
+            <span>Promedio Baricéntrico:</span>
             <strong style="color:var(--neon-green)">${(bar>=0?'+':'')+bar.toFixed(3)}</strong>
           </div>
           <div style="display:flex; justify-content:space-between; gap:8px; font-size:10px; color:var(--neon-magenta); margin-top:1px;">
-            <span>Fricción |DA - RC|:</span>
-            <strong>${fric.toFixed(2)}</strong>
+            <span>Fricción / Asimetría:</span>
+            <strong>${fric.toFixed(3)}</strong>
           </div>`;
       } else if (carrilTrackMode === '3vias_expect') {
         const pda = tetra.d1;
@@ -9339,11 +9648,11 @@
 
       tt.innerHTML = `
         <div style="font-weight:900; color:var(--neon-gold); font-size:12px; margin-bottom:3px;">
-          ${station.coordLabel} &middot; ${currentSpace === 'nxn' ? (station.from + ' ➔ ' + station.to) : ('Q' + station.id + ' ' + station.sym)}
+          ${titleLabel}
         </div>
         ${metricRow}
         <div style="font-size:9.5px; color:var(--text-dim); margin-top:4px; border-top:1px solid rgba(255,255,255,0.08); padding-top:2px;">
-          Tetragrama: D1:${tetra.d1} | D2:${tetra.d2} | D3:${tetra.d3} | D4:${tetra.d4}
+          Tetragrama: D1:${tetra.d1.toFixed(2)} | D2:${tetra.d2.toFixed(2)} | D3:${tetra.d3.toFixed(2)} | D4:${tetra.d4.toFixed(2)}
         </div>
       `;
     }
@@ -9359,6 +9668,7 @@
 
     // INICIALIZACIÓN ONLOAD
     window.onload = () => {
+      setResolution('condensado');
       setCarrilTrackMode('3vias_da_rc');
     };
   </script>
