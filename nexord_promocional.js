@@ -207,7 +207,6 @@ function initHeroVideo() {
 
   const btnPlay = document.getElementById('btn-video-play');
   const btnAudio = document.getElementById('btn-video-audio');
-  const unmuteBadge = document.getElementById('hero-unmute-badge');
   const btnFs = document.getElementById('btn-video-fs');
   const playIcon = document.getElementById('video-play-icon');
   const playLabel = document.getElementById('video-play-label');
@@ -230,14 +229,12 @@ function initHeroVideo() {
       }
       if (audioIcon) audioIcon.textContent = '🔇';
       if (audioLabel) audioLabel.textContent = 'Activar Audio';
-      if (unmuteBadge) unmuteBadge.style.display = 'inline-flex';
     } else {
       if (btnAudio) {
         btnAudio.classList.add('audio-active');
       }
       if (audioIcon) audioIcon.textContent = '🔊';
       if (audioLabel) audioLabel.textContent = 'Silenciar Audio';
-      if (unmuteBadge) unmuteBadge.style.display = 'none';
     }
   }
 
@@ -299,18 +296,10 @@ function initHeroVideo() {
     btnAudio.addEventListener('click', toggleAudio);
   }
 
-  if (unmuteBadge) {
-    unmuteBadge.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      activateSound();
-    });
-  }
-
   // Pulsar sobre el video conmuta Play / Pausa (salvo si se pulsa sobre botones de control)
   if (playerWrap) {
     playerWrap.addEventListener('click', (e) => {
-      if (e.target.closest('#hero-unmute-badge') || e.target.closest('.video-ctrl-btn')) {
+      if (e.target.closest('.video-ctrl-btn')) {
         return;
       }
       togglePlayPause(e);
