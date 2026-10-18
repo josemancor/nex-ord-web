@@ -554,7 +554,15 @@
         custodia: 'Custodia',
         portal: 'Portal Institucional ➔',
         tap_hint: '👆 Pulsa en cualquier lugar para entrar ➔',
-        tap_aria: 'Acceder al Portal Institucional NEXORD'
+        tap_aria: 'Acceder al Portal Institucional NEXORD',
+        click_title: 'Haz clic o pulsa en cualquier lugar para acceder al Portal Institucional',
+        brand_title: 'Entrar al Portal Institucional NEXORD',
+        dial_title: 'Abrir Dial Orbital Epistemológico (9 Sectores)',
+        custodia_title: 'Custodia Institucional para Universidades',
+        portal_title: 'Entrar al Portal Institucional NEXORD',
+        lang_aria: 'Seleccionar idioma',
+        dd_aria: 'Idiomas disponibles',
+        future_langs: 'Idiomas para futuras localizaciones...'
       },
       en: {
         flag: '🇬🇧',
@@ -566,7 +574,15 @@
         custodia: 'Stewardship',
         portal: 'Institutional Portal ➔',
         tap_hint: '👆 Tap anywhere to enter ➔',
-        tap_aria: 'Access NEXORD Institutional Portal'
+        tap_aria: 'Access NEXORD Institutional Portal',
+        click_title: 'Click or tap anywhere to access the Institutional Portal',
+        brand_title: 'Enter NEXORD Institutional Portal',
+        dial_title: 'Open Epistemological Orbital Dial (9 Sectors)',
+        custodia_title: 'Institutional Stewardship for Universities',
+        portal_title: 'Enter NEXORD Institutional Portal',
+        lang_aria: 'Select language',
+        dd_aria: 'Available languages',
+        future_langs: 'Languages for future localizations...'
       }
     };
 
@@ -590,14 +606,29 @@
       const subEl = document.querySelector('.brand-subtitle');
       if (subEl) subEl.textContent = dict.subtitle;
 
-      const dialEl = document.querySelector('a[href="dial_orbital.html"] span:last-child');
-      if (dialEl) dialEl.textContent = dict.dial;
+      const dialLink = document.querySelector('a[href="dial_orbital.html"]');
+      if (dialLink) {
+        dialLink.setAttribute('title', dict.dial_title);
+        const dialSpan = dialLink.querySelector('span:last-child');
+        if (dialSpan) dialSpan.textContent = dict.dial;
+      }
 
-      const custEl = document.querySelector('a[href="index_promocional.html#custodia"] span:last-child');
-      if (custEl) custEl.textContent = dict.custodia;
+      const custLink = document.querySelector('a[href="index_promocional.html#custodia"]');
+      if (custLink) {
+        custLink.setAttribute('title', dict.custodia_title);
+        const custSpan = custLink.querySelector('span:last-child');
+        if (custSpan) custSpan.textContent = dict.custodia;
+      }
 
-      const portalEl = document.querySelector('.btn-portal-main span:last-child');
-      if (portalEl) portalEl.textContent = dict.portal;
+      const portalBtn = document.querySelector('.btn-portal-main');
+      if (portalBtn) {
+        portalBtn.setAttribute('title', dict.portal_title);
+        const portalSpan = portalBtn.querySelector('span:last-child');
+        if (portalSpan) portalSpan.textContent = dict.portal;
+      }
+
+      const brandBox = document.querySelector('.brand-box');
+      if (brandBox) brandBox.setAttribute('title', dict.brand_title);
 
       const tapEl = document.querySelector('#mobile-tap-hint span');
       if (tapEl) tapEl.textContent = dict.tap_hint;
@@ -605,18 +636,29 @@
       const clickZone = document.getElementById('click-anywhere-zone');
       if (clickZone) {
         clickZone.setAttribute('aria-label', dict.tap_aria);
-        clickZone.setAttribute('title', dict.tap_hint);
+        clickZone.setAttribute('title', dict.click_title);
       }
+
+      const heroBg = document.getElementById('hero-bg-cover');
+      if (heroBg) heroBg.setAttribute('title', dict.click_title);
+
+      const futureLangsEl = document.querySelector('#lang-dropdown div');
+      if (futureLangsEl) futureLangsEl.textContent = dict.future_langs;
+
+      const langBtn = document.getElementById('lang-btn');
+      if (langBtn) langBtn.setAttribute('aria-label', dict.lang_aria);
+
+      const dd = document.getElementById('lang-dropdown');
+      if (dd) {
+        dd.setAttribute('aria-label', dict.dd_aria);
+        dd.classList.remove('open');
+      }
+      if (langBtn) langBtn.setAttribute('aria-expanded', 'false');
 
       const optEs = document.getElementById('opt-es');
       const optEn = document.getElementById('opt-en');
       if (optEs) optEs.classList.toggle('active', lang === 'es');
       if (optEn) optEn.classList.toggle('active', lang === 'en');
-
-      const dd = document.getElementById('lang-dropdown');
-      if (dd) dd.classList.remove('open');
-      const btn = document.getElementById('lang-btn');
-      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
 
     function toggleLangMenu(event) {

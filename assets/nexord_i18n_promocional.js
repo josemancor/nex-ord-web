@@ -317,7 +317,33 @@
       modal_link_man_es: 'Manifiesto ES (PDF) ↗',
       modal_link_man_en: 'Manifesto EN (PDF) ↗',
       modal_link_zenodo: 'Repositorio CERN Zenodo ↗',
-      modal_btn_copy: 'Copiar al Portapapeles'
+      modal_btn_copy: 'Copiar al Portapapeles',
+
+      // Extras & Accesibilidad
+      video_fallback: 'Tu navegador no soporta el elemento de video.',
+      brand_home_title: 'Volver a la Portada de Bienvenida NEXORD',
+      nav_dial_btn_title: 'Abrir Dial Orbital Epistemológico (9 Sectores)',
+      btn_lang_es_title: 'Español (Canónico)',
+      btn_lang_en_title: 'English (International)',
+      doi_license_title: 'Creative Commons Atribución 4.0 Internacional',
+      nav_main_aria: 'Navegación Principal',
+      video_hero_aria: 'Demostración Oficial de VISORD 3D',
+      vnav_band_aria: 'Navegación vertical por secciones',
+      vnav_btn_up_title: 'Sección anterior (▲)',
+      vnav_btn_up_aria: 'Ir a sección anterior',
+      vnav_btn_down_title: 'Siguiente sección (▼)',
+      vnav_btn_down_aria: 'Ir a siguiente sección',
+      vnav_dots_aria: 'Indicadores de sección',
+      vnav_btn_dial_title: 'Abrir Dial Orbital Epistemológico (9 Sectores)',
+      vnav_btn_home_title: 'Volver a la Portada de Bienvenida NEXORD (🏠)',
+      vnav_dot_titles: ['1. Inicio / Hero', '2. ¿Por qué NEXORD?', '3. Joyas 3D', '4. Soluciones', '5. Garantía Ética', '6. Bóveda Científica', '7. Custodia Institucional'],
+      modal_close_aria: 'Cerrar',
+      modal_link_man_web_title: 'Abrir Manifiesto Científico Oficial en la Web (Zero-Install, 29 Láminas y Glosario)',
+      modal_link_supp_title: 'Ver Material Suplementario y Anexos Técnicos (6 Documentos)',
+      modal_link_sum_en_title: 'Descargar Resumen Ejecutivo Oficial (Edición en Inglés, PDF ~500 kB)',
+      modal_link_man_es_title: 'Descargar Manifiesto Científico Oficial (Edición en Español, PDF 58 MB)',
+      modal_link_man_en_title: 'Descargar Manifiesto Científico Oficial (Edición en Inglés, PDF 58 MB)',
+      modal_link_zenodo_title: 'Ver Registro y Custodia Oficial en CERN Zenodo (DOI: 10.5281/zenodo.23329641)'
     },
 
     en: {
@@ -626,7 +652,33 @@
       modal_link_man_es: 'Manifesto ES (PDF) ↗',
       modal_link_man_en: 'Manifesto EN (PDF) ↗',
       modal_link_zenodo: 'CERN Zenodo Repository ↗',
-      modal_btn_copy: 'Copy to Clipboard'
+      modal_btn_copy: 'Copy to Clipboard',
+
+      // Extras & Accessibility
+      video_fallback: 'Your browser does not support the video tag.',
+      brand_home_title: 'Return to NEXORD Welcome Portal',
+      nav_dial_btn_title: 'Open Epistemological Orbital Dial (9 Sectors)',
+      btn_lang_es_title: 'Spanish (Canonical)',
+      btn_lang_en_title: 'English (International)',
+      doi_license_title: 'Creative Commons Attribution 4.0 International',
+      nav_main_aria: 'Main Navigation',
+      video_hero_aria: 'Official VISORD 3D Demonstration',
+      vnav_band_aria: 'Vertical section navigation',
+      vnav_btn_up_title: 'Previous section (▲)',
+      vnav_btn_up_aria: 'Go to previous section',
+      vnav_btn_down_title: 'Next section (▼)',
+      vnav_btn_down_aria: 'Go to next section',
+      vnav_dots_aria: 'Section indicators',
+      vnav_btn_dial_title: 'Open Epistemological Orbital Dial (9 Sectors)',
+      vnav_btn_home_title: 'Return to NEXORD Welcome Portal (🏠)',
+      vnav_dot_titles: ['1. Home / Hero', '2. Why NEXORD?', '3. 3D Jewels', '4. Solutions', '5. Ethical Guarantee', '6. Scientific Vault', '7. Institutional Stewardship'],
+      modal_close_aria: 'Close',
+      modal_link_man_web_title: 'Open Official Scientific Manifesto on the Web (Zero-Install, 29 Plates & Glossary)',
+      modal_link_supp_title: 'View Supplementary Material & Technical Annexes (6 Documents)',
+      modal_link_sum_en_title: 'Download Official Executive Summary (English Edition, PDF ~500 kB)',
+      modal_link_man_es_title: 'Download Official Scientific Manifesto (Spanish Edition, PDF 58 MB)',
+      modal_link_man_en_title: 'Download Official Scientific Manifesto (English Edition, PDF 58 MB)',
+      modal_link_zenodo_title: 'View Official Record & Custody on CERN Zenodo (DOI: 10.5281/zenodo.23329641)'
     }
   };
 
@@ -667,6 +719,15 @@
     const navCta = document.querySelector('.nav-cta');
     if (navCta) navCta.textContent = dict.nav_cta;
 
+    const brandLink = document.querySelector('a.brand');
+    if (brandLink && dict.brand_home_title) brandLink.setAttribute('title', dict.brand_home_title);
+
+    const navDialBtn = document.querySelector('a.nav-dial-btn');
+    if (navDialBtn && dict.nav_dial_btn_title) navDialBtn.setAttribute('title', dict.nav_dial_btn_title);
+
+    const mainNav = document.querySelector('nav[aria-label]');
+    if (mainNav && dict.nav_main_aria) mainNav.setAttribute('aria-label', dict.nav_main_aria);
+
     // Dropdown items (11 elementos)
     const dropItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
     if (dropItems.length >= 11) {
@@ -701,6 +762,12 @@
     if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
 
     // Video Hero HUD & Controls
+    const vHeroBlock = document.getElementById('video-hero-block');
+    if (vHeroBlock && dict.video_hero_aria) vHeroBlock.setAttribute('aria-label', dict.video_hero_aria);
+
+    const vFb = document.getElementById('video-fallback-msg');
+    if (vFb && dict.video_fallback) vFb.textContent = dict.video_fallback;
+
     const vBadge = document.querySelector('.video-hero-badge span:last-child');
     if (vBadge) vBadge.textContent = dict.video_badge;
     const vMeta = document.querySelector('.video-hero-meta span');
@@ -1240,9 +1307,36 @@
       footPs[2].textContent = dict.foot_lang_future;
     }
 
+    const doiLic = document.querySelector('.doi-license');
+    if (doiLic && dict.doi_license_title) doiLic.setAttribute('title', dict.doi_license_title);
+
     // =========================================================================
-    // 14. VERTICAL NAV BAND TOOLTIPS
+    // 14. VERTICAL NAV BAND TOOLTIPS & ACCESSIBILITY
     // =========================================================================
+    const vNavBand = document.getElementById('vertical-nav-band');
+    if (vNavBand && dict.vnav_band_aria) vNavBand.setAttribute('aria-label', dict.vnav_band_aria);
+
+    const btnUp = document.getElementById('btn-vnav-up');
+    if (btnUp) {
+      if (dict.vnav_btn_up_title) btnUp.setAttribute('title', dict.vnav_btn_up_title);
+      if (dict.vnav_btn_up_aria) btnUp.setAttribute('aria-label', dict.vnav_btn_up_aria);
+    }
+
+    const btnDown = document.getElementById('btn-vnav-down');
+    if (btnDown) {
+      if (dict.vnav_btn_down_title) btnDown.setAttribute('title', dict.vnav_btn_down_title);
+      if (dict.vnav_btn_down_aria) btnDown.setAttribute('aria-label', dict.vnav_btn_down_aria);
+    }
+
+    const vNavDotsWrap = document.getElementById('vnav-dots');
+    if (vNavDotsWrap && dict.vnav_dots_aria) vNavDotsWrap.setAttribute('aria-label', dict.vnav_dots_aria);
+
+    const vNavDial = document.querySelector('.vnav-dial');
+    if (vNavDial && dict.vnav_btn_dial_title) vNavDial.setAttribute('title', dict.vnav_btn_dial_title);
+
+    const vNavHome = document.querySelector('.vnav-home');
+    if (vNavHome && dict.vnav_btn_home_title) vNavHome.setAttribute('title', dict.vnav_btn_home_title);
+
     const vDots = document.querySelectorAll('.vnav-dots .vnav-dot');
     if (vDots.length >= 7) {
       const tips = [
@@ -1257,6 +1351,9 @@
       vDots.forEach((d, idx) => {
         const tipEl = d.querySelector('.vnav-dot-tooltip');
         if (tipEl && tips[idx]) tipEl.textContent = tips[idx];
+        if (dict.vnav_dot_titles && dict.vnav_dot_titles[idx]) {
+          d.setAttribute('title', dict.vnav_dot_titles[idx]);
+        }
       });
     }
 
@@ -1265,6 +1362,9 @@
     // =========================================================================
     const mTitle = document.querySelector('.bibtex-modal-title');
     if (mTitle) mTitle.innerHTML = '<span>📑</span> ' + dict.modal_title;
+    const mCloseBtn = document.querySelector('.bibtex-close-btn');
+    if (mCloseBtn && dict.modal_close_aria) mCloseBtn.setAttribute('aria-label', dict.modal_close_aria);
+
     const mHint = document.getElementById('citation-format-hint');
     if (mHint && (!mHint.getAttribute('data-fmt') || mHint.getAttribute('data-fmt') === 'bibtex')) {
       mHint.textContent = dict.modal_hint_bibtex;
@@ -1275,11 +1375,22 @@
     const mLinks = document.querySelectorAll('.bibtex-modal-body a');
     if (mLinks.length >= 6) {
       mLinks[0].innerHTML = '<span>📜</span> ' + dict.modal_link_manifesto_web;
+      if (dict.modal_link_man_web_title) mLinks[0].setAttribute('title', dict.modal_link_man_web_title);
+
       mLinks[1].innerHTML = '<span>📦</span> ' + dict.modal_link_supp;
+      if (dict.modal_link_supp_title) mLinks[1].setAttribute('title', dict.modal_link_supp_title);
+
       mLinks[2].innerHTML = '<span>⚡</span> ' + dict.modal_link_summary_en;
+      if (dict.modal_link_sum_en_title) mLinks[2].setAttribute('title', dict.modal_link_sum_en_title);
+
       mLinks[3].innerHTML = '<span>📄</span> ' + dict.modal_link_man_es;
+      if (dict.modal_link_man_es_title) mLinks[3].setAttribute('title', dict.modal_link_man_es_title);
+
       mLinks[4].innerHTML = '<span>📄</span> ' + dict.modal_link_man_en;
+      if (dict.modal_link_man_en_title) mLinks[4].setAttribute('title', dict.modal_link_man_en_title);
+
       mLinks[5].innerHTML = '<span>🏛️</span> ' + dict.modal_link_zenodo;
+      if (dict.modal_link_zenodo_title) mLinks[5].setAttribute('title', dict.modal_link_zenodo_title);
     }
 
     // =========================================================================
@@ -1290,10 +1401,12 @@
     if (btnEs) {
       btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
       btnEs.style.fontWeight = (lang === 'es') ? '800' : '700';
+      if (dict.btn_lang_es_title) btnEs.setAttribute('title', dict.btn_lang_es_title);
     }
     if (btnEn) {
       btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
       btnEn.style.fontWeight = (lang === 'en') ? '800' : '700';
+      if (dict.btn_lang_en_title) btnEn.setAttribute('title', dict.btn_lang_en_title);
     }
 
     // Notificar al ecosistema
