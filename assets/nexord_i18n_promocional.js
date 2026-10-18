@@ -174,7 +174,7 @@
       flow_s3_desc: 'La dirección recibe un informe ejecutivo claro, acompañado de las visualizaciones interactivas en 3D/4D y recomendaciones prácticas de intervención inmediata.',
 
       // Sección 5: Garantía Ética
-      ethics_heading: '<span>🛡️</span> Mandato Deontológico Inviolable',
+      ethics_heading: '<span>🛡️</span> Mandato Deontológico',
       ethics_text_1: 'En NEXORD, la ciencia relacional está al servicio exclusivo del crecimiento humano. Cumplimos con los principios más estrictos de <strong>Privacidad por Diseño (Privacy by Design)</strong> y el mandato ético del Investigador Principal: <em>lo que detectamos son fenómenos termodinámicos estrictamente grupales, nunca defectos intrínsecos de la personalidad</em>. Queda formalmente garantizado el uso no punitivo de los datos para salvaguardar la dignidad y autoestima de cada persona.',
       ethics_text_2: '✓ Cumplimiento RGPD &bull; Encriptación de extremo a extremo &bull; Destrucción forense de datos efímeros',
       ethics_btn: 'Ver Portal del Participante ↗',
@@ -483,7 +483,7 @@
       flow_s3_desc: 'Leadership receives a clear executive report accompanied by interactive 3D/4D visualizers and actionable immediate recommendations.',
 
       // Section 5: Ethical Safeguards
-      ethics_heading: '<span>🛡️</span> Inviolable Deontological Mandate',
+      ethics_heading: '<span>🛡️</span> Deontological Mandate',
       ethics_text_1: 'At NEXORD, relational science serves human flourishing exclusively. We adhere to the strictest <strong>Privacy by Design</strong> principles and the Principal Investigator\'s ethical pledge: <em>we identify strictly group thermodynamic phenomena, never intrinsic personality flaws</em>. Non-punitive data use is formally guaranteed to safeguard personal dignity and self-esteem.',
       ethics_text_2: '✓ GDPR Compliant &bull; End-to-end encryption &bull; Forensic purging of ephemeral data',
       ethics_btn: 'View Participant Portal ↗',
