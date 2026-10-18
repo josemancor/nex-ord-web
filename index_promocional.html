@@ -1,6 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- =========================================================================
+       NEXORD CANONICAL CLEAN BOOT & ANTI-CACHE RESET
+       ========================================================================= -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    (function() {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      try {
+        sessionStorage.clear();
+      } catch(e) {}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        }).catch(function(){});
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
+        }).catch(function(){});
+      }
+      window.addEventListener('pageshow', function(ev) {
+        if (ev.persisted) {
+          window.location.reload();
+        }
+      });
+    })();
+  </script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEXORD | La Radiografía 3D de las Relaciones Humanas · Visualizador Sociométrico VISORD</title>

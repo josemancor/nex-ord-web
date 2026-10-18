@@ -1,9 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- =========================================================================
+       NEXORD CANONICAL CLEAN BOOT & ANTI-CACHE RESET
+       ========================================================================= -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    (function() {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      try {
+        sessionStorage.clear();
+      } catch(e) {}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        }).catch(function(){});
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
+        }).catch(function(){});
+      }
+      window.addEventListener('pageshow', function(ev) {
+        if (ev.persisted) {
+          window.location.reload();
+        }
+      });
+    })();
+  </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>NEXORD · Recursos y Entornos Operativos (Nivel 8: Experiencia VISORD)</title>
     <meta name="description" content="NEXORD Recursos y Entornos Operativos (Nivel 8: Experiencia VISORD). Acceso a simuladores interactivos 3D/4D: VISORD_demo, VISORD_cultural, VISORD_radiológico y VISORD_dialectico.">
     <meta name="keywords" content="NEXORD, recursos sociometría, VISORD demo, VISORD cultural, VISORD radiológico, VISORD dialectico, simulador 3D, sociometría ordinal">
