@@ -54,6 +54,11 @@
       s2_r4_t: 'Preservar la disponibilidad del repositorio institucional bajo licencia abierta CC-BY-4.0 para usos de investigación y docencia.',
       s2_r5_h: '5. Mandato de Universalidad Cosmopolita',
       s2_r5_t: 'Preservar la vocación del software como patrimonio abierto de la humanidad (UNESCO Open Science), manteniendo activos y homologados el Español e Inglés, con arquitectura preparada para futuras localizaciones.',
+      s2_dt_title: '⚖️ Régimen de Protección: Doble Vía',
+      s2_dt_lead: 'La gobernanza del ecosistema se estructura en dos esferas estrictamente diferenciadas y complementarias:',
+      s2_dt_li1: '<strong>ESFERA ABIERTA (CC-BY-4.0):</strong> Manifiesto, canon teórico, métricas formalizadas, dashboards, demos VISORD y documentación. Ciencia abierta verificable y citable por cualquiera.',
+      s2_dt_li2: '<strong>ESFERA CUSTODIADA (SIN DISTRIBUCIÓN LIBRE):</strong> Motores Python de cálculo, suite operativa, corpus BSOC con datos y herramientas de credenciales. Acceso exclusivo para equipos de investigación acreditados, con revocación.',
+      s2_dt_li3: '<strong>Auditorías («Auditable no significa abierto»):</strong> El código operativo es auditable por comités o terceros acreditados bajo acuerdo de confidencialidad; los informes de auditoría son públicos, el código no se publica.',
 
       // Sección 3
       s3_title: 'Plan de Mantenimiento y Asesoría Voluntaria del Autor',
@@ -145,6 +150,11 @@
       s2_r4_t: 'Preserve the availability of the institutional repository under the open CC-BY-4.0 license for research and academic dissemination.',
       s2_r5_h: '5. Cosmopolitan Universal Mandate',
       s2_r5_t: 'Preserve the software\'s purpose as open human heritage (UNESCO Open Science), maintaining active and homologated Spanish and English, with architecture ready for future localizations.',
+      s2_dt_title: '⚖️ Double-Track Protection Regime',
+      s2_dt_lead: 'Ecosystem governance is structured into two strictly differentiated, complementary spheres:',
+      s2_dt_li1: '<strong>OPEN SPHERE (CC-BY-4.0):</strong> Scientific Manifesto, theoretical canon, formalized metrics, dashboards, VISORD demos, and documentation. Open science verifiable and citable by anyone.',
+      s2_dt_li2: '<strong>CUSTODIED SPHERE (NO FREE DISTRIBUTION):</strong> Native Python calculation engines, operational suite, BSOC corpus with data, and credential tools. Exclusive access for accredited research teams, subject to revocation.',
+      s2_dt_li3: '<strong>Audits ("Auditable does not mean open"):</strong> Operational code is auditable by ethics committees or accredited third parties under non-disclosure agreement; audit reports are public, code is not published.',
 
       // Section 3
       s3_title: 'Author\'s Maintenance and Voluntary Advisory Plan',
@@ -282,6 +292,17 @@
         s2Rows[3].children[1].textContent = d.s2_r4_t;
         s2Rows[4].children[0].innerHTML = '<strong>' + d.s2_r5_h + '</strong>';
         s2Rows[4].children[1].textContent = d.s2_r5_t;
+      }
+      const s2DtBox = document.getElementById('s2-double-track-box');
+      if (s2DtBox) {
+        s2DtBox.querySelector('h4').innerHTML = '<span>⚖️</span> ' + d.s2_dt_title.replace('⚖️ ', '');
+        s2DtBox.querySelector('p').innerHTML = d.s2_dt_lead;
+        const dtLis = s2DtBox.querySelectorAll('li');
+        if (dtLis.length >= 3) {
+          dtLis[0].innerHTML = d.s2_dt_li1;
+          dtLis[1].innerHTML = d.s2_dt_li2;
+          dtLis[2].innerHTML = d.s2_dt_li3;
+        }
       }
 
       // Sec 3
