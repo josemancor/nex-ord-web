@@ -385,6 +385,64 @@
       visibility: hidden;
     }
 
+    /* Pestañas de Vista Tensorial 2D (Ver 3 vs G·T, G·C, T·C) */
+    .pad-tensor-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-bottom: 2px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-tensor-tab {
+      flex: 1;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 2px 0;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-tensor-tab:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-tensor-tab.active {
+      background: rgba(255, 159, 28, 0.25);
+      border-color: #FF9F1C;
+      color: #FF9F1C;
+    }
+
+    /* Scrollbar estilizada para el panel de teclado maestro */
+    .master-keypad-panel {
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+
+    .master-keypad-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    .master-keypad-panel::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    .master-keypad-panel::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 2px;
+    }
+    .master-keypad-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.7);
+    }
+
     /* Selector de Arquitectura: 1 Carril vs Varios Carriles */
     .carril-layout-selector {
       display: flex;
@@ -438,6 +496,10 @@
       font-weight: 900;
       color: #38BDF8;
       letter-spacing: 0.5px;
+    }
+
+    .layout-cruzados-group {
+      border-left: 1px solid rgba(255, 230, 0, 0.28) !important;
     }
 
     /* Contenedor de Varios Carriles (Stack) */
@@ -1285,9 +1347,15 @@
             <button class="btn-layout active" id="btn-layout-1carril" onclick="setLayoutMode('1carril')">1 Carril</button>
             <div class="layout-multi-group">
               <span class="layout-multi-label">VARIOS:</span>
-              <button class="btn-layout" id="btn-multi-grupos" onclick="setLayoutMode('varios_carriles', 'grupos')" title="Varios Carriles por Grupos: G1 (Grupo A) · G2 (Grupo B) · G3 (Grupo C)">👥 Grupos (G1-G3)</button>
-              <button class="btn-layout" id="btn-multi-tiempos" onclick="setLayoutMode('varios_carriles', 'tiempos')" title="Varios Carriles por Tiempos: T1 (Inicial) · T2 (Intermedio) · T3 (Consolidado)">⏳ Tiempos (T1-T3)</button>
-              <button class="btn-layout" id="btn-multi-criterios" onclick="setLayoutMode('varios_carriles', 'criterios')" title="Varios Carriles por Criterios: C1 (Afinidad) · C2 (Tarea)">🎯 Criterios (C1-C2)</button>
+              <button class="btn-layout" id="btn-multi-grupos" onclick="setLayoutMode('varios_carriles', 'grupos')" title="Varios Carriles por Grupos: G1 (Grupo A) · G2 (Grupo B) · G3 (Grupo C)">👥 Grupos</button>
+              <button class="btn-layout" id="btn-multi-tiempos" onclick="setLayoutMode('varios_carriles', 'tiempos')" title="Varios Carriles por Tiempos: T1 (Inicial) · T2 (Intermedio) · T3 (Consolidado)">⏳ Tiempos</button>
+              <button class="btn-layout" id="btn-multi-criterios" onclick="setLayoutMode('varios_carriles', 'criterios')" title="Varios Carriles por Criterios: C1 (Afinidad) · C2 (Tarea)">🎯 Criterios</button>
+            </div>
+            <div class="layout-multi-group layout-cruzados-group">
+              <span class="layout-multi-label" style="color:var(--neon-gold)">CRUZADOS:</span>
+              <button class="btn-layout" id="btn-multi-cruz-gt" onclick="setLayoutMode('varios_carriles', 'cruzado_gt')" title="Carriles Cruzados G × T: Grupos y Tiempos">⮂ G × T</button>
+              <button class="btn-layout" id="btn-multi-cruz-gc" onclick="setLayoutMode('varios_carriles', 'cruzado_gc')" title="Carriles Cruzados G × C: Grupos y Criterios">⮂ G × C</button>
+              <button class="btn-layout" id="btn-multi-cruz-tc" onclick="setLayoutMode('varios_carriles', 'cruzado_tc')" title="Carriles Cruzados T × C: Tiempos y Criterios">⮂ T × C</button>
             </div>
           </div>
 
@@ -1342,24 +1410,67 @@
             </div>
           </div>
 
-          <!-- BLOQUE 1: HIPERTENSOR (G, T, C) - 1 a 3 celdas activables -->
-          <div class="pad-block" id="pad-block-tensor" title="Hipertensor: 1 a 3 opciones activables por dimensión (por defecto 1)">
-            <div class="pad-row">
-              <span class="pad-row-num">1</span>
-              <button class="pad-cell active-amber" id="pcell-g1" onclick="toggleTensorCell('g', '1')" title="Grupo A (G1)">G1</button>
-              <button class="pad-cell active-green" id="pcell-t1" onclick="toggleTensorCell('t', '1')" title="T1 Inicial">T1</button>
-              <button class="pad-cell active-cyan" id="pcell-c1" onclick="toggleTensorCell('c', '1')" title="C1 Afinidad">C1</button>
-            </div>
+          <!-- SELECTOR DE VISTA TENSORIAL 2D (VER 3 APILADOS O FILTRAR PAR) -->
+          <div class="pad-tensor-tabs" title="Modo de visualización de pares tensoriales">
+            <button class="btn-tensor-tab active" id="tab-tensor-all" onclick="setTensorViewMode('all')" title="Ver los 3 pares apilados (G·T, G·C, T·C)">Ver 3</button>
+            <button class="btn-tensor-tab" id="tab-tensor-gt" onclick="setTensorViewMode('gt')" title="Ver solo Par G·T">G·T</button>
+            <button class="btn-tensor-tab" id="tab-tensor-gc" onclick="setTensorViewMode('gc')" title="Ver solo Par G·C">G·C</button>
+            <button class="btn-tensor-tab" id="tab-tensor-tc" onclick="setTensorViewMode('tc')" title="Ver solo Par T·C">T·C</button>
+          </div>
+
+          <!-- BLOQUE 1: PAR G · T (Grupos y Tiempos - 2 celdas activas) -->
+          <div class="pad-block" id="pad-block-gt" title="Par G·T: Grupos vs Tiempos (2 opciones activas)">
             <div class="pad-row">
               <span class="pad-row-num">2</span>
-              <button class="pad-cell" id="pcell-g2" onclick="toggleTensorCell('g', '2')" title="Grupo B (G2)">G2</button>
-              <button class="pad-cell" id="pcell-t2" onclick="toggleTensorCell('t', '2')" title="T2 Intermedio">T2</button>
-              <button class="pad-cell" id="pcell-c2" onclick="toggleTensorCell('c', '2')" title="C2 Tarea">C2</button>
+              <button class="pad-cell active-amber" id="pcell-gt-g1" onclick="toggleTensorCell('g', '1')" title="Grupo A (G1)">G1</button>
+              <button class="pad-cell" id="pcell-gt-t1" onclick="toggleTensorCell('t', '1')" title="T1 Inicial">T1</button>
             </div>
             <div class="pad-row">
-              <span class="pad-row-num">3</span>
-              <button class="pad-cell" id="pcell-g3" onclick="toggleTensorCell('g', '3')" title="Grupo C (G3)">G3</button>
-              <button class="pad-cell" id="pcell-t3" onclick="toggleTensorCell('t', '3')" title="T3 Consolidado">T3</button>
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-gt-g2" onclick="toggleTensorCell('g', '2')" title="Grupo B (G2)">G2</button>
+              <button class="pad-cell" id="pcell-gt-t2" onclick="toggleTensorCell('t', '2')" title="T2 Intermedio">T2</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-gt-g3" onclick="toggleTensorCell('g', '3')" title="Grupo C (G3)">G3</button>
+              <button class="pad-cell" id="pcell-gt-t3" onclick="toggleTensorCell('t', '3')" title="T3 Consolidado">T3</button>
+            </div>
+          </div>
+
+          <!-- BLOQUE 2: PAR G · C (Grupos y Criterios - 2 celdas activas) -->
+          <div class="pad-block" id="pad-block-gc" title="Par G·C: Grupos vs Criterios (2 opciones activas)">
+            <div class="pad-row">
+              <span class="pad-row-num">2</span>
+              <button class="pad-cell active-amber" id="pcell-gc-g1" onclick="toggleTensorCell('g', '1')" title="Grupo A (G1)">G1</button>
+              <button class="pad-cell" id="pcell-gc-c1" onclick="toggleTensorCell('c', '1')" title="C1 Afinidad">C1</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-gc-g2" onclick="toggleTensorCell('g', '2')" title="Grupo B (G2)">G2</button>
+              <button class="pad-cell" id="pcell-gc-c2" onclick="toggleTensorCell('c', '2')" title="C2 Tarea">C2</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-gc-g3" onclick="toggleTensorCell('g', '3')" title="Grupo C (G3)">G3</button>
+              <span class="pad-cell-empty"></span>
+            </div>
+          </div>
+
+          <!-- BLOQUE 3: PAR T · C (Tiempos y Criterios - 2 celdas activas) -->
+          <div class="pad-block" id="pad-block-tc" title="Par T·C: Tiempos vs Criterios (2 opciones activas)">
+            <div class="pad-row">
+              <span class="pad-row-num">2</span>
+              <button class="pad-cell" id="pcell-tc-t1" onclick="toggleTensorCell('t', '1')" title="T1 Inicial">T1</button>
+              <button class="pad-cell" id="pcell-tc-c1" onclick="toggleTensorCell('c', '1')" title="C1 Afinidad">C1</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-tc-t2" onclick="toggleTensorCell('t', '2')" title="T2 Intermedio">T2</button>
+              <button class="pad-cell" id="pcell-tc-c2" onclick="toggleTensorCell('c', '2')" title="C2 Tarea">C2</button>
+            </div>
+            <div class="pad-row">
+              <span class="pad-row-num"></span>
+              <button class="pad-cell" id="pcell-tc-t3" onclick="toggleTensorCell('t', '3')" title="T3 Consolidado">T3</button>
               <span class="pad-cell-empty"></span>
             </div>
           </div>
@@ -8990,25 +9101,49 @@
       updateActiveStation(activeStationIndex, false);
     }
 
+    let tensorViewMode = 'all'; // 'all' (los 3 apilados) | 'gt' | 'gc' | 'tc'
+
+    function setTensorViewMode(mode) {
+      tensorViewMode = mode;
+      document.getElementById('tab-tensor-all')?.classList.toggle('active', mode === 'all');
+      document.getElementById('tab-tensor-gt')?.classList.toggle('active', mode === 'gt');
+      document.getElementById('tab-tensor-gc')?.classList.toggle('active', mode === 'gc');
+      document.getElementById('tab-tensor-tc')?.classList.toggle('active', mode === 'tc');
+
+      const blockGT = document.getElementById('pad-block-gt');
+      const blockGC = document.getElementById('pad-block-gc');
+      const blockTC = document.getElementById('pad-block-tc');
+
+      if (blockGT) blockGT.style.display = (mode === 'all' || mode === 'gt') ? 'flex' : 'none';
+      if (blockGC) blockGC.style.display = (mode === 'all' || mode === 'gc') ? 'flex' : 'none';
+      if (blockTC) blockTC.style.display = (mode === 'all' || mode === 'tc') ? 'flex' : 'none';
+    }
+
     function updateMasterPadUI() {
-      // 1. Bloque Tensor (G, T, C)
+      // 1. Bloques Tensoriales Pares 2D (G·T, G·C, T·C) - Estilo exacto captura usuario (amber)
       ['1', '2', '3'].forEach(v => {
-        const btnG = document.getElementById('pcell-g' + v);
-        if (btnG) {
-          const act = masterPadState.tensor.g.includes(v);
-          btnG.className = 'pad-cell' + (act ? (v === '1' ? ' active-amber' : (v === '2' ? ' active-green' : ' active-cyan')) : '');
-        }
-        const btnT = document.getElementById('pcell-t' + v);
-        if (btnT) {
-          const act = masterPadState.tensor.t.includes(v);
-          btnT.className = 'pad-cell' + (act ? (v === '1' ? ' active-green' : (v === '2' ? ' active-amber' : ' active-cyan')) : '');
-        }
+        const isG = masterPadState.tensor.g.includes(v);
+        const isT = masterPadState.tensor.t.includes(v);
+        const isC = masterPadState.tensor.c.includes(v);
+
+        // G en Bloque G·T y Bloque G·C
+        const btnGtG = document.getElementById('pcell-gt-g' + v);
+        if (btnGtG) btnGtG.className = 'pad-cell' + (isG ? ' active-amber' : '');
+        const btnGcG = document.getElementById('pcell-gc-g' + v);
+        if (btnGcG) btnGcG.className = 'pad-cell' + (isG ? ' active-amber' : '');
+
+        // T en Bloque G·T y Bloque T·C
+        const btnGtT = document.getElementById('pcell-gt-t' + v);
+        if (btnGtT) btnGtT.className = 'pad-cell' + (isT ? ' active-amber' : '');
+        const btnTcT = document.getElementById('pcell-tc-t' + v);
+        if (btnTcT) btnTcT.className = 'pad-cell' + (isT ? ' active-amber' : '');
+
+        // C en Bloque G·C y Bloque T·C
         if (v !== '3') {
-          const btnC = document.getElementById('pcell-c' + v);
-          if (btnC) {
-            const act = masterPadState.tensor.c.includes(v);
-            btnC.className = 'pad-cell' + (act ? (v === '1' ? ' active-cyan' : ' active-amber') : '');
-          }
+          const btnGcC = document.getElementById('pcell-gc-c' + v);
+          if (btnGcC) btnGcC.className = 'pad-cell' + (isC ? ' active-amber' : '');
+          const btnTcC = document.getElementById('pcell-tc-c' + v);
+          if (btnTcC) btnTcC.className = 'pad-cell' + (isC ? ' active-amber' : '');
         }
       });
 
@@ -9482,6 +9617,9 @@
       document.getElementById('btn-multi-grupos')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'grupos');
       document.getElementById('btn-multi-tiempos')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'tiempos');
       document.getElementById('btn-multi-criterios')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'criterios');
+      document.getElementById('btn-multi-cruz-gt')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_gt');
+      document.getElementById('btn-multi-cruz-gc')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_gc');
+      document.getElementById('btn-multi-cruz-tc')?.classList.toggle('active', mode === 'varios_carriles' && multicarrilSplit === 'cruzado_tc');
 
       const hudLayout = document.getElementById('hud-layout');
       if (hudLayout) {
@@ -9492,7 +9630,10 @@
           const splitLabels = {
             grupos: 'Varios (Grupos G1-G3)',
             tiempos: 'Varios (Tiempos T1-T3)',
-            criterios: 'Varios (Criterios C1-C2)'
+            criterios: 'Varios (Criterios C1-C2)',
+            cruzado_gt: 'Cruzados (G × T)',
+            cruzado_gc: 'Cruzados (G × C)',
+            cruzado_tc: 'Cruzados (T × C)'
           };
           hudLayout.textContent = splitLabels[multicarrilSplit] || 'Varios Carriles';
           hudLayout.style.color = 'var(--neon-gold)';
@@ -9509,11 +9650,13 @@
       } else {
         if (singleContainer) singleContainer.style.display = 'none';
         if (multiContainer) multiContainer.style.display = 'flex';
-        const splitMsg = multicarrilSplit === 'grupos'
-          ? '👥 Varios Carriles: Por Grupos (G1 · G2 · G3)'
-          : (multicarrilSplit === 'tiempos'
-            ? '⏳ Varios Carriles: Por Tiempos (T1 · T2 · T3)'
-            : '🎯 Varios Carriles: Por Criterios (C1 · C2)');
+        let splitMsg = '👥 Varios Carriles';
+        if (multicarrilSplit === 'grupos') splitMsg = '👥 Varios Carriles: Por Grupos (G1 · G2 · G3)';
+        else if (multicarrilSplit === 'tiempos') splitMsg = '⏳ Varios Carriles: Por Tiempos (T1 · T2 · T3)';
+        else if (multicarrilSplit === 'criterios') splitMsg = '🎯 Varios Carriles: Por Criterios (C1 · C2)';
+        else if (multicarrilSplit === 'cruzado_gt') splitMsg = '⮂ Carriles Cruzados: Grupos × Tiempos (G × T)';
+        else if (multicarrilSplit === 'cruzado_gc') splitMsg = '⮂ Carriles Cruzados: Grupos × Criterios (G × C)';
+        else if (multicarrilSplit === 'cruzado_tc') splitMsg = '⮂ Carriles Cruzados: Tiempos × Criterios (T × C)';
         showLimitToast(splitMsg, 2200);
       }
 
@@ -9522,6 +9665,21 @@
         if (multicarrilSplit === 'grupos') masterPadState.tensor.g = ['1', '2', '3'];
         else if (multicarrilSplit === 'tiempos') masterPadState.tensor.t = ['1', '2', '3'];
         else if (multicarrilSplit === 'criterios') masterPadState.tensor.c = ['1', '2'];
+        else if (multicarrilSplit === 'cruzado_gt') {
+          if (masterPadState.tensor.g.length === 0) masterPadState.tensor.g = ['1'];
+          masterPadState.tensor.t = ['1', '2', '3'];
+          setTensorViewMode('gt');
+        }
+        else if (multicarrilSplit === 'cruzado_gc') {
+          masterPadState.tensor.g = ['1', '2'];
+          masterPadState.tensor.c = ['1', '2'];
+          setTensorViewMode('gc');
+        }
+        else if (multicarrilSplit === 'cruzado_tc') {
+          masterPadState.tensor.t = ['1', '3'];
+          masterPadState.tensor.c = ['1', '2'];
+          setTensorViewMode('tc');
+        }
       }
 
       updateMasterPadUI();
@@ -9592,6 +9750,99 @@
           { id: 'c1', title: 'CARRIL 1: CRITERIO 1 · AFINIDAD SOCIO-AFECTIVA (C1)', g: gShared, t: tShared, c: '1', color: '#38BDF8' },
           { id: 'c2', title: 'CARRIL 2: CRITERIO 2 · TAREA FUNCIONAL / EFICACIA (C2)', g: gShared, t: tShared, c: '2', color: '#FFE600' }
         ];
+      } else if (multicarrilSplit === 'cruzado_gt') {
+        // CARRILES CRUZADOS G × T (Grupos cruzados con Tiempos)
+        const gActive = masterPadState.tensor.g.length > 0 ? masterPadState.tensor.g : ['1'];
+        const tActive = masterPadState.tensor.t.length > 0 ? masterPadState.tensor.t : ['1', '2', '3'];
+        const groupLabels = { '1': 'GRUPO A (G1)', '2': 'GRUPO B (G2)', '3': 'GRUPO C (G3)' };
+        const timeLabels = { '1': 'T1 INICIAL', '2': 'T2 INTERMEDIO', '3': 'T3 CONSOLIDADO' };
+        const palette = ['#38BDF8', '#FF9F1C', '#00FF87', '#E879F9'];
+        let idx = 0;
+        lanes = [];
+        gActive.forEach(gVal => {
+          tActive.forEach(tVal => {
+            if (lanes.length < 4) {
+              lanes.push({
+                id: `gt_${gVal}_${tVal}`,
+                title: `CARRIL CRUZADO ${idx + 1}: ${groupLabels[gVal] || 'G' + gVal} · ${timeLabels[tVal] || 'T' + tVal}`,
+                g: gVal,
+                t: tVal,
+                c: cShared,
+                color: palette[idx % palette.length]
+              });
+              idx++;
+            }
+          });
+        });
+        if (lanes.length === 0) {
+          lanes = [
+            { id: 'gt_1_1', title: 'CARRIL CRUZADO 1: GRUPO A (G1) · T1 INICIAL', g: '1', t: '1', c: cShared, color: '#38BDF8' },
+            { id: 'gt_1_2', title: 'CARRIL CRUZADO 2: GRUPO A (G1) · T2 INTERMEDIO', g: '1', t: '2', c: cShared, color: '#FF9F1C' },
+            { id: 'gt_1_3', title: 'CARRIL CRUZADO 3: GRUPO A (G1) · T3 CONSOLIDADO', g: '1', t: '3', c: cShared, color: '#00FF87' }
+          ];
+        }
+      } else if (multicarrilSplit === 'cruzado_gc') {
+        // CARRILES CRUZADOS G × C (Grupos cruzados con Criterios)
+        const gActive = masterPadState.tensor.g.length > 0 ? masterPadState.tensor.g : ['1', '2'];
+        const cActive = masterPadState.tensor.c.length > 0 ? masterPadState.tensor.c : ['1', '2'];
+        const groupLabels = { '1': 'GRUPO A (G1)', '2': 'GRUPO B (G2)', '3': 'GRUPO C (G3)' };
+        const critLabels = { '1': 'C1 AFINIDAD', '2': 'C2 TAREA' };
+        const palette = ['#38BDF8', '#FFE600', '#FF007F', '#00FF87'];
+        let idx = 0;
+        lanes = [];
+        gActive.forEach(gVal => {
+          cActive.forEach(cVal => {
+            if (lanes.length < 4) {
+              lanes.push({
+                id: `gc_${gVal}_${cVal}`,
+                title: `CARRIL CRUZADO ${idx + 1}: ${groupLabels[gVal] || 'G' + gVal} · ${critLabels[cVal] || 'C' + cVal}`,
+                g: gVal,
+                t: tShared,
+                c: cVal,
+                color: palette[idx % palette.length]
+              });
+              idx++;
+            }
+          });
+        });
+        if (lanes.length === 0) {
+          lanes = [
+            { id: 'gc_1_1', title: 'CARRIL CRUZADO 1: GRUPO A (G1) · C1 AFINIDAD', g: '1', t: tShared, c: '1', color: '#38BDF8' },
+            { id: 'gc_1_2', title: 'CARRIL CRUZADO 2: GRUPO A (G1) · C2 TAREA', g: '1', t: tShared, c: '2', color: '#FFE600' }
+          ];
+        }
+      } else if (multicarrilSplit === 'cruzado_tc') {
+        // CARRILES CRUZADOS T × C (Tiempos cruzados con Criterios)
+        const tActive = masterPadState.tensor.t.length > 0 ? masterPadState.tensor.t : ['1', '3'];
+        const cActive = masterPadState.tensor.c.length > 0 ? masterPadState.tensor.c : ['1', '2'];
+        const timeLabels = { '1': 'T1 INICIAL', '2': 'T2 INTERMEDIO', '3': 'T3 CONSOLIDADO' };
+        const critLabels = { '1': 'C1 AFINIDAD', '2': 'C2 TAREA' };
+        const palette = ['#38BDF8', '#FFE600', '#FF9F1C', '#00FF87'];
+        let idx = 0;
+        lanes = [];
+        tActive.forEach(tVal => {
+          cActive.forEach(cVal => {
+            if (lanes.length < 4) {
+              lanes.push({
+                id: `tc_${tVal}_${cVal}`,
+                title: `CARRIL CRUZADO ${idx + 1}: ${timeLabels[tVal] || 'T' + tVal} · ${critLabels[cVal] || 'C' + cVal}`,
+                g: gShared,
+                t: tVal,
+                c: cVal,
+                color: palette[idx % palette.length]
+              });
+              idx++;
+            }
+          });
+        });
+        if (lanes.length === 0) {
+          lanes = [
+            { id: 'tc_1_1', title: 'CARRIL CRUZADO 1: T1 INICIAL · C1 AFINIDAD', g: gShared, t: '1', c: '1', color: '#38BDF8' },
+            { id: 'tc_1_2', title: 'CARRIL CRUZADO 2: T1 INICIAL · C2 TAREA', g: gShared, t: '1', c: '2', color: '#FFE600' },
+            { id: 'tc_3_1', title: 'CARRIL CRUZADO 3: T3 CONSOLIDADO · C1 AFINIDAD', g: gShared, t: '3', c: '1', color: '#FF9F1C' },
+            { id: 'tc_3_2', title: 'CARRIL CRUZADO 4: T3 CONSOLIDADO · C2 TAREA', g: gShared, t: '3', c: '2', color: '#00FF87' }
+          ];
+        }
       }
 
       if (currentRenderedSplit !== multicarrilSplit || container.children.length !== lanes.length) {
