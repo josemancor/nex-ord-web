@@ -10050,17 +10050,19 @@
       '3': ['1C', '2C', '3C', '4C', '5C', '6C']
     };
 
-    // DEFINICIÓN DE LAS 9 FIGURAS MARGINALES DE Q81 (Q)
+    // DEFINICIÓN DE LAS 9 FIGURAS MARGINALES DE Q81 (Q: CANÓNICO DE MENOS A MÁS 1 A 9)
+    // Emisión:   [R  ¡R  <R   [¿  ¡¿  <¿   [E  ¡E  <E   (cols 9, 6, 3, 8, 5, 2, 7, 4, 1)
+    // Recepción: r]  r!  r>   ?]  ?!  ?>   e]  e!  e>   (filas 9, 6, 3, 8, 5, 2, 7, 4, 1)
     const Q_MARGINAL_STATIONS = [
-      { type: 'q_marginal', id: 1, k: 1, sym: '<Ee>', label: 'Q1 <Ee>', coordLabel: 'Q1 <Ee>', def: 'Elección total mutua / fuerte', u: 1, v: 1 },
-      { type: 'q_marginal', id: 2, k: 2, sym: '<¿?>', label: 'Q2 <¿?>', coordLabel: 'Q2 <¿?>', def: 'Expectativa positiva con indiferencia', u: 2, v: 2 },
-      { type: 'q_marginal', id: 3, k: 3, sym: '<Rr>', label: 'Q3 <Rr>', coordLabel: 'Q3 <Rr>', def: 'Expectativa positiva con rechazo', u: 3, v: 3 },
-      { type: 'q_marginal', id: 4, k: 4, sym: '¡Ee!>', label: 'Q4 ¡Ee!>', coordLabel: 'Q4 ¡Ee!>', def: 'Elección mutua con expectativa neutra', u: 4, v: 4 },
-      { type: 'q_marginal', id: 5, k: 5, sym: '¡¿?!>', label: 'Q5 ¡¿?!>', coordLabel: 'Q5 ¡¿?!>', def: 'Indiferencia absoluta (Centro Neutro)', u: 5, v: 5 },
-      { type: 'q_marginal', id: 6, k: 6, sym: '¡Rr!>', label: 'Q6 ¡Rr!>', coordLabel: 'Q6 ¡Rr!>', def: 'Rechazo mutuo con expectativa neutra', u: 6, v: 6 },
-      { type: 'q_marginal', id: 7, k: 7, sym: '[Ee]', label: 'Q7 [Ee]', coordLabel: 'Q7 [Ee]', def: 'Elección con expectativa negativa', u: 7, v: 7 },
-      { type: 'q_marginal', id: 8, k: 8, sym: '[¿?]', label: 'Q8 [¿?]', coordLabel: 'Q8 [¿?]', def: 'Expectativa negativa con indiferencia', u: 8, v: 8 },
-      { type: 'q_marginal', id: 9, k: 9, sym: '[Rr]', label: 'Q9 [Rr]', coordLabel: 'Q9 [Rr]', def: 'Rechazo recíproco total / fuerte', u: 9, v: 9 }
+      { type: 'q_marginal', id: 1, step: 1, sym: '[Rr]',  label: 'Q1 [Rr]',  coordLabel: 'Q1 [R+r]',  def: 'Rechazo recíproco total [R + r]',                col: 9, row: 9, qid: 1 },
+      { type: 'q_marginal', id: 2, step: 2, sym: '¡Rr!>', label: 'Q2 ¡Rr!>', coordLabel: 'Q2 ¡R+r!', def: 'Rechazo mutuo con expectativa neutra [¡R + r!]',  col: 6, row: 6, qid: 25 },
+      { type: 'q_marginal', id: 3, step: 3, sym: '<Rr>',  label: 'Q3 <Rr>',  coordLabel: 'Q3 <R+r>',  def: 'Rechazo mutuo con percepciones positivas [<R + r>]', col: 3, row: 3, qid: 69 },
+      { type: 'q_marginal', id: 4, step: 4, sym: '[¿?]',  label: 'Q4 [¿?]',  coordLabel: 'Q4 [¿+?]',  def: 'Indiferencia con anticipación hostil [[¿ + ?]]', col: 8, row: 8, qid: 5 },
+      { type: 'q_marginal', id: 5, step: 5, sym: '¡¿?!>', label: 'Q5 ¡¿?!>', coordLabel: 'Q5 ¡¿+?!', def: 'Indiferencia absoluta (Centro Neutro Canónico)',     col: 5, row: 5, qid: 41 },
+      { type: 'q_marginal', id: 6, step: 6, sym: '<¿?>',  label: 'Q6 <¿?>',  coordLabel: 'Q6 <¿+?>',  def: 'Indiferencia con expectativas positivas [<¿ + ?>]', col: 2, row: 2, qid: 77 },
+      { type: 'q_marginal', id: 7, step: 7, sym: '[Ee]',  label: 'Q7 [Ee]',  coordLabel: 'Q7 [E+e]',  def: 'Elección mutua con recelo recíproco [[E + e]]',     col: 7, row: 7, qid: 13 },
+      { type: 'q_marginal', id: 8, step: 8, sym: '¡Ee!>', label: 'Q8 ¡Ee!>', coordLabel: 'Q8 ¡E+e!', def: 'Elección mutua con desconocimiento [¡E + e!]',      col: 4, row: 4, qid: 57 },
+      { type: 'q_marginal', id: 9, step: 9, sym: '<Ee>',  label: 'Q9 <Ee>',  coordLabel: 'Q9 <E+e>',  def: 'Elección mutua total plena [<E + e>]',             col: 1, row: 1, qid: 81 }
     ];
     const MATRIX_9X9_LOOKUP = {};
     const MATRIX_TRANSPOSE_MAP = {};
@@ -10088,19 +10090,27 @@
         }
       }
 
-      // BARRIDO 9x9 INVERSO CANÓNICO: (9,9) hasta (1,1)
-      for (let r = 9; r >= 1; r--) {
-        for (let c = 9; c >= 1; c--) {
-          const it = lookup[r + ',' + c];
-          TRAVERSAL_9X9.push({
-            ...it,
-            u: r,
-            v: c,
-            isDiagonal: (r === c),
-            coordLabel: '(' + r + ',' + c + ')'
-          });
+      // BARRIDO 9x9 DE MENOS A MÁS (ID 1 [Rr] hasta ID 81 <Ee>)
+      const sortedQ81 = [...MATRIX_9x9_CONFIG].sort((a, b) => a.id - b.id);
+      sortedQ81.forEach(it => {
+        let foundR = 1, foundC = 1;
+        for (let r = 1; r <= 9; r++) {
+          for (let c = 1; c <= 9; c++) {
+            if (MATRIX_9X9_LOOKUP[r + ',' + c]?.id === it.id) {
+              foundR = r;
+              foundC = c;
+              break;
+            }
+          }
         }
-      }
+        TRAVERSAL_9X9.push({
+          ...it,
+          u: foundR,
+          v: foundC,
+          isDiagonal: (foundR === foundC),
+          coordLabel: '#' + it.id + ' ' + it.sym
+        });
+      });
     })();
 
     // OBTENER LISTA DE ESTACIONES SEGÚN RESOLUCIÓN
@@ -10228,24 +10238,25 @@
       };
     }
 
-    // CALCULAR MARGINALES DE LAS 9 FIGURAS DE Q81 (PROMEDIO DE DENSIDADES ELEMENTALES)
+    // CALCULAR MARGINALES DE LAS 9 FIGURAS DE Q81 (DE MENOS A MÁS: PROMEDIO ELEMENTAL)
     function getQMarginalTetragram(station, mat) {
-      const k = station.k || station.id || 1; // 1 a 9
+      const colIdx = station.col || 5;
+      const rowIdx = station.row || 5;
       const qmap = (mat && mat.q_map) ? mat.q_map : {};
 
-      // 1. Fila k (Recepción: d3 = RC, d4 = pRC) - cells (k, c) para c=1..9
+      // 1. Fila rowIdx (Recepción: d3 = RC, d4 = pRC) - cells (rowIdx, c) para c=1..9
       const rowLinks = [];
       for (let c = 1; c <= 9; c++) {
-        const fig = MATRIX_9X9_LOOKUP[k + ',' + c];
+        const fig = MATRIX_9X9_LOOKUP[rowIdx + ',' + c];
         if (fig && qmap[String(fig.id)]) {
           rowLinks.push(...qmap[String(fig.id)]);
         }
       }
 
-      // 2. Columna k (Emisión: d1 = pDA, d2 = DA) - cells (r, k) para r=1..9
+      // 2. Columna colIdx (Emisión: d1 = pDA, d2 = DA) - cells (r, colIdx) para r=1..9
       const colLinks = [];
       for (let r = 1; r <= 9; r++) {
-        const fig = MATRIX_9X9_LOOKUP[r + ',' + k];
+        const fig = MATRIX_9X9_LOOKUP[r + ',' + colIdx];
         if (fig && qmap[String(fig.id)]) {
           colLinks.push(...qmap[String(fig.id)]);
         }
@@ -10255,7 +10266,7 @@
       let d1 = 0, d2 = 0, d3 = 0, d4 = 0;
       let hasData = false;
 
-      // Emisión (Columna k)
+      // Emisión (Columna colIdx)
       if (colLinks.length > 0) {
         d1 = colLinks.reduce((acc, l) => acc + (l.d1 !== undefined ? l.d1 : 0), 0) / colLinks.length;
         d2 = colLinks.reduce((acc, l) => acc + (l.d2 !== undefined ? l.d2 : 0), 0) / colLinks.length;
@@ -10263,14 +10274,14 @@
       } else {
         let s1 = 0, s2 = 0;
         for (let r = 1; r <= 9; r++) {
-          const fig = MATRIX_9X9_LOOKUP[r + ',' + k];
+          const fig = MATRIX_9X9_LOOKUP[r + ',' + colIdx];
           if (fig) { s1 += fig.d1; s2 += fig.d2; }
         }
         d1 = s1 / 9;
         d2 = s2 / 9;
       }
 
-      // Recepción (Fila k)
+      // Recepción (Fila rowIdx)
       if (rowLinks.length > 0) {
         d3 = rowLinks.reduce((acc, l) => acc + (l.d3 !== undefined ? l.d3 : 0), 0) / rowLinks.length;
         d4 = rowLinks.reduce((acc, l) => acc + (l.d4 !== undefined ? l.d4 : 0), 0) / rowLinks.length;
@@ -10278,7 +10289,7 @@
       } else {
         let s3 = 0, s4 = 0;
         for (let c = 1; c <= 9; c++) {
-          const fig = MATRIX_9X9_LOOKUP[k + ',' + c];
+          const fig = MATRIX_9X9_LOOKUP[rowIdx + ',' + c];
           if (fig) { s3 += fig.d3; s4 += fig.d4; }
         }
         d3 = s3 / 9;
@@ -10293,7 +10304,7 @@
         d2: d2,
         d3: d3,
         d4: d4,
-        smib: station.sym || ('Q' + k),
+        smib: station.sym,
         daMarginal: d2,
         rcMarginal: d3,
         pdaMarginal: d1,
