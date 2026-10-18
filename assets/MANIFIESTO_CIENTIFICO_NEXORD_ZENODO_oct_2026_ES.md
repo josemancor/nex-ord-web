@@ -503,8 +503,18 @@ Conviene precisar el alcance de esta declaración. El presente Manifiesto es un 
 ### 8.1. Anexo I: Matrices Duales (SMIb y SMIa, Retícula Q81)
 Formalización de la correspondencia biyectiva entre el orden de asignación alfanumérico y las figuras diádicas computables en la retícula fundamental Q81.
 
-![Tabla Anexo I: Matriz Q81](Tabla_Anexo_I_Matriz_Q81.png)  
-*Tabla Anexo I. Matriz estructural Q81 con las 81 figuras relacionales básicas ordenadas por antidiagonales de valencia creciente.*
+**Sintaxis Concentrada SMIa:**
+
+| tipo | DA: PERCEPCIÓN | DA: EFECTIVA | RECIBE: EFECTIVA | RECIBE: PERCEPCIÓN | code |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **elige** | `<` | `E` | `e` | `>` | `A-Z` |
+| **indiferencia** | `¡` | `¿` | `?` | `!` | `0000` |
+| **rechaza** | `[` | `R` | `r` | `]` | `a -z` |
+
+![SMIa Sintaxis Concentrada](Tabla_SMIa_Sintaxis_Concentrada.png)
+
+![Tabla Anexo I: Numeralización Q81(9,9) y Sintaxis SMIa](Tabla_Q81_Numeralizacion_Figuras_Sociometricas.png)  
+*Tabla Anexo I. Numeralización canónica de figuras relacionales sociométricas Q81(9,9): De 81 a 1 con centro neutro en 41 y sintaxis concentrada SMIa.*
 
 ### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO)
 

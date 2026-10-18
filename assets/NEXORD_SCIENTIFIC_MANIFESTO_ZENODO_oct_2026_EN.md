@@ -527,10 +527,20 @@ It is vital to clarify the exact scope of this declaration. This Manifesto is a 
 ## 8. Formalized Technical Annexes
 
 ### 8.1. Annex I: Dual Matrices (SMIb and SMIa, Q81 Lattice)
-Formalization of bijective correspondence between alphanumeric ordering and computable dyadic figures in the canonical Q81 lattice.
+Formalization of bijective correspondence between alphanumeric ordering and computable dyadic figures in the Q81 lattice.
 
-![Table Annex I: Q81 Matrix](Table_Annex_I_Matrix_Q81_EN.png)  
-*Table Annex I. Structural Q81 matrix with 81 canonical relational figures ordered by increasing-valence antidiagonals.*
+**Concentrated SMIa Syntax:**
+
+| type | GIVES (DA): PERCEPTION | GIVES (DA): EFFECTIVE | RECEIVES (RC): EFFECTIVE | RECEIVES (RC): PERCEPTION | code |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **choice** | `<` | `E` | `e` | `>` | `A-Z` |
+| **indifference** | `¡` | `¿` | `?` | `!` | `0000` |
+| **rejection** | `[` | `R` | `r` | `]` | `a -z` |
+
+![SMIa Concentrated Syntax](Tabla_SMIa_Sintaxis_Concentrada.png)
+
+![Table Annex I: Q81(9,9) Numeralization and SMIa Syntax](Tabla_Q81_Numeralizacion_Figuras_Sociometricas.png)  
+*Table Annex I. Canonical numeralization of relational figures Q81(9,9): From 81 to 1 centered on neutral 41 with concentrated SMIa syntax.*
 
 ### 8.2. Annex II: Factorial Metrics (COR, CTA, CTR), Slender Vertical Axes, and Hierarchical Axonometric 6D-to-2D Projection (DIMO / ANCORM Algorithm by Dr. J. M. Cornejo Álvarez)
 
