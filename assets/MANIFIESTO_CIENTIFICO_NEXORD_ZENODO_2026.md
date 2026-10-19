@@ -572,6 +572,16 @@ $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura 
 * **Convergencia a la Pluralidad Pura ($\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1}$):** Mediante la delta de Kronecker $\delta_{k,1}$, únicamente cuenta el primer voto ($k=1$). El centro se adjudica por primacía polarizada («quien es elegido primero»), amplificando el contraste y concentrando el riesgo de ostracismo primario $D^{(1)}$.
 * **Equilibrio Canónico de Semivida ($\alpha = 1/2$):** Es el punto medio exacto de la balanza socio-termodinámica donde consenso y primacía reciben exactamente el mismo peso gravitatorio ($50\%$ en la primera elección $W(1)=1.000$ y $50\%$ distribuido a lo largo del cuerpo social $\sum_{k=2}^\infty 2^{1-k} = 1.000$).
 
+> La matriz de carreteras España-1988 verifica el corolario de forma cuantitativa. La recepción se comprime 7,5 veces al aplanar el gradiente, y el rango de $\Delta$ colapsa hacia cero —homeostasis aparente que es artefacto de la óptica, no propiedad del campo:
+
+| Gradiente $\alpha$ | $G$ (constante) | 1.ª elección $\%$ | $\rho$ máx / mín | Rango de $\Delta$ | Centro Resultante | Diagnóstico Socio-Termodinámico |
+| :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **$0{,}50$ canónico** | $1{,}996$ | $50{,}1\%$ | **$11{,}5\times$** | $[-1{,}88; \, +1{,}66]$ | **Zaragoza** ($\rho = 3{,}875$) | **Jerarquía nítida (deuda plenamente medible)** |
+| **$0{,}75$** | $3{,}700$ | $27{,}0\%$ | **$3{,}1\times$** | $[-1{,}52; \, +2{,}01]$ | Transición | Jerarquía atenuada (el baricentro Madrid emerge) |
+| **$0{,}90$ igualitaria** | $6{,}126$ | $16{,}3\%$ | **$1{,}5\times$** | $[-1{,}04; \, +1{,}46]$ | **Madrid** ($\rho = 7{,}160$) | Campo casi plano (Bilbao cae del 2.º al 7.º puesto) |
+| **$0{,}99$** | $8{,}648$ | $11{,}6\%$ | **$1{,}04\times$** | $[-0{,}15; \, +0{,}21]$ | Madrid (consistencia) | Homeostasis aparente total (ceguera de deuda) |
+| **$\alpha \to 1$ (límite)** | $9{,}000$ | $11{,}1\%$ | **$1{,}00\times$** | $[0{,}00; \, 0{,}00]$ | Indiferenciado Borda | Colapso métrico ($\|\boldsymbol{\Delta}\| \to 0$ artificial) |
+
 **Síntesis Apodíctica:** Con interdistancia igualitaria, el modelo nulo España-1988 no cambia de forma ni de simetría ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes): cambia de temperatura. El campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
 
 ---
