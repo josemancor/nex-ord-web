@@ -582,6 +582,8 @@ $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura 
 | **$0{,}99$** | $8{,}648$ | $11{,}6\%$ | **$1{,}04\times$** | $[-0{,}15; \, +0{,}21]$ | Madrid (consistencia) | Homeostasis aparente total (ceguera de deuda) |
 | **$\alpha \to 1$ (límite)** | $9{,}000$ | $11{,}1\%$ | **$1{,}00\times$** | $[0{,}00; \, 0{,}00]$ | Indiferenciado Borda | Colapso métrico ($\|\boldsymbol{\Delta}\| \to 0$ artificial) |
 
+**Hallazgo Fino:** La óptica jerárquica mide ser elegido primero (Zaragoza, tres primeras posiciones recibidas); la óptica igualitaria mide nunca estar al final (Madrid, sin colas malas en ninguna fila). La identidad del centro puede invertirse sin que el dato cambie: **la jerarquía medida es óptica declarada, no propiedad del dato**.
+
 **Síntesis Apodíctica:** Con interdistancia igualitaria, el modelo nulo España-1988 no cambia de forma ni de simetría ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes): cambia de temperatura. El campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
 
 ---
