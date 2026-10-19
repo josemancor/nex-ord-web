@@ -292,10 +292,11 @@ function initHeroVideo() {
   const audioLabel = document.getElementById('video-audio-label');
   const playerWrap = document.getElementById('hero-player-wrap');
 
-  // Asegurar reproducción única (sin bucle), playsinline y silencio inicial para permitir Autoplay
+  const overlayBtn = document.getElementById('hero-audio-overlay-btn');
+  const statusPill = document.getElementById('lbl-status-pill') || document.querySelector('.video-hero-status-pill span:last-child');
+
+  // Asegurar reproducción con playsinline
   vid.loop = false;
-  vid.muted = true;
-  vid.defaultMuted = true;
   vid.setAttribute('playsinline', '');
   vid.setAttribute('webkit-playsinline', '');
   vid.removeAttribute('loop');
@@ -308,12 +309,16 @@ function initHeroVideo() {
       }
       if (audioIcon) audioIcon.textContent = '🔇';
       if (audioLabel) audioLabel.textContent = isEn ? 'Enable Audio' : 'Activar Audio';
+      if (statusPill) statusPill.textContent = 'VISORD 3D · MUTE';
+      if (overlayBtn) overlayBtn.classList.remove('hidden');
     } else {
       if (btnAudio) {
         btnAudio.classList.add('audio-active');
       }
       if (audioIcon) audioIcon.textContent = '🔊';
-      if (audioLabel) audioLabel.textContent = isEn ? 'Mute Audio' : 'Silenciar Audio';
+      if (audioLabel) audioLabel.textContent = isEn ? 'Audio Active' : 'Audio Activado';
+      if (statusPill) statusPill.textContent = 'VISORD 3D · AUDIO ACTIVADO';
+      if (overlayBtn) overlayBtn.classList.add('hidden');
     }
   }
 
@@ -326,14 +331,21 @@ function initHeroVideo() {
         updateAudioUI(false);
       }).catch(err => {
         console.warn("Video sound activate error:", err);
-        vid.muted = false;
-        vid.volume = 1.0;
-        updateAudioUI(false);
+        vid.muted = true;
+        vid.play().catch(() => {});
+        updateAudioUI(true);
       });
     } else {
       updateAudioUI(false);
     }
   }
+  window.activateSoundFromOverlay = function(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    activateSound();
+  };
 
   function toggleAudio(e) {
     if (e) {
@@ -375,13 +387,17 @@ function initHeroVideo() {
     btnAudio.addEventListener('click', toggleAudio);
   }
 
-  // Pulsar sobre el video conmuta Play / Pausa (salvo si se pulsa sobre botones de control)
+  // Pulsar sobre el video activa el audio si está silenciado o conmuta Play / Pausa
   if (playerWrap) {
     playerWrap.addEventListener('click', (e) => {
-      if (e.target.closest('.video-ctrl-btn')) {
+      if (e.target.closest('.video-ctrl-btn') || e.target.closest('#hero-audio-overlay-btn')) {
         return;
       }
-      togglePlayPause(e);
+      if (vid.muted) {
+        activateSound();
+      } else {
+        togglePlayPause(e);
+      }
     });
   }
 
@@ -412,21 +428,28 @@ function initHeroVideo() {
     updateAudioUI(vid.muted);
   });
 
-  // Autoplay continuo y seguro
+  // Autoplay con AUDIO ACTIVADO prioritario
   function startAutoplaySafe() {
-    vid.muted = true;
+    vid.muted = false;
+    vid.volume = 1.0;
     const p = vid.play();
     if (p !== undefined) {
-      p.catch(() => {
-        // En navegadores móviles con políticas estrictas de ahorro de datos
-        const oneTouch = () => {
-          vid.play().catch(() => {});
-          ['touchstart', 'click'].forEach(ev => window.removeEventListener(ev, oneTouch));
+      p.then(() => {
+        updateAudioUI(false);
+      }).catch(() => {
+        // Política de Autoplay del navegador exigió gesto previo:
+        // iniciar en silencio y activar al primer gesto del usuario
+        vid.muted = true;
+        vid.play().catch(() => {});
+        updateAudioUI(true);
+
+        const unlockAudio = () => {
+          activateSound();
+          ['touchstart', 'click', 'pointerdown'].forEach(ev => window.removeEventListener(ev, unlockAudio, true));
         };
-        ['touchstart', 'click'].forEach(ev => window.addEventListener(ev, oneTouch, { once: true, passive: true }));
+        ['touchstart', 'click', 'pointerdown'].forEach(ev => window.addEventListener(ev, unlockAudio, { once: true, capture: true, passive: true }));
       });
     }
-    updateAudioUI(true);
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') {

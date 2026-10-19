@@ -46,6 +46,8 @@
       hero_title: 'La Radiografía 3D de las<br><span class="gradient-text">Relaciones Humanas</span>',
       hero_subtitle: 'Descubre las corrientes invisibles, el liderazgo real, las alianzas latentes y el riesgo de ostracismo en tu grupo antes de que se conviertan en crisis. Diagnóstico instantáneo, visual y 100% no punitivo.',
       hero_btn_3d: '🚀 Explorar las 4 Joyas 3D',
+      hero_btn_dial: '🧭 Dial Orbital',
+      hero_btn_manifesto: '📜 Manifiesto Global (HTML)',
       hero_btn_custody: '🏛️ Custodia Institucional',
       hero_btn_solutions: '💼 Soluciones Sectoriales',
 
@@ -381,6 +383,8 @@
       hero_title: 'The 3D Radiography of<br><span class="gradient-text">Human Relationships</span>',
       hero_subtitle: 'Uncover invisible currents, authentic leadership, latent factions, and hidden ostracism risks in your group before they become crises. Instantaneous, visual, and 100% non-punitive diagnosis.',
       hero_btn_3d: '🚀 Explore the 4 3D Jewels',
+      hero_btn_dial: '🧭 Orbital Dial',
+      hero_btn_manifesto: '📜 Global Manifesto (HTML)',
       hero_btn_custody: '🏛️ Institutional Stewardship',
       hero_btn_solutions: '💼 Sectoral Solutions',
 
@@ -754,12 +758,23 @@
     const heroSubtitle = document.querySelector('.hero-subtitle');
     if (heroSubtitle) heroSubtitle.textContent = dict.hero_subtitle;
 
-    const heroBtn3d = document.querySelector('.hero-actions .btn-primary span');
-    if (heroBtn3d) heroBtn3d.textContent = dict.hero_btn_3d;
+    const heroBtnDial = document.querySelector('.hero-actions a[href="dial_orbital.html"] span');
+    if (heroBtnDial) heroBtnDial.textContent = dict.hero_btn_dial || '🧭 Dial Orbital';
+    const heroBtnMan = document.querySelector('.hero-actions a.btn-manifiesto span');
+    if (heroBtnMan) heroBtnMan.textContent = dict.hero_btn_manifesto || '📜 Manifiesto Global (HTML)';
     const heroBtnCust = document.querySelector('.hero-actions a[href="#custodia"] span');
-    if (heroBtnCust) heroBtnCust.textContent = dict.hero_btn_custody;
+    if (heroBtnCust) heroBtnCust.textContent = dict.hero_btn_custody || '🏛️ Custodia Institucional';
+    const heroBtn3d = document.querySelector('.hero-actions .btn-primary span');
+    if (heroBtn3d && !heroBtnDial) heroBtn3d.textContent = dict.hero_btn_3d;
     const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
     if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
+
+    const overlayAudioText = document.getElementById('overlay-audio-text');
+    if (overlayAudioText) overlayAudioText.textContent = (lang === 'en') ? 'TAP TO ACTIVATE VISORD 3D AUDIO' : 'PULSA PARA ACTIVAR AUDIO VISORD 3D';
+    const overlayBtn = document.getElementById('hero-audio-overlay-btn');
+    if (overlayBtn) overlayBtn.setAttribute('title', (lang === 'en') ? 'Tap to activate audio' : 'Pulsa para activar audio');
+    const statusPillText = document.getElementById('lbl-status-pill');
+    if (statusPillText) statusPillText.textContent = (lang === 'en') ? 'VISORD 3D · AUDIO ACTIVE' : 'VISORD 3D · AUDIO ACTIVADO';
 
     // Video Hero HUD & Controls
     const vHeroBlock = document.getElementById('video-hero-block');
@@ -1401,11 +1416,13 @@
     if (btnEs) {
       btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
       btnEs.style.fontWeight = (lang === 'es') ? '800' : '700';
+      btnEs.classList.toggle('active', lang === 'es');
       if (dict.btn_lang_es_title) btnEs.setAttribute('title', dict.btn_lang_es_title);
     }
     if (btnEn) {
       btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
       btnEn.style.fontWeight = (lang === 'en') ? '800' : '700';
+      btnEn.classList.toggle('active', lang === 'en');
       if (dict.btn_lang_en_title) btnEn.setAttribute('title', dict.btn_lang_en_title);
     }
 

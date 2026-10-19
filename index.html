@@ -256,6 +256,14 @@
       box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
     }
 
+    .btn-text-desktop {
+      display: inline;
+    }
+
+    .btn-text-mobile {
+      display: none;
+    }
+
     .btn-portal-main {
       background: rgba(0, 255, 135, 0.18) !important;
       border-color: var(--neon-green) !important;
@@ -402,29 +410,34 @@
         display: none;
       }
 
-      /* Acciones de cabecera: scroll horizontal táctil si no caben (evita que los botones salten de línea o se corten) */
+      /* Acciones de cabecera: compactas y siempre visibles sin desbordamiento */
       .header-actions {
         gap: 6px;
         flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        max-width: calc(100vw - 150px);
-        padding-bottom: 2px;
-      }
-
-      .header-actions::-webkit-scrollbar {
-        display: none;
+        overflow-x: visible;
+        max-width: none;
       }
 
       .btn-nav-header {
-        padding: 6px 10px;
-        font-size: 0.76rem;
+        padding: 6px 9px;
+        font-size: 0.75rem;
+      }
+
+      .btn-custodia {
+        display: none !important; /* Oculta botón secundario en móviles para dar espacio al selector de idioma */
+      }
+
+      .btn-text-desktop {
+        display: none !important;
+      }
+
+      .btn-text-mobile {
+        display: inline !important;
       }
 
       .lang-picker-btn {
-        padding: 6px 9px;
-        font-size: 0.76rem;
+        padding: 6px 8px;
+        font-size: 0.75rem;
       }
 
       /* En pantallas muy estrechas, simplificar aún más la cabecera */
@@ -507,25 +520,20 @@
 
     <div class="header-actions" onclick="event.stopPropagation()">
       <a href="dial_orbital.html" class="btn-nav-header" style="color: #00F0FF; border-color: rgba(0, 240, 255, 0.45);" title="Abrir Dial Orbital Epistemológico (9 Sectores)">
-        <span>🧭</span> <span>Dial Orbital</span>
+        <span>🧭</span> <span class="btn-text-desktop">Dial Orbital</span><span class="btn-text-mobile">Dial</span>
       </a>
-      <a href="index_promocional.html#custodia" class="btn-nav-header" style="color: #38BDF8;" title="Custodia Institucional para Universidades">
-        <span>🏛️</span> <span>Custodia</span>
+      <a href="manifiesto.html" class="btn-nav-header btn-manifiesto" style="color: #FFE600; border-color: rgba(255, 230, 0, 0.4);" title="Abrir Manifiesto Científico Global en HTML">
+        <span>📜</span> <span class="btn-text-desktop">Manifiesto</span><span class="btn-text-mobile">Manifiesto</span>
       </a>
       <a href="index_promocional.html" class="btn-nav-header btn-portal-main" title="Entrar al Portal Institucional NEXORD">
-        <span>🏛️</span> <span>Portal Institucional ➔</span>
+        <span>🏛️</span> <span class="btn-text-desktop">Portal Institucional ➔</span><span class="btn-text-mobile">Portal ➔</span>
       </a>
 
-      <!-- Selector Internacional de Idioma (ES / EN) -->
-      <div class="lang-picker">
-        <button class="lang-picker-btn" id="lang-btn" type="button" onclick="toggleLangMenu(event)" aria-haspopup="true" aria-expanded="false" aria-label="Seleccionar idioma">
-          <span id="lang-flag">🇪🇸</span> <span id="lang-code">ES</span> ▾
-        </button>
-        <div class="lang-dropdown" id="lang-dropdown" role="menu" aria-label="Idiomas disponibles">
-          <button type="button" class="lang-opt active" id="opt-es" role="menuitem" onclick="setLanguage('es')">🇪🇸 Español (ES)</button>
-          <button type="button" class="lang-opt" id="opt-en" role="menuitem" onclick="setLanguage('en')">🇬🇧 English (EN)</button>
-          <div style="border-top:1px solid rgba(255,255,255,0.12); margin:6px 0 2px 0; padding:6px 8px; font-size:0.68rem; color:#94A3B8; font-style:italic; line-height:1.35;">Idiomas para futuras localizaciones...</div>
-        </div>
+      <!-- Selector Directo de Idioma (ES / EN) Sin Desplegables -->
+      <div class="hud-lang-picker" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.90); border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 20px; padding: 2px 6px; gap: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.80rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);">
+        <button type="button" class="lang-btn active" id="btn-idx-lang-es" onclick="setLanguage('es')" ontouchend="setLanguage('es')" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:4px 6px; font-size:0.80rem; touch-action:manipulation;" title="Español (Canónico)">🇪🇸 ES</button>
+        <span style="color: rgba(255,255,255,0.3);">|</span>
+        <button type="button" class="lang-btn" id="btn-idx-lang-en" onclick="setLanguage('en')" ontouchend="setLanguage('en')" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:4px 6px; font-size:0.80rem; touch-action:manipulation;" title="English (International)">🇬🇧 EN</button>
       </div>
     </div>
   </header>
@@ -551,6 +559,8 @@
         desc: 'NEXORD | Plataforma Científica de Sociometría Ordinal Computacional y Diagnóstico Socio-Termodinámico. Modelado matemático de redes humanas mediante matrices SMIb y variedades de Grassmann.',
         subtitle: 'Hacia una Física de lo Grupal',
         dial: 'Dial Orbital',
+        manifesto: 'Manifiesto',
+        manifesto_title: 'Abrir Manifiesto Científico Global en HTML',
         custodia: 'Custodia',
         portal: 'Portal Institucional ➔',
         tap_hint: '👆 Pulsa en cualquier lugar para entrar ➔',
@@ -571,6 +581,8 @@
         desc: 'NEXORD | Computational Ordinal Sociometry & Socio-Thermodynamic Diagnosis Platform. Mathematical modeling of human networks via SMIb matrices and Grassmann manifolds.',
         subtitle: 'Towards a Physics of the Group',
         dial: 'Orbital Dial',
+        manifesto: 'Manifesto',
+        manifesto_title: 'Open Global Scientific Manifesto in HTML',
         custodia: 'Stewardship',
         portal: 'Institutional Portal ➔',
         tap_hint: '👆 Tap anywhere to enter ➔',
@@ -609,22 +621,28 @@
       const dialLink = document.querySelector('a[href="dial_orbital.html"]');
       if (dialLink) {
         dialLink.setAttribute('title', dict.dial_title);
-        const dialSpan = dialLink.querySelector('span:last-child');
-        if (dialSpan) dialSpan.textContent = dict.dial;
+        const dialDesktop = dialLink.querySelector('.btn-text-desktop');
+        const dialMobile = dialLink.querySelector('.btn-text-mobile');
+        if (dialDesktop) dialDesktop.textContent = dict.dial;
+        if (dialMobile) dialMobile.textContent = 'Dial';
       }
 
-      const custLink = document.querySelector('a[href="index_promocional.html#custodia"]');
-      if (custLink) {
-        custLink.setAttribute('title', dict.custodia_title);
-        const custSpan = custLink.querySelector('span:last-child');
-        if (custSpan) custSpan.textContent = dict.custodia;
+      const manLink = document.querySelector('a[href="manifiesto.html"]');
+      if (manLink) {
+        manLink.setAttribute('title', dict.manifesto_title);
+        const manDesktop = manLink.querySelector('.btn-text-desktop');
+        const manMobile = manLink.querySelector('.btn-text-mobile');
+        if (manDesktop) manDesktop.textContent = dict.manifesto;
+        if (manMobile) manMobile.textContent = dict.manifesto;
       }
 
       const portalBtn = document.querySelector('.btn-portal-main');
       if (portalBtn) {
         portalBtn.setAttribute('title', dict.portal_title);
-        const portalSpan = portalBtn.querySelector('span:last-child');
-        if (portalSpan) portalSpan.textContent = dict.portal;
+        const portalDesktop = portalBtn.querySelector('.btn-text-desktop');
+        const portalMobile = portalBtn.querySelector('.btn-text-mobile');
+        if (portalDesktop) portalDesktop.textContent = dict.portal;
+        if (portalMobile) portalMobile.textContent = 'Portal ➔';
       }
 
       const brandBox = document.querySelector('.brand-box');
@@ -642,23 +660,23 @@
       const heroBg = document.getElementById('hero-bg-cover');
       if (heroBg) heroBg.setAttribute('title', dict.click_title);
 
-      const futureLangsEl = document.querySelector('#lang-dropdown div');
-      if (futureLangsEl) futureLangsEl.textContent = dict.future_langs;
-
-      const langBtn = document.getElementById('lang-btn');
-      if (langBtn) langBtn.setAttribute('aria-label', dict.lang_aria);
-
-      const dd = document.getElementById('lang-dropdown');
-      if (dd) {
-        dd.setAttribute('aria-label', dict.dd_aria);
-        dd.classList.remove('open');
+      // Botones directos de idioma
+      const btnIdxEs = document.getElementById('btn-idx-lang-es');
+      const btnIdxEn = document.getElementById('btn-idx-lang-en');
+      if (btnIdxEs) {
+        btnIdxEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
+        btnIdxEs.style.fontWeight = (lang === 'es') ? '800' : '700';
+        btnIdxEs.classList.toggle('active', lang === 'es');
       }
-      if (langBtn) langBtn.setAttribute('aria-expanded', 'false');
+      if (btnIdxEn) {
+        btnIdxEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
+        btnIdxEn.style.fontWeight = (lang === 'en') ? '800' : '700';
+        btnIdxEn.classList.toggle('active', lang === 'en');
+      }
 
-      const optEs = document.getElementById('opt-es');
-      const optEn = document.getElementById('opt-en');
-      if (optEs) optEs.classList.toggle('active', lang === 'es');
-      if (optEn) optEn.classList.toggle('active', lang === 'en');
+      try {
+        window.dispatchEvent(new CustomEvent('nexordLangChanged', { detail: { lang: lang } }));
+      } catch (e) {}
     }
 
     function toggleLangMenu(event) {

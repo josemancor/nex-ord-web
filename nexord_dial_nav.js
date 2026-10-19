@@ -461,79 +461,92 @@
 
   // Función constructora del HTML de navegación
   function injectPersistentNav() {
-    if (document.getElementById('nexord-persistent-nav')) return;
+    const hasCanonicalHud = !!document.getElementById('top-floating-hud') || !!document.querySelector('.top-floating-hud');
+    const isDialOrbital = filename.includes('dial_orbital');
+    const isPromoHome = filename.includes('index_promocional') || filename === 'index.html' || filename === '';
 
-    document.body.classList.add('has-persistent-nav');
+    if (isDialOrbital || isPromoHome) {
+      // dial_orbital.html es la propia página de la rueda 3-6-9 interactiva a pantalla completa;
+      // no debe tener inyección de persistent-nav ni modal secundario sobrepuesto.
+      return;
+    }
+
     const d = NAV_I18N[currentNavLang] || NAV_I18N.es;
 
-    // 1. BARRA SUPERIOR PERSISTENTE
-    const nav = document.createElement('nav');
-    nav.id = 'nexord-persistent-nav';
-    nav.setAttribute('aria-label', 'Navegación Persistente de Niveles NEXORD');
+    // 1. BARRA SUPERIOR PERSISTENTE (Solo si la página no dispone de HUD canónico ni es la portada/portal)
+    if (!hasCanonicalHud && !document.getElementById('nexord-persistent-nav')) {
+      document.body.classList.add('has-persistent-nav');
+      const nav = document.createElement('nav');
+      nav.id = 'nexord-persistent-nav';
+      nav.setAttribute('aria-label', 'Navegación Persistente de Niveles NEXORD');
 
-    nav.innerHTML = `
-      <div class="pnav-left">
-        <button type="button" class="pnav-dial-btn" id="btn-open-zenith-dial" title="${d.dial_btn_title}">
-          <span>🧭</span> <span>${d.dial_btn}</span>
-        </button>
-        <div class="pnav-breadcrumb">
-          <a href="${rootPrefix}index.html">NEXORD</a>
-          <span class="sep">›</span>
-          <span class="cur">${getBreadcrumbName(currentNavLang)}</span>
+      nav.innerHTML = `
+        <div class="pnav-left">
+          <button type="button" class="pnav-dial-btn" id="btn-open-zenith-dial" title="${d.dial_btn_title}">
+            <span>🧭</span> <span>${d.dial_btn}</span>
+          </button>
+          <div class="pnav-breadcrumb">
+            <a href="${rootPrefix}index.html">NEXORD</a>
+            <span class="sep">›</span>
+            <span class="cur">${getBreadcrumbName(currentNavLang)}</span>
+          </div>
         </div>
-      </div>
 
-      <div class="pnav-center">
-        <a href="${rootPrefix}nivel1_intuitivo.html" data-pill="nivel1" class="pnav-lvl-pill ${activeKey === 'nivel1' ? 'active' : ''}" title="${d.pills.nivel1.title}">${d.pills.nivel1.text}</a>
-        <a href="${rootPrefix}nivel2_basico.html" data-pill="nivel2" class="pnav-lvl-pill ${activeKey === 'nivel2' ? 'active' : ''}" title="${d.pills.nivel2.title}">${d.pills.nivel2.text}</a>
-        <a href="${rootPrefix}nivel3_esquema.html" data-pill="nivel3" class="pnav-lvl-pill ${activeKey === 'nivel3' ? 'active' : ''}" title="${d.pills.nivel3.title}">${d.pills.nivel3.text}</a>
-        <a href="${rootPrefix}nivel4_aplicaciones.html" data-pill="nivel4" class="pnav-lvl-pill ${activeKey === 'nivel4' ? 'active' : ''}" title="${d.pills.nivel4.title}">${d.pills.nivel4.text}</a>
-        <a href="${rootPrefix}nivel5_matematico.html" data-pill="nivel5" class="pnav-lvl-pill ${activeKey === 'nivel5' ? 'active' : ''}" title="${d.pills.nivel5.title}">${d.pills.nivel5.text}</a>
-        <a href="${rootPrefix}nivel6_informes.html" data-pill="nivel6" class="pnav-lvl-pill ${activeKey === 'nivel6' ? 'active' : ''}" title="${d.pills.nivel6.title}">${d.pills.nivel6.text}</a>
-        <a href="${rootPrefix}nivel7_documentacion.html" data-pill="nivel7" class="pnav-lvl-pill ${activeKey === 'nivel7' ? 'active' : ''}" title="${d.pills.nivel7.title}">${d.pills.nivel7.text}</a>
-        <a href="${rootPrefix}recursos.html" data-pill="recursos" class="pnav-lvl-pill ${activeKey === 'recursos' || activeKey === 'visord' ? 'active' : ''}" title="${d.pills.recursos.title}">${d.pills.recursos.text}</a>
-        <a href="${rootPrefix}fundamentos.html" data-pill="fundamentos" class="pnav-lvl-pill ${activeKey === 'fundamentos' ? 'active' : ''}" title="${d.pills.fundamentos.title}">${d.pills.fundamentos.text}</a>
-      </div>
+        <div class="pnav-center">
+          <a href="${rootPrefix}nivel1_intuitivo.html" data-pill="nivel1" class="pnav-lvl-pill ${activeKey === 'nivel1' ? 'active' : ''}" title="${d.pills.nivel1.title}">${d.pills.nivel1.text}</a>
+          <a href="${rootPrefix}nivel2_basico.html" data-pill="nivel2" class="pnav-lvl-pill ${activeKey === 'nivel2' ? 'active' : ''}" title="${d.pills.nivel2.title}">${d.pills.nivel2.text}</a>
+          <a href="${rootPrefix}nivel3_esquema.html" data-pill="nivel3" class="pnav-lvl-pill ${activeKey === 'nivel3' ? 'active' : ''}" title="${d.pills.nivel3.title}">${d.pills.nivel3.text}</a>
+          <a href="${rootPrefix}nivel4_aplicaciones.html" data-pill="nivel4" class="pnav-lvl-pill ${activeKey === 'nivel4' ? 'active' : ''}" title="${d.pills.nivel4.title}">${d.pills.nivel4.text}</a>
+          <a href="${rootPrefix}nivel5_matematico.html" data-pill="nivel5" class="pnav-lvl-pill ${activeKey === 'nivel5' ? 'active' : ''}" title="${d.pills.nivel5.title}">${d.pills.nivel5.text}</a>
+          <a href="${rootPrefix}nivel6_informes.html" data-pill="nivel6" class="pnav-lvl-pill ${activeKey === 'nivel6' ? 'active' : ''}" title="${d.pills.nivel6.title}">${d.pills.nivel6.text}</a>
+          <a href="${rootPrefix}nivel7_documentacion.html" data-pill="nivel7" class="pnav-lvl-pill ${activeKey === 'nivel7' ? 'active' : ''}" title="${d.pills.nivel7.title}">${d.pills.nivel7.text}</a>
+          <a href="${rootPrefix}recursos.html" data-pill="recursos" class="pnav-lvl-pill ${activeKey === 'recursos' || activeKey === 'visord' ? 'active' : ''}" title="${d.pills.recursos.title}">${d.pills.recursos.text}</a>
+          <a href="${rootPrefix}fundamentos.html" data-pill="fundamentos" class="pnav-lvl-pill ${activeKey === 'fundamentos' ? 'active' : ''}" title="${d.pills.fundamentos.title}">${d.pills.fundamentos.text}</a>
+        </div>
 
-      <div class="pnav-right">
-        <a href="${rootPrefix}deontologia_legal.html" data-nav-right="deonto" class="pnav-link highlight" title="${d.nav_deonto_title}">
-          <span>🛡️</span> <span class="link-text">${d.nav_deonto_text}</span>
-        </a>
-        <a href="${rootPrefix}index_promocional.html#custodia" data-nav-right="custodia" class="pnav-link" title="${d.nav_custodia_title}">
-          <span>🏛️</span> <span class="link-text">${d.nav_custodia_text}</span>
-        </a>
-        <a href="${rootPrefix}dial_orbital.html" data-nav-right="dial" class="pnav-link" title="${d.nav_dial_title}">
-          <span>🧭</span>
-        </a>
-        <a href="${rootPrefix}index.html" data-nav-right="home" class="pnav-link" title="${d.nav_home_title}">
-          <span>🏠</span>
-        </a>
-      </div>
-    `;
+        <div class="pnav-right">
+          <a href="${rootPrefix}deontologia_legal.html" data-nav-right="deonto" class="pnav-link highlight" title="${d.nav_deonto_title}">
+            <span>🛡️</span> <span class="link-text">${d.nav_deonto_text}</span>
+          </a>
+          <a href="${rootPrefix}index_promocional.html#custodia" data-nav-right="custodia" class="pnav-link" title="${d.nav_custodia_title}">
+            <span>🏛️</span> <span class="link-text">${d.nav_custodia_text}</span>
+          </a>
+          <a href="${rootPrefix}dial_orbital.html" data-nav-right="dial" class="pnav-link" title="${d.nav_dial_title}">
+            <span>🧭</span>
+          </a>
+          <a href="${rootPrefix}index.html" data-nav-right="home" class="pnav-link" title="${d.nav_home_title}">
+            <span>🏠</span>
+          </a>
+        </div>
+      `;
 
-    document.body.insertAdjacentElement('afterbegin', nav);
+      document.body.insertAdjacentElement('afterbegin', nav);
+    }
 
-    // 2. CONSTRUCCIÓN DEL MENÚ LATERAL SIMPLIFICADO 1-9
+    if (document.getElementById('nexord-zenith-modal')) return;
+
+    // 2. CONSTRUCCIÓN DEL MENÚ LATERAL SIMPLIFICADO 1-9 (ENLACES REALES)
     const sortedLevels = [...DIAL_SECTORS].sort((a, b) => parseInt(a.num) - parseInt(b.num));
     let sidebarMenuHtml = '';
     sortedLevels.forEach(baseSec => {
       const sec = getLocalizedSector(baseSec, currentNavLang);
       const isSecActive = sec.key === activeKey;
       sidebarMenuHtml += `
-        <button type="button"
-                class="zenith-menu-item ${isSecActive ? 'is-active-page' : ''}"
-                data-idx="${sec.idx}"
-                data-num="${sec.num}"
-                role="tab"
-                aria-selected="false"
-                title="${sec.title} · ${sec.subtitle}">
+        <a href="${rootPrefix}${sec.url}"
+           class="zenith-menu-item ${isSecActive ? 'is-active-page' : ''}"
+           data-idx="${sec.idx}"
+           data-num="${sec.num}"
+           role="tab"
+           aria-selected="${isSecActive ? 'true' : 'false'}"
+           style="text-decoration: none;"
+           title="${sec.title} · ${sec.subtitle}">
           <span class="zenith-menu-num" style="border-color:${sec.color}; color:${sec.color};">${sec.num}</span>
           <div class="zenith-menu-info">
             <div class="zenith-menu-title">${sec.title}</div>
             <div class="zenith-menu-sub">${sec.subtitle}</div>
           </div>
           <span class="zenith-menu-arrow">➔</span>
-        </button>
+        </a>
       `;
     });
 
