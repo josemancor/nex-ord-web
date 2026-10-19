@@ -582,6 +582,23 @@ $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura 
 | **$0{,}99$** | $8{,}648$ | $11{,}6\%$ | **$1{,}04\times$** | $[-0{,}15; \, +0{,}21]$ | Madrid (consistencia) | Homeostasis aparente total (ceguera de deuda) |
 | **$\alpha \to 1$ (límite)** | $9{,}000$ | $11{,}1\%$ | **$1{,}00\times$** | $[0{,}00; \, 0{,}00]$ | Indiferenciado Borda | Colapso métrico ($\|\boldsymbol{\Delta}\| \to 0$ artificial) |
 
+#### Demostración Fehaciente de Estabilidad en la Banda Canónica [0,40, 0,60]
+La comprobación de seguridad en los tres puntos de la horquilla $\alpha \in \{0{,}40, \, 0{,}50, \, 0{,}60\}$ prueba fehacientemente que la estructura relacional es invariante:
+
+| Indicador de Estabilidad | $\alpha = 0{,}40$ (Límite Inferior) | $\alpha = 0{,}50$ (Canónico Central) | $\alpha = 0{,}60$ (Límite Superior) | Dictamen Topológico |
+| :--- | :---: | :---: | :---: | :--- |
+| **Centro Relacional (Top-1)** | **Zaragoza** ($\rho = 3{,}624$) | **Zaragoza** ($\rho = 3{,}875$) | **Zaragoza** ($\rho = 4{,}176$) | **INVARIANTE en los 3 puntos** |
+| **Subcentro Consistente** | Madrid ($\rho = 2{,}208$) | Madrid ($\rho = 3{,}000$) | Madrid ($\rho = 3{,}912$) | Mantiene posición sin adelantar |
+| **Periferia de Deuda Máxima** | A Coruña ($\rho = 0{,}168$) | A Coruña ($\rho = 0{,}336$) | A Coruña ($\rho = 0{,}642$) | **INVARIANTE en los 3 puntos** |
+| **Ratio de Contraste $\rho_{\max}/\rho_{\min}$** | $21{,}6\times$ | $11{,}5\times$ | $6{,}5\times$ | Variación continua sin salto de fase |
+| **Correlación de Rangos ($\tau_{\text{Kendall}}$)** | **$\tau = 1{,}000$** | **$\tau = 1{,}000$** | **$\tau = 1{,}000$** | **Cero permutaciones jerárquicas** |
+| **Ajuste Factorial Procrustes** | **$R^2 = 0{,}998$** | **$R^2 = 1{,}000$** | **$R^2 = 0{,}997$** | **Isomorfismo geométrico total** |
+
+La bifurcación crítica (donde Madrid adelanta a Zaragoza) ocurre recién en $\alpha = 0{,}64$, confirmando que la horquilla $[0{,}40, \, 0{,}60]$ constituye una **isla de estabilidad homeomórfica**.
+
+* **La Metáfora de la Escalera Armónica:** La sociomatriz ORBIT fija la posición inmutable de los peldaños ($1º..Nº$). El parámetro $\alpha$ gradúa su altura relativa. Con $\alpha = 1/2$, el primer peldaño mide exactamente lo mismo que todos los peldaños restantes juntos hasta el infinito ($W(1) = 1{,}000 = \sum_{k=2}^\infty 2^{1-k}$).
+* **Cuadruplicación en el Tetragrama ($4\times$):** La función $W_\alpha(k)$ opera cuatro veces en cada celda $(i, j)$ del tetragrama ($A_1=pDA, A_2=DA, A_3=RC, A_4=pRC$), modulando los 3 prismas y las 18 densidades relacionales. $\alpha$ no es un corrector: es el operador ontológico de la medida.
+
 **Hallazgo Fino:** La óptica jerárquica mide ser elegido primero (Zaragoza, tres primeras posiciones recibidas); la óptica igualitaria mide nunca estar al final (Madrid, sin colas malas en ninguna fila). La identidad del centro puede invertirse sin que el dato cambie: **la jerarquía medida es óptica declarada, no propiedad del dato**.
 
 **Síntesis Apodíctica:** Con interdistancia igualitaria, el campo no cambia de forma ni de simetría: cambia de temperatura. El dato es ordinal; la jerarquía medida es óptica. En el modelo nulo España-1988 ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes), el campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
