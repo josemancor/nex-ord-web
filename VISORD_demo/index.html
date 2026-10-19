@@ -2738,11 +2738,24 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                     Teorema Baricéntrico Canónico: El baricentro de cada sujeto es el centroide exacto entre Emisión (SDA) y Recepción (SRC) [Δ = 0.000].
                 </div>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <button id="btn-biplot-pca" onclick="setBiplotMode('PCA')" style="background: #00A2FF; color: #000; font-weight: 800; font-size: 11px; padding: 6px 14px; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 0 10px rgba(0,162,255,0.4);">📈 PCA (Densidad SDR)</button>
                 <button id="btn-biplot-afc" onclick="setBiplotMode('AFC')" style="background: rgba(255,255,255,0.08); color: #FFF; font-weight: 700; font-size: 11px; padding: 6px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; cursor: pointer;">📊 AFC (Sociograma Geométrico Q81)</button>
+                <button id="btn-biplot-dendro" onclick="setBiplotMode('DENDRO')" style="background: rgba(255,255,255,0.08); color: #FFF; font-weight: 700; font-size: 11px; padding: 6px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; cursor: pointer;">🌳 Dendrograma (Subgrupos)</button>
+                <button id="btn-proj-3d" onclick="toggleSubgroupCentroids3D()" style="background: rgba(255,230,0,0.15); color: #FFE600; font-weight: 800; font-size: 11px; padding: 6px 14px; border: 1px solid #FFE600; border-radius: 5px; cursor: pointer;" title="Proyectar o retirar los centroides de subgrupos en el espacio 3D">🪐 Proyectar Centroides 3D</button>
                 <button onclick="document.getElementById('pca-sdr-overlay').style.display='none'" style="background: #FF0055; color: white; border: none; padding: 6px 14px; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 11px;">✕ CERRAR</button>
             </div>
+        </div>
+
+        <!-- Selector de Perspectiva Diádica (Regla 18 / Distinción DA vs RC) -->
+        <div id="afc-perspective-controls" style="display: flex; gap: 8px; align-items: center; background: rgba(15, 23, 42, 0.7); padding: 8px 14px; border-radius: 6px; border: 1px solid rgba(0, 255, 135, 0.25); margin-bottom: 12px; flex-wrap: wrap;">
+            <span style="font-size: 11px; font-weight: 800; color: #00FF87; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
+                <span>🧭</span> Perspectiva Diádica:
+            </span>
+            <button id="btn-persp-rc" onclick="setDiadicPerspective('RC')" style="background: #00FF87; color: #000; font-weight: 800; font-size: 11px; padding: 5px 14px; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 0 8px rgba(0,255,135,0.3);">🎯 Plano RC (Recepción / Resultado Grupal)</button>
+            <button id="btn-persp-dual" onclick="setDiadicPerspective('DUAL')" style="background: rgba(255,255,255,0.08); color: #FFF; font-weight: 700; font-size: 11px; padding: 5px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer;">⚖️ Plano Dual (DA ↔ RC / Vectores)</button>
+            <button id="btn-persp-da" onclick="setDiadicPerspective('DA')" style="background: rgba(255,255,255,0.08); color: #FFF; font-weight: 700; font-size: 11px; padding: 5px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer;">📤 Plano DA (Emisión / Expansividad)</button>
+            <span id="persp-hint" style="font-size: 10.5px; color: #38BDF8; margin-left: auto; font-style: italic;">💡 El plano RC es el canon sociométrico: describe el consenso y estatus otorgado por el grupo.</span>
         </div>
 
         <!-- Canvas Plotly -->
@@ -6412,50 +6425,108 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             .sort((a,b) => a-b);
         
         if (nodesArray.length === 1) {
-            // Selección unitaria: Mostrar fila del ego contra TODA la red (1..n_nodes)
+            // Selección unitaria: Dos filas paralelas (Emisor DA vs Receptor RC) para representar la reversión de figuras recíprocas
             container.style.display = 'block';
             let titleEl = document.getElementById('mini-matrix-title');
             let ego = nodesArray[0];
-            if (titleEl) titleEl.innerText = `🔍 RED EGO · SUJETO S${ego+1} (Vínculos con todo el grupo)`;
+            let rol = (currentStats && currentStats.roles && currentStats.roles[ego]) ? currentStats.roles[ego] : '-';
+            if (titleEl) titleEl.innerHTML = `🔍 DIAGNÓSTICO INDIVIDUAL & RED EGO · SUJETO S${ego+1} (ID: ${ego+1}A) <span style="font-size:11px; color:#FFE600; font-weight:normal; margin-left:8px;">[Reversión Diádica: DA ↔ RC]</span>`;
             
-            let html = '<table class="dt-table" style="font-size: 13px; width: 100%; border-collapse: collapse;">';
+            let html = '<div style="margin-bottom:8px; font-size:11px; color:#94A3B8;">Dos filas paralelas que representan las figuras relacionales como <strong>Emisor (DA)</strong> y como <strong>Receptor (RC)</strong>, evidenciando la correspondencia diádica y la reversión de figuras recíprocas frente a todo el grupo:</div>';
+            
+            html += '<table class="dt-table" style="font-size: 12px; width: 100%; border-collapse: collapse;">';
             
             // Header: 1..N
-            html += '<tr><th style="background:rgba(255,255,255,0.05); color:#94A3B8;">S↓ \\ R→</th>';
+            html += '<thead><tr style="background:rgba(255,255,255,0.06);"><th style="padding:6px; text-align:left; color:#38BDF8;">Perspectiva Diádica</th>';
             for (let j = 0; j < n_nodes; j++) {
-                html += `<th style="background:rgba(255,255,255,0.05); color:${j === ego ? '#00FF87' : '#94A3B8'};">S${j+1}</th>`;
+                html += `<th style="padding:6px; color:${j === ego ? '#FFE600' : '#38BDF8'}; font-weight:bold;">S${j+1}</th>`;
             }
-            html += '<th style="background:rgba(255,255,255,0.1); color:#FFCC00; font-size:10px;">SDA</th>';
-            html += '<th style="background:rgba(255,255,255,0.1); color:#00A2FF; font-size:10px;">SRC</th>';
-            html += '<th style="background:rgba(255,255,255,0.1); color:#FF0000; font-size:10px;">DIS</th>';
-            html += '<th style="background:rgba(255,255,255,0.1); color:#fff; font-size:10px;">ROL</th>';
-            html += '</tr>';
+            html += '<th style="background:rgba(255,255,255,0.1); color:#FFCC00; font-size:10.5px;">SDA/SRC</th>';
+            html += '<th style="background:rgba(255,255,255,0.1); color:#00FF87; font-size:10.5px;">Elec.</th>';
+            html += '<th style="background:rgba(255,255,255,0.1); color:#FF0055; font-size:10.5px;">Rech.</th>';
+            html += '<th style="background:rgba(255,255,255,0.1); color:#FFF; font-size:10.5px;">ROL</th>';
+            html += '</tr></thead>';
             
-            // Row del sujeto ego seleccionado
-            let i = ego;
-            html += `<tr><th style="background:rgba(255,255,255,0.05); color:#00FF87; font-weight:900;">S${i+1}</th>`;
+            let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[ego] === 'number') ? currentStats.sda_emisores[ego].toFixed(2) : '-';
+            let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[ego] === 'number') ? currentStats.sda_receptores[ego].toFixed(2) : '-';
+            
+            let e_given_cnt = 0, r_given_cnt = 0;
+            let e_recv_cnt = 0, r_recv_cnt = 0;
+            
+            html += '<tbody>';
+            // FILA 1: COMO EMISOR (DA: ego -> j)
+            html += '<tr style="background:rgba(0, 255, 135, 0.05); border-bottom:1px solid rgba(255,255,255,0.08);">';
+            html += `<td style="font-weight:bold; color:#00FF87; text-align:left; white-space:nowrap; padding:6px;">📤 Fila 1: Como Emisor (DA: S${ego+1} &rarr; S_j)</td>`;
             for (let j = 0; j < n_nodes; j++) {
-                if (i === j) {
-                    let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : 'AA00000000';
-                    let tooltip = formatDiagonal10Tooltip(diagStr, i);
-                    html += `<td title="${tooltip.replace(/"/g, '&quot;')}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; font-size:10px; border:1px solid rgba(255,230,0,0.3); cursor:help; letter-spacing:0.5px;">${diagStr}</td>`;
+                if (ego === j) {
+                    let diagStr = currentMatrix && currentMatrix[ego] && currentMatrix[ego][ego] ? currentMatrix[ego][ego] : 'AA00000000';
+                    let tooltip = formatDiagonal10Tooltip(diagStr, ego);
+                    html += `<td title="${tooltip.replace(/"/g, '&quot;')}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; font-size:10px; border:1px solid rgba(255,230,0,0.3); cursor:help;">${diagStr}</td>`;
                 } else {
-                    let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
+                    let cellData = currentMatrix && currentMatrix[ego] && currentMatrix[ego][j] ? currentMatrix[ego][j] : '0000';
                     let smiaStr = smibToSmia(cellData);
                     let color = getSMIaColor(smiaStr);
-                    html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
+                    if (cellData[1] >= 'A' && cellData[1] <= 'Z') e_given_cnt++;
+                    if (cellData[1] >= 'a' && cellData[1] <= 'z') r_given_cnt++;
+                    html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;" title="Emisión de S${ego+1} hacia S${j+1} (${cellData})">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
                 }
             }
-            let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '-';
-            let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '-';
-            let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
-            let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : '-';
-            html += `<td style="color:#FFCC00; font-size: 11px;">${sda}</td>`;
-            html += `<td style="color:#00A2FF; font-size: 11px;">${src}</td>`;
-            html += `<td style="color:#FF0000; font-size: 11px;">${dis}</td>`;
-            html += `<td style="color:#fff; font-size: 10px; font-weight:bold;">${rol}</td>`;
+            html += `<td style="color:#FFCC00; font-weight:bold;">${sda}</td>`;
+            html += `<td style="color:#00FF87; font-weight:bold;">${e_given_cnt}</td>`;
+            html += `<td style="color:#FF0055; font-weight:bold;">${r_given_cnt}</td>`;
+            html += `<td style="color:#FFF; font-weight:bold;">${rol}</td>`;
             html += '</tr>';
-            html += '</table>';
+            
+            // FILA 2: COMO RECEPTOR (RC: j -> ego)
+            html += '<tr style="background:rgba(0, 162, 255, 0.05); border-bottom:1px solid rgba(255,255,255,0.08);">';
+            html += `<td style="font-weight:bold; color:#00A2FF; text-align:left; white-space:nowrap; padding:6px;">🎯 Fila 2: Como Receptor (RC: S_j &rarr; S${ego+1})</td>`;
+            for (let j = 0; j < n_nodes; j++) {
+                if (ego === j) {
+                    html += `<td style="background:rgba(0,162,255,0.15); color:#00A2FF; font-weight:bold; font-size:10px;">[EGO]</td>`;
+                } else {
+                    let cellData = currentMatrix && currentMatrix[j] && currentMatrix[j][ego] ? currentMatrix[j][ego] : '0000';
+                    let smiaStr = smibToSmia(cellData);
+                    let color = getSMIaColor(smiaStr);
+                    if (cellData[1] >= 'A' && cellData[1] <= 'Z') e_recv_cnt++;
+                    if (cellData[1] >= 'a' && cellData[1] <= 'z') r_recv_cnt++;
+                    html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;" title="Recepción de S${ego+1} desde S${j+1} (${cellData})">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
+                }
+            }
+            html += `<td style="color:#00A2FF; font-weight:bold;">${src}</td>`;
+            html += `<td style="color:#00FF87; font-weight:bold;">${e_recv_cnt}</td>`;
+            html += `<td style="color:#FF0055; font-weight:bold;">${r_recv_cnt}</td>`;
+            html += `<td style="color:#FFF; font-weight:bold;">${rol}</td>`;
+            html += '</tr>';
+            
+            // FILA 3: REVERSIÓN RECÍPROCA
+            let simCount = 0, invCount = 0, asimCount = 0;
+            html += '<tr style="background:rgba(255, 230, 0, 0.03); font-size:11px;">';
+            html += `<td style="font-weight:bold; color:#FFE600; text-align:left; padding:6px;">🔄 Reversión Recíproca</td>`;
+            for (let j = 0; j < n_nodes; j++) {
+                if (ego === j) {
+                    html += `<td style="color:#64748B;">--</td>`;
+                } else {
+                    let c_out = currentMatrix && currentMatrix[ego] && currentMatrix[ego][j] ? smibToSmia(currentMatrix[ego][j]) : '';
+                    let c_in = currentMatrix && currentMatrix[j] && currentMatrix[j][ego] ? smibToSmia(currentMatrix[j][ego]) : '';
+                    let badge = '';
+                    if (c_out === c_in && (c_out.includes('E') || c_out.includes('R') || c_out.includes('e') || c_out.includes('r'))) {
+                        badge = '<span style="color:#00FF87; font-weight:bold;" title="Simetría diádica directa">⚖️ Sim</span>';
+                        simCount++;
+                    } else if ((c_out.includes('Er') && c_in.includes('Re')) || (c_out.includes('Re') && c_in.includes('Er'))) {
+                        badge = '<span style="color:#FF9F1C; font-weight:bold;" title="Reversión dialéctica complementaria">🔄 Inv</span>';
+                        invCount++;
+                    } else if (c_out.includes('0') && c_in.includes('0')) {
+                        badge = '<span style="color:#64748B;" title="Neutralidad bilateral">⚪ Neu</span>';
+                    } else {
+                        badge = '<span style="color:#38BDF8;" title="Asimetría relacional">⚡ Asim</span>';
+                        asimCount++;
+                    }
+                    html += `<td title="Par diádico: S${ego+1}&rarr;S${j+1} [${c_out}] vs S${j+1}&rarr;S${ego+1} [${c_in}]">${badge}</td>`;
+                }
+            }
+            html += `<td colspan="4" style="text-align:right; padding:6px; color:#CBD5E1; font-size:10px;"><b>${simCount}</b> Simétricas · <b>${invCount}</b> Inversas · <b>${asimCount}</b> Asimétricas</td>`;
+            html += '</tr>';
+            html += '</tbody></table>';
             document.getElementById('mini-matrix-content').innerHTML = html;
             
         } else if (nodesArray.length > 1) {
@@ -14070,27 +14141,91 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
     // =========================================================================
     // BIPLOT DUAL FACTORIAL 2D DINÁMICO (PCA SDR / AFC CON PLOTLY - REGLA 18)
     // =========================================================================
+    // =========================================================================
+    // PERSPECTIVA DIÁDICA (CANON REGLA 18: DISTINCIÓN DA vs RC)
+    // El plano RC es el canon sociométrico: describe el estatus y resultado del grupo
+    // =========================================================================
+    let currentDiadicPersp = 'RC';
     let currentBiplotMode = 'PCA';
+
+    function setDiadicPerspective(persp) {
+        currentDiadicPersp = persp;
+        const bRc = document.getElementById('btn-persp-rc');
+        const bDual = document.getElementById('btn-persp-dual');
+        const bDa = document.getElementById('btn-persp-da');
+        const hint = document.getElementById('persp-hint');
+        
+        [bRc, bDual, bDa].forEach(b => {
+            if (b) {
+                b.style.background = 'rgba(255,255,255,0.08)';
+                b.style.color = '#FFF';
+                b.style.boxShadow = 'none';
+            }
+        });
+        
+        if (persp === 'RC') {
+            if (bRc) {
+                bRc.style.background = '#00FF87';
+                bRc.style.color = '#000';
+                bRc.style.boxShadow = '0 0 10px rgba(0,255,135,0.4)';
+            }
+            if (hint) hint.innerHTML = '💡 <strong>Plano RC (Canónico):</strong> Describe el consenso y estatus objetivo otorgado por el grupo a cada sujeto.';
+        } else if (persp === 'DA') {
+            if (bDa) {
+                bDa.style.background = '#FF9F1C';
+                bDa.style.color = '#000';
+                bDa.style.boxShadow = '0 0 10px rgba(255,159,28,0.4)';
+            }
+            if (hint) hint.innerHTML = '💡 <strong>Plano DA:</strong> Describe la expansividad, generosidad o selectividad de emisión de cada sujeto hacia el grupo.';
+        } else if (persp === 'DUAL') {
+            if (bDual) {
+                bDual.style.background = '#00A2FF';
+                bDual.style.color = '#000';
+                bDual.style.boxShadow = '0 0 10px rgba(0,162,255,0.4)';
+            }
+            if (hint) hint.innerHTML = '💡 <strong>Plano Dual:</strong> Muestra la dialéctica Emisión (DA) ➔ Recepción (RC) y el Teorema Baricéntrico (Δ = 0.000).';
+        }
+        
+        renderDynamicPlotlyBiplot(currentBiplotMode);
+    }
+
     function setBiplotMode(mode) {
         currentBiplotMode = mode;
         const bPca = document.getElementById('btn-biplot-pca');
         const bAfc = document.getElementById('btn-biplot-afc');
+        const bDendro = document.getElementById('btn-biplot-dendro');
+        const bProj3d = document.getElementById('btn-proj-3d');
+        const perspControls = document.getElementById('afc-perspective-controls');
         const mTitle = document.getElementById('biplot-modal-title');
         const mSub = document.getElementById('biplot-modal-subtitle');
         const mNote = document.getElementById('pca-coord-note');
         
+        // Reset botones de modo
+        [bPca, bAfc, bDendro].forEach(b => {
+            if (b) { b.style.background = 'rgba(255,255,255,0.08)'; b.style.color = '#FFF'; b.style.boxShadow = 'none'; }
+        });
+        
         if (mode === 'PCA') {
-            if (bPca) { bPca.style.background = '#00A2FF'; bPca.style.color = '#000'; }
-            if (bAfc) { bAfc.style.background = 'rgba(255,255,255,0.08)'; bAfc.style.color = '#FFF'; }
+            if (bPca) { bPca.style.background = '#00A2FF'; bPca.style.color = '#000'; bPca.style.boxShadow = '0 0 10px rgba(0,162,255,0.4)'; }
+            if (perspControls) perspControls.style.display = 'flex';
+            if (bProj3d) bProj3d.style.display = 'none';
             if (mTitle) mTitle.innerHTML = '<span>🗺️</span> BIPLOT DUAL FACTORIAL 2D (PCA SDR · DENSIDAD)';
             if (mSub) mSub.innerText = 'Teorema Baricéntrico Canónico: El baricentro de cada sujeto es el centroide exacto entre Emisión (SDA) y Recepción (SRC) [Δ = 0.000].';
             if (mNote) mNote.innerText = '💡 Nota PCA: Proyección continua SVD sobre la matriz centrada SDR. Los vectores diádicos unen la Emisión (SDA) y Recepción (SRC) de cada nodo.';
-        } else {
-            if (bPca) { bPca.style.background = 'rgba(255,255,255,0.08)'; bPca.style.color = '#FFF'; }
-            if (bAfc) { bAfc.style.background = '#00FF87'; bAfc.style.color = '#000'; }
+        } else if (mode === 'AFC') {
+            if (bAfc) { bAfc.style.background = '#00FF87'; bAfc.style.color = '#000'; bAfc.style.boxShadow = '0 0 10px rgba(0,255,135,0.4)'; }
+            if (perspControls) perspControls.style.display = 'flex';
+            if (bProj3d) bProj3d.style.display = 'none';
             if (mTitle) mTitle.innerHTML = '<span>🗺️</span> SOCIOGRAMA GEOMÉTRICO (AFC BENZÉCRI · Q81)';
             if (mSub) mSub.innerText = 'Espacio relacional dual: Sujetos × Figuras Q81 filtradas (Marginales > 2 casos). Métrica χ² y Teorema Baricéntrico.';
-            if (mNote) mNote.innerText = '💡 Nota AFC: Métrica χ² de Benzécri sobre frecuencias discretas de interacción (DA + RC). Se excluyen figuras con marginal ≤ 2 para evitar dispersión periférica.';
+            if (mNote) mNote.innerText = '💡 Nota AFC: Métrica χ² de Benzécri sobre frecuencias de interacción (DA + RC). El plano RC refleja el estatus y resultado del grupo. Figuras con marginal 1-2 proyectadas como suplementarias.';
+        } else if (mode === 'DENDRO') {
+            if (bDendro) { bDendro.style.background = '#FFE600'; bDendro.style.color = '#000'; bDendro.style.boxShadow = '0 0 10px rgba(255,230,0,0.4)'; }
+            if (perspControls) perspControls.style.display = 'none';
+            if (bProj3d) bProj3d.style.display = 'inline-block';
+            if (mTitle) mTitle.innerHTML = '<span>🌳</span> DENDROGRAMA JERÁRQUICO DE SUBGRUPOS (CLUSTERING WARD)';
+            if (mSub) mSub.innerText = 'Clasificación no supervisada de núcleos de afinidad y silos relacionales. Proyección de centroides axonométricos en 3D.';
+            if (mNote) mNote.innerText = '💡 Nota Dendrograma: Mínima varianza incremental sobre los perfiles de densidad SDR. Permite detectar clics cerrados y proyectar sus baricentros en el espacio 3D.';
         }
         renderDynamicPlotlyBiplot(mode);
     }
@@ -14113,6 +14248,9 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         
         if (mode === 'AFC') {
             renderPlotlyAFCSociograma();
+            return;
+        } else if (mode === 'DENDRO') {
+            renderPlotlyDendrogram();
             return;
         }
         
@@ -14176,47 +14314,72 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             else colors.push('#00A2FF');
         }
         
-        // Flechas diádicas SDA -> SRC
+        let tracesPlotly = [];
         let arrowShapes = [];
-        for (let i = 0; i < n; i++) {
-            arrowShapes.push({
-                type: 'line',
-                x0: pc1_sda[i], y0: pc2_sda[i],
-                x1: pc1_src[i], y1: pc2_src[i],
-                line: { color: colors[i], width: 1.5, dash: 'dot' }
+        let chartTitle = '';
+        
+        if (currentDiadicPersp === 'RC') {
+            chartTitle = `Biplot PCA (Densidad SDR) · Plano de Recepción (SRC: Estatus Grupal)`;
+            tracesPlotly.push({
+                x: pc1_src, y: pc2_src,
+                text: labels,
+                mode: 'markers+text',
+                textposition: 'top center',
+                marker: { size: 14, color: colors, line: { color: '#0B132B', width: 2 } },
+                name: 'Sujetos en Recepción (SRC)',
+                type: 'scatter'
+            });
+        } else if (currentDiadicPersp === 'DA') {
+            chartTitle = `Biplot PCA (Densidad SDR) · Plano de Emisión (SDA: Expansividad)`;
+            tracesPlotly.push({
+                x: pc1_sda, y: pc2_sda,
+                text: labels.map(l => l.replace(')', ' - DA)')),
+                mode: 'markers+text',
+                textposition: 'top center',
+                marker: { size: 13, color: colors, symbol: 'triangle-right', line: { color: '#0B132B', width: 1.5 } },
+                name: 'Sujetos en Emisión (SDA)',
+                type: 'scatter'
+            });
+        } else {
+            // DUAL
+            chartTitle = `Biplot Dual PCA (Densidad SDR) · Teorema Baricéntrico (Δ = 0.000)`;
+            for (let i = 0; i < n; i++) {
+                arrowShapes.push({
+                    type: 'line',
+                    x0: pc1_sda[i], y0: pc2_sda[i],
+                    x1: pc1_src[i], y1: pc2_src[i],
+                    line: { color: colors[i], width: 1.5, dash: 'dot' }
+                });
+            }
+            tracesPlotly.push({
+                x: pc1_bari, y: pc2_bari,
+                text: labels,
+                mode: 'markers+text',
+                textposition: 'top center',
+                marker: { size: 12, color: colors, line: { color: '#0B132B', width: 1.5 } },
+                name: 'Baricentro (SDR)',
+                type: 'scatter'
+            });
+            tracesPlotly.push({
+                x: pc1_sda, y: pc2_sda,
+                mode: 'markers',
+                marker: { size: 6, color: '#00FF87', symbol: 'triangle-right' },
+                name: 'Emisión (SDA)',
+                type: 'scatter'
+            });
+            tracesPlotly.push({
+                x: pc1_src, y: pc2_src,
+                mode: 'markers',
+                marker: { size: 6, color: '#00A2FF', symbol: 'circle-open' },
+                name: 'Recepción (SRC)',
+                type: 'scatter'
             });
         }
-        
-        let traceBaricentros = {
-            x: pc1_bari, y: pc2_bari,
-            text: labels,
-            mode: 'markers+text',
-            textposition: 'top center',
-            marker: { size: 12, color: colors, line: { color: '#0B132B', width: 1.5 } },
-            name: 'Baricentro (SDR)',
-            type: 'scatter'
-        };
-        
-        let traceSDA = {
-            x: pc1_sda, y: pc2_sda,
-            mode: 'markers',
-            marker: { size: 6, color: '#00FF87', symbol: 'triangle-right' },
-            name: 'Emisión (SDA)',
-            type: 'scatter'
-        };
-        
-        let traceSRC = {
-            x: pc1_src, y: pc2_src,
-            mode: 'markers',
-            marker: { size: 6, color: '#00A2FF', symbol: 'circle-open' },
-            name: 'Recepción (SRC)',
-            type: 'scatter'
-        };
         
         let layout = {
             paper_bgcolor: '#0B0F19',
             plot_bgcolor: '#0B0F19',
-            title: { text: `Biplot Dual PCA (Densidad SDR) · Teorema Baricéntrico (Δ = 0.000)`, font: { color: '#00E5FF', size: 14 } },
+            title: { text: chartTitle, font: { color: '#00E5FF', size: 14 } },
             xaxis: { title: `PC 1 (${pct1.toFixed(1)}% Varianza) · Eje Gravitatorio Principal`, color: '#94A3B8', gridcolor: '#1E293B', zerolinecolor: '#334155' },
             yaxis: { title: `PC 2 (${pct2.toFixed(1)}% Varianza) · Eje de Asimetría Relacional`, color: '#94A3B8', gridcolor: '#1E293B', zerolinecolor: '#334155' },
             shapes: arrowShapes,
@@ -14224,25 +14387,38 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             margin: { l: 45, r: 25, t: 40, b: 40 }
         };
         
-        Plotly.newPlot('pca-plotly-canvas', [traceBaricentros, traceSDA, traceSRC], layout, { responsive: true, displayModeBar: false });
+        Plotly.newPlot('pca-plotly-canvas', tracesPlotly, layout, { responsive: true, displayModeBar: false });
         
         // Poblar tabla auxiliar
         let thead = document.getElementById('pca-coord-thead');
         if (thead) {
-            thead.innerHTML = `<tr><th>Sujeto</th><th>Rol</th><th>PC1 (Baricentro)</th><th>PC2 (Baricentro)</th><th>PC1 (SDA Emisión)</th><th>PC1 (SRC Recepción)</th><th>Δ Baricéntrico</th></tr>`;
+            if (currentDiadicPersp === 'RC') {
+                thead.innerHTML = `<tr><th>Sujeto</th><th>Rol</th><th>PC1 (SRC Recepción)</th><th>PC2 (SRC Recepción)</th><th>SDR Saldo</th><th>Tipo</th></tr>`;
+            } else if (currentDiadicPersp === 'DA') {
+                thead.innerHTML = `<tr><th>Sujeto</th><th>Rol</th><th>PC1 (SDA Emisión)</th><th>PC2 (SDA Emisión)</th><th>SDR Saldo</th><th>Tipo</th></tr>`;
+            } else {
+                thead.innerHTML = `<tr><th>Sujeto</th><th>Rol</th><th>PC1 (Baricentro)</th><th>PC2 (Baricentro)</th><th>PC1 (SDA Emisión)</th><th>PC1 (SRC Recepción)</th><th>Δ Baricéntrico</th></tr>`;
+            }
         }
         let tbody = document.getElementById('pca-coord-tbody');
         if (tbody) {
             let html = '';
             for (let i = 0; i < n; i++) {
-                html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colors[i]}; font-weight:bold;">${roles[i]}</td><td>${pc1_bari[i].toFixed(3)}</td><td>${pc2_bari[i].toFixed(3)}</td><td>${pc1_sda[i].toFixed(3)}</td><td>${pc1_src[i].toFixed(3)}</td><td style="color:#00FF87; font-weight:bold;">0.000</td></tr>`;
+                if (currentDiadicPersp === 'RC') {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colors[i]}; font-weight:bold;">${roles[i]}</td><td>${pc1_src[i].toFixed(3)}</td><td>${pc2_src[i].toFixed(3)}</td><td>${(currentStats && currentStats.sda_receptores ? currentStats.sda_receptores[i] : 0).toFixed(2)}</td><td style="color:#00A2FF;">Recepción (Estatus)</td></tr>`;
+                } else if (currentDiadicPersp === 'DA') {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colors[i]}; font-weight:bold;">${roles[i]}</td><td>${pc1_sda[i].toFixed(3)}</td><td>${pc2_sda[i].toFixed(3)}</td><td>${(currentStats && currentStats.sda_emisores ? currentStats.sda_emisores[i] : 0).toFixed(2)}</td><td style="color:#FF9F1C;">Emisión (Expansividad)</td></tr>`;
+                } else {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colors[i]}; font-weight:bold;">${roles[i]}</td><td>${pc1_bari[i].toFixed(3)}</td><td>${pc2_bari[i].toFixed(3)}</td><td>${pc1_sda[i].toFixed(3)}</td><td>${pc1_src[i].toFixed(3)}</td><td style="color:#00FF87; font-weight:bold;">0.000</td></tr>`;
+                }
             }
             tbody.innerHTML = html;
         }
     }
 
     // =========================================================================
-    // SOCIOGRAMA GEOMÉTRICO (AFC BENZÉCRI · FIGURAS Q81 FILTRADAS MARGINAL > 2)
+    // SOCIOGRAMA GEOMÉTRICO (AFC BENZÉCRI · Q81 · DISTINCIÓN DA vs RC)
+    // El plano de las RC es el que mejor describe el resultado del grupo (Canon)
     // =========================================================================
     function renderPlotlyAFCSociograma() {
         const container = document.getElementById('pca-plotly-canvas');
@@ -14251,7 +14427,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let n = n_nodes;
         let roles = currentStats && currentStats.roles ? currentStats.roles : [];
         
-        // 1. Recuento factual de frecuencias diádicas (DA, RC, ACT)
+        // 1. Recuento factual de frecuencias diádicas en ambos sentidos (DA y RC)
         let freq_DA = Array.from({length: n}, () => ({}));
         let freq_RC = Array.from({length: n}, () => ({}));
         let freq_ACT = Array.from({length: n}, () => ({}));
@@ -14284,7 +14460,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         
         // 3. Filtrar figuras activas cuya marginal supera los 2 casos (Canon Benzécri)
         let activeFigs = Array.from(allAppearedFigures).filter(fig => marginalTotal[fig] > 2);
-        // Figuras ilustrativas / suplementarias con marginales de 1 y 2 casos (proyectadas en baricentro sin alterar la inercia)
+        // Figuras ilustrativas / suplementarias con marginales de 1 y 2 casos
         let illusFigs = Array.from(allAppearedFigures).filter(fig => marginalTotal[fig] === 1 || marginalTotal[fig] === 2);
         
         if (activeFigs.length < 2) {
@@ -14351,7 +14527,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let s1 = Math.sqrt(Math.max(0, top1.val));
         let s2 = Math.sqrt(Math.max(0, top2.val));
         
-        // Coordenadas factoriales de Sujetos (Filas)
+        // Coordenadas factoriales de Sujetos (Baricentro)
         let f1 = [], f2 = [];
         let labelsSubj = [], colorsSubj = [];
         for (let i = 0; i < n; i++) {
@@ -14397,7 +14573,6 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
         
         // Coordenadas factoriales de Figuras Q81 ILUSTRATIVAS (Marginales 1 y 2 casos)
-        // Fórmula canónica Benzécri: G_sup = (1 / S) * sum_i (w_i * F_i)
         let g1_illus = [], g2_illus = [];
         let labelsFigIllus = [], colorsFigIllus = [], hoverFigIllus = [];
         for (let k = 0; k < illusFigs.length; k++) {
@@ -14424,12 +14599,16 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             else if (figStr.includes('Er') || figStr.includes('Re')) cCol = '#FF9F1C';
             colorsFigIllus.push(cCol);
             
-            hoverFigIllus.push(`<b>Figura Ilustrativa:</b> ${figStr} [ID ${qId}]<br><b>Significado:</b> ${figInfo.name}<br><b>Marginal:</b> ${tot_k} caso(s) [Frec 1-2]<br><i>(Variable suplementaria: proyectada en baricentro sin alterar la inercia)</i><br><b>F1:</b> ${x_sup.toFixed(3)} | <b>F2:</b> ${y_sup.toFixed(3)}`);
+            hoverFigIllus.push(`<b>Figura Ilustrativa:</b> ${figStr} [ID ${qId}]<br><b>Significado:</b> ${figInfo.name}<br><b>Marginal:</b> ${tot_k} caso(s) [Frec 1-2]<br><i>(Suplementaria proyectada en baricentro sin alterar inercia)</i><br><b>F1:</b> ${x_sup.toFixed(3)} | <b>F2:</b> ${y_sup.toFixed(3)}`);
         }
         
         // Coordenadas Ilustrativas DA y RC de cada sujeto (Teorema Baricéntrico AFC)
         let f1_da = [], f2_da = [], f1_rc = [], f2_rc = [];
         let arrowShapes = [];
+        let top_fig_rc_list = [], top_fig_da_list = [];
+        let e_recv_counts = [], r_recv_counts = [];
+        let e_da_counts = [], r_da_counts = [];
+        
         for (let i = 0; i < n; i++) {
             let sumDA_total = activeFigs.reduce((acc, f) => acc + (freq_DA[i][f] || 0), 0);
             let sumRC_total = activeFigs.reduce((acc, f) => acc + (freq_RC[i][f] || 0), 0);
@@ -14469,17 +14648,30 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 x1: x_rc, y1: y_rc,
                 line: { color: colorsSubj[i], width: 1.5, dash: 'dot' }
             });
+            
+            // Tally top figures y recuentos
+            let topRc = '-', maxRc = -1, eRc = 0, rRc = 0;
+            for (let f in freq_RC[i]) {
+                let cnt = freq_RC[i][f];
+                if (cnt > maxRc) { maxRc = cnt; topRc = f; }
+                if (f.includes('e') || f.includes('E')) eRc += cnt;
+                if (f.includes('r') || f.includes('R')) rRc += cnt;
+            }
+            top_fig_rc_list.push(topRc);
+            e_recv_counts.push(eRc);
+            r_recv_counts.push(rRc);
+            
+            let topDa = '-', maxDa = -1, eDa = 0, rDa = 0;
+            for (let f in freq_DA[i]) {
+                let cnt = freq_DA[i][f];
+                if (cnt > maxDa) { maxDa = cnt; topDa = f; }
+                if (f.includes('E') || f.includes('e')) eDa += cnt;
+                if (f.includes('R') || f.includes('r')) rDa += cnt;
+            }
+            top_fig_da_list.push(topDa);
+            e_da_counts.push(eDa);
+            r_da_counts.push(rDa);
         }
-        
-        let traceSujetos = {
-            x: f1, y: f2,
-            text: labelsSubj,
-            mode: 'markers+text',
-            textposition: 'top center',
-            marker: { size: 13, color: colorsSubj, line: { color: '#0B132B', width: 2 } },
-            name: 'Sujetos (Baricentro χ²)',
-            type: 'scatter'
-        };
         
         let traceFiguras = {
             x: g1, y: g2,
@@ -14507,33 +14699,108 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             type: 'scatter'
         };
         
-        let traceDA = {
-            x: f1_da, y: f2_da,
-            mode: 'markers',
-            marker: { size: 6, color: '#00FF87', symbol: 'triangle-right' },
-            name: 'Emisión DA (Ilustrativa)',
-            type: 'scatter'
-        };
+        let tracesPlotly = [];
+        let shapesToRender = [];
+        let chartTitle = '';
         
-        let traceRC = {
-            x: f1_rc, y: f2_rc,
-            mode: 'markers',
-            marker: { size: 6, color: '#00A2FF', symbol: 'circle-open' },
-            name: 'Recepción RC (Ilustrativa)',
-            type: 'scatter'
-        };
-        
-        let tracesPlotly = [traceSujetos, traceFiguras];
-        if (illusFigs.length > 0) tracesPlotly.push(traceFigurasIlustrativas);
-        tracesPlotly.push(traceDA, traceRC);
+        if (currentDiadicPersp === 'RC') {
+            // =================================================================
+            // PLANO CANÓNICO RC: ESTATUS Y RESULTADO GRUPAL (RECOMENDADO)
+            // =================================================================
+            chartTitle = `Sociograma Geométrico AFC · Plano de Recepción (RC: Estatus y Resultado Grupal)`;
+            
+            let hoverRc = [];
+            for (let i = 0; i < n; i++) {
+                hoverRc.push(`<b>Sujeto:</b> ${i+1}A (${roles[i] || 'SATELITE'})<br><b>Plano:</b> Recepción (RC: Estatus Grupal)<br><b>F1 (RC):</b> ${f1_rc[i].toFixed(3)} | <b>F2 (RC):</b> ${f2_rc[i].toFixed(3)}<br><b>Elecciones Recibidas:</b> ${e_recv_counts[i]}<br><b>Rechazos Recibidos:</b> ${r_recv_counts[i]}<br><b>Figura Receptora Predominante:</b> ${top_fig_rc_list[i]}`);
+            }
+            
+            let traceSujetosRC = {
+                x: f1_rc, y: f2_rc,
+                text: labelsSubj.map(l => l.split(' ')[0]),
+                hoverinfo: 'text',
+                hovertext: hoverRc,
+                mode: 'markers+text',
+                textposition: 'top center',
+                textfont: { color: '#FFFFFF', size: 12, family: 'sans-serif', weight: 'bold' },
+                marker: { size: 15, color: colorsSubj, line: { color: '#0B132B', width: 2 } },
+                name: 'Sujetos en Recepción (RC)',
+                type: 'scatter'
+            };
+            
+            tracesPlotly = [traceSujetosRC, traceFiguras];
+            if (illusFigs.length > 0) tracesPlotly.push(traceFigurasIlustrativas);
+            shapesToRender = [];
+            
+        } else if (currentDiadicPersp === 'DA') {
+            // =================================================================
+            // PLANO DA: EMISIÓN Y EXPANSIÓN RELACIONAL
+            // =================================================================
+            chartTitle = `Sociograma Geométrico AFC · Plano de Emisión (DA: Expansividad y Selectividad Relacional)`;
+            
+            let hoverDa = [];
+            for (let i = 0; i < n; i++) {
+                hoverDa.push(`<b>Sujeto:</b> ${i+1}A (${roles[i] || 'SATELITE'})<br><b>Plano:</b> Emisión (DA: Expansividad)<br><b>F1 (DA):</b> ${f1_da[i].toFixed(3)} | <b>F2 (DA):</b> ${f2_da[i].toFixed(3)}<br><b>Elecciones Emitidas:</b> ${e_da_counts[i]}<br><b>Rechazos Emitidos:</b> ${r_da_counts[i]}<br><b>Figura Emisora Predominante:</b> ${top_fig_da_list[i]}`);
+            }
+            
+            let traceSujetosDA = {
+                x: f1_da, y: f2_da,
+                text: labelsSubj.map(l => `${l.split(' ')[0]} [DA]`),
+                hoverinfo: 'text',
+                hovertext: hoverDa,
+                mode: 'markers+text',
+                textposition: 'top center',
+                textfont: { color: '#FF9F1C', size: 11, family: 'sans-serif', weight: 'bold' },
+                marker: { size: 14, color: colorsSubj, symbol: 'triangle-up', line: { color: '#0B132B', width: 2 } },
+                name: 'Sujetos en Emisión (DA)',
+                type: 'scatter'
+            };
+            
+            tracesPlotly = [traceSujetosDA, traceFiguras];
+            if (illusFigs.length > 0) tracesPlotly.push(traceFigurasIlustrativas);
+            shapesToRender = [];
+            
+        } else {
+            // =================================================================
+            // PLANO DUAL: DIALÉCTICA DA ↔ RC Y VECTORES DIÁDICOS
+            // =================================================================
+            chartTitle = `Sociograma Geométrico AFC · Plano Dual (DA ↔ RC / Vectores Diádicos & Teorema Baricéntrico)`;
+            
+            let traceSujetos = {
+                x: f1, y: f2,
+                text: labelsSubj,
+                mode: 'markers+text',
+                textposition: 'top center',
+                marker: { size: 13, color: colorsSubj, line: { color: '#0B132B', width: 2 } },
+                name: 'Baricentro χ² (Δ=0.000)',
+                type: 'scatter'
+            };
+            
+            let traceDA = {
+                x: f1_da, y: f2_da,
+                mode: 'markers',
+                marker: { size: 7, color: '#00FF87', symbol: 'triangle-right' },
+                name: 'Emisión DA (Ilustrativa)',
+                type: 'scatter'
+            };
+            
+            let traceRC = {
+                x: f1_rc, y: f2_rc,
+                mode: 'markers',
+                marker: { size: 7, color: '#00A2FF', symbol: 'circle-open' },
+                name: 'Recepción RC (Ilustrativa)',
+                type: 'scatter'
+            };
+            
+            tracesPlotly = [traceSujetos, traceFiguras];
+            if (illusFigs.length > 0) tracesPlotly.push(traceFigurasIlustrativas);
+            tracesPlotly.push(traceDA, traceRC);
+            shapesToRender = arrowShapes;
+        }
         
         let layout = {
             paper_bgcolor: '#0B0F19',
             plot_bgcolor: '#0B0F19',
-            title: {
-                text: `Sociograma Geométrico AFC · Espacio Dual Sujetos × Figuras Q81 (Activas > 2 e Ilustrativas 1-2)`,
-                font: { color: '#00FF87', size: 14 }
-            },
+            title: { text: chartTitle, font: { color: '#00FF87', size: 14 } },
             xaxis: {
                 title: `Factor 1 (${inercia1.toFixed(1)}% Inercia) · Eje de Polarización Principal`,
                 color: '#94A3B8', gridcolor: '#1E293B', zerolinecolor: '#334155'
@@ -14542,35 +14809,393 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 title: `Factor 2 (${inercia2.toFixed(1)}% Inercia) · Eje de Tensión y Asimetría`,
                 color: '#94A3B8', gridcolor: '#1E293B', zerolinecolor: '#334155'
             },
-            shapes: arrowShapes,
+            shapes: shapesToRender,
             legend: { font: { color: '#CBD5E1' }, orientation: 'h', y: -0.15 },
             margin: { l: 50, r: 30, t: 45, b: 45 }
         };
         
         Plotly.newPlot('pca-plotly-canvas', tracesPlotly, layout, { responsive: true, displayModeBar: false });
         
-        // Actualizar Tabla Auxiliar con Sujetos y Figuras Q81 Activas e Ilustrativas (Regla 17)
+        // Actualizar Tabla Auxiliar según la perspectiva activa (Regla 17)
         let thead = document.getElementById('pca-coord-thead');
         if (thead) {
-            thead.innerHTML = `<tr><th>Elemento</th><th>Tipo / Rol</th><th>Eje 1 (F1)</th><th>Eje 2 (F2)</th><th>Masa Relativa</th><th>Marginal Absoluto</th><th>Símbolo Canónico</th></tr>`;
+            if (currentDiadicPersp === 'RC') {
+                thead.innerHTML = `<tr><th>Elemento</th><th>Tipo / Rol</th><th>Eje 1 (F1 RC)</th><th>Eje 2 (F2 RC)</th><th>Elec. Recibidas</th><th>Rech. Recibidos</th><th>Figura RC Principal</th></tr>`;
+            } else if (currentDiadicPersp === 'DA') {
+                thead.innerHTML = `<tr><th>Elemento</th><th>Tipo / Rol</th><th>Eje 1 (F1 DA)</th><th>Eje 2 (F2 DA)</th><th>Elec. Dadas</th><th>Rech. Dados</th><th>Figura DA Principal</th></tr>`;
+            } else {
+                thead.innerHTML = `<tr><th>Elemento</th><th>Tipo / Rol</th><th>Eje 1 (F1 Bari)</th><th>Eje 2 (F2 Bari)</th><th>Masa Relativa</th><th>F1 (DA)</th><th>F1 (RC)</th></tr>`;
+            }
         }
         let tbody = document.getElementById('pca-coord-tbody');
         if (tbody) {
             let html = '';
             for (let i = 0; i < n; i++) {
-                html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colorsSubj[i]}; font-weight:bold;">${roles[i] || 'SATELITE'}</td><td>${f1[i].toFixed(3)}</td><td>${f2[i].toFixed(3)}</td><td>${(r[i]*100).toFixed(1)}%</td><td>${2*(n-1)}</td><td style="color:#38BDF8;">Sujeto</td></tr>`;
+                if (currentDiadicPersp === 'RC') {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colorsSubj[i]}; font-weight:bold;">${roles[i] || 'SATELITE'}</td><td>${f1_rc[i].toFixed(3)}</td><td>${f2_rc[i].toFixed(3)}</td><td style="color:#00FF87; font-weight:bold;">${e_recv_counts[i]}</td><td style="color:#FF0055; font-weight:bold;">${r_recv_counts[i]}</td><td style="font-family:monospace; color:#38BDF8; font-weight:bold;">${top_fig_rc_list[i]}</td></tr>`;
+                } else if (currentDiadicPersp === 'DA') {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colorsSubj[i]}; font-weight:bold;">${roles[i] || 'SATELITE'}</td><td>${f1_da[i].toFixed(3)}</td><td>${f2_da[i].toFixed(3)}</td><td style="color:#00FF87; font-weight:bold;">${e_da_counts[i]}</td><td style="color:#FF0055; font-weight:bold;">${r_da_counts[i]}</td><td style="font-family:monospace; color:#FF9F1C; font-weight:bold;">${top_fig_da_list[i]}</td></tr>`;
+                } else {
+                    html += `<tr><td><strong>${i+1}A</strong></td><td style="color:${colorsSubj[i]}; font-weight:bold;">${roles[i] || 'SATELITE'}</td><td>${f1[i].toFixed(3)}</td><td>${f2[i].toFixed(3)}</td><td>${(r[i]*100).toFixed(1)}%</td><td>${f1_da[i].toFixed(3)}</td><td>${f1_rc[i].toFixed(3)}</td></tr>`;
+                }
             }
             for (let k = 0; k < numCols; k++) {
                 let figStr = activeFigs[k];
                 let qId = getQ81Id(figStr);
-                html += `<tr><td style="color:${colorsFig[k]}; font-weight:bold;">ID ${qId}</td><td>Figura Activa (> 2)</td><td>${g1[k].toFixed(3)}</td><td>${g2[k].toFixed(3)}</td><td>${(c[k]*100).toFixed(1)}%</td><td>${marginalTotal[figStr]}</td><td style="font-family:monospace; font-size:12px; color:${colorsFig[k]};">${figStr}</td></tr>`;
+                html += `<tr><td style="color:${colorsFig[k]}; font-weight:bold;">ID ${qId}</td><td>Figura Activa (> 2)</td><td>${g1[k].toFixed(3)}</td><td>${g2[k].toFixed(3)}</td><td>${marginalTotal[figStr]} casos</td><td colspan="2" style="font-family:monospace; font-size:12px; color:${colorsFig[k]};">${figStr}</td></tr>`;
             }
             for (let k = 0; k < illusFigs.length; k++) {
                 let figStr = illusFigs[k];
                 let qId = getQ81Id(figStr);
-                html += `<tr><td style="color:${colorsFigIllus[k]}; font-weight:bold;">ID ${qId}*</td><td style="color:#94A3B8;">Figura Ilustrativa (1-2)</td><td>${g1_illus[k].toFixed(3)}</td><td>${g2_illus[k].toFixed(3)}</td><td>--</td><td>${marginalTotal[figStr]}</td><td style="font-family:monospace; font-size:12px; color:${colorsFigIllus[k]};">${figStr}</td></tr>`;
+                html += `<tr><td style="color:${colorsFigIllus[k]}; font-weight:bold;">ID ${qId}*</td><td style="color:#94A3B8;">Figura Ilustrativa (1-2)</td><td>${g1_illus[k].toFixed(3)}</td><td>${g2_illus[k].toFixed(3)}</td><td>${marginalTotal[figStr]} caso(s)</td><td colspan="2" style="font-family:monospace; font-size:12px; color:${colorsFigIllus[k]};">${figStr}</td></tr>`;
             }
             tbody.innerHTML = html;
+        }
+    }
+
+    // =========================================================================
+    // DENDROGRAMA JERÁRQUICO DE SUBGRUPOS (WARD / PROYECCIÓN AXONOMÉTRICA 3D)
+    // =========================================================================
+    window._detectedSubgroups = [];
+    let isSubgroupCentroids3DActive = false;
+    window.subgroupCentroids3DGroup = null;
+
+    function renderPlotlyDendrogram() {
+        const container = document.getElementById('pca-plotly-canvas');
+        if (!container || !currentMatrix || currentMatrix.length === 0) return;
+        
+        let analiticas = engine.extraer_matrices_analiticas(currentMatrix);
+        let sdr = analiticas['SDR'];
+        let n = n_nodes;
+        let roles = currentStats && currentStats.roles ? currentStats.roles : [];
+        
+        // Hojas iniciales
+        let clusters = [];
+        for (let i = 0; i < n; i++) {
+            clusters.push({
+                id: i,
+                members: [i],
+                size: 1,
+                leaf: true,
+                label: `${i+1}A`,
+                role: roles[i] || 'SATELITE',
+                x: i + 1,
+                height: 0
+            });
+        }
+        
+        // Distancia euclídea media entre clusters sobre perfiles SDR
+        function getClusterDist(c1, c2) {
+            let sumDist = 0;
+            let count = 0;
+            for (let i of c1.members) {
+                for (let j of c2.members) {
+                    let d2 = 0;
+                    for (let k = 0; k < n; k++) {
+                        let diff = sdr[i][k] - sdr[j][k];
+                        d2 += diff * diff;
+                    }
+                    sumDist += Math.sqrt(d2);
+                    count++;
+                }
+            }
+            return count > 0 ? sumDist / count : 0;
+        }
+        
+        let activeClusters = [...clusters];
+        let merges = [];
+        let nextId = n;
+        
+        while (activeClusters.length > 1) {
+            let bestDist = Infinity;
+            let bestA = 0, bestB = 1;
+            for (let a = 0; a < activeClusters.length; a++) {
+                for (let b = a + 1; b < activeClusters.length; b++) {
+                    let d = getClusterDist(activeClusters[a], activeClusters[b]);
+                    if (d < bestDist) {
+                        bestDist = d;
+                        bestA = a;
+                        bestB = b;
+                    }
+                }
+            }
+            let cA = activeClusters[bestA];
+            let cB = activeClusters[bestB];
+            let newMembers = [...cA.members, ...cB.members];
+            let newCluster = {
+                id: nextId++,
+                members: newMembers,
+                size: newMembers.length,
+                leaf: false,
+                left: cA,
+                right: cB,
+                height: Math.max(bestDist, Math.max(cA.height, cB.height) + 0.12)
+            };
+            merges.push({ left: cA, right: cB, parent: newCluster, dist: newCluster.height });
+            activeClusters.splice(Math.max(bestA, bestB), 1);
+            activeClusters.splice(Math.min(bestA, bestB), 1);
+            activeClusters.push(newCluster);
+        }
+        
+        let root = activeClusters[0];
+        let leafOrder = [];
+        function traverse(node) {
+            if (node.leaf) leafOrder.push(node);
+            else { traverse(node.left); traverse(node.right); }
+        }
+        traverse(root);
+        
+        leafOrder.forEach((leaf, idx) => { leaf.x = idx + 1; });
+        function assignPositions(node) {
+            if (node.leaf) return node.x;
+            let lx = assignPositions(node.left);
+            let rx = assignPositions(node.right);
+            node.x = (lx + rx) / 2.0;
+            return node.x;
+        }
+        assignPositions(root);
+        
+        // Umbral de corte para detección de subgrupos
+        let mergeDists = merges.map(m => m.dist).sort((a,b)=>a-b);
+        let cutoffDist = 1.0;
+        if (mergeDists.length >= 2) {
+            cutoffDist = (mergeDists[Math.floor(mergeDists.length * 0.5)] + mergeDists[mergeDists.length - 1]) / 2.0;
+        }
+        
+        let detectedSubgroups = [];
+        function findSubgroupsAtCut(node) {
+            if (node.height <= cutoffDist || node.leaf) {
+                detectedSubgroups.push(node);
+            } else {
+                findSubgroupsAtCut(node.left);
+                findSubgroupsAtCut(node.right);
+            }
+        }
+        findSubgroupsAtCut(root);
+        if (detectedSubgroups.length < 2 && root.left && root.right) {
+            detectedSubgroups = [root.left, root.right];
+        }
+        
+        let clusterColors = ['#00FF87', '#00A2FF', '#FF007F', '#FFE600', '#A855F7', '#FF9F1C'];
+        let nodeClusterColor = {};
+        let nodeClusterId = {};
+        detectedSubgroups.forEach((sg, idx) => {
+            let col = clusterColors[idx % clusterColors.length];
+            sg.members.forEach(m => {
+                nodeClusterColor[m] = col;
+                nodeClusterId[m] = idx + 1;
+            });
+        });
+        window._detectedSubgroups = detectedSubgroups;
+        
+        // Líneas de dendrograma
+        let lineTraces = [];
+        merges.forEach(m => {
+            let x0 = m.left.x, y0 = m.left.height;
+            let x1 = m.right.x, y1 = m.right.height;
+            let h = m.dist;
+            
+            let pathX = [x0, x0, x1, x1];
+            let pathY = [y0, h, h, y1];
+            
+            let color = '#38BDF8';
+            if (m.left.members.length === 1 && m.right.members.length === 1) {
+                if (nodeClusterColor[m.left.members[0]] === nodeClusterColor[m.right.members[0]]) {
+                    color = nodeClusterColor[m.left.members[0]];
+                }
+            }
+            
+            lineTraces.push({
+                x: pathX, y: pathY,
+                mode: 'lines',
+                line: { color: color, width: 2.2 },
+                showlegend: false,
+                hoverinfo: 'none'
+            });
+        });
+        
+        let leafX = leafOrder.map(l => l.x);
+        let leafY = leafOrder.map(l => 0);
+        let leafLabels = leafOrder.map(l => `${l.label}`);
+        let leafColors = leafOrder.map(l => nodeClusterColor[l.id] || '#00A2FF');
+        let leafHover = leafOrder.map(l => `<b>Sujeto:</b> ${l.label} (${l.role})<br><b>Subgrupo Asignado:</b> Grupo ${nodeClusterId[l.id]}<br><b>Miembros Subgrupo:</b> ${nodeClusterId[l.id] ? detectedSubgroups[nodeClusterId[l.id]-1].members.map(m=>`S${m+1}`).join(', ') : '-'}`);
+        
+        let traceLeaves = {
+            x: leafX, y: leafY,
+            text: leafLabels,
+            hoverinfo: 'text',
+            hovertext: leafHover,
+            mode: 'markers+text',
+            textposition: 'bottom center',
+            textfont: { color: '#CBD5E1', size: 12, family: 'monospace', weight: 'bold' },
+            marker: { size: 16, color: leafColors, line: { color: '#FFFFFF', width: 1.5 } },
+            name: 'Sujetos (Hojas)',
+            type: 'scatter'
+        };
+        
+        let traceCut = {
+            x: [0.5, n + 0.5],
+            y: [cutoffDist, cutoffDist],
+            mode: 'lines',
+            line: { color: '#FFE600', width: 1.8, dash: 'dash' },
+            name: `Umbral de Partición (${detectedSubgroups.length} Subgrupos)`,
+            hoverinfo: 'text',
+            hovertext: `Umbral: ${cutoffDist.toFixed(2)} &rarr; ${detectedSubgroups.length} Subgrupos Cohesivos`
+        };
+        
+        let layout = {
+            paper_bgcolor: '#0B0F19',
+            plot_bgcolor: '#0B0F19',
+            title: {
+                text: `Dendrograma Jerárquico de Subgrupos Naturales (${detectedSubgroups.length} Clics Cohesivos)`,
+                font: { color: '#FFE600', size: 14 }
+            },
+            xaxis: {
+                title: `Partición Jerárquica de Sujetos`,
+                color: '#94A3B8',
+                tickvals: leafX,
+                ticktext: leafLabels,
+                gridcolor: '#1E293B',
+                zeroline: false
+            },
+            yaxis: {
+                title: `Distancia Relacional Incremental (Métrica Ward / SDR)`,
+                color: '#94A3B8',
+                gridcolor: '#1E293B',
+                zerolinecolor: '#334155'
+            },
+            legend: { font: { color: '#CBD5E1' }, orientation: 'h', y: -0.15 },
+            margin: { l: 50, r: 30, t: 45, b: 60 }
+        };
+        
+        Plotly.newPlot('pca-plotly-canvas', [...lineTraces, traceLeaves, traceCut], layout, { responsive: true, displayModeBar: false });
+        
+        // Tabla Auxiliar
+        let thead = document.getElementById('pca-coord-thead');
+        if (thead) {
+            thead.innerHTML = `<tr><th>Subgrupo Natural</th><th>Color Distintivo</th><th>Nº Sujetos</th><th>Miembros</th><th>Cohesión Interna</th><th>Acción 3D</th></tr>`;
+        }
+        let tbody = document.getElementById('pca-coord-tbody');
+        if (tbody) {
+            let html = '';
+            detectedSubgroups.forEach((sg, idx) => {
+                let col = clusterColors[idx % clusterColors.length];
+                let membersStr = sg.members.map(m => `<strong>S${m+1}</strong>`).join(', ');
+                let cohes = (1.0 / (1.0 + sg.height)).toFixed(3);
+                html += `<tr><td style="color:${col}; font-weight:bold;">Subgrupo ${idx+1}</td><td><span style="display:inline-block; width:12px; height:12px; background:${col}; border-radius:50%; vertical-align:middle; margin-right:5px;"></span>${col}</td><td>${sg.members.length}</td><td>${membersStr}</td><td style="color:#00FF87; font-weight:bold;">${cohes}</td><td><button onclick="toggleSubgroupCentroids3D()" style="background:rgba(0,255,135,0.15); border:1px solid #00FF87; color:#00FF87; font-size:10px; padding:2px 8px; border-radius:4px; cursor:pointer;">🪐 Proyectar en 3D</button></td></tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+    }
+
+    function toggleSubgroupCentroids3D() {
+        if (!window.Graph) return;
+        const scene = window.Graph.scene();
+        if (!scene) return;
+        
+        if (isSubgroupCentroids3DActive && window.subgroupCentroids3DGroup) {
+            scene.remove(window.subgroupCentroids3DGroup);
+            window.subgroupCentroids3DGroup = null;
+            isSubgroupCentroids3DActive = false;
+            let btn = document.getElementById('btn-proj-3d');
+            if (btn) {
+                btn.style.background = 'rgba(255,230,0,0.15)';
+                btn.style.color = '#FFE600';
+                btn.innerText = '🪐 Proyectar Centroides 3D';
+            }
+            return;
+        }
+        
+        if (!window._detectedSubgroups || window._detectedSubgroups.length === 0) {
+            renderPlotlyDendrogram();
+        }
+        let detectedSubgroups = window._detectedSubgroups || [];
+        if (detectedSubgroups.length === 0) return;
+        
+        let graphNodes = window.Graph.graphData().nodes;
+        if (!graphNodes || graphNodes.length === 0) return;
+        
+        let nodePosMap = {};
+        graphNodes.forEach(node => {
+            nodePosMap[parseInt(node.id)] = { x: node.x || 0, y: node.y || 0, z: node.z || 0 };
+        });
+        
+        let clusterGroup = new THREE.Group();
+        clusterGroup.name = "subgroup_centroids_3d";
+        let clusterColorsHex = [0x00FF87, 0x00A2FF, 0xFF007F, 0xFFE600, 0xA855F7, 0xFF9F1C];
+        
+        detectedSubgroups.forEach((sg, idx) => {
+            let colHex = clusterColorsHex[idx % clusterColorsHex.length];
+            let cx = 0, cy = 0, cz = 0;
+            let validCount = 0;
+            
+            sg.members.forEach(m => {
+                let pos = nodePosMap[m];
+                if (pos) {
+                    cx += pos.x; cy += pos.y; cz += pos.z;
+                    validCount++;
+                }
+            });
+            if (validCount === 0) return;
+            cx /= validCount; cy /= validCount; cz /= validCount;
+            
+            // 1. Centroide: Octaedro brillante
+            let centroidGeo = new THREE.OctahedronGeometry(6.5, 0);
+            let centroidMat = new THREE.MeshStandardMaterial({
+                color: colHex,
+                emissive: colHex,
+                emissiveIntensity: 0.6,
+                roughness: 0.2,
+                metalness: 0.8
+            });
+            let centroidMesh = new THREE.Mesh(centroidGeo, centroidMat);
+            centroidMesh.position.set(cx, cy, cz);
+            clusterGroup.add(centroidMesh);
+            
+            // 2. Disco Axonométrico translúcido en el centroide
+            let diskGeo = new THREE.RingGeometry(2, 24, 32);
+            let diskMat = new THREE.MeshBasicMaterial({
+                color: colHex,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.25
+            });
+            let diskMesh = new THREE.Mesh(diskGeo, diskMat);
+            diskMesh.position.set(cx, cy, cz);
+            diskMesh.rotation.x = Math.PI / 2.8;
+            clusterGroup.add(diskMesh);
+            
+            // 3. Conexiones vectoriales desde los miembros al centroide
+            sg.members.forEach(m => {
+                let pos = nodePosMap[m];
+                if (pos) {
+                    let lineGeo = new THREE.BufferGeometry().setFromPoints([
+                        new THREE.Vector3(pos.x, pos.y, pos.z),
+                        new THREE.Vector3(cx, cy, cz)
+                    ]);
+                    let lineMat = new THREE.LineDashedMaterial({
+                        color: colHex,
+                        dashSize: 3,
+                        gapSize: 2,
+                        transparent: true,
+                        opacity: 0.65
+                    });
+                    let line = new THREE.Line(lineGeo, lineMat);
+                    line.computeLineDistances();
+                    clusterGroup.add(line);
+                }
+            });
+        });
+        
+        scene.add(clusterGroup);
+        window.subgroupCentroids3DGroup = clusterGroup;
+        isSubgroupCentroids3DActive = true;
+        
+        let btn = document.getElementById('btn-proj-3d');
+        if (btn) {
+            btn.style.background = '#00FF87';
+            btn.style.color = '#000';
+            btn.innerText = '🪐 Centroides 3D Proyectados ✓';
         }
     }
 
@@ -14661,7 +15286,159 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                     <li><strong>En la Familia o Comunidad:</strong> Validar los sentimientos expresados objetivamente en la SMIb, desarmando prejuicios heredados y reforzando los puentes afectivos existentes.</li>
                 </ol>
             </div>
+
+            <!-- DIAGNÓSTICO INDIVIDUALIZADO POR SUJETO & REVERSIÓN DE FIGURAS RECÍPROCAS -->
+            <div class="report-section" style="border-left-color: #38BDF8;">
+                <div class="report-section-title" style="color: #38BDF8;">👤 DIAGNÓSTICO INDIVIDUALIZADO &amp; REVERSIÓN DE FIGURAS RECÍPROCAS (DA ↔ RC)</div>
+                <div style="margin-bottom: 10px; font-size: 11.5px; line-height: 1.5;">
+                    Configuración relacional de cada sujeto frente a todos los demás miembros del grupo. Las dos filas paralelas permiten contrastar de forma directa lo que cada sujeto expresa como <strong>Emisor (DA)</strong> frente a lo que el grupo le devuelve como <strong>Receptor (RC)</strong>, identificando reciprocidades plenas, reversiones dialécticas e inconsistencias de expectativa:
+                </div>
+                ${generateAllSubjectsDiagnosisHTML()}
+            </div>
         `;
+        return html;
+    }
+
+    function generateAllSubjectsDiagnosisHTML() {
+        if (!currentMatrix || currentMatrix.length === 0) return '';
+        let n = n_nodes;
+        let html = '<div style="display:flex; flex-direction:column; gap:16px; margin-top:10px;">';
+        
+        for (let i = 0; i < n; i++) {
+            let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : 'SATELITE';
+            let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '0.00';
+            let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '0.00';
+            let sdr = (parseFloat(src) - parseFloat(sda)).toFixed(2);
+            let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores) ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '0.00';
+            
+            let rolColor = '#00A2FF';
+            if (rol === 'ALPHA') rolColor = '#00FF87';
+            else if (rol === 'OMEGA') rolColor = '#FF0055';
+            else if (rol === 'AISLADO') rolColor = '#64748B';
+            
+            let cenitIdx = (currentStats && currentStats.cenit) ? currentStats.cenit[i] : -1;
+            let nadirIdx = (currentStats && currentStats.nadir) ? currentStats.nadir[i] : -1;
+            let aE_target = (currentStats && currentStats.aE_target) ? currentStats.aE_target[i] : -1;
+            let oE_target = (currentStats && currentStats.oE_target) ? currentStats.oE_target[i] : -1;
+            let cenitStr = (cenitIdx >= 0) ? `S${cenitIdx+1}` : 'N/A';
+            let nadirStr = (nadirIdx >= 0) ? `S${nadirIdx+1}` : 'N/A';
+            let aE_targetStr = (aE_target === i) ? 'A sí mismo' : (aE_target >= 0 ? `S${aE_target+1}` : '-');
+            let oE_targetStr = (oE_target === i) ? 'A sí mismo' : (oE_target >= 0 ? `S${oE_target+1}` : '-');
+            
+            let e_given_cnt = 0, r_given_cnt = 0;
+            let e_recv_cnt = 0, r_recv_cnt = 0;
+            
+            html += `
+                <div style="background: rgba(11, 19, 43, 0.7); border: 1px solid rgba(255,255,255,0.12); border-left: 4px solid ${rolColor}; border-radius: 6px; padding: 10px 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px;">
+                        <div>
+                            <strong style="color:#FFF; font-size:13px;">SUJETO S${i+1} (ID: ${i+1}A)</strong>
+                            <span style="background:${rolColor}; color:#000; font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:3px; margin-left:8px;">${rol}</span>
+                        </div>
+                        <div style="font-size:11px; font-family:monospace; color:#CBD5E1;">
+                            SDA: <span style="color:#FFCC00; font-weight:bold;">${sda}</span> | 
+                            SRC: <span style="color:#00A2FF; font-weight:bold;">${src}</span> | 
+                            SDR: <span style="color:${parseFloat(sdr)>=0?'#00FF87':'#FF0055'}; font-weight:bold;">${sdr}</span> | 
+                            DIS: <span style="color:#FFF; font-weight:bold;">${dis}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="overflow-x:auto;">
+                        <table class="dt-table" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom:6px;">
+                            <thead>
+                                <tr style="background:rgba(255,255,255,0.04); color:#94A3B8;">
+                                    <th style="padding:4px 6px; text-align:left;">Díada</th>`;
+            for (let j = 0; j < n; j++) {
+                html += `<th style="padding:4px 6px; color:${j === i ? '#FFE600' : '#38BDF8'};">S${j+1}</th>`;
+            }
+            html += `<th style="padding:4px 6px; color:#FFCC00;">SDA/SRC</th>
+                     <th style="padding:4px 6px; color:#00FF87;">Elec.</th>
+                     <th style="padding:4px 6px; color:#FF0055;">Rech.</th>
+                     </tr></thead><tbody>`;
+            
+            // Fila 1 Emisor DA
+            html += `<tr style="background:rgba(0,255,135,0.04);">
+                     <td style="font-weight:bold; color:#00FF87; text-align:left; padding:4px 6px; white-space:nowrap;">📤 Emisor (DA: S${i+1}&rarr;S_j)</td>`;
+            for (let j = 0; j < n; j++) {
+                if (i === j) {
+                    let dStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : 'AA00000000';
+                    html += `<td style="color:#FFE600; font-family:monospace; font-size:9.5px;">[${dStr.slice(0,2)}]</td>`;
+                } else {
+                    let c = currentMatrix[i][j];
+                    let smia = smibToSmia(c);
+                    let col = getSMIaColor(smia);
+                    if (c[1] >= 'A' && c[1] <= 'Z') e_given_cnt++;
+                    if (c[1] >= 'a' && c[1] <= 'z') r_given_cnt++;
+                    html += `<td style="color:${col}; font-weight:bold;">${smia.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
+                }
+            }
+            html += `<td style="color:#FFCC00; font-weight:bold;">${sda}</td><td style="color:#00FF87; font-weight:bold;">${e_given_cnt}</td><td style="color:#FF0055; font-weight:bold;">${r_given_cnt}</td></tr>`;
+            
+            // Fila 2 Receptor RC
+            html += `<tr style="background:rgba(0,162,255,0.04);">
+                     <td style="font-weight:bold; color:#00A2FF; text-align:left; padding:4px 6px; white-space:nowrap;">🎯 Receptor (RC: S_j&rarr;S${i+1})</td>`;
+            for (let j = 0; j < n; j++) {
+                if (i === j) {
+                    html += `<td style="color:#00A2FF; font-size:9.5px;">[EGO]</td>`;
+                } else {
+                    let c = currentMatrix[j][i];
+                    let smia = smibToSmia(c);
+                    let col = getSMIaColor(smia);
+                    if (c[1] >= 'A' && c[1] <= 'Z') e_recv_cnt++;
+                    if (c[1] >= 'a' && c[1] <= 'z') r_recv_cnt++;
+                    html += `<td style="color:${col}; font-weight:bold;">${smia.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
+                }
+            }
+            html += `<td style="color:#00A2FF; font-weight:bold;">${src}</td><td style="color:#00FF87; font-weight:bold;">${e_recv_cnt}</td><td style="color:#FF0055; font-weight:bold;">${r_recv_cnt}</td></tr>`;
+            
+            // Fila 3 Reversión Recíproca
+            let simC = 0, invC = 0, asimC = 0;
+            html += `<tr style="background:rgba(255,230,0,0.03); font-size:10px;">
+                     <td style="font-weight:bold; color:#FFE600; text-align:left; padding:4px 6px;">🔄 Reversión</td>`;
+            for (let j = 0; j < n; j++) {
+                if (i === j) {
+                    html += `<td style="color:#64748B;">--</td>`;
+                } else {
+                    let c_out = smibToSmia(currentMatrix[i][j]);
+                    let c_in = smibToSmia(currentMatrix[j][i]);
+                    let b = '';
+                    if (c_out === c_in && (c_out.includes('E') || c_out.includes('R') || c_out.includes('e') || c_out.includes('r'))) {
+                        b = '<span style="color:#00FF87; font-weight:bold;">⚖️ Sim</span>';
+                        simC++;
+                    } else if ((c_out.includes('Er') && c_in.includes('Re')) || (c_out.includes('Re') && c_in.includes('Er'))) {
+                        b = '<span style="color:#FF9F1C; font-weight:bold;">🔄 Inv</span>';
+                        invC++;
+                    } else if (c_out.includes('0') && c_in.includes('0')) {
+                        b = '<span style="color:#64748B;">⚪ Neu</span>';
+                    } else {
+                        b = '<span style="color:#38BDF8;">⚡ Asim</span>';
+                        asimC++;
+                    }
+                    html += `<td>${b}</td>`;
+                }
+            }
+            html += `<td colspan="3" style="text-align:right; color:#CBD5E1; font-size:9.5px;">${simC} Sim · ${invC} Inv · ${asimC} Asim</td></tr>`;
+            html += `</tbody></table></div>`;
+            
+            // Nota diagnóstica individual
+            let diagNota = '';
+            if (rol === 'ALPHA') {
+                diagNota = `Referente central del grupo con alto estatus de recepción (${src}). Concentra vínculos simétricos de confianza mutua. Oportunidad: compartir la toma de decisiones para no sobrecargar el rol facilitador.`;
+            } else if (rol === 'OMEGA') {
+                diagNota = `Nodo de fricción o discrepancia normativa (${r_recv_cnt} rechazos recibidos). Su saldo relacional (${sdr}) refleja disonancia vincular. Recomendación: intervenir mediante mediación pedagógica y clarificación de expectativas con sus interlocutores directos.`;
+            } else if (rol === 'AISLADO') {
+                diagNota = `Participante periférico con escasa interacción recibida (${src}). Sus elecciones emitidas señalan puentes potenciales de integración. Recomendación: propiciar tareas en parejas con sus preferencias directas (${cenitStr}).`;
+            } else {
+                diagNota = `Posición de integración intermedia o satélite estable. Buen balance entre emisión (${sda}) y recepción (${src}), participando en la cohesión operativa del grupo.`;
+            }
+            
+            html += `
+                <div style="font-size:10.5px; color:#CBD5E1; font-style:italic; line-height:1.45; background:rgba(255,255,255,0.03); padding:5px 8px; border-radius:4px;">
+                    💡 <strong>Diagnóstico:</strong> ${diagNota} | <strong>Sonda Cenit (1º):</strong> ${cenitStr} (predice que eligió a ${aE_targetStr}) | <strong>Sonda Nadir:</strong> ${nadirStr} (predice que eligió a ${oE_targetStr}).
+                </div>
+            </div>`;
+        }
+        html += '</div>';
         return html;
     }
 
