@@ -3473,6 +3473,51 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             </div>
         </div>
 
+        <!-- ACTIVACIÓN CANÓNICA DE LA DIAGONAL (i, i) VIA PROMEDIO GRUPAL + aE, oE -->
+        <div style="background:rgba(255, 230, 0, 0.08); border:1.5px solid #FFE600; border-radius:8px; padding:14px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                <span style="font-size:12px; font-weight:900; color:#FFE600; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:6px;">
+                    <span>⚡</span> ACTIVACIÓN CANÓNICA DE LA DIAGONAL [i, i]: AUTOPOSICIONAMIENTO r_ii (CORNEJO 1988 / NEXORD 2026)
+                </span>
+                <span style="font-size:10px; background:#1E293B; color:#00FF87; padding:3px 8px; border-radius:4px; font-family:monospace; border:1px solid #00FF87;">
+                    Sin Sesgo de Exclusión · Clausura Reflexiva
+                </span>
+            </div>
+            <div style="font-size:11px; color:#CBD5E1; line-height:1.55; margin-bottom:12px;">
+                A diferencia de la sociometría tradicional de Moreno (1934), que <strong>anulaba o dejaba a cero la diagonal</strong> (<code>[diag] = 0</code>), introduciendo sesgos en las métricas de centralidad y en el cálculo espectral, NEXORD <strong>activa endógenamente la celda reflexiva \([i, i]\)</strong>:
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
+                <div style="background:#070C1E; border:1px solid #334155; border-radius:6px; padding:10px;">
+                    <div style="font-size:11.5px; font-weight:bold; color:#00FF87; display:flex; align-items:center; gap:6px;">
+                        <span>👥</span> 1. Promedio de Nominaciones del Grupo (R̄_rec)
+                    </div>
+                    <div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">
+                        Se promedian todos los rangos atribuidos al sujeto \(i\) por sus compañeros en elecciones \(E\), rechazos \(R\) y expectativas \((pE, pR)\). La posición basal del individuo es el consenso directo que el grupo le confiere.
+                    </div>
+                </div>
+                <div style="background:#070C1E; border:1px solid #334155; border-radius:6px; padding:10px;">
+                    <div style="font-size:11.5px; font-weight:bold; color:#38BDF8; display:flex; align-items:center; gap:6px;">
+                        <span>🔭</span> 2. Modulación por Sondas Cenit (aE) y Nadir (oE)
+                    </div>
+                    <div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">
+                        Se incorpora la metapercepción extrema: la <strong>Sonda Cenit \(aE\)</strong> (¿quién me elegirá? / auto-expectativa) y la <strong>Sonda Nadir \(oE\)</strong> (hetero-atribución periférica), modulando el rango reflexivo \(r_{ii} \in \{1 \dots N\}\).
+                    </div>
+                </div>
+                <div style="background:#070C1E; border:1px solid #334155; border-radius:6px; padding:10px;">
+                    <div style="font-size:11.5px; font-weight:bold; color:#FFE600; display:flex; align-items:center; gap:6px;">
+                        <span>🎯</span> 3. Intercalación Canónica en Secuencia 1..N
+                    </div>
+                    <div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">
+                        El sujeto \(i\) se intercala en la posición \(r_{ii}\) de su propia fila \(1 \dots N\). Si el sujeto expresó una auto-nominación factual en Moreno, esta prevalece; de lo contrario, se adopta el consenso grupal \(+ aE, oE\).
+                    </div>
+                </div>
+            </div>
+            <!-- Detalle dinámico del sujeto seleccionado -->
+            <div id="moreno-orbit-diag-summary" style="margin-top:12px; background:#0B0F19; border:1px dashed #FFE600; border-radius:6px; padding:8px 12px; font-size:10.5px; color:#FFF; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <!-- Rellenado dinámicamente por renderMorenoOrbitEquivTable() -->
+            </div>
+        </div>
+
         <!-- CONTROLES DEL INSPECTOR EN VIVO -->
         <div style="display:flex; justify-content:space-between; align-items:center; background:#0F172A; border:1px solid rgba(255,204,0,0.25); border-radius:8px; padding:10px 14px; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -5601,7 +5646,26 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         let p = parseDiagonalCell(diagStr);
         let aText = p.aNodes.map((x, idx) => x !== null ? `${idx + 1}º:S${x}` : null).filter(x => x !== null).join(', ') || 'ninguno';
         let oText = p.oNodes.map((x, idx) => x !== null ? `${idx + 1}º:S${x}` : null).filter(x => x !== null).join(', ') || 'ninguno';
-        return `Diagonal S${subjIdx + 1} [${p.raw.length} pos, ${p.kRanks} expectativas]: ${p.raw}\n• Auto: A1=${p.a1} (auto-exp), A2=${p.a2} (auto-val)\n• Predicción Alpha (aE): [${p.aRaw}] -> ${aText}\n• Predicción Omega (oE): [${p.oRaw}] -> ${oText}`;
+        
+        let avgRecText = '';
+        if (typeof currentMatrix !== 'undefined' && currentMatrix && currentMatrix.length > 0 && typeof n_nodes !== 'undefined') {
+            let rec_ranks = [];
+            for (let k = 0; k < n_nodes; k++) {
+                if (k === subjIdx) continue;
+                let c = currentMatrix[k] ? currentMatrix[k][subjIdx] : null;
+                if (c) {
+                    let da_k = c[1];
+                    if (da_k >= 'A' && da_k <= 'Z') rec_ranks.push(da_k.charCodeAt(0) - 64);
+                    else if (da_k >= 'a' && da_k <= 'z') rec_ranks.push(n_nodes - (da_k.charCodeAt(0) - 97));
+                }
+            }
+            if (rec_ranks.length > 0) {
+                let avg = rec_ranks.reduce((a, b) => a + b, 0) / rec_ranks.length;
+                let r_auto = Math.max(1, Math.min(n_nodes, Math.round(avg)));
+                avgRecText = `\n• ⚡ Activación Canónica [${subjIdx + 1}, ${subjIdx + 1}]:\n  - Promedio de nominaciones recibidas: R̄_rec = ${avg.toFixed(1)}º (${rec_ranks.length} votos)\n  - Auto-posicionamiento intercalado: r_ii = ${r_auto}º (Sin sesgo de exclusión)`;
+            }
+        }
+        return `Diagonal S${subjIdx + 1} [${p.raw.length} pos, ${p.kRanks} expectativas]: ${p.raw}\n• Auto: A1=${p.a1} (auto-expectativa), A2=${p.a2} (auto-aprecio)\n• Sonda Cenit (aE): [${p.aRaw}] -> ${aText}\n• Sonda Nadir (oE): [${p.oRaw}] -> ${oText}${avgRecText}`;
     }
 
     function formatDiagonal10Tooltip(diagStr, subjIdx) {
@@ -6670,6 +6734,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                     if (c[2] >= 'a' && c[2] <= 'z') r_recv.push(`S${j+1}`);
                 }
                 
+                let rec_ranks = [];
+                for (let k = 0; k < n_nodes; k++) {
+                    if (k === ego) continue;
+                    let c = currentMatrix[k] ? currentMatrix[k][ego] : null;
+                    if (c) {
+                        let da_k = c[1];
+                        if (da_k >= 'A' && da_k <= 'Z') rec_ranks.push(da_k.charCodeAt(0) - 64);
+                        else if (da_k >= 'a' && da_k <= 'z') rec_ranks.push(n_nodes - (da_k.charCodeAt(0) - 97));
+                    }
+                }
+                let avgRec = rec_ranks.length > 0 ? (rec_ranks.reduce((a, b) => a + b, 0) / rec_ranks.length) : (n_nodes / 2.0);
+                let r_auto = Math.max(1, Math.min(n_nodes, Math.round(avgRec)));
+                let diagStr = (currentMatrix && currentMatrix[ego] && currentMatrix[ego][ego]) ? currentMatrix[ego][ego] : 'AA00000000';
+                
                 cardName.innerText = `👤 SUJETO ${ego+1} (ID: ${ego+1}A)`;
                 cardRole.innerText = rol;
                 cardRole.style.color = rol === 'ALPHA' ? '#F5F5DC' : (rol === 'OMEGA' ? '#FF0055' : (rol === 'AISLADO' ? '#64748B' : '#00A2FF'));
@@ -6703,6 +6781,16 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                         </div>
                         <div style="color:#CBD5E1; font-size:9px; font-style:italic; margin-top:2px;">
                             ● ${oE_lbl}
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,230,0,0.07); padding:6px; border-radius:5px; border-left:3px solid #00FF87; margin-top:5px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:#00FF87; font-size:10px;">⚡ DIAGONAL ACTIVADA [${ego+1}, ${ego+1}]</strong>
+                            <span style="font-size:8.5px; color:#FFE600; font-family:monospace; font-weight:bold;">r_ii = ${r_auto}º (${diagStr})</span>
+                        </div>
+                        <div style="color:#CBD5E1; font-size:9px; margin-top:2px; line-height:1.35;">
+                            Promedio nominaciones del grupo: <strong>${avgRec.toFixed(1)}º</strong> (${rec_ranks.length} votos) + Sondas aE/oE.<br/>
+                            <span style="color:#94A3B8;">Autoposicionamiento intercalado en secuencia 1..N sin sesgo de exclusión.</span>
                         </div>
                     </div>
                 `;
@@ -16719,7 +16807,62 @@ let activeCitationFormat = 'bibtex';
         let n = n_nodes;
         let isEspana = !!(window.isEspanaScenarioActive && window.DATASET_ESPANA_47);
         
-        let items = [];
+        // 1. Cálculo de Activación Canónica de la Diagonal [ego, ego]:
+        // Promedio de nominaciones recibidas por ego de sus compañeros en el grupo
+        let rec_ranks = [];
+        let e_recv_count = 0, r_recv_count = 0;
+        for (let k = 0; k < n; k++) {
+            if (k === ego) continue;
+            let c = currentMatrix[k] ? currentMatrix[k][ego] : null;
+            if (c) {
+                let p_da_k = c[0];
+                let da_k = c[1];
+                if (da_k >= 'A' && da_k <= 'Z') {
+                    let rVal = da_k.charCodeAt(0) - 64; // 'A'=1, 'B'=2...
+                    rec_ranks.push(rVal);
+                    e_recv_count++;
+                } else if (da_k >= 'a' && da_k <= 'z') {
+                    let rVal = n - (da_k.charCodeAt(0) - 97); // 'a'=n, 'b'=n-1...
+                    rec_ranks.push(rVal);
+                    r_recv_count++;
+                }
+                if (p_da_k >= 'A' && p_da_k <= 'Z') {
+                    rec_ranks.push(p_da_k.charCodeAt(0) - 64);
+                } else if (p_da_k >= 'a' && p_da_k <= 'z') {
+                    rec_ranks.push(n - (p_da_k.charCodeAt(0) - 97));
+                }
+            }
+        }
+        let avgRec = rec_ranks.length > 0 ? (rec_ranks.reduce((a, b) => a + b, 0) / rec_ranks.length) : (n / 2.0);
+        let r_auto = Math.max(1, Math.min(n, Math.round(avgRec)));
+        
+        let cenitIdx = (currentStats && currentStats.cenit) ? currentStats.cenit[ego] : -1;
+        let nadirIdx = (currentStats && currentStats.nadir) ? currentStats.nadir[ego] : -1;
+        let aE_target = (currentStats && currentStats.aE_target) ? currentStats.aE_target[ego] : -1;
+        let oE_target = (currentStats && currentStats.oE_target) ? currentStats.oE_target[ego] : -1;
+        let aE_str = (aE_target === ego) ? 'A mí mismo' : (aE_target >= 0 ? `S${aE_target+1}` : '-');
+        let oE_str = (oE_target === ego) ? 'A mí mismo' : (oE_target >= 0 ? `S${oE_target+1}` : '-');
+        let diagStr = (currentMatrix && currentMatrix[ego] && currentMatrix[ego][ego]) ? currentMatrix[ego][ego] : 'AA00000000';
+        let pDiag = (typeof parseDiagonalCell === 'function') ? parseDiagonalCell(diagStr) : { a1: diagStr[0], a2: diagStr[1] };
+
+        // Actualizar caja de resumen de activación diagonal
+        const diagSummaryEl = document.getElementById('moreno-orbit-diag-summary');
+        if (diagSummaryEl) {
+            diagSummaryEl.innerHTML = `
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-weight:900; color:#FFE600; font-size:11px;">⚡ ACTIVACIÓN DIAGONAL [${ego+1}, ${ego+1}]:</span>
+                    <span style="color:#00FF87;">R̄_rec (Promedio Grupal): <strong>${avgRec.toFixed(2)}º</strong> (${rec_ranks.length} votos)</span>
+                    <span style="color:#38BDF8;">● Sonda Cenit (aE): <strong>${aE_str}</strong></span>
+                    <span style="color:#C084FC;">● Sonda Nadir (oE): <strong>${oE_str}</strong></span>
+                    <span style="color:#FFF;">● Auto-posicionamiento resultante: <strong style="color:#FFE600; font-size:12px; font-family:monospace;">${r_auto}º de ${n}</strong></span>
+                </div>
+                <div style="font-family:monospace; color:#FFE600; font-size:11px; font-weight:bold; background:#070C1E; padding:3px 8px; border-radius:4px; border:1px solid #FFE600;">
+                    Decagrama SMIb: [${diagStr}]
+                </div>
+            `;
+        }
+
+        let otherItems = [];
         for (let j = 0; j < n; j++) {
             if (j === ego) continue;
             
@@ -16789,7 +16932,7 @@ let activeCitationFormat = 'bibtex';
                 partnerSub = window.DATASET_ESPANA_47.cities[j].shortName;
             }
             
-            items.push({
+            otherItems.push({
                 j: j,
                 partnerName: partnerName,
                 partnerSub: partnerSub,
@@ -16804,18 +16947,53 @@ let activeCitationFormat = 'bibtex';
                 moreno_pda: moreno_pda,
                 pda_color: pda_color,
                 moreno_rc: moreno_rc,
-                rc_color: rc_color
+                rc_color: rc_color,
+                isDiagonal: false
             });
         }
         
         if (!isEspana) {
-            items.sort((a, b) => b.rawScore - a.rawScore);
-            items.forEach((item, idx) => {
-                item.rankOrbit = idx + 1;
-            });
+            otherItems.sort((a, b) => b.rawScore - a.rawScore);
         } else {
-            items.sort((a, b) => a.rankOrbit - b.rankOrbit);
+            otherItems.sort((a, b) => a.rankOrbit - b.rankOrbit);
         }
+        
+        // Intercalación canónica del auto-posicionamiento en la posición r_auto - 1
+        let egoPartnerName = '★ Sujeto ' + (ego + 1) + ' (YO)';
+        let egoPartnerSub = (ego + 1) + 'A';
+        if (isEspana && window.DATASET_ESPANA_47 && window.DATASET_ESPANA_47.cities[ego]) {
+            egoPartnerName = '★ ' + window.DATASET_ESPANA_47.cities[ego].id + ' (Centroide)';
+            egoPartnerSub = window.DATASET_ESPANA_47.cities[ego].shortName;
+        }
+        
+        let diagItem = {
+            j: ego,
+            partnerName: egoPartnerName,
+            partnerSub: egoPartnerSub,
+            rawScore: 0,
+            rankOrbit: r_auto,
+            cell: diagStr,
+            smia: '[DIAG]',
+            p1: diagStr[0], p2: diagStr[1], p3: '0', p4: '0',
+            moreno_da: `Auto-aprecio (${pDiag.a2 || 'A'})`,
+            moreno_da_code: 'DIAG',
+            da_color: '#FFE600',
+            moreno_pda: `Auto-expectativa (${pDiag.a1 || 'A'})`,
+            pda_color: '#FFE600',
+            moreno_rc: `R̄_rec grupal (${avgRec.toFixed(1)}º)`,
+            rc_color: '#FFE600',
+            isDiagonal: true
+        };
+        
+        let insertIdx = Math.max(0, Math.min(otherItems.length, r_auto - 1));
+        otherItems.splice(insertIdx, 0, diagItem);
+        
+        // Asignar rangos finales 1..N
+        otherItems.forEach((it, idx) => {
+            it.rankOrbit = idx + 1;
+        });
+        
+        let items = otherItems;
         
         let totalE = items.filter(it => it.moreno_da_code === 'E').length;
         let totalR = items.filter(it => it.moreno_da_code === 'R').length;
@@ -16828,39 +17006,45 @@ let activeCitationFormat = 'bibtex';
                     <span style="color:#00FF87; margin-left:8px;">● ${totalE} Elecciones (E)</span>
                     <span style="color:#94A3B8; margin-left:8px;">● ${totalNeu} Neutros (0)</span>
                     <span style="color:#FF0055; margin-left:8px;">● ${totalR} Rechazos (R)</span>
+                    <span style="color:#FFE600; margin-left:12px; font-weight:bold;">★ Diagonal Activada: ${r_auto}º (R̄_rec=${avgRec.toFixed(1)}º)</span>
                 </div>
-                <div style="font-size:10px; color:#FFE600; font-family:monospace;">
+                <div style="font-size:10px; color:#00FF87; font-family:monospace;">
                     Preservación Posicional: 100% de Consistencia
                 </div>
             </div>
             <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left; color:#CBD5E1;">
                 <thead>
                     <tr style="background:#0F172A; border-bottom:1.5px solid #1E293B; color:#94A3B8; text-transform:uppercase; font-size:10px;">
-                        <th style="padding:10px 12px; width:75px; color:#00FF87; font-weight:900;">🪐 ORBIT</th>
+                        <th style="padding:10px 12px; width:85px; color:#00FF87; font-weight:900;">🪐 ORBIT</th>
                         <th style="padding:10px 12px;">Partner (j)</th>
                         <th style="padding:10px 12px; width:130px; color:#00FF87;">MORENO DA (A2)</th>
                         <th style="padding:10px 12px; width:140px; color:#38BDF8;">MORENO p_DA (A1)</th>
                         <th style="padding:10px 12px; width:140px; color:#00A2FF;">MORENO RC (A3)</th>
-                        <th style="padding:10px 12px; width:95px; color:#FFCC00;">Tetragrama SMIb</th>
+                        <th style="padding:10px 12px; width:105px; color:#FFCC00;">Tetragrama / Decagrama SMIb</th>
                         <th style="padding:10px 12px; width:80px; color:#C084FC;">Figura Q81</th>
-                        <th style="padding:10px 12px; width:150px;">Densidad W(k)=2^(1-k)</th>
+                        <th style="padding:10px 12px; width:140px;">Densidad W(k)=2^(1-k)</th>
                     </tr>
                 </thead>
                 <tbody>`;
                 
         items.forEach((it, idx) => {
             let wk = Math.pow(2, 1 - it.rankOrbit);
-            let rowBg = idx % 2 === 0 ? 'background:rgba(15, 23, 42, 0.4);' : 'background:transparent;';
-            let rankColor = it.rankOrbit <= 3 ? '#00FF87' : (it.rankOrbit >= (n - 2) ? '#FF0055' : '#94A3B8');
             let wkDisplay = wk >= 0.001 ? wk.toFixed(4) : wk.toExponential(2);
             
-            html += `<tr style="${rowBg} border-bottom:1px solid rgba(30, 41, 59, 0.5); transition:background 0.15s;" onmouseover="this.style.background='rgba(255,204,0,0.1)'" onmouseout="this.style.background='${idx % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'transparent'}'">
+            let rowBg = it.isDiagonal 
+                ? 'background:rgba(255, 230, 0, 0.12); border-left:3px solid #FFE600;' 
+                : (idx % 2 === 0 ? 'background:rgba(15, 23, 42, 0.4);' : 'background:transparent;');
+            let rankColor = it.isDiagonal ? '#FFE600' : (it.rankOrbit <= 3 ? '#00FF87' : (it.rankOrbit >= (n - 2) ? '#FF0055' : '#94A3B8'));
+            let star = it.isDiagonal ? ' ★' : '';
+            
+            html += `<tr style="${rowBg} border-bottom:1px solid rgba(30, 41, 59, 0.5); transition:background 0.15s;" onmouseover="this.style.background='rgba(255,204,0,0.1)'" onmouseout="this.style.background='${it.isDiagonal ? 'rgba(255, 230, 0, 0.12)' : (idx % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'transparent')}'">
                 <td style="padding:7px 12px; font-weight:900; font-family:monospace; color:${rankColor}; font-size:12px;">
-                    ${it.rankOrbit}º
+                    ${it.rankOrbit}º${star}
                 </td>
                 <td style="padding:7px 12px;">
-                    <span style="font-weight:bold; color:#FFF;">${it.partnerName}</span>
+                    <span style="font-weight:bold; color:${it.isDiagonal ? '#FFE600' : '#FFF'};">${it.partnerName}</span>
                     <span style="font-size:9.5px; color:#94A3B8; margin-left:6px;">(${it.partnerSub})</span>
+                    ${it.isDiagonal ? '<span style="background:rgba(255,230,0,0.2); color:#FFE600; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:900; margin-left:8px; border:1px solid #FFE600;">⚡ DIAGONAL ACTIVADA</span>' : ''}
                 </td>
                 <td style="padding:7px 12px; font-weight:bold; color:${it.da_color}; font-family:monospace;">
                     ${it.moreno_da}
@@ -16871,13 +17055,13 @@ let activeCitationFormat = 'bibtex';
                 <td style="padding:7px 12px; font-weight:bold; color:${it.rc_color}; font-family:monospace;">
                     ${it.moreno_rc}
                 </td>
-                <td style="padding:7px 12px; font-weight:900; font-family:monospace; color:#FFCC00; font-size:12.5px;">
+                <td style="padding:7px 12px; font-weight:900; font-family:monospace; color:#FFCC00; font-size:12px;">
                     ${it.cell}
                 </td>
-                <td style="padding:7px 12px; font-weight:bold; font-family:monospace; color:#C084FC;">
+                <td style="padding:7px 12px; font-weight:bold; font-family:monospace; color:${it.isDiagonal ? '#FFE600' : '#C084FC'};">
                     ${it.smia}
                 </td>
-                <td style="padding:7px 12px; font-family:monospace; color:#00FF87;">
+                <td style="padding:7px 12px; font-family:monospace; color:${it.isDiagonal ? '#FFE600' : '#00FF87'};">
                     ${wkDisplay}
                 </td>
             </tr>`;
