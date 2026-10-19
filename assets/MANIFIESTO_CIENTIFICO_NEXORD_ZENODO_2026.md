@@ -644,7 +644,28 @@ Si un actor satura su inercia en los planos 1 y 2 ($\sum \text{CTA}_{1,2} \appro
 * **Traza Vectorial Continua:** Una línea fina orientada une la posición basal $(f_1, f_2)$ con la coordenada final proyectada en 6D, eliminando cualquier ambigüedad de lectura espacial.
 
 ### 8.3. Anexo III: Catálogo de los 10 Dominios Ecosistémicos
-Parametrización estructural completa ($\alpha$, $\gamma$) y criterios de aplicación para los contextos: Educativo, Familiar, Deportivo, Comunitario, Misiones Críticas, Terapéutico, Laboral, Institucional, Militar y Penitenciario.
+Parametrización estructural completa ($\alpha$, $\gamma$), foco socio-dinámico y criterios canónicos de elección administrados para los 10 dominios normativos de NEXORD:
+
+#### Tabla Anexo III. Catálogo de Calibración de los 10 Dominios Sociométricos Ecosistémicos
+
+| # | Dominio Sociométrico | Parámetros Estructurales | Foco Psicosocial y Dinámica Relacional | Criterios Clave de Elección |
+| :---: | :--- | :---: | :--- | :--- |
+| **1** | **Sociometría Educativa y Formativa** | $\alpha = 0{,}50$ <br> $\gamma = 0{,}80$ | Aprendizaje colaborativo, inclusión y prevención activa de la marginación escolar. | • Tarea / Estudio <br> • Lúdico / Patio <br> • Liderazgo Integrador |
+| **2** | **Sociometría Familiar y Sistémica** | $\alpha = 0{,}85$ <br> $\gamma = 0{,}99$ | Jerarquía, fronteras de rol, lealtades implícitas y resolución de tabúes sistémicos. | • Confianza y Sostén <br> • Fricción / Conflicto <br> • Toma de Decisiones |
+| **3** | **Sociometría Deportiva y Alto Rendimiento** | $\alpha = 0{,}30$ <br> $\gamma = 0{,}60$ | Sinergia táctica bajo presión, cohesión de vestuario vs. eficacia en campo. | • Pase / Sinergia Táctica <br> • Cohesión de Vestuario <br> • Liderazgo bajo Estrés |
+| **4** | **Sociometría Social y Comunitaria** | $\alpha = 0{,}30$ <br> $\gamma = 0{,}40$ | Dinámicas informales de barrio, agrupaciones espontáneas e integración vecinal. | • Proximidad y Afecto <br> • Organización e Iniciativa <br> • Compartir Ocio |
+| **5** | **Sociometría de Equipos de Élite / Misiones Críticas** | $\alpha = 0{,}85$ <br> $\gamma = 0{,}90$ | Fiabilidad absoluta, respuesta coordinada ante imprevistos y gestión de fallos. | • Fiabilidad Técnica <br> • Respuesta a Crisis <br> • Apoyo en Misión |
+| **6** | **Sociometría Terapéutica y Clínica** | $\alpha = 0{,}40$ <br> $\gamma = 0{,}70$ | Salud de la red de apoyo, vulnerabilidad, sostén emocional y contención afectiva. | • Sostén Emocional <br> • Identificación y Reflejo <br> • Distancia Defensiva |
+| **7** | **Sociometría Laboral y Organizacional** | $\alpha = 0{,}65$ <br> $\gamma = 0{,}85$ | Red informal de trabajo, eliminación de silos, clima laboral y retención de talento. | • Resolución Operativa <br> • Innovación y Confianza <br> • Fluidez Informativa |
+| **8** | **Sociometría Institucional y Gubernamental** | $\alpha = 0{,}80$ <br> $\gamma = 0{,}90$ | Coordinación interdepartamental, estabilidad normativa y consensos de gestión. | • Protocolo Institucional <br> • Consenso Normativo <br> • Consulta Estratégica |
+| **9** | **Sociometría Militar y Geo-Política** | $\alpha = 0{,}90$ <br> $\gamma = 0{,}95$ | Estructuras de mando, bloques diplomáticos, alianzas de poder y dinámicas de veto. | • Cadena de Mando <br> • Lealtad de Bloque <br> • Veto y Tensión |
+| **10** | **Sociometría Biológica / Eco-Penitenciaria** | $\alpha = 0{,}20$ <br> $\gamma = 0{,}50$ | Autoorganización, asignación de recursos escasos, nichos territoriales y supervivencia. | • Proximidad Espacial <br> • Defensa y Cooperación <br> • Dominancia Ordinal |
+
+> [!NOTE]
+> **💡 Nota Metodológica de Calibración e Invariancia Canon 2026**:
+> 1. **Inercia Temporal ($\alpha_{\text{temp}} \in [0, 1]$)**: En simulaciones longitudinales ($T > 1$), rige la ecuación diferencial de evolución diádica $I_t = \alpha_{\text{temp}} \cdot (\gamma \cdot I_{t-1}) + (1 - \alpha_{\text{temp}}) \cdot \Delta_{\text{nuevo}}$. Cuantifica la resistencia al cambio estructural: desde colectivos de altísima cristalización institucional o histórica (Militar $\alpha=0{,}90$, Familiar $\alpha=0{,}85$, Institucional $\alpha=0{,}80$) hasta entornos de alta volatilidad operativa y respuesta contingente (Eco-Penitenciario $\alpha=0{,}20$, Deportivo $\alpha=0{,}30$, Social $\alpha=0{,}30$).
+> 2. **Factor de Retención de Memoria ($\gamma \in [0, 1]$)**: Determina la fracción de memoria vincular que sobrevive entre cortes temporales ($\Delta t$). Refleja la persistencia de agravios y lealtades (Familia $\gamma=0{,}99$, Militar $\gamma=0{,}95$) frente a redes informales de rápida disolución si cesa la interacción (Comunitario $\gamma=0{,}40$).
+> 3. **Independencia del Análisis Factorial y Densidad Canónica**: En el análisis analítico de campo (`FullTableGenerator`), la cuantificación socio-termodinámica de densidades (BDR/SDR) se rige **estrictamente por la base invariante canónica $W(k) = 2^{1-k}$ ($\alpha_{\text{ord}} = 0{,}50$)**, garantizando la perfecta estabilidad topológica demostrada en la banda $[0{,}40, 0{,}60]$. La simulación emite exclusivamente rankings ordinales discretos $1º..Nº$ libres de sesgos numéricos.
 
 ![Tabla Anexo III: Catálogo 10 Dominios](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
 *Tabla Anexo III. Catálogo de los 10 dominios ecosistémicos de calibración con inercia relacional (α) y tasa de decaimiento (γ).*
