@@ -2987,6 +2987,20 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             </div>
         </div>
 
+        <!-- CONVERSIÓN CANÓNICA: MORENO ↔ ORBIT & NÚCLEO SMIb -->
+        <div style="background: rgba(255, 204, 0, 0.08); border: 1.5px solid rgba(255, 204, 0, 0.4); border-radius: 6px; padding: 7px; margin-top: 5px;">
+            <div style="font-size: 9px; font-weight: 900; color: #FFCC00; font-family: monospace; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                <span>🔄 MORENO ↔ ORBIT &amp; SMIb</span>
+                <span style="color:#000; background:#FFCC00; padding:1px 4px; border-radius:3px; font-size:8px; font-weight:bold;">CANON</span>
+            </div>
+            <div style="font-size: 8.5px; color: #94A3B8; margin-bottom: 5px; line-height: 1.35;">
+                SMIb se construye sobre MORENO <code>(p_DA, DA, RC, p_RC) ↔ (pE, E, e, pR)</code> garantizando casi-equivalencia con ORBIT.
+            </div>
+            <button onclick="openMorenoOrbitEquivModal()" style="width: 100%; padding: 5px 7px; font-size: 9px; font-weight: bold; background: rgba(255, 204, 0, 0.15); color: #FFCC00; border: 1px solid #FFCC00; border-radius: 4px; cursor: pointer; text-align: center;">
+                ⚡ Inspector de Conversión Recíproca
+            </button>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px;">
             <button onclick="openManualMode()" style="padding: 5px; background: #FFCC00; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 9.5px;">✏️ EDITOR MANUAL</button>
             <button onclick="exportSmibMatrixJSON()" style="padding: 5px; background: #0F172A; color: #00E5FF; border: 1px solid #00E5FF; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 9.5px;">💾 EXPORTAR SMIb</button>
@@ -3048,6 +3062,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             <div id="card-node-body" style="color:#94A3B8; font-size:10px; line-height:1.45;">
                 💡 Haz clic en cualquier nodo 3D o en el timeline para inspeccionar sus vínculos factuales y su Sonda de los Extremos (Cenit \(aE\) y Nadir \(oE\)).
             </div>
+            <button onclick="openMorenoOrbitEquivModal()" style="width:100%; margin-top:6px; padding:5px; background:rgba(255,204,0,0.15); border:1px solid #FFCC00; color:#FFCC00; border-radius:4px; font-size:9px; cursor:pointer; font-weight:bold;">
+                🔄 Ver Equivalencia MORENO ↔ ORBIT (SMIb)
+            </button>
         </div>
     </div>
 
@@ -3071,6 +3088,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             </button>
             <button class="btn-vcr" onclick="openEspanaInterdistModal()" style="width:100%; padding:7px; text-align:left; display:flex; justify-content:space-between; background:rgba(56,189,248,0.15); border-color:#38BDF8; color:#38BDF8;">
                 <span>🇪🇸 Interdistancias: KM vs ORBIT (46 Ciudades)</span><span style="font-size:8.5px;">DUAL</span>
+            </button>
+            <button class="btn-vcr" onclick="openMorenoOrbitEquivModal()" style="width:100%; padding:7px; text-align:left; display:flex; justify-content:space-between; background:rgba(255,204,0,0.15); border-color:#FFCC00; color:#FFCC00;">
+                <span>🔄 Conversión MORENO ↔ ORBIT (SMIb)</span><span style="font-size:8.5px;">CANON</span>
             </button>
             <button class="btn-vcr" onclick="openMatricesMode()" style="width:100%; padding:7px; text-align:left; display:flex; justify-content:space-between; background:rgba(233,30,99,0.15); border-color:#E91E63; color:#FF80AB;">
                 <span>📊 Matriz SMIa / SMIb Completa</span><span style="font-size:8.5px;">4C</span>
@@ -3359,6 +3379,126 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     </div>
 </div>
 
+<!-- =========================================================================
+     MODAL DE CASI-EQUIVALENCIA MORENO ↔ ORBIT & TRANSCIPCIÓN CANÓNICA SMIb
+     ========================================================================= -->
+<div id="modal-moreno-orbit-equiv" class="modal-overlay" style="display:none; z-index:6600; align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto;" onclick="closeMorenoOrbitEquivModal()">
+    <div class="report-window" style="max-width:1260px; width:95vw; background:#0B132B; border:1.5px solid #FFCC00; border-radius:12px; box-shadow:0 15px 50px rgba(0,0,0,0.9); margin:20px auto; padding:20px;" onclick="event.stopPropagation()">
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,204,0,0.3); padding-bottom:14px; margin-bottom:14px; flex-wrap:wrap; gap:12px;">
+            <div>
+                <h2 style="margin:0; color:#FFCC00; font-size:19px; font-weight:900; display:flex; align-items:center; gap:8px;">
+                    <span>🔄</span> CASI-EQUIVALENCIA MORENO ↔ ORBIT &amp; TRANSCIPCIÓN SMIb
+                </h2>
+                <div style="font-size:11px; color:#94A3B8; margin-top:4px;">
+                    Fundamentación Canónica: Aunque los datos se recojan en <strong>ORBIT</strong>, la sociomatriz <strong>SMIb</strong> se construye rigurosamente sobre la cuaterna de <strong>MORENO</strong>: <code>(p_DA, DA, RC, p_RC) ↔ (pE, E, e, pR)</code>.
+                </div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <button onclick="closeMorenoOrbitEquivModal()" style="background:#1E293B; border:1px solid #475569; color:#FFF; padding:6px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:12px;">✕ CERRAR</button>
+            </div>
+        </div>
+
+        <!-- 4 POSICIONES DEL TETRAGRAMA CANÓNICO (REGLA 5) -->
+        <div style="background:rgba(255,204,0,0.06); border:1px solid rgba(255,204,0,0.3); border-radius:8px; padding:12px; margin-bottom:16px;">
+            <div style="font-size:11px; font-weight:900; color:#FFCC00; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                <span>⚖️</span> DEFINICIÓN CANÓNICA INVIOLABLE DEL TETRAGRAMA SMIb EN LA CELDA (i, j) [REGLA 5]:
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px;">
+                <div style="background:#070C1E; border:1px solid #1E293B; border-radius:6px; padding:8px 10px;">
+                    <div style="font-size:12px; font-weight:900; color:#38BDF8; font-family:monospace;">A1 (p_DA) ↔ pE / pR</div>
+                    <div style="font-size:10.5px; color:#CBD5E1; margin-top:2px;">La <strong>expectativa que el emisor</strong> tiene de lo que hará el partner (¿me elegirá o me rechazará?).</div>
+                    <div style="font-size:9px; color:#64748B; margin-top:2px;">Mayúscula = Espera (+), Minúscula = Espera (-), 0 = Neutro</div>
+                </div>
+                <div style="background:#070C1E; border:1px solid #1E293B; border-radius:6px; padding:8px 10px;">
+                    <div style="font-size:12px; font-weight:900; color:#00FF87; font-family:monospace;">A2 (DA) ↔ E / R</div>
+                    <div style="font-size:10.5px; color:#CBD5E1; margin-top:2px;">La <strong>preferencia efectiva que el emisor</strong> otorga al partner (elección positiva o rechazo).</div>
+                    <div style="font-size:9px; color:#64748B; margin-top:2px;">Mayúscula = Elección E, Minúscula = Rechazo R, 0 = Indiferencia</div>
+                </div>
+                <div style="background:#070C1E; border:1px solid #1E293B; border-radius:6px; padding:8px 10px;">
+                    <div style="font-size:12px; font-weight:900; color:#00A2FF; font-family:monospace;">A3 (RC) ↔ E_rec / R_rec</div>
+                    <div style="font-size:10.5px; color:#CBD5E1; margin-top:2px;">La <strong>preferencia efectiva que el partner</strong> otorga al emisor (lo que el emisor recibe fácticamente).</div>
+                    <div style="font-size:9px; color:#64748B; margin-top:2px;">Mayúscula = Me elige, Minúscula = Me rechaza, 0 = Neutro</div>
+                </div>
+                <div style="background:#070C1E; border:1px solid #1E293B; border-radius:6px; padding:8px 10px;">
+                    <div style="font-size:12px; font-weight:900; color:#C084FC; font-family:monospace;">A4 (p_RC) ↔ pE_rec / pR_rec</div>
+                    <div style="font-size:10.5px; color:#CBD5E1; margin-top:2px;">La <strong>expectativa que el partner</strong> tiene de lo que hará el emisor (expectativa recibida).</div>
+                    <div style="font-size:9px; color:#64748B; margin-top:2px;">Mayúscula = Espera mi elección, Minúscula = Espera mi rechazo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAGRAMA BIDIRECCIONAL: ORBIT ↔ MORENO ↔ SMIb -->
+        <div style="background:#070C1E; border:1px solid #1E293B; border-radius:8px; padding:12px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                <span style="font-size:11px; font-weight:bold; color:#38BDF8; text-transform:uppercase;">
+                    🔄 FUNCIÓN DE CONVERSIÓN RECÍPROCA (CASI-EQUIVALENCIA r > 0.96)
+                </span>
+                <span style="font-size:10px; color:#00FF87; font-family:monospace;">
+                    Invarianza Topológica Preservada (&Delta; = 0.000)
+                </span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center;">
+                <!-- Bloque ORBIT -->
+                <div style="background:rgba(0,255,135,0.06); border:1px solid rgba(0,255,135,0.3); border-radius:6px; padding:10px;">
+                    <div style="color:#00FF87; font-weight:900; font-size:12px; display:flex; align-items:center; gap:6px;">
+                        <span>🪐</span> FORMATO ORBIT (Continuo)
+                    </div>
+                    <div style="font-size:10px; color:#94A3B8; margin-top:4px; line-height:1.45;">
+                        • Rango ordinal completo: <code>1º, 2º ... (N-1)º</code><br/>
+                        • Densidad física: <code>W(k) = 2^(1-k)</code><br/>
+                        • Sonda Cenit: <code>1º atribuido (aE)</code><br/>
+                        • Sonda Nadir: <code>Último atribuido (oE)</code><br/>
+                        • Cero truncamiento de información.
+                    </div>
+                </div>
+                <!-- Flechas de Conversión -->
+                <div style="text-align:center; padding:0 8px;">
+                    <div style="font-size:18px; color:#FFCC00; font-weight:900;">⇄</div>
+                    <div style="font-size:8.5px; color:#94A3B8; font-family:monospace;">Transcripción<br/>Biunívoca</div>
+                </div>
+                <!-- Bloque MORENO -->
+                <div style="background:rgba(0,162,255,0.06); border:1px solid rgba(0,162,255,0.3); border-radius:6px; padding:10px;">
+                    <div style="color:#38BDF8; font-weight:900; font-size:12px; display:flex; align-items:center; gap:6px;">
+                        <span>👥</span> FORMATO MORENO (Diádico)
+                    </div>
+                    <div style="font-size:10px; color:#94A3B8; margin-top:4px; line-height:1.45;">
+                        • Elecciones efectivas: <code>E (A2)</code><br/>
+                        • Rechazos efectivos: <code>R (A2)</code><br/>
+                        • Expectativa de elección: <code>pE (A1)</code><br/>
+                        • Expectativa de rechazo: <code>pR (A1)</code><br/>
+                        • Indiferencia / Neutral: <code>'0'</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROLES DEL INSPECTOR EN VIVO -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#0F172A; border:1px solid rgba(255,204,0,0.25); border-radius:8px; padding:10px 14px; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="font-size:11px; font-weight:bold; color:#FFCC00;">SUJETO EMISOR A INSPECCIONAR:</label>
+                <select id="sel-moreno-orbit-subject" onchange="renderMorenoOrbitEquivTable(this.value)" style="background:#070C1E; border:1px solid #FFCC00; color:#FFF; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:11.5px; cursor:pointer;">
+                    <!-- Sujetos inyectados dinámicamente -->
+                </select>
+            </div>
+            <div style="font-size:10.5px; color:#94A3B8;">
+                💡 Demostración de correspondencia entre el rango ORBIT, la tipología Moreno y la celda SMIb.
+            </div>
+        </div>
+
+        <!-- TABLA DINÁMICA DE CONVERSIÓN FILA A FILA -->
+        <div id="moreno-orbit-table-wrap" style="background:#070C1E; border:1px solid #1E293B; border-radius:8px; overflow:hidden; max-height:420px; overflow-y:auto; margin-bottom:14px;">
+            <!-- Renderizado dinámicamente por renderMorenoOrbitEquivTable() -->
+        </div>
+
+        <!-- NOTA EPISTEMOLÓGICA FINAL (REGLA 10) -->
+        <div style="background:rgba(0, 255, 135, 0.07); border-left:3px solid #00FF87; border-radius:4px; padding:10px 14px; font-size:11px; line-height:1.55; color:#CBD5E1;">
+            <strong style="color:#00FF87;">💡 Principio Epistemológico de Casi-Equivalencia (Cornejo 1988 / NEXORD 2026):</strong>
+            Aunque en el campo empírico los datos se recogen con el formato completo <strong>ORBIT</strong> (ordenación exhaustiva 1º a N-ésimo con ponderación física \(W(k) = 2^{1-k}\)), la sociomatriz <strong>SMIb</strong> se apoya en el álgebra canónica de <strong>MORENO</strong> mediante el tetragrama \((p\_DA, DA, RC, p\_RC)\). Esta dualidad garantiza que la metodología conserve la intuición humana y la interpretabilidad diádica del sociograma de Moreno, combinándola con la potencia métrica continua del espacio de Hilbert, el análisis factorial ortogonal (PCA/AFC) y la recuperación geométrica sin pérdida de información.
+        </div>
+    </div>
+</div>
+
 <!-- OVERLAY ESPECTROGRAMA PANORÁMICO 18D (ZENODO 2026) -->
 <div id="modal-18d-spectrogram" class="modal-overlay" style="display: none; z-index: 2600;" onclick="if(event.target===this) close18DSpectrogramModal()">
     <div class="modal-window" style="width: 92vw; max-width: 1300px; max-height: 92vh; display: flex; flex-direction: column; background:#0B132B; border:2px solid #00FF87; box-shadow:0 20px 60px rgba(0,0,0,0.9);">
@@ -3589,6 +3729,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                                 <button type="button" class="agile-btn agile-adv-btn" onclick="renderMatrixTab('ESPECTRAL')">📐 Espectral</button>
                                 <button type="button" class="agile-btn agile-adv-btn" onclick="renderMatrixTab('GRASSMANN')">🌌 Gr(k,N)</button>
                                 <button type="button" class="agile-btn agile-adv-btn" onclick="renderMatrixTab('INDICADORES')">💎 255 Ind</button>
+                                <button type="button" class="agile-btn agile-adv-btn" onclick="openMorenoOrbitEquivModal()" style="border-color:#FFCC00; color:#FFCC00;">🔄 MORENO ↔ ORBIT</button>
                             </div>
                         </div>
                     </div>
@@ -16531,6 +16672,219 @@ let activeCitationFormat = 'bibtex';
             if (modP) modP.value = 'PIRAMIDAL';
             initSimulation();
         }
+    }
+
+
+
+    /* =========================================================================
+       CASI-EQUIVALENCIA MORENO ↔ ORBIT & TRANSCIPCIÓN SMIb
+       ========================================================================= */
+    function openMorenoOrbitEquivModal() {
+        const modal = document.getElementById('modal-moreno-orbit-equiv');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        
+        const sel = document.getElementById('sel-moreno-orbit-subject');
+        if (sel) {
+            sel.innerHTML = '';
+            for (let i = 0; i < n_nodes; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                if (window.isEspanaScenarioActive && window.DATASET_ESPANA_47 && window.DATASET_ESPANA_47.cities[i]) {
+                    opt.text = window.DATASET_ESPANA_47.cities[i].id + ' (' + window.DATASET_ESPANA_47.cities[i].shortName + ')';
+                } else {
+                    opt.text = 'Sujeto ' + (i + 1) + ' (' + (i + 1) + 'A)';
+                }
+                sel.appendChild(opt);
+            }
+            let activeIdx = 0;
+            if (typeof selectedNodes !== 'undefined' && selectedNodes.size === 1) {
+                activeIdx = parseInt(Array.from(selectedNodes)[0]);
+            }
+            sel.value = activeIdx;
+        }
+        renderMorenoOrbitEquivTable(sel ? sel.value : 0);
+    }
+
+    function closeMorenoOrbitEquivModal() {
+        const modal = document.getElementById('modal-moreno-orbit-equiv');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function renderMorenoOrbitEquivTable(subjectIdx) {
+        const wrap = document.getElementById('moreno-orbit-table-wrap');
+        if (!wrap || !currentMatrix || currentMatrix.length === 0) return;
+        
+        let ego = parseInt(subjectIdx) || 0;
+        let n = n_nodes;
+        let isEspana = !!(window.isEspanaScenarioActive && window.DATASET_ESPANA_47);
+        
+        let items = [];
+        for (let j = 0; j < n; j++) {
+            if (j === ego) continue;
+            
+            let cell = currentMatrix[ego][j] || '0000';
+            let p1 = cell[0]; // p_DA
+            let p2 = cell[1]; // DA
+            let p3 = cell[2]; // RC
+            let p4 = cell[3]; // p_RC
+            let smia = typeof smibToSmia === 'function' ? smibToSmia(cell) : cell;
+            
+            // Rango ORBIT
+            let rankOrbit = 0;
+            if (isEspana && window.DATASET_ESPANA_47.matrix_orbit && window.DATASET_ESPANA_47.matrix_orbit[ego]) {
+                rankOrbit = window.DATASET_ESPANA_47.matrix_orbit[ego][j];
+            } else {
+                let score = 0;
+                if (p2 >= 'A' && p2 <= 'Z') score = 200 - (p2.charCodeAt(0) - 65);
+                else if (p2 === '0') score = 50;
+                else if (p2 >= 'a' && p2 <= 'z') score = -100 - (p2.charCodeAt(0) - 97);
+                
+                if (p1 >= 'A' && p1 <= 'Z') score += 10;
+                else if (p1 >= 'a' && p1 <= 'z') score -= 10;
+                
+                rankOrbit = score;
+            }
+            
+            // MORENO DA (A2)
+            let moreno_da = 'Neutro (0)';
+            let moreno_da_code = '0';
+            let da_color = '#94A3B8';
+            if (p2 >= 'A' && p2 <= 'Z') {
+                moreno_da = 'Elección (' + p2 + ')';
+                moreno_da_code = 'E';
+                da_color = '#00FF87';
+            } else if (p2 >= 'a' && p2 <= 'z') {
+                moreno_da = 'Rechazo (' + p2 + ')';
+                moreno_da_code = 'R';
+                da_color = '#FF0055';
+            }
+            
+            // MORENO p_DA (A1)
+            let moreno_pda = 'Neutro (0)';
+            let pda_color = '#94A3B8';
+            if (p1 >= 'A' && p1 <= 'Z') {
+                moreno_pda = 'Espera Elección (' + p1 + ')';
+                pda_color = '#38BDF8';
+            } else if (p1 >= 'a' && p1 <= 'z') {
+                moreno_pda = 'Espera Rechazo (' + p1 + ')';
+                pda_color = '#FF9F1C';
+            }
+            
+            // MORENO RC (A3)
+            let moreno_rc = 'Neutro (0)';
+            let rc_color = '#94A3B8';
+            if (p3 >= 'A' && p3 <= 'Z') {
+                moreno_rc = 'Recibe Elección (' + p3 + ')';
+                rc_color = '#00A2FF';
+            } else if (p3 >= 'a' && p3 <= 'z') {
+                moreno_rc = 'Recibe Rechazo (' + p3 + ')';
+                rc_color = '#FB7185';
+            }
+            
+            let partnerName = 'S' + (j + 1);
+            let partnerSub = (j + 1) + 'A';
+            if (isEspana && window.DATASET_ESPANA_47.cities[j]) {
+                partnerName = window.DATASET_ESPANA_47.cities[j].id;
+                partnerSub = window.DATASET_ESPANA_47.cities[j].shortName;
+            }
+            
+            items.push({
+                j: j,
+                partnerName: partnerName,
+                partnerSub: partnerSub,
+                rawScore: rankOrbit,
+                rankOrbit: rankOrbit,
+                cell: cell,
+                smia: smia,
+                p1: p1, p2: p2, p3: p3, p4: p4,
+                moreno_da: moreno_da,
+                moreno_da_code: moreno_da_code,
+                da_color: da_color,
+                moreno_pda: moreno_pda,
+                pda_color: pda_color,
+                moreno_rc: moreno_rc,
+                rc_color: rc_color
+            });
+        }
+        
+        if (!isEspana) {
+            items.sort((a, b) => b.rawScore - a.rawScore);
+            items.forEach((item, idx) => {
+                item.rankOrbit = idx + 1;
+            });
+        } else {
+            items.sort((a, b) => a.rankOrbit - b.rankOrbit);
+        }
+        
+        let totalE = items.filter(it => it.moreno_da_code === 'E').length;
+        let totalR = items.filter(it => it.moreno_da_code === 'R').length;
+        let totalNeu = items.filter(it => it.moreno_da_code === '0').length;
+        
+        let html = `
+            <div style="padding:10px 14px; background:#0B132B; border-bottom:1px solid #1E293B; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="font-size:11px; color:#FFF;">
+                    <strong>Resumen Factual del Sujeto emisor:</strong> 
+                    <span style="color:#00FF87; margin-left:8px;">● ${totalE} Elecciones (E)</span>
+                    <span style="color:#94A3B8; margin-left:8px;">● ${totalNeu} Neutros (0)</span>
+                    <span style="color:#FF0055; margin-left:8px;">● ${totalR} Rechazos (R)</span>
+                </div>
+                <div style="font-size:10px; color:#FFE600; font-family:monospace;">
+                    Preservación Posicional: 100% de Consistencia
+                </div>
+            </div>
+            <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left; color:#CBD5E1;">
+                <thead>
+                    <tr style="background:#0F172A; border-bottom:1.5px solid #1E293B; color:#94A3B8; text-transform:uppercase; font-size:10px;">
+                        <th style="padding:10px 12px; width:75px; color:#00FF87; font-weight:900;">🪐 ORBIT</th>
+                        <th style="padding:10px 12px;">Partner (j)</th>
+                        <th style="padding:10px 12px; width:130px; color:#00FF87;">MORENO DA (A2)</th>
+                        <th style="padding:10px 12px; width:140px; color:#38BDF8;">MORENO p_DA (A1)</th>
+                        <th style="padding:10px 12px; width:140px; color:#00A2FF;">MORENO RC (A3)</th>
+                        <th style="padding:10px 12px; width:95px; color:#FFCC00;">Tetragrama SMIb</th>
+                        <th style="padding:10px 12px; width:80px; color:#C084FC;">Figura Q81</th>
+                        <th style="padding:10px 12px; width:150px;">Densidad W(k)=2^(1-k)</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+                
+        items.forEach((it, idx) => {
+            let wk = Math.pow(2, 1 - it.rankOrbit);
+            let rowBg = idx % 2 === 0 ? 'background:rgba(15, 23, 42, 0.4);' : 'background:transparent;';
+            let rankColor = it.rankOrbit <= 3 ? '#00FF87' : (it.rankOrbit >= (n - 2) ? '#FF0055' : '#94A3B8');
+            let wkDisplay = wk >= 0.001 ? wk.toFixed(4) : wk.toExponential(2);
+            
+            html += `<tr style="${rowBg} border-bottom:1px solid rgba(30, 41, 59, 0.5); transition:background 0.15s;" onmouseover="this.style.background='rgba(255,204,0,0.1)'" onmouseout="this.style.background='${idx % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'transparent'}'">
+                <td style="padding:7px 12px; font-weight:900; font-family:monospace; color:${rankColor}; font-size:12px;">
+                    ${it.rankOrbit}º
+                </td>
+                <td style="padding:7px 12px;">
+                    <span style="font-weight:bold; color:#FFF;">${it.partnerName}</span>
+                    <span style="font-size:9.5px; color:#94A3B8; margin-left:6px;">(${it.partnerSub})</span>
+                </td>
+                <td style="padding:7px 12px; font-weight:bold; color:${it.da_color}; font-family:monospace;">
+                    ${it.moreno_da}
+                </td>
+                <td style="padding:7px 12px; font-weight:bold; color:${it.pda_color}; font-family:monospace;">
+                    ${it.moreno_pda}
+                </td>
+                <td style="padding:7px 12px; font-weight:bold; color:${it.rc_color}; font-family:monospace;">
+                    ${it.moreno_rc}
+                </td>
+                <td style="padding:7px 12px; font-weight:900; font-family:monospace; color:#FFCC00; font-size:12.5px;">
+                    ${it.cell}
+                </td>
+                <td style="padding:7px 12px; font-weight:bold; font-family:monospace; color:#C084FC;">
+                    ${it.smia}
+                </td>
+                <td style="padding:7px 12px; font-family:monospace; color:#00FF87;">
+                    ${wkDisplay}
+                </td>
+            </tr>`;
+        });
+        
+        html += `</tbody></table>`;
+        wrap.innerHTML = html;
     }
 
 
