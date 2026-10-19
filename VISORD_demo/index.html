@@ -2783,9 +2783,12 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 </div>
 
     
-    <!-- Mini Matriz Subgrupo -->
-    <div id="mini-matrix">
-        <h3 data-i18n="subgroup_matrix" style="margin: 0 0 10px 0; font-size: 12px; text-align: center; color: #fff; letter-spacing: 1px;">MATRIZ DE SUBGRUPO (SMIa)</h3>
+    <!-- Mini Matriz Subgrupo / Red Ego / Diseño Global -->
+    <div id="mini-matrix" style="max-height: 80vh; max-width: 92vw; overflow: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px; border-bottom: 1px solid rgba(0, 162, 255, 0.3); padding-bottom: 6px;">
+            <h3 id="mini-matrix-title" data-i18n="subgroup_matrix" style="margin: 0; font-size: 11.5px; color: #00FF87; letter-spacing: 0.8px; font-weight: 800; font-family: monospace;">MATRIZ DE SUBGRUPO (SMIa)</h3>
+            <button onclick="clearSelectedNodes()" title="Cerrar matriz y deseleccionar sujetos" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); color: #CBD5E1; border-radius: 4px; padding: 1px 7px; cursor: pointer; font-size: 11px; font-weight: bold; transition: all 0.2s;">✕</button>
+        </div>
         <div id="mini-matrix-content"></div>
     </div>
 
@@ -6408,15 +6411,19 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             .filter(id => !isNaN(id) && id >= 0 && id < n_nodes)
             .sort((a,b) => a-b);
         
-        if (nodesArray.length >= 1 && nodesArray.length <= 3) {
-            // Mostrar filas de los seleccionados contra TODA la red (1..n_nodes)
+        if (nodesArray.length === 1) {
+            // Selección unitaria: Mostrar fila del ego contra TODA la red (1..n_nodes)
             container.style.display = 'block';
-            let html = '<table class="dt-table" style="font-size: 14px; width: 100%; border-collapse: collapse;">';
+            let titleEl = document.getElementById('mini-matrix-title');
+            let ego = nodesArray[0];
+            if (titleEl) titleEl.innerText = `🔍 RED EGO · SUJETO S${ego+1} (Vínculos con todo el grupo)`;
+            
+            let html = '<table class="dt-table" style="font-size: 13px; width: 100%; border-collapse: collapse;">';
             
             // Header: 1..N
-            html += '<tr><th style="background:rgba(255,255,255,0.05)">S↓ \\ R→</th>';
+            html += '<tr><th style="background:rgba(255,255,255,0.05); color:#94A3B8;">S↓ \\ R→</th>';
             for (let j = 0; j < n_nodes; j++) {
-                html += `<th style="background:rgba(255,255,255,0.05)">S${j+1}</th>`;
+                html += `<th style="background:rgba(255,255,255,0.05); color:${j === ego ? '#00FF87' : '#94A3B8'};">S${j+1}</th>`;
             }
             html += '<th style="background:rgba(255,255,255,0.1); color:#FFCC00; font-size:10px;">SDA</th>';
             html += '<th style="background:rgba(255,255,255,0.1); color:#00A2FF; font-size:10px;">SRC</th>';
@@ -6424,45 +6431,50 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             html += '<th style="background:rgba(255,255,255,0.1); color:#fff; font-size:10px;">ROL</th>';
             html += '</tr>';
             
-            // Rows: Selected nodes
-            for (let i of nodesArray) {
-                html += `<tr><th style="background:rgba(255,255,255,0.05)">S${i+1}</th>`;
-                for (let j = 0; j < n_nodes; j++) {
-                    if (i === j) {
-                        let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : 'AA00000000';
-                        let tooltip = formatDiagonal10Tooltip(diagStr, i);
-                        html += `<td title="${tooltip.replace(/"/g, '&quot;')}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; font-size:10px; border:1px solid rgba(255,230,0,0.3); cursor:help; letter-spacing:0.5px;">${diagStr}</td>`;
-                    } else {
-                        let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
-                        let smiaStr = smibToSmia(cellData);
-                        
-                        let color = getSMIaColor(smiaStr);
-                        
-                        html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
-                    }
+            // Row del sujeto ego seleccionado
+            let i = ego;
+            html += `<tr><th style="background:rgba(255,255,255,0.05); color:#00FF87; font-weight:900;">S${i+1}</th>`;
+            for (let j = 0; j < n_nodes; j++) {
+                if (i === j) {
+                    let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : 'AA00000000';
+                    let tooltip = formatDiagonal10Tooltip(diagStr, i);
+                    html += `<td title="${tooltip.replace(/"/g, '&quot;')}" style="background:rgba(255,230,0,0.15); color:#FFE600; font-weight:bold; font-family:monospace; font-size:10px; border:1px solid rgba(255,230,0,0.3); cursor:help; letter-spacing:0.5px;">${diagStr}</td>`;
+                } else {
+                    let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
+                    let smiaStr = smibToSmia(cellData);
+                    let color = getSMIaColor(smiaStr);
+                    html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
                 }
-                let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '-';
-                let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '-';
-                let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
-                let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : '-';
-                html += `<td style="color:#FFCC00; font-size: 11px;">${sda}</td>`;
-                html += `<td style="color:#00A2FF; font-size: 11px;">${src}</td>`;
-                html += `<td style="color:#FF0000; font-size: 11px;">${dis}</td>`;
-                html += `<td style="color:#fff; font-size: 10px; font-weight:bold;">${rol}</td>`;
-                html += '</tr>';
             }
+            let sda = (currentStats && currentStats.sda_emisores && typeof currentStats.sda_emisores[i] === 'number') ? currentStats.sda_emisores[i].toFixed(2) : '-';
+            let src = (currentStats && currentStats.sda_receptores && typeof currentStats.sda_receptores[i] === 'number') ? currentStats.sda_receptores[i].toFixed(2) : '-';
+            let dis = (currentStats && currentStats.sda_emisores && currentStats.sda_receptores && typeof currentStats.sda_emisores[i] === 'number' && typeof currentStats.sda_receptores[i] === 'number') ? (currentStats.sda_emisores[i] - currentStats.sda_receptores[i]).toFixed(2) : '-';
+            let rol = (currentStats && currentStats.roles && currentStats.roles[i]) ? currentStats.roles[i] : '-';
+            html += `<td style="color:#FFCC00; font-size: 11px;">${sda}</td>`;
+            html += `<td style="color:#00A2FF; font-size: 11px;">${src}</td>`;
+            html += `<td style="color:#FF0000; font-size: 11px;">${dis}</td>`;
+            html += `<td style="color:#fff; font-size: 10px; font-weight:bold;">${rol}</td>`;
+            html += '</tr>';
             html += '</table>';
             document.getElementById('mini-matrix-content').innerHTML = html;
             
-        } else if (nodesArray.length > 3 && nodesArray.length <= 15) {
-            // Mostrar submatriz cerrada (solo entre los seleccionados)
+        } else if (nodesArray.length > 1) {
+            // Selección múltiple: Submatriz inducida cuadrada SOLO con filas y columnas de los sujetos seleccionados
             container.style.display = 'block';
-            let html = '<table class="dt-table" style="font-size: 14px; width: 100%; border-collapse: collapse;">';
+            let titleEl = document.getElementById('mini-matrix-title');
+            if (titleEl) {
+                if (nodesArray.length === n_nodes) {
+                    titleEl.innerText = `🌐 DISEÑO RELACIONAL GLOBAL COMPLETO (${n_nodes} Sujetos)`;
+                } else {
+                    titleEl.innerText = `👥 MATRIZ PARCIAL INDUCIDA (${nodesArray.length} Sujetos: ${nodesArray.map(n=>'S'+(n+1)).join(', ')})`;
+                }
+            }
+            let html = '<table class="dt-table" style="font-size: 13px; width: 100%; border-collapse: collapse;">';
             
-            // Header
-            html += '<tr><th style="background:rgba(255,255,255,0.05)">S↓ \\ R→</th>';
+            // Header: estrictamente las columnas de los sujetos seleccionados
+            html += '<tr><th style="background:rgba(255,255,255,0.05); color:#94A3B8;">S↓ \\ R→</th>';
             for (let j of nodesArray) {
-                html += `<th style="background:rgba(255,255,255,0.05)">S${j+1}</th>`;
+                html += `<th style="background:rgba(255,255,255,0.05); color:#38BDF8; font-weight:bold;">S${j+1}</th>`;
             }
             html += '<th style="background:rgba(255,255,255,0.1); color:#FFCC00; font-size:10px;">SDA</th>';
             html += '<th style="background:rgba(255,255,255,0.1); color:#00A2FF; font-size:10px;">SRC</th>';
@@ -6470,9 +6482,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             html += '<th style="background:rgba(255,255,255,0.1); color:#fff; font-size:10px;">ROL</th>';
             html += '</tr>';
             
-            // Rows
+            // Filas: estrictamente las filas de los sujetos seleccionados
             for (let i of nodesArray) {
-                html += `<tr><th style="background:rgba(255,255,255,0.05)">S${i+1}</th>`;
+                html += `<tr><th style="background:rgba(255,255,255,0.05); color:#00FF87; font-weight:bold;">S${i+1}</th>`;
                 for (let j of nodesArray) {
                     if (i === j) {
                         let diagStr = currentMatrix && currentMatrix[i] && currentMatrix[i][i] ? currentMatrix[i][i] : 'AA00000000';
@@ -6481,9 +6493,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
                     } else {
                         let cellData = currentMatrix && currentMatrix[i] && currentMatrix[i][j] ? currentMatrix[i][j] : '0000';
                         let smiaStr = smibToSmia(cellData);
-                        
                         let color = getSMIaColor(smiaStr);
-                        
                         html += `<td style="color:${color}; font-weight:bold; letter-spacing:1px;">${smiaStr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>`;
                     }
                 }
@@ -6502,6 +6512,14 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         } else {
             container.style.display = 'none';
         }
+    }
+
+    function clearSelectedNodes() {
+        selectedNodes.clear();
+        applyFiltersToGraph();
+        updateTableSelection();
+        updateTimelineSelection();
+        updateMiniMatrix();
     }
     
     function applyFiltersToGraph() {
@@ -6607,14 +6625,18 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     }
     
     function selectAllNodes() {
-        if (n_nodes > 20) {
-            alert(`El grupo actual (${n_nodes} sujetos) supera el tamaño óptimo (20) para seleccionar a todos a la vez visualmente.`);
-            return;
-        }
-        for (let i = 0; i < n_nodes; i++) {
-            selectedNodes.add(i.toString());
+        if (selectedNodes.size === n_nodes) {
+            selectedNodes.clear();
+        } else {
+            selectedNodes.clear();
+            for (let i = 0; i < n_nodes; i++) {
+                selectedNodes.add(i.toString());
+            }
         }
         applyFiltersToGraph();
+        updateTableSelection();
+        updateTimelineSelection();
+        updateMiniMatrix();
     }
     
     function drawECG(densidad, entropia) {
