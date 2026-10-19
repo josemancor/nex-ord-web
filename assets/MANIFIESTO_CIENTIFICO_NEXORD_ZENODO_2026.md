@@ -554,6 +554,26 @@ La información sociométrica refleja dinámicas interpersonales de alta sensibi
 
 Conviene precisar el alcance de esta declaración. El presente Manifiesto es un documento puramente programático —la exposición de las características teóricas, metodológicas y pragmáticas del proyecto—: ni él, ni la suite computacional, ni sus algoritmos son objeto de patentes restrictivas; el Manifiesto se difunde abiertamente bajo licencia CC BY 4.0, y las salvaguardas éticas buscan regular el acceso operativo al instrumento sobre colectivos reales, no restringir la difusión del conocimiento científico.
 
+### 7.5. Gobernanza Metodológica del Gradiente α y Protocolo de Calibración Canónica (§7.9)
+> *«La elección de $\alpha$ puede invertir conclusiones sustantivas (quién es el centro) sobre datos idénticos. Esto cierra el argumento del protocolo §7.9 con evidencia: sin banda de sensibilidad y $\alpha$ declarado, el investigador elige el centro que quiere ver.»*
+
+La manipulación *post hoc* del gradiente $\alpha$ en la familia de ponderaciones $W_\alpha(k) = \alpha^{k-1}$ constituiría una vulneración directa de la Regla 21 (*Ethics by Design*): permitiría fabricar o disolver liderazgos, o hacer desaparecer el ostracismo bajo una falsa ilusión de homeostasis. Por ello, NEXORD establece la gobernanza estricta del gradiente:
+1. **$\alpha = 1/2 \implies$ Diagnóstico Primario:** Toda lectura reportable se produce obligatoriamente con el canónico de semivida.
+2. **$\alpha \in [0{,}4, \, 0{,}6] \implies$ Banda de Estabilidad:** Las conclusiones que no sobreviven a la banda se descartan como artefactos del gradiente.
+3. **Calibración Contextual Justificada y Auditada:** Solo admisible cuando las normas institucionales objetivas del campo lo exijan (campo de mando vertical $\implies \alpha$ bajo; asamblea horizontal de pares $\implies \alpha$ alto), debiendo constar formalmente documentada en el registro de decisión metodológica del Investigador Principal.
+
+#### Corolario 7.9.6 (Equivalencia de Ópticas y Límites de Convergencia)
+*El límite igualitario de la familia $W_\alpha$ converge a la regla de consenso; el límite jerárquico converge a la regla de pluralidad; el canónico $\alpha = 1/2$ es el punto donde ambas lecturas pesan igual:*
+
+$$\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k \implies \text{recuento Borda / auto-nodo de consenso (percentil 75)}$$
+$$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura (primacía: la primera elección lo es todo)}$$
+
+* **Convergencia al Auto-Nodo de Consenso ($\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k$):** Cada posición ordinal contribuye uniformemente, transformando la sociomatriz en un recuento Borda y convergiendo con el anclaje endógeno del **Percentil 75 ($P_{75}$) del consenso grupal de recepciones**. El centro se adjudica por consistencia baricéntrica («quien nunca es abandonado»), la deuda relacional se comprime ($\Delta \to 0$) y el peso de la primera elección se diluye del $50\%$ al $11\%$ del presupuesto vincular.
+* **Convergencia a la Pluralidad Pura ($\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1}$):** Mediante la delta de Kronecker $\delta_{k,1}$, únicamente cuenta el primer voto ($k=1$). El centro se adjudica por primacía polarizada («quien es elegido primero»), amplificando el contraste y concentrando el riesgo de ostracismo primario $D^{(1)}$.
+* **Equilibrio Canónico de Semivida ($\alpha = 1/2$):** Es el punto medio exacto de la balanza socio-termodinámica donde consenso y primacía reciben exactamente el mismo peso gravitatorio ($50\%$ en la primera elección $W(1)=1.000$ y $50\%$ distribuido a lo largo del cuerpo social $\sum_{k=2}^\infty 2^{1-k} = 1.000$).
+
+**Síntesis Apodíctica:** Con interdistancia igualitaria, el modelo nulo España-1988 no cambia de forma ni de simetría ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes): cambia de temperatura. El campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
+
 ---
 
 ## 8. Anexos Técnicos Formalizados
