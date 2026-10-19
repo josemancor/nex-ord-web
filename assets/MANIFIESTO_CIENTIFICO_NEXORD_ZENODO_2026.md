@@ -584,7 +584,7 @@ $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura 
 
 **Hallazgo Fino:** La óptica jerárquica mide ser elegido primero (Zaragoza, tres primeras posiciones recibidas); la óptica igualitaria mide nunca estar al final (Madrid, sin colas malas en ninguna fila). La identidad del centro puede invertirse sin que el dato cambie: **la jerarquía medida es óptica declarada, no propiedad del dato**.
 
-**Síntesis Apodíctica:** Con interdistancia igualitaria, el modelo nulo España-1988 no cambia de forma ni de simetría ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes): cambia de temperatura. El campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
+**Síntesis Apodíctica:** Con interdistancia igualitaria, el campo no cambia de forma ni de simetría: cambia de temperatura. El dato es ordinal; la jerarquía medida es óptica. En el modelo nulo España-1988 ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes), el campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
 
 ---
 
