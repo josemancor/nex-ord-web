@@ -12280,6 +12280,26 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         if (initResizeTicks > 10) clearInterval(initResizeInterval);
     }, 100);
 
+    // =========================================================================
+    // CATÁLOGO CANÓNICO Q81: MAPA BIYECTIVO DE 81 FIGURAS RELACIONALES (IDs 1-81)
+    // =========================================================================
+    const Q81_ID_MAP = {
+        "<Ee>": 81, "<¿e>": 80, "<Re>": 78, "¡Ee>": 75, "¡¿e>": 71, "¡Re>": 66, "[Ee>": 60, "[¿e>": 53, "[Re>": 45,
+        "<E?>": 79, "<¿?>": 77, "<R?>": 74, "¡E?>": 70, "¡¿?>": 65, "¡R?>": 59, "[E?>": 52, "[¿?>": 44, "[R?>": 36,
+        "<Er>": 76, "<¿r>": 73, "<Rr>": 69, "¡Er>": 64, "¡¿r>": 58, "¡Rr>": 51, "[Er>": 43, "[¿r>": 35, "[Rr>": 28,
+        "<Ee!>": 72, "<¿e!>": 68, "<Re!>": 63, "¡Ee!>": 57, "¡¿e!>": 50, "¡Re!>": 42, "[Ee!>": 34, "[¿e!>": 27, "[Re!>": 21,
+        "<E?!>": 67, "<¿?!>": 62, "<R?!>": 56, "¡E?!>": 49, "¡¿?!>": 41, "¡R?!>": 33, "[E?!>": 26, "[¿?!>": 20, "[R?!>": 15,
+        "<Er!>": 61, "<¿r!>": 55, "<Rr!>": 48, "¡Er!>": 40, "¡¿r!>": 32, "¡Rr!>": 25, "[Er!>": 19, "[¿r!>": 14, "[Rr!>": 10,
+        "<Ee]": 54, "<¿e]": 47, "<Re]": 39, "¡Ee]": 31, "¡¿e]": 24, "¡Re]": 18, "[Ee]": 13, "[¿e]": 9, "[Re]": 6,
+        "<E?]": 46, "<¿?]": 38, "<R?]": 30, "¡E?]": 23, "¡¿?]": 17, "¡R?]": 12, "[E?]": 8, "[¿?]": 5, "[R?]": 3,
+        "<Er]": 37, "<¿r]": 29, "<Rr]": 22, "¡Er]": 16, "¡¿r]": 11, "¡Rr]": 7, "[Er]": 4, "[¿r]": 2, "[Rr]": 1
+    };
+
+    function getQ81Id(smia) {
+        if (!smia || typeof smia !== 'string') return 41;
+        return Q81_ID_MAP[smia.trim()] || 41;
+    }
+
     // --- FRECUENCIAS SMIa ---
     function calcularFrecuenciasGlobales(matrix) {
         let totalDyads = n_nodes * (n_nodes - 1);
@@ -12362,87 +12382,85 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         let hudEstado = document.getElementById('disp-estado') ? document.getElementById('disp-estado').innerText : '--';
         let hudBDR = document.getElementById('disp-bdr-global') ? document.getElementById('disp-bdr-global').innerText : '--';
 
+        let rowKeys = ['Ee', 'E?', 'Er', '¿e', '¿?', '¿r', 'Re', 'R?', 'Rr'];
+        let colKeys = ['<>', '<!', '<]', '¡>', '¡!', '¡]', '[>', '[!', '[]'];
+
+        // Construir datos volumétricos para el Cubo-Histograma 3D (9x9 = 81 figuras)
+        let zData3D = [];
+        let hoverText3D = [];
+        for (let rIdx = 0; rIdx < rowKeys.length; rIdx++) {
+            let r = rowKeys[rIdx];
+            let zRow = [];
+            let textRow = [];
+            for (let cIdx = 0; cIdx < colKeys.length; cIdx++) {
+                let c = colKeys[cIdx];
+                let sym = c[0] + r + c[1];
+                let q81Id = getQ81Id(sym);
+                let cnt = count[sym] || 0;
+                let pct = totalDyads > 0 ? ((cnt / totalDyads) * 100).toFixed(1) : '0.0';
+                zRow.push(cnt);
+                textRow.push(`<b>Figura Q81 [ID ${q81Id}]:</b> ${sym}<br><b>Acción Efectiva (A2 A3):</b> ${r}<br><b>Cápsula Expectativa (A1 A4):</b> ${c}<br><b>Frecuencia:</b> ${cnt} díadas (${pct}%)`);
+            }
+            zData3D.push(zRow);
+            hoverText3D.push(textRow);
+        }
+
         let html = `
-            <div style="background:#111; padding:30px; border-radius:8px; border:1px solid #333; max-width:1400px; width:95%; max-height:90vh; overflow-y:auto; margin:auto; text-align:left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
-                    <h2 style="color:#00A2FF; margin:0;">📊 FRECUENCIAS SMIa GLOBALES (Ciclo: ${currentCycle})</h2>
+            <div style="background:#0B132B; padding:25px; border-radius:10px; border:2px solid #00FF87; max-width:1450px; width:96%; max-height:92vh; overflow-y:auto; margin:auto; text-align:left; box-shadow: 0 15px 50px rgba(0,0,0,0.9); font-family: 'Inter', sans-serif;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(0,255,135,0.3); padding-bottom: 12px; margin-bottom: 18px;">
+                    <div>
+                        <h2 style="color:#00FF87; margin:0; font-family:'Roboto Mono', monospace; font-size:18px; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+                            <span>📊 FRECUENCIAS SMIa GLOBALES & CUBO-HISTOGRAMA TOPOLÓGICO 3D</span>
+                            <span style="font-size:12px; background:rgba(0,162,255,0.2); border:1px solid #00A2FF; color:#00E5FF; padding:2px 8px; border-radius:4px;">Ciclo: ${currentCycle}</span>
+                        </h2>
+                        <div style="font-size:11px; color:#94A3B8; margin-top:4px;">
+                            Proyección simultánea de la matriz factorial 9×9 y relieve tridimensional interactivo de las 81 figuras relacionales canónicas (Q81)
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('modal-overlay').style.display='none'" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); color:#FFF; font-size:14px; font-weight:bold; border-radius:6px; padding:4px 12px; cursor:pointer;">✕</button>
                 </div>
 
-                <!-- Matriz Explicativa SMIa -->
-                <div style="margin-bottom: 20px;">
-                    <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:center; border:2px solid #555;">
-                        <thead>
-                            <tr>
-                                <th rowspan="2" style="background:#E0E0E0; color:#333; border:1px solid #555; width:15%; padding:6px;">TIPO</th>
-                                <th colspan="2" style="background:#00A2FF; color:#FFF; border:1px solid #555; padding:6px;">DA (Emite)</th>
-                                <th colspan="2" style="background:#00FF00; color:#000; border:1px solid #555; padding:6px;">RECIBE</th>
-                                <th rowspan="2" style="background:#FFF; color:#333; border:1px solid #555; width:15%; padding:6px;">CODE</th>
-                            </tr>
-                            <tr>
-                                <th style="background:#FFE6B3; color:#333; border:1px solid #555; padding:6px;">Percepción</th>
-                                <th style="background:#FFB300; color:#000; border:1px solid #555; padding:6px;">Efectivo</th>
-                                <th style="background:#FFB300; color:#000; border:1px solid #555; padding:6px;">Efectivo</th>
-                                <th style="background:#FFE6B3; color:#333; border:1px solid #555; padding:6px;">Percepción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="background:#B8860B; color:#FFF; font-weight:bold; border:1px solid #555; padding:4px;">elige</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">&lt;</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">E</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">e</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">&gt;</td>
-                                <td style="background:#FFB300; color:#000; border:1px solid #555; font-weight:bold;">ABCDE..</td>
-                            </tr>
-                            <tr>
-                                <td style="background:#ADD8E6; color:#000; font-weight:bold; border:1px solid #555; padding:4px;">indiferencia</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">¡</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">¿</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">?</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">!</td>
-                                <td style="background:#FFF; color:#000; border:1px solid #555; font-weight:bold;">0</td>
-                            </tr>
-                            <tr>
-                                <td style="background:#E9967A; color:#FFF; font-weight:bold; border:1px solid #555; padding:4px;">relega</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">[</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">R</td>
-                                <td style="background:#FFB300; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">r</td>
-                                <td style="background:#FFF; color:#000; font-weight:bold; border:1px solid #555; font-size:16px;">]</td>
-                                <td style="background:#FFB300; color:#000; border:1px solid #555; font-weight:bold;">abcde..</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div style="display:flex; justify-content:space-between; background:#222; padding:15px; border-radius:6px; margin-bottom:20px; border:1px solid #444; flex-wrap:wrap; gap:10px;">
+                <!-- Chips Termodinámicos -->
+                <div style="display:flex; justify-content:space-between; background:#111827; padding:12px 18px; border-radius:8px; margin-bottom:18px; border:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; gap:10px;">
                     <div style="text-align:center;">
-                        <div style="color:#888; font-size:11px; text-transform:uppercase;">Estado Físico</div>
-                        <div style="color:#FFF; font-weight:bold; font-size:16px;">${hudEstado}</div>
+                        <div style="color:#888; font-size:10px; text-transform:uppercase;">Estado Físico</div>
+                        <div style="color:#FFF; font-weight:bold; font-size:15px;">${hudEstado}</div>
                     </div>
                     <div style="text-align:center;">
-                        <div style="color:#888; font-size:11px; text-transform:uppercase;">SDR (Densidad)</div>
-                        <div style="color:#00FF9D; font-weight:bold; font-size:16px;">${hudSDR}</div>
+                        <div style="color:#888; font-size:10px; text-transform:uppercase;">SDR (Densidad Relativa)</div>
+                        <div style="color:#00FF9D; font-weight:bold; font-size:15px;">${hudSDR}</div>
                         <div style="font-size:10px; color:#38BDF8;">Canon: ${window.canonPct ? window.canonPct.toFixed(1) + '%' : '50.0%'}</div>
                     </div>
                     <div style="text-align:center;">
-                        <div style="color:#888; font-size:11px; text-transform:uppercase;">Inercia Desgaste</div>
-                        <div style="color:#FF0055; font-weight:bold; font-size:16px;">${hudEntropia}</div>
+                        <div style="color:#888; font-size:10px; text-transform:uppercase;">Inercia Desgaste</div>
+                        <div style="color:#FF0055; font-weight:bold; font-size:15px;">${hudEntropia}</div>
                         <div style="font-size:10px; color:#FF9800;">Fricción: ${window.tasaFriccion ? window.tasaFriccion.toFixed(1) + '%' : '0.0%'}</div>
                     </div>
                     <div style="text-align:center;">
-                        <div style="color:#888; font-size:11px; text-transform:uppercase;">BDR Global</div>
-                        <div style="color:#00A2FF; font-weight:bold; font-size:16px;">${hudBDR}</div>
+                        <div style="color:#888; font-size:10px; text-transform:uppercase;">BDR Global</div>
+                        <div style="color:#00A2FF; font-weight:bold; font-size:15px;">${hudBDR}</div>
                         <div style="font-size:10px; color:#86efac;">Energía Σ</div>
                     </div>
                     <div style="text-align:center;">
-                        <div style="color:#888; font-size:11px; text-transform:uppercase;">Díadas Vivas</div>
-                        <div style="color:#FFF; font-weight:bold; font-size:16px;">${totalDyads}</div>
-                        <div style="font-size:10px; color:#AAA;">N = ${n_nodes}</div>
+                        <div style="color:#888; font-size:10px; text-transform:uppercase;">Díadas Evaluadas</div>
+                        <div style="color:#FFE600; font-weight:bold; font-size:15px;">${totalDyads}</div>
+                        <div style="font-size:10px; color:#AAA;">N = ${n_nodes} sujetos</div>
                     </div>
                 </div>
 
-                <div style="margin-bottom: 10px; color: #FFF; font-size: 14px; text-align: center; background: #222; padding: 10px; border-radius: 6px; border: 1px solid #444;">
-                    <strong>Volumen Total de Díadas Evaluadas:</strong> <span style="color:#00FF9D; font-size:18px;">${totalDyads}</span>
+                <!-- 1. VISTA TRIDIMENSIONAL: CUBO-HISTOGRAMA TOPOLÓGICO 3D (9x9 = 81 FIGURAS) -->
+                <div style="margin-bottom: 22px; background: #0E172E; border: 1.5px solid rgba(0, 255, 135, 0.4); border-radius: 8px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.7);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-family:'Roboto Mono', monospace; font-size:12px; font-weight:bold; color:#00FF87;">🌌 CUBO-HISTOGRAMA TOPOLÓGICO 3D (Relieve de Frecuencias sobre Cuadrícula 9x9 = 81 Figuras)</span>
+                        <span style="font-size:10px; color:#94A3B8;">🖱️ Arrastre para orbitar en 3D | Rueda para zoom | Pase el cursor sobre los picos</span>
+                    </div>
+                    <div id="plotly-frecuencias-3d" style="width:100%; height:440px;"></div>
+                </div>
+
+                <!-- 2. VISTA TABULAR SIMULTÁNEA: MATRIZ NUMÉRICA Y PORCENTUAL 9x9 (CON IDENTIFICADORES ID 1-81) -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                    <span style="font-family:'Roboto Mono', monospace; font-size:12px; font-weight:bold; color:#38BDF8;">📋 TABLA DE FRECUENCIAS MATRICIAL 9×9 CON IDENTIFICADORES OFICIALES (IDs 1-81)</span>
+                    <span style="font-size:10px; color:#94A3B8;">Casilla: [ID Canónico Q81] Porcentaje % (Frecuencia Absoluta)</span>
                 </div>
         `;
 
@@ -12495,11 +12513,11 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
 
         window.lastFrequenciesMatrix = mat;
 
-        html += `<div style="width:100%; overflow-x:auto; margin-top:20px; box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
-                    <table style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #555; min-width:1100px; font-size:14px;">
+        html += `<div style="width:100%; overflow-x:auto; margin-top:8px; box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
+                    <table style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #555; min-width:1100px; font-size:13px;">
                         <thead>
                             <tr>
-                                <th style="background:#222; border:1px solid #555; color:#AAA; padding:8px; position:sticky; left:0; z-index:10; box-shadow: 2px 0 5px rgba(0,0,0,0.5);">ACC \ PERC</th>
+                                <th style="background:#222; border:1px solid #555; color:#AAA; padding:8px; position:sticky; left:0; z-index:10; box-shadow: 2px 0 5px rgba(0,0,0,0.5);">ACC \\ PERC</th>
 `;
         // Cabeceras de columnas superiores
         colDefs.forEach(c => {
@@ -12508,7 +12526,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             html += `<th style="background:${bg}; border:1px solid #555; color:${color}; padding:6px; position:sticky; top:0; z-index:5;">${safe(c.key)}</th>`;
         });
         
-        // Cabecera duplicada al final (a petición del usuario)
+        // Cabecera duplicada al final
         html += `<th style="background:#222; border:1px solid #555; color:#AAA; padding:8px; position:sticky; right:0; z-index:10; box-shadow: -2px 0 5px rgba(0,0,0,0.5);">REF</th>`;
         html += `</tr></thead><tbody>`;
 
@@ -12530,11 +12548,16 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                 let textColor = isTot ? '#FFF' : (isSub ? '#00FF9D' : '#AAA');
                 if (r.type === 'tot' && c.type === 'tot') textColor = '#FFF';
 
-                html += `<td style="padding:6px; border:1px solid #555; background:${bgC}; cursor:pointer; position:relative;" 
-                            onmouseover="this.style.filter='brightness(1.5)'; this.title='Absoluto: ${val}';" 
+                let sym = (r.type === 'dyad' && c.type === 'dyad') ? (c.key[0] + r.key + c.key[1]) : '';
+                let q81Id = sym ? getQ81Id(sym) : '';
+                let idBadge = q81Id ? `<span style="color:#FFE600; font-size:9.5px; font-family:monospace; display:block; opacity:0.85; margin-bottom:2px;">ID ${q81Id}</span>` : '';
+
+                html += `<td style="padding:6px 4px; border:1px solid #555; background:${bgC}; cursor:pointer; position:relative;" 
+                            onmouseover="this.style.filter='brightness(1.5)'; this.title='${sym ? 'Figura Q81 [' + sym + '] ID: ' + q81Id + ' | ' : ''}Absoluto: ${val} díadas';" 
                             onmouseout="this.style.filter='none';">
-                            <span style="color:${textColor}; font-weight:bold; font-size:15px;">${getPct(val)}</span><br>
-                            <span style="color:#777; font-size:11px;">(${val})</span>
+                            ${idBadge}
+                            <span style="color:${textColor}; font-weight:bold; font-size:13.5px;">${getPct(val)}</span><br>
+                            <span style="color:#94A3B8; font-size:10.5px;">(${val})</span>
                         </td>`;
             });
             
@@ -12550,14 +12573,14 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             let color = c.type === 'tot' ? '#FFF' : (c.type === 'sub' ? '#00FF9D' : '#FFCC00');
             html += `<th style="background:${bg}; border:1px solid #555; color:${color}; padding:6px;">${safe(c.key)}</th>`;
         });
-        html += `<th style="background:#222; border:1px solid #555; color:#AAA; padding:8px; position:sticky; right:0; z-index:10; box-shadow: -2px 0 5px rgba(0,0,0,0.5);">ACC \ PERC</th></tr>`;
+        html += `<th style="background:#222; border:1px solid #555; color:#AAA; padding:8px; position:sticky; right:0; z-index:10; box-shadow: -2px 0 5px rgba(0,0,0,0.5);">ACC \\ PERC</th></tr>`;
         
         html += `</tbody></table></div>`;
 
         html += `
-            <div style="margin-top:25px; display:flex; justify-content:flex-end; gap:10px;">
-                <button onclick="takeScreenshot()" style="padding:10px 20px; font-weight:bold; background:#E91E63; color:#FFF; border:none; border-radius:4px; cursor:pointer; box-shadow:0 0 8px rgba(233,30,99,0.5);">📸 CAPTURA</button>
-                <button onclick="document.getElementById('modal-overlay').style.display='none'" style="padding:10px 20px; font-weight:bold; background:#FF0055; color:#FFF; border:none; border-radius:4px; cursor:pointer;">CERRAR TABLA</button>
+            <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="takeScreenshot()" style="padding:9px 18px; font-weight:bold; background:#E91E63; color:#FFF; border:none; border-radius:5px; cursor:pointer; box-shadow:0 0 8px rgba(233,30,99,0.5);">📸 CAPTURA</button>
+                <button onclick="document.getElementById('modal-overlay').style.display='none'" style="padding:9px 18px; font-weight:bold; background:#FF0055; color:#FFF; border:none; border-radius:5px; cursor:pointer;">CERRAR TABLA & CUBO 3D</button>
             </div>
         </div>
         `;
@@ -12569,7 +12592,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
             overlay.style.position = 'fixed';
             overlay.style.top = '0'; overlay.style.left = '0';
             overlay.style.width = '100vw'; overlay.style.height = '100vh';
-            overlay.style.background = 'rgba(0,0,0,0.85)';
+            overlay.style.background = 'rgba(0,0,0,0.88)';
             overlay.style.zIndex = '9999';
             overlay.style.display = 'flex';
             overlay.style.alignItems = 'center';
@@ -12578,6 +12601,71 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
         }
         overlay.innerHTML = html;
         overlay.style.display = 'flex';
+
+        // Renderizar simultáneamente el Cubo-Histograma 3D interactivo con Plotly
+        setTimeout(() => {
+            let pDiv = document.getElementById('plotly-frecuencias-3d');
+            if (pDiv && typeof Plotly !== 'undefined') {
+                let trace3D = {
+                    z: zData3D,
+                    x: colKeys,
+                    y: rowKeys,
+                    text: hoverText3D,
+                    hoverinfo: 'text',
+                    type: 'surface',
+                    colorscale: [
+                        [0.0, '#0B132B'],
+                        [0.15, '#1E3A8A'],
+                        [0.35, '#00A2FF'],
+                        [0.65, '#00FF87'],
+                        [1.0, '#FFE600']
+                    ],
+                    showscale: true,
+                    colorbar: {
+                        title: { text: 'Díadas', font: { color: '#00FF87', size: 11 } },
+                        tickfont: { color: '#E2E8F0', size: 10 },
+                        len: 0.8,
+                        thickness: 14
+                    },
+                    contours: {
+                        z: { show: true, usecolormap: true, highlightcolor: '#00FF87', project: { z: true } }
+                    }
+                };
+
+                let layout3D = {
+                    autosize: true,
+                    height: 440,
+                    margin: { l: 20, r: 20, b: 30, t: 25 },
+                    paper_bgcolor: '#0E172E',
+                    plot_bgcolor: '#0E172E',
+                    scene: {
+                        xaxis: {
+                            title: 'Expectativa A1 A4',
+                            color: '#38BDF8',
+                            tickfont: { size: 9, color: '#94A3B8' },
+                            gridcolor: 'rgba(255,255,255,0.08)'
+                        },
+                        yaxis: {
+                            title: 'Acción A2 A3',
+                            color: '#FFE600',
+                            tickfont: { size: 9, color: '#94A3B8' },
+                            gridcolor: 'rgba(255,255,255,0.08)'
+                        },
+                        zaxis: {
+                            title: 'Frecuencia',
+                            color: '#00FF87',
+                            tickfont: { size: 9, color: '#94A3B8' },
+                            gridcolor: 'rgba(255,255,255,0.08)'
+                        },
+                        camera: {
+                            eye: { x: 1.6, y: -1.6, z: 1.25 }
+                        }
+                    }
+                };
+
+                Plotly.newPlot('plotly-frecuencias-3d', [trace3D], layout3D, { responsive: true, displayModeBar: true, modeBarButtonsToRemove: ['sendDataToCloud'] });
+            }
+        }, 70);
     }
 
     function exportData() {
@@ -13924,8 +14012,9 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
                         html += `<td title="${tooltip.replace(/"/g, '&quot;')}" style="background:rgba(255,230,0,0.18); color:#FFE600; font-weight:bold; font-family:monospace; font-size:10px; border:1px solid rgba(255,230,0,0.3); cursor:help; letter-spacing:0.5px;">${diagStr}</td>`;
                     } else {
                         let smia = smibToSmia(currentMatrix[i][j]);
+                        let qId = getQ81Id(smia);
                         let col = getSMIaColor(smia);
-                        html += `<td style="color:${col}; font-weight:bold; font-family:monospace;">${smia.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</td>`;
+                        html += `<td title="Figura Q81 [ID ${qId}]: ${smia} (S${i+1} &rarr; S${j+1})" style="color:${col}; font-weight:bold; font-family:monospace; cursor:help; padding:4px 3px;"><span style="font-size:8.5px; color:#FFE600; opacity:0.85; display:block; line-height:1;">ID ${qId}</span>${smia.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</td>`;
                     }
                 }
                 let sda = currentStats && currentStats.sda_emisores ? currentStats.sda_emisores[i].toFixed(2) : '0.00';
