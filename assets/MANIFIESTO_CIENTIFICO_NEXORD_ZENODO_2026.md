@@ -603,6 +603,57 @@ La bifurcación crítica (donde Madrid adelanta a Zaragoza) ocurre recién en $\
 
 **Síntesis Apodíctica:** Con interdistancia igualitaria, el campo no cambia de forma ni de simetría: cambia de temperatura. El dato es ordinal; la jerarquía medida es óptica. En el modelo nulo España-1988 ($\operatorname{Procrustes}=1{,}000, \, \theta_m=0^\circ$ invariantes), el campo se ve más plano, la deuda casi desaparece, el ostracismo se diluye del $50\%$ al $11\%$ del presupuesto, y el trono pasa del que es elegido primero (Zaragoza) al que nunca es abandonado (Madrid), mientras la periferia cantábrica (Bilbao) se desploma del 2.º al 7.º puesto. La misma red, dos diagnósticos: el dato era ordinal; la jerarquía medida es óptica.
 
+### 7.6. El Simulador como Laboratorio Experimental de Psicopatología Relacional: La Regla de Oro de Demarcación
+
+La demarcación epistemológica de NEXORD distingue nítidamente entre dos esferas complementarias del conocimiento científico: la **medición diagnóstica factual** sobre personas y grupos reales, y la **experimentación simulada de estrés sistémico** mediante el motor biomecánico nativo (`ENGINE_Simulator.py`).
+
+Si el dial del modulador $\alpha$ se clausurase de forma dogmática e inflexible en el entorno de simulación, se mutilaría la capacidad de la plataforma para operar como un **laboratorio avanzado de psicopatología social y dinámica de grupos extremos**. La ciencia de los sistemas humanos no solo requiere modelar colectivos funcionales y homeostáticos; requiere modelar de forma predictiva y controlada el autoritarismo, la anomia, la alienación sectaria y el colapso institucional.
+
+#### 1. Las Tres Patologías Sistémicas del Dial de Inercia y Concentración ($\alpha$)
+
+El modulador $\alpha$, articulado como inercia temporal ($\alpha_{\text{temp}} \in [0, 1]$) en series longitudinales ($T > 1$) según la ecuación diferencial $I_t = \alpha_{\text{temp}} \cdot (\gamma \cdot I_{t-1}) + (1 - \alpha_{\text{temp}}) \cdot \Delta_{\text{nuevo}}$, o como tasa de decaimiento en la función inversa de rango ($\alpha_{\text{ord}}$), permite explorar experimentalmente las fronteras de la disfunción relacional:
+
+```
+                       EL ESPECTRO PATOLÓGICO DEL DIAL α
+                       
+     α → 0.10                       α = 0.50                       α → 0.95
+ ┌───────────────┐             ┌────────────────┐             ┌───────────────┐
+ │   PATOLOGÍA   │             │ CANON HOMÓLOGO │             │   PATOLOGÍA   │
+ │   VERTICAL    │             │   EQUILIBRIO   │             │   ESCLERÓTICA │
+ │               │             │                │             │               │
+ │ Tiranía /     │             │ Escalera       │             │ Secta / Tabú /│
+ │ Hipertrofia   │             │ Armónica 50/50 │             │ Parálisis por │
+ │ del Mesías /  │             │ Homeostasis    │             │ Agravio       │
+ │ Canibalismo   │             │ Sistémica      │             │ Permanente    │
+ └───────────────┘             └────────────────┘             └───────────────┘
+```
+
+1. **Patología de Hiper-Cristalización e Inercia Esclerótica ($\alpha_{\text{temp}} \to 0{,}90 - 0{,}99$):**
+   - **Mecanismo Dinámico:** La historia previa aplasta sistemáticamente la contingencia presente. La novedad $\Delta_{\text{nuevo}}$ queda neutralizada por la masa acumulada de memoria vincular ($\alpha \to 1$).
+   - **Fenomenología Psicosocial:** Sectas destructivas, estructuras totalitarias cerradas, familias con lealtades invisibles tóxicas y tabúes intergeneracionales inamovibles, o corporaciones escleróticas incapaces de adaptación donde las rencillas históricas bloquean cualquier nuevo proyecto.
+   - **Firma Espectral en VISORD:** Colapso de la conectividad algebraica de Fiedler ($\lambda_2 \to 0$), rigidez de frontera y atrapamiento en cuencas de atracción irreversibles en la variedad de Grassmann $\operatorname{Gr}(k, N)$.
+
+2. **Patología de Amnesia Anómica y Volatilidad Histérica ($\alpha_{\text{temp}} \to 0{,}05 - 0{,}15$):**
+   - **Mecanismo Dinámico:** Ausencia de memoria vincular y de capital social acumulado. Cada iteración temporal borra instantáneamente la historia relacional previa.
+   - **Fenomenología Psicosocial:** Linchamientos relacionales en redes digitales (*hate mobs*), pánico bancario o desbandadas en combate, y colectivos anómicos con disociación psicótica institucional donde no existe confianza basal.
+   - **Firma Espectral en VISORD:** Entropía relacional máxima ($S_{\text{rel}} \to 1{,}00$) y pérdida completa de curvatura topológica estable.
+
+3. **Patología de Concentración Despótica vs. Aplanamiento Nihilista ($\alpha_{\text{ord}}$):**
+   - **Tiranía de Primacía Absoluta ($\alpha_{\text{ord}} \to 0{,}10$):** Solo la primera elección acumula valor ($W(1)=1{,}00, W(2)=0{,}10, W(3)=0{,}01$). Modela entornos de canibalismo competitivo («el segundo es el primer perdedor»), hipertrofia del líder providencial y desamparo de la periferia.
+   - **Aplanamiento Nihilista ($\alpha_{\text{ord}} \to 0{,}95$):** Todas las elecciones reciben prácticamente la misma masa métrica. Modela colectivos atenazados por el *síndrome del tallo alto* (represión de la excelencia), donde la mediocridad complaciente neutraliza la meritocracia y el compromiso individual carece de recompensa relacional.
+
+#### 2. La Regla de Oro de Demarcación Metodológica
+
+Para salvaguardar de forma estricta los principios de **Ética por Diseño (*Ethics by Design*)** y **Ciencia Abierta**, NEXORD establece formalmente la frontera inviolable entre la investigación experimental y el diagnóstico de campo:
+
+| Ámbito de Operación | Régimen del Modulador $\alpha$ | Función Científica | Garantía Deontológica |
+| :--- | :---: | :--- | :--- |
+| **Simulador Experimental** (`ENGINE_Simulator.py`) | **Modulación Libre y Parametrizable** <br> ($\alpha \in [0{,}01, \, 0{,}99]$) | Laboratorio de estrés, simulación de patologías extremas, sectas, anomia y transiciones de fase. | Obligatoriedad del prefijo de categoría `SIMUL-`. Los parámetros de estrés y desviación constan explícitamente en el payload JSON. |
+| **Auditor de Diagnóstico Factual** (`FullTableGenerator`) | **Blindaje Canónico Invariable** <br> ($\alpha_{\text{ord}} \equiv 0{,}50$) | Evaluación imparcial de colectivos y personas reales en entornos educativos, clínicos o laborales. | Prohibición estricta de manipular $\alpha$ para favorecer o perjudicar a un individuo. Certificado de estabilidad `ThermalStabilityAuditor` en $[0{,}40, 0{,}60]$. |
+
+> [!IMPORTANT]
+> **Aforismo Canónico de Demarcación:** *«En la simulación, el dial de $\alpha$ es la lente que permite recrear el abismo patológico para comprenderlo y prevenirlo; en el diagnóstico de personas reales, $\alpha = 1/2$ es el fiel de la balanza armónica que protege a los seres humanos de la arbitrariedad del evaluador.»*
+
 ---
 
 ## 8. Anexos Técnicos Formalizados
