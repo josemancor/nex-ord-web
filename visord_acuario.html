@@ -351,6 +351,9 @@
     }
 
     @media (max-width: 640px) {
+      #mobile-quick-toolbar {
+        padding-right: 56px !important;
+      }
       .containment-frame {
         height: 50vh !important;
         min-height: 330px !important;
@@ -482,11 +485,11 @@
 
       <!-- Accesos Rápidos de Cabecera -->
       <div class="flex items-center gap-1.5 flex-wrap">
-        <button id="btn-master-top" onclick="toggleMasterDynamics()" class="action-btn px-3 py-1 rounded-lg text-xs font-black hidden sm:flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-sm hover:scale-105" title="Iniciar / Detener Movimiento Dinámico del Acuario">
+        <button id="btn-master-top" onclick="toggleMasterDynamics()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 bg-emerald-950 text-emerald-300 border-2 border-emerald-400 shadow-sm hover:scale-105" title="Iniciar / Activar Dinámica del Acuario" style="touch-action: manipulation;">
           <span class="led-indicator led-on led-pulse" id="led-master-top"></span>
-          <span id="lbl-master-top">ACCIÓN: EN MOVIMIENTO</span>
+          <span id="lbl-master-top">ACCIÓN</span>
         </button>
-        <button id="btn-top-stop" onclick="togglePauseSimulation()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-black hidden sm:flex items-center gap-1.5 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition" title="STOP: Congelar toda la imagen del Acuario (Barra espaciadora)">
+        <button id="btn-top-stop" onclick="togglePauseSimulation()" class="action-btn px-2 py-1 rounded-lg text-xs font-black flex items-center gap-1 bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-sm hover:scale-105 transition" title="STOP / REANUDAR Dinámica" style="touch-action: manipulation;">
           <span id="ico-top-stop">⏹</span>
           <span id="lbl-top-stop">STOP</span>
         </button>
@@ -7560,7 +7563,7 @@
        13. SÍNTESIS HIDROACÚSTICA REACTIVA (SONIFICACIÓN EXCLUSIVA DE PROYECCIÓN)
        ========================================================================= */
     let audioCtx = null;
-    let isAudioPlaying = true; // Activo por defecto: sonará cuando los elementos se proyecten
+    let isAudioPlaying = false; // Desactivado por defecto para coincidir con icono mudo y cumplir politica movil
 
     function initAudio() {
       if (!audioCtx) {
@@ -8274,9 +8277,64 @@
       }
     }
 
+    // Fast-Forward inmediato si el usuario pulsa Acción durante el ascenso lento
+    function fastForwardToActiveDynamics() {
+      isAscendingFromFloor = false;
+      clearAllChoreographyTimers();
+      const floorY = -3.48;
+      const visibleCores = nodeMeshes.filter(m => m.userData && m.userData.type === 'core');
+      visibleCores.forEach((core) => {
+        const targetY = core.userData.targetY !== undefined ? core.userData.targetY : 0;
+        core.position.y = targetY;
+        const idx = core.userData.subjectIndex;
+        const halo = haloMeshes.find(h => h.userData && h.userData.subjectIndex === idx);
+        if (halo) halo.position.y = targetY;
+        const numSpr = nodeMeshes.find(m => m.userData && m.userData.type === 'number' && m.userData.subjectIndex === idx);
+        if (numSpr) numSpr.position.y = targetY;
+        const drop = dropLines.find(d => d.userData && d.userData.subjectIndex === idx && d.userData.maxY === undefined);
+        if (drop) {
+          const pX = core.userData.pX !== undefined ? core.userData.pX : core.position.x;
+          const pZ = core.userData.pZ !== undefined ? core.userData.pZ : core.position.z;
+          updateLineSegment(drop, pX, floorY + 0.015, pZ, pX, targetY, pZ);
+          if (drop.material) drop.material.opacity = 0.40;
+        }
+      });
+      isRelationalSheetActive = true;
+      if (seaPlaneMesh) seaPlaneMesh.visible = true;
+      if (relationalSheetWireMesh && isSheetWireframeVisible) relationalSheetWireMesh.visible = true;
+      updateSheetButtonsState();
+      setOptimalObservationPerspective(true);
+      isMasterDynamicsRunning = true;
+      isSimulationFrozen = false;
+      isDyadScannerRunning = true;
+      startDyadScanner();
+      const phaseBadge = document.getElementById('scene-phase-badge');
+      if (phaseBadge) {
+        phaseBadge.textContent = 'FASE 3/3: DINÁMICA DIÁDICA (EN VIVO)';
+        phaseBadge.className = 'text-emerald-300 font-black';
+      }
+      const txtAction = document.getElementById('txt-master-action');
+      if (txtAction) txtAction.textContent = '⚡ ¡ ACCIÓN ! (EN VIVO)';
+      const lblTop = document.getElementById('lbl-master-top');
+      if (lblTop) lblTop.textContent = 'ACCIÓN: EN VIVO';
+      const ledTop = document.getElementById('led-master-top');
+      if (ledTop) ledTop.className = 'led-indicator led-on led-pulse';
+      showSmibToast('⚡ ¡ Acuario Activado en Vivo !');
+    }
+
     function toggleMasterDynamics() {
-      // Canon socio: Al pulsar Acción siempre se reinician todas las fases desde el fondo
-      triggerMasterActionLaunch(false);
+      // Si la simulacion estaba congelada (STOP), reactivarla de inmediato
+      if (isSimulationFrozen) {
+        togglePauseSimulation();
+        return;
+      }
+      // Si esta en pleno proceso de ascenso lento inicial, avanzar de inmediato a la dinamica en vivo
+      if (isAscendingFromFloor) {
+        fastForwardToActiveDynamics();
+      } else {
+        // Si ya estaba en vivo, reiniciar la coreografia completa desde el fondo
+        triggerMasterActionLaunch(false);
+      }
     }
 
     function toggleDyadScanner() {

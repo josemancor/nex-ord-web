@@ -2598,39 +2598,16 @@ SECTORS_DATA.forEach((sec, i) => {
   
   // Soporte táctil móvil y ratón:
   // - En desktop: hover activa el sector; clic accede directamente al módulo.
-  // - En táctil: tocar un sector inactivo lo activa, lo rota y muestra su información.
-  //             Tocar el sector ya activo accede inmediatamente al módulo.
-  //             En ambos casos, el botón '#panel-btn' (siempre visible) permite entrar con un solo toque.
-  let wasInactiveTouch = false;
-  path.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "touch") {
-      if (activeIndex !== i) {
-        wasInactiveTouch = true;
-        activateSector(i);
-        try {
-          const p = document.getElementById("info-panel");
-          if (p && window.innerWidth <= 768) {
-            p.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          }
-        } catch(err) {}
-      } else {
-        wasInactiveTouch = false;
-      }
-    }
-  });
-
-  // Al pasar el puntero (hover en desktop): despliega la información lateral y permanece
+  // - En móvil/táctil: un toque accede directamente al módulo sin requerir doble pulsación.
+  // - Para explorar/rotar sin entrar: se utilizan las flechas ◀ ▶ o el botón central 🔄 GIRAR.
   path.addEventListener("mouseenter", () => {
     activateSector(i);
   });
-  
-  // Al pulsar en el recuadro: abre directamente el enlace
+
+  // Al pulsar o tocar en el sector: abre directamente el enlace
   path.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (wasInactiveTouch) {
-      wasInactiveTouch = false;
-      return;
-    }
+    activateSector(i);
     if (sec && sec.link) {
       window.location.href = sec.link;
     }
