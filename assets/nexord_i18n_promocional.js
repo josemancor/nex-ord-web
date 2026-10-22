@@ -703,24 +703,24 @@
     // =========================================================================
     // 1. NAVBAR
     // =========================================================================
-    const sub = document.querySelector('.brand-sub');
+    const sub = document.querySelector('nav .brand-sub');
     if (sub) sub.textContent = dict.nav_brand_sub;
 
-    const navWhy = document.querySelector('a[href="#dolor"]');
+    const navWhy = document.querySelector('nav a[href="#dolor"]');
     if (navWhy) navWhy.textContent = dict.nav_why;
-    const navShow = document.querySelector('a[href="#showroom"]');
+    const navShow = document.querySelector('nav a[href="#showroom"]');
     if (navShow) navShow.textContent = dict.nav_showroom;
-    const navSol = document.querySelector('a[href="#soluciones"]');
+    const navSol = document.querySelector('nav a[href="#soluciones"]');
     if (navSol) navSol.textContent = dict.nav_solutions;
-    const navEth = document.querySelector('a[href="#etica"]');
+    const navEth = document.querySelector('nav a[href="#etica"]');
     if (navEth) navEth.textContent = dict.nav_ethics;
-    const navDial = document.querySelector('a[href="dial_orbital.html"]');
+    const navDial = document.querySelector('nav a[href="dial_orbital.html"]');
     if (navDial) navDial.textContent = dict.nav_dial;
-    const navSci = document.querySelector('a[href="#boveda"]');
+    const navSci = document.querySelector('nav a[href="#boveda"]');
     if (navSci) navSci.textContent = dict.nav_science;
-    const navCust = document.querySelector('a[href="#custodia"]');
+    const navCust = document.querySelector('nav a[href="#custodia"]');
     if (navCust) navCust.textContent = dict.nav_custody;
-    const navCta = document.querySelector('.nav-cta');
+    const navCta = document.querySelector('nav .nav-cta');
     if (navCta) navCta.textContent = dict.nav_cta;
 
     const brandLink = document.querySelector('a.brand');

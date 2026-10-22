@@ -419,12 +419,13 @@
       }
 
       .btn-nav-header {
-        padding: 6px 9px;
-        font-size: 0.75rem;
+        padding: 5px 8px;
+        font-size: 0.72rem;
       }
 
-      .btn-custodia {
-        display: none !important; /* Oculta botón secundario en móviles para dar espacio al selector de idioma */
+      .btn-custodia,
+      .btn-manifiesto {
+        display: none !important; /* Oculta botones secundarios en móviles para garantizar espacio prioritario al idioma y portal */
       }
 
       .btn-text-desktop {
@@ -438,6 +439,11 @@
       .lang-picker-btn {
         padding: 6px 8px;
         font-size: 0.75rem;
+      }
+
+      .hud-lang-picker {
+        flex-shrink: 0 !important;
+        z-index: 50 !important;
       }
 
       /* En pantallas muy estrechas, simplificar aún más la cabecera */
@@ -480,8 +486,11 @@
       }
     }
 
-    /* Teléfonos muy pequeños (<= 420px): priorizar marca + Portal + idioma */
-    @media (max-width: 420px) {
+    /* Teléfonos muy pequeños (<= 460px): priorizar marca + Portal + selector de idioma */
+    @media (max-width: 460px) {
+      .btn-dial-header {
+        display: none !important;
+      }
       .brand-title {
         font-size: 1.15rem;
       }
@@ -490,7 +499,8 @@
         height: 32px;
       }
       .header-actions {
-        max-width: calc(100vw - 120px);
+        max-width: none !important;
+        gap: 6px;
       }
     }
   </style>
@@ -510,7 +520,7 @@
 
   <!-- CABECERA INSTITUCIONAL HUD -->
   <header>
-    <a href="index_promocional.html" class="brand-box" title="Entrar al Portal Institucional NEXORD" onclick="event.stopPropagation()">
+    <a href="index_promocional.html" class="brand-box" title="Entrar al Portal Institucional NEXORD" onclick="goToInstitutional(event)">
       <img src="LOGO_NEXORD_OFICIAL.png" alt="Logo NEXORD" class="brand-logo-img" decoding="async" onerror="this.src='assets/logo_nexord_base.png'">
       <div style="display: flex; align-items: baseline; gap: 12px;">
         <span class="brand-title">NEX<span>ORD</span></span>
@@ -518,22 +528,22 @@
       </div>
     </a>
 
-    <div class="header-actions" onclick="event.stopPropagation()">
-      <a href="dial_orbital.html" class="btn-nav-header" style="color: #00F0FF; border-color: rgba(0, 240, 255, 0.45);" title="Abrir Dial Orbital Epistemológico (9 Sectores)">
+    <div class="header-actions" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+      <a href="dial_orbital.html" class="btn-nav-header btn-dial-header" style="color: #00F0FF; border-color: rgba(0, 240, 255, 0.45);" title="Abrir Dial Orbital Epistemológico (9 Sectores)">
         <span>🧭</span> <span class="btn-text-desktop">Dial Orbital</span><span class="btn-text-mobile">Dial</span>
       </a>
       <a href="manifiesto.html" class="btn-nav-header btn-manifiesto" style="color: #FFE600; border-color: rgba(255, 230, 0, 0.4);" title="Abrir Manifiesto Científico Global en HTML">
         <span>📜</span> <span class="btn-text-desktop">Manifiesto</span><span class="btn-text-mobile">Manifiesto</span>
       </a>
-      <a href="index_promocional.html" class="btn-nav-header btn-portal-main" title="Entrar al Portal Institucional NEXORD">
-        <span>🏛️</span> <span class="btn-text-desktop">Portal Institucional ➔</span><span class="btn-text-mobile">Portal ➔</span>
+      <a href="index_promocional.html" class="btn-nav-header btn-portal-main" title="Entrar al Portal Institucional NEXORD" onclick="goToInstitutional(event)">
+        <span>🏛️</span> <span class="btn-text-desktop">Portal Institucional ➔</span><span class="btn-text-mobile">Entrar ➔</span>
       </a>
 
       <!-- Selector Directo de Idioma (ES / EN) Sin Desplegables -->
-      <div class="hud-lang-picker" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.90); border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 20px; padding: 2px 6px; gap: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.80rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);">
-        <button type="button" class="lang-btn active" id="btn-idx-lang-es" onclick="setLanguage('es')" ontouchend="setLanguage('es')" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:4px 6px; font-size:0.80rem; touch-action:manipulation;" title="Español (Canónico)">🇪🇸 ES</button>
+      <div class="hud-lang-picker" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.95); border: 1.5px solid rgba(56, 189, 248, 0.5); border-radius: 20px; padding: 2px 5px; gap: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.80rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.25); flex-shrink: 0;">
+        <button type="button" class="lang-btn active" id="btn-idx-lang-es" onclick="onLangSelect('es', event)" ontouchend="onLangSelect('es', event)" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:6px 8px; font-size:0.80rem; touch-action:manipulation; min-width:38px; min-height:34px; display:inline-flex; align-items:center; justify-content:center;" title="Español (Canónico)">🇪🇸 ES</button>
         <span style="color: rgba(255,255,255,0.3);">|</span>
-        <button type="button" class="lang-btn" id="btn-idx-lang-en" onclick="setLanguage('en')" ontouchend="setLanguage('en')" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:4px 6px; font-size:0.80rem; touch-action:manipulation;" title="English (International)">🇬🇧 EN</button>
+        <button type="button" class="lang-btn" id="btn-idx-lang-en" onclick="onLangSelect('en', event)" ontouchend="onLangSelect('en', event)" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:6px 8px; font-size:0.80rem; touch-action:manipulation; min-width:38px; min-height:34px; display:inline-flex; align-items:center; justify-content:center;" title="English (International)">🇬🇧 EN</button>
       </div>
     </div>
   </header>
@@ -541,14 +551,25 @@
   <script>
     let hasNavigated = false;
 
+    function onLangSelect(lang, ev) {
+      if (ev) {
+        if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
+        if (ev.type === 'touchend' && typeof ev.preventDefault === 'function') {
+          ev.preventDefault();
+        }
+      }
+      setLanguage(lang);
+    }
+
     /* ============================================================
-       NAVEGACIÓN AL PORTAL · función que faltaba (daba ReferenceError con Enter/Espacio/Flecha derecha y en los onclick)
+       NAVEGACIÓN AL PORTAL · Transfiere el idioma activo (?lang=xx)
        ============================================================ */
     function goToInstitutional(e) {
       if (hasNavigated) return;
       if (e && typeof e.preventDefault === 'function') e.preventDefault();
       hasNavigated = true;
-      window.location.href = 'index_promocional.html';
+      const curLang = document.documentElement.lang || localStorage.getItem('nexord_lang') || 'es';
+      window.location.href = 'index_promocional.html?lang=' + encodeURIComponent(curLang);
     }
 
     const INDEX_I18N = {
@@ -642,7 +663,7 @@
         const portalDesktop = portalBtn.querySelector('.btn-text-desktop');
         const portalMobile = portalBtn.querySelector('.btn-text-mobile');
         if (portalDesktop) portalDesktop.textContent = dict.portal;
-        if (portalMobile) portalMobile.textContent = 'Portal ➔';
+        if (portalMobile) portalMobile.textContent = (lang === 'en') ? 'Enter ➔' : 'Entrar ➔';
       }
 
       const brandBox = document.querySelector('.brand-box');

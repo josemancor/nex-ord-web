@@ -191,14 +191,31 @@
   </a>
 
   <!-- LO PRIMERO: IDIOMA ES / EN -->
-  <div class="nav-lang-picker" style="display: flex; align-items: center;">
+  <div class="nav-lang-picker" style="display: flex; align-items: center;" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()">
     <div class="hud-lang-picker" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.90); border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 20px; padding: 3px 6px; gap: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.82rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);">
-      <button type="button" class="lang-btn active" id="btn-promo-lang-es" onclick="setPromoLanguage('es')" ontouchend="setPromoLanguage('es')" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:6px 10px; font-size:0.84rem; touch-action:manipulation; min-width:50px; min-height:36px; display:inline-flex; align-items:center; justify-content:center;" title="Español (Canónico)">🇪🇸 ES</button>
+      <button type="button" class="lang-btn active" id="btn-promo-lang-es" onclick="handlePromoLangSelect('es', event)" ontouchend="handlePromoLangSelect('es', event)" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:6px 10px; font-size:0.84rem; touch-action:manipulation; min-width:50px; min-height:36px; display:inline-flex; align-items:center; justify-content:center;" title="Español (Canónico)">🇪🇸 ES</button>
       <span style="color: rgba(255,255,255,0.3);">|</span>
-      <button type="button" class="lang-btn" id="btn-promo-lang-en" onclick="setPromoLanguage('en')" ontouchend="setPromoLanguage('en')" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:6px 10px; font-size:0.84rem; touch-action:manipulation; min-width:50px; min-height:36px; display:inline-flex; align-items:center; justify-content:center;" title="English (International)">🇬🇧 EN</button>
+      <button type="button" class="lang-btn" id="btn-promo-lang-en" onclick="handlePromoLangSelect('en', event)" ontouchend="handlePromoLangSelect('en', event)" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:6px 10px; font-size:0.84rem; touch-action:manipulation; min-width:50px; min-height:36px; display:inline-flex; align-items:center; justify-content:center;" title="English (International)">🇬🇧 EN</button>
     </div>
   </div>
 </nav>
+
+<script>
+  function handlePromoLangSelect(lang, ev) {
+    if (ev) {
+      if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
+      if (ev.type === 'touchend' && typeof ev.preventDefault === 'function') ev.preventDefault();
+    }
+    if (typeof setPromoLanguage === 'function') {
+      setPromoLanguage(lang);
+    } else {
+      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
+      window.addEventListener('DOMContentLoaded', function() {
+        if (typeof setPromoLanguage === 'function') setPromoLanguage(lang);
+      });
+    }
+  }
+</script>
 
 <!-- =======================================================================
      HERO SECTION
