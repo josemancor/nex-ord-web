@@ -540,7 +540,7 @@
       </a>
 
       <!-- Selector Directo de Idioma (ES / EN) Sin Desplegables -->
-      <div class="hud-lang-picker" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.95); border: 1.5px solid rgba(56, 189, 248, 0.5); border-radius: 20px; padding: 2px 5px; gap: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.80rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.25); flex-shrink: 0;">
+      <div class="hud-lang-picker" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.95); border: 1.5px solid rgba(56, 189, 248, 0.5); border-radius: 20px; padding: 2px 5px; gap: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.80rem; font-weight: 700; box-shadow: 0 0 10px rgba(56, 189, 248, 0.25); flex-shrink: 0;">
         <button type="button" class="lang-btn active" id="btn-idx-lang-es" onclick="onLangSelect('es', event)" ontouchend="onLangSelect('es', event)" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:6px 8px; font-size:0.80rem; touch-action:manipulation; min-width:38px; min-height:34px; display:inline-flex; align-items:center; justify-content:center;" title="Español (Canónico)">🇪🇸 ES</button>
         <span style="color: rgba(255,255,255,0.3);">|</span>
         <button type="button" class="lang-btn" id="btn-idx-lang-en" onclick="onLangSelect('en', event)" ontouchend="onLangSelect('en', event)" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-weight:700; padding:6px 8px; font-size:0.80rem; touch-action:manipulation; min-width:38px; min-height:34px; display:inline-flex; align-items:center; justify-content:center;" title="English (International)">🇬🇧 EN</button>
@@ -551,13 +551,12 @@
   <script>
     let hasNavigated = false;
 
+    let lastIdxLangTap = 0;
     function onLangSelect(lang, ev) {
-      if (ev) {
-        if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
-        if (ev.type === 'touchend' && typeof ev.preventDefault === 'function') {
-          ev.preventDefault();
-        }
-      }
+      if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
+      const now = Date.now();
+      if (now - lastIdxLangTap < 350) return;
+      lastIdxLangTap = now;
       setLanguage(lang);
     }
 

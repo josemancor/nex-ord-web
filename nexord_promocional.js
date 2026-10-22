@@ -302,9 +302,9 @@ function initHeroVideo() {
     }
   }
 
-  // Escuchar cambios de volumen nativos
+  // Escuchar cambios de volumen y silenciado nativos
   vid.addEventListener('volumechange', () => {
-    updateLocalAudioUI(vid.muted || vid.volume === 0);
+    updateLocalAudioUI(vid.muted);
   });
 
   // Si no estan asignados como onclick inline, asociarlos
@@ -324,7 +324,7 @@ function initHeroVideo() {
     });
   }
 
-  // Pulsar sobre el marco del video conmuta Play/Pausa (sin reactivar audio si el usuario lo silencio)
+  // Pulsar sobre el marco del video conmuta Play/Pausa
   if (playerWrap) {
     playerWrap.addEventListener('click', (e) => {
       if (e.target.closest('.video-ctrl-btn')) return;
@@ -359,31 +359,21 @@ function initHeroVideo() {
     if (btnPlay) btnPlay.classList.remove('playing');
   });
 
-  // Autoplay seguro con audio
+  // Autoplay seguro: si el navegador lo permite con audio, perfecto; si exige silencio (como en movil), se silencia limpiamente
   function startAutoplaySafe() {
     vid.muted = false;
-    vid.volume = 1.0;
+    try { vid.volume = 1.0; } catch (e) {}
     const p = vid.play();
     if (p !== undefined) {
       p.then(() => {
         updateLocalAudioUI(false);
       }).catch(() => {
-        // En movil la politica de autoplay exige gesto previo
+        // En dispositivos moviles la politica de autoplay exige iniciar en silencio
         vid.muted = true;
-        vid.volume = 0;
+        vid.defaultMuted = true;
+        try { vid.volume = 0; } catch (e) {}
         vid.play().catch(() => {});
         updateLocalAudioUI(true);
-
-        const unlockAudio = () => {
-          // Si el usuario ya silencio deliberadamente, NO desbloquear
-          if (window.__userMutedHeroVideo) return;
-          vid.muted = false;
-          vid.volume = 1.0;
-          vid.play().catch(() => {});
-          updateLocalAudioUI(false);
-          ['touchstart', 'click'].forEach(ev => window.removeEventListener(ev, unlockAudio, false));
-        };
-        ['touchstart', 'click'].forEach(ev => window.addEventListener(ev, unlockAudio, { once: true, passive: true }));
       });
     }
   }

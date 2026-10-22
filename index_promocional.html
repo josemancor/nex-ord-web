@@ -172,11 +172,11 @@
 }
 </script>
 
-<link rel="stylesheet" href="nexord_promocional.css?v=20261015">
+<link rel="stylesheet" href="nexord_promocional.css?v=20261022_final">
   <link rel="stylesheet" href="nexord_dial_nav.css">
   <!-- Master Mobile Responsive Engine (Cierre maestro de cascada) -->
-  <link rel="stylesheet" href="mobile_responsive_engine.css?v=20261015">
-  <script src="assets/nexord_i18n_promocional.js"></script>
+  <link rel="stylesheet" href="mobile_responsive_engine.css?v=20261022_final">
+  <script src="assets/nexord_i18n_promocional.js?v=20261022_final"></script>
 </head>
 <body>
 
@@ -192,7 +192,7 @@
   </a>
 
   <!-- LO PRIMERO: IDIOMA ES / EN -->
-  <div class="nav-lang-picker" style="display: flex; align-items: center; z-index: 1002;" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+  <div class="nav-lang-picker" style="display: flex; align-items: center; z-index: 1002;">
     <div class="hud-lang-picker" style="display: inline-flex; align-items: center; background: rgba(14, 25, 52, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 20px; padding: 3px 6px; gap: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.84rem; font-weight: 700; box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);">
       <button type="button" class="lang-btn active" id="btn-promo-lang-es" onclick="handlePromoLangSelect('es', event)" style="background:none; border:none; color:var(--neon-green); cursor:pointer; font-weight:800; padding:6px 12px; font-size:0.86rem; touch-action:manipulation; min-width:54px; min-height:40px; display:inline-flex; align-items:center; justify-content:center;" title="Español (Canónico)">🇪🇸 ES</button>
       <span style="color: rgba(255,255,255,0.3);">|</span>
@@ -202,29 +202,45 @@
 </nav>
 
 <script>
-  // CONTROL DE IDIOMA ULTRA-ROBUSTO CON DEBOUNCE PARA MÓVIL Y DESKTOP
-  let lastLangSelectTime = 0;
+  // CONTROL DE IDIOMA INSTANTÁNEO Y ULTRA-ROBUSTO
+  let lastLangTap = 0;
   function handlePromoLangSelect(lang, ev) {
-    const now = Date.now();
-    if (now - lastLangSelectTime < 300) return;
-    lastLangSelectTime = now;
     if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
+    const now = Date.now();
+    if (now - lastLangTap < 350) return;
+    lastLangTap = now;
 
+    // 1. Guardar y actualizar HTML lang de inmediato
+    try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
+    document.documentElement.lang = lang;
+
+    // 2. Feedback visual instantaneo para los botones de idioma
+    const btnEs = document.getElementById('btn-promo-lang-es');
+    const btnEn = document.getElementById('btn-promo-lang-en');
+    if (btnEs) {
+      btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
+      btnEs.style.fontWeight = (lang === 'es') ? '800' : '700';
+      btnEs.classList.toggle('active', lang === 'es');
+    }
+    if (btnEn) {
+      btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
+      btnEn.style.fontWeight = (lang === 'en') ? '800' : '700';
+      btnEn.classList.toggle('active', lang === 'en');
+    }
+
+    // 3. Ejecutar traductor de la pagina
     if (typeof window.setPromoLanguage === 'function') {
-      window.setPromoLanguage(lang);
-    } else {
-      try { localStorage.setItem('nexord_lang', lang); } catch (e) {}
-      document.documentElement.lang = lang;
-      const btnEs = document.getElementById('btn-promo-lang-es');
-      const btnEn = document.getElementById('btn-promo-lang-en');
-      if (btnEs) {
-        btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
-        btnEs.classList.toggle('active', lang === 'es');
+      try {
+        window.setPromoLanguage(lang);
+      } catch (err) {
+        console.warn('setPromoLanguage error:', err);
       }
-      if (btnEn) {
-        btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
-        btnEn.classList.toggle('active', lang === 'en');
-      }
+    }
+
+    // 4. Actualizar textos de controles de video
+    if (typeof window.updateHeroAudioUI === 'function') {
+      const vid = document.getElementById('hero-master-video');
+      window.updateHeroAudioUI(vid ? vid.muted : false);
     }
   }
   window.handlePromoLangSelect = handlePromoLangSelect;
@@ -261,36 +277,46 @@
   }
   window.updateHeroAudioUI = updateHeroAudioUI;
 
+  // SILENCIAR VIDEO (INFALIBLE)
+  function muteHeroAudio() {
+    const vid = document.getElementById('hero-master-video');
+    if (!vid) return;
+    window.__userMutedHeroVideo = true;
+    vid.muted = true;
+    vid.defaultMuted = true;
+    try { vid.volume = 0; } catch (e) {}
+    updateHeroAudioUI(true);
+  }
+  window.muteHeroAudio = muteHeroAudio;
+
+  // ACTIVAR AUDIO VIDEO (INFALIBLE)
+  function unmuteHeroAudio() {
+    const vid = document.getElementById('hero-master-video');
+    if (!vid) return;
+    window.__userMutedHeroVideo = false;
+    vid.muted = false;
+    vid.defaultMuted = false;
+    try { vid.volume = 1.0; } catch (e) {}
+    vid.play().catch(function() {});
+    updateHeroAudioUI(false);
+  }
+  window.unmuteHeroAudio = unmuteHeroAudio;
+
   // CONMUTADOR MAESTRO DE AUDIO: ACTIVAR / DESACTIVAR CON FIABILIDAD ABSOLUTA
-  let lastAudioToggleTime = 0;
+  let lastAudioTap = 0;
   function toggleHeroAudio(e) {
-    const now = Date.now();
-    if (now - lastAudioToggleTime < 300) {
-      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
-      return;
-    }
-    lastAudioToggleTime = now;
     if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    const now = Date.now();
+    if (now - lastAudioTap < 350) return;
+    lastAudioTap = now;
 
     const vid = document.getElementById('hero-master-video');
     if (!vid) return;
 
-    // Verificar si actualmente suena audible
-    const isAudible = !vid.muted && vid.volume > 0;
-
-    if (isAudible) {
-      // SILENCIAR Y BLOQUEAR REACTIVACIÓN ACCIDENTAL
-      window.__userMutedHeroVideo = true;
-      vid.muted = true;
-      vid.volume = 0;
-      updateHeroAudioUI(true);
+    if (vid.muted) {
+      unmuteHeroAudio();
     } else {
-      // ACTIVAR AUDIO Y REPRODUCIR
-      window.__userMutedHeroVideo = false;
-      vid.muted = false;
-      vid.volume = 1.0;
-      vid.play().catch(function() {});
-      updateHeroAudioUI(false);
+      muteHeroAudio();
     }
   }
   window.toggleHeroAudio = toggleHeroAudio;
@@ -298,13 +324,10 @@
   // CONMUTADOR MAESTRO DE PLAY / PAUSA
   let lastPlayToggleTime = 0;
   function toggleHeroPlayPause(e) {
-    const now = Date.now();
-    if (now - lastPlayToggleTime < 300) {
-      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
-      return;
-    }
-    lastPlayToggleTime = now;
     if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    const now = Date.now();
+    if (now - lastPlayToggleTime < 350) return;
+    lastPlayToggleTime = now;
 
     const vid = document.getElementById('hero-master-video');
     if (!vid) return;
@@ -1231,7 +1254,7 @@ ER  - </pre>
   </div>
 </div>
 
-<script src="nexord_promocional.js?v=20261008b" defer></script>
+<script src="nexord_promocional.js?v=20261022_final" defer></script>
   <script src="nexord_dial_nav.js" defer></script>
 </body>
 </html>
