@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD Dialéctico: Holonomía y Deflexión de Berry 3D</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0B132B;
+      color: #E0E6ED;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .glass-card {
+      background: rgba(16, 26, 54, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    .neon-border-green {
+      border: 1px solid rgba(0, 255, 135, 0.4);
+      box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+    }
+    .neon-border-yellow {
+      border: 1px solid rgba(255, 230, 0, 0.4);
+      box-shadow: 0 0 15px rgba(255, 230, 0, 0.2);
+    }
+    .neon-border-pink {
+      border: 1px solid rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- CABECERA INSTITUCIONAL CANÓNICA -->
+  <header class="w-full bg-[#080E1E] border-b border-gray-800 px-6 py-4 flex flex-wrap items-center justify-between z-20">
+    <div class="flex items-center space-x-3">
+      <div class="w-3 h-8 bg-[#00FF87] rounded-sm shadow-[0_0_10px_#00FF87]"></div>
+      <div>
+        <h1 class="text-xl font-bold tracking-wider text-white flex items-center gap-2">
+          VISORD <span class="text-xs px-2 py-0.5 rounded bg-[#00FF87]/20 text-[#00FF87] border border-[#00FF87]/40 mono">DIALÉCTICO 3D</span>
+        </h1>
+        <p class="text-xs text-gray-400">Holonomía Riemanniana, Deflexión de Berry y Fatiga Deliberativa en Grassmann Gr(p, N)</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4 text-xs mono text-gray-300">
+      <span class="px-2.5 py-1 rounded bg-gray-800/80 border border-gray-700">Diseño: (G1T4C1)</span>
+      <span class="px-2.5 py-1 rounded bg-gray-800/80 border border-gray-700">Espacio: Gr(2, 10)</span>
+      <span class="text-[#00FF87]">21 de Octubre de 2026</span>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL: VIEWPORT THREE.JS Y HUD -->
+  <main class="flex-1 w-full max-w-7xl mx-auto p-4 md:p-6 flex flex-col space-y-6">
+
+    <!-- 1. GRÁFICO PRINCIPAL BIEN VISIBLE: LIENZO THREE.JS -->
+    <div class="relative w-full h-[520px] md:h-[580px] rounded-2xl overflow-hidden glass-card border border-gray-800 shadow-2xl">
+      
+      <!-- Canvas 3D -->
+      <div id="three-container" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Overlay HUD Superior Izquierdo: Telemetría de Holonomía -->
+      <div class="absolute top-4 left-4 p-4 rounded-xl glass-card max-w-xs space-y-2 pointer-events-none border border-white/10">
+        <div class="text-[10px] text-gray-400 uppercase tracking-widest mono">Métrica de Fase Geométrica</div>
+        <div class="flex items-baseline space-x-2">
+          <span id="hud-berry-angle" class="text-3xl font-extrabold text-[#00FF87] mono">0.39°</span>
+          <span class="text-xs text-gray-400">deflexión</span>
+        </div>
+        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+          <div id="hud-berry-bar" class="bg-[#00FF87] h-full transition-all duration-500" style="width: 4%"></div>
+        </div>
+        <div class="flex justify-between text-[11px] mono pt-1 border-t border-gray-800">
+          <span class="text-gray-400">Fidelidad Mandato:</span>
+          <span id="hud-fidelity" class="font-bold text-white">100.0%</span>
+        </div>
+        <div class="flex justify-between text-[11px] mono">
+          <span class="text-gray-400">Índice Fatiga:</span>
+          <span id="hud-fatigue" class="font-bold text-[#00FF87]">0.0239</span>
+        </div>
+        <div class="flex justify-between text-[11px] mono">
+          <span class="text-gray-400">Longitud Geodésica:</span>
+          <span id="hud-distance" class="font-bold text-gray-300">1.51 rad</span>
+        </div>
+      </div>
+
+      <!-- Overlay HUD Superior Derecho: Leyenda Semiótica -->
+      <div class="absolute top-4 right-4 p-3 rounded-xl glass-card text-xs space-y-1.5 pointer-events-auto border border-white/10">
+        <div class="text-[10px] text-gray-400 uppercase tracking-wider mono mb-1">Leyenda Topológica 3D</div>
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]"></span>
+          <span class="text-gray-200">Acuerdo Original (<span class="mono">u₀</span>)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-[#FFE600] shadow-[0_0_8px_#FFE600]"></span>
+          <span class="text-gray-200">Acuerdo Rotado (<span class="mono">u_final</span>)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-[#BA68C8] shadow-[0_0_8px_#BA68C8]"></span>
+          <span class="text-gray-200">Cinta Deliberativa (<span class="mono">T₀→T₄</span>)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-sm bg-[#00FF87]/40 border border-[#00FF87]"></span>
+          <span class="text-gray-200">Cono de Berry (<span class="mono">φ_Berry</span>)</span>
+        </div>
+      </div>
+
+      <!-- Overlay Inferior: Diagnóstico Clínico Dinámico -->
+      <div class="absolute bottom-4 left-4 right-4 p-3 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3 border border-white/10">
+        <div class="flex items-center space-x-3">
+          <div id="status-indicator" class="w-3.5 h-3.5 rounded-full bg-[#00FF87] animate-pulse"></div>
+          <div>
+            <div id="status-category" class="text-xs font-bold text-[#00FF87] mono uppercase tracking-wider">CONSENSO CONSERVATIVO</div>
+            <div id="status-desc" class="text-xs text-gray-300">El acuerdo ha madurado sin alterar el mandato esencial. Baja tensión latente.</div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 border border-gray-700 flex items-center space-x-1.5 transition">
+            <span>🔊 Biofeedback 432 Hz</span>
+            <span id="audio-state" class="text-gray-500 font-bold">OFF</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2. CONTROLES Y BOTONES DE ACCIÓN (INMEDIATAMENTE DEBAJO DEL GRÁFICO) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- Selector de Escenario de Deliberación -->
+      <div class="p-4 rounded-xl glass-card space-y-3">
+        <div class="text-xs font-semibold text-gray-300 uppercase tracking-wider mono flex items-center justify-between">
+          <span>Escenario Deliberativo</span>
+          <span class="text-[10px] text-gray-500">Ty Circuit</span>
+        </div>
+        <div class="flex flex-col space-y-2">
+          <button onclick="setScenario('suave')" id="btn-suave" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium border border-gray-700 bg-gray-800/80 hover:border-[#00FF87] transition flex items-center justify-between">
+            <span>1. Circuito Armónico / Suave</span>
+            <span class="text-[10px] text-[#00FF87] mono">K ≈ 0</span>
+          </button>
+          <button onclick="setScenario('estandar')" id="btn-estandar" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium border border-[#00FF87] bg-[#00FF87]/10 text-white transition flex items-center justify-between">
+            <span>2. Circuito Estándar (4 Fases)</span>
+            <span class="text-[10px] text-[#00FF87] mono">φ = 0.39°</span>
+          </button>
+          <button onclick="setScenario('disruptivo')" id="btn-disruptivo" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium border border-gray-700 bg-gray-800/80 hover:border-[#FF007F] transition flex items-center justify-between">
+            <span>3. Cizalladura / Choque Político</span>
+            <span class="text-[10px] text-[#FF007F] mono">φ = 20.34°</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modulador de Intensidad de Debate -->
+      <div class="p-4 rounded-xl glass-card space-y-3">
+        <div class="text-xs font-semibold text-gray-300 uppercase tracking-wider mono flex items-center justify-between">
+          <span>Intensidad del Debate</span>
+          <span id="lbl-intensity" class="text-xs text-[#00FF87] mono">0.35</span>
+        </div>
+        <input type="range" id="slider-intensity" min="0.05" max="1.50" step="0.05" value="0.35" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#00FF87]">
+        <div class="flex justify-between text-[10px] text-gray-400 mono">
+          <span>0.05 (Inercia Plácida)</span>
+          <span>1.50 (Conflicto Máximo)</span>
+        </div>
+        <p class="text-[11px] text-gray-400 leading-relaxed">
+          Modula la energía de las perturbaciones tangentes transversales en comisiones intermedias.
+        </p>
+      </div>
+
+      <!-- Auditoría de Rotación de Gauge en el Fibrado O(p) -->
+      <div class="p-4 rounded-xl glass-card space-y-3">
+        <div class="text-xs font-semibold text-gray-300 uppercase tracking-wider mono flex items-center justify-between">
+          <span>Operador de Gauge Φ_loop</span>
+          <span class="text-[10px] text-gray-500">SO(2)</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-black/40 border border-gray-800 mono text-xs text-gray-300 leading-tight space-y-1">
+          <div id="matrix-row-1">[ +0.9992 , +0.0392 ]</div>
+          <div id="matrix-row-2">[ -0.0392 , +0.9992 ]</div>
+        </div>
+        <div class="text-[11px] text-gray-400 flex justify-between">
+          <span>Determinante: <span id="mat-det" class="text-white mono">1.0000</span></span>
+          <span>Traza: <span id="mat-trace" class="text-white mono">1.9985</span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. EXPLICACIONES CONCISAS Y NOTA PEDAGÓGICA (SECCIÓN INFERIOR) -->
+    <section class="p-5 rounded-xl glass-card space-y-4 border border-gray-800">
+      <h3 class="text-sm font-bold text-white tracking-wide uppercase mono flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#00FF87]"></span>
+        Fundamento Físico: La Paradoja de la Negociación Circular
+      </h3>
+      <p class="text-xs text-gray-300 leading-relaxed">
+        Cuando un colectivo somete un preacuerdo a una ronda sucesiva de subcomisiones técnicas, negociaciones con minorías y ajustes jurídicos, el proceso concluye exteriormente en el mismo lugar de origen (<span class="mono">S_final = S_0</span>, los mismos miembros reunidos en el plenario). Sin embargo, bajo la conexión métrica de Levi-Civita en la variedad de Grassmann <span class="mono">Gr(p, N)</span>, el espacio vectorial interno de acuerdos experimenta una rotación de gauge neta conocida como <strong>Fase Geométrica de Berry</strong> (<span class="mono">Φ_loop ∈ O(p)</span>).
+      </p>
+      
+      <!-- NOTA PEDAGÓGICA OBLIGATORIA (REGLA 10) -->
+      <div class="p-3.5 rounded-lg bg-blue-950/40 border border-blue-500/30 text-xs text-blue-200 leading-relaxed">
+        <span class="font-bold text-blue-300">💡 Nota Pedagógica:</span> El cono tridimensional representa el margen de desajuste axiológico sufrido por la propuesta inicial tras su circulación burocrática. Un cono verde angosto (<span class="mono">φ &lt; 15°</span>) certifica que la negociación perfeccionó el texto sin traicionar el consenso basal. Un cono rojo dilatado (<span class="mono">φ &gt; 45°</span>) advierte que los compromisos bilaterales han rotado las prioridades del grupo de forma irreversible; someter el texto resultante a votación formal suele detonar desafección o sabotaje pasivo en la fase de implementación.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA INSTITUCIONAL -->
+  <footer class="w-full bg-[#080E1E] border-t border-gray-800 py-3 text-center text-xs text-gray-500 mono">
+    VISORD™ Ecosistema de Diagnóstico Socio-Termodinámico · NEXORD Architecture 2026
+  </footer>
+
+  <!-- SCRIPT THREE.JS Y SIMULADOR EN VIVO -->
+  <script>
+    // --- ESTADO Y PARÁMETROS GLOBALES ---
+    let scene, camera, renderer, controls;
+    let coneMesh, arrowInit, arrowFinal, ribbonMesh, markersGroup;
+    let currentScenario = 'estandar';
+    let debateIntensity = 0.35;
+    let audioCtx = null, oscNode = null, gainNode = null, isAudioActive = false;
+
+    // Datos precargados de los escenarios simulados
+    const SCENARIOS = {
+      suave: {
+        berryAngle: 0.02,
+        fidelity: 1.0000,
+        fatigue: 0.0005,
+        distance: 0.35,
+        matrix: [[1.0000, 0.0003], [-0.0003, 1.0000]],
+        color: '#00FF87',
+        category: 'CONSENSO CONSERVATIVO',
+        desc: 'El acuerdo maduró sin alterar el mandato esencial. Negociación fluida sin cizalladura.',
+        coneClass: 'neon-border-green',
+        pts: [
+          [0.0, 1.0, 0.0],
+          [0.08, 0.99, 0.05],
+          [-0.05, 0.98, 0.12],
+          [0.02, 0.99, -0.04],
+          [0.0, 1.0, 0.0]
+        ]
+      },
+      estandar: {
+        berryAngle: 0.39,
+        fidelity: 1.0000,
+        fatigue: 0.0239,
+        distance: 1.51,
+        matrix: [[0.9992, 0.0392], [-0.0392, 0.9992]],
+        color: '#00FF87',
+        category: 'CONSENSO CONSERVATIVO',
+        desc: 'El acuerdo maduró a través de las comisiones sin distorsionar el mandato original. Proceder a ratificación.',
+        coneClass: 'neon-border-green',
+        pts: [
+          [0.0, 1.0, 0.0],
+          [0.45, 0.82, 0.35],
+          [-0.32, 0.65, 0.69],
+          [0.28, 0.78, -0.56],
+          [0.0, 1.0, 0.0]
+        ]
+      },
+      disruptivo: {
+        berryAngle: 20.34,
+        fidelity: 0.9376,
+        fatigue: 1.8700,
+        distance: 3.84,
+        matrix: [[0.9376, 0.3476], [-0.3476, 0.9376]],
+        color: '#FF007F',
+        category: 'DERIVA NEGOCIADORA / CIZALLADURA',
+        desc: 'Las concesiones bilaterales extremas han provocado una torsión angular severa. Riesgo de cinismo o rechazo.',
+        coneClass: 'neon-border-pink',
+        pts: [
+          [0.0, 1.0, 0.0],
+          [0.85, 0.42, 0.31],
+          [-0.72, 0.35, 0.60],
+          [0.65, 0.28, -0.71],
+          [0.0, 1.0, 0.0]
+        ]
+      }
+    };
+
+    // --- INICIALIZACIÓN THREE.JS ---
+    function initThree() {
+      const container = document.getElementById('three-container');
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+      camera.position.set(3.2, 2.2, 3.8);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Iluminación
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      const dirLight1 = new THREE.DirectionalLight(0x00e5ff, 0.9);
+      dirLight1.position.set(5, 8, 6);
+      const dirLight2 = new THREE.DirectionalLight(0xff007f, 0.4);
+      dirLight2.position.set(-6, -4, -5);
+      scene.add(ambientLight, dirLight1, dirLight2);
+
+      // Esfera Guía de Referencia (S^2)
+      const sphereGeo = new THREE.SphereGeometry(1.4, 32, 24);
+      const sphereMat = new THREE.MeshBasicMaterial({
+        color: 0x1E3A8A,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.12
+      });
+      scene.add(new THREE.Mesh(sphereGeo, sphereMat));
+
+      // Grupo para marcadores
+      markersGroup = new THREE.Group();
+      scene.add(markersGroup);
+
+      // Render inicial del escenario estándar
+      updateSceneFromData(SCENARIOS[currentScenario]);
+
+      // Responsive resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Loop de animación
+      animate();
+    }
+
+    function updateSceneFromData(data) {
+      // 1. Eliminar objetos previos
+      if (coneMesh) scene.remove(coneMesh);
+      if (arrowInit) scene.remove(arrowInit);
+      if (arrowFinal) scene.remove(arrowFinal);
+      if (ribbonMesh) scene.remove(ribbonMesh);
+      while(markersGroup.children.length > 0) {
+        markersGroup.remove(markersGroup.children[0]);
+      }
+
+      const phiRad = THREE.MathUtils.degToRad(data.berryAngle);
+      const coneLength = 1.8;
+      const coneRadius = Math.tan(Math.max(phiRad, 0.03)) * coneLength;
+
+      // 2. Cono de Deflexión de Berry
+      const coneGeo = new THREE.ConeGeometry(coneRadius, coneLength, 36, 1, true);
+      coneGeo.translate(0, -coneLength / 2, 0); // Vértice en el origen
+
+      const coneColorHex = parseInt(data.color.replace('#', '0x'));
+      const coneMat = new THREE.MeshStandardMaterial({
+        color: coneColorHex,
+        transparent: true,
+        opacity: 0.38,
+        side: THREE.DoubleSide,
+        roughness: 0.2,
+        metalness: 0.1
+      });
+      coneMesh = new THREE.Mesh(coneGeo, coneMat);
+
+      // Orientar hacia el eje original u0 = [0, 1, 0]
+      coneMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1, 0));
+      scene.add(coneMesh);
+
+      // 3. Flechas Vectoriales: Acuerdo Inicial (Cian) y Final Rotado (Amarillo/Rosa)
+      const origin = new THREE.Vector3(0, 0, 0);
+      arrowInit = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, coneLength + 0.1, 0x00E5FF, 0.15, 0.08);
+      scene.add(arrowInit);
+
+      // Vector final rotado en el plano X-Y
+      const vFinal = new THREE.Vector3(Math.sin(phiRad), Math.cos(phiRad), 0).normalize();
+      arrowFinal = new THREE.ArrowHelper(vFinal, origin, coneLength + 0.1, data.berryAngle > 10 ? 0xFF007F : 0xFFE600, 0.15, 0.08);
+      scene.add(arrowFinal);
+
+      // 4. Cinta Geodésica Extruida (Circuito Deliberativo)
+      const points = data.pts.map(p => new THREE.Vector3(p[0] * 1.4, p[1] * 1.4, p[2] * 1.4));
+      const curve = new THREE.CatmullRomCurve3(points, true);
+      
+      const tubeRadius = 0.028 + Math.min(data.fatigue * 0.02, 0.05);
+      const tubeGeo = new THREE.TubeGeometry(curve, 64, tubeRadius, 12, true);
+      const tubeMat = new THREE.MeshStandardMaterial({
+        color: 0xBA68C8,
+        metalness: 0.3,
+        roughness: 0.4
+      });
+      ribbonMesh = new THREE.Mesh(tubeGeo, tubeMat);
+      scene.add(ribbonMesh);
+
+      // 5. Marcadores en Estaciones
+      const stationNames = ['T0: Plenario', 'T1: Técnica', 'T2: Concesiones', 'T3: Jurídica'];
+      points.forEach((pt, idx) => {
+        if (idx === points.length - 1) return; // Evitar duplicar T0 en el cierre
+        const markerGeo = new THREE.SphereGeometry(0.065, 16, 16);
+        const markerMat = new THREE.MeshBasicMaterial({
+          color: idx === 0 ? 0x00E5FF : 0xFF4081
+        });
+        const marker = new THREE.Mesh(markerGeo, markerMat);
+        marker.position.copy(pt);
+        markersGroup.add(marker);
+      });
+
+      // 6. Actualizar HUD de Texto
+      document.getElementById('hud-berry-angle').innerText = `${data.berryAngle.toFixed(2)}°`;
+      document.getElementById('hud-berry-angle').style.color = data.color;
+      document.getElementById('hud-berry-bar').style.width = `${Math.min(data.berryAngle * 2.5, 100)}%`;
+      document.getElementById('hud-berry-bar').style.backgroundColor = data.color;
+      document.getElementById('hud-fidelity').innerText = `${(data.fidelity * 100).toFixed(1)}%`;
+      document.getElementById('hud-fatigue').innerText = data.fatigue.toFixed(4);
+      document.getElementById('hud-fatigue').style.color = data.color;
+      document.getElementById('hud-distance').innerText = `${data.distance.toFixed(2)} rad`;
+
+      // Status
+      document.getElementById('status-indicator').style.backgroundColor = data.color;
+      document.getElementById('status-category').innerText = data.category;
+      document.getElementById('status-category').style.color = data.color;
+      document.getElementById('status-desc').innerText = data.desc;
+
+      // Matriz
+      document.getElementById('matrix-row-1').innerText = `[ ${data.matrix[0][0] >= 0 ? '+' : ''}${data.matrix[0][0].toFixed(4)} , ${data.matrix[0][1] >= 0 ? '+' : ''}${data.matrix[0][1].toFixed(4)} ]`;
+      document.getElementById('matrix-row-2').innerText = `[ ${data.matrix[1][0] >= 0 ? '+' : ''}${data.matrix[1][0].toFixed(4)} , ${data.matrix[1][1] >= 0 ? '+' : ''}${data.matrix[1][1].toFixed(4)} ]`;
+      document.getElementById('mat-trace').innerText = (data.matrix[0][0] + data.matrix[1][1]).toFixed(4);
+
+      // Actualizar Biofeedback si está activo
+      if (isAudioActive && oscNode) {
+        const freqMod = 432.0 + data.fatigue * 14.0;
+        oscNode.frequency.setTargetAtTime(freqMod, audioCtx.currentTime, 0.1);
+      }
+    }
+
+    function setScenario(scenKey) {
+      currentScenario = scenKey;
+      ['suave', 'estandar', 'disruptivo'].forEach(k => {
+        const btn = document.getElementById(`btn-${k}`);
+        if (k === scenKey) {
+          btn.classList.add('border-[#00FF87]', 'bg-[#00FF87]/10', 'text-white');
+          btn.classList.remove('border-gray-700', 'bg-gray-800/80');
+        } else {
+          btn.classList.remove('border-[#00FF87]', 'bg-[#00FF87]/10', 'text-white');
+          btn.classList.add('border-gray-700', 'bg-gray-800/80');
+        }
+      });
+      updateSceneFromData(SCENARIOS[scenKey]);
+    }
+
+    // Slider de Intensidad de Debate Dinámico
+    document.getElementById('slider-intensity').addEventListener('input', (e) => {
+      debateIntensity = parseFloat(e.target.value);
+      document.getElementById('lbl-intensity').innerText = debateIntensity.toFixed(2);
+      
+      // Interpolación dinámica
+      const base = SCENARIOS[currentScenario];
+      const factor = debateIntensity / 0.35;
+      const dynData = {
+        ...base,
+        berryAngle: Math.min(base.berryAngle * factor, 89.0),
+        fatigue: base.fatigue * factor,
+        distance: base.distance * Math.sqrt(factor)
+      };
+      updateSceneFromData(dynData);
+    });
+
+    // Biofeedback Acústico 432 Hz
+    document.getElementById('btn-audio-toggle').addEventListener('click', () => {
+      if (!isAudioActive) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        oscNode = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
+
+        oscNode.type = 'sine';
+        oscNode.frequency.setValueAtTime(432.0 + SCENARIOS[currentScenario].fatigue * 14.0, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+
+        oscNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscNode.start();
+
+        isAudioActive = true;
+        document.getElementById('audio-state').innerText = 'ON';
+        document.getElementById('audio-state').className = 'text-[#00FF87] font-bold';
+      } else {
+        if (oscNode) oscNode.stop();
+        if (audioCtx) audioCtx.close();
+        isAudioActive = false;
+        document.getElementById('audio-state').innerText = 'OFF';
+        document.getElementById('audio-state').className = 'text-gray-500 font-bold';
+      }
+    });
+
+    function onWindowResize() {
+      const container = document.getElementById('three-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      // Rotación suave del cono y cinta para sensación espacial
+      scene.rotation.y += 0.002;
+      renderer.render(scene, camera);
+    }
+
+    // Arrancar la escena al cargar la página
+    window.addEventListener('DOMContentLoaded', initThree);
+  </script>
+
+</body>
+</html>

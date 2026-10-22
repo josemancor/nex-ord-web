@@ -699,10 +699,258 @@
   // Exportar helper para actualización forzada
   window.updateNexordNavLanguage = applyNavTranslations;
 
-  // Inicializar al cargar el DOM
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectPersistentNav);
-  } else {
+  // =========================================================================
+  // UNIVERSAL FULLSCREEN ENGINE PARA EJERCICIOS PROPUESTOS (CANON NEXORD)
+  // Permite abrir cualquier .canonical-exercise-box en Pantalla Completa
+  // =========================================================================
+  let activeExerciseBox = null;
+  let activeExercisePlaceholder = null;
+
+  function getOrCreateExerciseModal() {
+    let modal = document.getElementById('universal-exercise-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'universal-exercise-modal';
+    modal.className = 'universal-exercise-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Ejercicio Propuesto en Pantalla Completa');
+
+    modal.innerHTML = `
+      <div class="universal-exercise-modal-backdrop"></div>
+      <div class="universal-exercise-modal-shell">
+        <div class="universal-exercise-modal-header">
+          <div class="universal-exercise-modal-brand">
+            <span class="uem-logo">VISORD / NEXORD</span>
+            <span class="uem-sep">·</span>
+            <span class="uem-title">EJERCICIO PROPUESTO · PANTALLA COMPLETA</span>
+          </div>
+          <div class="universal-exercise-modal-actions">
+            <button type="button" class="btn-uem-close" title="Cerrar pantalla completa (Esc)" aria-label="Cerrar">
+              <span>✕</span> <span class="uem-close-text">Cerrar (Esc)</span>
+            </button>
+          </div>
+        </div>
+        <div class="universal-exercise-modal-body"></div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const btnClose = modal.querySelector('.btn-uem-close');
+    const backdrop = modal.querySelector('.universal-exercise-modal-backdrop');
+    if (btnClose) btnClose.addEventListener('click', closeExerciseFullscreen);
+    if (backdrop) backdrop.addEventListener('click', closeExerciseFullscreen);
+
+    return modal;
+  }
+
+  function openExerciseFullscreen(box) {
+    if (!box) return;
+    const modal = getOrCreateExerciseModal();
+    const body = modal.querySelector('.universal-exercise-modal-body');
+    if (!body) return;
+
+    if (activeExerciseBox && activeExercisePlaceholder) {
+      closeExerciseFullscreen();
+    }
+
+    activeExerciseBox = box;
+    activeExercisePlaceholder = document.createElement('div');
+    activeExercisePlaceholder.className = 'exercise-box-placeholder';
+    activeExercisePlaceholder.style.display = 'none';
+    box.parentNode.insertBefore(activeExercisePlaceholder, box);
+
+    // Guardar tooltip previo y retirarlo durante la vista ampliada
+    box.dataset.prevTitle = box.getAttribute('title') || '';
+    box.removeAttribute('title');
+
+    box.classList.add('is-exercise-fullscreen');
+    body.innerHTML = '';
+    body.appendChild(box);
+
+    // Personalizar el título de la cabecera del modal según el ejercicio activo
+    const titleEl = box.querySelector('[id*="exercise-title"], [class*="exercise-title"]');
+    const uemTitle = modal.querySelector('.uem-title');
+    if (uemTitle) {
+      if (titleEl && titleEl.textContent.trim()) {
+        uemTitle.textContent = titleEl.textContent.trim().replace(/^[«"']+|[»"']+$/g, '') + ' · PANTALLA COMPLETA';
+      } else {
+        uemTitle.textContent = 'EJERCICIO PROPUESTO · PANTALLA COMPLETA';
+      }
+    }
+
+    modal.classList.add('active');
+    document.body.classList.add('exercise-modal-open');
+  }
+
+  function closeExerciseFullscreen() {
+    if (!activeExerciseBox || !activeExercisePlaceholder) {
+      const modal = document.getElementById('universal-exercise-modal');
+      if (modal) modal.classList.remove('active');
+      document.body.classList.remove('exercise-modal-open');
+      return;
+    }
+
+    const modal = document.getElementById('universal-exercise-modal');
+    activeExerciseBox.classList.remove('is-exercise-fullscreen');
+
+    // Restaurar título/tooltip de apertura al volver a la vista normal
+    if (activeExerciseBox.dataset.prevTitle !== undefined) {
+      if (activeExerciseBox.dataset.prevTitle) {
+        activeExerciseBox.setAttribute('title', activeExerciseBox.dataset.prevTitle);
+      } else {
+        activeExerciseBox.setAttribute('title', 'Haz clic en el cuadro para abrir en Pantalla Completa');
+      }
+      delete activeExerciseBox.dataset.prevTitle;
+    }
+
+    if (activeExercisePlaceholder.parentNode) {
+      activeExercisePlaceholder.parentNode.insertBefore(activeExerciseBox, activeExercisePlaceholder);
+      activeExercisePlaceholder.remove();
+    }
+
+    activeExerciseBox = null;
+    activeExercisePlaceholder = null;
+
+    if (modal) modal.classList.remove('active');
+    document.body.classList.remove('exercise-modal-open');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('universal-exercise-modal');
+      if (modal && modal.classList.contains('active')) {
+        closeExerciseFullscreen();
+      }
+    }
+  });
+
+  window.openExerciseFullscreen = openExerciseFullscreen;
+  window.closeExerciseFullscreen = closeExerciseFullscreen;
+
+  // Delegación de eventos global: pulsar el botón O pulsar en cualquier punto del cuadro de ejercicio abre pantalla completa
+  document.addEventListener('click', (e) => {
+    // 1. Botón explícito de maximizar/pantalla completa
+    const fsBtn = e.target.closest('.btn-exercise-fullscreen');
+    if (fsBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const box = fsBtn.closest('.canonical-exercise-box, [id^="exercise-box-"], [id*="exercise-box"], [id*="exercise"]');
+      if (box && !box.classList.contains('is-exercise-fullscreen')) {
+        openExerciseFullscreen(box);
+      }
+      return;
+    }
+
+    // 2. Botón de cerrar del modal o su backdrop
+    if (e.target.closest('.btn-uem-close')) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeExerciseFullscreen();
+      return;
+    }
+    if (e.target.classList && e.target.classList.contains('universal-exercise-modal-backdrop')) {
+      e.preventDefault();
+      closeExerciseFullscreen();
+      return;
+    }
+
+    // 3. Pulsar en cualquier punto del cuadro de ejercicio para abrir pantalla completa
+    const box = e.target.closest('.canonical-exercise-box, [id^="exercise-box-"], [id*="exercise-box"]');
+    if (box) {
+      // Si el cuadro ya está desplegado en pantalla completa dentro del modal, permitir interacción normal
+      if (box.classList.contains('is-exercise-fullscreen') || (activeExerciseBox && activeExerciseBox === box)) {
+        return;
+      }
+
+      // Si el clic fue sobre controles interactivos internos, respetar su funcionalidad original sin abrir modal
+      if (e.target.closest('button, select, input, textarea, a, option, .calc-preset-btn, .calc-select, .calc-step-card, [data-prevent-expand]')) {
+        return;
+      }
+
+      // En general, basta con pulsar el cuadro de ejercicio para abrir en pantalla completa
+      e.preventDefault();
+      openExerciseFullscreen(box);
+    }
+  });
+
+  function setupExerciseBoxes() {
+    const boxes = document.querySelectorAll('.canonical-exercise-box, [id^="exercise-box-"], [id*="exercise-box"]');
+    boxes.forEach(box => {
+      if (!box.classList.contains('canonical-exercise-box')) {
+        box.classList.add('canonical-exercise-box');
+      }
+
+      if (!box.classList.contains('is-exercise-fullscreen')) {
+        box.style.cursor = 'pointer';
+        if (!box.hasAttribute('title') || box.getAttribute('title').trim() === '') {
+          box.setAttribute('title', 'Haz clic en este cuadro para abrir en Pantalla Completa');
+        }
+      }
+
+      if (box.querySelector('.btn-exercise-fullscreen')) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-exercise-fullscreen';
+      btn.title = 'Abrir este Ejercicio Propuesto en Pantalla Completa (Maximizar)';
+      btn.setAttribute('aria-label', 'Maximizar Ejercicio Propuesto');
+      btn.innerHTML = '<span class="btn-fs-icon">⛶</span> <span class="btn-fs-label">Pantalla Completa</span>';
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openExerciseFullscreen(box);
+      });
+
+      // Búsqueda del mejor punto de anclaje en la cabecera del cuadro
+      const headerRow = box.querySelector('.exercise-header-row') ||
+                        box.querySelector('[style*="justify-content:space-between"]') ||
+                        box.querySelector('[style*="justify-content: space-between"]');
+
+      if (headerRow) {
+        // Si la fila tiene un contenedor de acciones a la derecha, añadir allí
+        const rightGroup = headerRow.children.length > 1 ? headerRow.lastElementChild : null;
+        if (rightGroup && (rightGroup.tagName === 'DIV' || rightGroup.tagName === 'SPAN') && rightGroup.children.length > 0) {
+          rightGroup.appendChild(btn);
+        } else {
+          headerRow.appendChild(btn);
+        }
+      } else {
+        const firstRow = box.firstElementChild;
+        if (firstRow) {
+          firstRow.appendChild(btn);
+        } else {
+          box.insertBefore(btn, box.firstChild);
+        }
+      }
+    });
+  }
+
+  window.setupExerciseBoxes = setupExerciseBoxes;
+
+  // Observador de mutaciones del DOM para capturar ejercicios inyectados dinámicamente
+  let observerTimer = null;
+  const domObserver = new MutationObserver(() => {
+    if (observerTimer) clearTimeout(observerTimer);
+    observerTimer = setTimeout(setupExerciseBoxes, 120);
+  });
+
+  // Inicializar al cargar el DOM y activar observador
+  function initExerciseEngine() {
     injectPersistentNav();
+    setupExerciseBoxes();
+    if (document.body) {
+      domObserver.observe(document.body, { childList: true, subtree: true });
+    }
+    setTimeout(setupExerciseBoxes, 400);
+    setTimeout(setupExerciseBoxes, 1200);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initExerciseEngine);
+  } else {
+    initExerciseEngine();
   }
 })();

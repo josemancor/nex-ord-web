@@ -1271,7 +1271,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             position: absolute;
             top: 68px;
             left: 15px;
-            width: 320px;
+            width: 345px;
             max-height: calc(100vh - 165px);
             background: rgba(11, 19, 43, 0.92);
             border: 1.5px solid rgba(0, 255, 135, 0.35);
@@ -1286,7 +1286,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         }
         .master-dock.collapsed {
-            transform: translateX(-360px);
+            transform: translateX(-380px);
             opacity: 0;
             pointer-events: none;
         }
@@ -2829,6 +2829,46 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             <button id="btn-sound-toggle" onclick="NEXORD_AudioEngine.toggle()" class="btn-dock-icon" title="Activar/Silenciar Audio Procedural">🔊</button>
             <button id="btn-collapse-dock" onclick="toggleMasterDock()" class="btn-dock-icon" title="Ocultar/Mostrar Dock">◀</button>
         </div>
+    </div>
+
+    <!-- CUADRO CON LAS INSTRUCCIONES DEL EJERCICIO PROPUESTO (VISORD DEMO · PARTE SUPERIOR IZQUIERDA) -->
+    <div id="exercise-box-visord-demo" class="canonical-exercise-box" style="background: rgba(7, 12, 27, 0.95); border: 1.5px solid rgba(0, 255, 135, 0.45); border-radius: 8px; padding: 7px 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.5); text-align: left; margin: 4px 6px 8px 6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; border-bottom:1px solid rgba(0,255,135,0.25); padding-bottom:3px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="background:rgba(0,255,135,0.15); color:#00FF87; border:1px solid #00FF87; padding:1px 5px; border-radius:3px; font-family:'Roboto Mono',monospace; font-size:0.72rem; font-weight:900;" id="exercise-tag-visord-demo">
+            EJERCICIO PROPUESTO
+          </span>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:800; color:#FFFFFF;" id="exercise-title-visord-demo">
+            «VISORD Demo: Simulación Socio-Termodinámica 3D/4D»
+          </span>
+        </div>
+        <span style="font-size:0.65rem; color:#38BDF8; font-family:'Roboto Mono',monospace; font-weight:700;" id="exercise-scope-visord-demo">
+          N &lt; 51
+        </span>
+      </div>
+
+      <div style="font-size:0.71rem; color:#94A3B8; margin-bottom:4px; line-height:1.28; font-style:italic;" id="exercise-context-visord-demo">
+        Simulador 3D/4D de dinámica grupal continua: moduladores de entropía, transiciones de fase (Sólido/Líquido/Gas) y telemetría BDR/SDR.
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:2px; font-size:0.72rem; line-height:1.32; color:#E2E8F0;" id="exercise-steps-visord-demo">
+        <div id="step1-wrap-visord-demo">
+          <strong style="color:#00FF87; font-family:'Roboto Mono',monospace;">Paso 1 (Calibrar Grupo y Ritmo):</strong>
+          <span> Ajusta el tamaño de grupo N y el deslizador de Ritmo de Mutación para observar la fluidez vincular.</span>
+        </div>
+        <div id="step2-wrap-visord-demo">
+          <strong style="color:#38BDF8; font-family:'Roboto Mono',monospace;">Paso 2 (Transiciones de Fase):</strong>
+          <span> Observa en el HUD superior la transición de fase (SDR, Inercia de Desgaste) y los enlaces activos (+ / 0 / -).</span>
+        </div>
+        <div id="step3-wrap-visord-demo">
+          <strong style="color:#FFE600; font-family:'Roboto Mono',monospace;">Paso 3 (Moviola y Laplaciano):</strong>
+          <span> Activa ▶️ PLAY en la Moviola y abre el análisis espectral (λ₂ Fiedler, Tr(W³)/6) para diagnosticar cohesión.</span>
+        </div>
+      </div>
+
+      <div style="margin-top:4px; padding-top:2px; border-top:1px dashed rgba(255,255,255,0.12); display:flex; justify-content:space-between; align-items:center; font-family:'Roboto Mono',monospace; font-size:0.68rem; color:#CBD5E1;" id="exercise-telemetry-visord-demo">
+        <strong>Modo:</strong> <span style="color:#00FF87;">Dinámica 3D Continua</span> | <strong>Moviola:</strong> <span style="color:#FFE600;">Telemetría Activa</span>
+      </div>
     </div>
 
     <!-- Dock Navigation Tabs -->
@@ -4905,6 +4945,10 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     let selectedPrismaIndex = 5; // Default PRISMA 6 (Factual)
     let selectedPrismaCategory = null;
 
+    // Estado Global de la Bandeja Sordina
+    var isSordinaOpen = false;
+    var activeSordinaTab = 'matriz';
+
     // =========================================================================
     // MOTOR MATEMÁTICO ESPECTRAL & TOPOLÓGICO 2026 (VISORD CANÓNICO)
     // =========================================================================
@@ -6695,8 +6739,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
             updateTableSelection();
             updateMiniMatrix();
-            if (isSordinaOpen && typeof renderSordinaContent === 'function') {
-                renderSordinaContent(activeSordinaTab);
+            if (typeof isSordinaOpen !== 'undefined' && isSordinaOpen && typeof renderSordinaContent === 'function') {
+                renderSordinaContent(typeof activeSordinaTab !== 'undefined' ? activeSordinaTab : 'matriz');
             }
         } catch (err) {
             let d = document.getElementById('debug-log');
@@ -14504,8 +14548,7 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
     // =========================================================================
     // SORDINA DRAWER (BANDEJA TÉCNICA INFERIOR)
     // =========================================================================
-    let isSordinaOpen = false;
-    let activeSordinaTab = 'matriz';
+    // isSordinaOpen y activeSordinaTab declaradas globalmente
     function toggleSordina() {
         const drawer = document.getElementById('sordina-drawer');
         if (!drawer) return;
