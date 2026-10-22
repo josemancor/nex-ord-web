@@ -461,7 +461,12 @@
 
   // Función constructora del HTML de navegación
   function injectPersistentNav() {
-    const hasCanonicalHud = !!document.getElementById('top-floating-hud') || !!document.querySelector('.top-floating-hud');
+    const hasCanonicalHud = !!document.getElementById('top-floating-hud') || 
+                            !!document.querySelector('.top-floating-hud') || 
+                            !!document.querySelector('.top-header') || 
+                            !!document.querySelector('header.top-header') ||
+                            !!document.querySelector('.master-hud') || 
+                            !!document.querySelector('.recursos-top-bar');
     const isDialOrbital = filename.includes('dial_orbital');
     const isPromoHome = filename.includes('index_promocional') || filename === 'index.html' || filename === '';
 
