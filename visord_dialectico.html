@@ -2688,7 +2688,7 @@
           <span id="scrubberLabel" style="font-size:7.5px; color:#00FF87; font-family:var(--font-mono); font-weight:700;">01/18</span>
           <button class="tele-btn-sub" id="btnSpeedTele" onclick="toggleSpeed(this)">1.0x</button>
           <button class="tele-btn-sub active" id="btnSfxTele" onclick="toggleSFX()">🔊 SFX</button>
-          <button class="tele-btn-sub active" id="btnVoiceTele" onclick="toggleVoice()" style="border:1.5px solid #00FF87; color:#FFF; background:rgba(0,255,135,0.2);"><span id="ledVoice" style="width:7px; height:7px; border-radius:50%; background:#00FF87; box-shadow:0 0 8px #00FF87; display:inline-block; margin-right:4px;"></span>🎙️ VOZ</button>
+          <button class="tele-btn-sub" id="btnVoiceTele" onclick="toggleVoice()" style="border:1.5px solid #64748B; color:#94A3B8; background:rgba(255,255,255,0.06);"><span id="ledVoice" style="width:7px; height:7px; border-radius:50%; background:#EF4444; box-shadow:0 0 4px #EF4444; display:inline-block; margin-right:4px;"></span>🎙️ VOZ</button>
         </div>
       </div>
     </div>
@@ -3287,7 +3287,7 @@
     let playInterval = null;
     let playbackSpeed = 1.0;
     let sfxEnabled = true;
-    let voiceEnabled = true;
+    let voiceEnabled = false;
 
     // Disposición y UI
     let layoutMode = 'split'; 
@@ -5623,6 +5623,9 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         clearInterval(playInterval);
         playInterval = null;
       }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
       updatePlayControls(false);
     }
 
@@ -5682,12 +5685,19 @@ Centro -> 1: El tribunal admite las dos periciales y suspende la vista para deli
         teleVoice.classList.toggle('active', voiceEnabled);
         teleVoice.style.background = voiceEnabled ? 'rgba(0,255,135,0.2)' : 'rgba(255,255,255,0.06)';
         teleVoice.style.borderColor = voiceEnabled ? '#00FF87' : '#64748B';
+        teleVoice.style.color = voiceEnabled ? '#FFF' : '#94A3B8';
       }
       if (led) {
         led.style.background = voiceEnabled ? '#00FF87' : '#EF4444';
         led.style.boxShadow = voiceEnabled ? '0 0 8px #00FF87' : '0 0 4px #EF4444';
       }
-      if (voiceEnabled) speakText("Voz activada.");
+      if (voiceEnabled) {
+        speakText("Voz activada.");
+      } else {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
     }
 
     // Teclado: Espacio = Play/Pausa, Flechas = Turnos, Tecla T = Contabilidad en 2º plano

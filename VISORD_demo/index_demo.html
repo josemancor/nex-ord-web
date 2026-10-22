@@ -2602,7 +2602,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             #top-dashboard a[href="index_omni.html"],
             #main-title a[href="../index.html"],
             #main-title > div > div:nth-child(2),
-            #btn-demo-audio-top,
             .floating-ecg {
                 display: none !important;
             }
@@ -2660,9 +2659,14 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
 
             #btn-demo-audio-top {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 padding: 3px 6px !important;
-                font-size: 10px !important;
+                font-size: 11px !important;
                 pointer-events: auto !important;
+                z-index: 100002 !important;
+                cursor: pointer !important;
             }
 
             #demo-top-audio-text {
@@ -6401,6 +6405,11 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 
     function togglePlay() {
         isPlaying = !isPlaying;
+        if (!isPlaying && ('speechSynthesis' in window) && window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            isVisordDemoAudioPlaying = false;
+            syncVisordDemoAudioUI(false);
+        }
         const btn = document.getElementById('btn-play');
         btn.innerHTML = isPlaying ? '<span id="led-btn-play" style="width:8px; height:8px; border-radius:50%; background:#00FF87; box-shadow:0 0 8px #00FF87; display:inline-block; margin-right:4px;"></span>⏸️ PAUSA' : '<span id="led-btn-play" style="width:8px; height:8px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444; display:inline-block; margin-right:4px;"></span>▶️ PLAY';
         const masterLed = document.getElementById('led-demo-master');
@@ -16464,7 +16473,7 @@ window.toggleVisordDemoAudio = function() {
         return;
     }
 
-    if (isVisordDemoAudioPlaying) {
+    if (isVisordDemoAudioPlaying || window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         isVisordDemoAudioPlaying = false;
         window._visordDemoUtterance = null;
@@ -16521,65 +16530,14 @@ window.addEventListener('beforeunload', () => {
 });
 
 // =========================================================================
-// INICIO AUTOMÁTICO DEL AUDIO AL ABRIR VISORD_DEMO
+// GESTIÓN ESTRICTA Y MANUAL DE AUDIO (SILENCIO ABSOLUTO SALVO PETICIÓN EXPLÍCITA)
 // =========================================================================
+// El audio NO se inicia automáticamente bajo ningún concepto.
+// El usuario dispone de control total y parada inmediata en el botón de audio o botón maestro.
 let hasAutoplayStarted = false;
-
 function startVisordDemoAudioAuto() {
-    if (hasAutoplayStarted || isVisordDemoAudioPlaying) return;
-    hasAutoplayStarted = true;
-
-    try {
-        if ('speechSynthesis' in window && window.speechSynthesis.paused) {
-            window.speechSynthesis.resume();
-        }
-        if (typeof toggleVisordDemoAudio === 'function') {
-            toggleVisordDemoAudio();
-        }
-    } catch(e) {
-        console.warn("Autoplay de audio diferido por política del navegador:", e);
-    }
+    // Intencionadamente deshabilitado para respetar el silencio y control de usuario
 }
-
-// 1. Intentar inicio automático al cargar la página (con retardo para que carguen voces y escena 3D)
-window.addEventListener('load', () => {
-    setTimeout(startVisordDemoAudioAuto, 800);
-});
-
-// En caso de que el documento ya esté completamente cargado
-if (document.readyState === 'complete') {
-    setTimeout(startVisordDemoAudioAuto, 600);
-}
-
-// Si onvoiceschanged se ejecuta después del load, asegurar el inicio
-if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    const existingVoicesChanged = window.speechSynthesis.onvoiceschanged;
-    window.speechSynthesis.onvoiceschanged = () => {
-        if (typeof existingVoicesChanged === 'function') existingVoicesChanged();
-        if (!hasAutoplayStarted && !isVisordDemoAudioPlaying) {
-            setTimeout(startVisordDemoAudioAuto, 400);
-        }
-    };
-}
-
-// 2. Respaldo por política estricta de Autoplay de navegadores (Chrome/Safari/Firefox/iOS):
-// Si el navegador bloquea la reproducción sin interacción previa en el documento,
-// el primer gesto de usuario (clic, toque, scroll, tecla) iniciará inmediatamente la locución.
-const triggerAudioOnFirstInteraction = () => {
-    if (!hasAutoplayStarted && !isVisordDemoAudioPlaying) {
-        startVisordDemoAudioAuto();
-    }
-    window.removeEventListener('pointerdown', triggerAudioOnFirstInteraction);
-    window.removeEventListener('click', triggerAudioOnFirstInteraction);
-    window.removeEventListener('touchstart', triggerAudioOnFirstInteraction);
-    window.removeEventListener('keydown', triggerAudioOnFirstInteraction);
-    window.removeEventListener('scroll', triggerAudioOnFirstInteraction);
-};
-window.addEventListener('pointerdown', triggerAudioOnFirstInteraction, { passive: true, once: true });
-window.addEventListener('click', triggerAudioOnFirstInteraction, { passive: true, once: true });
-window.addEventListener('touchstart', triggerAudioOnFirstInteraction, { passive: true, once: true });
-window.addEventListener('keydown', triggerAudioOnFirstInteraction, { passive: true, once: true });
-window.addEventListener('scroll', triggerAudioOnFirstInteraction, { passive: true, once: true });
 
 </script>
 <!-- MODAL OFICIAL DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->

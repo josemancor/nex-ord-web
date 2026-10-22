@@ -868,54 +868,54 @@
 
     // 3. ANATOMÍA DE LOS VÍNCULOS GRUPALES
     try {
-      const bTag = document.querySelector('.bonds-anatomy-section .section-tag');
+      const bTag = document.querySelector('#vinculos-insight .bonds-tag, .bonds-anatomy-section .section-tag');
       if (bTag && dict.bonds_tag) bTag.textContent = dict.bonds_tag;
-      const bTitle = document.querySelector('.bonds-anatomy-section .section-title');
+      const bTitle = document.querySelector('#vinculos-insight .bonds-title, .bonds-anatomy-section .section-title');
       if (bTitle && dict.bonds_title) bTitle.textContent = dict.bonds_title;
-      const bSub = document.querySelector('.bonds-anatomy-section .section-subtitle');
+      const bSub = document.querySelector('#vinculos-insight .bonds-subtitle, .bonds-anatomy-section .section-subtitle');
       if (bSub && dict.bonds_subtitle) bSub.textContent = dict.bonds_subtitle;
 
-      const bondCards = document.querySelectorAll('.bond-card');
-      if (bondCards && bondCards.length >= 3) {
-        safeText(bondCards[0].querySelector('.bond-card-badge'), dict.bond_c1_badge);
-        safeText(bondCards[0].querySelector('.bond-card-title'), dict.bond_c1_title);
-        safeHTML(bondCards[0].querySelector('.bond-card-text'), dict.bond_c1_text);
-        safeText(bondCards[0].querySelector('.bond-metric-label'), dict.bond_c1_metric_label);
-        safeText(bondCards[0].querySelector('.bond-metric-value'), dict.bond_c1_metric_val);
-
-        safeText(bondCards[1].querySelector('.bond-card-badge'), dict.bond_c2_badge);
-        safeText(bondCards[1].querySelector('.bond-card-title'), dict.bond_c2_title);
-        safeHTML(bondCards[1].querySelector('.bond-card-text'), dict.bond_c2_text);
-        safeText(bondCards[1].querySelector('.bond-metric-label'), dict.bond_c2_metric_label);
-        safeText(bondCards[1].querySelector('.bond-metric-value'), dict.bond_c2_metric_val);
-
-        safeText(bondCards[2].querySelector('.bond-card-badge'), dict.bond_c3_badge);
-        safeText(bondCards[2].querySelector('.bond-card-title'), dict.bond_c3_title);
-        safeHTML(bondCards[2].querySelector('.bond-card-text'), dict.bond_c3_text);
-        safeText(bondCards[2].querySelector('.bond-metric-label'), dict.bond_c3_metric_label);
-        safeText(bondCards[2].querySelector('.bond-metric-value'), dict.bond_c3_metric_val);
+      const cardAttr = document.querySelector('.bond-insight-card.card-attraction');
+      if (cardAttr) {
+        safeText(cardAttr.querySelector('.bond-card-badge'), dict.bond_c1_badge);
+        safeText(cardAttr.querySelector('.bond-card-title'), dict.bond_c1_title);
+        safeHTML(cardAttr.querySelector('.bond-card-text'), dict.bond_c1_text);
+        safeText(cardAttr.querySelector('.metric-label'), dict.bond_c1_metric_label);
+        safeText(cardAttr.querySelector('.metric-val'), dict.bond_c1_metric_val);
+      }
+      const cardRej = document.querySelector('.bond-insight-card.card-rejection');
+      if (cardRej) {
+        safeText(cardRej.querySelector('.bond-card-badge'), dict.bond_c2_badge);
+        safeText(cardRej.querySelector('.bond-card-title'), dict.bond_c2_title);
+        safeHTML(cardRej.querySelector('.bond-card-text'), dict.bond_c2_text);
+        safeText(cardRej.querySelector('.metric-label'), dict.bond_c2_metric_label);
+        safeText(cardRej.querySelector('.metric-val'), dict.bond_c2_metric_val);
+      }
+      const cardOst = document.querySelector('.bond-insight-card.card-ostracism');
+      if (cardOst) {
+        safeText(cardOst.querySelector('.bond-card-badge'), dict.bond_c3_badge);
+        safeText(cardOst.querySelector('.bond-card-title'), dict.bond_c3_title);
+        safeHTML(cardOst.querySelector('.bond-card-text'), dict.bond_c3_text);
+        safeText(cardOst.querySelector('.metric-label'), dict.bond_c3_metric_label);
+        safeText(cardOst.querySelector('.metric-val'), dict.bond_c3_metric_val);
       }
     } catch (e) {}
 
     // 4. MÉTRICAS RÁPIDAS HERO
     try {
-      const statCards = document.querySelectorAll('.hero-stats-band .stat-card');
+      const statCards = document.querySelectorAll('.hero-stats-grid .stat-card, .hero-stats-band .stat-card');
       if (statCards && statCards.length >= 4) {
         safeText(statCards[0].querySelector('.stat-number'), dict.hero_stat_1_val);
-        safeText(statCards[0].querySelector('.stat-label'), dict.hero_stat_1_lbl);
-        safeText(statCards[0].querySelector('.stat-sub'), dict.hero_stat_1_sub);
+        safeText(statCards[0].querySelector('.stat-desc'), dict.hero_stat_1_desc);
 
         safeText(statCards[1].querySelector('.stat-number'), dict.hero_stat_2_val);
-        safeText(statCards[1].querySelector('.stat-label'), dict.hero_stat_2_lbl);
-        safeText(statCards[1].querySelector('.stat-sub'), dict.hero_stat_2_sub);
+        safeText(statCards[1].querySelector('.stat-desc'), dict.hero_stat_2_desc);
 
         safeText(statCards[2].querySelector('.stat-number'), dict.hero_stat_3_val);
-        safeText(statCards[2].querySelector('.stat-label'), dict.hero_stat_3_lbl);
-        safeText(statCards[2].querySelector('.stat-sub'), dict.hero_stat_3_sub);
+        safeText(statCards[2].querySelector('.stat-desc'), dict.hero_stat_3_desc);
 
         safeText(statCards[3].querySelector('.stat-number'), dict.hero_stat_4_val);
-        safeText(statCards[3].querySelector('.stat-label'), dict.hero_stat_4_lbl);
-        safeText(statCards[3].querySelector('.stat-sub'), dict.hero_stat_4_sub);
+        safeText(statCards[3].querySelector('.stat-desc'), dict.hero_stat_4_desc);
       }
     } catch (e) {}
 
@@ -927,6 +927,32 @@
       if (dTitle && dict.pain_title) dTitle.textContent = dict.pain_title;
       const dSub = document.querySelector('#dolor .section-subtitle');
       if (dSub && dict.pain_subtitle) dSub.textContent = dict.pain_subtitle;
+
+      const cardTrad = document.querySelector('.comparison-card.traditional');
+      if (cardTrad) {
+        safeText(cardTrad.querySelector('.card-badge'), dict.pain_trad_badge);
+        safeText(cardTrad.querySelector('.card-heading'), dict.pain_trad_heading);
+        const tradItems = cardTrad.querySelectorAll('.feature-item div');
+        if (tradItems.length >= 4) {
+          safeHTML(tradItems[0], dict.pain_trad_item1);
+          safeHTML(tradItems[1], dict.pain_trad_item2);
+          safeHTML(tradItems[2], dict.pain_trad_item3);
+          safeHTML(tradItems[3], dict.pain_trad_item4);
+        }
+      }
+
+      const cardNex = document.querySelector('.comparison-card.nexord');
+      if (cardNex) {
+        safeText(cardNex.querySelector('.card-badge'), dict.pain_nex_badge);
+        safeText(cardNex.querySelector('.card-heading'), dict.pain_nex_heading);
+        const nexItems = cardNex.querySelectorAll('.feature-item div');
+        if (nexItems.length >= 4) {
+          safeHTML(nexItems[0], dict.pain_nex_item1);
+          safeHTML(nexItems[1], dict.pain_nex_item2);
+          safeHTML(nexItems[2], dict.pain_nex_item3);
+          safeHTML(nexItems[3], dict.pain_nex_item4);
+        }
+      }
     } catch (e) {}
 
     // 6. SECCIÓN 2: SHOWROOM INTERACTIVO (#showroom)
@@ -937,6 +963,29 @@
       if (sTitle && dict.show_title) sTitle.textContent = dict.show_title;
       const sSub = document.querySelector('#showroom .section-subtitle');
       if (sSub && dict.show_subtitle) sSub.textContent = dict.show_subtitle;
+
+      const jewelCards = document.querySelectorAll('#showroom .jewel-card');
+      if (jewelCards.length >= 4) {
+        safeText(jewelCards[0].querySelector('.jewel-title'), dict.jewel_1_title);
+        safeText(jewelCards[0].querySelector('.jewel-subtitle'), dict.jewel_1_subtitle);
+        safeHTML(jewelCards[0].querySelector('.jewel-desc'), dict.jewel_1_desc);
+        safeText(jewelCards[0].querySelector('.btn-jewel'), dict.jewel_1_btn);
+
+        safeText(jewelCards[1].querySelector('.jewel-title'), dict.jewel_2_title);
+        safeText(jewelCards[1].querySelector('.jewel-subtitle'), dict.jewel_2_subtitle);
+        safeHTML(jewelCards[1].querySelector('.jewel-desc'), dict.jewel_2_desc);
+        safeText(jewelCards[1].querySelector('.btn-jewel'), dict.jewel_2_btn);
+
+        safeText(jewelCards[2].querySelector('.jewel-title'), dict.jewel_3_title);
+        safeText(jewelCards[2].querySelector('.jewel-subtitle'), dict.jewel_3_subtitle);
+        safeHTML(jewelCards[2].querySelector('.jewel-desc'), dict.jewel_3_desc);
+        safeText(jewelCards[2].querySelector('.btn-jewel'), dict.jewel_3_btn);
+
+        safeText(jewelCards[3].querySelector('.jewel-title'), dict.jewel_4_title);
+        safeText(jewelCards[3].querySelector('.jewel-subtitle'), dict.jewel_4_subtitle);
+        safeHTML(jewelCards[3].querySelector('.jewel-desc'), dict.jewel_4_desc);
+        safeText(jewelCards[3].querySelector('.btn-jewel'), dict.jewel_4_btn);
+      }
     } catch (e) {}
 
     // 7. SECCIÓN 3: SOLUCIONES SECTORIALES (#soluciones)
@@ -947,6 +996,39 @@
       if (solTitle && dict.sol_title) solTitle.textContent = dict.sol_title;
       const solSub = document.querySelector('#soluciones .section-subtitle');
       if (solSub && dict.sol_subtitle) solSub.textContent = dict.sol_subtitle;
+
+      const sectorCards = document.querySelectorAll('#soluciones .sector-card');
+      if (sectorCards.length >= 3) {
+        safeText(sectorCards[0].querySelector('.sector-name'), dict.sol_s1_title);
+        safeHTML(sectorCards[0].querySelector('.sector-problem'), dict.sol_s1_prob);
+        safeHTML(sectorCards[0].querySelector('.sector-solution'), dict.sol_s1_sol);
+        const b1 = sectorCards[0].querySelectorAll('.sector-bullets li');
+        if (b1.length >= 3) {
+          safeText(b1[0], dict.sol_s1_b1);
+          safeText(b1[1], dict.sol_s1_b2);
+          safeText(b1[2], dict.sol_s1_b3);
+        }
+
+        safeText(sectorCards[1].querySelector('.sector-name'), dict.sol_s2_title);
+        safeHTML(sectorCards[1].querySelector('.sector-problem'), dict.sol_s2_prob);
+        safeHTML(sectorCards[1].querySelector('.sector-solution'), dict.sol_s2_sol);
+        const b2 = sectorCards[1].querySelectorAll('.sector-bullets li');
+        if (b2.length >= 3) {
+          safeText(b2[0], dict.sol_s2_b1);
+          safeText(b2[1], dict.sol_s2_b2);
+          safeText(b2[2], dict.sol_s2_b3);
+        }
+
+        safeText(sectorCards[2].querySelector('.sector-name'), dict.sol_s3_title);
+        safeHTML(sectorCards[2].querySelector('.sector-problem'), dict.sol_s3_prob);
+        safeHTML(sectorCards[2].querySelector('.sector-solution'), dict.sol_s3_sol);
+        const b3 = sectorCards[2].querySelectorAll('.sector-bullets li');
+        if (b3.length >= 3) {
+          safeText(b3[0], dict.sol_s3_b1);
+          safeText(b3[1], dict.sol_s3_b2);
+          safeText(b3[2], dict.sol_s3_b3);
+        }
+      }
     } catch (e) {}
 
     // 8. SECCIÓN 4: CÓMO FUNCIONA (#como-funciona)
@@ -957,6 +1039,18 @@
       if (fTitle && dict.flow_title) fTitle.textContent = dict.flow_title;
       const fSub = document.querySelector('#como-funciona .section-subtitle');
       if (fSub && dict.flow_subtitle) fSub.textContent = dict.flow_subtitle;
+
+      const stepCards = document.querySelectorAll('#como-funciona .step-card');
+      if (stepCards.length >= 3) {
+        safeText(stepCards[0].querySelector('.step-title'), dict.flow_s1_title);
+        safeText(stepCards[0].querySelector('.step-desc'), dict.flow_s1_desc);
+
+        safeText(stepCards[1].querySelector('.step-title'), dict.flow_s2_title);
+        safeText(stepCards[1].querySelector('.step-desc'), dict.flow_s2_desc);
+
+        safeText(stepCards[2].querySelector('.step-title'), dict.flow_s3_title);
+        safeText(stepCards[2].querySelector('.step-desc'), dict.flow_s3_desc);
+      }
     } catch (e) {}
 
     // 9. SECCIÓN 5: GARANTÍA ÉTICA (#etica)
@@ -967,6 +1061,16 @@
       if (eTitle && dict.ethics_title) eTitle.textContent = dict.ethics_title;
       const eSub = document.querySelector('#etica .section-subtitle');
       if (eSub && dict.ethics_subtitle) eSub.textContent = dict.ethics_subtitle;
+
+      const eHead = document.querySelector('#etica .ethics-heading');
+      if (eHead && dict.ethics_heading) eHead.innerHTML = dict.ethics_heading;
+      const eTexts = document.querySelectorAll('#etica .ethics-text');
+      if (eTexts.length >= 2) {
+        safeHTML(eTexts[0], dict.ethics_text_1);
+        safeHTML(eTexts[1], dict.ethics_text_2);
+      }
+      const eCta = document.querySelector('#etica .ethics-cta a');
+      if (eCta && dict.ethics_btn) eCta.textContent = dict.ethics_btn;
     } catch (e) {}
 
     // 10. SECCIÓN 6: BÓVEDA CIENTÍFICA (#boveda)
@@ -977,6 +1081,27 @@
       if (bTitle && dict.vault_title) bTitle.textContent = dict.vault_title;
       const bSub = document.querySelector('#boveda .section-subtitle');
       if (bSub && dict.vault_subtitle) bSub.textContent = dict.vault_subtitle;
+
+      const vaultCards = document.querySelectorAll('#boveda .vault-card');
+      if (vaultCards.length >= 8) {
+        const vMap = [
+          { t: dict.v_l1_title, d: dict.v_l1_desc, a: dict.v_l1_btn },
+          { t: dict.v_l2_title, d: dict.v_l2_desc, a: dict.v_l2_btn },
+          { t: dict.v_l3_title, d: dict.v_l3_desc, a: dict.v_l3_btn },
+          { t: dict.v_l4_title, d: dict.v_l4_desc, a: dict.v_l4_btn },
+          { t: dict.v_l5_title, d: dict.v_l5_desc, a: dict.v_l5_btn },
+          { t: dict.v_l6_title, d: dict.v_l6_desc, a: dict.v_l6_btn },
+          { t: dict.v_l7_title, d: dict.v_l7_desc, a: dict.v_l7_btn },
+          { t: dict.v_glo_title, d: dict.v_glo_desc, a: dict.v_glo_btn }
+        ];
+        vaultCards.forEach((vc, idx) => {
+          if (vMap[idx]) {
+            safeText(vc.querySelector('.vault-card-title'), vMap[idx].t);
+            safeText(vc.querySelector('.vault-card-desc'), vMap[idx].d);
+            safeText(vc.querySelector('.vault-card-arrow'), vMap[idx].a);
+          }
+        });
+      }
     } catch (e) {}
 
     // 11. SECCIÓN 7: CUSTODIA INSTITUCIONAL (#custodia)
@@ -987,6 +1112,100 @@
       if (cTitle && dict.cust_title) cTitle.textContent = dict.cust_title;
       const cSub = document.querySelector('#custodia .section-subtitle');
       if (cSub && dict.cust_subtitle) cSub.textContent = dict.cust_subtitle;
+
+      // Banner marco oficial
+      const mBanner = document.getElementById('custodia-marco-banner');
+      if (mBanner) {
+        safeText(mBanner.querySelector('h3'), dict.cust_banner_title);
+        safeText(mBanner.querySelector('p'), dict.cust_banner_desc);
+        safeText(mBanner.querySelector('a span:last-child'), dict.cust_banner_btn);
+      }
+
+      // Qué es NEXORD
+      const qBlock = document.getElementById('que-es-nexord-block');
+      if (qBlock) {
+        safeText(qBlock.querySelector('h3'), dict.what_title);
+        const qPs = qBlock.querySelectorAll('p');
+        if (qPs.length >= 3) {
+          safeHTML(qPs[0], dict.what_p1);
+          safeHTML(qPs[1], dict.what_p2);
+          safeHTML(qPs[2], dict.what_p3);
+        }
+      }
+
+      // Díptico: Ofrece
+      const ofBlock = document.getElementById('custodia-diptico-ofrece');
+      if (ofBlock) {
+        safeText(ofBlock.querySelector('h3'), dict.offer_title);
+        safeText(ofBlock.querySelector('p'), dict.offer_lead);
+        const ofLis = ofBlock.querySelectorAll('ul li div');
+        if (ofLis.length >= 5) {
+          safeHTML(ofLis[0], dict.offer_i1);
+          safeHTML(ofLis[1], dict.offer_i2);
+          safeHTML(ofLis[2], dict.offer_i3);
+          safeHTML(ofLis[3], dict.offer_i4);
+          safeHTML(ofLis[4], dict.offer_i5);
+        }
+        const ofNote = ofBlock.querySelector('div[style*="dashed"]');
+        if (ofNote && dict.offer_note) ofNote.textContent = dict.offer_note;
+      }
+
+      // Díptico: Pide
+      const reqBlock = document.getElementById('custodia-diptico-pide');
+      if (reqBlock) {
+        safeText(reqBlock.querySelector('h3'), dict.req_title);
+        safeText(reqBlock.querySelector('p'), dict.req_lead);
+        const reqLis = reqBlock.querySelectorAll('ul li div');
+        if (reqLis.length >= 4) {
+          safeHTML(reqLis[0], dict.req_i1);
+          safeHTML(reqLis[1], dict.req_i2);
+          safeHTML(reqLis[2], dict.req_i3);
+          safeHTML(reqLis[3], dict.req_i4);
+        }
+        const reqNote = reqBlock.querySelector('div[style*="dashed"]');
+        if (reqNote && dict.req_note) reqNote.textContent = dict.req_note;
+      }
+
+      // Garantías existentes
+      const garBlock = document.getElementById('custodia-garantias-block');
+      if (garBlock) {
+        safeText(garBlock.querySelector('h3'), dict.guard_title);
+        const gCards = garBlock.querySelectorAll('div[style*="padding: 16px"]');
+        if (gCards.length >= 5) {
+          safeText(gCards[0].children[0], dict.guard_b1_title);
+          safeText(gCards[0].children[1], dict.guard_b1_desc);
+
+          safeText(gCards[1].children[0], dict.guard_b2_title);
+          safeText(gCards[1].children[1], dict.guard_b2_desc);
+
+          safeHTML(gCards[2].children[0], dict.guard_b3_title);
+          safeHTML(gCards[2].children[1], dict.guard_b3_desc);
+
+          safeText(gCards[3].children[0], dict.guard_b4_title);
+          safeText(gCards[3].children[1], dict.guard_b4_desc);
+
+          safeText(gCards[4].children[0], dict.guard_b5_title);
+          safeText(gCards[4].children[1], dict.guard_b5_desc);
+        }
+      }
+
+      // Formulario y contacto
+      const cWrap = document.getElementById('custodia-contact-wrap');
+      if (cWrap) {
+        const cTagF = cWrap.querySelector('div[style*="color: var(--neon-green)"]');
+        if (cTagF && dict.contact_tag) cTagF.textContent = dict.contact_tag;
+        const cTitleF = cWrap.querySelector('h3');
+        if (cTitleF && dict.contact_title) cTitleF.textContent = dict.contact_title;
+        const cSubF = cWrap.querySelector('p');
+        if (cSubF && dict.contact_subtitle) cSubF.textContent = dict.contact_subtitle;
+      }
+
+      const btnPdf = document.querySelector('#custodia-contact-form a.btn-secondary');
+      if (btnPdf && dict.form_btn_pdf) btnPdf.textContent = dict.form_btn_pdf;
+      const btnCopyDraft = document.querySelector('#custodia-contact-form button[type="button"]');
+      if (btnCopyDraft && dict.form_btn_copy) btnCopyDraft.textContent = dict.form_btn_copy;
+      const btnSubmitProposal = document.querySelector('#custodia-contact-form button[type="submit"]');
+      if (btnSubmitProposal && dict.form_btn_send) btnSubmitProposal.textContent = dict.form_btn_send;
     } catch (e) {}
 
     // 12. FOOTER

@@ -359,23 +359,18 @@ function initHeroVideo() {
     if (btnPlay) btnPlay.classList.remove('playing');
   });
 
-  // Autoplay seguro: si el navegador lo permite con audio, perfecto; si exige silencio (como en movil), se silencia limpiamente
+  // Autoplay seguro y respetuoso: el video arranca siempre en silencio por defecto
   function startAutoplaySafe() {
-    vid.muted = false;
-    try { vid.volume = 1.0; } catch (e) {}
+    vid.muted = true;
+    vid.defaultMuted = true;
+    try { vid.volume = 0; } catch (e) {}
     const p = vid.play();
     if (p !== undefined) {
       p.then(() => {
-        updateLocalAudioUI(false);
-      }).catch(() => {
-        // En dispositivos moviles la politica de autoplay exige iniciar en silencio
-        vid.muted = true;
-        vid.defaultMuted = true;
-        try { vid.volume = 0; } catch (e) {}
-        vid.play().catch(() => {});
         updateLocalAudioUI(true);
-      });
+      }).catch(() => {});
     }
+    updateLocalAudioUI(true);
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
