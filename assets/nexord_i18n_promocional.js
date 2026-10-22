@@ -769,10 +769,6 @@
     const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
     if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
 
-    const overlayAudioText = document.getElementById('overlay-audio-text');
-    if (overlayAudioText) overlayAudioText.textContent = (lang === 'en') ? 'TAP TO ACTIVATE VISORD 3D AUDIO' : 'PULSA PARA ACTIVAR AUDIO VISORD 3D';
-    const overlayBtn = document.getElementById('hero-audio-overlay-btn');
-    if (overlayBtn) overlayBtn.setAttribute('title', (lang === 'en') ? 'Tap to activate audio' : 'Pulsa para activar audio');
     const statusPillText = document.getElementById('lbl-status-pill');
     if (statusPillText) statusPillText.textContent = (lang === 'en') ? 'VISORD 3D · AUDIO ACTIVE' : 'VISORD 3D · AUDIO ACTIVADO';
 

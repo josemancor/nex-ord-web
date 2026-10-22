@@ -390,7 +390,7 @@ function initHeroVideo() {
   // Pulsar sobre el video activa el audio si está silenciado o conmuta Play / Pausa
   if (playerWrap) {
     playerWrap.addEventListener('click', (e) => {
-      if (e.target.closest('.video-ctrl-btn') || e.target.closest('#hero-audio-overlay-btn')) {
+      if (e.target.closest('.video-ctrl-btn')) {
         return;
       }
       if (vid.muted) {
