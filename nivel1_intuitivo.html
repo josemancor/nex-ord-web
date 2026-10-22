@@ -6904,6 +6904,14 @@
        PANTALLA [A]: PORTADA DE INICIO GENERAL · PLATAFORMA NEXORD
        ========================================================================= -->
   <!-- MANDO UNIVERSAL MINIMALISTA (FILA INDIA ABAJO A LA DERECHA) -->
+    <!-- FLECHAS LATERALES FLOTANTES (PANTALLA ANTERIOR / SIGUIENTE) -->
+  <button type="button" class="floating-side-arrow arrow-left" id="floating-arrow-left" onclick="hudNavigatePrev()" title="Pantalla anterior [◀]" aria-label="Pantalla anterior">
+    <span class="arrow-glyph" aria-hidden="true">‹</span>
+  </button>
+  <button type="button" class="floating-side-arrow arrow-right" id="floating-arrow-right" onclick="hudNavigateNext()" title="Pantalla siguiente [▶]" aria-label="Pantalla siguiente">
+    <span class="arrow-glyph" aria-hidden="true">›</span>
+  </button>
+
   <nav class="universal-nav-pod" aria-label="Mando Universal NEXORD">
     <a href="index.html" class="nav-pod-btn nav-pod-home" title="Inicio (Portada Principal)" aria-label="Inicio: Portada Principal">
       <span aria-hidden="true">🏠</span>
@@ -18726,59 +18734,113 @@
     }
 
     function setupFastMobileTouch() {
-      // 1. Enlaces del índice de carátula
-      document.querySelectorAll('.transit-part-row').forEach(row => {
-        let startX = 0, startY = 0, startTime = 0;
-        row.addEventListener('touchstart', (e) => {
-          if (e.touches && e.touches.length === 1) {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            startTime = performance.now();
-          }
-        }, { passive: true });
-        row.addEventListener('touchend', (e) => {
-          if (e.changedTouches && e.changedTouches.length === 1) {
-            const dx = Math.abs(e.changedTouches[0].clientX - startX);
-            const dy = Math.abs(e.changedTouches[0].clientY - startY);
-            const dt = performance.now() - startTime;
-            if (dx < 14 && dy < 14 && dt < 450) {
-              e.preventDefault();
-              const href = row.getAttribute('href');
-              const targetId = href ? href.replace('#', '') : null;
-              if (targetId && typeof scrollToScreen === 'function') {
-                scrollToScreen(targetId);
-              }
+    // 1. Enlaces del índice de carátula
+    document.querySelectorAll('.transit-part-row').forEach(row => {
+      let startX = 0, startY = 0, startTime = 0;
+      row.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          startTime = performance.now();
+        }
+      }, { passive: true });
+      row.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          const dx = Math.abs(e.changedTouches[0].clientX - startX);
+          const dy = Math.abs(e.changedTouches[0].clientY - startY);
+          const dt = performance.now() - startTime;
+          if (dx < 14 && dy < 14 && dt < 450) {
+            e.preventDefault();
+            const href = row.getAttribute('href');
+            const targetId = href ? href.replace('#', '') : null;
+            if (targetId && typeof scrollToScreen === 'function') {
+              scrollToScreen(targetId);
             }
           }
-        }, { passive: false });
-      });
+        }
+      }, { passive: false });
+    });
 
-      // 2. Botones de letras en cabecera HUD
-      document.querySelectorAll('.hud-letter-btn').forEach(btn => {
-        let startX = 0, startY = 0, startTime = 0;
-        btn.addEventListener('touchstart', (e) => {
-          if (e.touches && e.touches.length === 1) {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            startTime = performance.now();
-          }
-        }, { passive: true });
-        btn.addEventListener('touchend', (e) => {
-          if (e.changedTouches && e.changedTouches.length === 1) {
-            const dx = Math.abs(e.changedTouches[0].clientX - startX);
-            const dy = Math.abs(e.changedTouches[0].clientY - startY);
-            const dt = performance.now() - startTime;
-            if (dx < 14 && dy < 14 && dt < 450) {
-              e.preventDefault();
-              const scr = btn.getAttribute('data-screen');
-              if (scr && typeof scrollToScreen === 'function') {
-                scrollToScreen(scr);
-              }
+    // 2. Botones de letras en cabecera HUD
+    document.querySelectorAll('.hud-letter-btn').forEach(btn => {
+      let startX = 0, startY = 0, startTime = 0;
+      btn.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          startTime = performance.now();
+        }
+      }, { passive: true });
+      btn.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          const dx = Math.abs(e.changedTouches[0].clientX - startX);
+          const dy = Math.abs(e.changedTouches[0].clientY - startY);
+          const dt = performance.now() - startTime;
+          if (dx < 14 && dy < 14 && dt < 450) {
+            e.preventDefault();
+            const scr = btn.getAttribute('data-screen');
+            if (scr && typeof scrollToScreen === 'function') {
+              scrollToScreen(scr);
             }
           }
-        }, { passive: false });
-      });
-    }
+        }
+      }, { passive: false });
+    });
+
+    // 3. Flechas de navegación HUD (prev / next)
+    document.querySelectorAll('.hud-arrow-btn').forEach(btn => {
+      let startX = 0, startY = 0, startTime = 0;
+      btn.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          startTime = performance.now();
+        }
+      }, { passive: true });
+      btn.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          const dx = Math.abs(e.changedTouches[0].clientX - startX);
+          const dy = Math.abs(e.changedTouches[0].clientY - startY);
+          const dt = performance.now() - startTime;
+          if (dx < 14 && dy < 14 && dt < 450) {
+            e.preventDefault();
+            if (btn.id === 'hud-arrow-prev' && typeof hudNavigatePrev === 'function') {
+              hudNavigatePrev();
+            } else if (btn.id === 'hud-arrow-next' && typeof hudNavigateNext === 'function') {
+              hudNavigateNext();
+            }
+          }
+        }
+      }, { passive: false });
+    });
+
+    // 4. Flechas laterales flotantes de pantalla completa (floating-side-arrow)
+    document.querySelectorAll('.floating-side-arrow').forEach(btn => {
+      let startX = 0, startY = 0, startTime = 0;
+      btn.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          startTime = performance.now();
+        }
+      }, { passive: true });
+      btn.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          const dx = Math.abs(e.changedTouches[0].clientX - startX);
+          const dy = Math.abs(e.changedTouches[0].clientY - startY);
+          const dt = performance.now() - startTime;
+          if (dx < 14 && dy < 14 && dt < 450) {
+            e.preventDefault();
+            if (btn.classList.contains('arrow-left') && typeof hudNavigatePrev === 'function') {
+              hudNavigatePrev();
+            } else if (btn.classList.contains('arrow-right') && typeof hudNavigateNext === 'function') {
+              hudNavigateNext();
+            }
+          }
+        }
+      }, { passive: false });
+    });
+  }
 
     // -------------------------------------------------------------------------
     // 6. INICIALIZACIÓN GLOBAL
@@ -19900,7 +19962,30 @@
           nextBtn.title = (currentIdx === (HUD_CONFIG.screens.length - 1)) ? 'Nivel siguiente' : ('Pantalla siguiente (' + HUD_CONFIG.screens[currentIdx + 1].letter + ')');
         }
       }
-    }
+    
+      // Sincronizar flechas laterales flotantes (floating-side-arrow)
+      const floatLeft = document.getElementById('floating-arrow-left');
+      const floatRight = document.getElementById('floating-arrow-right');
+      if (floatLeft) {
+        if (typeof HUD_CONFIG !== 'undefined' && HUD_CONFIG.levelNum === 1 && currentIdx <= 0) {
+          floatLeft.style.opacity = '0.2';
+          floatLeft.style.pointerEvents = 'none';
+        } else {
+          floatLeft.style.opacity = '1';
+          floatLeft.style.pointerEvents = 'all';
+        }
+      }
+      if (floatRight) {
+        if (typeof HUD_CONFIG !== 'undefined' && HUD_CONFIG.levelNum === 7 && currentIdx >= (HUD_CONFIG.screens.length - 1)) {
+          floatRight.style.opacity = '0.2';
+          floatRight.style.pointerEvents = 'none';
+        } else {
+          floatRight.style.opacity = '1';
+          floatRight.style.pointerEvents = 'all';
+        }
+      }
+
+  }
 
     function scrollToScreen(screenId) {
       if (typeof window.scrollToScreen === 'function') {
