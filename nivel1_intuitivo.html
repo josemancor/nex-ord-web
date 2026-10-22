@@ -4254,6 +4254,24 @@
       color: #FFE600 !important;
       box-shadow: 0 0 10px rgba(255, 230, 0, 0.3) !important;
     }
+    /* PESTAÑAS MÓVILES EXCLUSIVAS PARA MATRICES ORBIT */
+    .orbit-mobile-table-tabs {
+      display: none;
+    }
+    .orbit-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94A3B8;
+      cursor: pointer;
+      font-family: 'Roboto Mono', monospace;
+      transition: all 0.2s ease;
+    }
+    .orbit-tab-btn.active {
+      background: rgba(56, 189, 248, 0.22);
+      color: #FFFFFF;
+      border-color: #38BDF8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+    }
     @media (max-width: 980px) {
       .orbit-screen-model-layout {
         flex-direction: column !important;
@@ -4263,9 +4281,34 @@
         max-width: 100% !important;
         min-width: 0 !important;
       }
+    }
+    @media (max-width: 768px) {
+      .orbit-mobile-table-tabs {
+        display: block !important;
+      }
       .orbit-table-card {
+        display: none !important;
         flex: 1 1 100% !important;
         max-width: 100% !important;
+        width: 100% !important;
+      }
+      .orbit-table-card.active-mobile-tab {
+        display: flex !important;
+      }
+      .breve-table th, .breve-table td {
+        padding: 6px 3px !important;
+        font-size: 0.80rem !important;
+      }
+    }
+    @media (min-width: 769px) {
+      .orbit-mobile-table-tabs {
+        display: none !important;
+      }
+      .orbit-table-card {
+        display: flex !important;
+      }
+      .mobile-switch-btn {
+        display: none !important;
       }
     }
 
@@ -15942,6 +15985,7 @@
 
       let currentDs = options.defaultDataset || window.BREVE_WORKBENCH_STATE.currentDs || 'N8';
       let currentMode = options.defaultMode || window.BREVE_WORKBENCH_STATE.currentMode || 'ordinal';
+      let currentMobileTab = 'A';
       let activeState = null;
       let isLocked = false;
 
@@ -16145,10 +16189,23 @@
                   <span style="font-size:0.95rem;">👆</span>
                   <span>MESA INTERACTIVA ACTIVA: Haz clic o sobrevuela cualquier celda para explorar su correspondencia biunívoca en vivo</span>
                 </div>
+
+                <!-- SELECTOR DE PESTAÑAS MÓVILES (VISIBLE SOLO EN MÓVIL <= 768px) -->
+                <div class="orbit-mobile-table-tabs" id="${containerId}-mobile-tabs">
+                  <div style="display:flex; width:100%; background:rgba(15,23,42,0.92); border:1.5px solid rgba(56,189,248,0.45); border-radius:10px; padding:3px; gap:4px; box-sizing:border-box;">
+                    <button type="button" class="orbit-tab-btn ${currentMobileTab === 'A' ? 'active' : ''}" id="${containerId}-tab-a" style="flex:1; padding:7px 6px; border-radius:7px; font-weight:900; font-size:0.76rem; text-align:center;">
+                      📋 Matriz A (Rankings)
+                    </button>
+                    <button type="button" class="orbit-tab-btn ${currentMobileTab === 'B' ? 'active' : ''}" id="${containerId}-tab-b" style="flex:1; padding:7px 6px; border-radius:7px; font-weight:900; font-size:0.76rem; text-align:center;">
+                      ⊞ Matriz B (Distribución)
+                    </button>
+                  </div>
+                </div>
+
                 <div class="orbit-tables-wrap">
                   
                   <!-- TABLA 1: MATRIZ A(i, orden) · ORBIT -->
-                  <div class="orbit-table-card">
+                  <div class="orbit-table-card ${currentMobileTab === 'A' ? 'active-mobile-tab' : ''}" id="${containerId}-card-table-a">
                     <table class="breve-table" style="width:100%; border:2px solid #000000;">
                       <thead>
                         <tr>
@@ -16206,7 +16263,7 @@
                   </div>
 
                   <!-- TABLA 2: MATRIZ B(i, j) · DISTRIBUCIÓN DEL ORDEN -->
-                  <div class="orbit-table-card">
+                  <div class="orbit-table-card ${currentMobileTab === 'B' ? 'active-mobile-tab' : ''}" id="${containerId}-card-table-b">
                     <table class="breve-table" style="width:100%; border:2px solid #000000;">
                       <thead>
                         <tr>
@@ -16432,6 +16489,32 @@
           isLocked = false;
           renderDOM();
         };
+
+        // Eventos de Pestañas Móviles (Matriz A / Matriz B)
+        const tabA = document.getElementById(`${containerId}-tab-a`);
+        const tabB = document.getElementById(`${containerId}-tab-b`);
+        const cardA = document.getElementById(`${containerId}-card-table-a`);
+        const cardB = document.getElementById(`${containerId}-card-table-b`);
+
+        function setMobileTab(tab) {
+          currentMobileTab = tab;
+          if (tabA && tabB && cardA && cardB) {
+            if (tab === 'A') {
+              tabA.classList.add('active');
+              tabB.classList.remove('active');
+              cardA.classList.add('active-mobile-tab');
+              cardB.classList.remove('active-mobile-tab');
+            } else {
+              tabB.classList.add('active');
+              tabA.classList.remove('active');
+              cardB.classList.add('active-mobile-tab');
+              cardA.classList.remove('active-mobile-tab');
+            }
+          }
+        }
+
+        if (tabA) tabA.onclick = () => setMobileTab('A');
+        if (tabB) tabB.onclick = () => setMobileTab('B');
 
         const btnOrd = document.getElementById(`${containerId}-btn-mode-ord`);
         const btnSmib = document.getElementById(`${containerId}-btn-mode-smib`);
