@@ -447,6 +447,37 @@
       }
 
       /* En pantallas muy estrechas, simplificar aún más la cabecera */
+      .mobile-portal-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        position: fixed;
+        top: 56px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(11, 19, 43, 0.90);
+        border: 1px solid rgba(56, 189, 248, 0.45);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #E2E8F0;
+        z-index: 28;
+        pointer-events: none;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        max-width: 90vw;
+      }
+      .mobile-portal-badge .badge-dot {
+        color: var(--neon-green);
+        font-size: 0.65rem;
+      }
+
       .mobile-tap-hint {
         display: flex;
         align-items: center;
@@ -549,16 +580,41 @@
     </div>
   </header>
 
+  <!-- BADGE IDENTIFICATIVO EN SMARTPHONES -->
+  <div class="mobile-portal-badge" id="mobile-portal-badge" onclick="goToInstitutional(event)">
+    <span class="badge-dot">●</span> <span id="mobile-badge-text">Hacia una Física de lo Grupal</span>
+  </div>
+
   <script>
     let hasNavigated = false;
 
+    function showLangToast(msg) {
+      let toast = document.getElementById('idx-lang-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'idx-lang-toast';
+        toast.style.cssText = 'position:fixed; top:96px; left:50%; transform:translateX(-50%); background:rgba(4,7,16,0.95); border:1.5px solid #00FF87; color:#FFFFFF; font-family:"Roboto Mono",monospace; font-size:0.82rem; font-weight:800; padding:8px 18px; border-radius:24px; z-index:999999; box-shadow:0 0 24px rgba(0,255,135,0.45); pointer-events:none; transition:opacity 0.25s ease; opacity:0; text-align:center; white-space:nowrap;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.opacity = '1';
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 2000);
+    }
+
     let lastIdxLangTap = 0;
     function onLangSelect(lang, ev) {
-      if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
+      if (ev) {
+        if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
+        if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
+      }
       const now = Date.now();
-      if (now - lastIdxLangTap < 350) return;
+      if (now - lastIdxLangTap < 200) return;
       lastIdxLangTap = now;
       setLanguage(lang);
+      showLangToast(lang === 'en' ? '🌐 Language: English (International)' : '🌐 Idioma: Español');
     }
 
     /* ============================================================
@@ -668,6 +724,9 @@
 
       const brandBox = document.querySelector('.brand-box');
       if (brandBox) brandBox.setAttribute('title', dict.brand_title);
+
+      const badgeText = document.getElementById('mobile-badge-text');
+      if (badgeText) badgeText.textContent = dict.subtitle;
 
       const tapEl = document.querySelector('#mobile-tap-hint span');
       if (tapEl) tapEl.textContent = dict.tap_hint;

@@ -868,11 +868,11 @@
 
     // 3. ANATOMÍA DE LOS VÍNCULOS GRUPALES
     try {
-      const bTag = document.querySelector('#vinculos-insight .bonds-tag, .bonds-anatomy-section .section-tag');
+      const bTag = document.querySelector('#vinculos-insight .section-tag, #vinculos-insight .bonds-tag, .bonds-anatomy-section .section-tag');
       if (bTag && dict.bonds_tag) bTag.textContent = dict.bonds_tag;
-      const bTitle = document.querySelector('#vinculos-insight .bonds-title, .bonds-anatomy-section .section-title');
+      const bTitle = document.querySelector('#vinculos-insight .bonds-strip-title, #vinculos-insight .bonds-title, .bonds-anatomy-section .section-title');
       if (bTitle && dict.bonds_title) bTitle.textContent = dict.bonds_title;
-      const bSub = document.querySelector('#vinculos-insight .bonds-subtitle, .bonds-anatomy-section .section-subtitle');
+      const bSub = document.querySelector('#vinculos-insight .bonds-strip-subtitle, #vinculos-insight .bonds-subtitle, .bonds-anatomy-section .section-subtitle');
       if (bSub && dict.bonds_subtitle) bSub.textContent = dict.bonds_subtitle;
 
       const cardAttr = document.querySelector('.bond-insight-card.card-attraction');
@@ -1208,7 +1208,19 @@
       if (btnSubmitProposal && dict.form_btn_send) btnSubmitProposal.textContent = dict.form_btn_send;
     } catch (e) {}
 
-    // 12. FOOTER
+    // 12. CALL TO ACTION FINAL (.cta-banner)
+    try {
+      const ctaTitle = document.querySelector('.cta-banner .cta-title');
+      if (ctaTitle && dict.cta_title) ctaTitle.textContent = dict.cta_title;
+      const ctaSub = document.querySelector('.cta-banner .cta-subtitle');
+      if (ctaSub && dict.cta_subtitle) ctaSub.textContent = dict.cta_subtitle;
+      const ctaBtnDemos = document.querySelector('.cta-banner a[href="#showroom"]');
+      if (ctaBtnDemos && dict.cta_btn_demos) ctaBtnDemos.textContent = dict.cta_btn_demos;
+      const ctaBtnCust = document.querySelector('.cta-banner a[href="#custodia"]');
+      if (ctaBtnCust && dict.cta_btn_custody) ctaBtnCust.textContent = dict.cta_btn_custody;
+    } catch (e) {}
+
+    // 13. FOOTER
     try {
       const fLinks = document.querySelectorAll('.footer-links a');
       if (fLinks && fLinks.length >= 8) {
@@ -1220,10 +1232,46 @@
         safeText(fLinks[5], dict.foot_dialectico);
         safeText(fLinks[6], dict.foot_retorno);
         safeText(fLinks[7], dict.foot_glosario);
+        if (fLinks.length >= 9) safeText(fLinks[8], dict.foot_dial);
+      }
+      const fBtnBibtex = document.querySelector('.btn-bibtex-trigger');
+      if (fBtnBibtex && dict.foot_cite_btn) fBtnBibtex.innerHTML = '<span class="bibtex-icon">📑</span> ' + dict.foot_cite_btn;
+
+      const fPs = document.querySelectorAll('.footer p');
+      if (fPs && fPs.length >= 3) {
+        if (dict.foot_platform_lead) safeHTML(fPs[0], dict.foot_platform_lead);
+        if (dict.foot_open_science) safeText(fPs[1], dict.foot_open_science);
+        if (dict.foot_lang_future) safeText(fPs[2], dict.foot_lang_future);
+      }
+
+      // Zenodo banner
+      const zenHeading = document.querySelector('.zenodo-permanent-doi-section div[style*="text-transform: uppercase"]');
+      if (zenHeading) {
+        zenHeading.textContent = (lang === 'en')
+          ? 'Official Scientific Record • Permanent CERN Zenodo Repository'
+          : 'Registro Científico Oficial • Repositorio Permanente CERN Zenodo';
+      }
+      const zenLicense = document.querySelector('.zenodo-permanent-doi-section p');
+      if (zenLicense) {
+        zenLicense.textContent = (lang === 'en')
+          ? 'NEXORD / VISORD Engine • Open License Creative Commons Attribution 4.0 International (CC-BY-4.0)'
+          : 'NEXORD / VISORD Engine • Licencia Abierta Creative Commons Atribución 4.0 Internacional (CC-BY-4.0)';
+      }
+
+      // Vertical Nav Band Tooltips
+      const vnavTips = document.querySelectorAll('.vnav-dot .vnav-dot-tooltip');
+      if (vnavTips && vnavTips.length >= 7) {
+        safeText(vnavTips[0], dict.vnav_tip_inicio);
+        safeText(vnavTips[1], dict.vnav_tip_dolor);
+        safeText(vnavTips[2], dict.vnav_tip_showroom);
+        safeText(vnavTips[3], dict.vnav_tip_soluciones);
+        safeText(vnavTips[4], dict.vnav_tip_etica);
+        safeText(vnavTips[5], dict.vnav_tip_boveda);
+        safeText(vnavTips[6], dict.vnav_tip_custodia);
       }
     } catch (e) {}
 
-    // 13. MODAL DE CITACIÓN
+    // 14. MODAL DE CITACIÓN
     try {
       const mTitle = document.querySelector('#modal-bibtex h3');
       if (mTitle && dict.modal_title) mTitle.innerHTML = '<span>📑</span> ' + dict.modal_title;
