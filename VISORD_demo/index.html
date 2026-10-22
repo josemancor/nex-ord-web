@@ -2538,6 +2538,145 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
         }
         .pedagogical-title { color: #00F5D4; font-size: 0.84rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .pedagogical-body { font-size: 0.78rem; color: #CBD5E1; line-height: 1.5; }
+
+        /* =========================================================================
+           ADAPTACIÓN MÓVIL CANÓNICA VISORD DEMO (CANON REGLA 19)
+           ========================================================================= */
+        @media (max-width: 768px) {
+            body {
+                overflow: hidden !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+            }
+
+            #3d-graph {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                z-index: 1 !important;
+            }
+
+            #3d-graph canvas {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                touch-action: none !important;
+            }
+
+            /* Dashboard Superior Flotante Minimalista */
+            #top-dashboard {
+                top: 36px !important;
+                left: 0 !important;
+                width: 100% !important;
+                padding: 4px 8px !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 4px !important;
+                box-sizing: border-box !important;
+                pointer-events: none !important;
+                z-index: 50 !important;
+            }
+
+            /* Ocultar tarjetas colosales de escritorio que tapan el lienzo 3D */
+            #top-dashboard > div:first-child,
+            #top-dashboard > div:last-child,
+            #lang-flags,
+            #banner-auto-formacion,
+            #top-dashboard [data-i18n="subtitle"],
+            #top-dashboard a[href="index_omni.html"],
+            .floating-ecg {
+                display: none !important;
+            }
+
+            #main-title {
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            #main-title > div:first-child {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                gap: 4px !important;
+            }
+
+            #main-title a[href="../index.html"] {
+                padding: 3px 6px !important;
+                font-size: 10px !important;
+                pointer-events: auto !important;
+            }
+
+            #main-title div[style*="font-size: 22px"] {
+                font-size: 13px !important;
+                letter-spacing: 1px !important;
+            }
+
+            #btn-master-action-demo {
+                padding: 3px 8px !important;
+                font-size: 10px !important;
+                pointer-events: auto !important;
+                margin-left: 0 !important;
+            }
+
+            #btn-demo-audio-top {
+                padding: 3px 6px !important;
+                font-size: 10px !important;
+                pointer-events: auto !important;
+            }
+
+            #demo-top-audio-text {
+                display: none !important;
+            }
+
+            /* Panel Inferior Flotante Compacto */
+            #bottom-panel {
+                bottom: 8px !important;
+                left: 50% !important;
+                transform: translateX(-50%) scale(0.88) !important;
+                transform-origin: bottom center !important;
+                padding: 6px 10px !important;
+                gap: 8px !important;
+                max-width: 98vw !important;
+                z-index: 100 !important;
+            }
+
+            /* Master Dock plegado por defecto en móvil para dejar el canvas 3D 100% visible */
+            #master-dock {
+                transform: translateX(-380px) !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                top: 72px !important;
+                max-width: 92vw !important;
+                z-index: 500 !important;
+            }
+            #master-dock:not(.collapsed) {
+                transform: translateX(0) !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+            #btn-dock-reopen {
+                display: flex !important;
+                top: 76px !important;
+                left: 8px !important;
+                font-size: 11px !important;
+                padding: 4px 8px !important;
+                z-index: 120 !important;
+                border-radius: 20px !important;
+            }
+
+            /* Paneles laterales ocultos en móvil para no invadir el canvas */
+            .side-panel {
+                display: none !important;
+            }
+        }
     </style>
 
 <script>
@@ -4874,6 +5013,16 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     // Initialize language on load
     document.addEventListener('DOMContentLoaded', () => {
         setLanguage(currentLang);
+        if (window.innerWidth <= 768) {
+            const dock = document.getElementById('master-dock');
+            const btnReopen = document.getElementById('btn-dock-reopen');
+            if (dock && !dock.classList.contains('collapsed')) {
+                dock.classList.add('collapsed');
+            }
+            if (btnReopen) {
+                btnReopen.style.display = 'flex';
+            }
+        }
         // toggleFormacionGuiada(); // Start manually by user clicking 'INICIAR DESDE CERO'
     });
 </script>
@@ -4904,10 +5053,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     let activePrismaMode = false;
     let selectedPrismaIndex = 5; // Default PRISMA 6 (Factual)
     let selectedPrismaCategory = null;
-
-    // Estado Global de la Bandeja Sordina
-    var isSordinaOpen = false;
-    var activeSordinaTab = 'matriz';
 
     // =========================================================================
     // MOTOR MATEMÁTICO ESPECTRAL & TOPOLÓGICO 2026 (VISORD CANÓNICO)
@@ -6699,8 +6844,8 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
             }
             updateTableSelection();
             updateMiniMatrix();
-            if (typeof isSordinaOpen !== 'undefined' && isSordinaOpen && typeof renderSordinaContent === 'function') {
-                renderSordinaContent(typeof activeSordinaTab !== 'undefined' ? activeSordinaTab : 'matriz');
+            if (isSordinaOpen && typeof renderSordinaContent === 'function') {
+                renderSordinaContent(activeSordinaTab);
             }
         } catch (err) {
             let d = document.getElementById('debug-log');
@@ -14508,7 +14653,8 @@ Frecuencia enlaces: ${cnt}">${cellText}</td>`;
     // =========================================================================
     // SORDINA DRAWER (BANDEJA TÉCNICA INFERIOR)
     // =========================================================================
-    // isSordinaOpen y activeSordinaTab declaradas globalmente
+    let isSordinaOpen = false;
+    let activeSordinaTab = 'matriz';
     function toggleSordina() {
         const drawer = document.getElementById('sordina-drawer');
         if (!drawer) return;
