@@ -694,733 +694,325 @@
 
     document.documentElement.lang = lang;
     const dict = PROMO_I18N[lang];
+    if (!dict) return;
+
+    // Helper functions for safe DOM updates without crashing
+    function safeText(el, val) {
+      if (el && val !== undefined) el.textContent = val;
+    }
+    function safeHTML(el, val) {
+      if (el && val !== undefined) el.innerHTML = val;
+    }
+    function safeAttr(el, attr, val) {
+      if (el && val !== undefined) el.setAttribute(attr, val);
+    }
+
+    // 0. ACTUALIZAR DE INMEDIATO LOS BOTONES DE IDIOMA EN LA CABECERA
+    try {
+      const btnEs = document.getElementById('btn-promo-lang-es');
+      const btnEn = document.getElementById('btn-promo-lang-en');
+      if (btnEs) {
+        btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
+        btnEs.style.fontWeight = (lang === 'es') ? '800' : '700';
+        btnEs.classList.toggle('active', lang === 'es');
+        if (dict.btn_lang_es_title) btnEs.setAttribute('title', dict.btn_lang_es_title);
+      }
+      if (btnEn) {
+        btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
+        btnEn.style.fontWeight = (lang === 'en') ? '800' : '700';
+        btnEn.classList.toggle('active', lang === 'en');
+        if (dict.btn_lang_en_title) btnEn.setAttribute('title', dict.btn_lang_en_title);
+      }
+    } catch (e) {
+      console.warn("i18n buttons error:", e);
+    }
 
     // Page title & meta
-    document.title = dict.page_title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', dict.meta_desc);
+    try {
+      if (dict.page_title) document.title = dict.page_title;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.meta_desc) metaDesc.setAttribute('content', dict.meta_desc);
+    } catch (e) {}
 
-    // =========================================================================
     // 1. NAVBAR
-    // =========================================================================
-    const sub = document.querySelector('nav .brand-sub');
-    if (sub) sub.textContent = dict.nav_brand_sub;
+    try {
+      const sub = document.querySelector('nav .brand-sub');
+      if (sub && dict.nav_brand_sub) sub.textContent = dict.nav_brand_sub;
 
-    const navWhy = document.querySelector('nav a[href="#dolor"]');
-    if (navWhy) navWhy.textContent = dict.nav_why;
-    const navShow = document.querySelector('nav a[href="#showroom"]');
-    if (navShow) navShow.textContent = dict.nav_showroom;
-    const navSol = document.querySelector('nav a[href="#soluciones"]');
-    if (navSol) navSol.textContent = dict.nav_solutions;
-    const navEth = document.querySelector('nav a[href="#etica"]');
-    if (navEth) navEth.textContent = dict.nav_ethics;
-    const navDial = document.querySelector('nav a[href="dial_orbital.html"]');
-    if (navDial) navDial.textContent = dict.nav_dial;
-    const navSci = document.querySelector('nav a[href="#boveda"]');
-    if (navSci) navSci.textContent = dict.nav_science;
-    const navCust = document.querySelector('nav a[href="#custodia"]');
-    if (navCust) navCust.textContent = dict.nav_custody;
-    const navCta = document.querySelector('nav .nav-cta');
-    if (navCta) navCta.textContent = dict.nav_cta;
+      const navWhy = document.querySelector('nav a[href="#dolor"]');
+      if (navWhy && dict.nav_why) navWhy.textContent = dict.nav_why;
+      const navShow = document.querySelector('nav a[href="#showroom"]');
+      if (navShow && dict.nav_showroom) navShow.textContent = dict.nav_showroom;
+      const navSol = document.querySelector('nav a[href="#soluciones"]');
+      if (navSol && dict.nav_solutions) navSol.textContent = dict.nav_solutions;
+      const navEth = document.querySelector('nav a[href="#etica"]');
+      if (navEth && dict.nav_ethics) navEth.textContent = dict.nav_ethics;
+      const navDial = document.querySelector('nav a[href="dial_orbital.html"]');
+      if (navDial && dict.nav_dial) navDial.textContent = dict.nav_dial;
+      const navSci = document.querySelector('nav a[href="#boveda"]');
+      if (navSci && dict.nav_science) navSci.textContent = dict.nav_science;
+      const navCust = document.querySelector('nav a[href="#custodia"]');
+      if (navCust && dict.nav_custody) navCust.textContent = dict.nav_custody;
+      const navCta = document.querySelector('nav .nav-cta');
+      if (navCta && dict.nav_cta) navCta.textContent = dict.nav_cta;
 
-    const brandLink = document.querySelector('a.brand');
-    if (brandLink && dict.brand_home_title) brandLink.setAttribute('title', dict.brand_home_title);
+      const brandLink = document.querySelector('a.brand');
+      if (brandLink && dict.brand_home_title) brandLink.setAttribute('title', dict.brand_home_title);
 
-    const navDialBtn = document.querySelector('a.nav-dial-btn');
-    if (navDialBtn && dict.nav_dial_btn_title) navDialBtn.setAttribute('title', dict.nav_dial_btn_title);
+      const navDialBtn = document.querySelector('a.nav-dial-btn');
+      if (navDialBtn && dict.nav_dial_btn_title) navDialBtn.setAttribute('title', dict.nav_dial_btn_title);
 
-    const mainNav = document.querySelector('nav[aria-label]');
-    if (mainNav && dict.nav_main_aria) mainNav.setAttribute('aria-label', dict.nav_main_aria);
+      const mainNav = document.querySelector('nav[aria-label]');
+      if (mainNav && dict.nav_main_aria) mainNav.setAttribute('aria-label', dict.nav_main_aria);
 
-    // Dropdown items (11 elementos)
-    const dropItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
-    if (dropItems.length >= 11) {
-      dropItems[0].textContent = dict.drop_l1;
-      dropItems[1].textContent = dict.drop_l2;
-      dropItems[2].textContent = dict.drop_l3;
-      dropItems[3].textContent = dict.drop_l4;
-      dropItems[4].textContent = dict.drop_l5;
-      dropItems[5].textContent = dict.drop_l6;
-      dropItems[6].textContent = dict.drop_l7;
-      dropItems[7].textContent = dict.drop_framework;
-      dropItems[8].textContent = dict.drop_deontology;
-      dropItems[9].textContent = dict.drop_glossary;
-      dropItems[10].textContent = dict.drop_dial;
-    }
+      const dropItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
+      if (dropItems && dropItems.length >= 11) {
+        dropItems[0].textContent = dict.drop_l1;
+        dropItems[1].textContent = dict.drop_l2;
+        dropItems[2].textContent = dict.drop_l3;
+        dropItems[3].textContent = dict.drop_l4;
+        dropItems[4].textContent = dict.drop_l5;
+        dropItems[5].textContent = dict.drop_l6;
+        dropItems[6].textContent = dict.drop_l7;
+        dropItems[7].textContent = dict.drop_framework;
+        dropItems[8].textContent = dict.drop_deontology;
+        dropItems[9].textContent = dict.drop_glossary;
+        dropItems[10].textContent = dict.drop_dial;
+      }
+    } catch (e) {}
 
-    // =========================================================================
     // 2. HERO
-    // =========================================================================
-    const heroPill = document.querySelector('.hero-pill');
-    if (heroPill) heroPill.innerHTML = '<span class="hero-pill-dot"></span>' + dict.hero_pill;
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) heroTitle.innerHTML = dict.hero_title;
-    const heroSubtitle = document.querySelector('.hero-subtitle');
-    if (heroSubtitle) heroSubtitle.textContent = dict.hero_subtitle;
+    try {
+      const heroPill = document.querySelector('.hero-pill');
+      if (heroPill && dict.hero_pill) heroPill.innerHTML = '<span class="hero-pill-dot"></span>' + dict.hero_pill;
+      const heroTitle = document.querySelector('.hero-title');
+      if (heroTitle && dict.hero_title) heroTitle.innerHTML = dict.hero_title;
+      const heroSubtitle = document.querySelector('.hero-subtitle');
+      if (heroSubtitle && dict.hero_subtitle) heroSubtitle.textContent = dict.hero_subtitle;
 
-    const heroBtnDial = document.querySelector('.hero-actions a[href="dial_orbital.html"] span');
-    if (heroBtnDial) heroBtnDial.textContent = dict.hero_btn_dial || '🧭 Dial Orbital';
-    const heroBtnMan = document.querySelector('.hero-actions a.btn-manifiesto span');
-    if (heroBtnMan) heroBtnMan.textContent = dict.hero_btn_manifesto || '📜 Manifiesto Global (HTML)';
-    const heroBtnCust = document.querySelector('.hero-actions a[href="#custodia"] span');
-    if (heroBtnCust) heroBtnCust.textContent = dict.hero_btn_custody || '🏛️ Custodia Institucional';
-    const heroBtn3d = document.querySelector('.hero-actions .btn-primary span');
-    if (heroBtn3d && !heroBtnDial) heroBtn3d.textContent = dict.hero_btn_3d;
-    const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
-    if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
+      const heroBtnDial = document.querySelector('.hero-actions a[href="dial_orbital.html"] span');
+      if (heroBtnDial) heroBtnDial.textContent = dict.hero_btn_dial || '🧭 Dial Orbital';
+      const heroBtnMan = document.querySelector('.hero-actions a.btn-manifiesto span');
+      if (heroBtnMan) heroBtnMan.textContent = dict.hero_btn_manifesto || '📜 Manifiesto Global (HTML)';
+      const heroBtnCust = document.querySelector('.hero-actions a[href="#custodia"] span');
+      if (heroBtnCust) heroBtnCust.textContent = dict.hero_btn_custody || '🏛️ Custodia Institucional';
+      const heroBtn3d = document.querySelector('.hero-actions .btn-primary span');
+      if (heroBtn3d && !heroBtnDial) heroBtn3d.textContent = dict.hero_btn_3d;
+      const heroBtnSol = document.querySelector('.hero-actions a[href="#soluciones"] span');
+      if (heroBtnSol) heroBtnSol.textContent = dict.hero_btn_solutions;
 
-    const statusPillText = document.getElementById('lbl-status-pill');
-    if (statusPillText) statusPillText.textContent = (lang === 'en') ? 'VISORD 3D · AUDIO ACTIVE' : 'VISORD 3D · AUDIO ACTIVADO';
-
-    // Video Hero HUD & Controls
-    const vHeroBlock = document.getElementById('video-hero-block');
-    if (vHeroBlock && dict.video_hero_aria) vHeroBlock.setAttribute('aria-label', dict.video_hero_aria);
-
-    const vFb = document.getElementById('video-fallback-msg');
-    if (vFb && dict.video_fallback) vFb.textContent = dict.video_fallback;
-
-    const vBadge = document.querySelector('.video-hero-badge span:last-child');
-    if (vBadge) vBadge.textContent = dict.video_badge;
-    const vMeta = document.querySelector('.video-hero-meta span');
-    if (vMeta) vMeta.textContent = dict.video_meta;
-
-    const vPlayLabel = document.getElementById('video-play-label');
-    if (vPlayLabel) {
-      const vid = document.getElementById('hero-master-video');
-      if (vid && !vid.paused && !vid.ended) {
-        vPlayLabel.textContent = dict.video_btn_play;
-      } else if (vid && vid.ended) {
-        vPlayLabel.textContent = dict.video_btn_repeat;
-      } else {
-        vPlayLabel.textContent = dict.video_btn_play_pause;
+      const statusPillText = document.getElementById('lbl-status-pill');
+      if (statusPillText) {
+        const vid = document.getElementById('hero-master-video');
+        const isMuted = vid ? (vid.muted || vid.volume === 0) : false;
+        if (isMuted) {
+          statusPillText.textContent = (lang === 'en') ? 'VISORD 3D · MUTED' : 'VISORD 3D · SILENCIADO';
+        } else {
+          statusPillText.textContent = (lang === 'en') ? 'VISORD 3D · AUDIO ACTIVE' : 'VISORD 3D · AUDIO ACTIVADO';
+        }
       }
-    }
-    const vAudioLabel = document.getElementById('video-audio-label');
-    if (vAudioLabel) {
-      const vid = document.getElementById('hero-master-video');
-      vAudioLabel.textContent = (vid && !vid.muted) ? dict.video_btn_audio_off : dict.video_btn_audio_on;
-    }
-    const vFsBtn = document.querySelector('#btn-video-fs span:last-child');
-    if (vFsBtn) vFsBtn.textContent = dict.video_btn_fs;
 
-    const heroWrap = document.getElementById('hero-player-wrap');
-    if (heroWrap) heroWrap.setAttribute('title', dict.video_player_title);
-    const btnPlayEl = document.getElementById('btn-video-play');
-    if (btnPlayEl) btnPlayEl.setAttribute('title', dict.video_btn_play_title);
-    const btnAudioEl = document.getElementById('btn-video-audio');
-    if (btnAudioEl) btnAudioEl.setAttribute('title', dict.video_btn_audio_title);
-    const btnFsEl = document.getElementById('btn-video-fs');
-    if (btnFsEl) btnFsEl.setAttribute('title', dict.video_btn_fs_title);
+      // Video Hero HUD & Controls
+      const vHeroBlock = document.getElementById('video-hero-block');
+      if (vHeroBlock && dict.video_hero_aria) vHeroBlock.setAttribute('aria-label', dict.video_hero_aria);
 
-    // Decoder Pills
-    const bondPills = document.querySelectorAll('.video-bonds-decoder-hud .bond-pill');
-    if (bondPills.length >= 3) {
-      bondPills[0].innerHTML = '<span class="bond-dot dot-green"></span><strong class="bond-term">' + dict.bond_attraction_term + '</strong> ' + dict.bond_attraction_text;
-      bondPills[1].innerHTML = '<span class="bond-dot dot-magenta"></span><strong class="bond-term">' + dict.bond_rejection_term + '</strong> ' + dict.bond_rejection_text;
-      bondPills[2].innerHTML = '<span class="bond-dot dot-ostracism"></span><strong class="bond-term">' + dict.bond_ostracism_term + '</strong> ' + dict.bond_ostracism_text;
-    }
+      const vFb = document.getElementById('video-fallback-msg');
+      if (vFb && dict.video_fallback) vFb.textContent = dict.video_fallback;
 
-    const vSubText = document.getElementById('hero-subtitles-text');
-    if (vSubText && !vSubText.getAttribute('data-dynamic')) vSubText.textContent = dict.video_sub_initial;
-    const vCtaPill = document.querySelector('.video-cta-pill span:first-child');
-    if (vCtaPill) vCtaPill.textContent = dict.video_cta_pill;
+      const vBadge = document.querySelector('.video-hero-badge span:last-child');
+      if (vBadge && dict.video_badge) vBadge.textContent = dict.video_badge;
+      const vMeta = document.querySelector('.video-hero-meta span');
+      if (vMeta && dict.video_meta) vMeta.textContent = dict.video_meta;
 
-    // =========================================================================
+      const vPlayLabel = document.getElementById('video-play-label');
+      if (vPlayLabel) {
+        const vid = document.getElementById('hero-master-video');
+        if (vid && !vid.paused && !vid.ended) {
+          vPlayLabel.textContent = dict.video_btn_play || 'Pausa';
+        } else if (vid && vid.ended) {
+          vPlayLabel.textContent = dict.video_btn_repeat || 'Repetir';
+        } else {
+          vPlayLabel.textContent = dict.video_btn_play_pause || 'Play';
+        }
+      }
+      const vAudioLabel = document.getElementById('video-audio-label');
+      if (vAudioLabel) {
+        const vid = document.getElementById('hero-master-video');
+        const isMuted = vid ? (vid.muted || vid.volume === 0) : false;
+        vAudioLabel.textContent = isMuted ? (dict.video_btn_audio_on || 'Activar Audio') : (dict.video_btn_audio_off || 'Audio Activado');
+      }
+      const vFsBtn = document.querySelector('#btn-video-fs span:last-child');
+      if (vFsBtn && dict.video_btn_fs) vFsBtn.textContent = dict.video_btn_fs;
+
+      const heroWrap = document.getElementById('hero-player-wrap');
+      if (heroWrap && dict.video_player_title) heroWrap.setAttribute('title', dict.video_player_title);
+      const btnPlayEl = document.getElementById('btn-video-play');
+      if (btnPlayEl && dict.video_btn_play_title) btnPlayEl.setAttribute('title', dict.video_btn_play_title);
+      const btnAudioEl = document.getElementById('btn-video-audio');
+      if (btnAudioEl && dict.video_btn_audio_title) btnAudioEl.setAttribute('title', dict.video_btn_audio_title);
+      const btnFsEl = document.getElementById('btn-video-fs');
+      if (btnFsEl && dict.video_btn_fs_title) btnFsEl.setAttribute('title', dict.video_btn_fs_title);
+
+      const bondPills = document.querySelectorAll('.video-bonds-decoder-hud .bond-pill');
+      if (bondPills && bondPills.length >= 3) {
+        bondPills[0].innerHTML = '<span class="bond-dot dot-green"></span><strong class="bond-term">' + dict.bond_attraction_term + '</strong> ' + dict.bond_attraction_text;
+        bondPills[1].innerHTML = '<span class="bond-dot dot-magenta"></span><strong class="bond-term">' + dict.bond_rejection_term + '</strong> ' + dict.bond_rejection_text;
+        bondPills[2].innerHTML = '<span class="bond-dot dot-ostracism"></span><strong class="bond-term">' + dict.bond_ostracism_term + '</strong> ' + dict.bond_ostracism_text;
+      }
+
+      const vSubText = document.getElementById('hero-subtitles-text');
+      if (vSubText && !vSubText.getAttribute('data-dynamic') && dict.video_sub_initial) vSubText.textContent = dict.video_sub_initial;
+      const vCtaPill = document.querySelector('.video-cta-pill span:first-child');
+      if (vCtaPill && dict.video_cta_pill) vCtaPill.textContent = dict.video_cta_pill;
+    } catch (e) {}
+
     // 3. ANATOMÍA DE LOS VÍNCULOS GRUPALES
-    // =========================================================================
-    const bondsStrip = document.getElementById('vinculos-insight');
-    if (bondsStrip) {
-      const bTag = bondsStrip.querySelector('.section-tag');
-      if (bTag) bTag.textContent = dict.bonds_tag;
-      const bTitle = bondsStrip.querySelector('.bonds-strip-title');
-      if (bTitle) bTitle.textContent = dict.bonds_title;
-      const bSub = bondsStrip.querySelector('.bonds-strip-subtitle');
-      if (bSub) bSub.textContent = dict.bonds_subtitle;
+    try {
+      const bTag = document.querySelector('.bonds-anatomy-section .section-tag');
+      if (bTag && dict.bonds_tag) bTag.textContent = dict.bonds_tag;
+      const bTitle = document.querySelector('.bonds-anatomy-section .section-title');
+      if (bTitle && dict.bonds_title) bTitle.textContent = dict.bonds_title;
+      const bSub = document.querySelector('.bonds-anatomy-section .section-subtitle');
+      if (bSub && dict.bonds_subtitle) bSub.textContent = dict.bonds_subtitle;
 
-      // Card 1: Atracción
-      const cardAtt = bondsStrip.querySelector('.card-attraction');
-      if (cardAtt) {
-        const badge = cardAtt.querySelector('.bond-card-badge');
-        if (badge) badge.textContent = dict.bond_c1_badge;
-        const title = cardAtt.querySelector('.bond-card-title');
-        if (title) title.textContent = dict.bond_c1_title;
-        const text = cardAtt.querySelector('.bond-card-text');
-        if (text) text.innerHTML = dict.bond_c1_text;
-        const mLabel = cardAtt.querySelector('.metric-label');
-        if (mLabel) mLabel.textContent = dict.bond_c1_metric_label;
-        const mVal = cardAtt.querySelector('.metric-val');
-        if (mVal) mVal.textContent = dict.bond_c1_metric_val;
+      const bondCards = document.querySelectorAll('.bond-card');
+      if (bondCards && bondCards.length >= 3) {
+        safeText(bondCards[0].querySelector('.bond-card-badge'), dict.bond_c1_badge);
+        safeText(bondCards[0].querySelector('.bond-card-title'), dict.bond_c1_title);
+        safeHTML(bondCards[0].querySelector('.bond-card-text'), dict.bond_c1_text);
+        safeText(bondCards[0].querySelector('.bond-metric-label'), dict.bond_c1_metric_label);
+        safeText(bondCards[0].querySelector('.bond-metric-value'), dict.bond_c1_metric_val);
+
+        safeText(bondCards[1].querySelector('.bond-card-badge'), dict.bond_c2_badge);
+        safeText(bondCards[1].querySelector('.bond-card-title'), dict.bond_c2_title);
+        safeHTML(bondCards[1].querySelector('.bond-card-text'), dict.bond_c2_text);
+        safeText(bondCards[1].querySelector('.bond-metric-label'), dict.bond_c2_metric_label);
+        safeText(bondCards[1].querySelector('.bond-metric-value'), dict.bond_c2_metric_val);
+
+        safeText(bondCards[2].querySelector('.bond-card-badge'), dict.bond_c3_badge);
+        safeText(bondCards[2].querySelector('.bond-card-title'), dict.bond_c3_title);
+        safeHTML(bondCards[2].querySelector('.bond-card-text'), dict.bond_c3_text);
+        safeText(bondCards[2].querySelector('.bond-metric-label'), dict.bond_c3_metric_label);
+        safeText(bondCards[2].querySelector('.bond-metric-value'), dict.bond_c3_metric_val);
       }
+    } catch (e) {}
 
-      // Card 2: Rechazo
-      const cardRej = bondsStrip.querySelector('.card-rejection');
-      if (cardRej) {
-        const badge = cardRej.querySelector('.bond-card-badge');
-        if (badge) badge.textContent = dict.bond_c2_badge;
-        const title = cardRej.querySelector('.bond-card-title');
-        if (title) title.textContent = dict.bond_c2_title;
-        const text = cardRej.querySelector('.bond-card-text');
-        if (text) text.innerHTML = dict.bond_c2_text;
-        const mLabel = cardRej.querySelector('.metric-label');
-        if (mLabel) mLabel.textContent = dict.bond_c2_metric_label;
-        const mVal = cardRej.querySelector('.metric-val');
-        if (mVal) mVal.textContent = dict.bond_c2_metric_val;
-      }
-
-      // Card 3: Ostracismo
-      const cardOst = bondsStrip.querySelector('.card-ostracism');
-      if (cardOst) {
-        const badge = cardOst.querySelector('.bond-card-badge');
-        if (badge) badge.textContent = dict.bond_c3_badge;
-        const title = cardOst.querySelector('.bond-card-title');
-        if (title) title.textContent = dict.bond_c3_title;
-        const text = cardOst.querySelector('.bond-card-text');
-        if (text) text.innerHTML = dict.bond_c3_text;
-        const mLabel = cardOst.querySelector('.metric-label');
-        if (mLabel) mLabel.textContent = dict.bond_c3_metric_label;
-        const mVal = cardOst.querySelector('.metric-val');
-        if (mVal) mVal.textContent = dict.bond_c3_metric_val;
-      }
-    }
-
-    // =========================================================================
     // 4. MÉTRICAS RÁPIDAS HERO
-    // =========================================================================
-    const statCards = document.querySelectorAll('.hero-stats-grid .stat-card');
-    if (statCards.length >= 4) {
-      statCards[0].querySelector('.stat-number').textContent = dict.hero_stat_1_val;
-      statCards[0].querySelector('.stat-desc').textContent = dict.hero_stat_1_desc;
-      statCards[1].querySelector('.stat-number').textContent = dict.hero_stat_2_val;
-      statCards[1].querySelector('.stat-desc').textContent = dict.hero_stat_2_desc;
-      statCards[2].querySelector('.stat-number').textContent = dict.hero_stat_3_val;
-      statCards[2].querySelector('.stat-desc').textContent = dict.hero_stat_3_desc;
-      statCards[3].querySelector('.stat-number').textContent = dict.hero_stat_4_val;
-      statCards[3].querySelector('.stat-desc').textContent = dict.hero_stat_4_desc;
-    }
+    try {
+      const statCards = document.querySelectorAll('.hero-stats-band .stat-card');
+      if (statCards && statCards.length >= 4) {
+        safeText(statCards[0].querySelector('.stat-number'), dict.hero_stat_1_val);
+        safeText(statCards[0].querySelector('.stat-label'), dict.hero_stat_1_lbl);
+        safeText(statCards[0].querySelector('.stat-sub'), dict.hero_stat_1_sub);
 
-    // =========================================================================
+        safeText(statCards[1].querySelector('.stat-number'), dict.hero_stat_2_val);
+        safeText(statCards[1].querySelector('.stat-label'), dict.hero_stat_2_lbl);
+        safeText(statCards[1].querySelector('.stat-sub'), dict.hero_stat_2_sub);
+
+        safeText(statCards[2].querySelector('.stat-number'), dict.hero_stat_3_val);
+        safeText(statCards[2].querySelector('.stat-label'), dict.hero_stat_3_lbl);
+        safeText(statCards[2].querySelector('.stat-sub'), dict.hero_stat_3_sub);
+
+        safeText(statCards[3].querySelector('.stat-number'), dict.hero_stat_4_val);
+        safeText(statCards[3].querySelector('.stat-label'), dict.hero_stat_4_lbl);
+        safeText(statCards[3].querySelector('.stat-sub'), dict.hero_stat_4_sub);
+      }
+    } catch (e) {}
+
     // 5. SECCIÓN 1: EL DOLOR INVISIBLE (#dolor)
-    // =========================================================================
-    const dolorSec = document.getElementById('dolor');
-    if (dolorSec) {
-      const pTag = dolorSec.querySelector('.section-tag');
-      if (pTag) pTag.textContent = dict.pain_tag;
-      const pTitle = dolorSec.querySelector('.section-title');
-      if (pTitle) pTitle.textContent = dict.pain_title;
-      const pSub = dolorSec.querySelector('.section-subtitle');
-      if (pSub) pSub.textContent = dict.pain_subtitle;
+    try {
+      const dTag = document.querySelector('#dolor .section-tag');
+      if (dTag && dict.pain_tag) dTag.textContent = dict.pain_tag;
+      const dTitle = document.querySelector('#dolor .section-title');
+      if (dTitle && dict.pain_title) dTitle.textContent = dict.pain_title;
+      const dSub = document.querySelector('#dolor .section-subtitle');
+      if (dSub && dict.pain_subtitle) dSub.textContent = dict.pain_subtitle;
+    } catch (e) {}
 
-      // Card Tradicional
-      const cardTrad = dolorSec.querySelector('.comparison-card.traditional');
-      if (cardTrad) {
-        const badge = cardTrad.querySelector('.card-badge');
-        if (badge) badge.textContent = dict.pain_trad_badge;
-        const heading = cardTrad.querySelector('.card-heading');
-        if (heading) heading.textContent = dict.pain_trad_heading;
-        const items = cardTrad.querySelectorAll('.feature-list .feature-item div');
-        if (items.length >= 4) {
-          items[0].innerHTML = dict.pain_trad_item1;
-          items[1].innerHTML = dict.pain_trad_item2;
-          items[2].innerHTML = dict.pain_trad_item3;
-          items[3].innerHTML = dict.pain_trad_item4;
-        }
-      }
-
-      // Card NEXORD
-      const cardNex = dolorSec.querySelector('.comparison-card.nexord');
-      if (cardNex) {
-        const badge = cardNex.querySelector('.card-badge');
-        if (badge) badge.textContent = dict.pain_nex_badge;
-        const heading = cardNex.querySelector('.card-heading');
-        if (heading) heading.textContent = dict.pain_nex_heading;
-        const items = cardNex.querySelectorAll('.feature-list .feature-item div');
-        if (items.length >= 4) {
-          items[0].innerHTML = dict.pain_nex_item1;
-          items[1].innerHTML = dict.pain_nex_item2;
-          items[2].innerHTML = dict.pain_nex_item3;
-          items[3].innerHTML = dict.pain_nex_item4;
-        }
-      }
-    }
-
-    // =========================================================================
     // 6. SECCIÓN 2: SHOWROOM INTERACTIVO (#showroom)
-    // =========================================================================
-    const showSec = document.getElementById('showroom');
-    if (showSec) {
-      const sTag = showSec.querySelector('.section-tag');
-      if (sTag) sTag.textContent = dict.show_tag;
-      const sTitle = showSec.querySelector('.section-title');
-      if (sTitle) sTitle.textContent = dict.show_title;
-      const sSub = showSec.querySelector('.section-subtitle');
-      if (sSub) sSub.textContent = dict.show_subtitle;
+    try {
+      const sTag = document.querySelector('#showroom .section-tag');
+      if (sTag && dict.show_tag) sTag.textContent = dict.show_tag;
+      const sTitle = document.querySelector('#showroom .section-title');
+      if (sTitle && dict.show_title) sTitle.textContent = dict.show_title;
+      const sSub = document.querySelector('#showroom .section-subtitle');
+      if (sSub && dict.show_subtitle) sSub.textContent = dict.show_subtitle;
+    } catch (e) {}
 
-      const jewels = showSec.querySelectorAll('.jewel-card');
-      if (jewels.length >= 4) {
-        // Joya 1 (Acuario)
-        jewels[0].querySelector('.jewel-title').textContent = dict.jewel_1_title;
-        jewels[0].querySelector('.jewel-subtitle').textContent = dict.jewel_1_subtitle;
-        jewels[0].querySelector('.jewel-desc').innerHTML = dict.jewel_1_desc;
-        jewels[0].querySelector('.btn-jewel').textContent = dict.jewel_1_btn;
-
-        // Joya 2 (Cultural)
-        jewels[1].querySelector('.jewel-title').textContent = dict.jewel_2_title;
-        jewels[1].querySelector('.jewel-subtitle').textContent = dict.jewel_2_subtitle;
-        jewels[1].querySelector('.jewel-desc').innerHTML = dict.jewel_2_desc;
-        jewels[1].querySelector('.btn-jewel').textContent = dict.jewel_2_btn;
-
-        // Joya 3 (Dialéctico)
-        jewels[2].querySelector('.jewel-title').textContent = dict.jewel_3_title;
-        jewels[2].querySelector('.jewel-subtitle').textContent = dict.jewel_3_subtitle;
-        jewels[2].querySelector('.jewel-desc').innerHTML = dict.jewel_3_desc;
-        jewels[2].querySelector('.btn-jewel').textContent = dict.jewel_3_btn;
-
-        // Joya 4 (Demo 3D)
-        jewels[3].querySelector('.jewel-title').textContent = dict.jewel_4_title;
-        jewels[3].querySelector('.jewel-subtitle').textContent = dict.jewel_4_subtitle;
-        jewels[3].querySelector('.jewel-desc').innerHTML = dict.jewel_4_desc;
-        jewels[3].querySelector('.btn-jewel').textContent = dict.jewel_4_btn;
-      }
-    }
-
-    // =========================================================================
     // 7. SECCIÓN 3: SOLUCIONES SECTORIALES (#soluciones)
-    // =========================================================================
-    const solSec = document.getElementById('soluciones');
-    if (solSec) {
-      const sTag = solSec.querySelector('.section-tag');
-      if (sTag) sTag.textContent = dict.sol_tag;
-      const sTitle = solSec.querySelector('.section-title');
-      if (sTitle) sTitle.textContent = dict.sol_title;
-      const sSub = solSec.querySelector('.section-subtitle');
-      if (sSub) sSub.textContent = dict.sol_subtitle;
+    try {
+      const solTag = document.querySelector('#soluciones .section-tag');
+      if (solTag && dict.sol_tag) solTag.textContent = dict.sol_tag;
+      const solTitle = document.querySelector('#soluciones .section-title');
+      if (solTitle && dict.sol_title) solTitle.textContent = dict.sol_title;
+      const solSub = document.querySelector('#soluciones .section-subtitle');
+      if (solSub && dict.sol_subtitle) solSub.textContent = dict.sol_subtitle;
+    } catch (e) {}
 
-      const sectors = solSec.querySelectorAll('.sector-card');
-      if (sectors.length >= 3) {
-        // Sector 1: Educación
-        sectors[0].querySelector('.sector-name').textContent = dict.sol_s1_title;
-        sectors[0].querySelector('.sector-problem').innerHTML = dict.sol_s1_prob;
-        sectors[0].querySelector('.sector-solution').innerHTML = dict.sol_s1_sol;
-        const b1 = sectors[0].querySelectorAll('.sector-bullets li');
-        if (b1.length >= 3) {
-          b1[0].textContent = dict.sol_s1_b1;
-          b1[1].textContent = dict.sol_s1_b2;
-          b1[2].textContent = dict.sol_s1_b3;
-        }
-
-        // Sector 2: Empresas
-        sectors[1].querySelector('.sector-name').textContent = dict.sol_s2_title;
-        sectors[1].querySelector('.sector-problem').innerHTML = dict.sol_s2_prob;
-        sectors[1].querySelector('.sector-solution').innerHTML = dict.sol_s2_sol;
-        const b2 = sectors[1].querySelectorAll('.sector-bullets li');
-        if (b2.length >= 3) {
-          b2[0].textContent = dict.sol_s2_b1;
-          b2[1].textContent = dict.sol_s2_b2;
-          b2[2].textContent = dict.sol_s2_b3;
-        }
-
-        // Sector 3: Clínica
-        sectors[2].querySelector('.sector-name').textContent = dict.sol_s3_title;
-        sectors[2].querySelector('.sector-problem').innerHTML = dict.sol_s3_prob;
-        sectors[2].querySelector('.sector-solution').innerHTML = dict.sol_s3_sol;
-        const b3 = sectors[2].querySelectorAll('.sector-bullets li');
-        if (b3.length >= 3) {
-          b3[0].textContent = dict.sol_s3_b1;
-          b3[1].textContent = dict.sol_s3_b2;
-          b3[2].textContent = dict.sol_s3_b3;
-        }
-      }
-    }
-
-    // =========================================================================
     // 8. SECCIÓN 4: CÓMO FUNCIONA (#como-funciona)
-    // =========================================================================
-    const flowSec = document.getElementById('como-funciona');
-    if (flowSec) {
-      const fTag = flowSec.querySelector('.section-tag');
-      if (fTag) fTag.textContent = dict.flow_tag;
-      const fTitle = flowSec.querySelector('.section-title');
-      if (fTitle) fTitle.textContent = dict.flow_title;
-      const fSub = flowSec.querySelector('.section-subtitle');
-      if (fSub) fSub.textContent = dict.flow_subtitle;
+    try {
+      const fTag = document.querySelector('#como-funciona .section-tag');
+      if (fTag && dict.flow_tag) fTag.textContent = dict.flow_tag;
+      const fTitle = document.querySelector('#como-funciona .section-title');
+      if (fTitle && dict.flow_title) fTitle.textContent = dict.flow_title;
+      const fSub = document.querySelector('#como-funciona .section-subtitle');
+      if (fSub && dict.flow_subtitle) fSub.textContent = dict.flow_subtitle;
+    } catch (e) {}
 
-      const steps = flowSec.querySelectorAll('.step-card');
-      if (steps.length >= 3) {
-        steps[0].querySelector('.step-title').textContent = dict.flow_s1_title;
-        steps[0].querySelector('.step-desc').textContent = dict.flow_s1_desc;
-        steps[1].querySelector('.step-title').textContent = dict.flow_s2_title;
-        steps[1].querySelector('.step-desc').textContent = dict.flow_s2_desc;
-        steps[2].querySelector('.step-title').textContent = dict.flow_s3_title;
-        steps[2].querySelector('.step-desc').textContent = dict.flow_s3_desc;
-      }
-    }
-
-    // =========================================================================
     // 9. SECCIÓN 5: GARANTÍA ÉTICA (#etica)
-    // =========================================================================
-    const ethSec = document.getElementById('etica');
-    if (ethSec) {
-      const eHead = ethSec.querySelector('.ethics-heading');
-      if (eHead) eHead.innerHTML = dict.ethics_heading;
-      const eTexts = ethSec.querySelectorAll('.ethics-text');
-      if (eTexts.length >= 2) {
-        eTexts[0].innerHTML = dict.ethics_text_1;
-        eTexts[1].innerHTML = dict.ethics_text_2;
-      }
-      const eBtn = ethSec.querySelector('.ethics-cta a');
-      if (eBtn) eBtn.textContent = dict.ethics_btn;
-    }
+    try {
+      const eTag = document.querySelector('#etica .section-tag');
+      if (eTag && dict.ethics_tag) eTag.textContent = dict.ethics_tag;
+      const eTitle = document.querySelector('#etica .section-title');
+      if (eTitle && dict.ethics_title) eTitle.textContent = dict.ethics_title;
+      const eSub = document.querySelector('#etica .section-subtitle');
+      if (eSub && dict.ethics_subtitle) eSub.textContent = dict.ethics_subtitle;
+    } catch (e) {}
 
-    // =========================================================================
     // 10. SECCIÓN 6: BÓVEDA CIENTÍFICA (#boveda)
-    // =========================================================================
-    const vltSec = document.getElementById('boveda');
-    if (vltSec) {
-      const vTag = vltSec.querySelector('.section-tag');
-      if (vTag) vTag.textContent = dict.vault_tag;
-      const vTitle = vltSec.querySelector('.section-title');
-      if (vTitle) vTitle.textContent = dict.vault_title;
-      const vSub = vltSec.querySelector('.section-subtitle');
-      if (vSub) vSub.textContent = dict.vault_subtitle;
+    try {
+      const bTag = document.querySelector('#boveda .section-tag');
+      if (bTag && dict.vault_tag) bTag.textContent = dict.vault_tag;
+      const bTitle = document.querySelector('#boveda .section-title');
+      if (bTitle && dict.vault_title) bTitle.textContent = dict.vault_title;
+      const bSub = document.querySelector('#boveda .section-subtitle');
+      if (bSub && dict.vault_subtitle) bSub.textContent = dict.vault_subtitle;
+    } catch (e) {}
 
-      const vCards = vltSec.querySelectorAll('.vault-card');
-      if (vCards.length >= 8) {
-        // Nivel 1
-        vCards[0].querySelector('.vault-card-title').textContent = dict.v_l1_title;
-        vCards[0].querySelector('.vault-card-desc').textContent = dict.v_l1_desc;
-        vCards[0].querySelector('.vault-card-arrow').textContent = dict.v_l1_btn;
-        // Nivel 2
-        vCards[1].querySelector('.vault-card-title').textContent = dict.v_l2_title;
-        vCards[1].querySelector('.vault-card-desc').textContent = dict.v_l2_desc;
-        vCards[1].querySelector('.vault-card-arrow').textContent = dict.v_l2_btn;
-        // Nivel 3
-        vCards[2].querySelector('.vault-card-title').textContent = dict.v_l3_title;
-        vCards[2].querySelector('.vault-card-desc').textContent = dict.v_l3_desc;
-        vCards[2].querySelector('.vault-card-arrow').textContent = dict.v_l3_btn;
-        // Nivel 4
-        vCards[3].querySelector('.vault-card-title').textContent = dict.v_l4_title;
-        vCards[3].querySelector('.vault-card-desc').textContent = dict.v_l4_desc;
-        vCards[3].querySelector('.vault-card-arrow').textContent = dict.v_l4_btn;
-        // Nivel 5
-        vCards[4].querySelector('.vault-card-title').textContent = dict.v_l5_title;
-        vCards[4].querySelector('.vault-card-desc').textContent = dict.v_l5_desc;
-        vCards[4].querySelector('.vault-card-arrow').textContent = dict.v_l5_btn;
-        // Nivel 6
-        vCards[5].querySelector('.vault-card-title').textContent = dict.v_l6_title;
-        vCards[5].querySelector('.vault-card-desc').textContent = dict.v_l6_desc;
-        vCards[5].querySelector('.vault-card-arrow').textContent = dict.v_l6_btn;
-        // Nivel 7
-        vCards[6].querySelector('.vault-card-title').textContent = dict.v_l7_title;
-        vCards[6].querySelector('.vault-card-desc').textContent = dict.v_l7_desc;
-        vCards[6].querySelector('.vault-card-arrow').textContent = dict.v_l7_btn;
-        // Glosario
-        vCards[7].querySelector('.vault-card-title').textContent = dict.v_glo_title;
-        vCards[7].querySelector('.vault-card-desc').textContent = dict.v_glo_desc;
-        vCards[7].querySelector('.vault-card-arrow').textContent = dict.v_glo_btn;
+    // 11. SECCIÓN 7: CUSTODIA INSTITUCIONAL (#custodia)
+    try {
+      const cTag = document.querySelector('#custodia .section-tag');
+      if (cTag && dict.cust_tag) cTag.textContent = dict.cust_tag;
+      const cTitle = document.querySelector('#custodia .section-title');
+      if (cTitle && dict.cust_title) cTitle.textContent = dict.cust_title;
+      const cSub = document.querySelector('#custodia .section-subtitle');
+      if (cSub && dict.cust_subtitle) cSub.textContent = dict.cust_subtitle;
+    } catch (e) {}
+
+    // 12. FOOTER
+    try {
+      const fLinks = document.querySelectorAll('.footer-links a');
+      if (fLinks && fLinks.length >= 8) {
+        safeText(fLinks[0], dict.foot_inicio);
+        safeText(fLinks[1], dict.foot_custodia);
+        safeText(fLinks[2], dict.foot_demo);
+        safeText(fLinks[3], dict.foot_cultural);
+        safeText(fLinks[4], dict.foot_acuario);
+        safeText(fLinks[5], dict.foot_dialectico);
+        safeText(fLinks[6], dict.foot_retorno);
+        safeText(fLinks[7], dict.foot_glosario);
       }
-    }
+    } catch (e) {}
 
-    // =========================================================================
-    // 11. SECCIÓN 7: LLAMAMIENTO A LA CUSTODIA INSTITUCIONAL (#custodia)
-    // =========================================================================
-    const custSec = document.getElementById('custodia');
-    if (custSec) {
-      const cTag = custSec.querySelector('.section-tag');
-      if (cTag) cTag.textContent = dict.cust_tag;
-      const cTitle = custSec.querySelector('.section-title');
-      if (cTitle) cTitle.textContent = dict.cust_title;
-      const cSub = custSec.querySelector('.section-subtitle');
-      if (cSub) cSub.textContent = dict.cust_subtitle;
-
-      // Banner Marco Oficial
-      const marcoBanner = document.getElementById('custodia-marco-banner');
-      if (marcoBanner) {
-        const h3 = marcoBanner.querySelector('h3');
-        if (h3) h3.textContent = dict.cust_banner_title;
-        const p = marcoBanner.querySelector('p');
-        if (p) p.textContent = dict.cust_banner_desc;
-        const btnSpan = marcoBanner.querySelector('a span:last-child');
-        if (btnSpan) btnSpan.textContent = dict.cust_banner_btn;
-      }
-
-      // Bloque ¿Qué es NEXORD?
-      const queEsBlock = document.getElementById('que-es-nexord-block');
-      if (queEsBlock) {
-        const h3 = queEsBlock.querySelector('h3');
-        if (h3) h3.textContent = dict.what_title;
-        const ps = queEsBlock.querySelectorAll('p');
-        if (ps.length >= 3) {
-          ps[0].innerHTML = dict.what_p1;
-          ps[1].innerHTML = dict.what_p2;
-          ps[2].innerHTML = dict.what_p3;
-        }
-      }
-
-      // Díptico: ¿Qué se ofrece?
-      const ofrBlock = document.getElementById('custodia-diptico-ofrece');
-      if (ofrBlock) {
-        const h3 = ofrBlock.querySelector('h3');
-        if (h3) h3.textContent = dict.offer_title;
-        const lead = ofrBlock.querySelector('p');
-        if (lead) lead.textContent = dict.offer_lead;
-        const lis = ofrBlock.querySelectorAll('ul li div');
-        if (lis.length >= 6) {
-          lis[0].innerHTML = dict.offer_i1;
-          lis[1].innerHTML = dict.offer_i2;
-          lis[2].innerHTML = dict.offer_i3;
-          lis[3].innerHTML = dict.offer_i4;
-          lis[4].innerHTML = dict.offer_i5;
-          lis[5].innerHTML = dict.offer_i6;
-        }
-        const note = ofrBlock.querySelector('div[style*="dashed"]');
-        if (note) note.textContent = dict.offer_note;
-      }
-
-      // Díptico: ¿Qué se pide?
-      const reqBlock = document.getElementById('custodia-diptico-pide');
-      if (reqBlock) {
-        const h3 = reqBlock.querySelector('h3');
-        if (h3) h3.textContent = dict.req_title;
-        const lead = reqBlock.querySelector('p');
-        if (lead) lead.textContent = dict.req_lead;
-        const lis = reqBlock.querySelectorAll('ul li div');
-        if (lis.length >= 4) {
-          lis[0].innerHTML = dict.req_i1;
-          lis[1].innerHTML = dict.req_i2;
-          lis[2].innerHTML = dict.req_i3;
-          lis[3].innerHTML = dict.req_i4;
-        }
-        const note = reqBlock.querySelector('div[style*="dashed"]');
-        if (note) note.textContent = dict.req_note;
-      }
-
-      // Bloque de Garantías Existentes
-      const garBlock = document.getElementById('custodia-garantias-block');
-      if (garBlock) {
-        const h3 = garBlock.querySelector('h3');
-        if (h3) h3.textContent = dict.guard_title;
-        const boxes = garBlock.querySelectorAll('div[style*="background: rgba(0,0,0,0.3)"]');
-        if (boxes.length >= 5) {
-          // Box 1 (Privacy by Design)
-          boxes[0].children[0].textContent = dict.guard_b1_title;
-          boxes[0].children[1].textContent = dict.guard_b1_desc;
-          // Box 2 (Licencia CC-BY-4.0)
-          boxes[1].children[0].textContent = dict.guard_b2_title;
-          boxes[1].children[1].textContent = dict.guard_b2_desc;
-          // Box 3 (Zenodo)
-          boxes[2].children[0].textContent = dict.guard_b3_title;
-          boxes[2].children[1].innerHTML = dict.guard_b3_desc;
-          // Box 4 (Auditable)
-          boxes[3].children[0].textContent = dict.guard_b4_title;
-          boxes[3].children[1].textContent = dict.guard_b4_desc;
-          // Box 5 (Universalidad UNESCO)
-          boxes[4].children[0].textContent = dict.guard_b5_title;
-          boxes[4].children[1].textContent = dict.guard_b5_desc;
-        }
-      }
-
-      // Formulario de Contacto
-      const cForm = document.getElementById('custodia-contact-form');
-      if (cForm) {
-        const formWrap = cForm.parentElement;
-        if (formWrap) {
-          const tag = formWrap.querySelector('span[style*="CANAL DIRECTO"]');
-          if (tag) tag.textContent = dict.contact_tag;
-          const h3 = formWrap.querySelector('h3');
-          if (h3) h3.textContent = dict.contact_title;
-          const sub = formWrap.querySelector('p');
-          if (sub) sub.textContent = dict.contact_subtitle;
-
-          // Info PI
-          const piLabel = formWrap.querySelector('div[style*="font-size: 0.76rem"]');
-          if (piLabel) piLabel.textContent = dict.contact_pi_label;
-          const piSub = formWrap.querySelector('div[style*="font-size: 0.78rem"]');
-          if (piSub) piSub.textContent = dict.contact_pi_sub;
-        }
-
-        // Labels y Placeholders
-        const labels = cForm.querySelectorAll('label');
-        if (labels.length >= 5) {
-          labels[0].textContent = dict.form_inst_label;
-          labels[1].textContent = dict.form_rep_label;
-          labels[2].textContent = dict.form_email_label;
-          labels[3].textContent = dict.form_type_label;
-          labels[4].textContent = dict.form_msg_label;
-        }
-
-        const inputInst = document.getElementById('cust-institution');
-        if (inputInst) inputInst.placeholder = dict.form_inst_ph;
-        const inputRep = document.getElementById('cust-representative');
-        if (inputRep) inputRep.placeholder = dict.form_rep_ph;
-        const inputMsg = document.getElementById('cust-message');
-        if (inputMsg) inputMsg.placeholder = dict.form_msg_ph;
-
-        const selectType = document.getElementById('cust-type');
-        if (selectType && selectType.options.length >= 6) {
-          selectType.options[0].textContent = dict.form_type_opt1;
-          selectType.options[1].textContent = dict.form_type_opt2;
-          selectType.options[2].textContent = dict.form_type_opt3;
-          selectType.options[3].textContent = dict.form_type_opt4;
-          selectType.options[4].textContent = dict.form_type_opt5;
-          selectType.options[5].textContent = dict.form_type_opt6;
-        }
-
-        // Botones del formulario
-        const btnPdf = cForm.querySelector('a.btn-secondary');
-        if (btnPdf) btnPdf.textContent = dict.form_btn_pdf;
-        const btnCopy = cForm.querySelector('button[onclick*="copyCustodiaDraft"]');
-        if (btnCopy) btnCopy.textContent = dict.form_btn_copy;
-        const btnSubmit = cForm.querySelector('button[type="submit"]');
-        if (btnSubmit) btnSubmit.textContent = dict.form_btn_send;
-      }
-    }
-
-    // =========================================================================
-    // 12. CALL TO ACTION FINAL
-    // =========================================================================
-    const ctaBanner = document.querySelector('.cta-banner');
-    if (ctaBanner) {
-      const h2 = ctaBanner.querySelector('.cta-title');
-      if (h2) h2.textContent = dict.cta_title;
-      const sub = ctaBanner.querySelector('.cta-subtitle');
-      if (sub) sub.textContent = dict.cta_subtitle;
-      const btn1 = ctaBanner.querySelector('a.btn-primary');
-      if (btn1) btn1.textContent = dict.cta_btn_demos;
-      const btn2 = ctaBanner.querySelector('a.btn-secondary');
-      if (btn2) btn2.textContent = dict.cta_btn_custody;
-    }
-
-    // =========================================================================
-    // 13. FOOTER
-    // =========================================================================
-    const fLinks = document.querySelectorAll('.footer-links .footer-link');
-    if (fLinks.length >= 9) {
-      fLinks[0].textContent = dict.foot_inicio;
-      fLinks[1].textContent = dict.foot_custodia;
-      fLinks[2].textContent = dict.foot_demo;
-      fLinks[3].textContent = dict.foot_cultural;
-      fLinks[4].textContent = dict.foot_acuario;
-      fLinks[5].textContent = dict.foot_dialectico;
-      fLinks[6].textContent = dict.foot_retorno;
-      fLinks[7].textContent = dict.foot_glosario;
-      fLinks[8].textContent = dict.foot_dial;
-    }
-
-    const btnBibTrigger = document.querySelector('.btn-bibtex-trigger');
-    if (btnBibTrigger) {
-      btnBibTrigger.innerHTML = '<span class="bibtex-icon">📑</span> ' + dict.foot_cite_btn;
-    }
-
-    const footPs = document.querySelectorAll('.footer p');
-    if (footPs.length >= 3) {
-      footPs[0].innerHTML = dict.foot_platform_lead;
-      footPs[1].textContent = dict.foot_open_science;
-      footPs[2].textContent = dict.foot_lang_future;
-    }
-
-    const doiLic = document.querySelector('.doi-license');
-    if (doiLic && dict.doi_license_title) doiLic.setAttribute('title', dict.doi_license_title);
-
-    // =========================================================================
-    // 14. VERTICAL NAV BAND TOOLTIPS & ACCESSIBILITY
-    // =========================================================================
-    const vNavBand = document.getElementById('vertical-nav-band');
-    if (vNavBand && dict.vnav_band_aria) vNavBand.setAttribute('aria-label', dict.vnav_band_aria);
-
-    const btnUp = document.getElementById('btn-vnav-up');
-    if (btnUp) {
-      if (dict.vnav_btn_up_title) btnUp.setAttribute('title', dict.vnav_btn_up_title);
-      if (dict.vnav_btn_up_aria) btnUp.setAttribute('aria-label', dict.vnav_btn_up_aria);
-    }
-
-    const btnDown = document.getElementById('btn-vnav-down');
-    if (btnDown) {
-      if (dict.vnav_btn_down_title) btnDown.setAttribute('title', dict.vnav_btn_down_title);
-      if (dict.vnav_btn_down_aria) btnDown.setAttribute('aria-label', dict.vnav_btn_down_aria);
-    }
-
-    const vNavDotsWrap = document.getElementById('vnav-dots');
-    if (vNavDotsWrap && dict.vnav_dots_aria) vNavDotsWrap.setAttribute('aria-label', dict.vnav_dots_aria);
-
-    const vNavDial = document.querySelector('.vnav-dial');
-    if (vNavDial && dict.vnav_btn_dial_title) vNavDial.setAttribute('title', dict.vnav_btn_dial_title);
-
-    const vNavHome = document.querySelector('.vnav-home');
-    if (vNavHome && dict.vnav_btn_home_title) vNavHome.setAttribute('title', dict.vnav_btn_home_title);
-
-    const vDots = document.querySelectorAll('.vnav-dots .vnav-dot');
-    if (vDots.length >= 7) {
-      const tips = [
-        dict.vnav_tip_inicio,
-        dict.vnav_tip_dolor,
-        dict.vnav_tip_showroom,
-        dict.vnav_tip_soluciones,
-        dict.vnav_tip_etica,
-        dict.vnav_tip_boveda,
-        dict.vnav_tip_custodia
-      ];
-      vDots.forEach((d, idx) => {
-        const tipEl = d.querySelector('.vnav-dot-tooltip');
-        if (tipEl && tips[idx]) tipEl.textContent = tips[idx];
-        if (dict.vnav_dot_titles && dict.vnav_dot_titles[idx]) {
-          d.setAttribute('title', dict.vnav_dot_titles[idx]);
-        }
-      });
-    }
-
-    // =========================================================================
-    // 15. MODAL DE CITACIÓN
-    // =========================================================================
-    const mTitle = document.querySelector('.bibtex-modal-title');
-    if (mTitle) mTitle.innerHTML = '<span>📑</span> ' + dict.modal_title;
-    const mCloseBtn = document.querySelector('.bibtex-close-btn');
-    if (mCloseBtn && dict.modal_close_aria) mCloseBtn.setAttribute('aria-label', dict.modal_close_aria);
-
-    const mHint = document.getElementById('citation-format-hint');
-    if (mHint && (!mHint.getAttribute('data-fmt') || mHint.getAttribute('data-fmt') === 'bibtex')) {
-      mHint.textContent = dict.modal_hint_bibtex;
-    }
-    const mBtnCopy = document.getElementById('bibtex-copy-text');
-    if (mBtnCopy) mBtnCopy.textContent = dict.modal_btn_copy;
-
-    const mLinks = document.querySelectorAll('.bibtex-modal-body a');
-    if (mLinks.length >= 6) {
-      mLinks[0].innerHTML = '<span>📜</span> ' + dict.modal_link_manifesto_web;
-      if (dict.modal_link_man_web_title) mLinks[0].setAttribute('title', dict.modal_link_man_web_title);
-
-      mLinks[1].innerHTML = '<span>📦</span> ' + dict.modal_link_supp;
-      if (dict.modal_link_supp_title) mLinks[1].setAttribute('title', dict.modal_link_supp_title);
-
-      mLinks[2].innerHTML = '<span>⚡</span> ' + dict.modal_link_summary_en;
-      if (dict.modal_link_sum_en_title) mLinks[2].setAttribute('title', dict.modal_link_sum_en_title);
-
-      mLinks[3].innerHTML = '<span>📄</span> ' + dict.modal_link_man_es;
-      if (dict.modal_link_man_es_title) mLinks[3].setAttribute('title', dict.modal_link_man_es_title);
-
-      mLinks[4].innerHTML = '<span>📄</span> ' + dict.modal_link_man_en;
-      if (dict.modal_link_man_en_title) mLinks[4].setAttribute('title', dict.modal_link_man_en_title);
-
-      mLinks[5].innerHTML = '<span>🏛️</span> ' + dict.modal_link_zenodo;
-      if (dict.modal_link_zenodo_title) mLinks[5].setAttribute('title', dict.modal_link_zenodo_title);
-    }
-
-    // =========================================================================
-    // 16. BOTONES DE SELECCIÓN DE IDIOMA
-    // =========================================================================
-    const btnEs = document.getElementById('btn-promo-lang-es');
-    const btnEn = document.getElementById('btn-promo-lang-en');
-    if (btnEs) {
-      btnEs.style.color = (lang === 'es') ? 'var(--neon-green)' : '#94A3B8';
-      btnEs.style.fontWeight = (lang === 'es') ? '800' : '700';
-      btnEs.classList.toggle('active', lang === 'es');
-      if (dict.btn_lang_es_title) btnEs.setAttribute('title', dict.btn_lang_es_title);
-    }
-    if (btnEn) {
-      btnEn.style.color = (lang === 'en') ? 'var(--neon-green)' : '#94A3B8';
-      btnEn.style.fontWeight = (lang === 'en') ? '800' : '700';
-      btnEn.classList.toggle('active', lang === 'en');
-      if (dict.btn_lang_en_title) btnEn.setAttribute('title', dict.btn_lang_en_title);
-    }
+    // 13. MODAL DE CITACIÓN
+    try {
+      const mTitle = document.querySelector('#modal-bibtex h3');
+      if (mTitle && dict.modal_title) mTitle.innerHTML = '<span>📑</span> ' + dict.modal_title;
+      const mHint = document.getElementById('modal-bibtex-hint');
+      if (mHint && dict.modal_hint_bibtex) mHint.textContent = dict.modal_hint_bibtex;
+      const mBtnCopy = document.getElementById('btn-copy-citation');
+      if (mBtnCopy && dict.modal_btn_copy) mBtnCopy.textContent = dict.modal_btn_copy;
+    } catch (e) {}
 
     // Notificar al ecosistema
     try {
@@ -1428,8 +1020,7 @@
     } catch (e) {}
   }
 
-  // Exportar globalmente
-  window.setPromoLanguage = setPromoLanguage;
+    window.setPromoLanguage = setPromoLanguage;
   window.setLanguage = setPromoLanguage; // Alias para compatibilidad
 
   // Detección inicial

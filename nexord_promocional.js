@@ -288,115 +288,51 @@ function initHeroVideo() {
   const btnFs = document.getElementById('btn-video-fs');
   const playIcon = document.getElementById('video-play-icon');
   const playLabel = document.getElementById('video-play-label');
-  const audioIcon = document.getElementById('video-audio-icon');
-  const audioLabel = document.getElementById('video-audio-label');
   const playerWrap = document.getElementById('hero-player-wrap');
 
-  const overlayBtn = document.getElementById('hero-audio-overlay-btn');
-  const statusPill = document.getElementById('lbl-status-pill') || document.querySelector('.video-hero-status-pill span:last-child');
-
-  // Asegurar reproducción con playsinline
+  // Asegurar reproduccion limpia con playsinline
   vid.loop = false;
   vid.setAttribute('playsinline', '');
   vid.setAttribute('webkit-playsinline', '');
   vid.removeAttribute('loop');
 
-  function updateAudioUI(isMuted) {
-    const isEn = (document.documentElement.lang === 'en');
-    if (isMuted) {
-      if (btnAudio) {
-        btnAudio.classList.remove('audio-active');
+  function updateLocalAudioUI(isMuted) {
+    if (typeof window.updateHeroAudioUI === 'function') {
+      window.updateHeroAudioUI(isMuted);
+    }
+  }
+
+  // Escuchar cambios de volumen nativos
+  vid.addEventListener('volumechange', () => {
+    updateLocalAudioUI(vid.muted || vid.volume === 0);
+  });
+
+  // Si no estan asignados como onclick inline, asociarlos
+  if (btnPlay && !btnPlay.hasAttribute('onclick')) {
+    btnPlay.addEventListener('click', (e) => {
+      if (typeof window.toggleHeroPlayPause === 'function') {
+        window.toggleHeroPlayPause(e);
       }
-      if (audioIcon) audioIcon.textContent = '🔇';
-      if (audioLabel) audioLabel.textContent = isEn ? 'Enable Audio' : 'Activar Audio';
-      if (statusPill) statusPill.textContent = 'VISORD 3D · MUTE';
-      if (overlayBtn) overlayBtn.classList.remove('hidden');
-    } else {
-      if (btnAudio) {
-        btnAudio.classList.add('audio-active');
+    });
+  }
+
+  if (btnAudio && !btnAudio.hasAttribute('onclick')) {
+    btnAudio.addEventListener('click', (e) => {
+      if (typeof window.toggleHeroAudio === 'function') {
+        window.toggleHeroAudio(e);
       }
-      if (audioIcon) audioIcon.textContent = '🔊';
-      if (audioLabel) audioLabel.textContent = isEn ? 'Audio Active' : 'Audio Activado';
-      if (statusPill) statusPill.textContent = 'VISORD 3D · AUDIO ACTIVADO';
-      if (overlayBtn) overlayBtn.classList.add('hidden');
-    }
+    });
   }
 
-  function activateSound() {
-    vid.muted = false;
-    vid.volume = 1.0;
-    const playPromise = vid.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        updateAudioUI(false);
-      }).catch(err => {
-        console.warn("Video sound activate error:", err);
-        vid.muted = true;
-        vid.play().catch(() => {});
-        updateAudioUI(true);
-      });
-    } else {
-      updateAudioUI(false);
-    }
-  }
-  window.activateSoundFromOverlay = function(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    activateSound();
-  };
-
-  function toggleAudio(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (vid.muted) {
-      activateSound();
-    } else {
-      vid.muted = true;
-      updateAudioUI(true);
-    }
-  }
-
-  // Controlador de Reproducción / Pausa
-  function togglePlayPause(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (vid.paused || vid.ended) {
-      if (vid.ended) {
-        vid.currentTime = 0;
-      }
-      const p = vid.play();
-      if (p !== undefined) {
-        p.catch(err => console.warn("Video play error:", err));
-      }
-    } else {
-      vid.pause();
-    }
-  }
-
-  if (btnPlay) {
-    btnPlay.addEventListener('click', togglePlayPause);
-  }
-
-  if (btnAudio) {
-    btnAudio.addEventListener('click', toggleAudio);
-  }
-
-  // Pulsar sobre el video activa el audio si está silenciado o conmuta Play / Pausa
+  // Pulsar sobre el marco del video conmuta Play/Pausa (sin reactivar audio si el usuario lo silencio)
   if (playerWrap) {
     playerWrap.addEventListener('click', (e) => {
-      if (e.target.closest('.video-ctrl-btn')) {
-        return;
-      }
-      if (vid.muted) {
-        activateSound();
+      if (e.target.closest('.video-ctrl-btn')) return;
+      if (typeof window.toggleHeroPlayPause === 'function') {
+        window.toggleHeroPlayPause(e);
       } else {
-        togglePlayPause(e);
+        if (vid.paused || vid.ended) vid.play().catch(() => {});
+        else vid.pause();
       }
     });
   }
@@ -417,37 +353,37 @@ function initHeroVideo() {
   });
 
   vid.addEventListener('ended', () => {
-    // Al concluir la reproducción única (sin bucle)
     const isEn = (document.documentElement.lang === 'en');
     if (playIcon) playIcon.textContent = '🔄';
     if (playLabel) playLabel.textContent = isEn ? 'Replay' : 'Repetir';
     if (btnPlay) btnPlay.classList.remove('playing');
   });
 
-  vid.addEventListener('volumechange', () => {
-    updateAudioUI(vid.muted);
-  });
-
-  // Autoplay con AUDIO ACTIVADO prioritario
+  // Autoplay seguro con audio
   function startAutoplaySafe() {
     vid.muted = false;
     vid.volume = 1.0;
     const p = vid.play();
     if (p !== undefined) {
       p.then(() => {
-        updateAudioUI(false);
+        updateLocalAudioUI(false);
       }).catch(() => {
-        // Política de Autoplay del navegador exigió gesto previo:
-        // iniciar en silencio y activar al primer gesto del usuario
+        // En movil la politica de autoplay exige gesto previo
         vid.muted = true;
+        vid.volume = 0;
         vid.play().catch(() => {});
-        updateAudioUI(true);
+        updateLocalAudioUI(true);
 
         const unlockAudio = () => {
-          activateSound();
-          ['touchstart', 'click', 'pointerdown'].forEach(ev => window.removeEventListener(ev, unlockAudio, true));
+          // Si el usuario ya silencio deliberadamente, NO desbloquear
+          if (window.__userMutedHeroVideo) return;
+          vid.muted = false;
+          vid.volume = 1.0;
+          vid.play().catch(() => {});
+          updateLocalAudioUI(false);
+          ['touchstart', 'click'].forEach(ev => window.removeEventListener(ev, unlockAudio, false));
         };
-        ['touchstart', 'click', 'pointerdown'].forEach(ev => window.addEventListener(ev, unlockAudio, { once: true, capture: true, passive: true }));
+        ['touchstart', 'click'].forEach(ev => window.addEventListener(ev, unlockAudio, { once: true, passive: true }));
       });
     }
   }
