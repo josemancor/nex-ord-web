@@ -2720,7 +2720,7 @@
      1. ARQUITECTURA DE SCROLL Y CONTENEDOR GENERAL
      ------------------------------------------------------------------------- */
   html {
-    scroll-snap-type: y proximity !important;
+    scroll-snap-type: none !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -2734,7 +2734,7 @@
     min-height: 100vh !important;
     min-height: 100dvh !important;
     overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
     position: relative !important;
     -webkit-tap-highlight-color: transparent !important;
   }
@@ -2749,6 +2749,8 @@
   }
 
   .screen-section {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -2936,7 +2938,8 @@
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .transit-caratula-card {
@@ -3396,7 +3399,7 @@
 
       <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
       <div class="transit-parts-grid">
-        <a href="#pantalla-4a" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-4a')" role="button" title="Ir a 4a · Los 10 Dominios Aplicados">
+        <a href="#pantalla-4a" class="transit-part-row" onclick="continueToLevel('pantalla-4a', event)" role="button" title="Ir a 4a · Los 10 Dominios Aplicados">
           <div class="transit-part-pill">4a</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3407,7 +3410,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-4b" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-4b')" role="button" title="Ir a 4b · Sociometría Preventiva">
+        <a href="#pantalla-4b" class="transit-part-row" onclick="continueToLevel('pantalla-4b', event)" role="button" title="Ir a 4b · Sociometría Preventiva">
           <div class="transit-part-pill">4b</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3418,7 +3421,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-4c" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-4c')" role="button" title="Ir a 4c · Sociometría Cultural">
+        <a href="#pantalla-4c" class="transit-part-row" onclick="continueToLevel('pantalla-4c', event)" role="button" title="Ir a 4c · Sociometría Cultural">
           <div class="transit-part-pill">4c</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3429,7 +3432,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-4d" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-4d')" role="button" title="Ir a 4d · Informes Diagnóstico">
+        <a href="#pantalla-4d" class="transit-part-row" onclick="continueToLevel('pantalla-4d', event)" role="button" title="Ir a 4d · Informes Diagnóstico">
           <div class="transit-part-pill">4d</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3440,7 +3443,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-4e" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-4e')" role="button" title="Ir a 4e · Propuestas de Intervención Estratégica">
+        <a href="#pantalla-4e" class="transit-part-row" onclick="continueToLevel('pantalla-4e', event)" role="button" title="Ir a 4e · Propuestas de Intervención Estratégica">
           <div class="transit-part-pill">4e</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4850,12 +4853,15 @@
     /* ==========================================================
        1. NAVEGACIÓN Y SCROLL SUAVE ENTRE PANTALLAS
        ========================================================== */
-    function scrollToScreen(id) {
-    if (typeof window.scrollToScreen === 'function' && window.scrollToScreen !== scrollToScreen) {
-      window.scrollToScreen(id);
-      return;
+    function scrollToScreen(id, isInstant = false) {
+      const fn = window.scrollToScreen;
+      if (typeof fn === 'function' && fn !== scrollToScreen) {
+        fn(id, isInstant);
+      } else {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ block: 'start', behavior: isInstant ? 'instant' : 'smooth' });
+      }
     }
-  }
 
     function replayCurrentScreen() {
       const scrollPos = window.scrollY + 250;
@@ -7693,102 +7699,6 @@
 
   </script>
 <script>
-  /* =========================================================================
-     LOCUCIÓN PAUSADA Y SERENA DE CARÁTULA DE PASO (NEXORD)
-     ========================================================================= */
-  if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
-      syncNavPodAudioUI(false);
-  if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
-
-  function playCaratulaAudio() {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-
-    const locucionTexto = "Nivel Cuatro. Aplicaciones y dominios. Sociometría en contextos reales, prospectiva relacional y sociometría cultural.";
-    caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
-    caratulaSpeechUtter.lang = 'es-ES';
-
-    const voices = window.speechSynthesis.getVoices();
-    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
-                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
-                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
-                 || voices[0];
-    if (esVoice) caratulaSpeechUtter.voice = esVoice;
-
-    caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
-    caratulaSpeechUtter.pitch = 0.95;
-    caratulaSpeechUtter.volume = 1.0;
-
-    const btnAudio = document.getElementById('btn-audio-caratula');
-    const playIcon = document.getElementById('audio-play-icon');
-
-    caratulaSpeechUtter.onstart = () => {
-      isCaratulaAudioPlaying = true;
-      if (btnAudio) btnAudio.classList.add('playing');
-      if (playIcon) playIcon.textContent = '❚❚';
-    };
-
-    caratulaSpeechUtter.onend = () => {
-      isCaratulaAudioPlaying = false;
-      if (btnAudio) btnAudio.classList.remove('playing');
-      if (playIcon) playIcon.textContent = '🔊';
-    };
-
-    caratulaSpeechUtter.onerror = () => {
-      isCaratulaAudioPlaying = false;
-      if (btnAudio) btnAudio.classList.remove('playing');
-      if (playIcon) playIcon.textContent = '🔊';
-    };
-
-    window.speechSynthesis.speak(caratulaSpeechUtter);
-  }
-
-  
-  function syncNavPodAudioUI(isPlaying) {
-    const navBtn = document.getElementById('nav-pod-btn-play');
-    const navIcon = document.getElementById('nav-pod-play-icon');
-    if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '⏯';
-    if (navBtn) {
-      navBtn.classList.toggle('playing', !!isPlaying);
-      navBtn.title = isPlaying ? 'Pausar Locución (Play/Stop)' : 'Reproducir Locución (Play/Stop)';
-    }
-  }
-
-  function toggleCaratulaAudio() {
-    if (isCaratulaAudioPlaying) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      isCaratulaAudioPlaying = false;
-      const btnAudio = document.getElementById('btn-audio-caratula');
-      const playIcon = document.getElementById('audio-play-icon');
-      if (btnAudio) btnAudio.classList.remove('playing');
-      if (playIcon) playIcon.textContent = '🔊';
-    } else {
-      playCaratulaAudio();
-    }
-  }
-
-  function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
-    }
-  }
-
-  // Inicio automático pausado suave tras ~1.2s al abrir la carátula
-  window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      if (!isCaratulaAudioPlaying && window.scrollY < 180) {
-        playCaratulaAudio();
-      }
-    }, 1200);
-  });
-
-  // Cancelar audio inmediatamente al navegar o salir
-  window.addEventListener('beforeunload', () => {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-  });
-
     // =========================================================================
     // CONTROLADOR CANÓNICO HUD NEXORD (Nivel 4.)
     // =========================================================================
@@ -7949,35 +7859,33 @@
       try { snapCont.scrollTo({ top: el.offsetTop, behavior: isInstant ? 'auto' : 'smooth' }); } catch(e){}
     }
 
-    setTimeout(() => {
-      rootHtml.style.scrollSnapType = prevHtmlSnap;
-      document.body.style.scrollSnapType = prevBodySnap;
-      if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
-    }, 800);
+    if (window.innerWidth > 820) {
+      setTimeout(() => {
+        rootHtml.style.scrollSnapType = prevHtmlSnap;
+        document.body.style.scrollSnapType = prevBodySnap;
+        if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
+      }, 800);
+    }
 
     setTimeout(() => {
       if (typeof updateUnifiedHud === 'function') updateUnifiedHud();
     }, isInstant ? 40 : 350);
   }
 
-  function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
+  function continueToLevel(targetId, evt) {
+    if (evt && typeof evt.preventDefault === 'function') {
+      try { evt.preventDefault(); } catch(e){}
     }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+    window.isCaratulaAudioPlaying = false;
+    if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
+    scrollToScreen(targetId);
   }
 
   window.scrollToScreen = scrollToScreen;
   window.continueToLevel = continueToLevel;
-
-    function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
-    }
-  }
 
     function hudNavigatePrev() {
       let currentIdx = -1;
@@ -8017,62 +7925,6 @@
         scrollToScreen(HUD_CONFIG.screens[nextIdx].id);
       } else if (HUD_CONFIG.nextLevelUrl) {
         window.location.href = HUD_CONFIG.nextLevelUrl;
-      }
-    }
-
-    function playCaratulaAudio() {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-
-      const locucionTexto = "Nivel Cuatro. Aplicaciones y dominios. Sociometría en contextos reales, prospectiva relacional y sociometría cultural.";
-      caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
-      caratulaSpeechUtter.lang = 'es-ES';
-
-      const voices = window.speechSynthesis.getVoices();
-      const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
-                        (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
-                   || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
-                   || voices[0];
-      if (esVoice) caratulaSpeechUtter.voice = esVoice;
-
-      caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
-      caratulaSpeechUtter.pitch = 0.95;
-      caratulaSpeechUtter.volume = 1.0;
-
-      const btnAudio = document.getElementById('btn-audio-caratula');
-      const playIcon = document.getElementById('audio-play-icon');
-
-      caratulaSpeechUtter.onstart = () => {
-        isCaratulaAudioPlaying = true;
-        if (btnAudio) btnAudio.classList.add('playing');
-        if (playIcon) playIcon.textContent = '⏹';
-      };
-
-      caratulaSpeechUtter.onend = () => {
-        isCaratulaAudioPlaying = false;
-        if (btnAudio) btnAudio.classList.remove('playing');
-        if (playIcon) playIcon.textContent = '🔊';
-      };
-
-      caratulaSpeechUtter.onerror = () => {
-        isCaratulaAudioPlaying = false;
-        if (btnAudio) btnAudio.classList.remove('playing');
-        if (playIcon) playIcon.textContent = '🔊';
-      };
-
-      window.speechSynthesis.speak(caratulaSpeechUtter);
-    }
-
-    function toggleCaratulaAudio() {
-      if (isCaratulaAudioPlaying) {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        isCaratulaAudioPlaying = false;
-        const btnAudio = document.getElementById('btn-audio-caratula');
-        const playIcon = document.getElementById('audio-play-icon');
-        if (btnAudio) btnAudio.classList.remove('playing');
-        if (playIcon) playIcon.textContent = '🔊';
-      } else {
-        playCaratulaAudio();
       }
     }
 
@@ -8392,59 +8244,115 @@
       if (typeof origSelectReportType === 'function') origSelectReportType(idx);
     };
 
-    // Multilingual speech synthesis
+    // Multilingual bulletproof speech synthesis (NEXORD Canon)
+    if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        try { window.speechSynthesis.getVoices(); } catch(e){}
+      };
+    }
+
+    function syncNavPodAudioUI(isPlaying) {
+      const navBtn = document.getElementById('nav-pod-btn-play');
+      const navIcon = document.getElementById('nav-pod-play-icon');
+      if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '⏯';
+      if (navBtn) {
+        navBtn.classList.toggle('playing', !!isPlaying);
+        navBtn.title = isPlaying ? 'Pausar Locución (Play/Stop)' : 'Reproducir Locución (Play/Stop)';
+      }
+    }
+    window.syncNavPodAudioUI = syncNavPodAudioUI;
+
     function playCaratulaAudio() {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch(e){}
 
-      const langTexts = {
+      const langTexts = (typeof I18N !== 'undefined' && I18N[currentLang] && I18N[currentLang].caratula) ? {
         es: I18N.es.caratula.speech,
         en: I18N.en.caratula.speech,
         ru: I18N.ru.caratula.speech,
         zh: I18N.zh.caratula.speech
-      };
+      } : null;
 
-      const locucionTexto = langTexts[currentLang] || langTexts.es;
-      caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+      const locucionTexto = (langTexts && (langTexts[currentLang] || langTexts.es)) ||
+        "Nivel Cuatro. Aplicaciones y dominios. Sociometría en contextos reales, prospectiva relacional y sociometría cultural.";
+
+      const utter = new SpeechSynthesisUtterance(locucionTexto);
+      window.caratulaSpeechUtter = utter;
       
       const langCodeMap = { es: 'es-ES', en: 'en-US', ru: 'ru-RU', zh: 'zh-CN' };
-      caratulaSpeechUtter.lang = langCodeMap[currentLang] || 'es-ES';
+      const targetLang = (typeof currentLang !== 'undefined' && langCodeMap[currentLang]) ? langCodeMap[currentLang] : 'es-ES';
+      utter.lang = targetLang;
 
-      const voices = window.speechSynthesis.getVoices();
-      const targetPrefix = currentLang.toLowerCase();
-      const matchedVoice = voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix) &&
-                            (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google')))
-                       || voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix))
-                       || voices[0];
-      if (matchedVoice) caratulaSpeechUtter.voice = matchedVoice;
+      try {
+        const voices = window.speechSynthesis.getVoices() || [];
+        const targetPrefix = targetLang.split('-')[0].toLowerCase();
+        const matchedVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix) &&
+                              (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                         || voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix));
+        if (matchedVoice) utter.voice = matchedVoice;
+      } catch(e){}
 
-      caratulaSpeechUtter.rate = 0.80;
-      caratulaSpeechUtter.pitch = 0.95;
-      caratulaSpeechUtter.volume = 1.0;
+      utter.rate = 0.85;
+      utter.pitch = 0.95;
+      utter.volume = 1.0;
 
       const btnAudio = document.getElementById('btn-audio-caratula');
       const playIcon = document.getElementById('audio-play-icon');
 
-      caratulaSpeechUtter.onstart = () => {
-        isCaratulaAudioPlaying = true;
+      utter.onstart = () => {
+        window.isCaratulaAudioPlaying = true;
+        syncNavPodAudioUI(true);
         if (btnAudio) btnAudio.classList.add('playing');
-        if (playIcon) playIcon.textContent = '❚❚';
+        if (playIcon) playIcon.textContent = '⏹';
       };
 
-      caratulaSpeechUtter.onend = () => {
-        isCaratulaAudioPlaying = false;
+      utter.onend = () => {
+        window.isCaratulaAudioPlaying = false;
+        syncNavPodAudioUI(false);
         if (btnAudio) btnAudio.classList.remove('playing');
         if (playIcon) playIcon.textContent = '🔊';
+        window.caratulaSpeechUtter = null;
       };
 
-      caratulaSpeechUtter.onerror = () => {
-        isCaratulaAudioPlaying = false;
+      utter.onerror = (err) => {
+        console.warn('SpeechSynthesis error:', err);
+        window.isCaratulaAudioPlaying = false;
+        syncNavPodAudioUI(false);
         if (btnAudio) btnAudio.classList.remove('playing');
         if (playIcon) playIcon.textContent = '🔊';
+        window.caratulaSpeechUtter = null;
       };
 
-      window.speechSynthesis.speak(caratulaSpeechUtter);
+      if (window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch(e){}
+      }
+
+      try {
+        window.speechSynthesis.speak(utter);
+      } catch(e) {
+        console.warn('speechSynthesis.speak error:', e);
+      }
     }
+
+    function toggleCaratulaAudio() {
+      if (window.isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) {
+          try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        window.isCaratulaAudioPlaying = false;
+        syncNavPodAudioUI(false);
+        const btnAudio = document.getElementById('btn-audio-caratula');
+        const playIcon = document.getElementById('audio-play-icon');
+        if (btnAudio) btnAudio.classList.remove('playing');
+        if (playIcon) playIcon.textContent = '🔊';
+        window.caratulaSpeechUtter = null;
+      } else {
+        playCaratulaAudio();
+      }
+    }
+
+    window.playCaratulaAudio = playCaratulaAudio;
+    window.toggleCaratulaAudio = toggleCaratulaAudio;
 
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('nexord_lang') || 'es';
@@ -8635,37 +8543,11 @@ function copyActiveCitation() {
 }
 </script>
 
-  <script src="nexord_dial_nav.js" defer>
+  <script src="nexord_dial_nav.js" defer></script>
 
+  <script>
   function setupFastMobileTouch() {
-    // 1. Enlaces del índice de carátula
-    document.querySelectorAll('.transit-part-row').forEach(row => {
-      let startX = 0, startY = 0, startTime = 0;
-      row.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          startTime = performance.now();
-        }
-      }, { passive: true });
-      row.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          const dx = Math.abs(e.changedTouches[0].clientX - startX);
-          const dy = Math.abs(e.changedTouches[0].clientY - startY);
-          const dt = performance.now() - startTime;
-          if (dx < 14 && dy < 14 && dt < 450) {
-            e.preventDefault();
-            const href = row.getAttribute('href');
-            const targetId = href ? href.replace('#', '') : null;
-            if (targetId && typeof scrollToScreen === 'function') {
-              scrollToScreen(targetId);
-            }
-          }
-        }
-      }, { passive: false });
-    });
-
-    // 2. Botones de letras en cabecera HUD
+    // 1. Botones de letras en cabecera HUD
     document.querySelectorAll('.hud-letter-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -8691,7 +8573,7 @@ function copyActiveCitation() {
       }, { passive: false });
     });
 
-    // 3. Flechas de navegación HUD (prev / next)
+    // 2. Flechas de navegación HUD (prev / next)
     document.querySelectorAll('.hud-arrow-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -8718,7 +8600,7 @@ function copyActiveCitation() {
       }, { passive: false });
     });
 
-    // 4. Flechas laterales flotantes de pantalla completa (floating-side-arrow)
+    // 3. Flechas laterales flotantes de pantalla completa (floating-side-arrow)
     document.querySelectorAll('.floating-side-arrow').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {

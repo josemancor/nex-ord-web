@@ -2623,7 +2623,7 @@
      1. ARQUITECTURA DE SCROLL Y CONTENEDOR GENERAL
      ------------------------------------------------------------------------- */
   html {
-    scroll-snap-type: y proximity !important;
+    scroll-snap-type: none !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -2637,7 +2637,7 @@
     min-height: 100vh !important;
     min-height: 100dvh !important;
     overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
     position: relative !important;
     -webkit-tap-highlight-color: transparent !important;
   }
@@ -2652,6 +2652,8 @@
   }
 
   .screen-section {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -2839,7 +2841,8 @@
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .transit-caratula-card {
@@ -3291,7 +3294,7 @@
 
       <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
       <div class="transit-parts-grid">
-        <a href="#pantalla-5a" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-5a')" role="button" title="Ir a 5a · Datos Sociométricos Básicos">
+        <a href="#pantalla-5a" class="transit-part-row" onclick="continueToLevel('pantalla-5a', event)" role="button" title="Ir a 5a · Datos Sociométricos Básicos">
           <div class="transit-part-pill">5a</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3302,7 +3305,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-5b" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-5b')" role="button" title="Ir a 5b · La Función Inversa del Orden Preferencial">
+        <a href="#pantalla-5b" class="transit-part-row" onclick="continueToLevel('pantalla-5b', event)" role="button" title="Ir a 5b · La Función Inversa del Orden Preferencial">
           <div class="transit-part-pill">5b</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3313,7 +3316,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-5c" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-5c')" role="button" title="Ir a 5c · Índices Grupales y Topológicos">
+        <a href="#pantalla-5c" class="transit-part-row" onclick="continueToLevel('pantalla-5c', event)" role="button" title="Ir a 5c · Índices Grupales y Topológicos">
           <div class="transit-part-pill">5c</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3324,7 +3327,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-5d" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-5d')" role="button" title="Ir a 5d · Mapas Factoriales Duales">
+        <a href="#pantalla-5d" class="transit-part-row" onclick="continueToLevel('pantalla-5d', event)" role="button" title="Ir a 5d · Mapas Factoriales Duales">
           <div class="transit-part-pill">5d</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -3335,7 +3338,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-5e" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-5e')" role="button" title="Ir a 5e · Ejemplos de Principales Tipos de Gráficos">
+        <a href="#pantalla-5e" class="transit-part-row" onclick="continueToLevel('pantalla-5e', event)" role="button" title="Ir a 5e · Ejemplos de Principales Tipos de Gráficos">
           <div class="transit-part-pill">5e</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -7473,74 +7476,89 @@
     }
   }
 
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      try { window.speechSynthesis.getVoices(); } catch(e){}
+    };
+  }
+
   function playCaratulaAudio() {
     if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+    try { window.speechSynthesis.cancel(); } catch(e){}
 
-    const locucionTexto = (I18N_NIVEL5[currentLang]?.speech_text) || I18N_NIVEL5['es'].speech_text;
-    caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+    const locucionTexto = (typeof I18N_NIVEL5 !== 'undefined' && I18N_NIVEL5[currentLang]?.speech_text) || (typeof I18N_NIVEL5 !== 'undefined' && I18N_NIVEL5['es']?.speech_text) || "Nivel Cinco. Formalización matemática. Espacio métrico SDR, espectro de grafos con signo y geometría de Grassmann.";
+    const utter = new SpeechSynthesisUtterance(locucionTexto);
+    window.caratulaSpeechUtter = utter;
     
     const langCodeMap = { es: 'es-ES', en: 'en-US', ru: 'ru-RU', zh: 'zh-CN' };
-    caratulaSpeechUtter.lang = langCodeMap[currentLang] || 'es-ES';
+    const targetLang = (typeof currentLang !== 'undefined' && langCodeMap[currentLang]) ? langCodeMap[currentLang] : 'es-ES';
+    utter.lang = targetLang;
 
-    const voices = window.speechSynthesis.getVoices();
-    const targetPrefix = currentLang.toLowerCase();
-    const matchedVoice = voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix) && 
-                          (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
-                       || voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix))
-                       || voices[0];
-    if (matchedVoice) caratulaSpeechUtter.voice = matchedVoice;
+    try {
+      const voices = window.speechSynthesis.getVoices() || [];
+      const targetPrefix = targetLang.split('-')[0].toLowerCase();
+      const matchedVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix) && 
+                            (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                         || voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix));
+      if (matchedVoice) utter.voice = matchedVoice;
+    } catch(e){}
 
-    caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne
-    caratulaSpeechUtter.pitch = 0.95;
-    caratulaSpeechUtter.volume = 1.0;
+    utter.rate = 0.85;
+    utter.pitch = 0.95;
+    utter.volume = 1.0;
 
     const btnAudio = document.getElementById('btn-audio-caratula');
     const playIcon = document.getElementById('audio-play-icon');
 
-    caratulaSpeechUtter.onstart = () => {
-      isCaratulaAudioPlaying = true;
+    utter.onstart = () => {
+      window.isCaratulaAudioPlaying = true;
       if (btnAudio) btnAudio.classList.add('playing');
-      if (playIcon) playIcon.textContent = '❚❚';
+      if (playIcon) playIcon.textContent = '⏹';
       syncNavPodAudioUI(true);
     };
 
-    caratulaSpeechUtter.onend = () => {
-      isCaratulaAudioPlaying = false;
+    utter.onend = () => {
+      window.isCaratulaAudioPlaying = false;
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
       syncNavPodAudioUI(false);
+      window.caratulaSpeechUtter = null;
     };
 
-    caratulaSpeechUtter.onerror = () => {
-      isCaratulaAudioPlaying = false;
+    utter.onerror = (err) => {
+      console.warn('SpeechSynthesis error:', err);
+      window.isCaratulaAudioPlaying = false;
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
       syncNavPodAudioUI(false);
+      window.caratulaSpeechUtter = null;
     };
 
-    window.speechSynthesis.speak(caratulaSpeechUtter);
+    if (window.speechSynthesis.paused) {
+      try { window.speechSynthesis.resume(); } catch(e){}
+    }
+
+    try {
+      window.speechSynthesis.speak(utter);
+    } catch(e) {
+      console.warn('speechSynthesis.speak error:', e);
+    }
   }
 
   function toggleCaratulaAudio() {
-    if (isCaratulaAudioPlaying) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      isCaratulaAudioPlaying = false;
+    if (window.isCaratulaAudioPlaying) {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e){}
+      }
+      window.isCaratulaAudioPlaying = false;
       const btnAudio = document.getElementById('btn-audio-caratula');
       const playIcon = document.getElementById('audio-play-icon');
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
       syncNavPodAudioUI(false);
+      window.caratulaSpeechUtter = null;
     } else {
       playCaratulaAudio();
-    }
-  }
-
-  function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
     }
   }
 
@@ -7700,23 +7718,29 @@
       try { snapCont.scrollTo({ top: el.offsetTop, behavior: isInstant ? 'auto' : 'smooth' }); } catch(e){}
     }
 
-    setTimeout(() => {
-      rootHtml.style.scrollSnapType = prevHtmlSnap;
-      document.body.style.scrollSnapType = prevBodySnap;
-      if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
-    }, 800);
+    if (window.innerWidth > 820) {
+      setTimeout(() => {
+        rootHtml.style.scrollSnapType = prevHtmlSnap;
+        document.body.style.scrollSnapType = prevBodySnap;
+        if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
+      }, 800);
+    }
 
     setTimeout(() => {
       if (typeof updateUnifiedHud === 'function') updateUnifiedHud();
     }, isInstant ? 40 : 350);
   }
 
-  function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
+  function continueToLevel(targetId, evt) {
+    if (evt && typeof evt.preventDefault === 'function') {
+      try { evt.preventDefault(); } catch(e){}
     }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+    window.isCaratulaAudioPlaying = false;
+    if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
+    scrollToScreen(targetId);
   }
 
   window.scrollToScreen = scrollToScreen;
@@ -7776,14 +7800,6 @@
       setTimeout(() => {
         scrollToScreen(hash, true);
       }, 70);
-    } else {
-      setTimeout(() => {
-        const snap = document.getElementById('main-snap-container');
-        const isAtCaratula = snap ? (snap.scrollTop < 180) : (window.scrollY < 180);
-        if (!isCaratulaAudioPlaying && isAtCaratula) {
-          playCaratulaAudio();
-        }
-      }, 1200);
     }
   });
 
@@ -8334,37 +8350,11 @@ function copyActiveCitation() {
 }
 </script>
 
-  <script src="nexord_dial_nav.js" defer>
+  <script src="nexord_dial_nav.js" defer></script>
 
+  <script>
   function setupFastMobileTouch() {
-    // 1. Enlaces del índice de carátula
-    document.querySelectorAll('.transit-part-row').forEach(row => {
-      let startX = 0, startY = 0, startTime = 0;
-      row.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          startTime = performance.now();
-        }
-      }, { passive: true });
-      row.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          const dx = Math.abs(e.changedTouches[0].clientX - startX);
-          const dy = Math.abs(e.changedTouches[0].clientY - startY);
-          const dt = performance.now() - startTime;
-          if (dx < 14 && dy < 14 && dt < 450) {
-            e.preventDefault();
-            const href = row.getAttribute('href');
-            const targetId = href ? href.replace('#', '') : null;
-            if (targetId && typeof scrollToScreen === 'function') {
-              scrollToScreen(targetId);
-            }
-          }
-        }
-      }, { passive: false });
-    });
-
-    // 2. Botones de letras en cabecera HUD
+    // 1. Botones de letras en cabecera HUD
     document.querySelectorAll('.hud-letter-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {

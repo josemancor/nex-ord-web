@@ -6340,7 +6340,8 @@
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .transit-caratula-card {
@@ -6961,7 +6962,7 @@
 
       <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
       <div class="transit-parts-grid">
-        <a href="#pantalla-b" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-b')" role="button" title="Ir a 1a · Génesis de un Grupo">
+        <a href="#pantalla-b" class="transit-part-row" onclick="continueToLevel('pantalla-b', event)" role="button" title="Ir a 1a · Génesis de un Grupo">
           <div class="transit-part-pill">1a</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -6973,7 +6974,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-c" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-c')" role="button" title="Ir a 1b · Fundamentos Conceptuales (6 Cuadros)">
+        <a href="#pantalla-c" class="transit-part-row" onclick="continueToLevel('pantalla-c', event)" role="button" title="Ir a 1b · Fundamentos Conceptuales (6 Cuadros)">
           <div class="transit-part-pill">1b</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -6985,7 +6986,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-d" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-d')" role="button" title="Ir a 1c · Proyección Dual: Votos y Densidades">
+        <a href="#pantalla-d" class="transit-part-row" onclick="continueToLevel('pantalla-d', event)" role="button" title="Ir a 1c · Proyección Dual: Votos y Densidades">
           <div class="transit-part-pill">1c</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -6997,7 +6998,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-e" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-e')" role="button" title="Ir a 1d · Informes de Resultados Expertos">
+        <a href="#pantalla-e" class="transit-part-row" onclick="continueToLevel('pantalla-e', event)" role="button" title="Ir a 1d · Informes de Resultados Expertos">
           <div class="transit-part-pill">1d</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -7009,7 +7010,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-f" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-f')" role="button" title="Ir a 1e · Sociometría Comparada (Cubo GxTyCz)">
+        <a href="#pantalla-f" class="transit-part-row" onclick="continueToLevel('pantalla-f', event)" role="button" title="Ir a 1e · Sociometría Comparada (Cubo GxTyCz)">
           <div class="transit-part-pill">1e</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -8396,10 +8397,12 @@
         try { document.body.scrollTo({ top: targetY, behavior: 'smooth' }); } catch(e){}
       }
 
-      setTimeout(() => {
-        rootHtml.style.scrollSnapType = prevHtmlSnap;
-        document.body.style.scrollSnapType = prevBodySnap;
-      }, 800);
+      if (window.innerWidth > 820) {
+        setTimeout(() => {
+          rootHtml.style.scrollSnapType = prevHtmlSnap;
+          document.body.style.scrollSnapType = prevBodySnap;
+        }, 800);
+      }
 
       setTimeout(() => {
         if (typeof updateUnifiedHud === 'function') updateUnifiedHud();
@@ -8432,7 +8435,16 @@
       }
     }
 
-    function continueToLevel(targetId) {
+    function continueToLevel(targetId, evt) {
+      if (evt && typeof evt.preventDefault === 'function') {
+        try { evt.preventDefault(); } catch(e){}
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e){}
+      }
+      if (typeof isCaratulaAudioPlaying !== 'undefined') isCaratulaAudioPlaying = false;
+      if (typeof window.isCaratulaAudioPlaying !== 'undefined') window.isCaratulaAudioPlaying = false;
+      if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
       scrollToScreen(targetId);
     }
 
@@ -10509,7 +10521,9 @@
       const idx = typeof getCurrentScreenIndex === 'function' ? getCurrentScreenIndex() : 1;
       const scrId = screenIds[idx] || 'pantalla-b';
       
-      if (scrId === 'pantalla-b') {
+      if (scrId === 'pantalla-a') {
+        toggleCaratulaAudio();
+      } else if (scrId === 'pantalla-b') {
         toggleMoviolaPlay();
       } else if (scrId === 'pantalla-c') {
         togglePantalla1bAudio();
@@ -18734,34 +18748,7 @@
     }
 
     function setupFastMobileTouch() {
-    // 1. Enlaces del índice de carátula
-    document.querySelectorAll('.transit-part-row').forEach(row => {
-      let startX = 0, startY = 0, startTime = 0;
-      row.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          startTime = performance.now();
-        }
-      }, { passive: true });
-      row.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          const dx = Math.abs(e.changedTouches[0].clientX - startX);
-          const dy = Math.abs(e.changedTouches[0].clientY - startY);
-          const dt = performance.now() - startTime;
-          if (dx < 14 && dy < 14 && dt < 450) {
-            e.preventDefault();
-            const href = row.getAttribute('href');
-            const targetId = href ? href.replace('#', '') : null;
-            if (targetId && typeof scrollToScreen === 'function') {
-              scrollToScreen(targetId);
-            }
-          }
-        }
-      }, { passive: false });
-    });
-
-    // 2. Botones de letras en cabecera HUD
+    // 1. Botones de letras en cabecera HUD
     document.querySelectorAll('.hud-letter-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -19795,24 +19782,33 @@
   if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
   if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
 
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      try { window.speechSynthesis.getVoices(); } catch(e){}
+    };
+  }
+
   function playCaratulaAudio() {
     if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+    try { window.speechSynthesis.cancel(); } catch(e){}
 
     const locucionTexto = window._caratulaSpeechText || (typeof I18N !== 'undefined' && I18N[currentLang] ? I18N[currentLang].audio_locution : "Nivel Uno. Dinámica Grupal Intuitiva. Génesis de un grupo, autoorganización y observación fenomenológica del sistema relacional en cuatro experiencias guiadas.");
     const utter = new SpeechSynthesisUtterance(locucionTexto);
     window._caratulaSpeechUtter = utter;
-    utter.lang = window._caratulaSpeechLang || (typeof I18N !== 'undefined' && I18N[currentLang] ? I18N[currentLang].voice_lang : 'es-ES');
+    const targetLang = window._caratulaSpeechLang || (typeof I18N !== 'undefined' && I18N[currentLang] ? I18N[currentLang].voice_lang : 'es-ES');
+    utter.lang = targetLang;
 
-    const voices = window.speechSynthesis.getVoices();
-    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
-                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica') || v.name.includes('Helena') || v.name.includes('Laura') || v.name.includes('Mónica')))
-                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
-                 || (voices.length > 0 ? voices[0] : null);
-    if (esVoice) utter.voice = esVoice;
+    try {
+      const voices = window.speechSynthesis.getVoices() || [];
+      const langPrefix = targetLang.split('-')[0].toLowerCase();
+      const esVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix) && 
+                        (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica') || v.name.includes('Helena') || v.name.includes('Laura') || v.name.includes('Mónica')))
+                   || voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix));
+      if (esVoice) utter.voice = esVoice;
+    } catch(e){}
 
-    utter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
-    utter.pitch = 0.95;
+    utter.rate = 0.85; // Ritmo pausado y nítido
+    utter.pitch = 1.0;
     utter.volume = 1.0;
 
     const btnAudio = document.getElementById('btn-audio-caratula');
@@ -19820,54 +19816,59 @@
 
     utter.onstart = () => {
       isCaratulaAudioPlaying = true;
+      window.isCaratulaAudioPlaying = true;
       if (btnAudio) btnAudio.classList.add('playing');
-      if (playIcon) playIcon.textContent = '❚❚';
+      if (playIcon) playIcon.textContent = '⏹';
+      if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(true);
     };
 
     utter.onend = () => {
       isCaratulaAudioPlaying = false;
+      window.isCaratulaAudioPlaying = false;
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
+      if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
       window._caratulaSpeechUtter = null;
     };
 
-    utter.onerror = () => {
+    utter.onerror = (err) => {
+      console.warn('SpeechSynthesis error:', err);
       isCaratulaAudioPlaying = false;
+      window.isCaratulaAudioPlaying = false;
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
+      if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
       window._caratulaSpeechUtter = null;
     };
 
     if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
+      try { window.speechSynthesis.resume(); } catch(e){}
     }
-    setTimeout(() => {
+
+    try {
       window.speechSynthesis.speak(utter);
-    }, 60);
+    } catch(e) {
+      console.warn('speechSynthesis.speak error:', e);
+    }
   }
 
   function toggleCaratulaAudio() {
-    if (isCaratulaAudioPlaying) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (isCaratulaAudioPlaying || window.isCaratulaAudioPlaying) {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e){}
+      }
       isCaratulaAudioPlaying = false;
+      window.isCaratulaAudioPlaying = false;
       window._caratulaSpeechUtter = null;
       const btnAudio = document.getElementById('btn-audio-caratula');
       const playIcon = document.getElementById('audio-play-icon');
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
+      if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
     } else {
       playCaratulaAudio();
     }
   }
-
-  // Inicio automático pausado suave tras ~1.2s al abrir la carátula
-  window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      if (!isCaratulaAudioPlaying && window.scrollY < 180) {
-        playCaratulaAudio();
-      }
-    }, 1200);
-  });
 
   // Cancelar audio inmediatamente al navegar o salir
   window.addEventListener('beforeunload', () => {
@@ -19986,20 +19987,6 @@
       }
 
   }
-
-    function scrollToScreen(screenId) {
-      if (typeof window.scrollToScreen === 'function') {
-        window.scrollToScreen(screenId);
-      }
-    }
-
-    function continueToLevel(targetId) {
-      if (typeof window.continueToLevel === 'function') {
-        window.continueToLevel(targetId);
-      } else {
-        scrollToScreen(targetId);
-      }
-    }
 
     function hudNavigatePrev() {
       let currentIdx = -1;

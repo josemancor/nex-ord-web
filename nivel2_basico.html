@@ -3894,7 +3894,8 @@
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .transit-caratula-card {
@@ -4512,7 +4513,7 @@
 
       <!-- ÍNDICE DE LAS 5 PANTALLAS (A, B, C, D, E) -->
       <div class="transit-parts-grid">
-        <a href="#pantalla-2a" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-2a')" role="button" title="Ir a 2a · El Vínculo: [Dar+Recibir]">
+        <a href="#pantalla-2a" class="transit-part-row" onclick="continueToLevel('pantalla-2a', event)" role="button" title="Ir a 2a · El Vínculo: [Dar+Recibir]">
           <div class="transit-part-pill">2a</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4524,7 +4525,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-2b" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-2b')" role="button" title="Ir a 2b · SMIa: Sociomatriz Integrada">
+        <a href="#pantalla-2b" class="transit-part-row" onclick="continueToLevel('pantalla-2b', event)" role="button" title="Ir a 2b · SMIa: Sociomatriz Integrada">
           <div class="transit-part-pill">2b</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4536,7 +4537,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-2c" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-2c')" role="button" title="Ir a 2c · SMIb(n, n): Sociomatriz Completa Estándar">
+        <a href="#pantalla-2c" class="transit-part-row" onclick="continueToLevel('pantalla-2c', event)" role="button" title="Ir a 2c · SMIb(n, n): Sociomatriz Completa Estándar">
           <div class="transit-part-pill">2c</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4548,7 +4549,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-2d" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-2d')" role="button" title="Ir a 2d · Densidad BDR/SDR y Entropía">
+        <a href="#pantalla-2d" class="transit-part-row" onclick="continueToLevel('pantalla-2d', event)" role="button" title="Ir a 2d · Densidad BDR/SDR y Entropía">
           <div class="transit-part-pill">2d</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4560,7 +4561,7 @@
           <div class="transit-part-arrow">➔</div>
         </a>
 
-        <a href="#pantalla-2e" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-2e')" role="button" title="Ir a 2e · Espacio 9×9 Q81 y Cuencas">
+        <a href="#pantalla-2e" class="transit-part-row" onclick="continueToLevel('pantalla-2e', event)" role="button" title="Ir a 2e · Espacio 9×9 Q81 y Cuencas">
           <div class="transit-part-pill">2e</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -5834,9 +5835,9 @@
       if (typeof updateUnifiedHud === 'function') setTimeout(updateUnifiedHud, 350);
     }
 
-    function continueToLevel(targetId) {
+    function continueToLevel(targetId, evt) {
       if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-        window.continueToLevel(targetId);
+        window.continueToLevel(targetId, evt);
       } else {
         scrollToScreen(targetId);
       }
@@ -7049,18 +7050,28 @@
       try { snapCont.scrollTo({ top: el.offsetTop, behavior: isInstant ? 'auto' : 'smooth' }); } catch(e){}
     }
 
-    setTimeout(() => {
-      rootHtml.style.scrollSnapType = prevHtmlSnap;
-      document.body.style.scrollSnapType = prevBodySnap;
-      if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
-    }, 800);
+    if (window.innerWidth > 820) {
+      setTimeout(() => {
+        rootHtml.style.scrollSnapType = prevHtmlSnap;
+        document.body.style.scrollSnapType = prevBodySnap;
+        if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
+      }, 800);
+    }
 
     setTimeout(() => {
       if (typeof updateUnifiedHud === 'function') updateUnifiedHud();
     }, isInstant ? 40 : 350);
   }
 
-  function continueToLevel(targetId) {
+  function continueToLevel(targetId, evt) {
+    if (evt && typeof evt.preventDefault === 'function') {
+      try { evt.preventDefault(); } catch(e){}
+    }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+    window.isCaratulaAudioPlaying = false;
+    if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
     scrollToScreen(targetId);
   }
 
@@ -7100,53 +7111,76 @@
     }
   }
 
+  if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
+  if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      try { window.speechSynthesis.getVoices(); } catch(e){}
+    };
+  }
+
   function playCaratulaAudio() {
     if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+    try { window.speechSynthesis.cancel(); } catch(e){}
 
     const locucionTexto = window._caratulaSpeechText || (I18N[currentLang] || I18N['es']).audio_locution;
-    window.caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
-    window.caratulaSpeechUtter.lang = window._caratulaSpeechLang || (I18N[currentLang] || I18N['es']).voice_lang || 'es-ES';
+    const utter = new SpeechSynthesisUtterance(locucionTexto);
+    window.caratulaSpeechUtter = utter;
+    const targetLang = window._caratulaSpeechLang || (I18N[currentLang] || I18N['es']).voice_lang || 'es-ES';
+    utter.lang = targetLang;
 
-    const voices = window.speechSynthesis.getVoices();
-    const esVoice = voices.find(v => (v.lang.startsWith('es') || v.lang.includes('ES')) && 
-                      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
-                 || voices.find(v => v.lang.startsWith('es') || v.lang.includes('ES'))
-                 || voices[0];
-    if (esVoice) window.caratulaSpeechUtter.voice = esVoice;
+    try {
+      const voices = window.speechSynthesis.getVoices() || [];
+      const langPrefix = targetLang.split('-')[0].toLowerCase();
+      const esVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix) && 
+                        (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos') || v.name.includes('Paulina') || v.name.includes('Monica')))
+                   || voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix));
+      if (esVoice) utter.voice = esVoice;
+    } catch(e){}
 
-    window.caratulaSpeechUtter.rate = 0.80;
-    window.caratulaSpeechUtter.pitch = 0.95;
-    window.caratulaSpeechUtter.volume = 1.0;
+    utter.rate = 0.85;
+    utter.pitch = 1.0;
+    utter.volume = 1.0;
 
     const btnAudio = document.getElementById('btn-audio-caratula');
     const playIcon = document.getElementById('audio-play-icon');
 
-    window.caratulaSpeechUtter.onstart = () => {
+    utter.onstart = () => {
       window.isCaratulaAudioPlaying = true;
       syncNavPodAudioUI(true);
       if (btnAudio) btnAudio.classList.add('playing');
       if (playIcon) playIcon.textContent = '⏹';
     };
 
-    window.caratulaSpeechUtter.onend = () => {
+    utter.onend = () => {
       window.isCaratulaAudioPlaying = false;
       syncNavPodAudioUI(false);
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
+      window.caratulaSpeechUtter = null;
     };
 
-    window.caratulaSpeechUtter.onerror = () => {
+    utter.onerror = (err) => {
+      console.warn('SpeechSynthesis error:', err);
       window.isCaratulaAudioPlaying = false;
       syncNavPodAudioUI(false);
       if (btnAudio) btnAudio.classList.remove('playing');
       if (playIcon) playIcon.textContent = '🔊';
+      window.caratulaSpeechUtter = null;
     };
 
-    window.speechSynthesis.speak(window.caratulaSpeechUtter);
+    if (window.speechSynthesis.paused) {
+      try { window.speechSynthesis.resume(); } catch(e){}
+    }
+
+    try {
+      window.speechSynthesis.speak(utter);
+    } catch(e) {
+      console.warn('speechSynthesis.speak error:', e);
+    }
   }
 
-  
   function syncNavPodAudioUI(isPlaying) {
     const navBtn = document.getElementById('nav-pod-btn-play');
     const navIcon = document.getElementById('nav-pod-play-icon');
@@ -7159,7 +7193,9 @@
 
   function toggleCaratulaAudio() {
     if (window.isCaratulaAudioPlaying) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e){}
+      }
       window.isCaratulaAudioPlaying = false;
       syncNavPodAudioUI(false);
       const btnAudio = document.getElementById('btn-audio-caratula');
@@ -7171,48 +7207,12 @@
     }
   }
 
-  // Inicio automático suave de locución
-  window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      if (!window.isCaratulaAudioPlaying && window.scrollY < 180) {
-        playCaratulaAudio();
-      }
-    }, 1200);
-  });
-
   window.addEventListener('beforeunload', () => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   });
 
   function setupFastMobileTouch() {
-    // 1. Enlaces del índice de carátula
-    document.querySelectorAll('.transit-part-row').forEach(row => {
-      let startX = 0, startY = 0, startTime = 0;
-      row.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          startTime = performance.now();
-        }
-      }, { passive: true });
-      row.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          const dx = Math.abs(e.changedTouches[0].clientX - startX);
-          const dy = Math.abs(e.changedTouches[0].clientY - startY);
-          const dt = performance.now() - startTime;
-          if (dx < 14 && dy < 14 && dt < 450) {
-            e.preventDefault();
-            const href = row.getAttribute('href');
-            const targetId = href ? href.replace('#', '') : null;
-            if (targetId && typeof scrollToScreen === 'function') {
-              scrollToScreen(targetId);
-            }
-          }
-        }
-      }, { passive: false });
-    });
-
-    // 2. Botones de letras en cabecera HUD
+    // 1. Botones de letras en cabecera HUD
     document.querySelectorAll('.hud-letter-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {

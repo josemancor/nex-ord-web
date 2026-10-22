@@ -3903,7 +3903,7 @@
      1. ARQUITECTURA DE SCROLL Y CONTENEDOR GENERAL
      ------------------------------------------------------------------------- */
   html {
-    scroll-snap-type: y proximity !important;
+    scroll-snap-type: none !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -3917,7 +3917,7 @@
     min-height: 100vh !important;
     min-height: 100dvh !important;
     overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
     position: relative !important;
     -webkit-tap-highlight-color: transparent !important;
   }
@@ -3932,6 +3932,8 @@
   }
 
   .screen-section {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
     height: auto !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
@@ -4119,7 +4121,8 @@
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .transit-caratula-card {
@@ -4668,7 +4671,7 @@
 
       <!-- ÍNDICE NORMATIVO DE LAS 5 PANTALLAS (3a..3e) -->
       <div class="transit-parts-grid">
-        <a href="#pantalla-3a" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-3a')" role="button" title="Ir a 3a · Datos Sociométricos: Moreno / BREVE">
+        <a href="#pantalla-3a" class="transit-part-row" onclick="continueToLevel('pantalla-3a', event)" role="button" title="Ir a 3a · Datos Sociométricos: Moreno / BREVE">
           <div class="transit-part-pill">3a</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4679,7 +4682,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-3b" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-3b')" role="button" title="Ir a 3b · Simulador y Laboratorio 'in silico'">
+        <a href="#pantalla-3b" class="transit-part-row" onclick="continueToLevel('pantalla-3b', event)" role="button" title="Ir a 3b · Simulador y Laboratorio 'in silico'">
           <div class="transit-part-pill">3b</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4690,7 +4693,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-3c" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-3c')" role="button" title="Ir a 3c · Análisis Sociométrico">
+        <a href="#pantalla-3c" class="transit-part-row" onclick="continueToLevel('pantalla-3c', event)" role="button" title="Ir a 3c · Análisis Sociométrico">
           <div class="transit-part-pill">3c</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4701,7 +4704,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-3d" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-3d')" role="button" title="Ir a 3d · Informes de Resultados">
+        <a href="#pantalla-3d" class="transit-part-row" onclick="continueToLevel('pantalla-3d', event)" role="button" title="Ir a 3d · Informes de Resultados">
           <div class="transit-part-pill">3d</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -4712,7 +4715,7 @@
           </div>
           <div class="transit-part-arrow">➔</div></a>
 
-        <a href="#pantalla-3e" class="transit-part-row" onclick="event.preventDefault(); continueToLevel('pantalla-3e')" role="button" title="Ir a 3e · Ética y Gobernanza NEXORD">
+        <a href="#pantalla-3e" class="transit-part-row" onclick="continueToLevel('pantalla-3e', event)" role="button" title="Ir a 3e · Ética y Gobernanza NEXORD">
           <div class="transit-part-pill">3e</div>
           <div class="transit-part-content">
             <div class="transit-part-heading">
@@ -7417,96 +7420,116 @@
     // LOCUCIÓN PAUSADA Y SERENA DE CARÁTULA DE PASO (NEXORD)
     // =========================================================================
     if (typeof window.isCaratulaAudioPlaying === 'undefined') window.isCaratulaAudioPlaying = false;
-      syncNavPodAudioUI(false);
     if (typeof window.caratulaSpeechUtter === 'undefined') window.caratulaSpeechUtter = null;
+
+    if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        try { window.speechSynthesis.getVoices(); } catch(e){}
+      };
+    }
 
     function playCaratulaAudio() {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch(e){}
 
-      const dict = (I18N[currentLang]) ? I18N[currentLang] : I18N['es'];
+      const dict = (typeof I18N !== 'undefined' && I18N[currentLang]) ? I18N[currentLang] : (typeof I18N !== 'undefined' ? I18N['es'] : {});
       const locucionTexto = dict.locucion_audio || "Nivel Tres. Esquema operativo. Fuentes de datos sociométricos, laboratorio de simulación, procedimientos matemáticos, gráficos y de interpretación, batería de resultados, y ética y gobernanza en NEXORD.";
-      caratulaSpeechUtter = new SpeechSynthesisUtterance(locucionTexto);
+      const utter = new SpeechSynthesisUtterance(locucionTexto);
+      window.caratulaSpeechUtter = utter;
 
       const langCodeMap = { 'es': 'es-ES', 'en': 'en-US', 'ru': 'ru-RU', 'zh': 'zh-CN' };
-      caratulaSpeechUtter.lang = langCodeMap[currentLang] || 'es-ES';
+      const targetLang = langCodeMap[currentLang] || 'es-ES';
+      utter.lang = targetLang;
 
-      const voices = window.speechSynthesis.getVoices();
-      const voicePrefix = currentLang === 'zh' ? 'zh' : (currentLang === 'ru' ? 'ru' : (currentLang === 'en' ? 'en' : 'es'));
-      const targetVoice = voices.find(v => v.lang.toLowerCase().startsWith(voicePrefix) && 
-                          (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Xiaoxiao') || v.name.includes('Yunxi') || v.name.includes('Yating') || v.name.includes('Tatyana') || v.name.includes('Maxim') || v.name.includes('Jenny') || v.name.includes('Guy') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos')))
-                       || voices.find(v => v.lang.toLowerCase().startsWith(voicePrefix))
-                       || voices[0];
-      if (targetVoice) caratulaSpeechUtter.voice = targetVoice;
+      try {
+        const voices = window.speechSynthesis.getVoices() || [];
+        const voicePrefix = targetLang.split('-')[0].toLowerCase();
+        const targetVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(voicePrefix) && 
+                            (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium') || v.name.includes('Google') || v.name.includes('Xiaoxiao') || v.name.includes('Yunxi') || v.name.includes('Yating') || v.name.includes('Tatyana') || v.name.includes('Maxim') || v.name.includes('Jenny') || v.name.includes('Guy') || v.name.includes('Jorge') || v.name.includes('Diego') || v.name.includes('Carlos')))
+                         || voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith(voicePrefix));
+        if (targetVoice) utter.voice = targetVoice;
+      } catch(e){}
 
-      caratulaSpeechUtter.rate = 0.80; // Ritmo pausado y solemne (sin aceleración)
-      caratulaSpeechUtter.pitch = 0.95;
-      caratulaSpeechUtter.volume = 1.0;
+      utter.rate = 0.85;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
 
       const btnAudio = document.getElementById('btn-audio-caratula');
       const playIcon = document.getElementById('audio-play-icon');
 
-      caratulaSpeechUtter.onstart = () => {
+      utter.onstart = () => {
         isCaratulaAudioPlaying = true;
+        window.isCaratulaAudioPlaying = true;
         if (btnAudio) btnAudio.classList.add('playing');
-        if (playIcon) playIcon.textContent = '❚❚';
+        if (playIcon) playIcon.textContent = '⏹';
+        if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(true);
       };
 
-      caratulaSpeechUtter.onend = () => {
+      utter.onend = () => {
         isCaratulaAudioPlaying = false;
+        window.isCaratulaAudioPlaying = false;
         if (btnAudio) btnAudio.classList.remove('playing');
         if (playIcon) playIcon.textContent = '🔊';
+        if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
+        window.caratulaSpeechUtter = null;
       };
 
-      caratulaSpeechUtter.onerror = () => {
+      utter.onerror = (err) => {
+        console.warn('SpeechSynthesis error:', err);
         isCaratulaAudioPlaying = false;
+        window.isCaratulaAudioPlaying = false;
         if (btnAudio) btnAudio.classList.remove('playing');
         if (playIcon) playIcon.textContent = '🔊';
+        if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
+        window.caratulaSpeechUtter = null;
       };
 
-      window.speechSynthesis.speak(caratulaSpeechUtter);
+      if (window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch(e){}
+      }
+
+      try {
+        window.speechSynthesis.speak(utter);
+      } catch(e) {
+        console.warn('speechSynthesis.speak error:', e);
+      }
     }
 
-    
-  function syncNavPodAudioUI(isPlaying) {
-    const navBtn = document.getElementById('nav-pod-btn-play');
-    const navIcon = document.getElementById('nav-pod-play-icon');
-    if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '⏯';
-    if (navBtn) {
-      navBtn.classList.toggle('playing', !!isPlaying);
-      navBtn.title = isPlaying ? 'Pausar Locución (Play/Stop)' : 'Reproducir Locución (Play/Stop)';
+    function syncNavPodAudioUI(isPlaying) {
+      const navBtn = document.getElementById('nav-pod-btn-play');
+      const navIcon = document.getElementById('nav-pod-play-icon');
+      if (navIcon) navIcon.textContent = isPlaying ? '⏸' : '⏯';
+      if (navBtn) {
+        navBtn.classList.toggle('playing', !!isPlaying);
+        navBtn.title = isPlaying ? 'Pausar Locución (Play/Stop)' : 'Reproducir Locución (Play/Stop)';
+      }
     }
-  }
 
-  function toggleCaratulaAudio() {
-      if (isCaratulaAudioPlaying) {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    function toggleCaratulaAudio() {
+      if (isCaratulaAudioPlaying || window.isCaratulaAudioPlaying) {
+        if ('speechSynthesis' in window) {
+          try { window.speechSynthesis.cancel(); } catch(e){}
+        }
         isCaratulaAudioPlaying = false;
+        window.isCaratulaAudioPlaying = false;
+        window.caratulaSpeechUtter = null;
         const btnAudio = document.getElementById('btn-audio-caratula');
         const playIcon = document.getElementById('audio-play-icon');
         if (btnAudio) btnAudio.classList.remove('playing');
         if (playIcon) playIcon.textContent = '🔊';
+        if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
       } else {
         playCaratulaAudio();
       }
     }
 
-    function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
+    function continueToLevel(targetId, evt) {
+      if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
+        window.continueToLevel(targetId, evt);
+      } else {
+        scrollToScreen(targetId);
+      }
     }
-  }
-
-    // Inicio automático pausado suave tras ~1.2s al abrir la carátula
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        if (!isCaratulaAudioPlaying && window.scrollY < 180) {
-          playCaratulaAudio();
-        }
-      }, 1200);
-    });
 
     // Cancelar audio inmediatamente al navegar o salir
     window.addEventListener('beforeunload', () => {
@@ -7669,23 +7692,29 @@
       try { snapCont.scrollTo({ top: el.offsetTop, behavior: isInstant ? 'auto' : 'smooth' }); } catch(e){}
     }
 
-    setTimeout(() => {
-      rootHtml.style.scrollSnapType = prevHtmlSnap;
-      document.body.style.scrollSnapType = prevBodySnap;
-      if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
-    }, 800);
+    if (window.innerWidth > 820) {
+      setTimeout(() => {
+        rootHtml.style.scrollSnapType = prevHtmlSnap;
+        document.body.style.scrollSnapType = prevBodySnap;
+        if (snapCont) snapCont.style.scrollSnapType = prevSnapContSnap;
+      }, 800);
+    }
 
     setTimeout(() => {
       if (typeof updateUnifiedHud === 'function') updateUnifiedHud();
     }, isInstant ? 40 : 350);
   }
 
-  function continueToLevel(targetId) {
-    if (typeof window.continueToLevel === 'function' && window.continueToLevel !== continueToLevel) {
-      window.continueToLevel(targetId);
-    } else {
-      scrollToScreen(targetId);
+  function continueToLevel(targetId, evt) {
+    if (evt && typeof evt.preventDefault === 'function') {
+      try { evt.preventDefault(); } catch(e){}
     }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+    window.isCaratulaAudioPlaying = false;
+    if (typeof syncNavPodAudioUI === 'function') syncNavPodAudioUI(false);
+    scrollToScreen(targetId);
   }
 
   window.scrollToScreen = scrollToScreen;
@@ -8484,37 +8513,11 @@ function copyActiveCitation() {
 }
 </script>
 
-  <script src="nexord_dial_nav.js" defer>
+  <script src="nexord_dial_nav.js" defer></script>
 
+  <script>
   function setupFastMobileTouch() {
-    // 1. Enlaces del índice de carátula
-    document.querySelectorAll('.transit-part-row').forEach(row => {
-      let startX = 0, startY = 0, startTime = 0;
-      row.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          startTime = performance.now();
-        }
-      }, { passive: true });
-      row.addEventListener('touchend', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          const dx = Math.abs(e.changedTouches[0].clientX - startX);
-          const dy = Math.abs(e.changedTouches[0].clientY - startY);
-          const dt = performance.now() - startTime;
-          if (dx < 14 && dy < 14 && dt < 450) {
-            e.preventDefault();
-            const href = row.getAttribute('href');
-            const targetId = href ? href.replace('#', '') : null;
-            if (targetId && typeof scrollToScreen === 'function') {
-              scrollToScreen(targetId);
-            }
-          }
-        }
-      }, { passive: false });
-    });
-
-    // 2. Botones de letras en cabecera HUD
+    // 1. Botones de letras en cabecera HUD
     document.querySelectorAll('.hud-letter-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -8540,7 +8543,7 @@ function copyActiveCitation() {
       }, { passive: false });
     });
 
-    // 3. Flechas de navegación HUD (prev / next)
+    // 2. Flechas de navegación HUD (prev / next)
     document.querySelectorAll('.hud-arrow-btn').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -8567,7 +8570,7 @@ function copyActiveCitation() {
       }, { passive: false });
     });
 
-    // 4. Flechas laterales flotantes de pantalla completa (floating-side-arrow)
+    // 3. Flechas laterales flotantes de pantalla completa (floating-side-arrow)
     document.querySelectorAll('.floating-side-arrow').forEach(btn => {
       let startX = 0, startY = 0, startTime = 0;
       btn.addEventListener('touchstart', (e) => {
@@ -8595,27 +8598,27 @@ function copyActiveCitation() {
     });
   }
 
+  function setCuadro3aTab(tabName) {
+    const tabs = ['dual', 'v10', 'aag16', 'hipercubo'];
+    tabs.forEach(t => {
+      const btn = document.getElementById('btn-tab-3a-' + t);
+      if (btn) {
+        if (t === tabName) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+      const view = document.getElementById('view-3a-' + t);
+      if (view) {
+        view.style.display = (t === tabName) ? (t === 'dual' ? 'grid' : 'block') : 'none';
+      }
+    });
+  }
+  window.setCuadro3aTab = setCuadro3aTab;
+
 </script>
 </body>
 </html>
-
-    function setCuadro3aTab(tabName) {
-      const tabs = ['dual', 'v10', 'aag16', 'hipercubo'];
-      tabs.forEach(t => {
-        const btn = document.getElementById('btn-tab-3a-' + t);
-        if (btn) {
-          if (t === tabName) {
-            btn.classList.add('active');
-          } else {
-            btn.classList.remove('active');
-          }
-        }
-        const view = document.getElementById('view-3a-' + t);
-        if (view) {
-          view.style.display = (t === tabName) ? (t === 'dual' ? 'grid' : 'block') : 'none';
-        }
-      });
-    }
-    window.setCuadro3aTab = setCuadro3aTab;
 
 
