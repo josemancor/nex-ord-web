@@ -38,7 +38,7 @@
   549.542 Líneas Código         100% Sintaxis DOM Ok          Universitat de Barcelona
   100% Core AST Válido          0 Cortes de Etiquetas         Safe Creative 2603074794486
   0 Fugas de Credenciales       Clean Boot Anti-Caché         Función Inversa al Rango
-  Modo Air-Gap Protegido        Latencia CDN: 33 ms           21 Reglas Canónicas OK
+  Modo Air-Gap Protegido        Latencia CDN: 33 ms           21 Reglas Oficiales OK
 ```
 
 | Dimensión de Verificación | Indicador Clave | Resultado Cuantitativo | Dictamen de Conformidad |
@@ -52,7 +52,7 @@
 | **II. Web: Rendimiento y Latencia** | TTFB y tiempo de carga en borde Fastly | **33 milisegundos** | ⚡ **MÁXIMO RENDIMIENTO** |
 | **III. Ciencia: Filiación UB** | Universitat de Barcelona en Manifiesto y Citas | **100% normalizado** | 🏛️ **ACREDITACIÓN COMPLETA** |
 | **III. Ciencia: Trazabilidad DOI** | Concept DOI CERN Zenodo unificado | `10.5281/zenodo.23329641` | 📜 **CUSTODIA PERMANENTE** |
-| **III. Ciencia: Formulación Rango** | Función Inversa $W(r)$ y escala par $A_{16}$ | **Canónica sin ambigüedad** | 📐 **RIGOR MATEMÁTICO** |
+| **III. Ciencia: Formulación Rango** | Función Inversa $W(r)$ y escala par $A_{16}$ | **Oficial sin ambigüedad** | 📐 **RIGOR MATEMÁTICO** |
 
 ---
 
@@ -82,7 +82,7 @@ Se aplicaron expresiones regulares de alta sensibilidad para el escaneo de caden
 ### 3.4. Registro Criptográfico de Integridad Inmutable (SHA-256)
 Para asegurar la inmutabilidad de la obra y servir de prueba fehaciente ante registros notariales o de propiedad intelectual, se calcularon las firmas criptográficas SHA-256 de todos los módulos. A continuación se certifica la huella de los principales motores de producción (extracto de los primeros módulos nodales; censo completo de 3.092 módulos archivado en `REGISTRO_SHA256_COMPLETO_NEXORD.csv`):
 
-| Módulo Canónico | Líneas | Tamaño | Firma Criptográfica SHA-256 |
+| Módulo Oficial | Líneas | Tamaño | Firma Criptográfica SHA-256 |
 | :--- | :---: | :---: | :--- |
 | `PLATINUM_SIMULATOR.py` | 258 | 12.344 B | `11286dd9b9b63e2b1d5681878fa7778b749ae7db37a2735f73340bba31c0ba66` |
 | `PLATINUM_MANUAL_SIMULATOR.py` | 413 | 19.918 B | `195780d099cfaf448a8b71c43cbddc43b7d32a14ca6c9001b76b11b9dce97969` |
@@ -105,7 +105,7 @@ Para asegurar la inmutabilidad de la obra y servir de prueba fehaciente ante reg
 ## 4. Pilar II: Auditoría del Ecosistema Web Promocional (`nex-ord.org`)
 
 ### 4.1. Inyección Universal del Módulo Clean Boot & Anti-Cache Reset
-Para contrarrestar el almacenamiento persistente de estados antiguos en los navegadores de los usuarios (*bfcache*, *Service Workers*, *localStorage*, restos de sesiones previas), se ha inyectado en el `<head>` de **las 73 páginas HTML** la directiva canónica:
+Para contrarrestar el almacenamiento persistente de estados antiguos en los navegadores de los usuarios (*bfcache*, *Service Workers*, *localStorage*, restos de sesiones previas), se ha inyectado en el `<head>` de **las 73 páginas HTML** la directiva oficial:
 ```html
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -155,9 +155,9 @@ El parser estricto HTML basado en pila (*DOM Stack Validator*) auditó todas y c
 
 ### 5.1. Filiación Institucional Universitat de Barcelona (UB)
 Se ha auditado y normalizado la adscripción universitaria del Dr. José Manuel Cornejo Álvarez en toda la documentación científica y metadatos web:
-* **Filiación Canónica en Español**:
+* **Filiación Oficial en Español**:
   > *Profesor Titular Jubilado de Psicología Social · Universitat de Barcelona (UB) · Investigador Principal y Creador de NEXORD*
-* **Filiación Canónica en Inglés**:
+* **Filiación Oficial en Inglés**:
   > *Retired Associate Professor of Social Psychology · University of Barcelona (UB) · Principal Investigator and Creator of the NEXORD Platform*
 * **Metadatos Científicos Inyectados (Google Scholar / Highwire Press / Dublin Core)**:
   ```html
@@ -169,7 +169,7 @@ Se ha auditado y normalizado la adscripción universitaria del Dr. José Manuel 
   ```
 
 ### 5.2. Unificación Universal del Concept DOI (CERN Zenodo)
-Se ha erradicado cualquier mención desactualizada a DOIs de versiones preliminares (`18941691` o `23303953`), estableciendo el **Concept DOI canónico e inmutable**:
+Se ha erradicado cualquier mención desactualizada a DOIs de versiones preliminares (`18941691` o `23303953`), estableciendo el **Concept DOI oficial e inmutable**:
 $$\text{DOI: } \mathbf{10.5281/zenodo.23329641}$$
 $$\text{URL Permanente: } \mathbf{https://doi.org/10.5281/zenodo.23329641}$$
 Este identificador persistente agrupa de manera permanente e histórica todas las versiones del software, del manifiesto bilingüe (ES/EN) y de los 6 documentos suplementarios bajo los protocolos de Ciencia Abierta del CERN.
@@ -187,25 +187,25 @@ Se certifica la plena armonización conceptual y algebraica en todo el ecosistem
 
 ---
 
-## 6. Matriz de Cumplimiento de las 21 Reglas Canónicas (`AGENTS.md`)
+## 6. Matriz de Cumplimiento de las 21 Reglas Oficiales (`AGENTS.md`)
 
-| Regla | Principio Canónico | Verificación Técnica Realizada | Dictamen |
+| Regla | Principio Oficial | Verificación Técnica Realizada | Dictamen |
 | :---: | :--- | :--- | :---: |
 | **R1** | Marca Maestra VISORD / NEXORD | Respetada la jerarquía de módulos y marcas en toda la plataforma. | 🟢 CONFORME |
 | **R2** | Documentación Fundamental | Coherencia matemática contrastada con `MANUAL_VISORD_HUB.md`. | 🟢 CONFORME |
 | **R3** | Preservación Lógicas Clave | Codificación ASCII de SMIb preservada (Mayúsculas, '0', Minúsculas). | 🟢 CONFORME |
 | **R4** | Flujo Estricto Despliegue | Código editado en `SOC_ORD_Project` y sincronizado vía rsync a `WEB`. | 🟢 CONFORME |
 | **R5** | Cuaterna SMIb ($A_1..A_4$) | Definición literal inviolable ($A_1$: p_DA, $A_2$: DA, $A_3$: RC, $A_4$: p_RC). | 🟢 CONFORME |
-| **R6** | Pipeline Canónico de 4 Pasos | Flujo secuencial: ConfigWizard $\rightarrow$ Simulator $\rightarrow$ Orchestrator $\rightarrow$ Web/3D. | 🟢 CONFORME |
-| **R7** | Anonimización Canónica | Sujetos codificados como `1A1a`..`5A1a` (o `1A`..`5A` en t1c1). Cero nombres propios. | 🟢 CONFORME |
+| **R6** | Pipeline Oficial de 4 Pasos | Flujo secuencial: ConfigWizard $\rightarrow$ Simulator $\rightarrow$ Orchestrator $\rightarrow$ Web/3D. | 🟢 CONFORME |
+| **R7** | Anonimización Oficial | Sujetos codificados como `1A1a`..`5A1a` (o `1A`..`5A` en t1c1). Cero nombres propios. | 🟢 CONFORME |
 | **R8** | Lienzo Puntillista Socio-Termodinámico | Visualización `#0B132B`, micro-nubes de color $\sigma=0.032$, verdes, rosas, naranjas. | 🟢 CONFORME |
-| **R9** | Identificación Institucional Canónica | Logo VISORD, claves multidimensionales `(G2T1C1)` y sellos presentes. | 🟢 CONFORME |
+| **R9** | Identificación Institucional Oficial | Logo VISORD, claves multidimensionales `(G2T1C1)` y sellos presentes. | 🟢 CONFORME |
 | **R10** | Notas Explicativas Pedagógicas | Inclusión obligatoria de `💡 Nota:` en todas las vistas no intuitivas. | 🟢 CONFORME |
-| **R11** | Nomenclatura Prefijos Canónicos | Uso obligatorio de guiones y prefijos (`SIMUL-`, `PROPIO-`, `REAL-`, `CULTURAL-`). | 🟢 CONFORME |
+| **R11** | Nomenclatura Prefijos Oficiales | Uso obligatorio de guiones y prefijos (`SIMUL-`, `PROPIO-`, `REAL-`, `CULTURAL-`). | 🟢 CONFORME |
 | **R12** | Fidelidad Factual (BREVE, VAR, AAG) | Datos empíricos originales intactos; transcripción en memoria sin degradación. | 🟢 CONFORME |
 | **R13** | Parámetros Defecto $V_{10}$ y $A_{16}$ | Batería 10 variables (3 modalidades) y 16 adjetivos (escala par 1 a 8). | 🟢 CONFORME |
 | **R14** | Marca Institucional NEXORD | Denominación continua e indivisible sin guion bajo. | 🟢 CONFORME |
-| **R15** | Navegación HUD y Protocolo Flechas | Secuencia canónica 1 a 7; flecha `--` bloqueada en 1a y en 7e. | 🟢 CONFORME |
+| **R15** | Navegación HUD y Protocolo Flechas | Secuencia oficial 1 a 7; flecha `--` bloqueada en 1a y en 7e. | 🟢 CONFORME |
 | **R16** | Proscripción del Término Cohorte | Sustituido universalmente por **Grupo / Grupos** en todas las pantallas. | 🟢 CONFORME |
 | **R17** | Planos Cartesianos, Dispersión y Biplot | Focalización dinámica de ejes, sin marcos ornamentales `bbox`, máxima legibilidad. | 🟢 CONFORME |
 | **R18** | Dualidad Factorial (AFC vs PCA) | AFC con $\mathbf{F}_{\text{DA}} + \mathbf{F}_{\text{RC}}$ enteras; PCA con $\mathbf{SDR}$ continua; Ley Baricéntrica. | 🟢 CONFORME |

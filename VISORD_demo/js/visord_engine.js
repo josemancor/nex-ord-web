@@ -17,7 +17,7 @@ class VisordHubEngine {
         this.layers = {
             'MACRO': new THREE.Group(),    // Capa 0: Centroides (Activos)
             'MICRO': new THREE.Group(),    // Capa 1: Sujetos (Ilustrativos)
-            'SMIB_LINKS': new THREE.Group(), // Capa Canónica: Vínculos SMIb & Cristalización
+            'SMIB_LINKS': new THREE.Group(), // Capa Oficial: Vínculos SMIb & Cristalización
             'FEATURES': new THREE.Group(), // Capa 2: Figuras Quatuor
             'SUPP': new THREE.Group(),     // Capa 3: Variables Complementarias
             'TRIADIC': new THREE.Group(),  // Capa 4: META_percepción Triádica
@@ -668,7 +668,7 @@ class VisordHubEngine {
                 mesh.userData = { type: 'Sujeto', ...subject, name: key.replace('_CONDENSED', ''), markovMass: markovMassRaw };
                 this.layers['MICRO'].add(mesh);
 
-                // Etiqueta de Código Canónico
+                // Etiqueta de Código Oficial
                 const labelCode = num ? `${num}A1a` : key.replace('_CONDENSED', '');
                 const labelSprite = this.createTextSprite(labelCode, nodeColor, 0.75);
                 labelSprite.position.set(pos.x, pos.y + (baseRadius * scaleMult) + 0.55, pos.z);
@@ -994,7 +994,7 @@ class VisordHubEngine {
     }
 
     /**
-     * Calcula la ordenación canónica de sujetos por su coeficiente Kendall de Recepción (RC) decreciente
+     * Calcula la ordenación oficial de sujetos por su coeficiente Kendall de Recepción (RC) decreciente
      * @param {Array<Array<string>>} matrix2D - Sociomatriz NxN con tetragramas SMIb o caracteres
      * @returns {Array<{index: number, rc: number, recVector: number[]}>}
      */
@@ -1009,7 +1009,7 @@ class VisordHubEngine {
                 const cell = matrix2D[i][j];
                 let a2 = '0';
                 if (typeof cell === 'string') {
-                    // Si es tetragrama canónico (A1 A2 A3 A4), la preferencia emitida por i a j es A2
+                    // Si es tetragrama oficial (A1 A2 A3 A4), la preferencia emitida por i a j es A2
                     a2 = cell.length >= 2 ? cell[1] : (cell.length === 1 ? cell[0] : '0');
                 } else if (typeof cell === 'number') {
                     a2 = cell > 0 ? 'A' : (cell < 0 ? 'a' : '0');

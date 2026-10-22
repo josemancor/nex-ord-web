@@ -7,7 +7,7 @@
 ## SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD)
 ### *«Hacia una Física de la Grupalidad»*
 
-**Edición Canónica Definitiva v9.1.1 (Octubre, 2026)**
+**Edición Oficial Definitiva v9.1.1 (Octubre, 2026)**
 
 * **Autor:** Dr. José Manuel Cornejo Álvarez
 * **Vinculación Académica:** Profesor Titular Jubilado de Psicología Social · Investigador Principal y Creador de NEXORD
@@ -514,7 +514,7 @@ Formalización de la correspondencia biyectiva entre el orden de asignación alf
 ![SMIa Sintaxis Concentrada](Tabla_SMIa_Sintaxis_Concentrada.png)
 
 ![Tabla Anexo I: Numeralización Q81(9,9) y Sintaxis SMIa](Tabla_Q81_Numeralizacion_Figuras_Sociometricas.png)  
-*Tabla Anexo I. Numeralización canónica de figuras relacionales sociométricas Q81(9,9): De 81 a 1 con centro neutro en 41 y sintaxis concentrada SMIa.*
+*Tabla Anexo I. Numeralización oficial de figuras relacionales sociométricas Q81(9,9): De 81 a 1 con centro neutro en 41 y sintaxis concentrada SMIa.*
 
 ### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO)
 

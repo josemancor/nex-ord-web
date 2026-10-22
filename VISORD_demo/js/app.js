@@ -1387,7 +1387,7 @@ class VisordApp {
                 const pad = (n) => String(n).padStart(2, '0');
                 const stamp = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
                 
-                // Formato Canónico: TIPO + GTC + Nombre + Fecha.json
+                // Formato Oficial: TIPO + GTC + Nombre + Fecha.json
                 const filename = `${defaultTipo}_${defaultGTC}_${sanitizedName}_${stamp}.json`;
                 window.VISORD_PAYLOAD.metadata.file_code = `${defaultTipo}_${defaultGTC}_${sanitizedName}_${stamp}`;
                 

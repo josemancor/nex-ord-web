@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DEL DOSSIER DE ADOPCIÓN
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
+ * Soporte bilingüe completo (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
@@ -23,7 +23,7 @@
 
       // Hero
       meta_badge: '🏛️ OFERTA PÚBLICA DE CUSTODIA INSTITUCIONAL',
-      hero_title: 'Marco Canónico de Legado Tecnológico &amp; Custodia Científica',
+      hero_title: 'Marco Oficial de Legado Tecnológico &amp; Custodia Científica',
       hero_subtitle: 'Bases y condiciones de transferencia del ecosistema de Sociometría Ordinal Computacional y Gemelos Digitales 3D/4D (NEXORD / VISORD Engine v8.3) para <strong>Universidades Públicas, Centros de I+D y Consorcios Científicos</strong>.',
       hero_principle: '<strong>PRINCIPIO FUNDACIONAL:</strong> Cesión de custodia responsable y fiduciaria académica, no enajenación a ciegas. El software se transfiere para su custodia, mantenimiento y uso docente/investigador bajo salvaguarda del mandato deontológico estricto (Regla 21).',
 
@@ -36,7 +36,7 @@
       s1_b2_desc: 'Laboratorios interactivos WebGL Three.js con simulación cinemática continua: <code>VISORD_demo</code> (transiciones de fase y gravedad de redes), <code>VISORD_acuario</code> (reactor de hidrostática relacional y detección de ostracismo sutil) y <code>VISORD_dialectico</code> (anfiteatro de dilemas dialécticos y Moviola Bales IPA).',
       s1_b3_title: '📐 Álgebra Tensorial y Espectral',
       s1_b3_desc: 'Módulos computacionales para proyección en variedades de Grassmann $\\operatorname{Gr}(k, N)$, cálculo del gap espectral y conectividad algebraica de Fiedler ($\\lambda_2$), frustración estructural de Heider y operadores de Estrada ($EE$).',
-      s1_b4_title: '📚 Banco Canónico de Datos BSOC &amp; Zenodo',
+      s1_b4_title: '📚 Banco Oficial de Datos BSOC &amp; Zenodo',
       s1_b4_desc: 'Corpus empírico homologado de sociogramas de campo reales, matrices simuladas Monte Carlo y series culturales. Registro permanente en CERN Zenodo: Manifiesto Científico Central y Material Suplementario (6 Anexos Técnicos) bajo <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-green); text-decoration:underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a> con metadatos Google Académico listos.',
 
       // Sección 2
@@ -83,7 +83,7 @@
 
       // Sección 5
       s5_title: 'Protocolo de Sucesión Abierta (Guardián Sustituto)',
-      s5_lead: 'Para garantizar la preservación incondicional de este legado y evitar que el ecosistema quede huérfano, inactivo o privatizado, el protocolo canónico de custodia establece un orden estructurado de prelación institucional para su depósito y salvaguarda continua:',
+      s5_lead: 'Para garantizar la preservación incondicional de este legado y evitar que el ecosistema quede huérfano, inactivo o privatizado, el protocolo oficial de custodia establece un orden estructurado de prelación institucional para su depósito y salvaguarda continua:',
       s5_th1: 'Orden de Prelación',
       s5_th2: 'Tipología de Entidad Guardiana',
       s5_th3: 'Naturaleza de la Adopción',
@@ -119,7 +119,7 @@
 
       // Hero
       meta_badge: '🏛️ PUBLIC CALL FOR INSTITUTIONAL STEWARDSHIP',
-      hero_title: 'Canonical Framework for Technological Legacy &amp; Scientific Custody',
+      hero_title: 'Official Framework for Technological Legacy &amp; Scientific Custody',
       hero_subtitle: 'Terms and conditions for the transfer of the Computational Ordinal Sociometry and 3D/4D Digital Twin ecosystem (NEXORD / VISORD Engine v8.3) for <strong>Public Universities, R&D Centers, and Scientific Consortia</strong>.',
       hero_principle: '<strong>FOUNDATIONAL PRINCIPLE:</strong> Academic fiduciary and responsible stewardship transfer, not blind alienation. The software is transferred for preservation, maintenance, and research/teaching under strict deontological mandate (Rule 21).',
 
@@ -132,7 +132,7 @@
       s1_b2_desc: 'Interactive Three.js WebGL laboratories featuring continuous kinematic simulation: <code>VISORD_demo</code> (phase transitions and network gravity), <code>VISORD_acuario</code> (relational hydrostatics reactor and subtle ostracism detection), and <code>VISORD_dialectico</code> (dialectical dilemma amphitheater and Bales IPA Moviola).',
       s1_b3_title: '📐 Tensorial and Spectral Algebra',
       s1_b3_desc: 'Computational modules for projection on Grassmann manifolds $\\operatorname{Gr}(k, N)$, spectral gap evaluation, Fiedler algebraic connectivity ($\\lambda_2$), Heider structural frustration, and Estrada operators ($EE$).',
-      s1_b4_title: '📚 BSOC Canonical Dataset &amp; Zenodo Depository',
+      s1_b4_title: '📚 BSOC Official Dataset &amp; Zenodo Depository',
       s1_b4_desc: 'Homologated empirical corpus of field sociomatrices, Monte Carlo simulations, and cultural works. Permanent CERN Zenodo record: Core Scientific Manifesto and Supplementary Material (6 Technical Annexes) under <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color:var(--neon-green); text-decoration:underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a> with full Google Scholar indexing.',
 
       // Section 2
@@ -179,7 +179,7 @@
 
       // Section 5
       s5_title: 'Open Succession Protocol (Substitute Guardian)',
-      s5_lead: 'To guarantee unconditional preservation of this legacy and prevent the ecosystem from becoming orphaned, inactive, or privatized, the canonical custody protocol establishes a structured order of institutional priority:',
+      s5_lead: 'To guarantee unconditional preservation of this legacy and prevent the ecosystem from becoming orphaned, inactive, or privatized, the official custody protocol establishes a structured order of institutional priority:',
       s5_th1: 'Priority Order',
       s5_th2: 'Type of Guardian Entity',
       s5_th3: 'Nature of Adoption',

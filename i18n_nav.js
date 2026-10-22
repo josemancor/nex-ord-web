@@ -3,7 +3,7 @@
  * VISORD / NEX_ORD — MOTOR DE INTERNACIONALIZACIÓN DE NAVEGACIÓN EN 8 IDIOMAS
  * =============================================================================
  * Idiomas soportados:
- *   - 🇪🇸 es: Español (Canónico)
+ *   - 🇪🇸 es: Español
  *   - 🇬🇧 en: English
  *   - 🇫🇷 fr: Français
  *   - 🇮🇹 it: Italiano
@@ -51,7 +51,7 @@ const NEXORD_I18N_DICTS = {
         "suite_tab_tables": "📊 Tablas Metodológicas (Pasos 1 al 6)",
         "suite_tab_planes": "📈 Planos Factoriales y Ejes Verticales",
         "suite_tab_dashboards": "📑 Dashboards e Informes Interactivos",
-        "suite_tab_journal": "🏛️ Proyecciones y Tablas Canónicas (300 DPI)",
+        "suite_tab_journal": "🏛️ Proyecciones y Tablas Oficiales (300 DPI)",
         "suite_sub_paso12": "Paso 1 y 2: Entrada BREVE & Moreno",
         "suite_sub_paso34": "Paso 3 y 4: Matrices SMIb y SMIa (Q81)",
         "suite_sub_paso5": "Paso 5: 10 Densidades Relacionales D(n,10)",
@@ -109,7 +109,7 @@ const NEXORD_I18N_DICTS = {
         "suite_tab_tables": "📊 Methodological Tables (Steps 1 to 6)",
         "suite_tab_planes": "📈 Factorial Planes & Vertical Axes",
         "suite_tab_dashboards": "📑 Dashboards & Interactive Reports",
-        "suite_tab_journal": "🏛️ Canonical Projections & Tables (300 DPI)",
+        "suite_tab_journal": "🏛️ Official Projections & Tables (300 DPI)",
         "suite_sub_paso12": "Step 1 & 2: BREVE Input & Moreno",
         "suite_sub_paso34": "Step 3 & 4: SMIb and SMIa Matrices (Q81)",
         "suite_sub_paso5": "Step 5: 10 Relational Densities D(n,10)",

@@ -1,4 +1,4 @@
-/* DOCUMENTACIÓN Y TRANSCRIPCIÓN CLÍNICA CANÓNICA DE CLARA */
+/* DOCUMENTACIÓN Y TRANSCRIPCIÓN CLÍNICA OFICIAL DE CLARA */
 const CANONICAL_THERAPY_DOCS = {
     'dialogos': {
         title: "Diálogos Clínicos & Escultura del Átomo Social",

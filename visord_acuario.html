@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <!-- =========================================================================
-       NEXORD CANONICAL CLEAN BOOT & ANTI-CACHE RESET
+       NEXORD OFFICIAL CLEAN BOOT & ANTI-CACHE RESET
        ========================================================================= -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -310,12 +310,24 @@
        OPTIMIZACIÓN RESPONSIVE AVANZADA PARA SMARTPHONES Y TABLETS (VISORD ACUARIO)
        ========================================================================= */
     #three-viewport,
-    #three-viewport canvas,
+    #three-viewport canvas {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 100% !important;
+      touch-action: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      user-select: none !important;
+    }
     .containment-frame {
       touch-action: none !important;
       -webkit-touch-callout: none !important;
       -webkit-user-select: none !important;
       user-select: none !important;
+    }
     }
 
     /* En pantallas móviles y tablets (< 1024px) el Acuario 3D sube al primer lugar */
@@ -355,8 +367,8 @@
         padding-right: 56px !important;
       }
       .containment-frame {
-        height: 64vh !important;
-        min-height: 400px !important;
+        height: 75vh !important;
+        min-height: 520px !important;
         max-height: none !important;
       }
       .header-badge-extra {
@@ -390,13 +402,44 @@
       background: #030E1E !important;
     }
 
+    /* Prioridad Absoluta al Espacio 3D y Controles en Primer Plano para Móviles */
+    @media (max-width: 1023px) {
+      main {
+        flex-direction: column !important;
+      }
+      #acuario-center-container {
+        order: 1 !important;
+        width: 100% !important;
+        height: 72vh !important;
+        min-height: 440px !important;
+      }
+      .containment-frame {
+        height: 100% !important;
+        min-height: 440px !important;
+      }
+      #acuario-sidebar {
+        order: 2 !important;
+        width: 100% !important;
+        max-height: none !important;
+        margin-top: 10px !important;
+      }
+      #acuario-profiles-aside {
+        order: 3 !important;
+        display: none !important;
+      }
+      .header-badge-extra {
+        display: none !important;
+      }
+    }
+
     /* Anticolisión y calibración de HUD en pantallas móviles */
     @media (max-width: 768px) {
       header {
         margin-bottom: 4px !important;
       }
       header .glass-panel {
-        padding: 4px 8px !important;
+        padding: 4px 6px !important;
+        justify-content: space-between !important;
       }
       header [title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal"],
       header [title="Consultar Guía Pedagógica del Acuario"],
@@ -405,9 +448,16 @@
       header [title="Volver a Recursos"] {
         display: none !important;
       }
+      .lang-switch-wrap {
+        display: inline-flex !important;
+        align-items: center !important;
+        z-index: 100002 !important;
+        pointer-events: auto !important;
+        flex-shrink: 0 !important;
+      }
       .containment-frame {
-        height: 64vh !important;
-        min-height: 400px !important;
+        height: 75vh !important;
+        min-height: 520px !important;
         max-height: none !important;
       }
       #cartelera-proyeccion-3d {
@@ -482,8 +532,8 @@
 </head>
 <body class="p-1 md:p-2 pb-6 overflow-x-hidden min-h-screen flex flex-col">
 
-  <!-- CABECERA INSTITUCIONAL CANÓNICA (COMPACTA PARA MAXIMIZAR ACUARIO) -->
-  <header class="w-full max-w-[1920px] mx-auto mb-1.5 flex-shrink-0">
+  <!-- CABECERA INSTITUCIONAL OFICIAL (COMPACTA PARA MAXIMIZAR ACUARIO) -->
+  <header class="w-full max-w-[1920px] mx-auto mb-1.5 flex-shrink-0" style="position: relative; z-index: 100000;">
     <div class="glass-panel rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2">
       <!-- Marca y Título -->
       <div class="flex items-center gap-2.5">
@@ -508,6 +558,12 @@
           <span id="ico-top-stop">⏹</span>
           <span id="lbl-top-stop">STOP</span>
         </button>
+        <!-- 3 OPCIONES PREESTABLECIDAS EN PRIMER PLANO (Op1 Activa + 2 Reserva) -->
+        <div class="flex items-center gap-1 bg-black/60 border border-teal-500/50 rounded-lg p-0.5 font-mono text-xs font-black shadow-inner">
+          <button id="hdr-btn-op1" onclick="launchPreparedConfig('OP1')" class="px-2.5 py-1 rounded bg-[#00FF87] text-slate-950 font-black cursor-pointer shadow-sm hover:scale-105 transition" title="Op1 (Activa): G1·T1·C1 (N=6)">Op1</button>
+          <button id="hdr-btn-op2" onclick="launchPreparedConfig('OP2')" class="px-2.5 py-1 rounded text-teal-300 hover:bg-teal-900/60 font-black cursor-pointer hover:scale-105 transition" title="Op2 (Reserva 1): G2·T2·C2 (N=6)">Op2</button>
+          <button id="hdr-btn-op3" onclick="launchPreparedConfig('OP3')" class="px-2.5 py-1 rounded text-teal-300 hover:bg-teal-900/60 font-black cursor-pointer hover:scale-105 transition" title="Op3 (Reserva 2): G3·T3·C2 (N=18)">Op3</button>
+        </div>
         <button id="btn-audio-toggle" onclick="toggleAudio()" class="action-btn px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-slate-900 text-slate-300 border-2 border-slate-700 hover:bg-slate-800 shadow-sm" title="Activar/Desactivar Sonificación Hidroacústica del Clima Grupal">
           <span class="led-indicator led-off" id="led-audio"></span>
           <span id="audio-icon" class="text-xs">🔇</span> <span id="audio-label">AUDIO</span>
@@ -550,6 +606,19 @@
         </button>
       </div>
 
+      <!-- 3 OPCIONES PREESTABLECIDAS EN PRIMER PLANO: Op1 (Activa) + Op2 / Op3 Reserva -->
+      <div class="grid grid-cols-3 gap-1.5 w-full text-center mono font-black">
+        <button id="btn-op1" onclick="launchPreparedConfig('OP1')" class="py-1.5 px-1 bg-[#00FF87] text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op1 (Activa): Oficial G1·T1·C1 (N=6)">
+          Op1 (N=6)
+        </button>
+        <button id="btn-op2" onclick="launchPreparedConfig('OP2')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op2 (Reserva 1): Dinámica G2·T2·C2 (N=6)">
+          Op2 (N=6)
+        </button>
+        <button id="btn-op3" onclick="launchPreparedConfig('OP3')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op3 (Reserva 2): Hipertensor G3·T3·C2 (N=18)">
+          Op3 (N=18)
+        </button>
+      </div>
+
       <!-- SELECTOR DE PESTAÑAS MÓVIL (EXCLUSIVO SMARTPHONES/TABLETS <= 1023px) -->
       <div class="mobile-sidebar-tabs lg:hidden flex items-center gap-1 w-full p-1 bg-slate-900/90 border border-teal-500/40 rounded-xl text-xs font-mono font-bold mb-1 shadow-md">
         <button type="button" onclick="switchMobileSidebarTab('dinamica')" id="tab-btn-dinamica" class="flex-1 py-1.5 px-1 rounded-lg bg-teal-500 text-black font-black text-center transition">🎮 DINÁMICA</button>
@@ -559,18 +628,6 @@
 
       <!-- SECCIÓN 1: DATOS, REGÍMENES Y CARGA DE MATRICES -->
       <div id="sec-sidebar-datos" class="sidebar-module flex flex-col gap-2 mobile-tab-hidden">
-      <!-- FILA DE 3 OPCIONES: Op1 | Op2 | Op3 -->
-      <div class="grid grid-cols-3 gap-1.5 w-full text-center mono font-black">
-        <button id="btn-op1" onclick="launchPreparedConfig('OP1')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op1: Canónica G1·T1·C1 (N=6)">
-          Op1
-        </button>
-        <button id="btn-op2" onclick="launchPreparedConfig('OP2')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op2: Dinámica de Tarea G2·T2·C2 (N=6)">
-          Op2
-        </button>
-        <button id="btn-op3" onclick="launchPreparedConfig('OP3')" class="py-1.5 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded-xl cursor-pointer transition select-none shadow-sm" title="Op3: Hipertensor Global G3T3C2 (N=18)">
-          Op3
-        </button>
-      </div>
 
       <!-- ACCIONES DE DATOS: CARGAR JSON / GxTyCz | SIMULADOR ALEATORIO -->
       <div class="grid grid-cols-2 gap-1.5 w-full text-center mono font-black">
@@ -622,7 +679,7 @@
         <div class="flex flex-col gap-1">
           <label class="text-[10px] text-slate-300 font-bold">Régimen Relacional:</label>
           <select id="select-sim-regime" class="w-full bg-black text-[#FDE047] border border-slate-600 rounded-lg px-2 py-1 text-xs font-mono font-bold cursor-pointer outline-none">
-            <option value="COHESION">1. Cohesión Canónica (Atracción Mútua)</option>
+            <option value="COHESION">1. Cohesión Oficial (Atracción Mútua)</option>
             <option value="POLARIZACION">2. Polarización en 2 Facciones</option>
             <option value="JERARQUIA">3. Jerarquía y Ostracismo (Líder / Chivo)</option>
             <option value="ALEATORIO">4. Estocástico Puro (Ruido Relacional)</option>
@@ -783,7 +840,7 @@
             <!-- Fila 4: 1A1 | 5FAS | MOV -->
             <tr class="h-7.5 md:h-8">
               <td onclick="startProgressiveSpawn(N)" id="btn-matrix-1a1" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Aparición Progresiva 1 a 1">1A1</td>
-              <td onclick="startChoreographySequence()" id="btn-matrix-5fas" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Coreografía Canónica de 5 Fases">5FAS</td>
+              <td onclick="startChoreographySequence()" id="btn-matrix-5fas" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Coreografía Oficial de 5 Fases">5FAS</td>
               <td onclick="toggleStepAutoPlay()" id="btn-matrix-mov" class="bg-[#56B4E9] hover:brightness-105 text-black border border-black rounded-lg cursor-pointer py-1 px-1 transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] shadow-sm" title="Moviola Temporal Paso a Paso">MOV</td>
             </tr>
             <!-- Fila 5: VOLT | LIMP | VIB -->
@@ -942,7 +999,7 @@
             <span class="font-black text-teal-300 ml-1.5" id="scene-regime-label">G1·T1·C1 (N=6)</span>
           </div>
 
-          <!-- IDENTIFICACIÓN CANÓNICA DE SOCIOMATRIZ/SOCIOMATRICES (Regla 9) -->
+          <!-- IDENTIFICACIÓN OFICIAL DE SOCIOMATRIZ/SOCIOMATRICES (Regla 9) -->
           <div class="hud-float px-3 py-1.5 rounded-xl text-xs mono font-bold flex items-center gap-1.5 pointer-events-none" id="hud-matrix-badge-container">
             <span class="text-amber-400 font-extrabold text-[11px] flex items-center gap-1">
               <span>📊</span> <span>SOCIOMATRIZ:</span>
@@ -1197,7 +1254,7 @@
   </div>
 
   <!-- =========================================================================
-       MODAL CANÓNICO DE ESPECTROGRAMA PANORÁMICO 18D (ZENODO 2026)
+       MODAL OFICIAL DE ESPECTROGRAMA PANORÁMICO 18D (ZENODO 2026)
        ========================================================================= -->
   <div id="modal-18d-spectrogram" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[99999] hidden flex items-center justify-center p-3 sm:p-6" onclick="if(event.target===this) close18DSpectrogramModal()">
     <div class="glass-panel rounded-3xl p-5 max-w-6xl w-full max-h-[92vh] overflow-y-auto border-2 border-teal-400 shadow-2xl flex flex-col gap-3">
@@ -1222,7 +1279,7 @@
 
       <!-- Imagen Central HD -->
       <div id="modal-18d-frame" class="w-full bg-[#FAF7F2] rounded-2xl p-3 border-2 border-amber-400/40 shadow-inner flex items-center justify-center transition-colors">
-        <img id="modal-18d-img-element" src="assets/Figura_18D_Espectrograma_Panoramico_Crema.png" alt="Espectrograma Panorámico 18D Canónico" class="max-w-full max-h-[64vh] object-contain rounded-lg shadow-lg">
+        <img id="modal-18d-img-element" src="assets/Figura_18D_Espectrograma_Panoramico_Crema.png" alt="Espectrograma Panorámico 18D Oficial" class="max-w-full max-h-[64vh] object-contain rounded-lg shadow-lg">
       </div>
 
       <!-- Cuadrícula de 4 Macro-Áreas -->
@@ -1305,7 +1362,7 @@
   <!-- =========================================================================
        MANDO UNIVERSAL FLOTANTE EN FILA INDIA (CANON REGLA 15)
        ========================================================================= -->
-    <!-- FOOTER INSTITUCIONAL CANÓNICO CON DOI Y CITACIÓN BibTeX -->
+    <!-- FOOTER INSTITUCIONAL OFICIAL CON DOI Y CITACIÓN BibTeX -->
   <footer class="nexord-standalone-footer" style="width:100%; text-align:center; padding:24px 16px 18px 16px; margin-top:20px; border-top:1px solid rgba(255,255,255,0.08); box-sizing:border-box;">
     <div class="nexord-doi-footer-block">
       <div class="doi-citation-badge">
@@ -1347,7 +1404,7 @@
        ========================================================================= -->
   <script>
     /* =========================================================================
-       1. DEFINICIÓN DE PRESETS CANÓNICOS DE SOCIOMATRICES SMIb
+       1. DEFINICIÓN DE PRESETS OFICIALES DE SOCIOMATRICES SMIb
        ========================================================================= */
     const PRESETS = {
       '1g1t1c': {
@@ -1370,55 +1427,55 @@
       },
       '1g2t2c': {
         name: "Grupo A · T2 · C2 (Fricción / Tarea) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo A · T2 · C2 (Ajuste de Roles Operativos) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.46, SDR=0.26, Entropía=0.31.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo A · T2 · C2 (Ajuste de Roles Operativos) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.46, SDR=0.26, Entropía=0.31.",
         subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
         matrix: [["0000", "00AA", "AABB", "00BC", "00CD", "00DE"], ["AA00", "0000", "AAAA", "aa00", "00B0", "00B0"], ["AAAA", "AAAA", "0000", "00C0", "0BC0", "00D0"], ["AAaa", "00bb", "00cc", "0000", "00dd", "00ee"], ["AA00", "0C00", "0BA0", "0000", "0000", "00B0"], ["AA00", "0B00", "0B00", "aa00", "00B0", "0000"]]
       },
       '2g1t1c': {
         name: "Grupo B · T1 · C1 (Afinidad / Elección) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo B · T1 · C1 (Afinidad / Elección Inicial). BDR=0.48, SDR=0.22, Entropía=0.35.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo B · T1 · C1 (Afinidad / Elección Inicial). BDR=0.48, SDR=0.22, Entropía=0.35.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "aabb", "AAcc", "0000", "00dd", "00ee"], ["0B00", "0000", "AA00", "aa00", "0000", "0CA0"], ["0B00", "0000", "AAA0", "aa00", "0CB0", "0000"]]
       },
       '2g1t2c': {
         name: "Grupo B · T1 · C2 (Fricción / Tarea) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo B · T1 · C2 (Choque Operativo Bipolar) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.52, SDR=0.14, Entropía=0.38.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo B · T1 · C2 (Choque Operativo Bipolar) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.52, SDR=0.14, Entropía=0.38.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "AAAA", "AABB", "aaaa", "aabb", "aacc"], ["AAAA", "0000", "AAAA", "aabb", "aaaa", "00cc"], ["AABB", "AAAA", "0000", "aacc", "00bb", "aaaa"], ["aaaa", "aabb", "aacc", "0000", "AAAA", "AABB"], ["aabb", "aaaa", "00bb", "AAAA", "0000", "AAAA"], ["aacc", "00cc", "aaaa", "AABB", "AAAA", "0000"]]
       },
       '2g2t1c': {
         name: "Grupo B · T2 · C1 (Afinidad / Elección) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo B · T2 · C1 (Afinidad / Mediación Emergente). BDR=0.48, SDR=0.22, Entropía=0.35.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo B · T2 · C1 (Afinidad / Mediación Emergente). BDR=0.48, SDR=0.22, Entropía=0.35.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aa00", "0000", "00B0"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "00bb", "AAcc", "0000", "aadd", "00ee"], ["0B00", "0000", "AA00", "aaaa", "0000", "0C00"], ["0B00", "0C00", "AAA0", "aa00", "00B0", "0000"]]
       },
       '2g2t2c': {
         name: "Grupo B · T2 · C2 (Fricción / Tarea) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo B · T2 · C2 (Puentes Operativos y Mediación Funcional) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.42, SDR=0.24, Entropía=0.32.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo B · T2 · C2 (Puentes Operativos y Mediación Funcional) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.42, SDR=0.24, Entropía=0.32.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "AAAA", "AABB", "00AA", "aa00", "00bb"], ["AAAA", "0000", "AAAA", "0BAA", "00aa", "00bb"], ["AABB", "AAAA", "0000", "AABB", "00BA", "00aa"], ["00AA", "0BAA", "AABB", "0000", "AAAA", "AABB"], ["aa00", "00aa", "00BA", "AAAA", "0000", "AAAA"], ["00bb", "00bb", "00aa", "AABB", "AAAA", "0000"]]
       },
       '1g3t1c': {
         name: "Grupo 1 · T3 · C1 (Afinidad / Consolidación) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo 1 · T3 · C1 (Afinidad / Consolidación). BDR=0.54, SDR=0.3, Entropía=0.29.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo 1 · T3 · C1 (Afinidad / Consolidación). BDR=0.54, SDR=0.3, Entropía=0.29.",
         subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
         matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aaaa", "0000", "0000"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "aabb", "AAcc", "0000", "00dd", "00ee"], ["0B00", "0000", "AA00", "aa00", "0000", "0CA0"], ["0B00", "0000", "AAA0", "aa00", "0CB0", "0000"]]
       },
       '1g3t2c': {
         name: "Grupo 1 · T3 · C2 (Tarea / Eficacia) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo 1 · T3 · C2 (Consolidación y Eficacia Instrumental) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.44, SDR=0.34, Entropía=0.27.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo 1 · T3 · C2 (Consolidación y Eficacia Instrumental) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.44, SDR=0.34, Entropía=0.27.",
         subjects: ["1A", "2A", "3A", "4A", "5A", "6A"],
         matrix: [["0000", "AAAA", "AAAA", "00BB", "00CC", "00DD"], ["AAAA", "0000", "AAAA", "00B0", "00BC", "00CD"], ["AAAA", "AAAA", "0000", "00AA", "00BB", "00CC"], ["00BB", "00B0", "00AA", "0000", "00BB", "00CC"], ["00CC", "00BC", "00BB", "00BB", "0000", "00BB"], ["00DD", "00CD", "00CC", "00CC", "00BB", "0000"]]
       },
       '2g3t1c': {
         name: "Grupo 2 · T3 · C1 (Afinidad / Consolidación) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo 2 · T3 · C1 (Afinidad / Consolidación). BDR=0.52, SDR=0.31, Entropía=0.3.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo 2 · T3 · C1 (Afinidad / Consolidación). BDR=0.52, SDR=0.31, Entropía=0.3.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "00B0", "AAAA", "aaC0", "00D0", "00E0"], ["0B00", "0000", "AAA0", "aa00", "0000", "00B0"], ["AAAA", "0BBB", "0000", "aaCC", "00DD", "0CEE"], ["0Baa", "00bb", "AAcc", "0000", "aadd", "00ee"], ["0B00", "0000", "AA00", "aaaa", "0000", "0C00"], ["0B00", "0C00", "AAA0", "aa00", "00B0", "0000"]]
       },
       '2g3t2c': {
         name: "Grupo 2 · T3 · C2 (Tarea / Eficacia) (N=6)",
-        desc: "Sociomatriz canónica G3T3C2: Grupo 2 · T3 · C2 (Maduración Ejecutiva e Integración Técnica) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.36, SDR=0.33, Entropía=0.25.",
+        desc: "Sociomatriz oficial G3T3C2: Grupo 2 · T3 · C2 (Maduración Ejecutiva e Integración Técnica) [Serie Longitudinal Calibrada · Simulación Factual]. BDR=0.36, SDR=0.33, Entropía=0.25.",
         subjects: ["1B", "2B", "3B", "4B", "5B", "6B"],
         matrix: [["0000", "AAAA", "AAAA", "AAAA", "AABB", "00BB"], ["AAAA", "0000", "AAAA", "AAAA", "00BA", "00BB"], ["AAAA", "AAAA", "0000", "AAAA", "AABB", "00AA"], ["AAAA", "AAAA", "AAAA", "0000", "AAAA", "AAAA"], ["AABB", "00BA", "AABB", "AAAA", "0000", "AAAA"], ["00BB", "00BB", "00AA", "AAAA", "AAAA", "0000"]]
       },
@@ -1957,10 +2014,10 @@
         matrix: [["0000", "+-+-", "++++", "++++", "+-+-", "++++", "++++", "+000", "+000"], ["+-+-", "0000", "----", "+-+-", "++++", "+-+-", "+-+-", "++++", "+000"], ["++++", "----", "0000", "++++", "----", "++++", "++++", "0000", "0000"], ["++++", "+-+-", "++++", "0000", "+-+-", "++++", "++++", "0000", "0000"], ["+-+-", "++++", "----", "+-+-", "0000", "+-+-", "+-+-", "++++", "0000"], ["++++", "+-+-", "++++", "++++", "+-+-", "0000", "++++", "0000", "0000"], ["++++", "+-+-", "++++", "++++", "+-+-", "++++", "0000", "0000", "0000"], ["+000", "++++", "0000", "0000", "++++", "0000", "0000", "0000", "0000"], ["+000", "+000", "0000", "0000", "0000", "0000", "0000", "0000", "0000"]]
       },
 
-      // Grupo Canónico G2T1C1 (N=5)
+      // Grupo Oficial G2T1C1 (N=5)
       'g2t1c1': {
-        name: 'Grupo Canónico G2T1C1 (N=5)',
-        desc: 'Segundo grupo canónico del diseño multidimensional G2T1C1: 5 sujetos, 20 díadas, Criterio Tarea T1. Matriz empírica fáctica con roles instrumentales y fricción de liderazgo.',
+        name: 'Grupo Oficial G2T1C1 (N=5)',
+        desc: 'Segundo grupo oficial del diseño multidimensional G2T1C1: 5 sujetos, 20 díadas, Criterio Tarea T1. Matriz empírica fáctica con roles instrumentales y fricción de liderazgo.',
         subjects: ['1A', '2A', '3A', '4A', '5A'],
         matrix: [["0000", "0++0", "0000", "0-00", "----"], ["0++0", "0000", "++++", "---0", "0-00"], ["0000", "++++", "0000", "----", "0--0"], ["00-0", "0---", "--00", "0000", "0++0"], ["----", "00-0", "0--0", "0++0", "0000"]]
       },
@@ -1985,7 +2042,7 @@
       // 3x3: Tríada Micro-Dialéctica
       '3x3': {
         name: 'Tríada Micro-Dialéctica (N=3)',
-        desc: 'Tríada dialéctica canónica: 1A Alfa/Integrador que sostiene al grupo a cielo abierto, 2A Opositor polarizado en tensión crítica en la lámina, y 3A Dependiente receptor pasivo.',
+        desc: 'Tríada dialéctica oficial: 1A Alfa/Integrador que sostiene al grupo a cielo abierto, 2A Opositor polarizado en tensión crítica en la lámina, y 3A Dependiente receptor pasivo.',
         subjects: ['1A', '2A', '3A'],
         matrix: [
           // 1A: da positivo a todos, recibe correspondencia
@@ -1997,9 +2054,9 @@
         ]
       },
 
-      // 5x5: Grupo Canónico de los 5 Arquetipos
+      // 5x5: Grupo Oficial de los 5 Arquetipos
       '5x5': {
-        name: 'Grupo Canónico de los 5 Arquetipos (N=5)',
+        name: 'Grupo Oficial de los 5 Arquetipos (N=5)',
         desc: 'Grupo paradigmático: 1A Integrador (Cielo Abierto), 2A Emisor altruista (Lámina), 3A Atractor pasivo (Lámina), 4A Foco polarizado con asfixia por halo (BDF/BDC=0.35) y 5A Aislado neutro (Fondo sumergido).',
         subjects: ['1A', '2A', '3A', '4A', '5A'],
         matrix: [
@@ -2038,7 +2095,7 @@
       }
     };
 
-    // Alias canónicos para compatibilidad con selectores y telemetría cultural
+    // Alias oficiales para compatibilidad con selectores y telemetría cultural
     PRESETS['bernarda'] = PRESETS['lorca'];
     PRESETS['doce_hombres'] = PRESETS['hombres12'];
 
@@ -2084,7 +2141,7 @@
     // Pestaña D18 activa
     let activeD18Tab = 'elem';
 
-    // Regímenes y Bases del Acuario (Directivas Canónicas)
+    // Regímenes y Bases del Acuario (Directivas Oficiales)
     let currentAquariumRegime = 'MARGINAL'; // 'DIADIC' ( [d(i,j)+d(j,i)]/2 ), 'MARGINAL' ( [d(i,.)+d(.,j)]/2 )
     let activePrismMode = 'OFF'; // 'OFF' | 'P1' | 'P2' | 'P3' | '3PRIS'
 
@@ -2160,7 +2217,7 @@
     /* =========================================================================
        3. MATEMÁTICA Y CÁLCULO DE LAS 18 DENSIDADES (D18)
        ========================================================================= */
-    // Decodificación canónica SMIb conforme a la Regla Canónica 3:
+    // Decodificación oficial SMIb conforme a la Regla Oficial 3:
     // Mayúsculas = Positivo (+1.0), '0' o '?' o ' ' = Neutro (0.0), Minúsculas = Negativo (-1.0), Dígitos 1-9 = Positivo (+1.0)
     function decodeSmibChar(ch) {
       if (!ch || ch === '0' || ch === '?' || ch === ' ' || ch === '¡' || ch === '!') return 0.0;
@@ -2384,7 +2441,7 @@
       scene.fog = new THREE.FogExp2(0x083C66, 0.015);
 
       camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 250);
-      // Perspectiva canónica en ángulo: etiquetas a la vista y acuario ladeado hacia arriba
+      // Perspectiva oficial en ángulo: etiquetas a la vista y acuario ladeado hacia arriba
       camera.position.set(-12.8, 10.2, 14.6);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -2570,14 +2627,14 @@
     // Canon socio: "que los puntos se eleven más despacio !!!"
     function getAscentTiming(nodeCount) {
       const count = Math.max(1, nodeCount || N);
-      let stagger = 850;
-      let lift = 1500;
+      let stagger = 150;
+      let lift = 600;
       if (count > 18) {
-        stagger = 90;
-        lift = 600;
+        stagger = 60;
+        lift = 400;
       } else if (count > 6) {
-        stagger = 260;
-        lift = 950;
+        stagger = 120;
+        lift = 500;
       }
       return {
         stagger: stagger,
@@ -3913,7 +3970,7 @@
         scene.add(footprintMesh);
         footprintMeshes.push(footprintMesh);
 
-        // Punto puntual central canónico "." (exacto como en el damero)
+        // Punto puntual central oficial "." (exacto como en el damero)
         const dotGeom = new THREE.CircleGeometry(0.038, 16);
         dotGeom.rotateX(-Math.PI / 2);
         const dotMat = new THREE.MeshBasicMaterial({
@@ -4014,7 +4071,7 @@
             if (i === effectiveCount - 1 || j === effectiveCount - 1) {
               lineOpacity = 1.0;
             } else {
-              lineOpacity = 0.22; // Rastro atenuado canónico
+              lineOpacity = 0.22; // Rastro atenuado oficial
             }
           }
 
@@ -4554,7 +4611,7 @@
       event.target.value = '';
     }
 
-    // Normalizador canónico de matrices SMIb (Cumplimiento estricto Regla 5 y Regla 7)
+    // Normalizador oficial de matrices SMIb (Cumplimiento estricto Regla 5 y Regla 7)
     function normalizeAndCleanSmibMatrix(rawMatrix, subjects) {
       if (!rawMatrix || !Array.isArray(rawMatrix) || rawMatrix.length < 2) {
         throw new Error("Estructura de matriz no válida");
@@ -4579,7 +4636,7 @@
         clean.push(row);
       }
 
-      // Regla Canónica 5: Espejo diádico recíproco si A3 (REC) o A4 (p_REC) vienen vacíos
+      // Regla Oficial 5: Espejo diádico recíproco si A3 (REC) o A4 (p_REC) vienen vacíos
       for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
           if (i !== j) {
@@ -4873,7 +4930,7 @@
       const regime = regEl ? regEl.value : 'COHESION';
 
       const regNames = {
-        'COHESION': 'Cohesión Canónica',
+        'COHESION': 'Cohesión Oficial',
         'POLARIZACION': 'Polarización en 2 Facciones',
         'JERARQUIA': 'Jerarquía y Ostracismo',
         'ALEATORIO': 'Estocástico Puro'
@@ -5568,7 +5625,7 @@
         if (ledFlip) ledFlip.className = 'led-indicator led-off';
         if (btnSideFlip) btnSideFlip.className = 'action-btn p-2 rounded-xl bg-purple-950 text-purple-200 border-2 border-purple-500/70 hover:border-purple-300 text-center font-black flex items-center justify-center gap-1.5 shadow-sm';
         if (btnFx) btnFx.className = 'action-btn p-1.5 rounded-lg bg-purple-950/90 text-purple-200 border-2 border-purple-400 hover:border-purple-200 text-center font-black flex flex-col items-center gap-0.5 shadow-sm';
-        showSmibToast('🔄 Retorno Frontal: Paneo orbital suave a la perspectiva canónica');
+        showSmibToast('🔄 Retorno Frontal: Paneo orbital suave a la perspectiva oficial');
       }
       if (typeof updatePreConfigDisplay === 'function') updatePreConfigDisplay();
     }
@@ -5646,7 +5703,7 @@
                 phaseBadge.textContent = 'FASE 5/5: VOLTEO POSTERIOR + VIBRACIÓN ARMÓNICA';
                 phaseBadge.className = 'text-purple-300 font-black';
               }
-              showSmibToast('✨ Coreografía Canónica de 5 Fases Completada');
+              showSmibToast('✨ Coreografía Oficial de 5 Fases Completada');
               if (typeof updatePreConfigDisplay === 'function') updatePreConfigDisplay();
               
               setTimeout(() => {
@@ -5913,19 +5970,65 @@
       showSmibToast(`🕸️ Enrejado de Densidades: ${isSheetWireframeVisible ? 'VISIBLE' : 'OCULTO'}`);
     }
 
+    const I18N_ACUARIO = {
+      es: {
+        lbl_master_top: "ACCIÓN",
+        lbl_master_top_pause: "PAUSA",
+        lbl_top_stop: "STOP",
+        lbl_top_resume: "REANUDAR",
+        hdr_btn_op1: "Op1",
+        hdr_btn_op2: "Op2",
+        hdr_btn_op3: "Op3",
+        txt_master_action: "¡ ACCIÓN !",
+        btn_audio_label: "AUDIO",
+        toast_es: "🌐 Idioma establecido en Español",
+        toast_en: "🌐 Language switched to English"
+      },
+      en: {
+        lbl_master_top: "ACTION",
+        lbl_master_top_pause: "PAUSE",
+        lbl_top_stop: "STOP",
+        lbl_top_resume: "RESUME",
+        hdr_btn_op1: "Op1",
+        hdr_btn_op2: "Op2",
+        hdr_btn_op3: "Op3",
+        txt_master_action: "ACTION !",
+        btn_audio_label: "AUDIO",
+        toast_es: "🌐 Idioma establecido en Español",
+        toast_en: "🌐 Language switched to English"
+      }
+    };
+
     function setAcuarioLanguage(lang) {
+      lang = lang || localStorage.getItem('nexord_lang') || 'es';
+      localStorage.setItem('nexord_lang', lang);
       document.documentElement.lang = lang;
+
+      const dict = I18N_ACUARIO[lang] || I18N_ACUARIO['es'];
       const btnEs = document.getElementById('btn-acuario-lang-es');
       const btnEn = document.getElementById('btn-acuario-lang-en');
+
       if (lang === 'en') {
         if (btnEn) { btnEn.style.background = '#00FF87'; btnEn.style.color = '#030308'; }
         if (btnEs) { btnEs.style.background = 'transparent'; btnEs.style.color = '#94A3B8'; }
-        showSmibToast('🌐 Language switched to English');
+        if (typeof showSmibToast === 'function') showSmibToast(dict.toast_en);
       } else {
         if (btnEs) { btnEs.style.background = '#00FF87'; btnEs.style.color = '#030308'; }
         if (btnEn) { btnEn.style.background = 'transparent'; btnEn.style.color = '#94A3B8'; }
-        showSmibToast('🌐 Idioma establecido en Español');
+        if (typeof showSmibToast === 'function') showSmibToast(dict.toast_es);
       }
+
+      const masterTopLbl = document.getElementById('lbl-master-top');
+      if (masterTopLbl) masterTopLbl.textContent = isMasterDynamicsRunning ? dict.lbl_master_top_pause : dict.lbl_master_top;
+
+      const stopTopLbl = document.getElementById('lbl-top-stop');
+      if (stopTopLbl) stopTopLbl.textContent = isSimulationPaused ? dict.lbl_top_resume : dict.lbl_top_stop;
+
+      const txtAction = document.getElementById('txt-master-action');
+      if (txtAction) txtAction.textContent = dict.txt_master_action;
+
+      const audioLbl = document.getElementById('audio-label');
+      if (audioLbl) audioLbl.textContent = dict.btn_audio_label;
     }
 
     function toggleProbeBody() {
@@ -6217,7 +6320,7 @@
     });
 
     /* =========================================================================
-       IDENTIFICACIÓN CANÓNICA DE SOCIOMATRICES (Regla 9)
+       IDENTIFICACIÓN OFICIAL DE SOCIOMATRICES (Regla 9)
        ========================================================================= */
     function getActiveSociomatrixInfo() {
       if (currentScenarioKey === 'g3t3c2_global' || currentAquariumBase === 'GCxT' || currentAquariumBase === 'TENSOR') {
@@ -6433,7 +6536,7 @@
       const btnOp2 = document.getElementById('btn-op2');
       const btnOp3 = document.getElementById('btn-op3');
 
-      const isOp1 = (op === 'OP1' || op === 'CANONICO');
+      const isOp1 = (op === 'OP1' || op === 'OFICIAL');
       const isOp2 = (op === 'OP2' || op === 'TAREA' || op === 'CONFLICTO');
       const isOp3 = (op === 'OP3' || op === 'GLOBAL' || op === 'BERNARDA');
 
@@ -6453,6 +6556,20 @@
         btnOp3.className = isOp3 
           ? 'py-1 px-1 bg-[#38BDF8] text-black font-black text-xs md:text-sm border-2 border-black rounded cursor-pointer transition select-none shadow-[0_0_10px_rgba(56,189,248,0.7)]'
           : 'py-1 px-1 bg-white hover:bg-slate-100 text-black font-black text-xs md:text-sm border-2 border-black rounded cursor-pointer transition select-none';
+      }
+
+      // Sincronizar botones de cabecera en primer plano
+      const hdrOp1 = document.getElementById('hdr-btn-op1');
+      const hdrOp2 = document.getElementById('hdr-btn-op2');
+      const hdrOp3 = document.getElementById('hdr-btn-op3');
+      if (hdrOp1) {
+        hdrOp1.className = isOp1 ? 'px-2.5 py-1 rounded bg-[#00FF87] text-slate-950 font-black cursor-pointer shadow-sm hover:scale-105 transition' : 'px-2.5 py-1 rounded text-teal-300 hover:bg-teal-900/60 font-black cursor-pointer hover:scale-105 transition';
+      }
+      if (hdrOp2) {
+        hdrOp2.className = isOp2 ? 'px-2.5 py-1 rounded bg-[#F59E0B] text-slate-950 font-black cursor-pointer shadow-sm hover:scale-105 transition' : 'px-2.5 py-1 rounded text-teal-300 hover:bg-teal-900/60 font-black cursor-pointer hover:scale-105 transition';
+      }
+      if (hdrOp3) {
+        hdrOp3.className = isOp3 ? 'px-2.5 py-1 rounded bg-[#38BDF8] text-slate-950 font-black cursor-pointer shadow-sm hover:scale-105 transition' : 'px-2.5 py-1 rounded text-teal-300 hover:bg-teal-900/60 font-black cursor-pointer hover:scale-105 transition';
       }
     }
 
@@ -6488,7 +6605,7 @@
       }
       if (isPosteriorFlipped) togglePosteriorFlip(false);
 
-      if (cfg === 'OP1' || cfg === 'CANONICO') {
+      if (cfg === 'OP1' || cfg === 'OFICIAL') {
         currentG = 1; currentT = 1; currentC = 1;
         updateG3T3C2Matrix();
         setAquariumBase('NxN');
@@ -6502,7 +6619,7 @@
         updateCartelera('REG', 'OP1');
         updateCartelera('FON', 'NxN');
         updateCartelera('DIM', 'SDR');
-        showSmibToast('🌊 Op1: Canónica Normal G1·T1·C1 desde el fondo (N=6)');
+        showSmibToast('🌊 Op1: Oficial Normal G1·T1·C1 desde el fondo (N=6)');
       } else if (cfg === 'OP2' || cfg === 'TAREA' || cfg === 'CONFLICTO') {
         currentG = 2; currentT = 2; currentC = 2;
         updateG3T3C2Matrix();
@@ -6882,7 +6999,7 @@
       'D17': { name: 'MASS', label: 'Masa Integrada Di', unit: '[0, 1]', color: 0xE879F9, hex: '#E879F9' }, // Hot Fuchsia
       'D18': { name: 'BIAS', label: 'Sesgo Relacional (δi)', unit: '[-1, +1]', color: 0x818CF8, hex: '#818CF8' }, // Indigo
 
-      // Descriptores canónicos de matriz 3 columnas (Sij / Bij)
+      // Descriptores oficiales de matriz 3 columnas (Sij / Bij)
       'SDR': { name: 'SDR', label: 'Saldo Relativo Total (Flotabilidad)', unit: '[-1, +1]', color: 0x00F5D4, hex: '#00F5D4', canonicalKey: 'D13' },
       'BDR': { name: 'BDR', label: 'Densidad Bruta Total (Energía/Masa)', unit: '[0, 1]', color: 0xFF9F1C, hex: '#FF9F1C', canonicalKey: 'D14' },
       'S12': { name: 'S12', label: 'Saldo Dador SDA (A1+A2)', unit: '[-1, +1]', color: 0x2DD4BF, hex: '#2DD4BF', canonicalKey: 'D5' },
@@ -7008,7 +7125,7 @@
           : 'py-1 px-0.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-purple-400 text-purple-300 font-bold text-[7.5px] cursor-pointer shadow-sm';
       }
 
-      // Comprobación de pares dialécticos canónicos (Canon socio: SDR-BDR, D1-D2, D3-D4, D1-D4, D2-D3, D1-D3, D2-D4)
+      // Comprobación de pares dialécticos oficiales (Canon socio: SDR-BDR, D1-D2, D3-D4, D1-D4, D2-D3, D1-D3, D2-D4)
       const pairs = [
         { id: 'btn-pair-sdr-bdr', a: 'D13', b: 'D14', label: 'SDR ⬌ BDR (Ámbar)' },
         { id: 'btn-pair-d1-d2',   a: 'D1',  b: 'D2',  label: 'D1 ⬌ D2 (Emisor)' },
@@ -7744,7 +7861,7 @@
         const da = typeof st.SDA === 'number' ? st.SDA : 0;
         const rc = typeof st.SRC === 'number' ? st.SRC : 0;
 
-        // Estratificación termodinámica canónica
+        // Estratificación termodinámica oficial
         let stratumLabel = 'FONDO';
         let stratumColor = 'text-amber-400 bg-amber-950/80 border-amber-500/60';
         let stratumIcon = '⚓';
@@ -7842,7 +7959,7 @@
       sheet: true
     };
 
-    let activeSpectacularPreset = 'CANONICO';
+    let activeSpectacularPreset = 'OFICIAL';
 
     function updatePreConfigDisplay() {
       const elScen = document.getElementById('precfg-scen');
@@ -7969,7 +8086,7 @@
           badge.textContent = `🎬 FASE ${currentChoreographyPhase}/5`;
           badge.className = 'mono text-[8.5px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/50 font-black';
         } else if (isCanon) {
-          badge.textContent = '⚡ 1. CANÓNICA';
+          badge.textContent = '⚡ 1. OFICIAL';
           badge.className = 'mono text-[8.5px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/50 font-black';
         } else if (isConflicto) {
           badge.textContent = '⚡ 2. CONFLICTO';
@@ -8004,7 +8121,7 @@
 
       activeSpectacularPreset = profileKey;
 
-      if (profileKey === 'CANONICO') {
+      if (profileKey === 'OFICIAL') {
         if (isPosteriorFlipped) togglePosteriorFlip(false);
         loadScenario('20x20');
         setAglutinadorMode('TOTAL');
@@ -8013,7 +8130,7 @@
         if (!isRelationalSheetActive) toggleRelationalSheet();
         if (isDyadScannerRunning) toggleDyadScanner();
         triggerMasterActionLaunch(false);
-        showSmibToast('🌊 1. Sábana Canónica Activada: 20×20 Cohesivo, Síntesis SDR, Piel Neón 360º');
+        showSmibToast('🌊 1. Sábana Oficial Activada: 20×20 Cohesivo, Síntesis SDR, Piel Neón 360º');
       } else if (profileKey === 'CONFLICTO') {
         if (isPosteriorFlipped) togglePosteriorFlip(false);
         loadScenario('simul_02');
@@ -8060,8 +8177,8 @@
     }
 
     function resetToInitialPreConfig() {
-      launchSpectacularAction('CANONICO');
-      showSmibToast('↺ Configuración Previa Canónica Restablecida');
+      launchSpectacularAction('OFICIAL');
+      showSmibToast('↺ Configuración Previa Oficial Restablecida');
     }
 
     /* =========================================================================
@@ -8071,60 +8188,11 @@
     let autoActionSecondsLeft = 2;
 
     function initAquariumAutoAction() {
-      // Estado de espera inicial: Acuario diáfano listo para arrancar en 2s
-      isMasterDynamicsRunning = false;
-      if (controls) controls.autoRotate = false;
-
-      const btnAction = document.getElementById('btn-master-action');
-      const ledAction = document.getElementById('led-master-action');
-      const txtAction = document.getElementById('txt-master-action');
-
-      const btnBanner = document.getElementById('btn-master-dynamics');
-      const ledBanner = document.getElementById('led-master-dynamics');
-      const txtBanner = document.getElementById('txt-master-dynamics');
-
-      const ledTop = document.getElementById('led-master-top');
-      const lblTop = document.getElementById('lbl-master-top');
-
-      if (btnAction) {
-        btnAction.className = 'w-full py-3.5 px-4 rounded-xl font-black text-sm md:text-base mono flex items-center justify-center gap-2.5 bg-slate-900 border-2 border-amber-400/80 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.25)] hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer';
-      }
-      if (ledAction) {
-        ledAction.className = 'led-indicator led-on led-pulse';
-        ledAction.style.background = '#F59E0B';
-        ledAction.style.boxShadow = '0 0 10px #F59E0B';
-      }
-      if (txtAction) {
-        txtAction.textContent = '⏳ ¡ ACCIÓN ! (EN 2s...)';
-        txtAction.className = 'tracking-wider font-black text-amber-300';
-      }
-
-      if (btnBanner) btnBanner.classList.add('paused');
-      if (ledBanner) { ledBanner.className = 'led-indicator led-off'; }
-      if (txtBanner) txtBanner.textContent = '⏳ INICIANDO ACUARIO EN 2s...';
-
-      if (ledTop) { ledTop.className = 'led-indicator led-off'; }
-      if (lblTop) lblTop.textContent = 'INICIANDO (2s)';
-
-      // Mostrar escenario diáfano inicial
+      // Arranque inmediato de la dinámica socio-termodinámica del Acuario
       renderAquariumState(0);
-
-      autoActionSecondsLeft = 2;
+      autoActionSecondsLeft = 0;
       updatePreConfigDisplay();
-      if (autoActionCountdownTimer) clearInterval(autoActionCountdownTimer);
-      autoActionCountdownTimer = setInterval(() => {
-        autoActionSecondsLeft--;
-        if (autoActionSecondsLeft === 1) {
-          if (txtAction) txtAction.textContent = '⏳ ¡ ACCIÓN ! (EN 1s...)';
-          if (txtBanner) txtBanner.textContent = '⏳ INICIANDO ACUARIO EN 1s...';
-          if (lblTop) lblTop.textContent = 'INICIANDO (1s)';
-          updatePreConfigDisplay();
-        } else if (autoActionSecondsLeft <= 0) {
-          clearInterval(autoActionCountdownTimer);
-          autoActionCountdownTimer = null;
-          triggerMasterActionLaunch(true);
-        }
-      }, 1000);
+      triggerMasterActionLaunch(true);
     }
 
     let choreographyTimers = [];
@@ -8243,7 +8311,7 @@
       const timing = getAscentTiming(numNodes);
       const totalAscentTime = timing.total;
 
-      // COREOGRAFÍA CANÓNICA SECUENCIAL:
+      // COREOGRAFÍA OFICIAL SECUENCIAL:
       // FASE 2: Cuando todos los puntos están en su posición definitiva -> SE CUBRE LA SÁBANA O EL OLEAJE
       const tSheet = setTimeout(() => {
         isRelationalSheetActive = true;
@@ -8941,6 +9009,9 @@
       if (typeof updateProjectedProfilesList === 'function') updateProjectedProfilesList();
       initAquariumAutoAction();
 
+      const savedLang = localStorage.getItem('nexord_lang') || 'es';
+      if (typeof setAcuarioLanguage === 'function') setAcuarioLanguage(savedLang);
+
       // Inicialización adaptada para smartphones y tablets
       if (window.innerWidth < 1024) {
         initMobileAcuarioLayout();
@@ -8958,7 +9029,7 @@
       });
     });
   </script>
-<!-- MODAL CANÓNICO DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->
+<!-- MODAL OFICIAL DE CITACIÓN CIENTÍFICA (GOOGLE ACADÉMICO / ZENODO) -->
 <div id="nexord-bibtex-modal" class="bibtex-modal" style="display:none;" onclick="if(event.target===this) toggleBibtexModal()">
   <div class="bibtex-modal-box">
     <div class="bibtex-modal-header">

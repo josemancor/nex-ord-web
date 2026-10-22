@@ -1,7 +1,7 @@
 /**
  * NEXORD Plataforma Promocional · Scripts Maestros
  * Control de Video Hero 3D, Citas Académicas y Custodia Institucional
- * Versión Canónica 2026
+ * Versión Oficial 2026
  */
 
 let activeCitationFormat = 'bibtex';

@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE VISORD 3D (G2T1C1 & G2T2C2)
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
+ * Soporte bilingüe completo (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
@@ -33,7 +33,7 @@
       vnav_2: '2. Motor 10 Densidades',
       vnav_3: '3. Árbol CAJ (Ward)',
       vnav_4: '4. Inter-Proximidades',
-      vnav_5: '5. Tablas Canónicas',
+      vnav_5: '5. Tablas Oficiales',
       vnav_6: '6. Galería Gráfica',
       vnav_7: '7. Fichas Individuales',
       vnav_8: '8. Dossier Global',
@@ -71,7 +71,7 @@
       vnav_2: '2. 10 Densities Engine',
       vnav_3: '3. CAJ Tree (Ward)',
       vnav_4: '4. Inter-Proximities',
-      vnav_5: '5. Canonical Tables',
+      vnav_5: '5. Official Tables',
       vnav_6: '6. Graphic Gallery',
       vnav_7: '7. Individual Profiles',
       vnav_8: '8. Global Dossier',

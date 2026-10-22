@@ -11,7 +11,7 @@
 1. **Indexabilidad Google en Reposo:**  
    - Añadida sección `<noscript>` en el cuerpo de `index.html` con enlaces semánticos a los 9 niveles y simuladores.
    - Añadido footer estático y rastreable (`.seo-crawlable-footer`) con enlaces permanentes accesibles para motores de búsqueda.
-   - Generados archivos canónicos `sitemap.xml` (16 URLs) y `robots.txt`.
+   - Generados archivos oficiales `sitemap.xml` (16 URLs) y `robots.txt`.
 2. **Accesibilidad de Teclado en Portada:**  
    - Implementado banner interactivo accesible `.passive-explore-banner` con `<button class="btn-explore-dial">`, soporte para foco con tabulador, tecla `Enter` y `Espacio`.
    - Núcleo central inmutable con `tabindex="0"`, `role="button"` y atajos de teclado.

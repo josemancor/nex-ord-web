@@ -5,7 +5,7 @@
  * Marca Maestra VISORD (Regla 1) • Ecosistema Socio-Termodinámico SMIb & Geometría de Grassmann Gr(k, N)
  *
  * Cumplimiento Estricto de los Cánones Inviolables:
- * - Canón 5: Definición Canónica Inviolable del Tetragrama SMIb [A1: p_DA, A2: DA, A3: RECIBE, A4: p_RECIBE].
+ * - Canón 5: Definición Oficial Inviolable del Tetragrama SMIb [A1: p_DA, A2: DA, A3: RECIBE, A4: p_RECIBE].
  * - Canón 8: Lienzo Puntillista Socio-Termodinámico (Pointillist Color Area Cloud Engine):
  *            Fondo #0B132B, Isobaras KDE (alpha=0.18), Micro-píxeles sin contorno (edgecolors='none')
  *            sigma = 0.032, Colores Neón (#00FF87 <Ee>, #FF007F [Rr], #FF9F1C <Er]/[Re>, #FFE600 ¡¿?!),
@@ -20,7 +20,7 @@
     'use strict';
 
     // =========================================================================
-    // 1. DATASET FACTORIAL CANÓNICO DE SÍNTESIS LONGITUDINAL (CULTURAL_SYNTHESIS_DATA)
+    // 1. DATASET FACTORIAL OFICIAL DE SÍNTESIS LONGITUDINAL (CULTURAL_SYNTHESIS_DATA)
     // =========================================================================
     const CULTURAL_SYNTHESIS_DATA = {
         "clara": {
@@ -132,7 +132,7 @@
                 { charId: "P9", charName: "GRP", tc: "1g4t1c", t: 4, c: 1, x: 1.50, y: 0.55, valence: "Ee", label: "Asamblea Emancipadora Plena" },
                 { charId: "P9", charName: "GRP", tc: "1g4t2c", t: 4, c: 2, x: 1.45, y: 0.50, valence: "Ee", label: "Cierre del Ciclo Terapéutico" }
             ],
-            // Vectores Suplementarios AAG (Atribución Adjetival Grupal Canónica)
+            // Vectores Suplementarios AAG (Atribución Adjetival Grupal Oficial)
             aag_vectors: [
                 { label: "AAG_Claro (+)", text: "Claro", factor: "TEMA", val: "+", x: 1.29, y: 0.74, cos2: 0.83, desc: "Transparencia relacional y autoconcepto positivo" },
                 { label: "AAG_Activo (+)", text: "Activo", factor: "FUNC", val: "+", x: 1.43, y: -0.18, cos2: 0.84, desc: "Dinamismo proactivo en iniciativa de interacción" },
@@ -1073,7 +1073,7 @@
         }
         const badgeFecha = document.getElementById('pca-fecha-institucional');
         if (badgeFecha) {
-            badgeFecha.textContent = `Homologación Canónica: ${sData.fecha_homologacion}`;
+            badgeFecha.textContent = `Homologación Oficial: ${sData.fecha_homologacion}`;
         }
 
         // 2. Tabla de Baricentros Bi
@@ -1402,7 +1402,7 @@
         }
     }
 
-    // CÁLCULO SISTÉMICO CANÓNICO DE MÁXIMOS Y MÍNIMOS DEL SISTEMA
+    // CÁLCULO SISTÉMICO OFICIAL DE MÁXIMOS Y MÍNIMOS DEL SISTEMA
     function computeSystemExtremes(activeSeries, catalog, STATIONS) {
         // Extremos de las series activas proyectadas
         let activePoints = [];

@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD PLATFORM · PERSISTENT GLOBAL NAVIGATION & ZENITH DIAL (SCHEMA ENGINE)
  * Motor universal de barra persistente superior, breadcrumbs y Dial 3-6-9
- * Soporte bilingüe completo y dinámico (Español Canónico / English)
+ * Soporte bilingüe completo y dinámico (Español Oficial / English)
  * =============================================================================
  */
 
@@ -82,7 +82,7 @@
         fundamentos: '9. Fundamentos (Cenit Epistemológico)',
         visord: '8. VISORD 3D Suite',
         deontologia: 'Deontología PI & RGPD',
-        glosario: 'Glosario Canónico',
+        glosario: 'Glosario Oficial',
         portal: 'Portal Institucional',
         dial: 'Dial Orbital'
       },
@@ -113,7 +113,7 @@
           title: "Nivel 3: Esquema",
           badge: "NIVEL 3 • ESTRUCTURA FORMAL (CANON 3-6-9)",
           subtitle: "81 Figuras Sociométricas",
-          desc: "El invariante universal Q81: ordenación formal, topología de roles diádicos y partición canónica en 5 zonas."
+          desc: "El invariante universal Q81: ordenación formal, topología de roles diádicos y partición oficial en 5 zonas."
         },
         "4": {
           short: "APL",
@@ -196,7 +196,7 @@
         fundamentos: '9. Foundations (Epistemology)',
         visord: '8. VISORD 3D Suite',
         deontologia: 'Deontology & GDPR',
-        glosario: 'Canonical Glossary',
+        glosario: 'Official Glossary',
         portal: 'Institutional Portal',
         dial: 'Orbital Dial'
       },
@@ -227,7 +227,7 @@
           title: "Level 3: Schema",
           badge: "LEVEL 3 • FORMAL STRUCTURE (3-6-9 CANON)",
           subtitle: "81 Sociometric Figures",
-          desc: "Universal Q81 invariant: formal ordering, dyadic role topology, and canonical 5-zone partition."
+          desc: "Universal Q81 invariant: formal ordering, dyadic role topology, and official 5-zone partition."
         },
         "4": {
           short: "APP",
@@ -268,7 +268,7 @@
     }
   };
 
-  // Definición canónica de los 9 sectores del Dial (3-6-9)
+  // Definición oficial de los 9 sectores del Dial (3-6-9)
   const DIAL_SECTORS = [
     { idx: 0, num: "9", url: rootPrefix + "fundamentos.html", key: "fundamentos", color: "#00FF87", is369: true },
     { idx: 1, num: "1", url: rootPrefix + "nivel1_intuitivo.html", key: "nivel1", color: "#38BDF8", is369: false },
@@ -469,16 +469,17 @@
                             !!document.querySelector('.recursos-top-bar');
     const isDialOrbital = filename.includes('dial_orbital');
     const isPromoHome = filename.includes('index_promocional') || filename === 'index.html' || filename === '';
+    const isVisord = filename.includes('visord') || filename.includes('radiografia') || filename.includes('index_demo');
 
-    if (isDialOrbital || isPromoHome) {
-      // dial_orbital.html es la propia página de la rueda 3-6-9 interactiva a pantalla completa;
-      // no debe tener inyección de persistent-nav ni modal secundario sobrepuesto.
+    if (isDialOrbital || isPromoHome || isVisord) {
+      // Entornos de simulación a pantalla completa o portales:
+      // no deben tener inyección de persistent-nav ni modal secundario sobrepuesto.
       return;
     }
 
     const d = NAV_I18N[currentNavLang] || NAV_I18N.es;
 
-    // 1. BARRA SUPERIOR PERSISTENTE (Solo si la página no dispone de HUD canónico ni es la portada/portal)
+    // 1. BARRA SUPERIOR PERSISTENTE (Solo si la página no dispone de HUD oficial ni es la portada/portal)
     if (!hasCanonicalHud && !document.getElementById('nexord-persistent-nav')) {
       document.body.classList.add('has-persistent-nav');
       const nav = document.createElement('nav');
@@ -581,7 +582,7 @@
           </div>
         </div>
 
-        <!-- VISTA CANÓNICA: MENÚ LATERAL SIMPLIFICADO 1-9 + INSPECTOR -->
+        <!-- VISTA OFICIAL: MENÚ LATERAL SIMPLIFICADO 1-9 + INSPECTOR -->
         <div class="zenith-dial-container">
           <div class="zenith-sidebar-col" role="tablist" aria-label="Menú Lateral de Niveles 1-9">
             <div class="zenith-sidebar-header">

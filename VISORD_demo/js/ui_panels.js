@@ -768,7 +768,7 @@ class UIPanels {
                 </table>
             </div>
 
-            <!-- Nota Explicativa Pedagógica Canónica (Regla 10) -->
+            <!-- Nota Explicativa Pedagógica Oficial (Regla 10) -->
             <div style="background:rgba(30,41,59,0.6); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:12px 16px; font-size:0.76rem; color:#cbd5e1; line-height:1.6;">
                 <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px; font-size:0.82rem;">💡 Nota Explicativa de Interpretación: Inter-Proximidad DA/RC y Diagrama de Dispersión</div>
                 El <strong>Diagrama de Dispersión DA/RC</strong> proyecta el balance entre la <em>Expansividad Sociométrica Emita (DA, Eje Horizontal)</em> y el <em>Estatus o Prestigio Recibido (RC, Eje Vertical)</em> para los participantes del colectivo ($N &lt; 51$). 
@@ -1363,7 +1363,7 @@ class UIPanels {
             <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.7); padding:10px 16px; border-radius:8px; border:1px solid rgba(244,63,94,0.4); flex-wrap:wrap; gap:10px;">
                 <div>
                     <h4 style="margin:0; font-size:1.0rem; color:#f43f5e; font-family:'Outfit',sans-serif;">📐 Geometría Riemanniana en la Variedad de Grassmann Gr(3, 12)</h4>
-                    <span style="font-size:0.76rem; color:#94a3b8;">Métrica Geodésica d_G, deformación topológica y ángulos canónicos principales</span>
+                    <span style="font-size:0.76rem; color:#94a3b8;">Métrica Geodésica d_G, deformación topológica y ángulos oficiales principales</span>
                 </div>
                 <div style="display:flex; gap:12px; font-size:0.78rem;">
                     <span style="background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); padding:4px 10px; border-radius:6px; color:#f43f5e;">
@@ -1402,7 +1402,7 @@ class UIPanels {
                 </div>
             </div>
 
-            <!-- Tabla de Ángulos Canónicos Principales -->
+            <!-- Tabla de Ángulos Oficiales Principales -->
             <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; overflow-x:auto;">
                 <h5 style="margin:0 0 10px 0; color:#38bdf8; font-size:0.85rem;">📋 Progresión de Ángulos Principales (&theta;<sub>1</sub>, &theta;<sub>2</sub>, &theta;<sub>3</sub>) y Métrica Geodésica</h5>
                 <table class="cyber-table" style="width:100%; font-size:0.78rem; color:#cbd5e1;">
@@ -2034,7 +2034,7 @@ class UIPanels {
             <div style="background:rgba(30,41,59,0.7); border:1px solid #ff6384; border-radius:8px; padding:14px;">
                 <h4 style="color:#ff6384; margin:0 0 6px 0; font-size:0.92rem; font-weight:800;">1. Síntesis Diagnóstica Canon 2026 de Cohesión & Estabilidad Red [${gtc.toUpperCase()}]</h4>
                 <p style="font-size:0.78rem; line-height:1.6; margin:0; color:#e2e8f0;">
-                    El análisis de la sociomatriz relacional SMIb para la configuración <b>${gtc.toUpperCase()}</b> evidencia una estructura socio-termodinámica con equilibrio entre la Densidad Bruta (<b>BDR = ${bdrVal}</b>) y la Densidad Relativa (<b>SDR = ${sdrVal}</b>). La <b>Inercia de Desgaste</b> se establece en <b>I<sub>desgaste</sub> = ${(Math.max(0, (parseFloat(bdrVal)||0) - (parseFloat(sdrVal)||0))).toFixed(3)}</b> (tasa disipativa por fricción: ${(parseFloat(bdrVal)>0 ? ((((parseFloat(bdrVal)||0)-(parseFloat(sdrVal)||0))/(parseFloat(bdrVal)||1))*100).toFixed(1)+'%':'0.0%')}), anclada a la escala porcentual canónica [0.0%, 100.0%] con Nivel del Mar basal en 50.0%.
+                    El análisis de la sociomatriz relacional SMIb para la configuración <b>${gtc.toUpperCase()}</b> evidencia una estructura socio-termodinámica con equilibrio entre la Densidad Bruta (<b>BDR = ${bdrVal}</b>) y la Densidad Relativa (<b>SDR = ${sdrVal}</b>). La <b>Inercia de Desgaste</b> se establece en <b>I<sub>desgaste</sub> = ${(Math.max(0, (parseFloat(bdrVal)||0) - (parseFloat(sdrVal)||0))).toFixed(3)}</b> (tasa disipativa por fricción: ${(parseFloat(bdrVal)>0 ? ((((parseFloat(bdrVal)||0)-(parseFloat(sdrVal)||0))/(parseFloat(bdrVal)||1))*100).toFixed(1)+'%':'0.0%')}), anclada a la escala porcentual oficial [0.0%, 100.0%] con Nivel del Mar basal en 50.0%.
                 </p>
             </div>
             ` : ''}

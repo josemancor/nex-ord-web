@@ -17,7 +17,7 @@
 ## I. QUÉ OCURRE: La Expulsión del Paraíso y la Fenomenología de la Disimetría
 
 ### 1. La carretera miente: El modelo nulo inanimado
-La carretera es el único lugar donde dar es recibir. En el asfalto no hay intencionalidad, ni memoria de rechazo, ni asimetría de afecto: la N-IV carece de *tele* moreniano. Por eso el experimento fundacional **España-1988** sirve de **modelo nulo de reciprocidad perfecta**: al aplicar la ponderación exponencial canónica $W(k) = 2^{1-k}$ sobre la matriz simétrica de 10 capitales, cada ciudad emite exactamente $1{,}996$ unidades de proximidad hacia las otras nueve:
+La carretera es el único lugar donde dar es recibir. En el asfalto no hay intencionalidad, ni memoria de rechazo, ni asimetría de afecto: la N-IV carece de *tele* moreniano. Por eso el experimento fundacional **España-1988** sirve de **modelo nulo de reciprocidad perfecta**: al aplicar la ponderación exponencial oficial $W(k) = 2^{1-k}$ sobre la matriz simétrica de 10 capitales, cada ciudad emite exactamente $1{,}996$ unidades de proximidad hacia las otras nueve:
 
 $$\sum_{k=1}^{9} 2^{1-k} = 1 + \frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{256} = \frac{1022}{512} \approx 1{,}99609$$
 
@@ -52,7 +52,7 @@ Simetrizar $(\mathbf{E} + \mathbf{R})/2$ equivale a imponer $\boldsymbol{\delta}
 ## II. CÓMO SE MIDE: El Aparato Formal, Tensorial y Topológico
 
 ### 1. Axiomática Formal del Vínculo
-Sea un grupo de $n$ miembros con ordenación completa de preferencias, y sea $W(k) = 2^{1-k}$ la función inversa exponencial canónica. Se definen las cuatro matrices del vínculo:
+Sea un grupo de $n$ miembros con ordenación completa de preferencias, y sea $W(k) = 2^{1-k}$ la función inversa exponencial oficial. Se definen las cuatro matrices del vínculo:
 * $\mathbf{E}$ (DAR real, emisión fáctica): $E_{ij} = W(r_{ij})$
 * $\mathbf{R} = \mathbf{E}^T$ (RECIBIR real, estatus de acogida): $R_{ij} = E_{ji} = W(r_{ji})$
 * $\mathbf{\hat{E}}$ (DAR percibido, expectativa de emisión $pE$): $\hat{E}_{ij} = W(\hat{r}_{ij})$
@@ -110,13 +110,13 @@ Simetrizar $(\mathbf{E} + \mathbf{R})/2$ equivale a imponer $\boldsymbol{\delta}
 Sea $\sigma_i(1)$ el partner situado en 1.ª posición (rango 1) por el emisor $i$. La **deuda primaria** del nodo se define como:
 $$D_i^{(1)} = E_{i, \, \sigma_i(1)} \cdot \left(1 - R_{\sigma_i(1), \, i}\right)$$
 
-Dado que la función canónica otorga $E_{i, \, \sigma_i(1)} = W(1) = 1$:
+Dado que la función oficial otorga $E_{i, \, \sigma_i(1)} = W(1) = 1$:
 * Si el referente $\sigma_i(1)$ corresponde en primer rango ($R_{\sigma_i(1), \, i} = 1$), la deuda primaria se anula: $D_i^{(1)} = 1 \cdot (1 - 1) = 0$.
 * Si $\sigma_i(1)$ no ordena a $i$ en ninguna posición receptora positiva ($R_{\sigma_i(1), \, i} = 0$), se alcanza la **deuda máxima primaria**:
   $$D_i^{(1)} = 1 \cdot (1 - 0) = 1$$
   lo que representa **media unidad de presupuesto afectivo en caída libre** (exactamente el $50{,}1\%$ de toda la capacidad vincular del sujeto disipada en el vacío).
 
-> **Criterio Canónico de Ostracismo:**  
+> **Criterio Oficial de Ostracismo:**  
 > El ostracismo en NEXORD no se define por la cola vacía de la fila —que en el modelo nulo puede ser simple normalidad geográfica periférica (como La Coruña respecto a las ciudades del sur)—, sino por la **acumulación sistemática de deuda primaria $D_i^{(1)} \to 1$ con saldo relacional global $\Delta_i > 0$ sostenido en el tiempo.**  
 > El dolor del ostracismo no es la lejanía métrica; es la hemorragia de emitir la máxima primacía afectiva hacia quien devuelve la nada.
 
@@ -182,13 +182,13 @@ $$S_{ii} \sim P_{75}\left(\mathbf{R}_{*i}\right) = \operatorname{percentile}\lef
 ---
 
 ### 11. La Familia de Ponderaciones $W_\alpha(k)$: El Gradiente Jerárquico del Campo Social
-> Sea $\alpha \in (0, 1)$ el gradiente jerárquico del campo. Se define la familia $W_\alpha(k) = \alpha^{k-1}, \, k = 1,\dots, n-1$, con el valor canónico $\alpha = 1/2$ recuperando $W(k) = 2^{1-k}$. La función conserva la invariancia ordinal —los ranks no cambian: solo cambia la graduación— y parametriza un continuo de contextos sociales entre dos extremos imposibles: $\alpha \to 1$, campo plano o igualitario, donde todos los puestos pesan casi igual (equipos de pares, redes horizontales, asambleas); $\alpha = 1/2$, campo escolar medio, donde la primera elección pesa el doble que la segunda; $\alpha \to 0$, campo fuertemente jerárquico, donde la primera elección lo es todo (mando, secta, aula examinada, corte). Así, el salto drástico $1, \, 0{,}5$ se suaviza o agudiza según el contexto: no es el dato el que cambia, es la óptica con que el campo social organiza su propia atención.  
+> Sea $\alpha \in (0, 1)$ el gradiente jerárquico del campo. Se define la familia $W_\alpha(k) = \alpha^{k-1}, \, k = 1,\dots, n-1$, con el valor oficial $\alpha = 1/2$ recuperando $W(k) = 2^{1-k}$. La función conserva la invariancia ordinal —los ranks no cambian: solo cambia la graduación— y parametriza un continuo de contextos sociales entre dos extremos imposibles: $\alpha \to 1$, campo plano o igualitario, donde todos los puestos pesan casi igual (equipos de pares, redes horizontales, asambleas); $\alpha = 1/2$, campo escolar medio, donde la primera elección pesa el doble que la segunda; $\alpha \to 0$, campo fuertemente jerárquico, donde la primera elección lo es todo (mando, secta, aula examinada, corte). Así, el salto drástico $1, \, 0{,}5$ se suaviza o agudiza según el contexto: no es el dato el que cambia, es la óptica con que el campo social organiza su propia atención.  
 >  
 > $\sum_{k=1}^{n-1} \alpha^{k-1} = \frac{1 - \alpha^{n-1}}{1 - \alpha} \to \frac{1}{1 - \alpha}$ cuando $n \to \infty$. Fracción de primera elección: $\frac{w(1)}{\sum w} \to 1 - \alpha$. Tabla asintótica: $\alpha = 0{,}9 \to 10\%$; $\alpha = 0{,}75 \to 25\%$; $\alpha = 0{,}5 \to 50\%$; $\alpha = 0{,}25 \to 75\%$; $\alpha = 0{,}1 \to 90\%$. Corolario. La entropía de la distribución normalizada $p_k = w_k / \sum w$ es un índice directo de estructura: campos planos, $H$ alta (peso difuso); campos jerárquicos, $H$ baja (peso concentrado). El parámetro $\alpha$ es, formalmente, el inverso de la temperatura jerárquica del campo.
 
 * **Conservación de la Invarianza Ordinal:**  
   La función conserva de forma estricta la invariancia ordinal: **los rankings fácticos no se alteran en absoluto; solo cambia la graduación de las interdistancias métricas**.
-* **Recuperación Canónica Exacta ($\alpha = 1/2$):**  
+* **Recuperación Oficial Exacta ($\alpha = 1/2$):**  
   $$W_{1/2}(k) = \left(\frac{1}{2}\right)^{k-1} = 2^{1-k} \implies w(1) = 1{,}000, \quad w(2) = 0{,}500, \quad w(3) = 0{,}250, \dots$$
 * **Presupuesto Afectivo y Concentración Asintótica:**  
   La suma finita e infinita del presupuesto vincular marginal verifica:
@@ -201,7 +201,7 @@ $$S_{ii} \sim P_{75}\left(\mathbf{R}_{*i}\right) = \operatorname{percentile}\lef
 | :---: | :---: | :---: | :--- |
 | $\alpha = 0{,}90$ | **$10\%$** | $90\%$ | **Hiper-Horizontal / Asamblea:** El 1.º apenas resalta; peso difuso en el colectivo |
 | $\alpha = 0{,}75$ | **$25\%$** | $75\%$ | **Cooperativo / Redes de Pares:** Cohesión distribuida, jerarquía muy suave |
-| $\mathbf{\alpha = 0{,}50}$ | $\mathbf{50\%}$ | $\mathbf{50\%}$ | **Canónico de Semivida:** Campo escolar medio / organizativo estándar |
+| $\mathbf{\alpha = 0{,}50}$ | $\mathbf{50\%}$ | $\mathbf{50\%}$ | **Oficial de Semivida:** Campo escolar medio / organizativo estándar |
 | $\alpha = 0{,}25$ | **$75\%$** | $25\%$ | **Vertical / Jerárquico:** Mando operativo claro, concentración en el vértice |
 | $\alpha = 0{,}10$ | **$90\%$** | $10\%$ | **Hiper-Jerárquico / Autocrático:** Campos de mando, sectas, aulas examinadas, cortes |
 
@@ -222,30 +222,30 @@ $$S_{ii} \sim P_{75}\left(\mathbf{R}_{*i}\right) = \operatorname{percentile}\lef
 
 ---
 
-### 12. Protocolo de Calibración Canónica (Obligatorio)
-> **(1) Valor por defecto:** $\alpha = 1/2$; toda lectura NEXORD reportable se produce primero con el canónico.  
+### 12. Protocolo de Calibración Oficial (Obligatorio)
+> **(1) Valor por defecto:** $\alpha = 1/2$; toda lectura NEXORD reportable se produce primero con el oficial.  
 > **(2) Banda de sensibilidad:** repetir con $\alpha \in [0{,}4, \, 0{,}6]$; si las conclusiones no sobreviven a la banda, son artefactos del gradiente, no conclusiones.  
 > **(3) Calibración contextual justificada:** solo en campos institucionalmente marcados puede fijarse $\alpha \neq 1/2$, declarando evidencia social del gradiente (normas de mando, historial de elecciones, Gini de $\rho$), valor elegido y efecto sobre $\Delta$ y $D^{(1)}$.  
-> **(4) Comparabilidad:** comparar en $\operatorname{Gr}(k, N)$ exige $\alpha$ común; dos grupos medidos con $\alpha$ distintos se reexpresan en el canónico o en un $\alpha$ común declarado.
+> **(4) Comparabilidad:** comparar en $\operatorname{Gr}(k, N)$ exige $\alpha$ común; dos grupos medidos con $\alpha$ distintos se reexpresan en el oficial o en un $\alpha$ común declarado.
 
 Para blindar la reproducibilidad científica y evitar cualquier deriva hacia la arbitrariedad heurística, toda investigación o auditoría en NEXORD debe someterse de forma estricta a este protocolo de cuatro salvaguardas:
 
-1. **Valor por Defecto ($\alpha = 1/2$, Canónico):**  
-   Toda lectura, tabla o informe técnico reportable de NEXORD debe producirse **primero y obligatoriamente con el valor canónico $\alpha = 1/2$** ($W(k) = 2^{1-k}$).
+1. **Valor por Defecto ($\alpha = 1/2$, Oficial):**  
+   Toda lectura, tabla o informe técnico reportable de NEXORD debe producirse **primero y obligatoriamente con el valor oficial $\alpha = 1/2$** ($W(k) = 2^{1-k}$).
 2. **Banda de Sensibilidad ($\alpha \in [0{,}4, \, 0{,}6]$):**  
    Es preceptivo repetir el cálculo dentro de la banda de sensibilidad $\alpha \in [0{,}4, \, 0{,}6]$. **Si las conclusiones sustantivas no sobreviven a la banda, no son conclusiones: son artefactos del gradiente.**
 3. **Calibración Contextual Justificada:**  
    Solo en campos institucionalmente marcados —ejército, aula examinada, clínica cerrada, cooperativa asamblearia— puede fijarse un $\alpha \neq 1/2$. En tal caso, el informe debe declarar obligatoriamente:
    - *(i) Evidencia social del gradiente:* Normas institucionales de mando, historial fáctico de elecciones o el índice de Gini de la recepción ($\operatorname{Gini}(\boldsymbol{\rho})$).
    - *(ii) Valor elegido:* Declaración explícita del parámetro $\alpha$ y su temperatura jerárquica asociada ($\mathcal{T}$).
-   - *(iii) Efecto sobre $\boldsymbol{\Delta}$ y $D^{(1)}$:* Demostración transparente de cómo varían las deudas relacionales frente al patrón canónico $\alpha = 1/2$.
+   - *(iii) Efecto sobre $\boldsymbol{\Delta}$ y $D^{(1)}$:* Demostración transparente de cómo varían las deudas relacionales frente al patrón oficial $\alpha = 1/2$.
 4. **Principio de Comparabilidad en $\operatorname{Gr}(k, N)$:**  
-   Comparar configuraciones grupales en la variedad de Grassmann $\operatorname{Gr}(k, N)$ exige de forma imperativa un **$\alpha$ común**. Dos grupos medidos con $\alpha$ distintos jamás se comparan por sus densidades brutas, sino tras **reexpresar ambos en el canónico $\alpha = 1/2$ o en un $\alpha$ común formalmente declarado**.
+   Comparar configuraciones grupales en la variedad de Grassmann $\operatorname{Gr}(k, N)$ exige de forma imperativa un **$\alpha$ común**. Dos grupos medidos con $\alpha$ distintos jamás se comparan por sus densidades brutas, sino tras **reexpresar ambos en el oficial $\alpha = 1/2$ o en un $\alpha$ común formalmente declarado**.
 
 ---
 
 ### 13. Conexión con el Modelo Nulo: El Gradiente Modula Contraste, no Simetría
-> *«España-1988 se lee con precisión: la red viaria es un campo de gradiente suave —infraestructura igualitaria entre pares— y, aun así, bajo $\alpha = 1/2$ la recepción concentraba todo el significado ($\rho$: Zaragoza $3{,}875$ vs. La Coruña $0{,}336$). En un campo verdaderamente jerárquico ($\alpha \to 0$) la divergencia entre centros receptores y periferias emisivas sería abrupta: el canónico ya opera en el régimen intermedio donde la deuda es medible.»*
+> *«España-1988 se lee con precisión: la red viaria es un campo de gradiente suave —infraestructura igualitaria entre pares— y, aun así, bajo $\alpha = 1/2$ la recepción concentraba todo el significado ($\rho$: Zaragoza $3{,}875$ vs. La Coruña $0{,}336$). En un campo verdaderamente jerárquico ($\alpha \to 0$) la divergencia entre centros receptores y periferias emisivas sería abrupta: el oficial ya opera en el régimen intermedio donde la deuda es medible.»*
 
 El experimento fundacional **España-1988** sometido a la variación del gradiente $\alpha$ arroja un resultado revelador: **la comparación $G - R$ no se modifica en su simetría, pero sí en sus contrastes y hasta en la identidad del centro**.
 
@@ -259,7 +259,7 @@ La matriz de carreteras España-1988 verifica el corolario de forma cuantitativa
 
 | Gradiente $\alpha$ | $G$ (constante) | 1.ª elección $\%$ | $\rho$ máx / mín | Rango de $\Delta$ | Centro Resultante | Diagnóstico Socio-Termodinámico |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **$0{,}50$ canónico** | $1{,}996$ | $50{,}1\%$ | **$11{,}5\times$** | $[-1{,}88; \, +1{,}66]$ | **Zaragoza** ($\rho = 3{,}875$) | **Jerarquía nítida (deuda plenamente medible)** |
+| **$0{,}50$ oficial** | $1{,}996$ | $50{,}1\%$ | **$11{,}5\times$** | $[-1{,}88; \, +1{,}66]$ | **Zaragoza** ($\rho = 3{,}875$) | **Jerarquía nítida (deuda plenamente medible)** |
 | **$0{,}75$** | $3{,}700$ | $27{,}0\%$ | **$3{,}1\times$** | $[-1{,}52; \, +2{,}01]$ | Transición | Jerarquía atenuada (el baricentro Madrid emerge) |
 | **$0{,}90$ igualitaria** | $6{,}126$ | $16{,}3\%$ | **$1{,}5\times$** | $[-1{,}04; \, +1{,}46]$ | **Madrid** ($\rho = 7{,}160$) | Campo casi plano (Bilbao cae del 2.º al 7.º puesto) |
 | **$0{,}99$** | $8{,}648$ | $11{,}6\%$ | **$1{,}04\times$** | $[-0{,}15; \, +0{,}21]$ | Madrid (consistencia) | Homeostasis aparente total (ceguera de deuda) |
@@ -274,10 +274,10 @@ La recepción se comprime **$7{,}5$ veces**: lo que bajo $\alpha = 1/2$ era un c
 #### 3. El Hallazgo Fino: El Centro Cambia de Identidad (Primacía vs. Consistencia)
 > *«Hallazgo fino: la óptica jerárquica mide ser elegido primero (Zaragoza, tres primeras posiciones recibidas); la óptica igualitaria mide nunca estar al final (Madrid, sin colas malas en ninguna fila). La identidad del centro puede invertirse sin que el dato cambie: la jerarquía medida es óptica declarada, no propiedad del dato.»*  
 > *«Con $\alpha = 0{,}5$ el centro es Zaragoza ($\rho = 3{,}875$): gana por primacía —tres capitales la ponen 1.ª—. Con $\alpha = 0{,}9$ el centro es Madrid ($\rho = 7{,}16$): gana por consistencia —nunca está lejos para nadie—, mientras Zaragoza cae (sus colas malas: SEV, MAL, GRA la ponen 7.ª–9.ª) y Bilbao se desploma del 2.º al 7.º puesto en recepción.*  
-> *Es decir: la óptica jerárquica mide "ser elegido primero"; la óptica igualitaria mide "nunca estar al final". El canónico $\alpha = 1/2$ es el punto exacto donde las dos lecturas se equilibran — y por eso es el punto medio declarado del canon.»*
+> *Es decir: la óptica jerárquica mide "ser elegido primero"; la óptica igualitaria mide "nunca estar al final". El oficial $\alpha = 1/2$ es el punto exacto donde las dos lecturas se equilibran — y por eso es el punto medio declarado del canon.»*
 
 Al variar la óptica $\alpha$, la topología de centralidad no solo modula su gradiente métrico: **muda la propia identidad del centro**:
-* **Bajo $\alpha = 0{,}50$ (Óptica Jerárquica Canónica): El centro es Zaragoza ($\rho = 3{,}875$):**  
+* **Bajo $\alpha = 0{,}50$ (Óptica Jerárquica Oficial): El centro es Zaragoza ($\rho = 3{,}875$):**  
   Zaragoza triunfa por **primacía absoluta**. Tres nodos mayores (Barcelona, Bilbao, Valencia) la eligen como su primera opción ($k=1$), inyectándole una masa de recepción gravitatoria masiva ($1{,}000 \times 3 = 3{,}000$). Sus posiciones rezagadas en el sur peninsular pesan poco porque el factor $\alpha = 1/2$ atenúa exponencialmente la cola.
 * **Bajo $\alpha = 0{,}90$ (Óptica Igualitaria / Plana): El centro es Madrid ($\rho = 7{,}16$):**  
   Madrid triunfa por **consistencia distributiva**. Al estar en el corazón geográfico radial, nadie la elige en 1.ª posición (ninguna capital de la muestra la tiene a menor distancia que a su vecino limítrofe), pero **nunca está lejos para nadie** (ocupa puestos 2.º a 4.º sistemáticos en casi todas las capitales). Al aplanarse la ponderación ($\alpha \to 1$), acumular puestos medios altos supera a acumular unos pocos primeros puestos acompañados de colas malas. Paralelamente, Zaragoza cae (por el lastre de Sevilla, Málaga y Granada, que la sitúan 7.ª–9.ª) y Bilbao se desploma del 2.º al 7.º puesto de recepción grupal.
@@ -285,7 +285,7 @@ Al variar la óptica $\alpha$, la topología de centralidad no solo modula su gr
 **El Axioma Dual de Medición:**
 * La **óptica jerárquica** ($\alpha \to 0$) mide el poder de atracción polarizada: *«ser elegido primero»*.
 * La **óptica igualitaria** ($\alpha \to 1$) mide la centralidad de bajo riesgo y consistencia baricéntrica: *«nunca estar al final»*.
-* El **canónico $\alpha = 1/2$** es el **punto exacto de equilibrio** donde ambas dimensiones conviven en tensión dialéctica perfecta. Por esta razón matemática y sociológica objetiva, $\alpha = 1/2$ constituye el punto medio formal e irrenunciable del canon de NEXORD.
+* El **oficial $\alpha = 1/2$** es el **punto exacto de equilibrio** donde ambas dimensiones conviven en tensión dialéctica perfecta. Por esta razón matemática y sociológica objetiva, $\alpha = 1/2$ constituye el punto medio formal e irrenunciable del canon de NEXORD.
 
 #### 4. Consecuencia Metodológica Directa: La Evidencia que Cierra el Protocolo §7.9.3
 > *«Consecuencia metodológica: La elección de $\alpha$ puede invertir conclusiones sustantivas sobre datos idénticos. La lectura NEXORD rigurosa exige: diagnóstico primario con $\alpha = 1/2$; banda de sensibilidad $\alpha \in [0{,}4, \, 0{,}6]$; calibración contextual solo con declaración auditada (§7.9.3). El protocolo no es burocracia: es la única barrera contra elegir el centro que se desea ver.»*
@@ -298,7 +298,7 @@ Sin un protocolo estricto, la libertad de elegir $\alpha$ permitiría a un obser
 3. O bien forzar $\alpha \to 1$ para comprimir toda la deuda a cero ($\Delta \to 0$), disolviendo artificialmente el sufrimiento relacional o el aislamiento bajo una falsa ilusión de homeostasis.
 
 Por ello, la **lectura NEXORD rigurosa e inviolable** se define en tres escalones imperativos:
-* **$\alpha = 1/2 \implies$ Diagnóstico primario:** Toda lectura, informe o visualización reportable de NEXORD se produce primero con el canónico de semivida ($\alpha = 1/2$).
+* **$\alpha = 1/2 \implies$ Diagnóstico primario:** Toda lectura, informe o visualización reportable de NEXORD se produce primero con el oficial de semivida ($\alpha = 1/2$).
 * **$\alpha \in [0{,}4, \, 0{,}6] \implies$ Banda de estabilidad:** Se verifica la solidez de las conclusiones en la banda de sensibilidad. Si un núcleo o un ostracismo no sobrevive a la banda, es un artefacto métrico del gradiente, no una realidad social del grupo.
 * **Declaración contextual auditada:** Si el contexto social impone un gradiente específico (un campo de mando, jerárquico o militar $\implies \alpha$ bajo; una asamblea de pares, cooperativa o red horizontal $\implies \alpha$ alto), dicha calibración debe constar con su **justificación formal auditada en el registro de decisión metodológica del Investigador Principal**.
 
@@ -307,7 +307,7 @@ Por ello, la **lectura NEXORD rigurosa e inviolable** se define en tres escalone
 
 #### 5. Corolario 7.9.6: Equivalencia de Ópticas y Límites de Convergencia
 > **Corolario 7.9.6 (Equivalencia de Ópticas):**  
-> *El límite igualitario de la familia $W_\alpha$ converge a la regla de consenso; el límite jerárquico converge a la regla de pluralidad; el canónico $\alpha = 1/2$ es el punto donde ambas lecturas pesan igual.*
+> *El límite igualitario de la familia $W_\alpha$ converge a la regla de consenso; el límite jerárquico converge a la regla de pluralidad; el oficial $\alpha = 1/2$ es el punto donde ambas lecturas pesan igual.*
 >
 > $$\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k \implies \text{recuento Borda / auto-nodo de consenso (percentil 75)}$$
 > $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura (primacía: la primera elección lo es todo)}$$
@@ -315,7 +315,7 @@ Por ello, la **lectura NEXORD rigurosa e inviolable** se define en tres escalone
 De este comportamiento asintótico emerge la fundamentación que unifica toda la arquitectura de NEXORD:
 * **$\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k$ (Límite Igualitario $\implies$ Regla de Consenso):** Al aplanarse los pesos, cada posición ordinal contribuye uniformemente, transformando la sociomatriz en un recuento Borda y convergiendo asintóticamente con el anclaje endógeno del **Percentil 75 ($P_{75}$) del consenso grupal de recepciones** (Sección II.10). Es la voz distributiva de la asamblea deliberativa, donde el centro se adjudica por consistencia («quien nunca es abandonado»).
 * **$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1}$ (Límite Jerárquico $\implies$ Regla de Pluralidad Pura):** Mediante la delta de Kronecker $\delta_{k,1}$, únicamente cuenta el primer voto ($k=1$), coincidiendo con la regla electoral estricta de primer puesto o devoción unipolar («quien es elegido primero»).
-* **El canónico $\alpha = 1/2$ es el punto exacto donde ambas lecturas pesan igual:** Concede exactamente la misma masa gravitatoria al consenso y a la primacía ($50\%$ al vértice de primera elección $k=1$ y $50\%$ distribuido a lo largo del resto del tejido colectivo, pues $\sum_{k=2}^\infty 2^{1-k} = 1$). El canon de semivida no es una convención arbitraria: **es el fiel exacto de la balanza socio-termodinámica donde consenso y primacía pesan lo mismo**.
+* **El oficial $\alpha = 1/2$ es el punto exacto donde ambas lecturas pesan igual:** Concede exactamente la misma masa gravitatoria al consenso y a la primacía ($50\%$ al vértice de primera elección $k=1$ y $50\%$ distribuido a lo largo del resto del tejido colectivo, pues $\sum_{k=2}^\infty 2^{1-k} = 1$). El canon de semivida no es una convención arbitraria: **es el fiel exacto de la balanza socio-termodinámica donde consenso y primacía pesan lo mismo**.
 
 #### 6. La Metáfora de los Peldaños de la Escalera: El Orden Primario vs. la Altura del Peldaño
 Para desterrar cualquier ambigüedad sobre la soberanía del dato fáctico, la relación entre la sociomatriz ORBIT y el parámetro $\alpha$ se comprende de forma inmediata mediante la **metáfora de la escalera**:
@@ -340,7 +340,7 @@ Esta cuadruplicación se propaga en cascada tensorial hacia los **3 Prismas** (O
 #### 8. Demostración Fehaciente de Estabilidad en la Banda $[0{,}40, \, 0{,}60]$
 Para acreditar fehacientemente que la estructura de salida es robusta y no depende de micro-variaciones de temperatura, el sistema audita la red en los tres puntos nodales $\alpha \in \{0{,}40, \, 0{,}50, \, 0{,}60\}$:
 
-| Indicador de Estabilidad | $\alpha = 0{,}40$ (Límite Inferior) | $\alpha = 0{,}50$ (Canónico Central) | $\alpha = 0{,}60$ (Límite Superior) | Dictamen Topológico |
+| Indicador de Estabilidad | $\alpha = 0{,}40$ (Límite Inferior) | $\alpha = 0{,}50$ (Oficial Central) | $\alpha = 0{,}60$ (Límite Superior) | Dictamen Topológico |
 | :--- | :---: | :---: | :---: | :--- |
 | **Presupuesto $G$ emitido** | $1{,}666$ | $1{,}996$ | $2{,}488$ | Escalamiento monotónico regular |
 | **Peso 1.er voto $W(1)/G$** | $60{,}0\%$ | $50{,}1\%$ | $40{,}2\%$ | Rango de gradiente controlado |
@@ -360,7 +360,7 @@ La bifurcación crítica (donde Madrid adelanta a Zaragoza) ocurre recién en $\
 ### 1. $\Delta$ como Magnitud de Campo, no Sentencia Individual: La Corriente Rota y el Centro Inconsciente
 > *«$\Delta$ es una magnitud de campo, no una sentencia individual. El $\Delta$ alto señala una corriente rota; el $\Delta$ negativo, un centro que ignora su condición de centro. Ninguno es diagnóstico clínico ni cargo punitivo: el instrumento existe para devolver al grupo la imagen de su propio desajuste. El auto-nodo a posteriori —percentil 75 del consenso grupal— ancla la lectura en lo que el campo reconoce colectivamente.»*
 
-La **Regla Canónica 21** de NEXORD adquiere aquí su máxima exigencia ética: mostrar el mapa de desequilibrios $\Delta_i = g_i - \rho_i$ sirve para iluminar la topología del campo, jamás para sentenciar ni estigmatizar al deudor o al acreedor:
+La **Regla Oficial 21** de NEXORD adquiere aquí su máxima exigencia ética: mostrar el mapa de desequilibrios $\Delta_i = g_i - \rho_i$ sirve para iluminar la topología del campo, jamás para sentenciar ni estigmatizar al deudor o al acreedor:
 * **El $\Delta$ alto ($\Delta \gg 0$) señala una corriente rota:** El miembro que da sin recibir no es un «pesado», ni un «dependiente afectivo», ni padece una tara de personalidad. Es un sensor del sistema: un nodo vital que con su desgaste continuo está señalando que el circuito de reciprocidad del colectivo está interrumpido.
 * **El $\Delta$ negativo ($\Delta \ll 0$) señala un centro que ignora su condición de centro:** El miembro hiper-recibido no es un «egoísta», ni un «aprovechado», ni un «narcisista». Es un atractor gravitatorio —igual que Zaragoza en el modelo nulo de carreteras— que, la inmensa mayoría de las veces, desconoce por completo la enorme masa de expectativas, proyecciones y dependencia que el colectivo ha depositado sobre sus espaldas.
 * **Prohibición de Diagnóstico Clínico y Cargo Punitivo:** Ningún valor de $\Delta$, $D^{(1)}$ o $I_{\text{desgaste}}$ constituye una patología individual ni autoriza un reproche moral. El instrumento existe única y exclusivamente como **espejo sociométrico**: para devolver al grupo la imagen nítida de su propio desajuste, permitiendo que la inteligencia colectiva restaure la homeostasis sin mediación punitiva.
@@ -390,7 +390,7 @@ Esta exigencia deontológica fundamenta la **Regla de Oro de Demarcación** entr
 
 ---
 
-## Síntesis Canónica
+## Síntesis Oficial
 
 | Dimensión | Red Geográfica / Vial (España-1988) | Red Sociométrica Humana (NEXORD) |
 | :--- | :--- | :--- |
@@ -406,7 +406,7 @@ Esta exigencia deontológica fundamenta la **Regla de Oro de Demarcación** entr
 
 > ### 🌌 Síntesis Epistemológica
 > *«Los ranks son la forma; $\alpha$ es la temperatura con que el campo social derrite o congela esa forma en intensidades.*  
-> *El canónico $\alpha = 1/2$ no impone una jerarquía: reconoce que todo campo humano está, por defecto, a medio camino entre la asamblea y el trono —y declara el instrumento para medir cuánto se acerca cada grupo a uno u otro polo.»*  
+> *El oficial $\alpha = 1/2$ no impone una jerarquía: reconoce que todo campo humano está, por defecto, a medio camino entre la asamblea y el trono —y declara el instrumento para medir cuánto se acerca cada grupo a uno u otro polo.»*  
 > 
 > *«Con interdistancia igualitaria, el campo no cambia de forma ni de simetría: cambia de temperatura. El dato es ordinal; la jerarquía medida es óptica.»*
 

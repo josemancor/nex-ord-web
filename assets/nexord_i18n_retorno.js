@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE RETORNO AL PARTICIPANTE
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
+ * Soporte bilingüe completo (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */

@@ -2,7 +2,7 @@
 
 ## Scientific Manifesto, Theoretical-Methodological Foundations, and Open Science Governance Framework
 ### *«Toward a Physics of the Collective»*
-#### Official Canonical Edition v9.2 (October 2026) — Complete English Text
+#### Official Official Edition v9.2 (October 2026) — Complete English Text
 
 * **Author:** Dr. José Manuel Cornejo Álvarez
 * **Academic Affiliation:** Retired Associate Professor of Social Psychology · Principal Investigator and Creator of the NEXORD Platform
@@ -54,7 +54,7 @@ As an explicit tribute to both founders, the NEXORD Platform commissioned two te
 
 The specific debt to Kurt Lewin underpins the boldness of the title of this work: the origin of developing a «Physics of the Collective»—and the formalization of its cardinal variable, relational density, which anchors the socio-thermodynamic apparatus (§4.4)—resides in pioneering field theory, which conceived group life as force dynamics in a measurable life space. What is quantified here as density is no decorative metaphor, but the algorithmic continuation of that foundational insight.
 
-Without an explicit canonical order, historical sociometry accumulated isolated and incommensurable measurements: beautiful melodies that no one could read on the same score. NEXORD provides that shared staff where order does not dictate the music, but makes it legible and comparable.
+Without an explicit official order, historical sociometry accumulated isolated and incommensurable measurements: beautiful melodies that no one could read on the same score. NEXORD provides that shared staff where order does not dictate the music, but makes it legible and comparable.
 
 ![Figure 1: Carte de la Spontanéité et du Télé by Jacob L. Moreno (1934)](Figura_Homenaje_Moreno_1934_Carte_Tendre.png)  
 *Figure 1. Carte de la Spontanéité et du Télé by Jacob L. Moreno (1934): the first cartography of group affective preferences, with NEXORD commemorative border.*
@@ -98,7 +98,7 @@ In the BREVE Format, participants view a randomized peer roster to neutralize vi
 * **Direct Capture Matrix $A(i, k)$ BREVE:** An $N \times N$ matrix where each row corresponds to sender $i$, each column to ordinal slot $k \in \{1^\circ, 2^\circ, \dots, N^\circ\}$, and the cell entry identifies the peer assigned to that rank:
 $$A(i, k) = j \tag{3}$$
 
-* **Canonical Rank Distribution Sociomatrix $B(i, j)$:** A square $N \times N$ sociomatrix where rows ($i$) and columns ($j$) index group members, recording the numerical rank assigned:
+* **Official Rank Distribution Sociomatrix $B(i, j)$:** A square $N \times N$ sociomatrix where rows ($i$) and columns ($j$) index group members, recording the numerical rank assigned:
 $$B(i, j) = k \iff A(i, k) = j \tag{4}$$
 
 This duality decouples evaluator cognitive load during ordering from downstream algebraic computation, satisfying row rank-sum conservation (Figures 3–5): $\sum_{j=1}^N B(i, j) = \frac{N(N+1)}{2}$.
@@ -168,8 +168,8 @@ Following the rigorous territorial isomorphism, the third dimension corresponds 
 ![Figure 2b: 3D Orographic Relief of Perceptual Realism](Figura_NEXORD_ORBIT_Espana_47_Ciudades_Relieve_3D_Orografico.png)  
 *Figure 2b. 3D Orographic model of the peninsular network of 47 provincial capitals: the vertical Z-dimension encodes the topography of dyadic realism and relational consonance (basal valleys, functional plateaus, and jagged peaks of dissonance).*
 
-#### 5. Canonical Metric Calibration and Empirical Peninsular Validation (Cornejo, 1988 vs. NEXORD, 2026)
-To validate the direct, rigorous comparability between the classical metric model based on physical road distances in kilometres (Cornejo, 1988) and the dimensionless latent space derived strictly from the ORBIT ordinal format $A(i, k) = j$, the **Canonical Three-Step Metric Calibration Protocol** is applied (Annex VI, §8.6):
+#### 5. Official Metric Calibration and Empirical Peninsular Validation (Cornejo, 1988 vs. NEXORD, 2026)
+To validate the direct, rigorous comparability between the classical metric model based on physical road distances in kilometres (Cornejo, 1988) and the dimensionless latent space derived strictly from the ORBIT ordinal format $A(i, k) = j$, the **Official Three-Step Metric Calibration Protocol** is applied (Annex VI, §8.6):
 1. **Common Radial Centering:** Setting Madrid at the origin $(0, 0)$ as the peninsular centroid ($\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}}$).
 2. **Optimal Orthogonal Rotation ($Q \in \mathrm{SO}(2)$):** Aligning eigenvectors with cardinal geographic axes (West–East and South–North) via Procrustes Singular Value Decomposition (SVD).
 3. **Scalar Homothety Factor ($\alpha$):** Analytically converting the dimensionless ordinal latent units into physical kilometres via ordinary least squares:
@@ -229,7 +229,7 @@ In summary: group health and productivity are not matters of moral goodwill, but
 ## 4. Tensorial Algebra, Q81 Lattice, and the Densities Pentagram
 
 ### 4.1. 12-Symbol Atomic Grammar and the Relational Cell X1 X2 X3 X4
-The canonical Q81 lattice formalizes the complete combinatorial space of all $3^4 = 81$ dyadic configurations structuring the relational field. To provide an exact, unambiguous notation, NEXORD establishes a 12-symbol alphabet distributed across three relational polarity states:
+The official Q81 lattice formalizes the complete combinatorial space of all $3^4 = 81$ dyadic configurations structuring the relational field. To provide an exact, unambiguous notation, NEXORD establishes a 12-symbol alphabet distributed across three relational polarity states:
 
 #### Table 1: Atomic grammar — the 12 symbols of the NEXORD relational alphabet
 
@@ -249,7 +249,7 @@ $$\text{Figure}_{ij} = X_1 X_2 X_3 X_4 \in \{<, i, [\} \times \{E, \text{¿}, R\
 * $X_3$: Reactive vector of real behavioral reception returned by $j$ toward $i$.
 * $X_4$: Cognitive expectation attributed by $i$ to $j$'s response.
 
-From this atomic catalogue emerge canonical relational archetypes:
+From this atomic catalogue emerge official relational archetypes:
 * `<Ee>`: Full harmony and resonance (mutual choice and confirmed expectation).
 * `[Rr]`: Acknowledged conflict and segregation (explicit, congruent mutual rejection).
 * `i¿?!`: Basal indifference or field inertia (interactive and perceptual zero-point).
@@ -257,7 +257,7 @@ From this atomic catalogue emerge canonical relational archetypes:
 Formalizing signed configurations ($+ / -$) and measuring dyadic friction dialogs constructively with contemporary research on signed graphs, communicability geometry, and structural frustration indices (Aref & Wilson, 2021; Cucuringu et al., 2023; Diaz-Diaz & Estrada, 2025).
 
 ![Figure 6: Anatomy of the SMIa dyadic cell](Figura_Seccion_2_1_Entrada_SMIb_SMIa_G1.png)  
-*Figure 6. Anatomy of the SMIa dyadic cell: breakdown of its 4 canonical positions (A1 · A2 · A3 · A4) = (pDA · DA · REC · pREC).*
+*Figure 6. Anatomy of the SMIa dyadic cell: breakdown of its 4 official positions (A1 · A2 · A3 · A4) = (pDA · DA · REC · pREC).*
 
 ### 4.2. Antidiagonal Topology of the (9 × 9) Lattice and [1, 81] Numeralization as the First Density Metric
 The $9 \times 9$ partition crosses 9 objective behavioral interaction profiles (rows $i = \text{<E}, \text{¡E}, \text{[E}, \text{<¿}, \text{i¿}, \text{[¿}, \text{<R}, \text{¡R}, \text{[R}$) with 9 crossed cognitive expectation profiles (columns $j = \text{e>}, \text{e!}, \text{e]}, \text{?>}, \text{?!}, \text{?]}, \text{r>}, \text{r!}, \text{r]}$). 
@@ -271,7 +271,7 @@ This geometric ordering provides the **first metric-scalar quantification of dya
 * **Hemisphere of Cohesion and Resonance (Scalars 46 to 81):** The 8 upper antidiagonals cover the 36 figures of attraction, convergence, and synergy up to the tip of antidiagonal 17 (length 1), crowning the space at full harmonic resonance: `<Ee>` = 81.
 
 **Continuous Normalization of $Q_{81}$ Density:**  
-By centering the scale on the neutral indifference centroid (41), the figure's elementary dyadic density is normalized onto the canonical continuous range $[-1.00, +1.00]$:
+By centering the scale on the neutral indifference centroid (41), the figure's elementary dyadic density is normalized onto the official continuous range $[-1.00, +1.00]$:
 
 $$D_{Q81}(i, j) = \frac{Q_{81}(i, j) - 41}{40} \tag{13}$$
 
@@ -282,11 +282,11 @@ where:
 
 This geometry preserves strict **antipodal complementary symmetry**: $\text{Antipode}(k) = 82 - k$, meaning that $\text{Figure}(i, j) + \text{Figure}(10-i, 10-j) = 82$, proving that the neutral centroid is self-invariant under polar inversion ($41 + 41 = 82$).
 
-![Figure 7: Canonical Q81 lattice](Figura_05_Reticula_Q81_Tabla.png)  
-*Figure 7. Canonical Q81 lattice (9 × 9): exhaustive classification of the 81 possible dyadic figures, indexed by increasing-valence antidiagonals (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).*
+![Figure 7: Official Q81 lattice](Figura_05_Reticula_Q81_Tabla.png)  
+*Figure 7. Official Q81 lattice (9 × 9): exhaustive classification of the 81 possible dyadic figures, indexed by increasing-valence antidiagonals (1 = [Rr] … 41 = i¿?! … 81 = <Ee>).*
 
 ### 4.3. The Subject's Structural Triptych Ti and Split Diagnosis
-Collapsing an individual's ties into a simple arithmetic scalar mean represents a severe methodological flaw producing diagnostic cancellation artifacts (a person with one tie at 81 and another at 1 would falsely average 41, indistinguishable from basal indifference). NEXORD preserves topological bidimensionality by splitting subject $i$'s position into its Canonical Structural Triptych:
+Collapsing an individual's ties into a simple arithmetic scalar mean represents a severe methodological flaw producing diagnostic cancellation artifacts (a person with one tie at 81 and another at 1 would falsely average 41, indistinguishable from basal indifference). NEXORD preserves topological bidimensionality by splitting subject $i$'s position into its Official Structural Triptych:
 
 $$T_i = ( F_i^{\text{out}}, F_i^{\text{in}}, f_{ii} ) \tag{14}$$
 
@@ -302,7 +302,7 @@ From positional discrepancy $\Delta_{\text{role}} = F_i^{\text{out}} - F_i^{\tex
 ### 4.4. The 18D Relational Hyperspace, the 3 Dual Prisms, and the Densities Pentagram (10D)
 
 #### 4.4.1. Algorithmic Foundations of Relational Density: The 6D Traceability Matrix and Modulators
-In NEXORD's canonical ordinal sociometry, Relational Density is neither a flat headcount nor an unweighted arithmetic average: it constitutes the **real thermal and structural mass** contributed by an interpersonal tie, defining the cohesive or destructive force of the interaction upon the thermodynamic continuum ($\pm\mathbb{R}$).
+In NEXORD's official ordinal sociometry, Relational Density is neither a flat headcount nor an unweighted arithmetic average: it constitutes the **real thermal and structural mass** contributed by an interpersonal tie, defining the cohesive or destructive force of the interaction upon the thermodynamic continuum ($\pm\mathbb{R}$).
 
 To ensure scientific reproducibility and eliminate algorithmic opacity, NEXORD's engine processes dyadic interaction $(i \to j)$ through a **6-Layer Traceability Matrix**. This clinical framework decomposes relational flow through an explicit set of **mathematical modulators** that rigorously weight ordinal rank, action symmetries, cognitive reciprocities, and status hierarchies:
 
@@ -317,7 +317,7 @@ To ensure scientific reproducibility and eliminate algorithmic opacity, NEXORD's
 | **5. Perceptual Effort** | Active presence of meta-perception ($pDA, pRC$) | **$1.2\times$** | Acknowledges cognitive cost of anticipatory mentalization. **Bonus strictly revoked to $1.0\times$ if structural blindness occurs**. |
 | **6. Sender's Prestige ($P_i$)** | Hierarchical Network Centrality | **Variable** ($0.5$ to $1.5$) | Gravitational scale multiplier. Governs the inertial mass dragged by the sender's action across the collective. |
 
-**Canonical Algorithm Illustration on the Dyadic Scorecard:**
+**Official Algorithm Illustration on the Dyadic Scorecard:**
 * **Fully Harmonious Dyad (`<Ee>`):** High-prestige sender ($P_i = 1.5$) choosing as 1st rank ($1/r^k = 1.0$), with mutual factual reciprocity ($1.5\times$), accurate perceptual congruence ($1.5\times$), and maintained lucid effort bonus ($1.2\times$):  
   $$\text{Density}(i \to j) = (1.0 \times 1.5 \times 1.5 \times 1.2 \times 1.5) = \mathbf{4.86\text{ pts}}$$
 * **Dissonant / Paranoid Dyad (`[Ae)`):** Mid-status sender ($P_i = 1.0$) relegating as 2nd option ($1/r^k = 0.354$), null reciprocity, zero accuracy, perceptual effort bonus revoked by blindness, and active opposing sentiments:  
@@ -344,7 +344,7 @@ From these modulated dyadic densities, the system simultaneously computes the **
 * **S (Balance / Relative Density):** Signed magnitude ($\pm\mathbb{R}$). Quantifies force vectors, potential gradients, and direction of attraction or rejection.
 * **B (Gross / Absolute Density):** Modular unsigned magnitude ($|\cdot| \ge 0$). Quantifies total mobilized relational mass, overall kinetic energy, and metabolic system volume.
 
-#### Table 3c. Canonical Specification and Calculation of the 18 Relational Densities and Socio-Thermodynamic Invariants
+#### Table 3c. Official Specification and Calculation of the 18 Relational Densities and Socio-Thermodynamic Invariants
 
 | Dimension | Symbol / Alias | Partition / Axis | Exact Calculation Formula | Metric Range | Socio-Thermodynamic Significance |
 | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -372,17 +372,17 @@ From these modulated dyadic densities, the system simultaneously computes the **
 #### 4.4.2. The 3 Dual Prisms of Relational Density
 The four elementary densities $\{D_1, D_2, D_3, D_4\}$ admit exactly 3 complementary dual partitions $[\binom{4}{2} / 2 = 3]$, which subject the relational tie to three independent orthogonal refractions, termed **PRISMS**:
 
-![Figure 8b: Canonical Architecture of the 18D Relational Space and the 3 Dual Prisms](Figure_18D_Dual_Prisms_Cream_EN.png)  
-*Figure 8b. Canonical Architecture of the 18D Relational Space and the 3 Dual Prisms: Structuring of the tetragram into 4 elementary densities (D1–D4), invariant global balances (SDR, BDR), and decomposition across three fundamental axes: Operational (Giver/Receiver, 10D), Ontological (Mind/Facts, 14D), and Dialectical (Realism/Commitment, 18D).*
+![Figure 8b: Official Architecture of the 18D Relational Space and the 3 Dual Prisms](Figure_18D_Dual_Prisms_Cream_EN.png)  
+*Figure 8b. Official Architecture of the 18D Relational Space and the 3 Dual Prisms: Structuring of the tetragram into 4 elementary densities (D1–D4), invariant global balances (SDR, BDR), and decomposition across three fundamental axes: Operational (Giver/Receiver, 10D), Ontological (Mind/Facts, 14D), and Dialectical (Realism/Commitment, 18D).*
 
-The decomposition of the group field into its **18 Relational Densities (18D)** is not a scattered combinatorial inventory, but an ordered anatomy of psychosocial flux. The system articulates its tensions along a canonical dialectical sequence where **Gross Mass ($B$)**—the total mobilized interactive energy—and **Relative Balance ($S$)**—the net direction and vector tilt of the tie—succeed one another in harmonic counterpoint:
+The decomposition of the group field into its **18 Relational Densities (18D)** is not a scattered combinatorial inventory, but an ordered anatomy of psychosocial flux. The system articulates its tensions along a official dialectical sequence where **Gross Mass ($B$)**—the total mobilized interactive energy—and **Relative Balance ($S$)**—the net direction and vector tilt of the tie—succeed one another in harmonic counterpoint:
 
 $$\underbrace{B_{12} \; S_{12}}_{\text{DA (Initiative)}} \quad \underbrace{B_{14} \; S_{14}}_{\text{PA (Projection)}} \quad \underbrace{B_{13} \; S_{13}}_{\text{XA (Attunement)}} \quad \big[ D_1 \;\; D_2 \;\; D_3 \;\; D_4 \big] \quad \underbrace{S_{24} \; B_{24}}_{\text{XR (Disillusion)}} \quad \underbrace{S_{23} \; B_{23}}_{\text{PR (Facts)}} \quad \underbrace{S_{34} \; B_{34}}_{\text{RC (Status)}} \quad \mathbf{SDR} \quad \mathbf{BDR}$$
 
 This ordered sequence expresses the principle of energetic conservation: the discrepancy between gross mass ($B$) and its projected balance ($S$) reveals with millimetric precision the *Relational Wear Inertia* ($I_{\text{wear}} = B - S$) across each relational prism. The order of densities is no analytical whim: it represents the thermodynamic scale allowing one to read, at a single glance, from the active initiative of the giver to the consolidated status conferred by the group, culminating in the overarching homeostatic synthesis of $\mathbf{SDR}$ and $\mathbf{BDR}$.
 
 #### 4.4.3. The Socio-Thermodynamic Pentagram and Relational Wear Inertia
-Under the canonical correspondence $D_k \equiv X_k$ of the tetragram, the ten relational densities are organized into two polar macrodimensions (GIVING and RECEIVING) coupled under two analytical conservation strata:
+Under the official correspondence $D_k \equiv X_k$ of the tetragram, the ten relational densities are organized into two polar macrodimensions (GIVING and RECEIVING) coupled under two analytical conservation strata:
 
 * **Signed Vector Stratum (Net Valence and Harmony):** the sender's net potential $SDA = D_1 + D_2$ (emitted expectation $D_1$ plus real emitted action $D_2$), the receiver's net potential $SRC = D_3 + D_4$ (real received action $D_3$ plus attributed expectation $D_4$), and the total Relative Field Density Balance $SDR = SDA + SRC$.
 * **Absolute Scalar Stratum (Total Kinetic Mass Mobilized):** the gross emission mass $BDA = |D_1| + |D_2|$ and reception mass $BRC = |D_3| + |D_4|$, whose sum defines the Gross Relational Density $BDR = BDA + BRC$.
@@ -393,7 +393,7 @@ The analytical discrepancy between the total mobilized energy and the resulting 
 * **Friction and Resistance Regime ($BDR \gg SDR \implies I_{\text{wear}} \gg 0$):** The collective mobilizes high communication volumes ($BDR$ elevated), but sign cancellations from suspicion, latent tensions, or perceptual mismatches stall progress ($SDR \to 0$). Energy dissipates into rumination, suspicion, and sterile friction, quantifying structural fatigue prior to explicit fractures.
 
 ![Figure 8: Socio-Thermodynamic Pentagram (10D)](Figure_Pentagram_Socio_Thermodynamic_10D.png)  
-*Figure 8. Socio-Thermodynamic Pentagram with the 10 canonical densities: emission/reception decoupling and transition to the thermodynamic continuum; the gap I_wear = BDR − SDR quantifies energy dissipated in friction.*
+*Figure 8. Socio-Thermodynamic Pentagram with the 10 official densities: emission/reception decoupling and transition to the thermodynamic continuum; the gap I_wear = BDR − SDR quantifies energy dissipated in friction.*
 
 ### 4.5. The VISORD Aquarium Paradigm and Relational Hydrostatics
 As an experiential and perceptual culmination of this socio-thermodynamic formalism, **VISORD Aquarium** provides an integrated visual and acoustic interactive environment representing relational density structures within a multidimensional $G \times T \times C$ design.
@@ -445,13 +445,13 @@ The matrix formulation imposes no prior constraints on design configurations:
 ![Table 2: Normative battery V10 and A16](Tabla_Seccion_5_2_Bateria_VAR10_AAG16.png)  
 *Table 2. Normative board of the 10 contextual-variable battery (V10, 3 modalities) and 16 group-attribution adjectives (A16, 4 × 4, 1–8 scale).*
 
-Field application across $G \times T \times C$ is guided by the 10 ecosystemic calibration domains (Table 6), setting structural parameters—relational inertia $\alpha$ and decay $\gamma$—and canonical criteria.
+Field application across $G \times T \times C$ is guided by the 10 ecosystemic calibration domains (Table 6), setting structural parameters—relational inertia $\alpha$ and decay $\gamma$—and official criteria.
 
 ![Table 6: 10 Ecosystemic Application Domains](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
-*Table 6. Canonical catalogue of the 10 ecosystemic application domains with structural parameterization (α, γ), psychosocial focus, and canonical criteria.*
+*Table 6. Official catalogue of the 10 ecosystemic application domains with structural parameterization (α, γ), psychosocial focus, and official criteria.*
 
 ### 5.3. Multigroup PCA and Geodesic Distance on Grassmann Manifolds Gr(k, N)
-To compare collectives without forcing artificial cross-group interaction, each group projects as a $k$-dimensional subspace within $\mathbb{R}^N$. From Jordan canonical principal angles $\cos(\theta_m) = \sigma_m(U_1^T U_2)$, scale-invariant geodesic distance is computed:
+To compare collectives without forcing artificial cross-group interaction, each group projects as a $k$-dimensional subspace within $\mathbb{R}^N$. From Jordan official principal angles $\cos(\theta_m) = \sigma_m(U_1^T U_2)$, scale-invariant geodesic distance is computed:
 
 $$d_{\operatorname{Gr}}(U_1, U_2) = \sqrt{\sum_{m=1}^k \theta_m^2} \tag{20}$$
 
@@ -482,7 +482,7 @@ NEXORD implements the iceberg model through 3D visual projection (surfacing subm
 *Figure 13. Continuous interaction field and iceberg model across N = 50 subjects: submerged relational structure rendered visible.*
 
 ### 6.4. The CULTURAL Corpus as a Zero-Reactivity Laboratory
-Dramatic literature and cinema provide ideal human laboratories: closed, perfectly documented systems with zero reactivity. NEXORD has processed canonical corpora (*Twelve Angry Men*, *The House of Bernarda Alba*, *Lord of the Flies*), proving that socio-thermodynamic laws mathematically pinpoint dramatic climaxes and leadership collapses without observational bias.
+Dramatic literature and cinema provide ideal human laboratories: closed, perfectly documented systems with zero reactivity. NEXORD has processed official corpora (*Twelve Angry Men*, *The House of Bernarda Alba*, *Lord of the Flies*), proving that socio-thermodynamic laws mathematically pinpoint dramatic climaxes and leadership collapses without observational bias.
 
 ### 6.5. Triadic Social Cognition: Projected Expectations αE and ωE
 NEXORD extends expectation capture with two relational theory-of-mind sensors:
@@ -559,7 +559,7 @@ In rigorous adherence to the principles of Open Science and FAIR Data (*Findable
 
 Empirical field data are systematically anonymized under standardized alphanumeric codes (`1A1a` … `5A1a`) and protected via immutable cryptographic sealing utilizing the SHA3-512 algorithm (the Clélie Protocol), under the academic custody of the Sociometric Bank (BSOC).
 
-The BSOC originates from the visionary aim of conferring retrospective utility onto the vast body of sociometric studies conducted over past decades: the BSOC is established to preserve and leverage the extensive empirical heritage generated across decades of psychosocial research, enabling sociomatrices from local and historical studies to be integrated into retrospective, comparative, and meta-analytic investigations. Once sociomatrices are deposited into the bank under the canonical SMIb standard protocol—which seamlessly unifies both data capture paradigms (MORENO and BREVE)—this extensive historical heritage is transformed into reusable scientific capital under FAIR principles, fully safeguarding the empirical investment of preceding generations of researchers.
+The BSOC originates from the visionary aim of conferring retrospective utility onto the vast body of sociometric studies conducted over past decades: the BSOC is established to preserve and leverage the extensive empirical heritage generated across decades of psychosocial research, enabling sociomatrices from local and historical studies to be integrated into retrospective, comparative, and meta-analytic investigations. Once sociomatrices are deposited into the bank under the official SMIb standard protocol—which seamlessly unifies both data capture paradigms (MORENO and BREVE)—this extensive historical heritage is transformed into reusable scientific capital under FAIR principles, fully safeguarding the empirical investment of preceding generations of researchers.
 
 The NEXORD Platform materializes across four integrated pillars:
 1. The Python computational suite, which implements the complete formal and mathematical apparatus (under continuous revision and refinement, distributed under institutional accreditation pursuant to §7.4).
@@ -597,7 +597,7 @@ Formalization of bijective correspondence between alphanumeric ordering and comp
 ![SMIa Concentrated Syntax](Tabla_SMIa_Sintaxis_Concentrada.png)
 
 ![Table Annex I: Q81(9,9) Numeralization and SMIa Syntax](Tabla_Q81_Numeralizacion_Figuras_Sociometricas.png)  
-*Table Annex I. Canonical numeralization of relational figures Q81(9,9): From 81 to 1 centered on neutral 41 with concentrated SMIa syntax.*
+*Table Annex I. Official numeralization of relational figures Q81(9,9): From 81 to 1 centered on neutral 41 with concentrated SMIa syntax.*
 
 ### 8.2. Annex II: Factorial Metrics (COR, CTA, CTR), Slender Vertical Axes, and Hierarchical Axonometric 6D-to-2D Projection (DIMO / ANCORM Algorithm by Dr. J. M. Cornejo Álvarez)
 
@@ -679,7 +679,7 @@ subject to the strict monotonic constraint:
 $$r_{ij} < r_{ik} \implies \hat{d}_{ij} \le \hat{d}_{ik}$$
 For the empirical case of peninsular Spanish road distances ($N = 47$ provincial capitals), convergence yields $S < 0.035$ and a Shepard monotonic correlation $r_{\text{Shepard}} > 0.985$, proving analytically that pure ordinal information is sufficient to reconstruct the underlying Euclidean metric space without topological deformation.
 
-#### 3. Canonical Three-Step Metric Calibration Protocol
+#### 3. Official Three-Step Metric Calibration Protocol
 Given the dimensionless ordinal configuration $\mathbf{X}^{\text{ORBIT}} \in \mathbb{R}^{N \times 2}$ obtained through spectral decomposition of the sociomatrix $R_{\text{sym}} = \frac{1}{2}(B + B^\top)$, and the physical reference metric matrix $\mathbf{X}^{\text{KM}} \in \mathbb{R}^{N \times 2}$ (historically centered at Madrid):
 
 1. **Radial Centering to Reference Centroid:**

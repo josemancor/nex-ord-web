@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE DEONTOLOGÍA & RGPD
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
+ * Soporte bilingüe completo (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
@@ -21,7 +21,7 @@
       nav_custody: '🏛️ Custodia',
       nav_visord: '🎮 VISORD 3D',
 
-      hero_pill: '🛡️ MARCO ÉTICO, DEONTOLÓGICO Y REGULATORIO CANÓNICO',
+      hero_pill: '🛡️ MARCO ÉTICO, DEONTOLÓGICO Y REGULATORIO OFICIAL',
       hero_title: 'Código Deontológico, Privacidad por Diseño<br><span style="background: linear-gradient(135deg, #38BDF8, #00FF87); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">& Cumplimiento RGPD</span>',
       hero_subtitle: 'Garantías del Investigador Principal (Regla 21), arquitectura de protección de datos personales (<em>Privacy by Design</em>) y condiciones de licencia abierta para la adopción institucional de NEXORD.',
 
@@ -31,7 +31,7 @@
 
       // Pestaña 1
       p1_title: 'Canon Deontológico del Investigador Principal (Regla 21)',
-      p1_highlight_title: 'Declaración Oficial Homologada (Regla Canónica 21 de NEXORD)',
+      p1_highlight_title: 'Declaración Oficial Homologada (Regla Oficial 21 de NEXORD)',
       p1_highlight_text: '«En su aplicación a estudios de campo con personas reales, NEXORD garantiza un <strong>uso exclusivamente formativo, no punitivo</strong>, de los datos. Esta exigencia salvaguarda la <strong>privacidad por diseño (<em>Privacy by Design</em>)</strong> y exige la acreditación profesional e institucional así como el compromiso explícito del Investigador Principal (IP) conforme a los principios de la Ciencia Abierta, de <strong>no dañar jamás con sus informes la autoestima personal ni la reputación social de los participantes</strong>, dando por características intrínsecas de la personalidad individual lo que son fenómenos termodinámicos estrictamente grupales.»',
       p1_lead: 'El ecosistema NEXORD no es una herramienta de clasificación penal, selección punitiva o etiquetado psiquiátrico de sujetos. Es un sistema físico-matemático orientado a comprender la arquitectura de tensiones y equilibrios de un colectivo. Toda entidad (colegio, instituto, empresa, hospital o universidad) que implemente la plataforma suscribe formalmente los siguientes cuatro principios directores:',
       
@@ -52,7 +52,7 @@
       p2_lead: 'NEXORD fue concebido desde sus cimientos matemáticos bajo el principio de <strong>minimización radical de datos</strong> conforme al Reglamento General de Protección de Datos (RGPD UE 2016/679) y la Ley Orgánica 3/2018 (LOPDGDD).',
       
       p2_box1_title: '🔑 Anonimización Criptográfica Q.GID (T1-T9)',
-      p2_box1_text: 'Los nombres civiles de los participantes se disocian irreversiblemente antes del procesamiento algebraico mediante el protocolo Q.GID. En el sistema solo viajan códigos matriciales canónicos (ej. <code>1A1a</code>, <code>2A1a</code>... para Grupo A; <code>1B1a</code>... para Grupo B). Ningún identificador personal civil reside en los modelos 3D.',
+      p2_box1_text: 'Los nombres civiles de los participantes se disocian irreversiblemente antes del procesamiento algebraico mediante el protocolo Q.GID. En el sistema solo viajan códigos matriciales oficiales (ej. <code>1A1a</code>, <code>2A1a</code>... para Grupo A; <code>1B1a</code>... para Grupo B). Ningún identificador personal civil reside en los modelos 3D.',
       
       p2_box2_title: '⚡ Computación en el Cliente (Zero Cloud Leakage)',
       p2_box2_text: 'A diferencia de las plataformas SaaS tradicionales que recopilan sociogramas en servidores centrales, VISORD ejecuta la ingestión matricial, la cinemática de fluidos y los cálculos espectrales localmente en la memoria del navegador (<em>Client-Side Edge Computing</em>). Ninguna matriz nominativa se almacena en bases de datos remotas.',
@@ -68,7 +68,7 @@
       p3_lead: 'La marca maestra <strong>VISORD</strong> y la plataforma <strong>NEXORD</strong> constituyen un ecosistema de investigación y diagnóstico científico impulsado desde el ámbito universitario:',
       
       p3_attr_title: '🏛️ Atribución Académica e Investigador Principal',
-      p3_attr_text: '<strong>Investigador Principal (IP):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Filiación Institucional:</strong> NEXORD Research Initiative · Investigación independiente.<br><strong>Depósito Científico Oficial:</strong> CERN Zenodo · Edición Canónica Unificada (Manifiesto y Suplemento): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
+      p3_attr_text: '<strong>Investigador Principal (IP):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Filiación Institucional:</strong> NEXORD Research Initiative · Investigación independiente.<br><strong>Depósito Científico Oficial:</strong> CERN Zenodo · Edición Oficial Unificada (Manifiesto y Suplemento): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
       
       p3_lic_title: 'Régimen de Protección: Doble Vía & Licencia CC-BY-4.0',
       p3_lic_text: 'El ecosistema NEXORD / VISORD opera bajo un régimen formal articulado en dos esferas estrictamente diferenciadas y complementarias:<br><br>' +
@@ -77,7 +77,7 @@
         '• <strong>Auditorías («Auditable no significa abierto»):</strong> El código operativo es auditable por comités o terceros acreditados bajo acuerdo de confidencialidad (NDA); los informes de auditoría son públicos, el código no se publica.',
       
       p3_custody_title: '🤝 Custodia Institucional y Adopción Académica',
-      p3_custody_text: 'El equipo promotor de NEXORD mantiene una convocatoria abierta para que universidades, centros públicos de I+D o fundaciones científicas asuman la <strong>custodia institucional formal del software</strong>, garantizando su gobernanza democrática, el mantenimiento del repositorio público y la gestión de accesos sin ánimo de lucro punitivo. Consulte la sección <a href="index_promocional.html#custodia" style="color: var(--neon-cyan); text-decoration: underline;">Custodia Institucional</a> o descargue el <a href="dossier_adopcion.html" style="color: var(--neon-green); text-decoration: underline; font-weight: 700;">Marco Canónico de Custodia (PDF/HTML)</a> para remitir una propuesta formal.',
+      p3_custody_text: 'El equipo promotor de NEXORD mantiene una convocatoria abierta para que universidades, centros públicos de I+D o fundaciones científicas asuman la <strong>custodia institucional formal del software</strong>, garantizando su gobernanza democrática, el mantenimiento del repositorio público y la gestión de accesos sin ánimo de lucro punitivo. Consulte la sección <a href="index_promocional.html#custodia" style="color: var(--neon-cyan); text-decoration: underline;">Custodia Institucional</a> o descargue el <a href="dossier_adopcion.html" style="color: var(--neon-green); text-decoration: underline; font-weight: 700;">Marco Oficial de Custodia (PDF/HTML)</a> para remitir una propuesta formal.',
 
       // Footer
       ft_portal: 'Portal Institucional',
@@ -85,7 +85,7 @@
       ft_dossier: 'Marco de Custodia (PDF)',
       ft_custody: 'Custodia Institucional',
       ft_engine: 'VISORD 3D Engine',
-      ft_glossary: 'Glosario Canónico',
+      ft_glossary: 'Glosario Oficial',
       ft_pdf: 'Descargar Manifiesto PDF'
     },
 
@@ -99,7 +99,7 @@
       nav_custody: '🏛️ Stewardship',
       nav_visord: '🎮 VISORD 3D',
 
-      hero_pill: '🛡️ CANONICAL ETHICAL, DEONTOLOGICAL & REGULATORY FRAMEWORK',
+      hero_pill: '🛡️ OFFICIAL ETHICAL, DEONTOLOGICAL & REGULATORY FRAMEWORK',
       hero_title: 'Deontological Code, Privacy by Design<br><span style="background: linear-gradient(135deg, #38BDF8, #00FF87); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">& GDPR Compliance</span>',
       hero_subtitle: 'Guarantees of the Principal Investigator (Rule 21), personal data protection architecture (<em>Privacy by Design</em>), and open license terms for institutional adoption of NEXORD.',
 
@@ -109,7 +109,7 @@
 
       // Tab 1
       p1_title: 'Deontological Canon of the Principal Investigator (Rule 21)',
-      p1_highlight_title: 'Official Homologated Declaration (NEXORD Canonical Rule 21)',
+      p1_highlight_title: 'Official Homologated Declaration (NEXORD Official Rule 21)',
       p1_highlight_text: '«In its application to field studies with real human participants, NEXORD guarantees an <strong>exclusively formative, non-punitive use</strong> of data. This mandate safeguards <strong>privacy by design (<em>Privacy by Design</em>)</strong> and requires institutional and professional accreditation as well as the explicit commitment of the Principal Investigator (PI) under Open Science principles, to <strong>never damage personal self-esteem or social reputation of participants with diagnostic reports</strong>, attributing to intrinsic traits of individual personality what are strictly group-level thermodynamic phenomena.»',
       p1_lead: 'The NEXORD ecosystem is not an instrument for punitive screening, sanctioning, or psychiatric labeling of individuals. It is a physical-mathematical system designed to decipher the architecture of tensions and equilibria within human collectives. Any entity (school, institute, corporation, hospital, or university) deploying the platform formally endorses the following four governing principles:',
       
@@ -130,7 +130,7 @@
       p2_lead: 'NEXORD was conceived from its mathematical foundations under the principle of <strong>radical data minimization</strong> in full compliance with the European General Data Protection Regulation (GDPR EU 2016/679) and Spanish Organic Law 3/2018 (LOPDGDD).',
       
       p2_box1_title: '🔑 Q.GID Cryptographic Pseudonymization (T1-T9)',
-      p2_box1_text: 'Civil names of participants are irreversibly dissociated prior to algebraic processing using the Q.GID protocol. Only canonical matrix codes travel through the pipeline (e.g. <code>1A1a</code>, <code>2A1a</code>... for Group A; <code>1B1a</code>... for Group B). No civilian personal identifiers reside inside the 3D models.',
+      p2_box1_text: 'Civil names of participants are irreversibly dissociated prior to algebraic processing using the Q.GID protocol. Only official matrix codes travel through the pipeline (e.g. <code>1A1a</code>, <code>2A1a</code>... for Group A; <code>1B1a</code>... for Group B). No civilian personal identifiers reside inside the 3D models.',
       
       p2_box2_title: '⚡ Client-Side Edge Computing (Zero Cloud Leakage)',
       p2_box2_text: 'Unlike traditional SaaS platforms that collect sociograms on central servers, VISORD executes matrix ingestion, fluid kinematics, and spectral calculations locally within the browser\'s memory (<em>Client-Side Edge Computing</em>). No nominative matrix is ever stored in remote databases.',
@@ -146,7 +146,7 @@
       p3_lead: 'The master brand <strong>VISORD</strong> and the platform <strong>NEXORD</strong> constitute a scientific research and diagnostic ecosystem originated in the academic sphere:',
       
       p3_attr_title: '🏛️ Academic Attribution & Principal Investigator',
-      p3_attr_text: '<strong>Principal Investigator (PI):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Institutional Affiliation:</strong> NEXORD Research Initiative · Independent Research.<br><strong>Official Scientific Deposit:</strong> CERN Zenodo · Unified Canonical Edition (Manifesto & Supplement): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
+      p3_attr_text: '<strong>Principal Investigator (PI):</strong> Dr. José Manuel Cornejo Álvarez.<br><strong>Institutional Affiliation:</strong> NEXORD Research Initiative · Independent Research.<br><strong>Official Scientific Deposit:</strong> CERN Zenodo · Unified Official Edition (Manifesto & Supplement): <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI 10.5281/zenodo.23329641</a>.',
       
       p3_lic_title: 'Double-Track Protection Regime & CC-BY-4.0 License',
       p3_lic_text: 'The NEXORD / VISORD ecosystem operates under a formal regime structured into two strictly differentiated, complementary spheres:<br><br>' +
@@ -155,7 +155,7 @@
         '• <strong>Audits ("Auditable does not mean open"):</strong> Operational code is auditable by ethics committees or accredited third parties under strict non-disclosure agreement (NDA); audit reports are public, but operational code is not published or openly distributed.',
       
       p3_custody_title: '🤝 Institutional Custody & Academic Stewardship',
-      p3_custody_text: 'The NEXORD promoter team maintains an open call for universities, public R&D centers, or scientific foundations to assume <strong>formal institutional custody of the software</strong>, ensuring democratic governance, public repository maintenance, and non-punitive access. Visit the <a href="index_promocional.html#custodia" style="color: var(--neon-cyan); text-decoration: underline;">Institutional Custody</a> section or download the <a href="dossier_adopcion.html" style="color: var(--neon-green); text-decoration: underline; font-weight: 700;">Canonical Custody Framework (PDF/HTML)</a> to submit a formal proposal.',
+      p3_custody_text: 'The NEXORD promoter team maintains an open call for universities, public R&D centers, or scientific foundations to assume <strong>formal institutional custody of the software</strong>, ensuring democratic governance, public repository maintenance, and non-punitive access. Visit the <a href="index_promocional.html#custodia" style="color: var(--neon-cyan); text-decoration: underline;">Institutional Custody</a> section or download the <a href="dossier_adopcion.html" style="color: var(--neon-green); text-decoration: underline; font-weight: 700;">Official Custody Framework (PDF/HTML)</a> to submit a formal proposal.',
 
       // Footer
       ft_portal: 'Institutional Portal',
@@ -163,7 +163,7 @@
       ft_dossier: 'Custody Framework (PDF)',
       ft_custody: 'Institutional Custody',
       ft_engine: 'VISORD 3D Engine',
-      ft_glossary: 'Canonical Glossary',
+      ft_glossary: 'Official Glossary',
       ft_pdf: 'Download Manifesto PDF'
     }
   };

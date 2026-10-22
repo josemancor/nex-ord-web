@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE LA HOME PROMOCIONAL
  * =============================================================================
- * Soporte bilingüe integral (Español canónico / English) con persistencia en
+ * Soporte bilingüe integral (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
@@ -38,7 +38,7 @@
       drop_l7: 'Nivel 7: Manifiesto Zenodo',
       drop_framework: '📄 Marco de Custodia (PDF)',
       drop_deontology: '⚖️ Código Deontológico & RGPD',
-      drop_glossary: 'Glosario Canónico (ES / EN)',
+      drop_glossary: 'Glosario Oficial (ES / EN)',
       drop_dial: '🧭 Dial Orbital Epistemológico',
 
       // Hero
@@ -97,7 +97,7 @@
       hero_stat_1_val: '3 Min',
       hero_stat_1_desc: 'Tiempo de pasación individual por ordenación (Breve → ORBIT).',
       hero_stat_2_val: 'Q81',
-      hero_stat_2_desc: 'Figuras Relacionales Sociométricas canónicas computadas en retícula diádica.',
+      hero_stat_2_desc: 'Figuras Relacionales Sociométricas oficiales computadas en retícula diádica.',
       hero_stat_3_val: '18D',
       hero_stat_3_desc: 'Índices de Densidad Relacional en 3 prismas duales (BDR / SDR).',
       hero_stat_4_val: '5',
@@ -192,7 +192,7 @@
       v_l2_desc: 'Matrices elementales de adyacencia, reciprocidad diádica y grafos fundamentales.',
       v_l2_btn: 'Consultar Nivel 2 →',
       v_l3_title: 'Nivel 3: Esquema SMIb',
-      v_l3_desc: 'Tetragrama canónico de 4 posiciones: expectativa emisor, preferencia y recepción.',
+      v_l3_desc: 'Tetragrama oficial de 4 posiciones: expectativa emisor, preferencia y recepción.',
       v_l3_btn: 'Consultar Nivel 3 →',
       v_l4_title: 'Nivel 4: Aplicaciones',
       v_l4_desc: 'Batería de casos periciales resueltos en contextos escolares, laborales y clínicos.',
@@ -206,7 +206,7 @@
       v_l7_title: 'Nivel 7: Manifiesto',
       v_l7_desc: 'Manifiesto Científico 2026, DOI Zenodo, licencias académicas y bibliografía.',
       v_l7_btn: 'Consultar Nivel 7 →',
-      v_glo_title: 'Glosario Canónico',
+      v_glo_title: 'Glosario Oficial',
       v_glo_desc: 'Diccionario normativo oficial de términos, operadores y métricas NEXORD.',
       v_glo_btn: 'Abrir Glosario →',
 
@@ -229,10 +229,10 @@
       offer_lead: 'Una dote científica completa, operativa, validada empíricamente y lista para su transferencia:',
       offer_i1: '<strong style="color: #FFF;">Plataforma Integral:</strong> Motores computacionales de sociometría ordinal en Python y el ecosistema visual 3D/4D VISORD (Acuario D18, Dialéctico, Cultural y Demo Moviola).',
       offer_i2: '<strong style="color: #FFF;">Canon Metodológico:</strong> Formalización axiomática de la matriz de 4 posiciones SMIb (DA, RC, pDA, pRC), retícula universal Q81(9×9), densidades BDR/SDR e invarianza baricéntrica demostrada.',
-      offer_i3: '<strong style="color: #FFF;">Corpus Empírico (BSOC):</strong> Banco de Datos Sociométricos Canónicos con series longitudinales homologadas (matrices de campo reales, simuladas Monte Carlo y de dramaturgia cultural).',
-      offer_i4: '<strong style="color: #FFF;">Identificador Persistente &amp; DOI:</strong> Registro permanente en CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a>) indexado en Google Académico, integrando la Edición Canónica del Manifiesto y sus 6 anexos técnicos bilingües.',
+      offer_i3: '<strong style="color: #FFF;">Corpus Empírico (BSOC):</strong> Banco de Datos Sociométricos Oficiales con series longitudinales homologadas (matrices de campo reales, simuladas Monte Carlo y de dramaturgia cultural).',
+      offer_i4: '<strong style="color: #FFF;">Identificador Persistente &amp; DOI:</strong> Registro permanente en CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a>) indexado en Google Académico, integrando la Edición Oficial del Manifiesto y sus 6 anexos técnicos bilingües.',
       offer_i5: '<strong style="color: #FFF;">Comunidad Open Science:</strong> Metodología de código abierto para investigación interuniversitaria en psicología de grupos, sociología relacional y ciencias de redes complejas.',
-      offer_i6: '<strong style="color: #FFF;">Vocación Universal y Transferencia Multilingüe:</strong> Plataforma homologada en Español (canónico) e Inglés para investigación internacional, con arquitectura abierta e idiomas para futuras localizaciones....',
+      offer_i6: '<strong style="color: #FFF;">Vocación Universal y Transferencia Multilingüe:</strong> Plataforma homologada en Español  e Inglés para investigación internacional, con arquitectura abierta e idiomas para futuras localizaciones....',
       offer_note: '💡 Transferencia sin royalties comerciales con fines estrictamente científicos y docentes.',
 
       req_title: '¿QUÉ SE PIDE A LA INSTITUCIÓN?',
@@ -246,11 +246,11 @@
       // Blindaje técnico y legal
       guard_title: 'GARANTÍAS EXISTENTES DE BLINDAJE TÉCNICO Y LEGAL',
       guard_b1_title: '🔒 Privacy by Design (Q.GID / T1-T9)',
-      guard_b1_desc: 'Anonimización canónica obligatoria (1A..5A, 1B..5B), tokens ciegos de sesión, disociación nominal absoluta y secreto matemático del voto. Imposible reconstruir delaciones individuales.',
+      guard_b1_desc: 'Anonimización oficial obligatoria (1A..5A, 1B..5B), tokens ciegos de sesión, disociación nominal absoluta y secreto matemático del voto. Imposible reconstruir delaciones individuales.',
       guard_b2_title: '📜 Licencia Abierta CC-BY-4.0',
       guard_b2_desc: 'Licencia Creative Commons Atribución 4.0 Internacional: libertad para compartir, adaptar y desplegar con fines docentes y de investigación, preservando la autoría científica original.',
       guard_b3_title: '🌐 Depósito CERN Zenodo (Inmutable)',
-      guard_b3_desc: 'DOI persistente <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Edición Canónica: Manifiesto Central y Material Suplementario), con archivo de metadatos científicos Highwire Press y Dublin Core.',
+      guard_b3_desc: 'DOI persistente <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Edición Oficial: Manifiesto Central y Material Suplementario), con archivo de metadatos científicos Highwire Press y Dublin Core.',
       guard_b4_title: '🔍 Código Auditable &amp; Determinista',
       guard_b4_desc: 'Matemática verificable (descomposición SVD, χ², operadores de Estrada, Grassmann). Sin algoritmos de caja negra no reproducibles.',
       guard_b5_title: '🌍 Universalidad y Nodos Federados (UNESCO Open Science)',
@@ -276,7 +276,7 @@
       form_type_opt6: 'Otra propuesta institucional',
       form_msg_label: 'Mensaje / Alcance de la Propuesta',
       form_msg_ph: 'Indique brevemente el interés de su entidad, capacidades de alojamiento o marco de colaboración propuesto...',
-      form_btn_pdf: '📄 Ver Marco Canónico (PDF)',
+      form_btn_pdf: '📄 Ver Marco Oficial (PDF)',
       form_btn_copy: '📋 Copiar Borrador al Portapapeles',
       form_btn_send: '📤 Enviar Propuesta (Abrir Correo)',
 
@@ -325,7 +325,7 @@
       video_fallback: 'Tu navegador no soporta el elemento de video.',
       brand_home_title: 'Volver a la Portada de Bienvenida NEXORD',
       nav_dial_btn_title: 'Abrir Dial Orbital Epistemológico (9 Sectores)',
-      btn_lang_es_title: 'Español (Canónico)',
+      btn_lang_es_title: 'Español',
       btn_lang_en_title: 'English (International)',
       doi_license_title: 'Creative Commons Atribución 4.0 Internacional',
       nav_main_aria: 'Navegación Principal',
@@ -375,7 +375,7 @@
       drop_l7: 'Level 7: Zenodo Manifesto',
       drop_framework: '📄 Stewardship Framework (PDF)',
       drop_deontology: '⚖️ Deontological Code & GDPR',
-      drop_glossary: 'Canonical Glossary (ES / EN)',
+      drop_glossary: 'Official Glossary (ES / EN)',
       drop_dial: '🧭 Epistemological Orbital Dial',
 
       // Hero
@@ -434,7 +434,7 @@
       hero_stat_1_val: '3 Min',
       hero_stat_1_desc: 'Individual completion time via ordinal ranking (Breve → ORBIT).',
       hero_stat_2_val: 'Q81',
-      hero_stat_2_desc: 'Canonical Sociometric Relational Figures computed in dyadic lattice.',
+      hero_stat_2_desc: 'Official Sociometric Relational Figures computed in dyadic lattice.',
       hero_stat_3_val: '18D',
       hero_stat_3_desc: 'Relational Density Indices across 3 dual prisms (BDR / SDR).',
       hero_stat_4_val: '5',
@@ -529,7 +529,7 @@
       v_l2_desc: 'Elementary adjacency matrices, dyadic reciprocity, and fundamental graphs.',
       v_l2_btn: 'Explore Level 2 →',
       v_l3_title: 'Level 3: SMIb Schema',
-      v_l3_desc: 'Canonical 4-position tetragram: sender expectation, preference, and reception.',
+      v_l3_desc: 'Official 4-position tetragram: sender expectation, preference, and reception.',
       v_l3_btn: 'Explore Level 3 →',
       v_l4_title: 'Level 4: Applications',
       v_l4_desc: 'Forensic case studies solved across school, workplace, and clinical domains.',
@@ -543,7 +543,7 @@
       v_l7_title: 'Level 7: Manifesto',
       v_l7_desc: '2026 Scientific Manifesto, Zenodo DOI, academic licensing, and bibliography.',
       v_l7_btn: 'Explore Level 7 →',
-      v_glo_title: 'Canonical Glossary',
+      v_glo_title: 'Official Glossary',
       v_glo_desc: 'Official normative dictionary of NEXORD terms, operators, and metrics.',
       v_glo_btn: 'Open Glossary →',
 
@@ -566,10 +566,10 @@
       offer_lead: 'A comprehensive, operational, empirically validated scientific endowment ready for transfer:',
       offer_i1: '<strong style="color: #FFF;">Full Platform:</strong> Computational ordinal sociometry engines in Python and the 3D/4D VISORD visual ecosystem (D18 Aquarium, Dialectical, Cultural, and Demo Moviola).',
       offer_i2: '<strong style="color: #FFF;">Methodological Canon:</strong> Axiomatic formalization of the 4-position SMIb matrix (DA, RC, pDA, pRC), universal Q81 (9×9) lattice, BDR/SDR densities, and proven barycentric invariance.',
-      offer_i3: '<strong style="color: #FFF;">Empirical Corpus (BSOC):</strong> Canonical Sociometric Database with standardized longitudinal series (real field matrices, Monte Carlo simulations, and cultural dramaturgy series).',
-      offer_i4: '<strong style="color: #FFF;">Persistent Identifier &amp; DOI:</strong> Permanent record at CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a>) indexed in Google Scholar, integrating the Canonical Edition of the Manifesto and its 6 bilingual technical annexes.',
+      offer_i3: '<strong style="color: #FFF;">Empirical Corpus (BSOC):</strong> Official Sociometric Database with standardized longitudinal series (real field matrices, Monte Carlo simulations, and cultural dramaturgy series).',
+      offer_i4: '<strong style="color: #FFF;">Persistent Identifier &amp; DOI:</strong> Permanent record at CERN Zenodo (<a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener" style="color: var(--neon-green); text-decoration: underline; font-weight:700;">DOI: 10.5281/zenodo.23329641</a>) indexed in Google Scholar, integrating the Official Edition of the Manifesto and its 6 bilingual technical annexes.',
       offer_i5: '<strong style="color: #FFF;">Open Science Community:</strong> Open methodology for interuniversity research in group psychology, relational sociology, and complex network science.',
-      offer_i6: '<strong style="color: #FFF;">Universal Scope &amp; Multilingual Transfer:</strong> Platform certified in Spanish (canonical) and English for international research, with open architecture and languages for future localizations....',
+      offer_i6: '<strong style="color: #FFF;">Universal Scope &amp; Multilingual Transfer:</strong> Platform certified in Spanish  and English for international research, with open architecture and languages for future localizations....',
       offer_note: '💡 Royalty-free transfer strictly for scientific and educational purposes.',
 
       req_title: 'WHAT IS REQUESTED FROM THE INSTITUTION?',
@@ -583,11 +583,11 @@
       // Technical & legal safeguards
       guard_title: 'EXISTING TECHNICAL & LEGAL SAFEGUARDS',
       guard_b1_title: '🔒 Privacy by Design (Q.GID / T1-T9)',
-      guard_b1_desc: 'Mandatory canonical anonymization (1A..5A, 1B..5B), blind session tokens, absolute nominal dissociation, and mathematical secrecy of choices. Individual cross-identification is impossible.',
+      guard_b1_desc: 'Mandatory official anonymization (1A..5A, 1B..5B), blind session tokens, absolute nominal dissociation, and mathematical secrecy of choices. Individual cross-identification is impossible.',
       guard_b2_title: '📜 Open License CC-BY-4.0',
       guard_b2_desc: 'Creative Commons Attribution 4.0 International License: freedom to share, adapt, and deploy for educational and research purposes while preserving original scientific authorship.',
       guard_b3_title: '🌐 CERN Zenodo Repository (Immutable)',
-      guard_b3_desc: 'Persistent DOI <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Canonical Edition: Central Manifesto and Supplementary Material), with Highwire Press and Dublin Core scientific metadata archiving.',
+      guard_b3_desc: 'Persistent DOI <code style="color:var(--neon-green);">10.5281/zenodo.23329641</code> (Official Edition: Central Manifesto and Supplementary Material), with Highwire Press and Dublin Core scientific metadata archiving.',
       guard_b4_title: '🔍 Auditable &amp; Deterministic Code',
       guard_b4_desc: 'Verifiable mathematics (SVD decomposition, χ², Estrada communicability, Grassmann manifolds). Free from non-reproducible black-box heuristics.',
       guard_b5_title: '🌍 Universality &amp; Federated Nodes (UNESCO Open Science)',
@@ -613,7 +613,7 @@
       form_type_opt6: 'Other institutional proposal',
       form_msg_label: 'Message / Proposal Scope',
       form_msg_ph: 'Briefly outline your entity\'s interest, hosting capabilities, or proposed collaboration framework...',
-      form_btn_pdf: '📄 View Canonical Framework (PDF)',
+      form_btn_pdf: '📄 View Official Framework (PDF)',
       form_btn_copy: '📋 Copy Draft to Clipboard',
       form_btn_send: '📤 Submit Proposal (Open Email)',
 
@@ -662,7 +662,7 @@
       video_fallback: 'Your browser does not support the video tag.',
       brand_home_title: 'Return to NEXORD Welcome Portal',
       nav_dial_btn_title: 'Open Epistemological Orbital Dial (9 Sectors)',
-      btn_lang_es_title: 'Spanish (Canonical)',
+      btn_lang_es_title: 'Spanish',
       btn_lang_en_title: 'English (International)',
       doi_license_title: 'Creative Commons Attribution 4.0 International',
       nav_main_aria: 'Main Navigation',

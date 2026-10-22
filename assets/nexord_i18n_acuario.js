@@ -2,7 +2,7 @@
  * =============================================================================
  * NEXORD / VISORD — MOTOR DE INTERNACIONALIZACIÓN DE VISORD ACUARIO 3D
  * =============================================================================
- * Soporte bilingüe completo (Español canónico / English) con persistencia en
+ * Soporte bilingüe completo (Español oficial / English) con persistencia en
  * localStorage ('nexord_lang') y sincronización reactiva en todo el ecosistema.
  * =============================================================================
  */
@@ -30,7 +30,7 @@
       sec1_title: '1. ESCENARIOS MULTIESCALA (N×N)',
       sec1_series_title: '3 EJERCICIOS DE SERIE (EXPLORACIÓN)',
       sec1_series_badge: 'Activos',
-      scen_20_title: 'EJERCICIO 1: Dinámica Cohesiva Canónica',
+      scen_20_title: 'EJERCICIO 1: Dinámica Cohesiva Oficial',
       scen_20_desc: 'Flotabilidad Z_mar, Baricentro y 6 Prismas',
       scen_simul2_title: 'EJERCICIO 2: Ostracismo y Ruptura Diádica',
       scen_simul2_desc: 'Marginación invisible nodo 5B1a vs Núcleo',
@@ -98,7 +98,7 @@
       sec1_title: '1. MULTISCALE SCENARIOS (N×N)',
       sec1_series_title: '3 STANDARD EXERCISES (EXPLORATION)',
       sec1_series_badge: 'Active',
-      scen_20_title: 'EXERCISE 1: Canonical Cohesive Dynamics',
+      scen_20_title: 'EXERCISE 1: Official Cohesive Dynamics',
       scen_20_desc: 'Z_sea Buoyancy, Barycenter & 6 Prisms',
       scen_simul2_title: 'EXERCISE 2: Ostracism & Dyadic Rupture',
       scen_simul2_desc: 'Invisible exclusion node 5B1a vs Core',

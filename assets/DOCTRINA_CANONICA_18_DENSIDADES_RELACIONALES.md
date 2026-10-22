@@ -1,4 +1,4 @@
-# DOCTRINA CANÓNICA DE LAS 18 DENSIDADES RELACIONALES, LOS 3 PRISMAS DUALES Y LOS INVARIANTES SOCIO-TERMODINÁMICOS
+# DOCTRINA OFICIAL DE LAS 18 DENSIDADES RELACIONALES, LOS 3 PRISMAS DUALES Y LOS INVARIANTES SOCIO-TERMODINÁMICOS
 
 **Ecosistema VISORD Engine / Plataforma NEXORD (2026)**  
 **Autores:** J. Francisco Morales Domínguez (UNED) & José Manuel Cornejo Álvarez (UB)  
@@ -8,7 +8,7 @@
 
 ## 1. Fundamento Epistemológico: Del Espacio Discreto Ordinal al Continuo Físico de Densidad
 
-En la sociometría ordinal canónica de **NEXORD / VISORD Engine**, el análisis grupal supera la aritmética de recuentos discretos binarios (Moreno, 1934) y se articula en dos niveles formales perfectamente diferenciados:
+En la sociometría ordinal oficial de **NEXORD / VISORD Engine**, el análisis grupal supera la aritmética de recuentos discretos binarios (Moreno, 1934) y se articula en dos niveles formales perfectamente diferenciados:
 
 1. **El Nivel Discreto Ordinal (SMIb / SMIa):**  
    Registra los rankings exactos $1º \dots Nº$, polaridades $\{+, 0, -\}$ y figuras tensoriales $Q_{81}$. En este dominio, los cuatro componentes de la díada se identifican por sus siglas conceptuales:
@@ -140,7 +140,7 @@ La arquitectura de densidades de NEXORD se despliega jerárquicamente según la 
 
 ```text
   ┌────────────────────────────────────────────────────────────────────────┐
-  │ 10D: PENTAGRAMA CANÓNICO (5 Líneas Dobles · Nivel 1 y 2)               │
+  │ 10D: PENTAGRAMA OFICIAL (5 Líneas Dobles · Nivel 1 y 2)               │
   │ 4 Pulsos Base (dDP, dDA, dRA, dRP) + Prisma 1 (S12, B12, S34, B34)     │
   │ + 2 Invariantes Globales (SDR, BDR)                                    │
   └───────────────────────────────────┬────────────────────────────────────┘
@@ -160,9 +160,9 @@ La arquitectura de densidades de NEXORD se despliega jerárquicamente según la 
 
 ---
 
-## 6. Tabla Maestra de las 18 Densidades Relacionales Canónicas
+## 6. Tabla Maestra de las 18 Densidades Relacionales Oficiales
 
-| Dim | Símbolo | Denominación Canónica | Operación Matemática | Significado Socio-Termodinámico |
+| Dim | Símbolo | Denominación Oficial | Operación Matemática | Significado Socio-Termodinámico |
 |:---:|:---:|:---|:---:|:---|
 | **1D** | $\mathbf{dDP}$ | Densidad Dador Percepción | $A_1 = p\_DA$ | Potencial previo proyectado por el emisor |
 | **2D** | $\mathbf{dDA}$ | Densidad Dador Acción | $A_2 = DA$ | Flujo cinético efectivo transmitido por el emisor |
@@ -187,6 +187,6 @@ La arquitectura de densidades de NEXORD se despliega jerárquicamente según la 
 
 ## 7. Dictamen de Homologación Institucional
 
-Queda formalmente aprobada e inscrita esta **Doctrina Canónica de las 18 Densidades Relacionales** como estándar normativo inviolable para todos los módulos analíticos, simuladores, visualizadores 3D/4D (VISORD) e informes periciales del proyecto NEXORD.
+Queda formalmente aprobada e inscrita esta **Doctrina Oficial de las 18 Densidades Relacionales** como estándar normativo inviolable para todos los módulos analíticos, simuladores, visualizadores 3D/4D (VISORD) e informes periciales del proyecto NEXORD.
 
 *En Barcelona y Madrid, a 1 de Octubre de 2026.*

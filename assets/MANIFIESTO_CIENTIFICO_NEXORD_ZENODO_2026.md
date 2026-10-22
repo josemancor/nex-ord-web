@@ -7,7 +7,7 @@
 ## SOCIOMETRÍA ORDINAL COMPUTACIONAL (NEXORD)
 ### *«Hacia una Física de la Grupalidad»*
 
-**Edición Canónica Definitiva v9.2 (Octubre, 2026)**
+**Edición Oficial Definitiva v9.2 (Octubre, 2026)**
 
 * **Autor:** Dr. José Manuel Cornejo Álvarez
 * **Vinculación Académica:** Profesor Titular Jubilado de Psicología Social · Investigador Principal y Creador de NEXORD
@@ -185,8 +185,8 @@ Siguiendo el riguroso isomorfismo territorial, la tercera dimensión equivale ex
 ![Figura 2b: Modelo Orográfico 3D del Realismo Perceptivo](Figura_NEXORD_ORBIT_Espana_47_Ciudades_Relieve_3D_Orografico.png)  
 *Figura 2b. Modelo orográfico 3D de la red peninsular de 47 capitales: la tercera dimensión vertical Z codifica el relieve topográfico del realismo diádico y consonancia relacional (valles basales, mesetas funcionales y cumbres escarpadas de disonancia).*
 
-#### 5. Calibración Métrica Canónica y Validación Empírica Peninsular (Cornejo, 1988 vs. NEXORD, 2026)
-Para validar la comparabilidad directa y rigurosa entre el modelo clásico métrico en kilómetros (Cornejo, 1988) y el espacio latente ordinal adimensional derivado exclusivamente del formato ORBIT $A(i, k) = j$, se aplica el **Protocolo Canónico de Calibración y Homotecia Métrica en Tres Pasos** (Anexo VI, §8.6):
+#### 5. Calibración Métrica Oficial y Validación Empírica Peninsular (Cornejo, 1988 vs. NEXORD, 2026)
+Para validar la comparabilidad directa y rigurosa entre el modelo clásico métrico en kilómetros (Cornejo, 1988) y el espacio latente ordinal adimensional derivado exclusivamente del formato ORBIT $A(i, k) = j$, se aplica el **Protocolo Oficial de Calibración y Homotecia Métrica en Tres Pasos** (Anexo VI, §8.6):
 1. **Centrado Radial Común:** Fijación de Madrid en el origen $(0, 0)$ como centro geométrico de referencia peninsular ($\mathbf{x}_i^{\text{ORBIT(c)}} = \mathbf{x}_i^{\text{ORBIT}} - \mathbf{x}_{\text{Madrid}}^{\text{ORBIT}}$).
 2. **Rotación Ortogonal Óptima ($Q \in \mathrm{SO}(2)$):** Alineación de los autovectores con los ejes cardinales geográficos Oeste–Este y Sur–Norte mediante descomposición en valores singulares (SVD de Procrustes).
 3. **Factor de Homotecia Escalar ($\alpha$):** Conversión analítica del espacio latente ordinal a kilómetros físicos mediante el factor óptimo:
@@ -554,38 +554,38 @@ La información sociométrica refleja dinámicas interpersonales de alta sensibi
 
 Conviene precisar el alcance de esta declaración. El presente Manifiesto es un documento puramente programático —la exposición de las características teóricas, metodológicas y pragmáticas del proyecto—: ni él, ni la suite computacional, ni sus algoritmos son objeto de patentes restrictivas; el Manifiesto se difunde abiertamente bajo licencia CC BY 4.0, y las salvaguardas éticas buscan regular el acceso operativo al instrumento sobre colectivos reales, no restringir la difusión del conocimiento científico.
 
-### 7.5. Gobernanza Metodológica del Gradiente α y Protocolo de Calibración Canónica (§7.9)
+### 7.5. Gobernanza Metodológica del Gradiente α y Protocolo de Calibración Oficial (§7.9)
 > *«Consecuencia metodológica: La elección de $\alpha$ puede invertir conclusiones sustantivas sobre datos idénticos. La lectura NEXORD rigurosa exige: diagnóstico primario con $\alpha = 1/2$; banda de sensibilidad $\alpha \in [0{,}4, \, 0{,}6]$; calibración contextual solo con declaración auditada (§7.9.3). El protocolo no es burocracia: es la única barrera contra elegir el centro que se desea ver.»*
 
 La manipulación *post hoc* del gradiente $\alpha$ en la familia de ponderaciones $W_\alpha(k) = \alpha^{k-1}$ constituiría una vulneración directa de la Regla 21 (*Ethics by Design*): permitiría fabricar o disolver liderazgos, o hacer desaparecer el ostracismo bajo una falsa ilusión de homeostasis. Por ello, NEXORD establece la gobernanza estricta del gradiente:
-1. **$\alpha = 1/2 \implies$ Diagnóstico Primario:** Toda lectura reportable se produce obligatoriamente con el canónico de semivida.
+1. **$\alpha = 1/2 \implies$ Diagnóstico Primario:** Toda lectura reportable se produce obligatoriamente con el oficial de semivida.
 2. **$\alpha \in [0{,}4, \, 0{,}6] \implies$ Banda de Estabilidad:** Las conclusiones que no sobreviven a la banda se descartan como artefactos del gradiente.
 3. **Calibración Contextual Justificada y Auditada:** Solo admisible cuando las normas institucionales objetivas del campo lo exijan (campo de mando vertical $\implies \alpha$ bajo; asamblea horizontal de pares $\implies \alpha$ alto), debiendo constar formalmente documentada en el registro de decisión metodológica del Investigador Principal.
 
 #### Corolario 7.9.6 (Equivalencia de Ópticas y Límites de Convergencia)
-*El límite igualitario de la familia $W_\alpha$ converge a la regla de consenso; el límite jerárquico converge a la regla de pluralidad; el canónico $\alpha = 1/2$ es el punto donde ambas lecturas pesan igual:*
+*El límite igualitario de la familia $W_\alpha$ converge a la regla de consenso; el límite jerárquico converge a la regla de pluralidad; el oficial $\alpha = 1/2$ es el punto donde ambas lecturas pesan igual:*
 
 $$\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k \implies \text{recuento Borda / auto-nodo de consenso (percentil 75)}$$
 $$\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1} \implies \text{pluralidad pura (primacía: la primera elección lo es todo)}$$
 
 * **Convergencia al Auto-Nodo de Consenso ($\lim_{\alpha \to 1} W_\alpha(k) = 1 \quad \forall k$):** Cada posición ordinal contribuye uniformemente, transformando la sociomatriz en un recuento Borda y convergiendo con el anclaje endógeno del **Percentil 75 ($P_{75}$) del consenso grupal de recepciones**. El centro se adjudica por consistencia baricéntrica («quien nunca es abandonado»), la deuda relacional se comprime ($\Delta \to 0$) y el peso de la primera elección se diluye del $50\%$ al $11\%$ del presupuesto vincular.
 * **Convergencia a la Pluralidad Pura ($\lim_{\alpha \to 0} W_\alpha(k) = \delta_{k,1}$):** Mediante la delta de Kronecker $\delta_{k,1}$, únicamente cuenta el primer voto ($k=1$). El centro se adjudica por primacía polarizada («quien es elegido primero»), amplificando el contraste y concentrando el riesgo de ostracismo primario $D^{(1)}$.
-* **Equilibrio Canónico de Semivida ($\alpha = 1/2$):** Es el punto medio exacto de la balanza socio-termodinámica donde consenso y primacía reciben exactamente el mismo peso gravitatorio ($50\%$ en la primera elección $W(1)=1.000$ y $50\%$ distribuido a lo largo del cuerpo social $\sum_{k=2}^\infty 2^{1-k} = 1.000$).
+* **Equilibrio Oficial de Semivida ($\alpha = 1/2$):** Es el punto medio exacto de la balanza socio-termodinámica donde consenso y primacía reciben exactamente el mismo peso gravitatorio ($50\%$ en la primera elección $W(1)=1.000$ y $50\%$ distribuido a lo largo del cuerpo social $\sum_{k=2}^\infty 2^{1-k} = 1.000$).
 
 > La matriz de carreteras España-1988 verifica el corolario de forma cuantitativa. La recepción se comprime 7,5 veces al aplanar el gradiente, y el rango de $\Delta$ colapsa hacia cero —homeostasis aparente que es artefacto de la óptica, no propiedad del campo:
 
 | Gradiente $\alpha$ | $G$ (constante) | 1.ª elección $\%$ | $\rho$ máx / mín | Rango de $\Delta$ | Centro Resultante | Diagnóstico Socio-Termodinámico |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **$0{,}50$ canónico** | $1{,}996$ | $50{,}1\%$ | **$11{,}5\times$** | $[-1{,}88; \, +1{,}66]$ | **Zaragoza** ($\rho = 3{,}875$) | **Jerarquía nítida (deuda plenamente medible)** |
+| **$0{,}50$ oficial** | $1{,}996$ | $50{,}1\%$ | **$11{,}5\times$** | $[-1{,}88; \, +1{,}66]$ | **Zaragoza** ($\rho = 3{,}875$) | **Jerarquía nítida (deuda plenamente medible)** |
 | **$0{,}75$** | $3{,}700$ | $27{,}0\%$ | **$3{,}1\times$** | $[-1{,}52; \, +2{,}01]$ | Transición | Jerarquía atenuada (el baricentro Madrid emerge) |
 | **$0{,}90$ igualitaria** | $6{,}126$ | $16{,}3\%$ | **$1{,}5\times$** | $[-1{,}04; \, +1{,}46]$ | **Madrid** ($\rho = 7{,}160$) | Campo casi plano (Bilbao cae del 2.º al 7.º puesto) |
 | **$0{,}99$** | $8{,}648$ | $11{,}6\%$ | **$1{,}04\times$** | $[-0{,}15; \, +0{,}21]$ | Madrid (consistencia) | Homeostasis aparente total (ceguera de deuda) |
 | **$\alpha \to 1$ (límite)** | $9{,}000$ | $11{,}1\%$ | **$1{,}00\times$** | $[0{,}00; \, 0{,}00]$ | Indiferenciado Borda | Colapso métrico ($\|\boldsymbol{\Delta}\| \to 0$ artificial) |
 
-#### Demostración Fehaciente de Estabilidad en la Banda Canónica [0,40, 0,60]
+#### Demostración Fehaciente de Estabilidad en la Banda Oficial [0,40, 0,60]
 La comprobación de seguridad en los tres puntos de la horquilla $\alpha \in \{0{,}40, \, 0{,}50, \, 0{,}60\}$ prueba fehacientemente que la estructura relacional es invariante:
 
-| Indicador de Estabilidad | $\alpha = 0{,}40$ (Límite Inferior) | $\alpha = 0{,}50$ (Canónico Central) | $\alpha = 0{,}60$ (Límite Superior) | Dictamen Topológico |
+| Indicador de Estabilidad | $\alpha = 0{,}40$ (Límite Inferior) | $\alpha = 0{,}50$ (Oficial Central) | $\alpha = 0{,}60$ (Límite Superior) | Dictamen Topológico |
 | :--- | :---: | :---: | :---: | :--- |
 | **Centro Relacional (Top-1)** | **Zaragoza** ($\rho = 3{,}624$) | **Zaragoza** ($\rho = 3{,}875$) | **Zaragoza** ($\rho = 4{,}176$) | **INVARIANTE en los 3 puntos** |
 | **Subcentro Consistente** | Madrid ($\rho = 2{,}208$) | Madrid ($\rho = 3{,}000$) | Madrid ($\rho = 3{,}912$) | Mantiene posición sin adelantar |
@@ -649,10 +649,10 @@ Para salvaguardar de forma estricta los principios de **Ética por Diseño (*Eth
 | Ámbito de Operación | Régimen del Modulador $\alpha$ | Función Científica | Garantía Deontológica |
 | :--- | :---: | :--- | :--- |
 | **Simulador Experimental** (`ENGINE_Simulator.py`) | **Modulación Libre y Parametrizable** <br> ($\alpha \in [0{,}01, \, 0{,}99]$) | Laboratorio de estrés, simulación de patologías extremas, sectas, anomia y transiciones de fase. | Obligatoriedad del prefijo de categoría `SIMUL-`. Los parámetros de estrés y desviación constan explícitamente en el payload JSON. |
-| **Auditor de Diagnóstico Factual** (`FullTableGenerator`) | **Blindaje Canónico Invariable** <br> ($\alpha_{\text{ord}} \equiv 0{,}50$) | Evaluación imparcial de colectivos y personas reales en entornos educativos, clínicos o laborales. | Prohibición estricta de manipular $\alpha$ para favorecer o perjudicar a un individuo. Certificado de estabilidad `ThermalStabilityAuditor` en $[0{,}40, 0{,}60]$. |
+| **Auditor de Diagnóstico Factual** (`FullTableGenerator`) | **Blindaje Oficial Invariable** <br> ($\alpha_{\text{ord}} \equiv 0{,}50$) | Evaluación imparcial de colectivos y personas reales en entornos educativos, clínicos o laborales. | Prohibición estricta de manipular $\alpha$ para favorecer o perjudicar a un individuo. Certificado de estabilidad `ThermalStabilityAuditor` en $[0{,}40, 0{,}60]$. |
 
 > [!IMPORTANT]
-> **Aforismo Canónico de Demarcación:** *«En la simulación, el dial de $\alpha$ es la lente que permite recrear el abismo patológico para comprenderlo y prevenirlo; en el diagnóstico de personas reales, $\alpha = 1/2$ es el fiel de la balanza armónica que protege a los seres humanos de la arbitrariedad del evaluador.»*
+> **Aforismo Oficial de Demarcación:** *«En la simulación, el dial de $\alpha$ es la lente que permite recrear el abismo patológico para comprenderlo y prevenirlo; en el diagnóstico de personas reales, $\alpha = 1/2$ es el fiel de la balanza armónica que protege a los seres humanos de la arbitrariedad del evaluador.»*
 
 ---
 
@@ -672,7 +672,7 @@ Formalización de la correspondencia biyectiva entre el orden de asignación alf
 ![SMIa Sintaxis Concentrada](Tabla_SMIa_Sintaxis_Concentrada.png)
 
 ![Tabla Anexo I: Numeralización Q81(9,9) y Sintaxis SMIa](Tabla_Q81_Numeralizacion_Figuras_Sociometricas.png)  
-*Tabla Anexo I. Numeralización canónica de figuras relacionales sociométricas Q81(9,9): De 81 a 1 con centro neutro en 41 y sintaxis concentrada SMIa.*
+*Tabla Anexo I. Numeralización oficial de figuras relacionales sociométricas Q81(9,9): De 81 a 1 con centro neutro en 41 y sintaxis concentrada SMIa.*
 
 ### 8.2. Anexo II: Métricas Factoriales (COR, CTA, CTR), Ejes Verticales Slender y Proyección 2D(6) (Algoritmo DIMO)
 
@@ -695,7 +695,7 @@ Si un actor satura su inercia en los planos 1 y 2 ($\sum \text{CTA}_{1,2} \appro
 * **Traza Vectorial Continua:** Una línea fina orientada une la posición basal $(f_1, f_2)$ con la coordenada final proyectada en 6D, eliminando cualquier ambigüedad de lectura espacial.
 
 ### 8.3. Anexo III: Catálogo de los 10 Dominios Ecosistémicos
-Parametrización estructural completa ($\alpha$, $\gamma$), foco socio-dinámico y criterios canónicos de elección administrados para los 10 dominios normativos de NEXORD:
+Parametrización estructural completa ($\alpha$, $\gamma$), foco socio-dinámico y criterios oficiales de elección administrados para los 10 dominios normativos de NEXORD:
 
 #### Tabla Anexo III. Catálogo de Calibración de los 10 Dominios Sociométricos Ecosistémicos
 
@@ -716,7 +716,7 @@ Parametrización estructural completa ($\alpha$, $\gamma$), foco socio-dinámico
 > **💡 Nota Metodológica de Calibración e Invariancia Canon 2026**:
 > 1. **Inercia Temporal ($\alpha_{\text{temp}} \in [0, 1]$)**: En simulaciones longitudinales ($T > 1$), rige la ecuación diferencial de evolución diádica $I_t = \alpha_{\text{temp}} \cdot (\gamma \cdot I_{t-1}) + (1 - \alpha_{\text{temp}}) \cdot \Delta_{\text{nuevo}}$. Cuantifica la resistencia al cambio estructural: desde colectivos de altísima cristalización institucional o histórica (Militar $\alpha=0{,}90$, Familiar $\alpha=0{,}85$, Institucional $\alpha=0{,}80$) hasta entornos de alta volatilidad operativa y respuesta contingente (Eco-Penitenciario $\alpha=0{,}20$, Deportivo $\alpha=0{,}30$, Social $\alpha=0{,}30$).
 > 2. **Factor de Retención de Memoria ($\gamma \in [0, 1]$)**: Determina la fracción de memoria vincular que sobrevive entre cortes temporales ($\Delta t$). Refleja la persistencia de agravios y lealtades (Familia $\gamma=0{,}99$, Militar $\gamma=0{,}95$) frente a redes informales de rápida disolución si cesa la interacción (Comunitario $\gamma=0{,}40$).
-> 3. **Independencia del Análisis Factorial y Densidad Canónica**: En el análisis analítico de campo (`FullTableGenerator`), la cuantificación socio-termodinámica de densidades (BDR/SDR) se rige **estrictamente por la base invariante canónica $W(k) = 2^{1-k}$ ($\alpha_{\text{ord}} = 0{,}50$)**, garantizando la perfecta estabilidad topológica demostrada en la banda $[0{,}40, 0{,}60]$. La simulación emite exclusivamente rankings ordinales discretos $1º..Nº$ libres de sesgos numéricos.
+> 3. **Independencia del Análisis Factorial y Densidad Oficial**: En el análisis analítico de campo (`FullTableGenerator`), la cuantificación socio-termodinámica de densidades (BDR/SDR) se rige **estrictamente por la base invariante oficial $W(k) = 2^{1-k}$ ($\alpha_{\text{ord}} = 0{,}50$)**, garantizando la perfecta estabilidad topológica demostrada en la banda $[0{,}40, 0{,}60]$. La simulación emite exclusivamente rankings ordinales discretos $1º..Nº$ libres de sesgos numéricos.
 
 ![Tabla Anexo III: Catálogo 10 Dominios](Tabla_Anexo_III_10_Dominios_Ecosistemicos.png)  
 *Tabla Anexo III. Catálogo de los 10 dominios ecosistémicos de calibración con inercia relacional (α) y tasa de decaimiento (γ).*
@@ -778,7 +778,7 @@ sujeto a la restricción monótona estricta:
 $$r_{ij} < r_{ik} \implies \hat{d}_{ij} \le \hat{d}_{ik}$$
 Para el caso empírico de las distancias peninsulares de España ($N = 47$ capitales), la convergencia alcanza $S < 0.035$ y una correlación monótona de Shepard $r_{\text{Shepard}} > 0.985$, probando analíticamente que la información ordinal pura es suficiente para reconstruir el espacio métrico euclídeo subyacente sin deformación topológica.
 
-#### 3. Protocolo Canónico de Calibración y Homotecia Métrica en Tres Pasos
+#### 3. Protocolo Oficial de Calibración y Homotecia Métrica en Tres Pasos
 Dada la configuración ordinal adimensional $\mathbf{X}^{\text{ORBIT}} \in \mathbb{R}^{N \times 2}$ obtenida por descomposición espectral de la sociomatriz $R_{\text{sym}} = \frac{1}{2}(B + B^\top)$, y la matriz de coordenadas métricas físicas de referencia $\mathbf{X}^{\text{KM}} \in \mathbb{R}^{N \times 2}$ (centrada históricamente en Madrid):
 
 1. **Traslación Radial al Centroide de Referencia:**
