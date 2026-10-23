@@ -4282,6 +4282,73 @@
         min-width: 0 !important;
       }
     }
+
+    /* LISTA VERTICAL DE PASACIÓN ORBIT (ARRIBA - ABAJO) */
+    .orbit-survey-list-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .orbit-slot-vertical {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(5, 8, 20, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 5px 10px;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+      touch-action: pan-y;
+    }
+    .orbit-slot-vertical:hover, .orbit-slot-vertical.drag-over {
+      background: rgba(0, 255, 135, 0.16) !important;
+      border-color: #00FF87 !important;
+    }
+    .btn-survey-move-up, .btn-survey-move-down {
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #E2E8F0;
+      border-radius: 5px;
+      padding: 4px 9px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      font-family: 'Roboto Mono', monospace;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-height: 28px;
+      min-width: 58px;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+    }
+    .btn-survey-move-up:hover:not(:disabled), .btn-survey-move-down:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.35);
+      border-color: #38BDF8;
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+    @media (max-width: 768px) {
+      .orbit-slot-vertical {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 5px 8px;
+      }
+      .orbit-slot-hint-text {
+        display: none !important;
+      }
+      .btn-survey-move-up, .btn-survey-move-down {
+        padding: 3px 6px;
+        font-size: 0.70rem;
+        min-height: 26px;
+        min-width: 48px;
+      }
+    }
     @media (max-width: 768px) {
       .orbit-mobile-table-tabs {
         display: block !important;
@@ -16122,7 +16189,7 @@
     // MESA INTERACTIVA DUAL: TABLA ORBIT OFICIAL & MATRIZ A(i, j) (PANTALLA 1b.2)
     // OFFICIAL SCREEN MODEL: [EJERCICIO + CONTROLES + EFECTOS] ⟷ [COMPLEM + FIGURAS + EXPLICACIONES]
     // =========================================================================
-    window.BREVE_WORKBENCH_STATE = { currentDs: 'N8', currentMode: 'ordinal' };
+    window.BREVE_WORKBENCH_STATE = { currentDs: 'N8', currentMode: 'ordinal', surveyLayoutMode: 'vertical' };
 
     const BREVE_DATASETS = {
       N8: {
@@ -16212,6 +16279,7 @@
 
       let currentDs = options.defaultDataset || window.BREVE_WORKBENCH_STATE.currentDs || 'N8';
       let currentMode = options.defaultMode || window.BREVE_WORKBENCH_STATE.currentMode || 'ordinal';
+      let surveyLayoutMode = options.defaultSurveyLayout || window.BREVE_WORKBENCH_STATE.surveyLayoutMode || 'vertical';
       let currentMobileTab = 'A';
       let activeState = null;
       let isLocked = false;
@@ -16333,8 +16401,8 @@
                 </div>
                 <div style="display:flex; flex-direction:column; gap:3px; font-size:0.72rem; line-height:1.30; color:#E2E8F0;">
                   <div>
-                    <strong style="color:#00FF87; font-family:'Roboto Mono',monospace;">✋ 1. Arrastra las tarjetas:</strong>
-                    <span>Ordena a tus compañeros del 1º al ${n}º arriba. Tu fila 1A en ambas matrices se actualiza al instante.</span>
+                    <strong style="color:#00FF87; font-family:'Roboto Mono',monospace;">✋ 1. Arrastra arriba - abajo:</strong>
+                    <span>Ordena a tus compañeros en la lista vertical del 1º (arriba) al ${n}º (abajo). Tu fila 1A en ambas matrices se actualiza al instante.</span>
                   </div>
                   <div>
                     <strong style="color:#38BDF8; font-family:'Roboto Mono',monospace;">🔘 2. Conmuta modo:</strong>
@@ -16442,7 +16510,16 @@
                       Espacio S<sub>${n}</sub>: ${n === 8 ? '40.320' : (n === 6 ? '720' : n + '!')} permutaciones
                     </span>
                   </div>
-                  <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <!-- SELECTOR DE VISTA: LISTA VERTICAL (ARRIBA-ABAJO) O TIRA HORIZONTAL -->
+                    <div style="display:inline-flex; background:rgba(0,0,0,0.55); border:1px solid rgba(56,189,248,0.35); border-radius:6px; padding:2px; gap:2px;">
+                      <button type="button" class="btn-workbench-toggle" id="${containerId}-btn-mode-vertical" style="font-size:0.70rem; padding:3px 8px; font-weight:800; border:none; border-radius:4px; ${surveyLayoutMode === 'vertical' ? 'background:#00FF87; color:#0B132B;' : 'background:transparent; color:#94A3B8;'}" title="Ver como lista vertical para arrastrar arriba y abajo">
+                        ↕️ Lista Vertical (Arriba - Abajo)
+                      </button>
+                      <button type="button" class="btn-workbench-toggle" id="${containerId}-btn-mode-horizontal" style="font-size:0.70rem; padding:3px 8px; font-weight:800; border:none; border-radius:4px; ${surveyLayoutMode === 'horizontal' ? 'background:#38BDF8; color:#0B132B;' : 'background:transparent; color:#94A3B8;'}" title="Ver como tira horizontal">
+                        ↔️ Tira Horizontal
+                      </button>
+                    </div>
                     <button type="button" class="btn-workbench-toggle" id="${containerId}-btn-survey-rnd" style="font-size:0.72rem; padding:3px 8px; border-color:#38BDF8; color:#38BDF8; font-weight:800;" title="Generar una permutación aleatoria válida para el emisor 1A">
                       🎲 Orden Aleatorio
                     </button>
@@ -16459,48 +16536,106 @@
                 </div>
 
                 <!-- DIRECTIVA DE ACCIÓN INMEDIATA -->
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-size:0.71rem; color:#00FF87; font-family:'Roboto Mono',monospace; font-weight:700;">
-                  <span>✋ Arrastra y suelta las tarjetas para ordenar los puestos (o usa flechas ◀ ▶ / clics para intercambiar):</span>
-                  <span style="color:#94A3B8; font-weight:normal; font-style:italic;">Genera en vivo la Fila 1A</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-size:0.72rem; color:#00FF87; font-family:'Roboto Mono',monospace; font-weight:700;">
+                  <span>✋ ${surveyLayoutMode === 'vertical' ? 'Arrastra y suelta las filas arriba ⬆ y abajo ⬇ (o usa botones ▲ ▼ / clics para intercambiar):' : 'Arrastra y suelta las tarjetas para ordenar los puestos (o usa flechas ◀ ▶ / clics para intercambiar):'}</span>
+                  <span style="color:#FFE600; font-weight:800;">1º (Arriba: Mayor Preferencia) ➔ ${n}º (Abajo: Menor Preferencia)</span>
                 </div>
 
-                <!-- TIRA DINÁMICA DE TARJETAS ARRASTRABLES (1º AL Nº) -->
-                <div id="${containerId}-survey-strip" style="display:grid; grid-template-columns:repeat(${n}, 1fr); gap:5px; width:100%; box-sizing:border-box;">
-                  ${ds.ranks[0].map((subj, rankIdx) => {
-                    const rankNum = rankIdx + 1;
-                    const isSelf = subj === '1A';
-                    const isSelected = selectedCardIdx === rankIdx;
-                    let rankColor = '#94A3B8';
-                    let rankBadge = `${rankNum}º`;
-                    if (rankNum === 1) { rankColor = '#00FF87'; rankBadge = '1º (Máx)'; }
-                    else if (rankNum === 2) { rankColor = '#34D399'; rankBadge = '2º'; }
-                    else if (rankNum === 3) { rankColor = '#38BDF8'; rankBadge = '3º'; }
-                    else if (rankNum === n) { rankColor = '#FF007F'; rankBadge = `${n}º (Mín)`; }
-                    else if (rankNum === n - 1) { rankColor = '#FB7185'; rankBadge = `${rankNum}º`; }
+                ${surveyLayoutMode === 'vertical' ? `
+                  <!-- LISTA DINÁMICA VERTICAL (ARRIBA - ABAJO) -->
+                  <div id="${containerId}-survey-list-vertical" class="orbit-survey-list-vertical">
+                    ${ds.ranks[0].map((subj, rankIdx) => {
+                      const rankNum = rankIdx + 1;
+                      const isSelf = subj === '1A';
+                      const isSelected = selectedCardIdx === rankIdx;
+                      const smibVal = ds.smibMap ? ds.smibMap(rankNum, isSelf) : null;
+                      let rankColor = '#94A3B8';
+                      let rankBadge = `${rankNum}º`;
+                      if (rankNum === 1) { rankColor = '#00FF87'; rankBadge = '1º (Máxima Preferencia)'; }
+                      else if (rankNum === 2) { rankColor = '#34D399'; rankBadge = '2º Preferencia'; }
+                      else if (rankNum === 3) { rankColor = '#38BDF8'; rankBadge = '3º Preferencia'; }
+                      else if (rankNum === n) { rankColor = '#FF007F'; rankBadge = `${n}º (Menor Preferencia)`; }
+                      else if (rankNum === n - 1) { rankColor = '#FB7185'; rankBadge = `${rankNum}º Descarte`; }
+                      else { rankBadge = `${rankNum}º Puesto`; }
 
-                    return `
-                      <div class="orbit-survey-slot" data-slot-idx="${rankIdx}" style="display:flex; flex-direction:column; gap:2px; background:rgba(5,8,20,0.85); border:1px solid ${isSelected ? '#FFE600' : 'rgba(255,255,255,0.12)'}; border-radius:6px; padding:3px 2px; align-items:center; text-align:center; transition:border-color 0.15s ease, background 0.15s ease;">
-                        <span style="font-family:'Roboto Mono',monospace; font-size:0.67rem; font-weight:900; color:${rankColor};">
-                          ${rankBadge}
-                        </span>
-                        <div class="orbit-survey-card ${isSelected ? 'selected-card' : ''}" 
-                             draggable="true" 
-                             data-card-idx="${rankIdx}" 
-                             data-subject="${subj}"
-                             style="width:100%; box-sizing:border-box; background:${isSelected ? 'rgba(255,230,0,0.22)' : (isSelf ? 'rgba(56,189,248,0.22)' : 'rgba(255,255,255,0.08)')}; border:1.5px solid ${isSelected ? '#FFE600' : (isSelf ? '#38BDF8' : 'rgba(255,255,255,0.28)')}; color:#FFFFFF; border-radius:5px; padding:3px 1px; font-family:'Roboto Mono',monospace; font-size:0.78rem; font-weight:900; cursor:grab; user-select:none; display:flex; flex-direction:column; align-items:center; gap:2px; box-shadow:${isSelected ? '0 0 10px rgba(255,230,0,0.6)' : 'none'};">
-                          <div style="display:flex; align-items:center; gap:2px;">
-                            <span style="font-size:0.60rem; opacity:0.6; cursor:grab;">⠿</span>
-                            <span>${subj}${isSelf ? ' <small style="font-size:0.62rem; color:#38BDF8;">(Tú)</small>' : ''}</span>
+                      return `
+                        <div class="orbit-survey-slot orbit-slot-vertical" data-slot-idx="${rankIdx}" style="border-color:${isSelected ? '#FFE600' : 'rgba(255,255,255,0.14)'};">
+                          
+                          <div style="display:flex; align-items:center; gap:8px; min-width:185px;">
+                            <span style="font-family:'Roboto Mono',monospace; font-size:0.76rem; font-weight:900; color:${rankColor};">
+                              ${rankBadge}
+                            </span>
+                            ${smibVal ? `
+                              <span style="background:${smibVal.bg}; color:${smibVal.color}; border:1px solid ${smibVal.color}; font-family:'Roboto Mono',monospace; font-size:0.67rem; font-weight:800; padding:1px 5px; border-radius:3px;">
+                                ${smibVal.symbol} ${smibVal.desc}
+                              </span>
+                            ` : ''}
                           </div>
-                          <div style="display:flex; gap:2px; width:100%; justify-content:center; margin-top:1px;">
-                            <button type="button" class="btn-survey-move-left" data-move-idx="${rankIdx}" ${rankIdx === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#E2E8F0; border-radius:3px; padding:0 3px; font-size:0.58rem; line-height:1.2; cursor:pointer;" title="Subir preferencia (mover hacia 1º)">◀</button>
-                            <button type="button" class="btn-survey-move-right" data-move-idx="${rankIdx}" ${rankIdx === n - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#E2E8F0; border-radius:3px; padding:0 3px; font-size:0.58rem; line-height:1.2; cursor:pointer;" title="Bajar preferencia (mover hacia ${n}º)">▶</button>
+
+                          <div class="orbit-survey-card ${isSelected ? 'selected-card' : ''}" 
+                               draggable="true" 
+                               data-card-idx="${rankIdx}" 
+                               data-subject="${subj}"
+                               style="flex:1; background:${isSelected ? 'rgba(255,230,0,0.22)' : (isSelf ? 'rgba(56,189,248,0.20)' : 'rgba(255,255,255,0.08)')}; border:1.5px solid ${isSelected ? '#FFE600' : (isSelf ? '#38BDF8' : 'rgba(255,255,255,0.28)')}; color:#FFFFFF; border-radius:6px; padding:6px 12px; font-family:'Roboto Mono',monospace; font-size:0.84rem; font-weight:900; cursor:grab; user-select:none; display:flex; align-items:center; justify-content:space-between; box-shadow:${isSelected ? '0 0 10px rgba(255,230,0,0.6)' : 'none'};">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                              <span style="font-size:0.82rem; opacity:0.75; cursor:grab;">⠿</span>
+                              <span>Sujeto <strong>${subj}</strong>${isSelf ? ' <small style="font-size:0.72rem; color:#38BDF8;">(Tú · Emisor)</small>' : ''}</span>
+                            </div>
+                            <span class="orbit-slot-hint-text" style="font-size:0.68rem; color:#94A3B8; font-style:italic;">Arrastra ↕ arriba / abajo</span>
+                          </div>
+
+                          <div style="display:flex; gap:4px; align-items:center;">
+                            <button type="button" class="btn-survey-move-up" data-move-idx="${rankIdx}" ${rankIdx === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} title="Subir preferencia (▲ Mover hacia 1º)">
+                              ▲ Subir
+                            </button>
+                            <button type="button" class="btn-survey-move-down" data-move-idx="${rankIdx}" ${rankIdx === n - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} title="Bajar preferencia (▼ Mover hacia ${n}º)">
+                              ▼ Bajar
+                            </button>
+                          </div>
+
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                ` : `
+                  <!-- TIRA DINÁMICA DE TARJETAS ARRASTRABLES (HORIZONTAL) -->
+                  <div id="${containerId}-survey-strip" style="display:grid; grid-template-columns:repeat(${n}, 1fr); gap:5px; width:100%; box-sizing:border-box;">
+                    ${ds.ranks[0].map((subj, rankIdx) => {
+                      const rankNum = rankIdx + 1;
+                      const isSelf = subj === '1A';
+                      const isSelected = selectedCardIdx === rankIdx;
+                      let rankColor = '#94A3B8';
+                      let rankBadge = `${rankNum}º`;
+                      if (rankNum === 1) { rankColor = '#00FF87'; rankBadge = '1º (Máx)'; }
+                      else if (rankNum === 2) { rankColor = '#34D399'; rankBadge = '2º'; }
+                      else if (rankNum === 3) { rankColor = '#38BDF8'; rankBadge = '3º'; }
+                      else if (rankNum === n) { rankColor = '#FF007F'; rankBadge = `${n}º (Mín)`; }
+                      else if (rankNum === n - 1) { rankColor = '#FB7185'; rankBadge = `${rankNum}º`; }
+
+                      return `
+                        <div class="orbit-survey-slot" data-slot-idx="${rankIdx}" style="display:flex; flex-direction:column; gap:2px; background:rgba(5,8,20,0.85); border:1px solid ${isSelected ? '#FFE600' : 'rgba(255,255,255,0.12)'}; border-radius:6px; padding:3px 2px; align-items:center; text-align:center; transition:border-color 0.15s ease, background 0.15s ease;">
+                          <span style="font-family:'Roboto Mono',monospace; font-size:0.67rem; font-weight:900; color:${rankColor};">
+                            ${rankBadge}
+                          </span>
+                          <div class="orbit-survey-card ${isSelected ? 'selected-card' : ''}" 
+                               draggable="true" 
+                               data-card-idx="${rankIdx}" 
+                               data-subject="${subj}"
+                               style="width:100%; box-sizing:border-box; background:${isSelected ? 'rgba(255,230,0,0.22)' : (isSelf ? 'rgba(56,189,248,0.22)' : 'rgba(255,255,255,0.08)')}; border:1.5px solid ${isSelected ? '#FFE600' : (isSelf ? '#38BDF8' : 'rgba(255,255,255,0.28)')}; color:#FFFFFF; border-radius:5px; padding:3px 1px; font-family:'Roboto Mono',monospace; font-size:0.78rem; font-weight:900; cursor:grab; user-select:none; display:flex; flex-direction:column; align-items:center; gap:2px; box-shadow:${isSelected ? '0 0 10px rgba(255,230,0,0.6)' : 'none'};">
+                            <div style="display:flex; align-items:center; gap:2px;">
+                              <span style="font-size:0.60rem; opacity:0.6; cursor:grab;">⠿</span>
+                              <span>${subj}${isSelf ? ' <small style="font-size:0.62rem; color:#38BDF8;">(Tú)</small>' : ''}</span>
+                            </div>
+                            <div style="display:flex; gap:2px; width:100%; justify-content:center; margin-top:1px;">
+                              <button type="button" class="btn-survey-move-left" data-move-idx="${rankIdx}" ${rankIdx === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#E2E8F0; border-radius:3px; padding:0 3px; font-size:0.58rem; line-height:1.2; cursor:pointer;" title="Subir preferencia (mover hacia 1º)">◀</button>
+                              <button type="button" class="btn-survey-move-right" data-move-idx="${rankIdx}" ${rankIdx === n - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''} style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#E2E8F0; border-radius:3px; padding:0 3px; font-size:0.58rem; line-height:1.2; cursor:pointer;" title="Bajar preferencia (mover hacia ${n}º)">▶</button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    `;
-                  }).join('')}
-                </div>
+                      `;
+                    }).join('')}
+                  </div>
+                `}
 
               </div>
 
@@ -16828,6 +16963,42 @@
           updateSurveyTelemetry(0, 0);
         };
 
+        // Selector de Modo de Pasación: Vertical (Arriba-Abajo) vs Horizontal
+        const btnModeVertical = document.getElementById(`${containerId}-btn-mode-vertical`);
+        const btnModeHorizontal = document.getElementById(`${containerId}-btn-mode-horizontal`);
+        if (btnModeVertical) {
+          btnModeVertical.onclick = () => {
+            surveyLayoutMode = 'vertical';
+            window.BREVE_WORKBENCH_STATE.surveyLayoutMode = 'vertical';
+            renderDOM();
+          };
+        }
+        if (btnModeHorizontal) {
+          btnModeHorizontal.onclick = () => {
+            surveyLayoutMode = 'horizontal';
+            window.BREVE_WORKBENCH_STATE.surveyLayoutMode = 'horizontal';
+            renderDOM();
+          };
+        }
+
+        // Botones de Mover Arriba / Abajo (▲ / ▼)
+        container.querySelectorAll('.btn-survey-move-up').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.getAttribute('data-move-idx'), 10);
+            if (idx > 0) swapRanks(idx, idx - 1);
+          };
+        });
+
+        container.querySelectorAll('.btn-survey-move-down').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.getAttribute('data-move-idx'), 10);
+            const ds = BREVE_DATASETS[currentDs];
+            if (ds && idx < ds.subjects.length - 1) swapRanks(idx, idx + 1);
+          };
+        });
+
         // Flechas de Mover a Izquierda / Derecha
         container.querySelectorAll('.btn-survey-move-left').forEach(btn => {
           btn.onclick = (e) => {
@@ -16878,9 +17049,50 @@
             card.style.opacity = '1';
             draggedCardIdx = null;
             container.querySelectorAll('.orbit-survey-slot').forEach(s => {
-              s.style.background = 'rgba(5,8,20,0.85)';
+              s.style.background = s.classList.contains('orbit-slot-vertical') ? 'rgba(5,8,20,0.92)' : 'rgba(5,8,20,0.85)';
               s.style.borderColor = 'rgba(255,255,255,0.12)';
             });
+          });
+
+          // Soporte Táctil (Móvil / Tablet)
+          let touchDraggedIdx = null;
+          card.addEventListener('touchstart', (e) => {
+            touchDraggedIdx = parseInt(card.getAttribute('data-card-idx'), 10);
+            card.style.opacity = '0.6';
+          }, { passive: true });
+
+          card.addEventListener('touchmove', (e) => {
+            if (touchDraggedIdx === null) return;
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetSlot = target ? target.closest('.orbit-survey-slot') : null;
+            container.querySelectorAll('.orbit-survey-slot').forEach(s => {
+              s.style.background = s.classList.contains('orbit-slot-vertical') ? 'rgba(5,8,20,0.92)' : 'rgba(5,8,20,0.85)';
+              s.style.borderColor = 'rgba(255,255,255,0.12)';
+            });
+            if (targetSlot) {
+              targetSlot.style.background = 'rgba(0,255,135,0.22)';
+              targetSlot.style.borderColor = '#00FF87';
+            }
+          }, { passive: true });
+
+          card.addEventListener('touchend', (e) => {
+            if (touchDraggedIdx === null) return;
+            card.style.opacity = '1';
+            const touch = e.changedTouches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetSlot = target ? target.closest('.orbit-survey-slot') : null;
+            container.querySelectorAll('.orbit-survey-slot').forEach(s => {
+              s.style.background = s.classList.contains('orbit-slot-vertical') ? 'rgba(5,8,20,0.92)' : 'rgba(5,8,20,0.85)';
+              s.style.borderColor = 'rgba(255,255,255,0.12)';
+            });
+            if (targetSlot) {
+              const targetIdx = parseInt(targetSlot.getAttribute('data-slot-idx'), 10);
+              if (!isNaN(targetIdx) && targetIdx !== touchDraggedIdx) {
+                swapRanks(touchDraggedIdx, targetIdx);
+              }
+            }
+            touchDraggedIdx = null;
           });
         });
 
