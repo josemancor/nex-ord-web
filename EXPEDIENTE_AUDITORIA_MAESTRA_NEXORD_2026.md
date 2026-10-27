@@ -89,7 +89,7 @@ Para asegurar la inmutabilidad de la obra y servir de prueba fehaciente ante reg
 | `PLATINUM_SIMUL_WIZARD_INTERACTIVO.py` | 699 | 38.589 B | `21fb7afa79310939a8f843fc93a8841e0b67a30d34d9601705a1e59443162ba8` |
 | `PLATINUM_QUESTIONNAIRE_WIZARD.py` | 419 | 24.523 B | `2ad865a12004e890304d13ed16e4fb7c0516ac1d68ff5584238c0f1d22861f57` |
 | `NEXORD_ConfigWizard_Master.py` | 704 | 38.552 B | `c32d108c47d31bae56b1f49d1b702de9b3129ea344b7ada5d549795f473fd53a` |
-| `CONVERSOR_BREVE_MORENO_NEXORD.py` | 512 | 22.706 B | `f8be9418b3439c7b181ff9301ba6fb5aa0df95a0d74cf1fa69b8a5bde6e71ba7` |
+| `CONVERSOR_ORBIT_MORENO_NEXORD.py` | 512 | 22.706 B | `f8be9418b3439c7b181ff9301ba6fb5aa0df95a0d74cf1fa69b8a5bde6e71ba7` |
 | `GENERADOR_MATRIZ_AFC_Q81_INTERGRUPO.py` | 663 | 35.714 B | `485dbd54d19106e0ecc093a6b6b27f9b67883efcc300f5c46800d5a976f14bb8` |
 | `GENERADOR_DISTRIBUCION_DISTANCIAS_RANQUICAS.py` | 270 | 13.051 B | `19c13abfd4766fea39d653ddbd0b3511251d0568b302ef0b776ded418be04b4b` |
 | `LABORATORIO_GRASMANIANO_PATRONES_NEXORD.py` | 144 | 5.364 B | `3843190d45e409ee949ba5c500d6215eb94db531efebf0d96df1ae38beb99087` |
@@ -202,7 +202,7 @@ Se certifica la plena armonización conceptual y algebraica en todo el ecosistem
 | **R9** | Identificación Institucional Oficial | Logo VISORD, claves multidimensionales `(G2T1C1)` y sellos presentes. | 🟢 CONFORME |
 | **R10** | Notas Explicativas Pedagógicas | Inclusión obligatoria de `💡 Nota:` en todas las vistas no intuitivas. | 🟢 CONFORME |
 | **R11** | Nomenclatura Prefijos Oficiales | Uso obligatorio de guiones y prefijos (`SIMUL-`, `PROPIO-`, `REAL-`, `CULTURAL-`). | 🟢 CONFORME |
-| **R12** | Fidelidad Factual (BREVE, VAR, AAG) | Datos empíricos originales intactos; transcripción en memoria sin degradación. | 🟢 CONFORME |
+| **R12** | Fidelidad Factual (ORBIT, VAR, AAG) | Datos empíricos originales intactos; transcripción en memoria sin degradación. | 🟢 CONFORME |
 | **R13** | Parámetros Defecto $V_{10}$ y $A_{16}$ | Batería 10 variables (3 modalidades) y 16 adjetivos (escala par 1 a 8). | 🟢 CONFORME |
 | **R14** | Marca Institucional NEXORD | Denominación continua e indivisible sin guion bajo. | 🟢 CONFORME |
 | **R15** | Navegación HUD y Protocolo Flechas | Secuencia oficial 1 a 7; flecha `--` bloqueada en 1a y en 7e. | 🟢 CONFORME |

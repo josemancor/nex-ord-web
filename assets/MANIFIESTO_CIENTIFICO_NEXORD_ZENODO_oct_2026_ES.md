@@ -112,7 +112,7 @@ El funcionamiento armónico o la fractura patológica de un grupo no residen en 
 ### 2.1. Orden sin empates y Dualidad Matricial A(i, k)=j vs. B(i, j)=k
 En la sociometría clásica, las condiciones del cálculo manual condujeron naturalmente a procedimientos de recuento basados en cuotas fijas (habitualmente tres elecciones y tres rechazos), donde cada mención recibía el mismo peso, aunque pronto fue sustituido por una ponderación lineal inversa al rango (5-1).
 
-La Sociomatriz ORBIT (inicialmente denominada como formato BREVE por su rapidez de administración) formaliza la ordenación preferencial exhaustiva $A(i, k) = j$ sobre el conjunto completo del grupo, donde el emisor ocupa su propio lugar como parte integrante que es. El orden total permite representar una secuencia completa de todos sus integrantes. A partir de esta base ordinal, el modelo articula el tratamiento matricial y continuo de los intercambios relacionales como una permutación del espacio colectivo.
+La Sociomatriz ORBIT (inicialmente denominada como formato ORBIT por su rapidez de administración) formaliza la ordenación preferencial exhaustiva $A(i, k) = j$ sobre el conjunto completo del grupo, donde el emisor ocupa su propio lugar como parte integrante que es. El orden total permite representar una secuencia completa de todos sus integrantes. A partir de esta base ordinal, el modelo articula el tratamiento matricial y continuo de los intercambios relacionales como una permutación del espacio colectivo.
 
 Esta estructura se articula analíticamente mediante dos representaciones matriciales complementarias y biyectivas:
 

@@ -34,7 +34,7 @@ Computational Ordinal Sociometry (NEXORD) is, in essence, an updated extension o
 
 **7)** In its application to real-world field studies with human participants, NEXORD guarantees an exclusively formative, non-punitive use of data. This mandate safeguards Privacy by Design and requires professional and institutional accreditation as well as the explicit commitment of the Principal Investigator (PI) under Open Science principles, never to harm the personal self-esteem or social standing of participants through diagnostic reports, strictly refraining from attributing to intrinsic individual personality traits what are objectively group thermodynamic phenomena.
 
-**Keywords:** NEXORD Platform, VISORD, Computational Ordinal Sociometry, Preventive Sociometry, Breve Format, Inverse Rank Function, Relational Densities (18D), Metaperception, Dual Factorial Planes, Grassmann Manifolds, Groupthink, Ostracism, Ethics by Design, Open Science.
+**Keywords:** NEXORD Platform, VISORD, Computational Ordinal Sociometry, Preventive Sociometry, Orbit Format, Inverse Rank Function, Relational Densities (18D), Metaperception, Dual Factorial Planes, Grassmann Manifolds, Groupthink, Ostracism, Ethics by Design, Open Science.
 
 ---
 
@@ -50,7 +50,7 @@ Moreno conceived the concept of the social atom and the deep architecture of aff
 
 NEXORD positions active relational interaction at the ontological core of collective life: the group is not a mere aggregate of individual dispositional traits nor a static network of cold nodes, but a dynamic field of tensions, attractions, and resistances that continuously emerges and transforms.
 
-As an explicit tribute to both founders, the NEXORD Platform commissioned two territorial maps in the tradition of Mademoiselle de Scudéry's *Carte du Tendre* (1654)—the cartographic-literary genre that inspired the name of the Clélie Protocol for data custody (§7.2)—: the *Carte de la Spontanéité et du Télé* for Jacob Levy Moreno (1934) and the *Carte du Champ Dynamique et de l'Espace Vital* for Kurt Lewin (1936–1951) (Figures 1 and 2). These maps explicitly establish the epistemic stature of the project: at no point does NEXORD claim to replace its inspirations, but rather to algorithmically complete their brilliant intuitions, adapting them to the technical capabilities of modern computation. Continuity with foundational tradition is not merely cartographic: NEXORD operates seamlessly with both MORENO and BREVE capture protocols (interoperable dual-stack), as both are fundamentally convertible via an automated bidirectional mapping BREVE $\longleftrightarrow$ MORENO; and the dyadic tetragram ($pDA \cdot DA \cdot REC \cdot pREC$) underpinning the Q81 lattice is a purely Morenian construction.
+As an explicit tribute to both founders, the NEXORD Platform commissioned two territorial maps in the tradition of Mademoiselle de Scudéry's *Carte du Tendre* (1654)—the cartographic-literary genre that inspired the name of the Clélie Protocol for data custody (§7.2)—: the *Carte de la Spontanéité et du Télé* for Jacob Levy Moreno (1934) and the *Carte du Champ Dynamique et de l'Espace Vital* for Kurt Lewin (1936–1951) (Figures 1 and 2). These maps explicitly establish the epistemic stature of the project: at no point does NEXORD claim to replace its inspirations, but rather to algorithmically complete their brilliant intuitions, adapting them to the technical capabilities of modern computation. Continuity with foundational tradition is not merely cartographic: NEXORD operates seamlessly with both MORENO and ORBIT capture protocols (interoperable dual-stack), as both are fundamentally convertible via an automated bidirectional mapping ORBIT $\longleftrightarrow$ MORENO; and the dyadic tetragram ($pDA \cdot DA \cdot REC \cdot pREC$) underpinning the Q81 lattice is a purely Morenian construction.
 
 The specific debt to Kurt Lewin underpins the boldness of the title of this work: the origin of developing a «Physics of the Collective»—and the formalization of its cardinal variable, relational density, which anchors the socio-thermodynamic apparatus (§4.4)—resides in pioneering field theory, which conceived group life as force dynamics in a measurable life space. What is quantified here as density is no decorative metaphor, but the algorithmic continuation of that foundational insight.
 
@@ -86,16 +86,16 @@ The harmonious functioning or pathological fracture of a group does not reside i
 
 ---
 
-## 2. Capture Protocol: BREVE Format, Matrix Duality, and Diagonal Closure
+## 2. Capture Protocol: ORBIT Format, Matrix Duality, and Diagonal Closure
 
 ### 2.1. Forced Drag without Ties and Matrix Duality A(i, rank) vs. B(i, j)
 In classical sociometry, manual computation constraints naturally favored tallying procedures based on fixed quotas (typically three choices and three rejections), where each nomination received equal unit weight ($1 = 1$). This procedure, fully justified in its historical era, left undifferentiated the gradient of intensity between primary nuclear preferences and secondary choices.
 
-The BREVE Format (operationalized as the ORBIT Sociomatrix) formalizes exhaustive preferential ordering $A(i, k) = j$ over the entire collective, incorporating sender self-anchoring ($r_{ii} \in \{1, \dots, N\}$). Complete ordering without ties represents the continuous hierarchy of choices, facilitating natural participant expression and preserving data richness without quota truncation. From this ordinal foundation, the model formalizes the matrix and continuous treatment of relational exchanges as a permutation of group space.
+The ORBIT Format (operationalized as the ORBIT Sociomatrix) formalizes exhaustive preferential ordering $A(i, k) = j$ over the entire collective, incorporating sender self-anchoring ($r_{ii} \in \{1, \dots, N\}$). Complete ordering without ties represents the continuous hierarchy of choices, facilitating natural participant expression and preserving data richness without quota truncation. From this ordinal foundation, the model formalizes the matrix and continuous treatment of relational exchanges as a permutation of group space.
 
-In the BREVE Format, participants view a randomized peer roster to neutralize visual or sequential anchoring biases. Through an ergonomic drag-and-drop interface, each subject orders all group members between a maximum preference pole and a rejection pole. The algorithmic zero-ties rule ($r_{ij} \neq r_{ik}, \forall j \neq k$) eradicates social desirability and acquiescence biases, ensuring a complete and strict ordering. This capture splits analytically into two complementary, bijective matrix structures:
+In the ORBIT Format, participants view a randomized peer roster to neutralize visual or sequential anchoring biases. Through an ergonomic drag-and-drop interface, each subject orders all group members between a maximum preference pole and a rejection pole. The algorithmic zero-ties rule ($r_{ij} \neq r_{ik}, \forall j \neq k$) eradicates social desirability and acquiescence biases, ensuring a complete and strict ordering. This capture splits analytically into two complementary, bijective matrix structures:
 
-* **Direct Capture Matrix $A(i, k)$ BREVE:** An $N \times N$ matrix where each row corresponds to sender $i$, each column to ordinal slot $k \in \{1^\circ, 2^\circ, \dots, N^\circ\}$, and the cell entry identifies the peer assigned to that rank:
+* **Direct Capture Matrix $A(i, k)$ ORBIT:** An $N \times N$ matrix where each row corresponds to sender $i$, each column to ordinal slot $k \in \{1^\circ, 2^\circ, \dots, N^\circ\}$, and the cell entry identifies the peer assigned to that rank:
 $$A(i, k) = j \tag{3}$$
 
 * **Official Rank Distribution Sociomatrix $B(i, j)$:** A square $N \times N$ sociomatrix where rows ($i$) and columns ($j$) index group members, recording the numerical rank assigned:
@@ -103,14 +103,14 @@ $$B(i, j) = k \iff A(i, k) = j \tag{4}$$
 
 This duality decouples evaluator cognitive load during ordering from downstream algebraic computation, satisfying row rank-sum conservation (Figures 3–5): $\sum_{j=1}^N B(i, j) = \frac{N(N+1)}{2}$.
 
-![Figure 3: BREVE input-flow architecture](Figure_Section_2_1_Input_Data_BREVE.png)  
-*Figure 3. BREVE input-flow architecture and transcription into matrices A(i, rank) and B(i, j): from forced drag-and-drop (no ties) to matrix duality, with SMIb instrumental and SMIa integrated matrices.*
+![Figure 3: ORBIT input-flow architecture](Figure_Section_2_1_Input_Data_BREVE.png)  
+*Figure 3. ORBIT input-flow architecture and transcription into matrices A(i, rank) and B(i, j): from forced drag-and-drop (no ties) to matrix duality, with SMIb instrumental and SMIa integrated matrices.*
 
 ![Figure 4: Moreno's classical sociomatrix in Excel (N = 5)](Tabla_Seccion_2_1_Moreno_Original_Excel_N5.png)  
 *Figure 4. Moreno's classical sociomatrix (E, R, pE, pR) in Excel format for N = 5: the traditional sociometric technique.*
 
-![Figure 5: BREVE ordinal matrix (1st–5th)](Tabla_Seccion_2_1_BREVE_Ordinal_Excel_N5.png)  
-*Figure 5. BREVE ordinal matrix (1st–5th) with self-anchoring r_ii and triadic metaperceptions αE / ωE: tie-free capture and socio-cognitive closure.*
+![Figure 5: ORBIT ordinal matrix (1st–5th)](Tabla_Seccion_2_1_BREVE_Ordinal_Excel_N5.png)  
+*Figure 5. ORBIT ordinal matrix (1st–5th) with self-anchoring r_ii and triadic metaperceptions αE / ωE: tie-free capture and socio-cognitive closure.*
 
 ### 2.2. Reflexive Diagonal Closure and Core Sensors (IDA, ITA, P(k))
 NEXORD resolves the historical omission of the sociometric main diagonal (traditionally empty, $r_{ii} = \emptyset$) by requiring each participant to self-rank within the collective ($r_{ii} \in \{1, \dots, N\}$). This topological closure turns the sociomatrix into a continuous, complete relational space, activating three fundamental metric sensors:
@@ -502,7 +502,7 @@ In rigorous adherence to the principles of Open Science and FAIR Data (*Findable
 
 Empirical field data are systematically anonymized under standardized alphanumeric codes (`1A1a` … `5A1a`) and protected via immutable cryptographic sealing utilizing the SHA3-512 algorithm (the Clélie Protocol), under the academic custody of the Sociometric Bank (BSOC).
 
-The BSOC originates from the visionary aim of conferring retrospective utility onto the vast body of sociometric studies conducted over past decades: the BSOC is established to preserve and leverage the extensive empirical heritage generated across decades of psychosocial research, enabling sociomatrices from local and historical studies to be integrated into retrospective, comparative, and meta-analytic investigations. Once sociomatrices are deposited into the bank under the official SMIb standard protocol—which seamlessly unifies both data capture paradigms (MORENO and BREVE)—this extensive historical heritage is transformed into reusable scientific capital under FAIR principles, fully safeguarding the empirical investment of preceding generations of researchers.
+The BSOC originates from the visionary aim of conferring retrospective utility onto the vast body of sociometric studies conducted over past decades: the BSOC is established to preserve and leverage the extensive empirical heritage generated across decades of psychosocial research, enabling sociomatrices from local and historical studies to be integrated into retrospective, comparative, and meta-analytic investigations. Once sociomatrices are deposited into the bank under the official SMIb standard protocol—which seamlessly unifies both data capture paradigms (MORENO and ORBIT)—this extensive historical heritage is transformed into reusable scientific capital under FAIR principles, fully safeguarding the empirical investment of preceding generations of researchers.
 
 The NEXORD Platform materializes across four integrated pillars:
 1. The Python computational suite, which implements the complete formal and mathematical apparatus (under continuous revision and refinement, distributed under institutional accreditation pursuant to §7.4).

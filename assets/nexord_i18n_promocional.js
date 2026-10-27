@@ -95,7 +95,7 @@
 
       // Métricas Rápidas Hero
       hero_stat_1_val: '3 Min',
-      hero_stat_1_desc: 'Tiempo de pasación individual por ordenación (Breve → ORBIT).',
+      hero_stat_1_desc: 'Tiempo de pasación individual por ordenación (Orbit → ORBIT).',
       hero_stat_2_val: 'Q81',
       hero_stat_2_desc: 'Figuras Relacionales Sociométricas oficiales computadas en retícula diádica.',
       hero_stat_3_val: '18D',
@@ -115,7 +115,7 @@
       pain_trad_item4: '<strong>Procesos lentos y tediosos:</strong> Cuestionarios densos de 30 minutos que provocan fatiga y respuestas al azar.',
       pain_nex_badge: 'Ecosistema NEXORD / VISORD',
       pain_nex_heading: 'Sociometría Ordinal & Física Grupal',
-      pain_nex_item1: '<strong>Sociometría Breve en 3 minutos:</strong> Ordenación intuitiva sin agobio, con aleatorización anti-sesgo.',
+      pain_nex_item1: '<strong>Sociometría Orbit en 3 minutos:</strong> Ordenación intuitiva sin agobio, con aleatorización anti-sesgo.',
       pain_nex_item2: '<strong>Detección del rechazo sutil:</strong> El algoritmo de hidrostática identifica de inmediato el aislamiento invisible.',
       pain_nex_item3: '<strong>Gemelo Digital 3D/4D:</strong> Visualización viva de cuencas de atracción, camarillas y liderazgo real en movimiento.',
       pain_nex_item4: '<strong>Retorno Ético no punitivo:</strong> Enfoque constructivo que preserva siempre la autoestima y la cohesión.',
@@ -168,7 +168,7 @@
       flow_tag: 'Flujo Operativo Simple',
       flow_title: 'De la recogida al informe en 3 pasos',
       flow_subtitle: 'Diseñado para que cualquier institución pueda desplegarlo sin fricción tecnológica ni desgaste.',
-      flow_s1_title: 'Pasación Breve (3 min)',
+      flow_s1_title: 'Pasación Orbit (3 min)',
       flow_s1_desc: 'Cada participante accede desde su móvil o tablet mediante un enlace tokenizado seguro. Ordena a sus compañeros de forma visual sin fatiga cognitiva ni preguntas invasivas.',
       flow_s2_title: 'Ingestión y Física SMIb',
       flow_s2_desc: 'El motor VISORD calcula al instante la matriz diádica de emisión y recepción, descomponiendo los 255 indicadores de densidad absoluta (BDR) y relativa (SDR).',
@@ -432,7 +432,7 @@
 
       // Hero Quick Stats
       hero_stat_1_val: '3 Min',
-      hero_stat_1_desc: 'Individual completion time via ordinal ranking (Breve → ORBIT).',
+      hero_stat_1_desc: 'Individual completion time via ordinal ranking (Orbit → ORBIT).',
       hero_stat_2_val: 'Q81',
       hero_stat_2_desc: 'Official Sociometric Relational Figures computed in dyadic lattice.',
       hero_stat_3_val: '18D',
