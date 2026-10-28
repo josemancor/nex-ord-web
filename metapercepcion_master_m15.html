@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taller de Metapercepción Triádica M3-AΩ · Máster N=15 · NEXORD Platinum</title>
+  <title>Taller de Metapercepción Triádica M3-AΩ · Máster N=15 · NEXORD Standalone</title>
   <style>
     :root {
       --bg-dark: #0B132B;
@@ -258,11 +258,6 @@
     .chip.selected {
       opacity: 0.35;
       pointer-events: none;
-    }
-    .chip.self-chip {
-      border-color: var(--accent-magenta);
-      color: #F472B6;
-      background: rgba(255, 0, 127, 0.1);
     }
 
     /* CENSO HORIZONTAL INTERACTIVO */
@@ -654,7 +649,7 @@
   <header>
     <div class="badge-master">Máster en Análisis y Conducción de Grupos · UB (2025-2026)</div>
     <h1>Taller de Metapercepción Triádica (M3-AΩ)</h1>
-    <div class="subtitle">Protocolo de Descentralización Empática a 6 Columnas (N = 15) · NEXORD Platinum</div>
+    <div class="subtitle">Protocolo de Descentralización Empática a 6 Columnas (N = 15) · NEXORD Platinum Standalone</div>
   </header>
 
   <!-- BANNER TRANQUILIZADOR -->
@@ -671,7 +666,10 @@
       Progreso de la sesión: <span id="lblCountCompleted">0</span> / 15 participantes completados
     </div>
     <div class="btn-group">
-      <a href="protocolo_papel_imprimible_a4.html" target="_blank" class="btn-sm">📄 Ver Hoja Papel A4</a>
+      <label class="btn-sm" style="cursor:pointer;">
+        📂 Importar JSON
+        <input type="file" multiple accept=".json" style="display:none;" onchange="importarRespuestasJSON(event)">
+      </label>
       <button class="btn-sm" onclick="abrirModalCenso()">👥 Censo Alumnos</button>
       <button class="btn-sm btn-download" onclick="descargarPayloadJSON()">📥 Descargar General JSON</button>
       <button class="btn-sm" onclick="descargarCSV()">📊 Descargar CSV</button>
@@ -820,6 +818,16 @@
     <p style="color:var(--text-muted); font-size:0.95rem; max-width:550px; margin:0 auto 20px;">
       Muchas gracias, <strong><span id="lblSuccessParticipant"></span></strong>. Tus respuestas han sido incorporadas al archivo maestro confidencial del Máster.
     </p>
+
+    <!-- ACCIONES INDIVIDUALES (PARA RESPUESTA EN DISPOSITIVO PROPIO) -->
+    <div style="background:#0F172A; border:1px solid var(--card-border); border-radius:10px; padding:15px; max-width:480px; margin:0 auto 25px;">
+      <div style="font-size:0.85rem; color:var(--accent-cyan); font-weight:700; margin-bottom:8px;">Si estás usando tu propio móvil u ordenador:</div>
+      <div class="btn-group" style="justify-content:center; gap:8px;">
+        <button class="btn-sm btn-download" onclick="descargarFichaIndividual()">📥 Descargar Mi Ficha (JSON)</button>
+        <button class="btn-sm" onclick="copiarCodigoIndividual()">📋 Copiar Mi Código</button>
+      </div>
+    </div>
+
     <div class="btn-group" style="justify-content:center; gap:10px;">
       <button class="btn-nav btn-next" onclick="siguienteParticipante()">Siguiente Alumno/a ➔</button>
       <button class="btn-nav btn-prev" onclick="descargarPayloadJSON()">📥 Descargar General JSON</button>
@@ -879,8 +887,8 @@
     selfId: null,
     selfName: null,
     selfNum: null,
-    listAfinidad: [],   // [id, id, ...] ordenados
-    listDistancia: [],  // [id, id, ...] ordenados
+    listAfinidad: [],
+    listDistancia: [],
     columnas: {
       col1_alfa:        { refId: null, refName: null, refNum: null, choices: [] },
       col2_pivote_prox: { refId: null, refName: null, refNum: null, choices: [] },
@@ -917,7 +925,7 @@
   function getMetadataBase() {
     return {
       ecosistema: "NEXORD / VISORD Engine Platinum (v1.0.1)",
-      taller: "Metapercepción Triádica M3-AΩ (Máster N=15 · 6 Columnas)",
+      taller: "Metapercepción Triádica M3-AΩ (Máster N=15 · 6 Columnas Standalone)",
       institucion: "Máster en Análisis y Conducción de Grupos · Universitat de Barcelona (UB)",
       promocion: "2025-2026",
       criterio: "Afinidad y Convivencia",
@@ -1036,7 +1044,6 @@
     const af = responses.listAfinidad;
     const di = responses.listDistancia;
 
-    // Asignación de IDs de referentes
     const getObj = (id) => CENSO_ALUMNOS.find(a => a.id === id);
 
     const refAlfa = getObj(af[0]);
@@ -1102,7 +1109,6 @@
     const cdef = COL_DEFS[index];
     const colData = responses.columnas[cdef.key];
 
-    // Actualizar cabecera de la columna de trabajo
     const tag = document.getElementById("colActiveRoleTag");
     tag.innerText = `COLUMNA ${index + 1} · ${cdef.rol.toUpperCase()} (${cdef.subrol})`;
     tag.style.color = cdef.color;
@@ -1118,17 +1124,15 @@
     const colData = responses.columnas[cdef.key];
     const refId = colData.refId;
 
-    // Actualizar contador
     const prog = document.getElementById("colActiveProgress");
     prog.innerText = `${colData.choices.length} / 3 elecciones ${colData.choices.length >= 3 ? "✔" : ""}`;
     prog.style.color = colData.choices.length >= 3 ? "var(--accent-neon-green)" : "var(--accent-gold)";
 
-    // Pool de chips: excluye al referente (no se elige a sí mismo) y a uno mismo si se desea
     const pool = document.getElementById("poolColumnaActiva");
     pool.innerHTML = "";
 
     CENSO_ALUMNOS.forEach(al => {
-      if (al.id === refId) return; // Un referente no se elige a sí mismo
+      if (al.id === refId) return;
 
       const isSelected = colData.choices.includes(al.id);
       const chip = document.createElement("div");
@@ -1138,7 +1142,6 @@
       pool.appendChild(chip);
     });
 
-    // Lista ordenada
     const container = document.getElementById("orderedColumnaActiva");
     container.innerHTML = "";
 
@@ -1164,7 +1167,6 @@
       });
     }
 
-    // Controles de siguiente/anterior tab
     document.getElementById("btnTabPrev").style.visibility = activeColIndex > 0 ? "visible" : "hidden";
     const btnTabNext = document.getElementById("btnTabNext");
     btnTabNext.style.display = activeColIndex < 5 ? "inline-block" : "none";
@@ -1232,7 +1234,6 @@
 
     const formatList = (ids) => ids.map((id, i) => `${i+1}º ${CENSO_ALUMNOS.find(a=>a.id===id)?.name || id}`).join(", ");
 
-    // Tarjeta listas propias
     const cardPropias = document.createElement("div");
     cardPropias.className = "summary-card-box";
     cardPropias.style.borderColor = "var(--accent-cyan)";
@@ -1245,7 +1246,6 @@
     `;
     grid.appendChild(cardPropias);
 
-    // 6 Tarjetas metaperceptivas
     COL_DEFS.forEach((cdef, i) => {
       const col = responses.columnas[cdef.key];
       const box = document.createElement("div");
@@ -1269,7 +1269,6 @@
   function guardarRegistroCompleto() {
     const repo = cargarRepositorio();
 
-    // Guardado exhaustivo y compatible
     repo.participantes[responses.selfId] = {
       id: responses.selfId,
       nombre: responses.selfName,
@@ -1278,7 +1277,6 @@
       afinidad_propia: responses.listAfinidad,
       distancia_propia: responses.listDistancia,
       columnas: responses.columnas,
-      // Alias canónicos para ingestores directos
       alfa_id: responses.columnas.col1_alfa.refId,
       alfa_atribuidas: responses.columnas.col1_alfa.choices,
       omega_id: responses.columnas.col4_omega.refId,
@@ -1292,7 +1290,6 @@
   }
 
   function siguienteParticipante() {
-    // Resetear respuestas
     responses = {
       selfId: null,
       selfName: null,
@@ -1311,6 +1308,67 @@
     activeColIndex = 0;
     inicializarPaso0();
     avanzarPaso(0);
+  }
+
+  // ACCIONES INDIVIDUALES (PARA RESPUESTA EN DISPOSITIVO PROPIO)
+  function descargarFichaIndividual() {
+    const repo = cargarRepositorio();
+    const part = repo.participantes[responses.selfId];
+    if (!part) return;
+    const str = JSON.stringify(part, null, 2);
+    const blob = new Blob([str], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `RESPUESTA_M3_${part.id}_${part.nombre.replace(/\s+/g, '_')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function copiarCodigoIndividual() {
+    const repo = cargarRepositorio();
+    const part = repo.participantes[responses.selfId];
+    if (!part) return;
+    const str = JSON.stringify(part);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(str).then(() => {
+        alert("¡Código copiado al portapapeles! Puedes pegarlo en un mensaje o correo para tu profesor.");
+      }).catch(() => {
+        prompt("Copia este código de respuesta:", str);
+      });
+    } else {
+      prompt("Copia este código de respuesta:", str);
+    }
+  }
+
+  function importarRespuestasJSON(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    const repo = cargarRepositorio();
+    let count = 0;
+
+    Array.from(files).forEach(f => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.participantes) {
+            Object.assign(repo.participantes, parsed.participantes);
+          } else if (parsed.id && parsed.nombre) {
+            repo.participantes[parsed.id] = parsed;
+          }
+          guardarRepositorio(repo);
+          count++;
+          if (count === files.length) {
+            alert(`¡${files.length} archivo(s) importado(s) correctamente! Total actual en sesión: ${Object.keys(repo.participantes).length} / 15`);
+            location.reload();
+          }
+        } catch(err) {
+          console.error("Error al procesar archivo:", err);
+        }
+      };
+      reader.readAsText(f);
+    });
   }
 
   // ===========================================================================
