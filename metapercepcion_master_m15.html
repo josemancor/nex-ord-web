@@ -576,6 +576,34 @@
       line-height: 1.4;
     }
 
+    /* BOTÓN FLOTANTE PERSISTENTE PARA CONSULTAR LA LISTA EN CUALQUIER MOMENTO */
+    .floating-roster-btn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 990;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: var(--accent-neon-green);
+      border: 1.5px solid var(--accent-neon-green);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 255, 135, 0.35);
+      border-radius: 50px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+    }
+    .floating-roster-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      background: var(--accent-neon-green);
+      color: #0B132B;
+      box-shadow: 0 10px 30px rgba(0, 255, 135, 0.55);
+    }
+
     /* MODAL */
     .modal-overlay {
       position: fixed;
@@ -838,6 +866,12 @@
   </div>
 
 </div>
+
+<!-- BOTÓN FLOTANTE PERSISTENTE PARA CONSULTAR LA LISTA EN CUALQUIER MOMENTO -->
+<button class="floating-roster-btn" onclick="abrirModalCenso()" title="Consultar lista de compañeros en cualquier momento (Tecla L)">
+  <span style="font-size:1.15rem;">📋</span>
+  <span>Consultar Lista (N=15)</span>
+</button>
 
 <!-- MODAL DEL CENSO -->
 <div class="modal-overlay" id="modalCenso">
@@ -1527,6 +1561,17 @@
       location.reload();
     }
   }
+
+  // Atajo de teclado: L para abrir/cerrar censo, Escape para cerrar
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      cerrarModalCenso();
+    } else if ((e.key === "l" || e.key === "L") && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+      const modal = document.getElementById("modalCenso");
+      if (modal && modal.style.display === "flex") cerrarModalCenso();
+      else abrirModalCenso();
+    }
+  });
 </script>
 </body>
 </html>

@@ -598,6 +598,104 @@
       border-color: rgba(56, 189, 248, 0.4);
     }
 
+    /* BOTÓN FLOTANTE PERSISTENTE PARA CONSULTAR LA LISTA EN CUALQUIER MOMENTO */
+    .floating-roster-btn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 990;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: var(--accent-neon);
+      border: 1.5px solid var(--accent-neon);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 255, 135, 0.35);
+      border-radius: 50px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+    }
+    .floating-roster-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      background: var(--accent-neon);
+      color: #0B132B;
+      box-shadow: 0 10px 30px rgba(0, 255, 135, 0.55);
+    }
+    .floating-roster-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* SWITCHER DE VISTAS DENTRO DEL MODAL (ORLA VS LISTA) */
+    .roster-view-toggle {
+      display: inline-flex;
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      padding: 2px;
+      gap: 3px;
+    }
+    .btn-toggle {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-toggle.active {
+      background: #1E293B;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* VISTA LISTA VERTICAL DENTRO DEL MODAL */
+    .modal-list-view {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-list-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #152449;
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      padding: 6px 12px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .modal-list-row:hover {
+      border-color: var(--accent-cyan);
+      background: #1C3160;
+    }
+    .modal-list-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-list-num {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      min-width: 48px;
+    }
+    .modal-list-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .modal-list-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
     /* MODAL DE ORLA DEL GRUPO */
     .modal-overlay {
       position: fixed;
@@ -1010,23 +1108,36 @@
 
 </div>
 
+<!-- BOTÓN FLOTANTE PERSISTENTE PARA CONSULTAR LA LISTA EN CUALQUIER MOMENTO -->
+<button class="floating-roster-btn" id="btnFloatingRoster" onclick="openOrlaModal()" title="Consultar lista o fotografías del grupo en cualquier momento (Tecla L)">
+  <span style="font-size:1.15rem;">📋</span>
+  <span>Consultar Lista / Orla (<strong id="floatingRosterCount" style="color:#FFFFFF;">15</strong>)</span>
+</button>
+
 <!-- =========================================================================
-     MODAL 1: ORLA DEL GRUPO (VER ANUARIO / CENSO FOTOGRÁFICO)
+     MODAL 1: ORLA Y LISTA COMPLETA DEL GRUPO (CONSULTABLE EN CUALQUIER MOMENTO)
      ========================================================================= -->
 <div class="modal-overlay" id="orlaModal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2>🎓 Orla Oficial del Grupo (<span id="orlaCountBadge">0</span> Miembros)</h2>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <h2 style="font-size:1.1rem; color:#FFFFFF;">📋 Censo del Grupo (<span id="orlaCountBadge">0</span> Miembros)</h2>
+        <div class="roster-view-toggle">
+          <button class="btn-toggle active" id="btnViewGrid" onclick="setRosterView('grid')">🎓 Vista Orla (Fotos)</button>
+          <button class="btn-toggle" id="btnViewList" onclick="setRosterView('list')">📄 Vista Lista Vertical</button>
+        </div>
+      </div>
       <button class="btn-modal-close" onclick="closeOrlaModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-        <input type="text" id="orlaSearchInput" placeholder="Buscar por nombre o número..." oninput="filterOrla()" style="background:#0E1833; border:1px solid var(--border-card); color:#FFFFFF; padding:6px 12px; border-radius:6px; font-size:0.85rem; width:260px;">
-        <span style="font-size:0.75rem; color:var(--text-muted);">Haz clic en un miembro para seleccionarlo como tu identidad</span>
+      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <input type="text" id="orlaSearchInput" placeholder="🔍 Buscar por nombre o número de lista..." oninput="filterOrla()" style="background:#0E1833; border:1px solid var(--border-card); color:#FFFFFF; padding:6px 12px; border-radius:6px; font-size:0.85rem; width:280px;">
+        <span style="font-size:0.75rem; color:var(--text-muted);">Atajo: pulsa [L] o [ESC] · Consulta en cualquier momento sin perder datos</span>
       </div>
-      <div class="orla-grid" id="orlaGrid">
-        <!-- Renderizado dinámico de la orla -->
-      </div>
+      <!-- Vista 1: Cuadrícula Orla -->
+      <div class="orla-grid" id="orlaGrid"></div>
+      <!-- Vista 2: Lista Vertical -->
+      <div class="modal-list-view" id="orlaListView" style="display:none;"></div>
     </div>
   </div>
 </div>
@@ -1201,6 +1312,9 @@
     document.getElementById("headerCriterio").innerText = currentGroup.criterio;
     document.getElementById("mainGroupSubtitle").innerText = `${currentGroup.nombre} · ${currentGroup.criterio}`;
     document.getElementById("orlaCountBadge").innerText = currentGroup.participantes.length;
+    if (document.getElementById("floatingRosterCount")) {
+      document.getElementById("floatingRosterCount").innerText = currentGroup.participantes.length;
+    }
 
     // Reset de respuestas
     resetResponses();
@@ -1915,30 +2029,76 @@
     document.getElementById("orlaModal").classList.remove("open");
   }
 
+  let currentRosterView = "grid";
+
+  function setRosterView(mode) {
+    currentRosterView = mode;
+    const btnGrid = document.getElementById("btnViewGrid");
+    const btnList = document.getElementById("btnViewList");
+    if (btnGrid) btnGrid.classList.toggle("active", mode === "grid");
+    if (btnList) btnList.classList.toggle("active", mode === "list");
+    const grid = document.getElementById("orlaGrid");
+    const list = document.getElementById("orlaListView");
+    if (grid) grid.style.display = (mode === "grid") ? "grid" : "none";
+    if (list) list.style.display = (mode === "list") ? "flex" : "none";
+    filterOrla();
+  }
+
   function renderOrla(filter = "") {
     const grid = document.getElementById("orlaGrid");
-    grid.innerHTML = "";
+    const listView = document.getElementById("orlaListView");
+    if (grid) grid.innerHTML = "";
+    if (listView) listView.innerHTML = "";
+
     const list = currentGroup.participantes.filter(p => {
       if (!filter) return true;
       const f = filter.toLowerCase();
-      return p.nombre.toLowerCase().includes(f) || p.num.toString() === f;
+      return p.nombre.toLowerCase().includes(f) || p.num.toString() === f || (p.subgrupo && p.subgrupo.toLowerCase().includes(f));
     });
 
     list.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "orla-card";
-      card.innerHTML = `
-        <span class="orla-num">Nº ${p.num}</span>
-        <div class="orla-photo">${getAvatarHtml(p)}</div>
-        <div class="orla-name">${p.nombre}</div>
-        <div class="orla-role">${p.subgrupo || p.rol || ""}</div>
-      `;
-      card.onclick = () => {
-        selectSelf(p);
-        closeOrlaModal();
-      };
-      grid.appendChild(card);
+      // 1. Tarjeta estilo Orla (cuadrícula)
+      if (grid) {
+        const card = document.createElement("div");
+        card.className = "orla-card";
+        card.innerHTML = `
+          <span class="orla-num">Nº ${p.num}</span>
+          <div class="orla-photo">${getAvatarHtml(p)}</div>
+          <div class="orla-name">${p.nombre}</div>
+          <div class="orla-role">${p.subgrupo || p.rol || ""}</div>
+        `;
+        card.onclick = () => {
+          if (!responses.self) selectSelf(p);
+          closeOrlaModal();
+        };
+        grid.appendChild(card);
+      }
+
+      // 2. Fila estilo Lista Vertical (como en papel)
+      if (listView) {
+        const row = document.createElement("div");
+        row.className = "modal-list-row";
+        row.innerHTML = `
+          <div class="modal-list-left">
+            <span class="modal-list-num">[ Nº ${p.num} ]</span>
+            <div class="avatar-wrap" style="width:34px; height:38px;">${getAvatarHtml(p)}</div>
+            <div>
+              <div class="modal-list-name">${p.nombre}</div>
+              <div class="modal-list-sub">${p.subgrupo || p.rol || ""}</div>
+            </div>
+          </div>
+          <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">Nº ${p.num}</span>
+        `;
+        row.onclick = () => {
+          if (!responses.self) selectSelf(p);
+          closeOrlaModal();
+        };
+        listView.appendChild(row);
+      }
     });
+
+    const badge = document.getElementById("orlaCountBadge");
+    if (badge) badge.innerText = list.length;
   }
 
   function filterOrla() {
@@ -1968,11 +2128,15 @@
     }
   });
 
-  // Cerrar modales con Escape
+  // Cerrar modales con Escape y abrir Orla con tecla L
   window.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       closeOrlaModal();
       closeConfigModal();
+    } else if ((e.key === "l" || e.key === "L") && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+      const modal = document.getElementById("orlaModal");
+      if (modal && modal.classList.contains("open")) closeOrlaModal();
+      else openOrlaModal();
     }
   });
 
