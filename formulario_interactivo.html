@@ -443,6 +443,7 @@
     .rank-badge.green { background: rgba(0, 255, 135, 0.18); color: var(--accent-neon); border: 1px solid rgba(0, 255, 135, 0.4); }
     .rank-badge.orange { background: rgba(255, 159, 28, 0.18); color: var(--accent-orange); border: 1px solid rgba(255, 159, 28, 0.4); }
     .rank-badge.cyan { background: rgba(56, 189, 248, 0.18); color: var(--accent-cyan); border: 1px solid rgba(56, 189, 248, 0.4); }
+    .rank-badge.dotted { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px dashed rgba(255, 255, 255, 0.28); }
 
     .ranked-actions {
       display: flex;
@@ -813,7 +814,8 @@
         <span class="rank-badge green" id="proxCounterBadge">0 / mín. 3</span>
       </div>
       <div class="card-desc">
-        Indica, por orden de afinidad, los compañeros con los que te sientes más próximo, empezando por el más afín. <strong>Haz clic en una persona para añadirla</strong> a tu lista por orden de prioridad (p1º, p2º, p3º...). Puedes reordenar con las flechas o eliminar con ✕.
+        Indica, por orden de afinidad, los compañeros con los que te sientes más próximo, empezando por el más afín:
+        <br><code style="color:var(--accent-neon); font-size:0.78rem;">+Proximidad: p1º__ &nbsp; p2º__ &nbsp; p3º__ &nbsp; p4º.... &nbsp; p5º.... &nbsp; p6º.... &nbsp; p7º.... &nbsp; p8º.... &nbsp; ....</code>
       </div>
 
       <div class="dual-pane">
@@ -855,7 +857,8 @@
         <span class="rank-badge orange" id="distCounterBadge">0 / mín. 3</span>
       </div>
       <div class="card-desc">
-        Indica, por orden de distanciamiento, los compañeros con los que te sientes más distante o prefieres una interacción pausada, empezando por el más distante (d1º, d2º, d3º...).
+        Indica, por orden de distanciamiento, los compañeros con los que te sientes más distante o prefieres una interacción pausada, empezando por el más distante:
+        <br><code style="color:var(--accent-orange); font-size:0.78rem;">+Distancia: d1º__ &nbsp; d2º__ &nbsp; d3º__ &nbsp; d4º.... &nbsp; d5º.... &nbsp; d6º.... &nbsp; d7º.... &nbsp; d8º.... &nbsp; ....</code>
       </div>
 
       <div class="dual-pane">
@@ -897,7 +900,8 @@
         <span style="font-size:0.76rem; color:var(--accent-neon); font-weight:normal;">Deducción Automática Canónica</span>
       </div>
       <div class="card-desc">
-        A partir de tus respuestas en los pasos 1 y 2, el sistema identifica matemáticamente tus 6 anclas relacionales (3 de proximidad y 3 de distancia). En los pasos siguientes, te asomarás a la mirada de cada una de estas personas.
+        A partir de tus respuestas en los pasos 1 y 2, el sistema identifica matemáticamente tus 6 anclas relacionales:
+        <br><code style="color:var(--accent-cyan); font-size:0.76rem;">P1º es el: __ &nbsp; P3º es el: __ &nbsp; Pxº es el: __ &nbsp;|&nbsp; D1º es el: __ &nbsp; D3º es el: __ &nbsp; Dxº es el: __</code>
       </div>
 
       <div class="referents-showcase" id="referentsShowcase">
@@ -1366,11 +1370,14 @@
     });
 
     responses.proxList.forEach((p, idx) => {
+      const isCore = idx < 3;
+      const tagText = isCore ? `p${idx + 1}º__` : `p${idx + 1}º....`;
+      const badgeClass = isCore ? "rank-badge green" : "rank-badge dotted";
       const item = document.createElement("div");
       item.className = "ranked-item";
       item.innerHTML = `
         <div class="ranked-left">
-          <span class="rank-badge green">p${idx + 1}º</span>
+          <span class="${badgeClass}">${tagText}</span>
           <div class="chip-avatar">${getAvatarHtml(p)}</div>
           <div class="chip-info">
             <div class="chip-name">${p.nombre}</div>
@@ -1441,11 +1448,14 @@
     });
 
     responses.distList.forEach((p, idx) => {
+      const isCore = idx < 3;
+      const tagText = isCore ? `d${idx + 1}º__` : `d${idx + 1}º....`;
+      const badgeClass = isCore ? "rank-badge orange" : "rank-badge dotted";
       const item = document.createElement("div");
       item.className = "ranked-item";
       item.innerHTML = `
         <div class="ranked-left">
-          <span class="rank-badge orange">d${idx + 1}º</span>
+          <span class="${badgeClass}">${tagText}</span>
           <div class="chip-avatar">${getAvatarHtml(p)}</div>
           <div class="chip-info">
             <div class="chip-name">${p.nombre}</div>
@@ -1519,7 +1529,7 @@
         <span class="ref-badge-tag ${isProx ? "green" : "orange"}">${key}º</span>
         <div class="ref-avatar-lg">${getAvatarHtml(ref)}</div>
         <div style="overflow:hidden;">
-          <div class="ref-title-txt" style="color:${meta.color};">${meta.rol}</div>
+          <div class="ref-title-txt" style="color:${meta.color};">${key}º es el: __ &nbsp;·&nbsp; ${meta.rol}</div>
           <div class="ref-name-txt">${ref ? ref.nombre : "Sin asignar"} <small style="color:var(--accent-cyan); font-size:0.75rem;">(Nº ${ref ? ref.num : ""})</small></div>
           <div class="ref-sub-txt">${meta.sub}</div>
         </div>
@@ -1608,12 +1618,15 @@
     });
 
     list.forEach((p, idx) => {
+      const isCore = idx < 3;
+      const tagText = isCore ? `${idx + 1}º__` : `${idx + 1}º....`;
+      const badgeClass = isCore ? "rank-badge cyan" : "rank-badge dotted";
       const isSelf = responses.self && responses.self.num === p.num;
       const item = document.createElement("div");
       item.className = "ranked-item";
       item.innerHTML = `
         <div class="ranked-left">
-          <span class="rank-badge cyan">${idx + 1}º</span>
+          <span class="${badgeClass}">${tagText}</span>
           <div class="chip-avatar">${getAvatarHtml(p)}</div>
           <div class="chip-info">
             <div class="chip-name">${p.nombre} ${isSelf ? '<span style="color:var(--accent-gold); font-size:0.6rem;">(A ti)</span>' : ''}</div>
