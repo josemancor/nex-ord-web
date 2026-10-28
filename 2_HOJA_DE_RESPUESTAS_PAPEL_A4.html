@@ -79,7 +79,7 @@
       transform: translateY(-1px);
     }
 
-    /* TOAST DE FEEDBACK DE TRANSFERENCIA */
+    /* TOAST DE FEEDBACK DE TRANSFERENCIA Y AVISOS */
     .transfer-toast {
       position: fixed;
       top: 14px;
@@ -105,6 +105,16 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+    .transfer-toast.toast-warning {
+      color: #FF9F1C !important;
+      border-color: #FF9F1C !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(255, 159, 28, 0.4) !important;
+    }
+    .transfer-toast.toast-error {
+      color: #FF007F !important;
+      border-color: #FF007F !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(255, 0, 127, 0.4) !important;
+    }
 
     /* CASILLAS INTERACTIVAS Y EDITABLES */
     input.slot-interactive {
@@ -120,7 +130,7 @@
       font-family: inherit;
       border-radius: 2px;
       line-height: 1;
-      transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
       cursor: text;
     }
     input.slot-interactive:focus {
@@ -133,6 +143,19 @@
       border-color: #10B981 !important;
       transform: scale(1.08);
       transition: transform 0.15s ease;
+    }
+    input.slot-interactive.is-duplicate {
+      border-color: #EF4444 !important;
+      background: #FEE2E2 !important;
+      color: #B91C1C !important;
+      animation: slot-shake 0.35s ease;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.45) !important;
+    }
+
+    @keyframes slot-shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-2.5px); }
+      40%, 80% { transform: translateX(2.5px); }
     }
 
     input.slot-box {
@@ -305,6 +328,13 @@
         background: transparent !important;
         box-shadow: none !important;
         -webkit-appearance: none;
+      }
+      input.slot-interactive.is-duplicate {
+        border-color: #0F172A !important;
+        background: transparent !important;
+        color: #0F172A !important;
+        box-shadow: none !important;
+        animation: none !important;
       }
     }
 
@@ -632,14 +662,14 @@
 <body>
 
 <div id="transferToast" class="transfer-toast">
-  <span style="font-size:1.1rem;">⚡</span>
+  <span id="transferToastIcon" style="font-size:1.1rem;">⚡</span>
   <span id="transferToastMsg">Número transferido</span>
 </div>
 
 <div class="print-bar">
   <div class="print-bar-left">
     <span>📄 <strong>Protocolo Oficial 1 Página A4:</strong> Censo Lateral con Fotos + Cuestionario Interactivo Ergonómico.</span>
-    <span style="color:#94A3B8; font-size:7.5pt;">(Haz clic en cualquier nombre para transferirlo a la casilla activa)</span>
+    <span style="color:#94A3B8; font-size:7.5pt;">(Verificación sobre la marcha: sin duplicados por pregunta)</span>
   </div>
   <div class="print-bar-right">
     <button class="btn-action" onclick="toggleModalOrla()">📋 Orla / Lista (L)</button>
@@ -851,17 +881,17 @@
     </div>
 
     <!-- IDENTIFICACIÓN DEL ALUMNO/A -->
-    <div class="id-row">
+    <div class="id-row" data-question-group="self" data-question-name="Identificación Personal">
       <div><strong>¿Cuál es tu número de lista?</strong> &nbsp; Nº <input type="text" class="id-input-box slot-interactive" id="slot_self" maxlength="2" inputmode="numeric" placeholder="__" title="Tu número de lista (1 al 15)"> &nbsp; <small style="color:#64748B;">(1 al 15)</small></div>
       <div>Nombre (opcional): ____________________________________</div>
       <div>Fecha: ___ / ___ / 2026</div>
     </div>
 
     <!-- 1) PROXIMIDAD DIRECTA -->
-    <section class="block-section">
+    <section class="block-section" data-question-group="proximidad" data-question-name="1) Proximidad Directa">
       <div class="block-title green">
         <span>1) ELECCIONES DIRECTAS DE PROXIMIDAD / AFINIDAD</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite)</span>
+        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin repetir número)</span>
       </div>
       <div class="block-prompt">
         Indica, por orden de afinidad, los <strong>números de lista</strong> de los compañeros con los que te sientes más próximo, empezando por el más afín:
@@ -881,10 +911,10 @@
     </section>
 
     <!-- 2) DISTANCIA DIRECTA -->
-    <section class="block-section">
+    <section class="block-section" data-question-group="distancia" data-question-name="2) Distanciamiento Directo">
       <div class="block-title orange">
         <span>2) ELECCIONES DIRECTAS DE DISTANCIAMIENTO / CONVIVENCIA PAUSADA</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite)</span>
+        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin repetir número)</span>
       </div>
       <div class="block-prompt">
         Indica, por orden de distanciamiento, los <strong>números de lista</strong> de los compañeros con los que te sientes más distante, empezando por el más distante:
@@ -904,7 +934,7 @@
     </section>
 
     <!-- 3) TRASLACIÓN DE TUS 6 REFERENTES -->
-    <section class="block-section">
+    <section class="block-section" data-question-group="referentes" data-question-name="3) Referentes de Contorno">
       <div class="block-title blue">
         <span>3) IDENTIFICACIÓN DE TUS 6 REFERENTES DE CONTORNO (ANCLAJE)</span>
         <span style="font-weight:normal; font-size:5.8pt;">(Traslada los números anotados en los pasos 1 y 2)</span>
@@ -945,11 +975,11 @@
     <section class="block-section">
       <div class="block-title green">
         <span>4) PROBABLEMENTE, ¿A QUIÉNES HABRÁ PREFERIDO CADA REFERENTE CERCANO?</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(Ilimitadas, mín. 3)</span>
+        <span style="font-weight:normal; font-size:5.8pt;">(Ilimitadas, mín. 3 · sin repetir número por fila)</span>
       </div>
       <div class="atrib-block">
 
-        <div class="atrib-row prox">
+        <div class="atrib-row prox" data-question-group="atrib_p1" data-ref-id="ref_p1" data-question-name="Atribución de P1º">
           <div class="atrib-subject">
             <strong id="atrib_p1_title">P1º</strong> habrá preferido a:
             <span id="atrib_p1_subtitle">(Tu referente Cenit Alfa)</span>
@@ -967,7 +997,7 @@
           </div>
         </div>
 
-        <div class="atrib-row prox">
+        <div class="atrib-row prox" data-question-group="atrib_p3" data-ref-id="ref_p3" data-question-name="Atribución de P3º">
           <div class="atrib-subject">
             <strong id="atrib_p3_title">P3º</strong> habrá preferido a:
             <span id="atrib_p3_subtitle">(Tu pivote estándar k=3)</span>
@@ -985,7 +1015,7 @@
           </div>
         </div>
 
-        <div class="atrib-row prox">
+        <div class="atrib-row prox" data-question-group="atrib_px" data-ref-id="ref_px" data-question-name="Atribución de Pxº">
           <div class="atrib-subject">
             <strong id="atrib_px_title">Pxº</strong> habrá preferido a:
             <span id="atrib_px_subtitle">(Último Prox. · Vacío si señalaste 3)</span>
@@ -1010,11 +1040,11 @@
     <section class="block-section">
       <div class="block-title orange">
         <span>5) PROBABLEMENTE, ¿A QUIÉNES HABRÁ PREFERIDO CADA REFERENTE DISTANTE?</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(Ilimitadas, mín. 3)</span>
+        <span style="font-weight:normal; font-size:5.8pt;">(Ilimitadas, mín. 3 · sin repetir número por fila)</span>
       </div>
       <div class="atrib-block">
 
-        <div class="atrib-row dist">
+        <div class="atrib-row dist" data-question-group="atrib_d1" data-ref-id="ref_d1" data-question-name="Atribución de D1º">
           <div class="atrib-subject">
             <strong id="atrib_d1_title">D1º</strong> habrá preferido a:
             <span id="atrib_d1_subtitle">(Tu referente Nadir Omega)</span>
@@ -1032,7 +1062,7 @@
           </div>
         </div>
 
-        <div class="atrib-row dist">
+        <div class="atrib-row dist" data-question-group="atrib_d3" data-ref-id="ref_d3" data-question-name="Atribución de D3º">
           <div class="atrib-subject">
             <strong id="atrib_d3_title">D3º</strong> habrá preferido a:
             <span id="atrib_d3_subtitle">(Tu pivote estándar k=3)</span>
@@ -1050,7 +1080,7 @@
           </div>
         </div>
 
-        <div class="atrib-row dist">
+        <div class="atrib-row dist" data-question-group="atrib_dx" data-ref-id="ref_dx" data-question-name="Atribución de Dxº">
           <div class="atrib-subject">
             <strong id="atrib_dx_title">Dxº</strong> habrá preferido a:
             <span id="atrib_dx_subtitle">(Último Dist. · Vacío si señalaste 3)</span>
@@ -1075,7 +1105,7 @@
     <footer>
       <div>
         * <strong>Protocolo Clélie:</strong> En las valoraciones 4 y 5 se indagan exclusivamente orientaciones positivas (a quiénes prefiere la persona).<br>
-        * <strong>Respuestas Ilimitadas:</strong> Anota todos los números que consideres probables (mantén al menos 3; xº queda vacío si señalaste 3).
+        * <strong>Respuestas Ilimitadas:</strong> Anota todos los números que consideres probables (mín. 3; xº queda vacío si señalaste 3).
       </div>
       <div style="text-align:right;">
         Tratamiento formativo confidencial · NEXORD / VISORD Engine Platinum 2026<br>
@@ -1149,18 +1179,96 @@
     }
   });
 
-  // Notificación toast rápida
-  function showToast(msg) {
+  // TOAST DE FEEDBACK DE TRANSFERENCIA Y AVISOS
+  function showToast(msg, type = 'success') {
     const toast = document.getElementById('transferToast');
     const toastMsg = document.getElementById('transferToastMsg');
+    const toastIcon = document.getElementById('transferToastIcon');
     if (!toast || !toastMsg) return;
+
+    toast.className = 'transfer-toast show';
+    if (type === 'warning') {
+      toast.classList.add('toast-warning');
+      if (toastIcon) toastIcon.innerText = '⚠️';
+    } else if (type === 'error') {
+      toast.classList.add('toast-error');
+      if (toastIcon) toastIcon.innerText = '🚫';
+    } else {
+      if (toastIcon) toastIcon.innerText = '⚡';
+    }
+
     toastMsg.innerText = msg;
-    toast.classList.add('show');
     clearTimeout(toast._timer);
-    toast._timer = setTimeout(() => toast.classList.remove('show'), 1600);
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
   }
 
-  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR
+  // OBTENER GRUPO DE PREGUNTA Y ELEMENTOS HERMANOS
+  function getQuestionContainer(slot) {
+    return slot.closest('[data-question-group]');
+  }
+
+  function getQuestionSlots(slot) {
+    const groupContainer = getQuestionContainer(slot);
+    if (!groupContainer) return [slot];
+    return Array.from(groupContainer.querySelectorAll('input.slot-interactive'));
+  }
+
+  function getQuestionName(slot) {
+    const groupContainer = getQuestionContainer(slot);
+    return groupContainer ? (groupContainer.getAttribute('data-question-name') || 'esta pregunta') : 'esta pregunta';
+  }
+
+  function getReferentInput(slot) {
+    const row = slot.closest('[data-ref-id]');
+    if (!row) return null;
+    const refId = row.getAttribute('data-ref-id');
+    return document.getElementById(refId);
+  }
+
+  // REEVALUAR Y LIMPIAR DUPLICADOS EN UN GRUPO
+  function recheckGroupDuplicates(groupContainer) {
+    if (!groupContainer) return;
+    const slots = Array.from(groupContainer.querySelectorAll('input.slot-interactive'));
+    const counts = {};
+    slots.forEach(s => {
+      const v = s.value.trim();
+      if (v) counts[v] = (counts[v] || 0) + 1;
+    });
+
+    const groupKey = groupContainer.getAttribute('data-question-group');
+    const selfNum = document.getElementById('slot_self')?.value.trim();
+
+    slots.forEach(s => {
+      const v = s.value.trim();
+      if (!v) {
+        s.classList.remove('is-duplicate');
+        return;
+      }
+      // Duplicado en la misma pregunta
+      let isDup = (counts[v] > 1);
+
+      // Auto-selección en proximidad o distancia
+      if ((groupKey === 'proximidad' || groupKey === 'distancia') && selfNum && v === selfNum) {
+        isDup = true;
+      }
+
+      // Auto-selección en fila de atribución (referente eligiéndose a sí mismo)
+      const refEl = getReferentInput(s);
+      if (refEl && refEl.value.trim() && refEl.value.trim() === v) {
+        isDup = true;
+      }
+
+      if (isDup) {
+        s.classList.add('is-duplicate');
+      } else {
+        s.classList.remove('is-duplicate');
+      }
+    });
+  }
+
+  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR (CON VALIDACIÓN SOBRE LA MARCHA)
   function transferNumber(num, studentName = '') {
     const allSlots = getAllSlots();
     let target = activeSlot;
@@ -1171,29 +1279,77 @@
       if (!target) target = allSlots[0];
     }
 
-    if (target) {
-      target.value = num;
+    if (!target) return;
 
-      // Efecto visual flash neón en la casilla receptora
-      target.classList.add('flash-fill');
-      setTimeout(() => target.classList.remove('flash-fill'), 280);
+    const numStr = num.toString();
+    const name = studentName || (CENSO.find(c => c.num == num)?.name || '');
+    const qContainer = getQuestionContainer(target);
+    const qName = getQuestionName(target);
+    const qGroup = qContainer?.getAttribute('data-question-group');
 
-      // Feedback toast
-      const name = studentName || (CENSO.find(c => c.num == num)?.name || '');
-      showToast(`✓ Nº ${num} (${name}) transferido a casilla`);
-
-      // Disparar eventos input y change
-      target.dispatchEvent(new Event('input', { bubbles: true }));
-      target.dispatchEvent(new Event('change', { bubbles: true }));
-
-      // AVANCE AUTOMÁTICO DEL CURSOR A LA SIGUIENTE CASILLA
-      const idx = allSlots.indexOf(target);
-      if (idx !== -1 && idx < allSlots.length - 1) {
-        const next = allSlots[idx + 1];
-        next.focus();
-        next.select();
-        activeSlot = next;
+    // 1. VERIFICACIÓN DE AUTO-SELECCIÓN (SI NO ES LA CASILLA DE PROPIA IDENTIFICACIÓN)
+    if (target.id !== 'slot_self') {
+      const selfNum = document.getElementById('slot_self')?.value.trim();
+      if (selfNum && numStr === selfNum && (qGroup === 'proximidad' || qGroup === 'distancia')) {
+        showToast(`⚠️ No puedes seleccionarte a ti mismo (Nº ${num} ${name}) en ${qName}`, 'warning');
+        target.classList.add('is-duplicate');
+        setTimeout(() => target.classList.remove('is-duplicate'), 900);
+        target.focus();
+        return;
       }
+
+      // Referente en fila de atribución no puede elegirse a sí mismo
+      const refInput = getReferentInput(target);
+      if (refInput && refInput.value.trim() === numStr) {
+        showToast(`⚠️ Un compañero no puede elegirse a sí mismo (${name} Nº ${num})`, 'warning');
+        target.classList.add('is-duplicate');
+        setTimeout(() => target.classList.remove('is-duplicate'), 900);
+        target.focus();
+        return;
+      }
+    }
+
+    // 2. VERIFICACIÓN SOBRE LA MARCHA DE DUPLICADOS EN LA MISMA PREGUNTA
+    if (qContainer && target.id !== 'slot_self') {
+      const siblings = getQuestionSlots(target).filter(s => s !== target);
+      const existingSlot = siblings.find(s => s.value.trim() === numStr);
+
+      if (existingSlot) {
+        // DUPLICADO DETECTADO: NO INSERTAR Y DESTACAR EL EXISTENTE
+        existingSlot.classList.add('is-duplicate');
+        setTimeout(() => existingSlot.classList.remove('is-duplicate'), 1500);
+
+        showToast(`⚠️ El Nº ${num} (${name}) ya está anotado en ${qName}`, 'warning');
+        target.focus();
+        return;
+      }
+    }
+
+    // 3. ASIGNACIÓN VÁLIDA
+    target.value = numStr;
+    target.classList.remove('is-duplicate');
+
+    // Efecto visual flash neón en la casilla receptora
+    target.classList.add('flash-fill');
+    setTimeout(() => target.classList.remove('flash-fill'), 280);
+
+    // Feedback toast exitoso
+    showToast(`✓ Nº ${num} (${name}) transferido a casilla`, 'success');
+
+    // Reevaluar grupo
+    if (qContainer) recheckGroupDuplicates(qContainer);
+
+    // Disparar eventos input y change
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+    target.dispatchEvent(new Event('change', { bubbles: true }));
+
+    // AVANCE AUTOMÁTICO DEL CURSOR A LA SIGUIENTE CASILLA
+    const idx = allSlots.indexOf(target);
+    if (idx !== -1 && idx < allSlots.length - 1) {
+      const next = allSlots[idx + 1];
+      next.focus();
+      next.select();
+      activeSlot = next;
     }
   }
 
@@ -1205,6 +1361,44 @@
       if (num) {
         transferNumber(num, name);
       }
+    });
+  });
+
+  // ESCUCHAR ENTRADA DE TECLADO EN CADA CASILLA (VALIDACIÓN SOBRE LA MARCHA)
+  document.querySelectorAll('input.slot-interactive').forEach(slot => {
+    slot.addEventListener('input', () => {
+      const val = slot.value.trim();
+      const qContainer = getQuestionContainer(slot);
+      const qName = getQuestionName(slot);
+
+      if (val && slot.id !== 'slot_self') {
+        const numVal = parseInt(val, 10);
+        if (isNaN(numVal) || numVal < 1 || numVal > 15) {
+          slot.classList.add('is-duplicate');
+          showToast(`⚠️ El número debe estar entre 1 y 15`, 'warning');
+          return;
+        }
+
+        // Comprobar duplicado en la misma pregunta
+        if (qContainer) {
+          const siblings = getQuestionSlots(slot).filter(s => s !== slot);
+          const dup = siblings.find(s => s.value.trim() === val);
+          if (dup) {
+            slot.classList.add('is-duplicate');
+            dup.classList.add('is-duplicate');
+            const name = CENSO.find(c => c.num == val)?.name || '';
+            showToast(`⚠️ ¡Duplicado! El Nº ${val} (${name}) ya está en ${qName}`, 'warning');
+            return;
+          }
+        }
+      }
+
+      if (qContainer) recheckGroupDuplicates(qContainer);
+    });
+
+    slot.addEventListener('blur', () => {
+      const qContainer = getQuestionContainer(slot);
+      if (qContainer) recheckGroupDuplicates(qContainer);
     });
   });
 
@@ -1364,6 +1558,7 @@
     if (confirm("¿Deseas reiniciar todas las casillas del cuestionario?")) {
       getAllSlots().forEach(s => {
         s.value = '';
+        s.classList.remove('is-duplicate');
         delete s.dataset.manual;
       });
       updateRefLabels();
