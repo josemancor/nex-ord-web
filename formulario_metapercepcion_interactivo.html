@@ -2095,10 +2095,10 @@
           <div class="orla-photo">${getAvatarHtml(p)}</div>
           <div class="orla-name">${p.nombre}</div>
           <div class="orla-role">${p.subgrupo || p.rol || ""}</div>
+          <div style="font-size:0.65rem; color:var(--accent-neon); margin-top:3px; font-weight:700;">↳ transferir</div>
         `;
         card.onclick = () => {
-          if (!responses.self) selectSelf(p);
-          closeOrlaModal();
+          transferFromOrla(p);
         };
         grid.appendChild(card);
       }
@@ -2116,11 +2116,13 @@
               <div class="modal-list-sub">${p.subgrupo || p.rol || ""}</div>
             </div>
           </div>
-          <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">Nº ${p.num}</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">Nº ${p.num}</span>
+            <span style="font-size:0.68rem; color:var(--accent-neon); font-weight:700;">↳ transferir</span>
+          </div>
         `;
         row.onclick = () => {
-          if (!responses.self) selectSelf(p);
-          closeOrlaModal();
+          transferFromOrla(p);
         };
         listView.appendChild(row);
       }
@@ -2128,6 +2130,75 @@
 
     const badge = document.getElementById("orlaCountBadge");
     if (badge) badge.innerText = list.length;
+  }
+
+  function showToastNotification(msg) {
+    let toast = document.getElementById("orlaToast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "orlaToast";
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: #0F172A;
+        color: #00FF87;
+        border: 1.5px solid #00FF87;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(0,255,135,0.4);
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        z-index: 100000;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<span style="font-size:1.1rem;">⚡</span><span>${msg}</span>`;
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateX(-50%) translateY(-20px)";
+    }, 1800);
+  }
+
+  function transferFromOrla(person) {
+    if (currentStep === 0) {
+      selectSelf(person);
+      closeOrlaModal();
+    } else if (currentStep === 1) {
+      if (responses.self && person.num === responses.self.num) {
+        alert("No puedes seleccionarte a ti mismo en proximidad.");
+        return;
+      }
+      addProx(person);
+      showToastNotification(`✓ Nº ${person.num} (${person.nombre}) añadido a Proximidad`);
+    } else if (currentStep === 2) {
+      if (responses.self && person.num === responses.self.num) {
+        alert("No puedes seleccionarte a ti mismo en distanciamiento.");
+        return;
+      }
+      addDist(person);
+      showToastNotification(`✓ Nº ${person.num} (${person.nombre}) añadido a Distanciamiento`);
+    } else if (currentStep === 4) {
+      const activeRef = responses.referentes ? responses.referentes[activeRefKey] : null;
+      if (activeRef && person.num === activeRef.num) {
+        alert(`No puedes atribuir a ${activeRef.nombre} que se elija a sí mismo.`);
+        return;
+      }
+      addAttribution(person);
+      showToastNotification(`✓ Nº ${person.num} (${person.nombre}) atribuido a ${activeRefKey.toUpperCase()}`);
+    } else {
+      closeOrlaModal();
+    }
   }
 
   function filterOrla() {
