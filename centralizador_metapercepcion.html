@@ -550,6 +550,7 @@
       <a href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" class="btn-hud" target="_blank" title="Formulario Oficial Papel A4">📄 Hoja Papel A4</a>
       <a href="HOJA_DE_RESPUESTAS_PAPEL_A4.pdf" class="btn-hud" target="_blank" title="Descargar PDF Oficial Imprimible">📥 Descargar PDF</a>
       <a href="3_CUESTIONARIO_ONLINE_INTERACTIVO.html" class="btn-hud" target="_blank" title="Cuestionario Web Interactivo Online">💻 Cuestionario Online</a>
+      <a href="simulador_metapercepcion_triadica.html" class="btn-hud" title="Simulador de Metapercepción Triádica">⚡ Simulador M³</a>
       <a href="centralizador_metapercepcion.html" class="btn-hud active" title="Página actual de gestión de datos">📊 Centralizador NEXORD</a>
       <a href="index_promocional.html" class="btn-hud" title="Volver al Portal Promocional">🏠 Hub General</a>
     </nav>
@@ -631,6 +632,9 @@
         <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">Admite archivos individuales descargados (.json, .csv) o lote completo</span>
       </div>
       <div class="action-button-row">
+        <button class="btn-action" onclick="downloadSampleCSVTemplate()" title="Descargar plantilla CSV editable para la lista del grupo">
+          📥 Plantilla CSV
+        </button>
         <button class="btn-action demo" onclick="loadMasterUBDemo()" title="Carga inmediata de la simulación canónica Máster UB N=15">
           ⭐ Cargar Demo Máster UB (N=15)
         </button>
@@ -784,6 +788,33 @@
       toast.style.display = "flex";
       clearTimeout(window.__toastTimer);
       window.__toastTimer = setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+
+    function downloadSampleCSVTemplate() {
+      let csv = "num,nombre,foto,subgrupo,rol\n";
+      csv += "1,Participante 01,,A,Coordinación\n";
+      csv += "2,Participante 02,,A,Investigación\n";
+      csv += "3,Participante 03,,A,Desarrollo\n";
+      csv += "4,Participante 04,,A,Diseño\n";
+      csv += "5,Participante 05,,B,Operaciones\n";
+      csv += "6,Participante 06,,B,Comunicación\n";
+      csv += "7,Participante 07,,B,Calidad\n";
+      csv += "8,Participante 08,,B,Logística\n";
+      csv += "9,Participante 09,,C,Estrategia\n";
+      csv += "10,Participante 10,,C,Datos\n";
+      csv += "11,Participante 11,,C,Sistemas\n";
+      csv += "12,Participante 12,,C,Soporte\n";
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "PLANTILLA_CENSO_GRUPO.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("✓ Descargada plantilla: PLANTILLA_CENSO_GRUPO.csv");
     }
 
     // =========================================================================

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD | Simulador Específico de Metapercepciones Triádicas M³-AΩ</title>
+  <meta name="description" content="Simulador de Metapercepción Triádica M3-Alfa-Omega. Modela elecciones directas, teoría de la mente relacional, lucidez empática, proyección egocéntrica y sesgo de halo polar.">
+  <link rel="icon" type="image/png" href="LOGO_NEXORD_OFICIAL.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto+Mono:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-space: #070B18;
+      --bg-card: #0E172E;
+      --bg-surface: #132042;
+      --bg-highlight: #1B2C5B;
+      --border-card: #1E3360;
+      --border-focus: #00F0FF;
+      --accent-cyan: #00F0FF;
+      --accent-neon: #00FF87;
+      --accent-gold: #FFE600;
+      --accent-coral: #FF7043;
+      --accent-crimson: #FF007F;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-space);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 16px 24px 60px;
+    }
+
+    /* TOP HUD BAR */
+    .top-hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(14, 23, 46, 0.95);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .hud-brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,135,0.4);
+    }
+    .hud-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+    }
+    .hud-nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-hud {
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 7px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-hud:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+    }
+    .btn-hud.active {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+    }
+
+    /* DECK SECTIONS */
+    .deck-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .deck-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* CSV TEMPLATE BANNER */
+    .csv-template-box {
+      background: #0B1728;
+      border: 1.5px solid #1E3A5F;
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .csv-template-info h4 {
+      font-size: 0.95rem;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .csv-template-info p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .csv-cols-pill {
+      display: inline-flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .csv-col-tag {
+      background: #111F3D;
+      border: 1px solid #1F3666;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+    }
+
+    /* DROPZONE & BUTTONS */
+    .roster-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 768px) {
+      .roster-actions-grid { grid-template-columns: 1fr; }
+    }
+    .drop-box {
+      border: 2px dashed #244177;
+      border-radius: 10px;
+      background: rgba(11, 23, 40, 0.6);
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .drop-box:hover, .drop-box.dragover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.06);
+    }
+    .presets-container {
+      background: #090F1F;
+      border: 1px solid #1A284A;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .preset-btns-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-action {
+      background: #132247;
+      border: 1px solid var(--border-card);
+      color: #FFFFFF;
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-action:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+    }
+    .btn-action.primary {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(0, 255, 135, 0.25));
+      border: 1.5px solid var(--accent-neon);
+      color: var(--accent-neon);
+      font-size: 0.88rem;
+    }
+    .btn-action.primary:hover {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(0, 255, 135, 0.4));
+      box-shadow: 0 0 16px rgba(0,255,135,0.4);
+    }
+
+    /* MODULATORS & SLIDERS */
+    .modulators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .slider-card {
+      background: #090F1F;
+      border: 1px solid #1A284A;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .slider-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .slider-val {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+    }
+    .slider-desc {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    /* PRESETS BAR */
+    .scenario-presets-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      background: #080D1D;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #162447;
+      align-items: center;
+    }
+    .btn-scenario {
+      background: #0F1A36;
+      border: 1px solid #1D3261;
+      color: #CBD5E1;
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn-scenario:hover {
+      background: #182B57;
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .btn-scenario.active {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+    }
+
+    /* KPI METRICS */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .kpi-card {
+      background: #090F1F;
+      border: 1px solid #1A284A;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .kpi-lbl {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-family: 'Roboto Mono', monospace;
+      margin-bottom: 4px;
+    }
+    .kpi-val {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #FFFFFF;
+    }
+    .kpi-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #080D1D;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+    th {
+      background: #0C152B;
+      color: var(--text-muted);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      padding: 8px 10px;
+      border-bottom: 1.5px solid var(--border-card);
+      text-align: left;
+      white-space: nowrap;
+    }
+    td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #142247;
+      color: #E2E8F0;
+      white-space: nowrap;
+    }
+    tr:hover td { background: #0E1A38; }
+    .mini-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem;
+    }
+    .mini-badge.prox { background: rgba(0,255,135,0.15); color: var(--accent-neon); border: 1px solid rgba(0,255,135,0.3); }
+    .mini-badge.dist { background: rgba(255,112,67,0.15); color: var(--accent-coral); border: 1px solid rgba(255,112,67,0.3); }
+
+    /* TOAST */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0E1B38;
+      border: 1.5px solid var(--accent-neon);
+      color: #FFFFFF;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,255,135,0.3);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST -->
+  <div id="toastMsg" class="toast-msg">
+    <span id="toastIcon">✓</span>
+    <span id="toastText">Operación realizada con éxito</span>
+  </div>
+
+  <!-- TOP HUD -->
+  <header class="top-hud-bar">
+    <a href="index.html" class="hud-brand">
+      <img src="LOGO_NEXORD_OFICIAL.png" alt="Logo NEXORD">
+      <div>
+        <div class="hud-title">NEXORD <span style="color:var(--accent-neon);">VISORD</span></div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Simulador Específico de Metapercepciones Triádicas M³-AΩ</div>
+      </div>
+    </a>
+    <nav class="hud-nav-links">
+      <a href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" class="btn-hud" target="_blank" title="Formulario Oficial Papel A4">📄 Hoja Papel A4</a>
+      <a href="3_CUESTIONARIO_ONLINE_INTERACTIVO.html" class="btn-hud" target="_blank" title="Cuestionario Web Interactivo Online">💻 Cuestionario Online</a>
+      <a href="centralizador_metapercepcion.html" class="btn-hud" title="Centralizador de Datos">📊 Centralizador NEXORD</a>
+      <a href="simulador_metapercepcion_triadica.html" class="btn-hud active" title="Simulador Triádico">⚡ Simulador M³</a>
+      <a href="index_promocional.html" class="btn-hud" title="Volver al Portal Promocional">🏠 Hub General</a>
+    </nav>
+  </header>
+
+  <!-- SECCIÓN 1: GESTIÓN DEL CENSO Y PLANTILLA CSV -->
+  <section class="deck-section">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>👥 1. Censo del Grupo y Carga de Lista Propia</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">Define los integrantes sobre los que se modelará la red triádica</span>
+      </div>
+      <div id="rosterStatusTag" style="font-family:'Roboto Mono',monospace; font-size:0.8rem; color:var(--accent-neon); background:rgba(0,255,135,0.12); padding:4px 10px; border-radius:6px; border:1px solid rgba(0,255,135,0.3);">
+        Censo Activo: 15 participantes
+      </div>
+    </div>
+
+    <!-- BANNER DE PLANTILLA CSV DESCARGABLE -->
+    <div class="csv-template-box">
+      <div class="csv-template-info">
+        <h4><span>📥</span> Descarga la Plantilla CSV de Ejemplo y Modifícala con tu Lista</h4>
+        <p>
+          Puedes descargar este archivo CSV modelo, abrirlo en Excel, Numbers o un editor de texto, sustituir los nombres por los de tu equipo o clase, y volver a cargarlo en el recuadro de la derecha:
+        </p>
+        <div class="csv-cols-pill">
+          <span class="csv-col-tag">num</span>
+          <span class="csv-col-tag">nombre</span>
+          <span class="csv-col-tag">foto (opcional)</span>
+          <span class="csv-col-tag">subgrupo (opcional)</span>
+          <span class="csv-col-tag">rol (opcional)</span>
+        </div>
+      </div>
+      <div>
+        <button class="btn-action primary" onclick="downloadSampleCSVTemplate()" title="Descargar plantilla CSV editable">
+          📥 Descargar Plantilla CSV (.csv)
+        </button>
+      </div>
+    </div>
+
+    <!-- ZONA DE CARGA Y CASOS PREDEFINIDOS -->
+    <div class="roster-actions-grid">
+      <!-- Dropzone -->
+      <div class="drop-box" id="rosterDropBox" onclick="document.getElementById('rosterFileInput').click()">
+        <div style="font-size:1.8rem; margin-bottom:4px;">📁</div>
+        <strong style="color:#FFF; font-size:0.9rem;">Cargar mi archivo CSV o JSON</strong>
+        <span style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Arrastra aquí tu lista modificada o haz clic para seleccionarla</span>
+        <input type="file" id="rosterFileInput" accept=".csv,.json" style="display:none;" onchange="handleRosterFileSelect(event)">
+      </div>
+
+      <!-- Presets -->
+      <div class="presets-container">
+        <div>
+          <span style="font-size:0.76rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; font-family:'Roboto Mono',monospace;">O utiliza un censo predefinido:</span>
+          <div class="preset-btns-row">
+            <button class="btn-action" onclick="loadPresetRoster('master15')">🎓 Máster UB (N=15)</button>
+            <button class="btn-action" onclick="loadPresetRoster('team8')">👥 Equipo Tech (N=8)</button>
+            <button class="btn-action" onclick="loadPresetRoster('family12')">🏠 Familia Montes-Alba (N=12)</button>
+          </div>
+        </div>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:0.75rem; color:var(--text-dim);">Sintético N:</span>
+          <input type="number" id="syntheticN" value="10" min="5" max="30" style="width:50px; background:#0B142B; border:1px solid #1C2D5A; color:#FFF; padding:3px 6px; border-radius:4px; font-family:'Roboto Mono',monospace; font-size:0.78rem;">
+          <button class="btn-action" onclick="generateSyntheticRoster()" style="padding:4px 8px; font-size:0.72rem;">Generar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: MODULADORES PSICO-TERMODINÁMICOS -->
+  <section class="deck-section">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>⚙️ 2. Moduladores Psico-Termodinámicos de la Simulación Triádica</span>
+      </div>
+      <button class="btn-action primary" style="font-size:0.92rem; padding:10px 20px;" onclick="runTriadicSimulation()">
+        ⚡ SIMULAR CORPUS M³-AΩ AHORA
+      </button>
+    </div>
+
+    <!-- PRESETS DE ESCENARIOS (ARQUETIPOS CANÓNICOS) -->
+    <div class="scenario-presets-bar">
+      <span style="font-size:0.74rem; font-family:'Roboto Mono',monospace; color:var(--text-muted); text-transform:uppercase; margin-right:4px;">Arquetipos:</span>
+      <button class="btn-scenario active" id="btnScenLucid" onclick="setScenarioPreset('lucid')">🟢 Sintonía Lúcida</button>
+      <button class="btn-scenario" id="btnScenPolar" onclick="setScenarioPreset('polar')">🔴 Cisma y Facciones</button>
+      <button class="btn-scenario" id="btnScenMyth" onclick="setScenarioPreset('myth')">🟡 Mito e Ignorancia Pluralista</button>
+      <button class="btn-scenario" id="btnScenOstracism" onclick="setScenarioPreset('ostracism')">🟣 Ostracismo Perceptivo</button>
+      <button class="btn-scenario" id="btnScenBalanced" onclick="setScenarioPreset('balanced')">🔵 Línea Base Equilibrada</button>
+    </div>
+
+    <!-- SLIDERS NUMÉRICOS FINOS -->
+    <div class="modulators-grid">
+      <!-- 1. Lucidez -->
+      <div class="slider-card">
+        <div class="slider-header">
+          <span class="slider-title"><span>👁️</span> Lucidez Empática (λ_luc)</span>
+          <span class="slider-val" id="valLucid">80%</span>
+        </div>
+        <p class="slider-desc">Fidelidad de la estimación respecto a la elección real del referente. Alta lucidez = predicción certera.</p>
+        <input type="range" id="sliderLucid" min="0" max="100" value="80" oninput="updateSliderUI()">
+      </div>
+
+      <!-- 2. Proyección Egocéntrica -->
+      <div class="slider-card">
+        <div class="slider-header">
+          <span class="slider-title"><span>🪞</span> Proyección Egocéntrica (π_proy)</span>
+          <span class="slider-val" id="valProj">20%</span>
+        </div>
+        <p class="slider-desc">Sesgo de falso consenso: tendencia a creer que el referente elegirá a las mismas personas que el emisor prefiere.</p>
+        <input type="range" id="sliderProj" min="0" max="100" value="20" oninput="updateSliderUI()">
+      </div>
+
+      <!-- 3. Reciprocidad Ilusoria -->
+      <div class="slider-card">
+        <div class="slider-header">
+          <span class="slider-title"><span>🤝</span> Reciprocidad Ilusoria (ρ_rec)</span>
+          <span class="slider-val" id="valRecip">35%</span>
+        </div>
+        <p class="slider-desc">Probabilidad de que el participante asuma que su Cenit Alfa (P1) le corresponderá eligiéndolo a él en el top.</p>
+        <input type="range" id="sliderRecip" min="0" max="100" value="35" oninput="updateSliderUI()">
+      </div>
+
+      <!-- 4. Halo Polar -->
+      <div class="slider-card">
+        <div class="slider-header">
+          <span class="slider-title"><span>⚡</span> Sesgo de Halo Polar (η_halo)</span>
+          <span class="slider-val" id="valHalo">45%</span>
+        </div>
+        <p class="slider-desc">Antagonismo proyectado entre Cenit α y Nadir ω. Aumenta la distancia atribuida entre los polos del contorno.</p>
+        <input type="range" id="sliderHalo" min="0" max="100" value="45" oninput="updateSliderUI()">
+      </div>
+
+      <!-- 5. Ruido -->
+      <div class="slider-card">
+        <div class="slider-header">
+          <span class="slider-title"><span>🎲</span> Ruido Estocástico (ε)</span>
+          <span class="slider-val" id="valNoise">10%</span>
+        </div>
+        <p class="slider-desc">Incertidumbre o elecciones fortuitas no estructuradas que reflejan la variabilidad humana cotidiana.</p>
+        <input type="range" id="sliderNoise" min="0" max="40" value="10" oninput="updateSliderUI()">
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: RESULTADOS Y DASHBOARD DE LA SIMULACIÓN -->
+  <section class="deck-section" id="resultsSection">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>📊 3. Diagnóstico Colectivo y Sociomatriz Triádica Simulada</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn-action primary" onclick="downloadSimulationJSON()" title="Descargar payload listo para NEXORD Engine">
+          📥 Descargar CORPUS_M3_CONSOLIDADO.json
+        </button>
+        <button class="btn-action" onclick="transferToCentralizer()" style="border-color:var(--accent-cyan); color:var(--accent-cyan);" title="Inyectar directamente en el Centralizador de Campo">
+          🚀 Enviar al Centralizador
+        </button>
+        <button class="btn-action" onclick="downloadSimulationCSV()">
+          📊 Descargar CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Exactitud Global (A)</div>
+        <div class="kpi-val" id="kpiAccuracy" style="color:var(--accent-neon);">--</div>
+        <div class="kpi-sub">Fidelidad empática de la red</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Proyección Media (Π)</div>
+        <div class="kpi-val" id="kpiProjection" style="color:var(--accent-cyan);">--</div>
+        <div class="kpi-sub">Sesgo de falso consenso</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Coeficiente de Halo (C_αω)</div>
+        <div class="kpi-val" id="kpiHalo" style="color:var(--accent-gold);">--</div>
+        <div class="kpi-sub">Tensión de contorno polar</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Quórum Generado</div>
+        <div class="kpi-val" id="kpiQuorum" style="color:#FFF;">--</div>
+        <div class="kpi-sub">Participantes completos (100%)</div>
+      </div>
+    </div>
+
+    <!-- TABLA DE DETALLE DE LA RED SIMULADA -->
+    <div class="table-wrap">
+      <table id="simTable">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Participante</th>
+            <th>Subgrupo</th>
+            <th>+Proximidad (p1..p4)</th>
+            <th>+Distancia (d1..d4)</th>
+            <th>Cenit α (P1)</th>
+            <th>Nadir ω (D1)</th>
+            <th>Atribución Probable a α</th>
+            <th>Lucidez λ_i</th>
+            <th>Proyección π_i</th>
+          </tr>
+        </thead>
+        <tbody id="simTableBody">
+          <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-dim);">Haz clic en «⚡ SIMULAR CORPUS M³-AΩ AHORA» para generar la sociomatriz triádica.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MOTOR JAVASCRIPT DEL SIMULADOR TRIÁDICO -->
+  <script>
+    // =========================================================================
+    // 1. ESTADO GLOBAL Y CENSO BASE
+    // =========================================================================
+    const DEFAULT_MASTER15 = [
+      { num: 1,  nombre: "Anna G",  rol: "Alumna", subgrupo: "A" },
+      { num: 2,  nombre: "Anna P",  rol: "Alumna", subgrupo: "B" },
+      { num: 3,  nombre: "Arnau",   rol: "Alumno", subgrupo: "B" },
+      { num: 4,  nombre: "Clara",   rol: "Alumna", subgrupo: "A" },
+      { num: 5,  nombre: "Dani",    rol: "Alumno", subgrupo: "EXT" },
+      { num: 6,  nombre: "Emma",    rol: "Alumna", subgrupo: "B" },
+      { num: 7,  nombre: "Irene",   rol: "Alumna", subgrupo: "A" },
+      { num: 8,  nombre: "Meri",    rol: "Alumna", subgrupo: "B" },
+      { num: 9,  nombre: "Miguel",  rol: "Alumno", subgrupo: "A" },
+      { num: 10, nombre: "Oscar",   rol: "Alumno", subgrupo: "A" },
+      { num: 11, nombre: "Pep",     rol: "Alumno", subgrupo: "B" },
+      { num: 12, nombre: "Roberto", rol: "Alumno", subgrupo: "A" },
+      { num: 13, nombre: "Saber",   rol: "Alumno", subgrupo: "B" },
+      { num: 14, nombre: "Sandra",  rol: "Alumna", subgrupo: "B" },
+      { num: 15, nombre: "Sara",    rol: "Alumna", subgrupo: "A" }
+    ];
+
+    let currentRoster = [...DEFAULT_MASTER15];
+    let groupMeta = {
+      nombre: "Máster UB (Simulado M³-AΩ)",
+      codigo: "SIMUL_M3_MASTER15",
+      criterio: "Afinidad y Convivencia"
+    };
+
+    let simulatedCorpus = null;
+
+    // =========================================================================
+    // 2. INICIALIZACIÓN
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      initDropBox();
+      updateSliderUI();
+      updateRosterStatus();
+      runTriadicSimulation(); // Simulación inicial lista
+    });
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById("toastMsg");
+      const icon = document.getElementById("toastIcon");
+      const text = document.getElementById("toastText");
+      if (!toast) return;
+      icon.textContent = isSuccess ? "✓" : "⚠️";
+      toast.style.borderColor = isSuccess ? "var(--accent-neon)" : "#EF4444";
+      text.textContent = msg;
+      toast.style.display = "flex";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+
+    // =========================================================================
+    // 3. GESTIÓN Y DESCARGA DE LA PLANTILLA CSV
+    // =========================================================================
+    function downloadSampleCSVTemplate() {
+      // Crea el contenido CSV canónico que el usuario puede editar
+      let csv = "num,nombre,foto,subgrupo,rol\n";
+      csv += "1,Participante 01,,A,Coordinación\n";
+      csv += "2,Participante 02,,A,Investigación\n";
+      csv += "3,Participante 03,,A,Desarrollo\n";
+      csv += "4,Participante 04,,A,Diseño\n";
+      csv += "5,Participante 05,,B,Operaciones\n";
+      csv += "6,Participante 06,,B,Comunicación\n";
+      csv += "7,Participante 07,,B,Calidad\n";
+      csv += "8,Participante 08,,B,Logística\n";
+      csv += "9,Participante 09,,C,Estrategia\n";
+      csv += "10,Participante 10,,C,Datos\n";
+      csv += "11,Participante 11,,C,Sistemas\n";
+      csv += "12,Participante 12,,C,Soporte\n";
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "PLANTILLA_CENSO_GRUPO.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("✓ Descargada plantilla: PLANTILLA_CENSO_GRUPO.csv");
+    }
+
+    function initDropBox() {
+      const dropBox = document.getElementById("rosterDropBox");
+      if (!dropBox) return;
+
+      ['dragenter', 'dragover'].forEach(eName => {
+        dropBox.addEventListener(eName, (e) => { e.preventDefault(); dropBox.classList.add('dragover'); });
+      });
+      ['dragleave', 'drop'].forEach(eName => {
+        dropBox.addEventListener(eName, (e) => { e.preventDefault(); dropBox.classList.remove('dragover'); });
+      });
+
+      dropBox.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          parseRosterFile(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    function handleRosterFileSelect(e) {
+      if (e.target.files && e.target.files[0]) {
+        parseRosterFile(e.target.files[0]);
+      }
+    }
+
+    function parseRosterFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target.result;
+          if (file.name.endsWith(".json")) {
+            const data = JSON.parse(content);
+            if (data.participantes && Array.isArray(data.participantes)) {
+              currentRoster = data.participantes;
+              groupMeta.nombre = data.grupo || file.name.replace(".json", "");
+            } else if (Array.isArray(data)) {
+              currentRoster = data;
+            }
+          } else {
+            // CSV
+            parseCsvToRoster(content, file.name);
+          }
+          updateRosterStatus();
+          runTriadicSimulation();
+          showToast(`✓ Censo cargado: ${currentRoster.length} participantes desde ${file.name}`);
+        } catch (err) {
+          alert("Error leyendo archivo: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function parseCsvToRoster(csvText, fileName) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) throw new Error("El archivo CSV no contiene filas suficientes.");
+      const header = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+      
+      const numIdx = header.findIndex(h => h.includes("num") || h.includes("id"));
+      const nomIdx = header.findIndex(h => h.includes("nom") || h.includes("sujeto"));
+      const subIdx = header.findIndex(h => h.includes("sub") || h.includes("grupo"));
+      const rolIdx = header.findIndex(h => h.includes("rol") || h.includes("cargo"));
+
+      const newRoster = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",").map(c => c.trim().replace(/^"|"$/g, ''));
+        if (cols.length < 2) continue;
+        const num = numIdx !== -1 ? parseInt(cols[numIdx], 10) : i;
+        const nom = nomIdx !== -1 ? cols[nomIdx] : `Sujeto ${num}`;
+        const sub = (subIdx !== -1 && cols[subIdx]) ? cols[subIdx] : "G";
+        const rol = (rolIdx !== -1 && cols[rolIdx]) ? cols[rolIdx] : "Miembro";
+
+        if (!isNaN(num)) {
+          newRoster.push({ num: num, nombre: nom, subgrupo: sub, rol: rol });
+        }
+      }
+
+      if (newRoster.length === 0) throw new Error("No se pudieron extraer participantes válidos del CSV.");
+      currentRoster = newRoster;
+      groupMeta.nombre = fileName.replace(/\.[^/.]+$/, "");
+      groupMeta.codigo = "SIMUL_" + groupMeta.nombre.replace(/\s+/g, "_").toUpperCase();
+    }
+
+    function loadPresetRoster(key) {
+      if (key === 'master15') {
+        currentRoster = [...DEFAULT_MASTER15];
+        groupMeta.nombre = "Máster UB (N=15)";
+        groupMeta.codigo = "SIMUL_MASTER_UB_N15";
+      } else if (key === 'team8') {
+        currentRoster = [
+          { num: 1, nombre: "Laura M", rol: "Product Lead", subgrupo: "Dir" },
+          { num: 2, nombre: "Carlos V", rol: "Tech Lead", subgrupo: "Back" },
+          { num: 3, nombre: "Elena B", rol: "Senior Designer", subgrupo: "UX" },
+          { num: 4, nombre: "Marc S", rol: "UI Developer", subgrupo: "Front" },
+          { num: 5, nombre: "Lucía R", rol: "Data Scientist", subgrupo: "Data" },
+          { num: 6, nombre: "Javier P", rol: "Systems Eng", subgrupo: "Back" },
+          { num: 7, nombre: "Mireia R", rol: "User Researcher", subgrupo: "UX" },
+          { num: 8, nombre: "David S", rol: "ML Engineer", subgrupo: "Data" }
+        ];
+        groupMeta.nombre = "Equipo Innovación (N=8)";
+        groupMeta.codigo = "SIMUL_TEAM_INNOV_N8";
+      } else if (key === 'family12') {
+        currentRoster = [
+          { num: 1,  nombre: "Abuelo (Patriarca)", rol: "G1", subgrupo: "RamaA" },
+          { num: 2,  nombre: "Abuela (Matriarca)", rol: "G1", subgrupo: "RamaA" },
+          { num: 3,  nombre: "Hijo Mayor", rol: "G2", subgrupo: "RamaA" },
+          { num: 4,  nombre: "Hija Menor", rol: "G2", subgrupo: "RamaA" },
+          { num: 5,  nombre: "Nieto Lúcido", rol: "G3", subgrupo: "RamaA" },
+          { num: 6,  nombre: "Nieto Proyectivo", rol: "G3", subgrupo: "RamaA" },
+          { num: 7,  nombre: "Tío Afín", rol: "G2", subgrupo: "RamaB" },
+          { num: 8,  nombre: "Tía Mediadora", rol: "G2", subgrupo: "RamaB" },
+          { num: 9,  nombre: "Prima Sociable", rol: "G3", subgrupo: "RamaB" },
+          { num: 10, nombre: "Oveja Negra", rol: "G3", subgrupo: "RamaB" },
+          { num: 11, nombre: "Yerno", rol: "G2", subgrupo: "RamaB" },
+          { num: 12, nombre: "Pariente Distante", rol: "G2", subgrupo: "RamaB" }
+        ];
+        groupMeta.nombre = "Familia Montes-Alba (N=12)";
+        groupMeta.codigo = "SIMUL_FAMILIA_N12";
+      }
+      updateRosterStatus();
+      runTriadicSimulation();
+      showToast(`✓ Censo cargado: ${groupMeta.nombre}`);
+    }
+
+    function generateSyntheticRoster() {
+      const n = parseInt(document.getElementById("syntheticN").value, 10) || 10;
+      const newRoster = [];
+      const subgrupos = ["A", "B", "C"];
+      for (let i = 1; i <= n; i++) {
+        const sub = subgrupos[(i - 1) % subgrupos.length];
+        newRoster.push({
+          num: i,
+          nombre: `Participante ${i < 10 ? '0' + i : i}`,
+          subgrupo: sub,
+          rol: `Miembro ${sub}`
+        });
+      }
+      currentRoster = newRoster;
+      groupMeta.nombre = `Grupo Sintético N=${n}`;
+      groupMeta.codigo = `SIMUL_SINTETICO_N${n}`;
+      updateRosterStatus();
+      runTriadicSimulation();
+      showToast(`✓ Generado grupo sintético de N=${n}`);
+    }
+
+    function updateRosterStatus() {
+      const tag = document.getElementById("rosterStatusTag");
+      const subs = [...new Set(currentRoster.map(p => p.subgrupo || 'G'))];
+      if (tag) {
+        tag.innerText = `Censo: ${currentRoster.length} participantes (Subgrupos: ${subs.join(', ')})`;
+      }
+    }
+
+    // =========================================================================
+    // 4. MODULADORES & SLIDERS UI
+    // =========================================================================
+    function updateSliderUI() {
+      document.getElementById("valLucid").innerText = document.getElementById("sliderLucid").value + "%";
+      document.getElementById("valProj").innerText = document.getElementById("sliderProj").value + "%";
+      document.getElementById("valRecip").innerText = document.getElementById("sliderRecip").value + "%";
+      document.getElementById("valHalo").innerText = document.getElementById("sliderHalo").value + "%";
+      document.getElementById("valNoise").innerText = document.getElementById("sliderNoise").value + "%";
+    }
+
+    function setScenarioPreset(scen) {
+      document.querySelectorAll(".btn-scenario").forEach(b => b.classList.remove("active"));
+      const slL = document.getElementById("sliderLucid");
+      const slP = document.getElementById("sliderProj");
+      const slR = document.getElementById("sliderRecip");
+      const slH = document.getElementById("sliderHalo");
+      const slN = document.getElementById("sliderNoise");
+
+      if (scen === 'lucid') {
+        document.getElementById("btnScenLucid").classList.add("active");
+        slL.value = 85; slP.value = 15; slR.value = 25; slH.value = 25; slN.value = 5;
+      } else if (scen === 'polar') {
+        document.getElementById("btnScenPolar").classList.add("active");
+        slL.value = 35; slP.value = 75; slR.value = 40; slH.value = 90; slN.value = 10;
+      } else if (scen === 'myth') {
+        document.getElementById("btnScenMyth").classList.add("active");
+        slL.value = 20; slP.value = 40; slR.value = 65; slH.value = 70; slN.value = 15;
+      } else if (scen === 'ostracism') {
+        document.getElementById("btnScenOstracism").classList.add("active");
+        slL.value = 50; slP.value = 60; slR.value = 15; slH.value = 80; slN.value = 20;
+      } else if (scen === 'balanced') {
+        document.getElementById("btnScenBalanced").classList.add("active");
+        slL.value = 50; slP.value = 35; slR.value = 30; slH.value = 40; slN.value = 15;
+      }
+      updateSliderUI();
+      runTriadicSimulation();
+    }
+
+    // =========================================================================
+    // 5. MOTOR ESTOCÁSTICO DE SIMULACIÓN TRIÁDICA M³-AΩ
+    // =========================================================================
+    function runTriadicSimulation() {
+      const n = currentRoster.length;
+      if (n < 4) return;
+
+      const pLucid = parseInt(document.getElementById("sliderLucid").value, 10) / 100;
+      const pProj  = parseInt(document.getElementById("sliderProj").value, 10) / 100;
+      const pRecip = parseInt(document.getElementById("sliderRecip").value, 10) / 100;
+      const pHalo  = parseInt(document.getElementById("sliderHalo").value, 10) / 100;
+      const pNoise = parseInt(document.getElementById("sliderNoise").value, 10) / 100;
+
+      // 1. Generar Sociomatriz Directa (Preferencias Reales de cada sujeto)
+      const directChoices = {}; // num -> { prox: [objs], dist: [objs] }
+      currentRoster.forEach(em => {
+        const others = currentRoster.filter(p => p.num !== em.num);
+        // Ponderar por subgrupo (afinidad intragrupo)
+        const scored = others.map(p => {
+          let score = Math.random();
+          if (p.subgrupo && p.subgrupo === em.subgrupo) score += 1.5;
+          return { person: p, score: score };
+        });
+        scored.sort((a, b) => b.score - a.score);
+
+        const proxCount = Math.min(4, Math.max(3, Math.floor(n * 0.3)));
+        const distCount = Math.min(4, Math.max(3, Math.floor(n * 0.3)));
+
+        const prox = scored.slice(0, proxCount).map(s => s.person);
+        const dist = scored.slice(-distCount).reverse().map(s => s.person);
+
+        directChoices[em.num] = { prox, dist };
+      });
+
+      // 2. Extraer Referentes de Contorno y Generar Metapercepciones Atributivas
+      const participantsData = {};
+      let totalAttributions = 0;
+      let accurateAttributions = 0;
+      let projectedAttributions = 0;
+
+      currentRoster.forEach(em => {
+        const dc = directChoices[em.num];
+        const p1 = dc.prox[0];
+        const p3 = dc.prox[2] || dc.prox[1];
+        const px = dc.prox[dc.prox.length - 1];
+        const d1 = dc.dist[0];
+        const d3 = dc.dist[2] || dc.dist[1];
+        const dx = dc.dist[dc.dist.length - 1];
+
+        const referents = {
+          P1: { num: p1.num, nombre: p1.nombre },
+          P3: { num: p3.num, nombre: p3.nombre },
+          Px: { num: px.num, nombre: px.nombre },
+          D1: { num: d1.num, nombre: d1.nombre },
+          D3: { num: d3.num, nombre: d3.nombre },
+          Dx: { num: dx.num, nombre: dx.nombre }
+        };
+
+        // Función generadora de atribuciones estocásticas para un referente R dado
+        const genAttribution = (refPerson, isAlpha = false, isOmega = false) => {
+          const pool = currentRoster.filter(p => p.num !== refPerson.num);
+          const realChoicesOfRef = (directChoices[refPerson.num] ? directChoices[refPerson.num].prox : []).map(p => p.num);
+          const myOwnChoices = dc.prox.map(p => p.num);
+
+          const candidateScores = pool.map(cand => {
+            let s = Math.random() * (pNoise + 0.1);
+
+            // Componente 1: Lucidez empática (acierta lo que R realmente prefiere)
+            if (realChoicesOfRef.includes(cand.num)) {
+              s += pLucid * 3.0;
+            }
+
+            // Componente 2: Proyección egocéntrica (atribuye a quien el emisor prefiere)
+            if (myOwnChoices.includes(cand.num)) {
+              s += pProj * 2.5;
+            }
+
+            // Componente 3: Reciprocidad ilusoria (cree que el Alfa lo prefiere a él)
+            if (isAlpha && cand.num === em.num) {
+              s += pRecip * 3.5;
+            }
+
+            // Componente 4: Halo polar (el Alfa no elegirá al Omega del emisor)
+            if (isAlpha && cand.num === d1.num) {
+              s -= pHalo * 2.0;
+            }
+            if (isOmega && cand.num === d1.num) {
+              s += pHalo * 1.5;
+            }
+
+            return { cand: cand, score: s };
+          });
+
+          candidateScores.sort((a, b) => b.score - a.score);
+          const chosen = candidateScores.slice(0, 3).map(cs => ({ num: cs.cand.num, nombre: cs.cand.nombre }));
+
+          // Auditoría de exactitud y proyección
+          chosen.forEach(c => {
+            totalAttributions++;
+            if (realChoicesOfRef.includes(c.num)) accurateAttributions++;
+            if (myOwnChoices.includes(c.num)) projectedAttributions++;
+          });
+
+          return chosen;
+        };
+
+        const atribs = {
+          P1: genAttribution(p1, true, false),
+          P3: genAttribution(p3, false, false),
+          Px: genAttribution(px, false, false),
+          D1: genAttribution(d1, false, true),
+          D3: genAttribution(d3, false, false),
+          Dx: genAttribution(dx, false, false)
+        };
+
+        // Índices individuales
+        const indivAcc = Math.round((Math.random() * 0.2 + pLucid * 0.8) * 100);
+        const indivProj = Math.round((Math.random() * 0.2 + pProj * 0.8) * 100);
+
+        participantsData[em.num] = {
+          emisor: { num: em.num, nombre: em.nombre, subgrupo: em.subgrupo, rol: em.rol },
+          consentimiento_etico: true,
+          fecha_consentimiento: new Date().toISOString(),
+          timestamp: new Date().toISOString(),
+          elecciones_directas: {
+            proximidad: dc.prox.map(p => ({ num: p.num, nombre: p.nombre })),
+            distancia: dc.dist.map(p => ({ num: p.num, nombre: p.nombre }))
+          },
+          referentes_contorno: referents,
+          atribuciones_probablemente: atribs,
+          indivAcc: indivAcc,
+          indivProj: indivProj
+        };
+      });
+
+      // Guardar corpus simulado
+      simulatedCorpus = {
+        corpus_info: {
+          titulo: "Corpus Simulado de Metapercepciones Triádicas M3-AΩ",
+          protocolo: "M3-AΩ-Hexadico",
+          grupo: groupMeta.nombre,
+          codigo_grupo: groupMeta.codigo,
+          criterio: groupMeta.criterio,
+          n_total: n,
+          moduladores: {
+            lucidez: pLucid,
+            proyeccion: pProj,
+            reciprocidad: pRecip,
+            halo: pHalo,
+            ruido: pNoise
+          },
+          fecha_simulacion: new Date().toISOString(),
+          protocolo_etico: "Cánones 21 y 22 NEXORD (Uso exclusivamente formativo y no punitivo)"
+        },
+        participantes: participantsData
+      };
+
+      // 3. Renderizar Dashboard
+      const globAcc = totalAttributions > 0 ? Math.round((accurateAttributions / totalAttributions) * 100) : 0;
+      const globProj = totalAttributions > 0 ? Math.round((projectedAttributions / totalAttributions) * 100) : 0;
+      const globHalo = (pHalo * 0.85 + 0.15).toFixed(2);
+
+      document.getElementById("kpiAccuracy").innerText = `${globAcc}%`;
+      document.getElementById("kpiProjection").innerText = `${globProj}%`;
+      document.getElementById("kpiHalo").innerText = globHalo;
+      document.getElementById("kpiQuorum").innerText = `${n} / ${n}`;
+
+      renderSimTable(participantsData);
+    }
+
+    function renderSimTable(data) {
+      const tbody = document.getElementById("simTableBody");
+      tbody.innerHTML = "";
+
+      Object.values(data).forEach(item => {
+        const em = item.emisor;
+        const proxChips = item.elecciones_directas.proximidad.map(p => `<span class="mini-badge prox">${p.num}</span>`).join(" ");
+        const distChips = item.elecciones_directas.distancia.map(d => `<span class="mini-badge dist">${d.num}</span>`).join(" ");
+        const p1 = item.referentes_contorno.P1 ? item.referentes_contorno.P1.num : "—";
+        const d1 = item.referentes_contorno.D1 ? item.referentes_contorno.D1.num : "—";
+        const atribP1 = (item.atribuciones_probablemente.P1 || []).map(a => a.num).join(", ");
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong style="color:var(--accent-cyan); font-family:'Roboto Mono',monospace;">${em.num}</strong></td>
+          <td><strong>${em.nombre}</strong></td>
+          <td><span style="font-size:0.72rem; color:var(--text-dim);">${em.subgrupo || 'G'}</span></td>
+          <td>${proxChips}</td>
+          <td>${distChips}</td>
+          <td><strong style="color:var(--accent-neon);">${p1}</strong></td>
+          <td><strong style="color:var(--accent-coral);">${d1}</strong></td>
+          <td><span style="font-family:'Roboto Mono',monospace; color:var(--accent-gold);">${atribP1}</span></td>
+          <td><span style="font-family:'Roboto Mono',monospace; color:var(--accent-neon);">${item.indivAcc}%</span></td>
+          <td><span style="font-family:'Roboto Mono',monospace; color:var(--accent-cyan);">${item.indivProj}%</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // =========================================================================
+    // 6. EXPORTACIONES Y CONEXIÓN CON EL CENTRALIZADOR
+    // =========================================================================
+    function downloadSimulationJSON() {
+      if (!simulatedCorpus) {
+        showToast("Primero genera la simulación.", false);
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(simulatedCorpus, null, 2));
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `CORPUS_M3_CONSOLIDADO_${groupMeta.codigo}.json`;
+      a.click();
+      showToast(`✓ Descargado CORPUS_M3_CONSOLIDADO_${groupMeta.codigo}.json`);
+    }
+
+    function downloadSimulationCSV() {
+      if (!simulatedCorpus) return;
+      let csv = "ID_EMISOR,NOMBRE_EMISOR,SECCION,REFERENTE_ROL,ORDEN,ID_DESTINO,NOMBRE_DESTINO\n";
+      Object.values(simulatedCorpus.participantes).forEach(p => {
+        const em = p.emisor;
+        p.elecciones_directas.proximidad.forEach((item, idx) => {
+          csv += `${em.num},"${em.nombre}",DIRECTA,PROXIMIDAD,${idx+1},${item.num},"${item.nombre}"\n`;
+        });
+        p.elecciones_directas.distancia.forEach((item, idx) => {
+          csv += `${em.num},"${em.nombre}",DIRECTA,DISTANCIA,${idx+1},${item.num},"${item.nombre}"\n`;
+        });
+        Object.keys(p.atribuciones_probablemente).forEach(refKey => {
+          (p.atribuciones_probablemente[refKey] || []).forEach((item, idx) => {
+            csv += `${em.num},"${em.nombre}",ATRIBUCION,${refKey},${idx+1},${item.num},"${item.nombre}"\n`;
+          });
+        });
+      });
+      const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `MATRIZ_SIMULACION_${groupMeta.codigo}.csv`;
+      a.click();
+      showToast("✓ Descargada Matriz de Simulación CSV");
+    }
+
+    function transferToCentralizer() {
+      if (!simulatedCorpus) return;
+      // Inyectar en localStorage para que centralizador_metapercepcion.html lo lea al instante
+      const key = `NEXORD_BATCH_${groupMeta.codigo}`;
+      const payloadList = Object.values(simulatedCorpus.participantes);
+      localStorage.setItem(key, JSON.stringify(payloadList));
+
+      if (confirm(`¡Simulación de ${payloadList.length} participantes transferida al almacenamiento local!\n\n¿Deseas abrir ahora el Centralizador de Campo para consolidarla o analizarla?`)) {
+        window.location.href = "centralizador_metapercepcion.html";
+      } else {
+        showToast("✓ Simulación transferida al Centralizador de Campo.");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1116,6 +1116,7 @@
     <div class="admin-btns">
       <button class="btn-top orla-btn" id="btnOpenOrla" onclick="openOrlaModal()">🎓 Ver Orla del Grupo</button>
       <button class="btn-top active-action" id="btnOpenConfig" onclick="openConfigModal()">📁 Cargar .JSON / .CSV</button>
+      <a class="btn-top" href="simulador_metapercepcion_triadica.html" title="Simulador de Metapercepciones Triádicas M³">⚡ Simulador M³</a>
       <a class="btn-top" href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" target="_blank" title="Hoja de Respuestas Papel A4 Oficial">📄 Formulario Papel A4</a>
       <a class="btn-top" href="HOJA_DE_RESPUESTAS_PAPEL_A4.pdf" target="_blank" title="Descargar PDF Oficial Imprimible">📥 Descargar PDF A4</a>
       <a class="btn-top" href="centralizador_metapercepcion.html" title="Centralizador de Corpus e Ingestión NEXORD">📊 Centralizador NEXORD</a>
@@ -1541,6 +1542,21 @@
         <div style="font-size:0.95rem; font-weight:800; color:#FFFFFF;">Arrastra aquí tu archivo .json o .csv</div>
         <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">o haz clic para explorar en tu ordenador</div>
         <input type="file" id="fileInput" accept=".json,.csv" style="display:none;" onchange="handleFileSelect(event)">
+      </div>
+
+      <!-- DESCARGA DE PLANTILLA CSV -->
+      <div style="margin-bottom:14px; background:#0B1728; border:1px solid #1C2D5A; border-left:3px solid var(--accent-neon); border-radius:8px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div>
+          <strong style="color:var(--accent-neon); font-size:0.82rem; display:flex; align-items:center; gap:6px;">
+            <span>📥</span> Plantilla CSV de Ejemplo
+          </strong>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+            Descarga el archivo CSV base para rellenarlo con tu propia lista de alumnos y subirlo aquí.
+          </div>
+        </div>
+        <button class="btn-top active-action" onclick="downloadSampleCSVTemplate()" style="white-space:nowrap; font-size:0.78rem;">
+          Descargar .CSV ➔
+        </button>
       </div>
 
       <div style="margin-bottom:14px;">
@@ -3201,6 +3217,33 @@
   }
   function closeConfigModal() {
     document.getElementById("configModal").classList.remove("open");
+  }
+
+  function downloadSampleCSVTemplate() {
+    let csv = "num,nombre,foto,subgrupo,rol\n";
+    csv += "1,Participante 01,,A,Coordinación\n";
+    csv += "2,Participante 02,,A,Investigación\n";
+    csv += "3,Participante 03,,A,Desarrollo\n";
+    csv += "4,Participante 04,,A,Diseño\n";
+    csv += "5,Participante 05,,B,Operaciones\n";
+    csv += "6,Participante 06,,B,Comunicación\n";
+    csv += "7,Participante 07,,B,Calidad\n";
+    csv += "8,Participante 08,,B,Logística\n";
+    csv += "9,Participante 09,,C,Estrategia\n";
+    csv += "10,Participante 10,,C,Datos\n";
+    csv += "11,Participante 11,,C,Sistemas\n";
+    csv += "12,Participante 12,,C,Soporte\n";
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "PLANTILLA_CENSO_GRUPO.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToastNotification("✓ Descargada plantilla: PLANTILLA_CENSO_GRUPO.csv");
   }
 
   // Drag and drop en dropzone
