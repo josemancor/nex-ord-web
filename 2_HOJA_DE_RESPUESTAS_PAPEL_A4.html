@@ -66,6 +66,24 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+    .btn-save {
+      background: #0284C7;
+      color: #FFFFFF;
+      border: 1px solid #38BDF8;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 8pt;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn-save:hover {
+      background: #0369A1;
+      transform: translateY(-1px);
+    }
     .btn-print {
       background: #00FF87;
       color: #0F172A;
@@ -342,10 +360,97 @@
     }
     .modal-close-btn:hover { color: #FFFFFF; }
 
+    /* MODAL DE VALIDACIÓN Y AUDITORÍA */
+    .validation-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 10001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+    .validation-modal-overlay.open { display: flex; }
+    .validation-modal-content {
+      background: #0B132B;
+      color: #FFFFFF;
+      border: 1.5px solid #1C2D5A;
+      border-radius: 10px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 45px rgba(0,0,0,0.65);
+      overflow: hidden;
+    }
+    .validation-modal-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid #1C2D5A;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .validation-modal-header.error {
+      background: #450A0A;
+      border-bottom-color: #EF4444;
+    }
+    .validation-modal-header.success {
+      background: #064E3B;
+      border-bottom-color: #10B981;
+    }
+    .validation-modal-body {
+      padding: 15px 18px;
+      overflow-y: auto;
+      font-size: 8pt;
+      line-height: 1.4;
+    }
+    .validation-err-item {
+      background: #172852;
+      border: 1px solid #1C2D5A;
+      border-left: 3.5px solid #EF4444;
+      border-radius: 5px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .validation-err-item.warn {
+      border-left-color: #F59E0B;
+    }
+    .btn-goto-err {
+      background: #EF4444;
+      color: #FFFFFF;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 7.2pt;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+    .btn-goto-err:hover {
+      background: #DC2626;
+    }
+    .validation-modal-footer {
+      padding: 10px 18px;
+      border-top: 1px solid #1C2D5A;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #070E20;
+    }
+
     @media print {
       .print-bar { display: none !important; }
       .floating-roster-btn { display: none !important; }
       .modal-overlay { display: none !important; }
+      .validation-modal-overlay { display: none !important; }
       .transfer-toast { display: none !important; }
       .btn-rectify { display: none !important; }
       body { padding: 0; margin: 0; }
@@ -696,12 +801,13 @@
 <div class="print-bar">
   <div class="print-bar-left">
     <span>📄 <strong>Protocolo Oficial 1 Página A4:</strong> Censo Lateral con Fotos + Cuestionario Interactivo Ergonómico.</span>
-    <span style="color:#94A3B8; font-size:7.5pt;">(Doble clic para borrar casilla · Clic repetido desmarca · Ctrl+Z desace)</span>
+    <span style="color:#94A3B8; font-size:7.5pt;">(Validación metodológica obligatoria previa a guardar)</span>
   </div>
   <div class="print-bar-right">
     <button class="btn-action" id="btnUndo" onclick="undoLastAction()" title="Deshacer última acción (Ctrl+Z)" disabled>↩ Deshacer (Ctrl+Z)</button>
     <button class="btn-action" onclick="toggleModalOrla()">📋 Orla / Lista (L)</button>
     <button class="btn-action" onclick="resetAllFields()">🧹 Reiniciar</button>
+    <button class="btn-save" id="btnValidateAndSave" onclick="validateAndSaveResponses()">💾 Validar y Guardar</button>
     <button class="btn-print" onclick="window.print()">🖨 Imprimir Hoja Oficial (1 Página A4)</button>
   </div>
 </div>
@@ -1198,6 +1304,22 @@
   </div>
 </div>
 
+<!-- MODAL DE AUDITORÍA DE VALIDACIÓN -->
+<div class="validation-modal-overlay" id="modalValidationAudit" onclick="if(event.target===this) closeValidationModal()">
+  <div class="validation-modal-content">
+    <div class="validation-modal-header" id="validationModalHeader">
+      <strong id="validationModalTitle" style="font-size:0.95rem;">Auditoría de Validación</strong>
+      <button class="modal-close-btn" onclick="closeValidationModal()" title="Cerrar modal">✕</button>
+    </div>
+    <div class="validation-modal-body" id="validationModalBody">
+      <!-- Contenido dinámico de errores o éxito -->
+    </div>
+    <div class="validation-modal-footer" id="validationModalFooter">
+      <!-- Botones de acción dinámicos -->
+    </div>
+  </div>
+</div>
+
 <script>
   // =========================================================================
   // CENSO CANÓNICO DEL GRUPO (N=15)
@@ -1386,7 +1508,7 @@
     }
   }
 
-  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR (CON RECTIFICACIÓN Y BLINDAJE)
+  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR
   function transferNumber(num, studentName = '') {
     const allSlots = getAllSlots();
     let target = activeSlot;
@@ -1496,7 +1618,7 @@
     });
   });
 
-  // ESCUCHAR ENTRADA DE TECLADO Y EVENTOS EN CADA CASILLA (RECTIFICACIÓN ERGONÓMICA)
+  // ESCUCHAR ENTRADA DE TECLADO Y EVENTOS EN CADA CASILLA
   document.querySelectorAll('input.slot-interactive').forEach(slot => {
     // Al recibir foco, seleccionar contenido completo para sobreescritura inmediata
     slot.addEventListener('focus', () => {
@@ -1661,6 +1783,392 @@
   }
 
   // =========================================================================
+  // MOTOR DE VALIDACIÓN AUDITABLE ANTES DE GUARDAR
+  // =========================================================================
+  function runValidationAudit() {
+    const errors = [];
+    const warnings = [];
+
+    // 1. Identificación personal obligatoria
+    const selfInput = document.getElementById('slot_self');
+    const selfVal = selfInput ? selfInput.value.trim() : '';
+    if (!selfVal) {
+      errors.push({
+        fieldId: 'slot_self',
+        section: 'Identificación Personal',
+        msg: 'Debes indicar tu número de lista del censo (1 al 15).'
+      });
+    } else {
+      const n = parseInt(selfVal, 10);
+      if (isNaN(n) || n < 1 || n > 15) {
+        errors.push({
+          fieldId: 'slot_self',
+          section: 'Identificación Personal',
+          msg: `Tu número de lista debe estar entre 1 y 15 (indicaste "${selfVal}").`
+        });
+      }
+    }
+
+    // 2. Paso 1: Proximidad Directa (mínimo 3)
+    const proxSlots = [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({ id: 'slot_p' + i, val: document.getElementById('slot_p' + i)?.value.trim() }));
+    const proxFilled = proxSlots.filter(s => s.val);
+
+    if (proxFilled.length < 3) {
+      errors.push({
+        fieldId: proxSlots[proxFilled.length]?.id || 'slot_p1',
+        section: '1) Proximidad Directa',
+        msg: `Se requieren al menos 3 elecciones de proximidad (has anotado ${proxFilled.length}).`
+      });
+    }
+
+    // Huecos en proximidad
+    let hadEmptyP = false;
+    proxSlots.forEach((s, idx) => {
+      if (!s.val) hadEmptyP = true;
+      else if (hadEmptyP) {
+        errors.push({
+          fieldId: s.id,
+          section: '1) Proximidad Directa',
+          msg: `Hay casillas vacías previas a la casilla ${idx + 1}º. Las elecciones deben ser consecutivas.`
+        });
+      }
+    });
+
+    // Duplicados y auto-elección en proximidad
+    const proxCounts = {};
+    proxFilled.forEach(s => {
+      proxCounts[s.val] = (proxCounts[s.val] || 0) + 1;
+      if (selfVal && s.val === selfVal) {
+        errors.push({
+          fieldId: s.id,
+          section: '1) Proximidad Directa',
+          msg: `No puedes seleccionarte a ti mismo (Nº ${selfVal}).`
+        });
+      }
+    });
+    Object.keys(proxCounts).forEach(num => {
+      if (proxCounts[num] > 1) {
+        const dupSlot = proxFilled.find(s => s.val === num);
+        errors.push({
+          fieldId: dupSlot?.id || 'slot_p1',
+          section: '1) Proximidad Directa',
+          msg: `El Nº ${num} está duplicado en Proximidad (${proxCounts[num]} veces).`
+        });
+      }
+    });
+
+    // 3. Paso 2: Distanciamiento Directo (mínimo 3)
+    const distSlots = [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({ id: 'slot_d' + i, val: document.getElementById('slot_d' + i)?.value.trim() }));
+    const distFilled = distSlots.filter(s => s.val);
+
+    if (distFilled.length < 3) {
+      errors.push({
+        fieldId: distSlots[distFilled.length]?.id || 'slot_d1',
+        section: '2) Distanciamiento Directo',
+        msg: `Se requieren al menos 3 elecciones de distanciamiento (has anotado ${distFilled.length}).`
+      });
+    }
+
+    // Huecos en distancia
+    let hadEmptyD = false;
+    distSlots.forEach((s, idx) => {
+      if (!s.val) hadEmptyD = true;
+      else if (hadEmptyD) {
+        errors.push({
+          fieldId: s.id,
+          section: '2) Distanciamiento Directo',
+          msg: `Hay casillas vacías previas a la casilla ${idx + 1}º. Las elecciones deben ser consecutivas.`
+        });
+      }
+    });
+
+    // Duplicados y auto-elección en distancia
+    const distCounts = {};
+    distFilled.forEach(s => {
+      distCounts[s.val] = (distCounts[s.val] || 0) + 1;
+      if (selfVal && s.val === selfVal) {
+        errors.push({
+          fieldId: s.id,
+          section: '2) Distanciamiento Directo',
+          msg: `No puedes seleccionarte a ti mismo (Nº ${selfVal}).`
+        });
+      }
+    });
+    Object.keys(distCounts).forEach(num => {
+      if (distCounts[num] > 1) {
+        const dupSlot = distFilled.find(s => s.val === num);
+        errors.push({
+          fieldId: dupSlot?.id || 'slot_d1',
+          section: '2) Distanciamiento Directo',
+          msg: `El Nº ${num} está duplicado en Distanciamiento (${distCounts[num]} veces).`
+        });
+      }
+    });
+
+    // 4. Paso 3: Referentes de Contorno
+    autoSyncStep3();
+    const refP1 = document.getElementById('ref_p1')?.value.trim();
+    const refP3 = document.getElementById('ref_p3')?.value.trim();
+    const refPx = document.getElementById('ref_px')?.value.trim();
+    const refD1 = document.getElementById('ref_d1')?.value.trim();
+    const refD3 = document.getElementById('ref_d3')?.value.trim();
+    const refDx = document.getElementById('ref_dx')?.value.trim();
+
+    if (!refP1) errors.push({ fieldId: 'ref_p1', section: '3) Referentes', msg: 'Falta definir el referente P1º (Cenit α).' });
+    if (!refP3) errors.push({ fieldId: 'ref_p3', section: '3) Referentes', msg: 'Falta definir el referente P3º (Pivote k=3).' });
+    if (!refD1) errors.push({ fieldId: 'ref_d1', section: '3) Referentes', msg: 'Falta definir el referente D1º (Nadir ω).' });
+    if (!refD3) errors.push({ fieldId: 'ref_d3', section: '3) Referentes', msg: 'Falta definir el referente D3º (Pivote k=3).' });
+
+    // 5. Pasos 4 y 5: Atribuciones ("Probablemente")
+    const attribTargets = [
+      { key: 'atrib_p1', refVal: refP1, name: 'P1º', isRequired: !!refP1 },
+      { key: 'atrib_p3', refVal: refP3, name: 'P3º', isRequired: !!refP3 },
+      { key: 'atrib_px', refVal: refPx, name: 'Pxº', isRequired: !!refPx },
+      { key: 'atrib_d1', refVal: refD1, name: 'D1º', isRequired: !!refD1 },
+      { key: 'atrib_d3', refVal: refD3, name: 'D3º', isRequired: !!refD3 },
+      { key: 'atrib_dx', refVal: refDx, name: 'Dxº', isRequired: !!refDx },
+    ];
+
+    attribTargets.forEach(at => {
+      if (!at.isRequired) return;
+
+      const slots = [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({ id: `${at.key}_${i}`, val: document.getElementById(`${at.key}_${i}`)?.value.trim() }));
+      const filled = slots.filter(s => s.val);
+
+      if (filled.length < 3) {
+        errors.push({
+          fieldId: slots[filled.length]?.id || `${at.key}_1`,
+          section: `Atribución de ${at.name}`,
+          msg: `Debes estimar al menos 3 preferencias para ${at.name} (has anotado ${filled.length}).`
+        });
+      }
+
+      // Huecos
+      let hadEmpty = false;
+      slots.forEach((s, idx) => {
+        if (!s.val) hadEmpty = true;
+        else if (hadEmpty) {
+          errors.push({
+            fieldId: s.id,
+            section: `Atribución de ${at.name}`,
+            msg: `Hay casillas vacías previas a la casilla ${idx + 1}º en ${at.name}.`
+          });
+        }
+      });
+
+      // Duplicados
+      const counts = {};
+      filled.forEach(s => {
+        counts[s.val] = (counts[s.val] || 0) + 1;
+        if (at.refVal && s.val === at.refVal) {
+          errors.push({
+            fieldId: s.id,
+            section: `Atribución de ${at.name}`,
+            msg: `El referente ${at.name} (Nº ${at.refVal}) no puede elegirse a sí mismo.`
+          });
+        }
+      });
+      Object.keys(counts).forEach(num => {
+        if (counts[num] > 1) {
+          const dupSlot = filled.find(s => s.val === num);
+          errors.push({
+            fieldId: dupSlot?.id || `${at.key}_1`,
+            section: `Atribución de ${at.name}`,
+            msg: `El Nº ${num} está duplicado en la atribución de ${at.name}.`
+          });
+        }
+      });
+    });
+
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  // NAVEGACIÓN Y ENFOQUE DIRECTO A CASILLA CON ERROR
+  function goToAndFocusField(fieldId) {
+    closeValidationModal();
+    const el = document.getElementById(fieldId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus();
+      el.select();
+      el.classList.add('is-duplicate');
+      setTimeout(() => el.classList.remove('is-duplicate'), 1600);
+      activeSlot = el;
+    }
+  }
+
+  function closeValidationModal() {
+    const m = document.getElementById('modalValidationAudit');
+    if (m) m.classList.remove('open');
+  }
+
+  // GENERAR PAYLOAD JSON
+  function buildPayloadJSON() {
+    const selfNum = document.getElementById('slot_self')?.value.trim();
+    const selfName = CENSO.find(c => c.num == selfNum)?.name || 'Anónimo';
+
+    const getValues = (ids) => ids.map(id => document.getElementById(id)?.value.trim()).filter(Boolean).map(n => ({
+      num: parseInt(n, 10),
+      nombre: CENSO.find(c => c.num == n)?.name || `Alumno ${n}`
+    }));
+
+    const proxIds = [1, 2, 3, 4, 5, 6, 7, 8].map(i => 'slot_p' + i);
+    const distIds = [1, 2, 3, 4, 5, 6, 7, 8].map(i => 'slot_d' + i);
+
+    const refP1 = document.getElementById('ref_p1')?.value.trim();
+    const refP3 = document.getElementById('ref_p3')?.value.trim();
+    const refPx = document.getElementById('ref_px')?.value.trim();
+    const refD1 = document.getElementById('ref_d1')?.value.trim();
+    const refD3 = document.getElementById('ref_d3')?.value.trim();
+    const refDx = document.getElementById('ref_dx')?.value.trim();
+
+    return {
+      estudio: "M3-AΩ_Master_UB_2025_2026",
+      protocolo: "Clelie_Hexadico_N15",
+      timestamp: new Date().toISOString(),
+      emisor: {
+        num: parseInt(selfNum, 10),
+        nombre: selfName
+      },
+      elecciones_directas: {
+        proximidad: getValues(proxIds),
+        distanciamiento: getValues(distIds)
+      },
+      referentes_contorno: {
+        P1: refP1 ? { num: parseInt(refP1, 10), nombre: CENSO.find(c => c.num == refP1)?.name || '' } : null,
+        P3: refP3 ? { num: parseInt(refP3, 10), nombre: CENSO.find(c => c.num == refP3)?.name || '' } : null,
+        Px: refPx ? { num: parseInt(refPx, 10), nombre: CENSO.find(c => c.num == refPx)?.name || '' } : null,
+        D1: refD1 ? { num: parseInt(refD1, 10), nombre: CENSO.find(c => c.num == refD1)?.name || '' } : null,
+        D3: refD3 ? { num: parseInt(refD3, 10), nombre: CENSO.find(c => c.num == refD3)?.name || '' } : null,
+        Dx: refDx ? { num: parseInt(refDx, 10), nombre: CENSO.find(c => c.num == refDx)?.name || '' } : null
+      },
+      atribuciones_probablemente: {
+        P1: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_p1_${i}`)),
+        P3: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_p3_${i}`)),
+        Px: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_px_${i}`)),
+        D1: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_d1_${i}`)),
+        D3: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_d3_${i}`)),
+        Dx: getValues([1, 2, 3, 4, 5, 6, 7, 8].map(i => `atrib_dx_${i}`))
+      }
+    };
+  }
+
+  function buildPayloadCSV(payload) {
+    const rows = [
+      ["SECCION","REFERENTE_ROL","REFERENTE_NUM","REFERENTE_NOMBRE","ORDEN","ELEGIDO_NUM","ELEGIDO_NOMBRE"].join(",")
+    ];
+    payload.elecciones_directas.proximidad.forEach((item, idx) => {
+      rows.push(`DIRECTA,PROXIMIDAD,${payload.emisor.num},"${payload.emisor.nombre}",${idx+1},${item.num},"${item.nombre}"`);
+    });
+    payload.elecciones_directas.distanciamiento.forEach((item, idx) => {
+      rows.push(`DIRECTA,DISTANCIAMIENTO,${payload.emisor.num},"${payload.emisor.nombre}",${idx+1},${item.num},"${item.nombre}"`);
+    });
+    ['P1', 'P3', 'Px', 'D1', 'D3', 'Dx'].forEach(key => {
+      const ref = payload.referentes_contorno[key];
+      const items = payload.atribuciones_probablemente[key] || [];
+      items.forEach((item, idx) => {
+        rows.push(`ATRIBUCION,${key},${ref ? ref.num : ""},"${ref ? ref.nombre : ""}",${idx+1},${item.num},"${item.nombre}"`);
+      });
+    });
+    return rows.join(String.fromCharCode(10));
+  }
+
+  function triggerDownload(content, fileName, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ACCIÓN PRINCIPAL: VALIDAR Y GUARDAR
+  function validateAndSaveResponses() {
+    const audit = runValidationAudit();
+    const modal = document.getElementById('modalValidationAudit');
+    const header = document.getElementById('validationModalHeader');
+    const title = document.getElementById('validationModalTitle');
+    const body = document.getElementById('validationModalBody');
+    const footer = document.getElementById('validationModalFooter');
+
+    if (!audit.isValid) {
+      // VALIDACIÓN FALLIDA: BLOQUEAR GUARDADO
+      header.className = 'validation-modal-header error';
+      title.innerHTML = `⚠️ Auditoría de Validación (${audit.errors.length} correcciones requeridas)`;
+
+      let html = `
+        <div style="margin-bottom:12px; color:#FCA5A5; font-size:8.2pt;">
+          <strong>No es posible guardar las respuestas todavía.</strong> Para garantizar la validez metodológica del Protocolo Clélie, debes corregir los siguientes puntos:
+        </div>
+      `;
+
+      audit.errors.forEach((err, idx) => {
+        html += `
+          <div class="validation-err-item">
+            <div>
+              <div style="font-weight:800; color:#FFFFFF; margin-bottom:2px;">${idx + 1}. [${err.section}]</div>
+              <div style="color:#CBD5E1;">${err.msg}</div>
+            </div>
+            <button class="btn-goto-err" onclick="goToAndFocusField('${err.fieldId}')">Corregir ➔</button>
+          </div>
+        `;
+      });
+
+      body.innerHTML = html;
+      footer.innerHTML = `<button class="btn-action" onclick="closeValidationModal()">Volver a editar y corregir</button>`;
+      modal.classList.add('open');
+      showToast('🚫 Validación no superada: revisa los requisitos pendientes', 'error');
+      return;
+    }
+
+    // VALIDACIÓN EXITOSA: GUARDAR Y DESCARGAR
+    header.className = 'validation-modal-header success';
+    title.innerHTML = `✓ ¡Validación Superada con Éxito!`;
+
+    const payload = buildPayloadJSON();
+    const csv = buildPayloadCSV(payload);
+    const fileNameBase = `RESPUESTAS_METAPERCEPCION_Sujeto_${payload.emisor.num}_${payload.emisor.nombre.replace(/\s+/g, '_')}`;
+
+    // Descarga automática
+    triggerDownload(JSON.stringify(payload, null, 2), `${fileNameBase}.json`, 'application/json');
+    setTimeout(() => triggerDownload(csv, `${fileNameBase}.csv`, 'text/csv'), 350);
+
+    // Persistencia local
+    try {
+      localStorage.setItem(`NEXORD_M3_UltimaRespuesta_${payload.emisor.num}`, JSON.stringify(payload));
+    } catch(e) {}
+
+    const evaluatedRefCount = ['P1', 'P3', 'Px', 'D1', 'D3', 'Dx'].filter(k => payload.referentes_contorno[k]).length;
+
+    body.innerHTML = `
+      <div style="text-align:center; padding:10px 0;">
+        <div style="font-size:2.4rem; margin-bottom:6px;">🎉</div>
+        <h3 style="color:#00FF87; font-size:1.05rem; margin-bottom:6px;">¡Cuestionario validado y conforme al Protocolo Clélie!</h3>
+        <p style="color:#CBD5E1; font-size:8.2pt; line-height:1.4; max-width:460px; margin:0 auto 12px auto;">
+          Todas las preguntas cumplen con el mínimo de 3 respuestas, ausencia de duplicados, anonimización por número y consistencia de contorno.
+        </p>
+        <div style="background:#111E3D; border:1px solid #1C2D5A; border-radius:6px; padding:10px; display:inline-block; text-align:left; font-size:7.5pt; color:#F8FAFC;">
+          ✓ Emisor identificado: <strong>Nº ${payload.emisor.num} (${payload.emisor.nombre})</strong><br>
+          ✓ Proximidad: <strong>${payload.elecciones_directas.proximidad.length} compañeros</strong><br>
+          ✓ Distanciamiento: <strong>${payload.elecciones_directas.distanciamiento.length} compañeros</strong><br>
+          ✓ Referentes evaluados: <strong>${evaluatedRefCount} referentes</strong><br>
+          📥 Descargando archivos oficiales: <code>.json</code> y <code>.csv</code>
+        </div>
+      </div>
+    `;
+
+    footer.innerHTML = `
+      <button class="btn-action" onclick="window.print()">🖨 Imprimir Hoja Oficial</button>
+      <button class="btn-action" style="background:#00FF87; color:#0F172A; font-weight:800;" onclick="closeValidationModal()">Finalizar y Cerrar</button>
+    `;
+    modal.classList.add('open');
+    showToast('💾 Respuestas validadas y guardadas con éxito', 'success');
+  }
+
+  // =========================================================================
   // MODAL ORLA
   // =========================================================================
   function renderModalOrla(filter = "") {
@@ -1711,14 +2219,16 @@
     }
   }
 
-  // Atajos de teclado: 'L' para orla, 'Escape' para cerrar modal, 'Ctrl+Z' para deshacer
+  // Atajos de teclado: 'L' para orla, 'Escape' para cerrar modales, 'Ctrl+Z' para deshacer
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
       e.preventDefault();
       undoLastAction();
     } else if (e.key === 'Escape') {
-      const m = document.getElementById('modalOrla');
-      if (m && m.classList.contains('open')) m.classList.remove('open');
+      const m1 = document.getElementById('modalOrla');
+      if (m1 && m1.classList.contains('open')) m1.classList.remove('open');
+      const m2 = document.getElementById('modalValidationAudit');
+      if (m2 && m2.classList.contains('open')) m2.classList.remove('open');
     } else if ((e.key === 'l' || e.key === 'L') && !e.target.matches('input, textarea')) {
       e.preventDefault();
       toggleModalOrla();
