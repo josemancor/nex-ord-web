@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD | Centralizador de Corpus y Gestor de Campo M³-AΩ</title>
+  <meta name="description" content="Centralizador e Ingestor de Corpus de Metapercepción Triádica M3-Alfa-Omega. Monitoreo de quórum, auditoría deontológica y consolidación de datos para NEXORD Engine.">
+  <link rel="icon" type="image/png" href="LOGO_NEXORD_OFICIAL.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto+Mono:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-space: #070B18;
+      --bg-card: #0E172E;
+      --bg-surface: #132042;
+      --bg-highlight: #1B2C5B;
+      --border-card: #1E3360;
+      --border-focus: #00F0FF;
+      --accent-cyan: #00F0FF;
+      --accent-neon: #00FF87;
+      --accent-gold: #FFE600;
+      --accent-coral: #FF7043;
+      --accent-crimson: #FF007F;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-space);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 16px 24px 60px;
+    }
+
+    /* TOP HUD BAR */
+    .top-hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(14, 23, 46, 0.95);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .hud-brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,135,0.4);
+    }
+    .hud-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+    }
+    .hud-nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-hud {
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 7px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-hud:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+    }
+    .btn-hud.active {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+    }
+
+    /* BANNER DEONTOLÓGICO Y CUSTODIA (REGLAS 21 Y 22) */
+    .ethics-banner {
+      background: #0B1728;
+      border: 1px solid #1E3A5F;
+      border-left: 5px solid var(--accent-neon);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ethics-info {
+      flex: 1;
+      min-width: 280px;
+    }
+    .ethics-tag {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--accent-neon);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .ethics-text {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .ethics-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ethics-badge {
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      color: var(--accent-neon);
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* KPI DASHBOARD CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .kpi-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-value {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+    .kpi-sub {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: #070E20;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent-cyan);
+      transition: width 0.3s ease;
+    }
+    .progress-bar-fill.complete {
+      background: var(--accent-neon);
+      box-shadow: 0 0 8px var(--accent-neon);
+    }
+
+    /* DROP ZONE & INGESTION CARDS */
+    .deck-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+    }
+    .deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .deck-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* DROP ZONE */
+    .drop-zone {
+      border: 2px dashed #244177;
+      border-radius: 10px;
+      background: rgba(11, 23, 40, 0.6);
+      padding: 24px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: 0 0 16px rgba(0,240,255,0.15);
+    }
+    .drop-zone-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+    .drop-zone-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+    .drop-zone-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* INGESTION ACTION BUTTONS */
+    .action-button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-action {
+      background: #132247;
+      border: 1px solid var(--border-card);
+      color: #FFFFFF;
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 9px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+    }
+    .btn-action.demo {
+      background: rgba(255, 230, 0, 0.12);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+    .btn-action.demo:hover {
+      background: rgba(255, 230, 0, 0.22);
+      box-shadow: 0 0 12px rgba(255,230,0,0.3);
+    }
+    .btn-action.consolidate {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(0, 255, 135, 0.25));
+      border: 1.5px solid var(--accent-neon);
+      color: var(--accent-neon);
+      font-size: 0.9rem;
+      padding: 10px 20px;
+    }
+    .btn-action.consolidate:hover {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(0, 255, 135, 0.4));
+      box-shadow: 0 0 16px rgba(0,255,135,0.4);
+    }
+    .btn-action.danger {
+      background: rgba(255, 112, 67, 0.12);
+      border-color: #EF4444;
+      color: #FCA5A5;
+    }
+    .btn-action.danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* QUORUM AUDIT MATRIX TABLE */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #080D1D;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    th {
+      background: #0C152B;
+      color: var(--text-muted);
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 12px;
+      border-bottom: 1.5px solid var(--border-card);
+      white-space: nowrap;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #142247;
+      color: #E2E8F0;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    tr:hover td {
+      background: #0E1A38;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .status-badge.complete {
+      background: rgba(0, 255, 135, 0.15);
+      border: 1px solid rgba(0, 255, 135, 0.4);
+      color: var(--accent-neon);
+    }
+    .status-badge.pending {
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #94A3B8;
+    }
+    .choices-pill-row {
+      display: inline-flex;
+      gap: 3px;
+    }
+    .mini-chip {
+      background: #16254A;
+      border: 1px solid #233B70;
+      border-radius: 3px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem;
+      padding: 1px 5px;
+      color: #CBD5E1;
+    }
+    .mini-chip.prox { border-color: var(--accent-neon); color: var(--accent-neon); }
+    .mini-chip.dist { border-color: var(--accent-coral); color: var(--accent-coral); }
+    .btn-row-action {
+      background: #111D3B;
+      border: 1px solid #1F3566;
+      color: #94A3B8;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-row-action:hover {
+      background: #1C3160;
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+
+    /* TERMINAL EXECUTION SNIPPET */
+    .terminal-box {
+      background: #040711;
+      border: 1.5px solid #1C2D5A;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 14px;
+    }
+    .terminal-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .terminal-title {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .terminal-code {
+      background: #090F1F;
+      border: 1px solid #1A284A;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.85rem;
+      color: #00FF87;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* MODAL AUDITORÍA JSON */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border-card);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    pre.code-view {
+      background: #050A17;
+      border: 1px solid #1A284A;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.75rem;
+      color: #38BDF8;
+      overflow-x: auto;
+    }
+
+    /* TOAST */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0E1B38;
+      border: 1.5px solid var(--accent-neon);
+      color: #FFFFFF;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,255,135,0.3);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST NOTIFICACIÓN -->
+  <div id="toastMsg" class="toast-msg">
+    <span id="toastIcon">✓</span>
+    <span id="toastText">Operación realizada con éxito</span>
+  </div>
+
+  <!-- MODAL DE INSPECCIÓN JSON -->
+  <div class="modal-overlay" id="jsonInspectModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <strong id="modalParticipantTitle" style="color:var(--accent-cyan); font-family:'Roboto Mono',monospace;">Detalle de Respuesta</strong>
+        <button class="btn-row-action" onclick="closeJsonModal()">✕ Cerrar</button>
+      </div>
+      <div class="modal-body">
+        <pre class="code-view" id="modalJsonContent"></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-action" onclick="closeJsonModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP HUD -->
+  <header class="top-hud-bar">
+    <a href="index.html" class="hud-brand">
+      <img src="LOGO_NEXORD_OFICIAL.png" alt="Logo NEXORD">
+      <div>
+        <div class="hud-title">NEXORD <span style="color:var(--accent-neon);">VISORD</span></div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Centralizador de Campo M³-AΩ · Quórum & Consolidador</div>
+      </div>
+    </a>
+    <nav class="hud-nav-links">
+      <a href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" class="btn-hud" target="_blank" title="Formulario Oficial Papel A4">📄 Hoja Papel A4</a>
+      <a href="HOJA_DE_RESPUESTAS_PAPEL_A4.pdf" class="btn-hud" target="_blank" title="Descargar PDF Oficial Imprimible">📥 Descargar PDF</a>
+      <a href="3_CUESTIONARIO_ONLINE_INTERACTIVO.html" class="btn-hud" target="_blank" title="Cuestionario Web Interactivo Online">💻 Cuestionario Online</a>
+      <a href="centralizador_metapercepcion.html" class="btn-hud active" title="Página actual de gestión de datos">📊 Centralizador NEXORD</a>
+      <a href="index_promocional.html" class="btn-hud" title="Volver al Portal Promocional">🏠 Hub General</a>
+    </nav>
+  </header>
+
+  <!-- BANNER DEONTOLÓGICO Y CUSTODIA DE DATOS (CÁNONES 21 Y 22 NEXORD) -->
+  <section class="ethics-banner">
+    <div class="ethics-info">
+      <div class="ethics-tag">
+        <span>🛡️</span> CÁNONES 21 Y 22 NEXORD · PROTOCOLO DEONTOLÓGICO DE INVESTIGACIÓN DE CAMPO
+      </div>
+      <div class="ethics-text">
+        Este centralizador procesa datos relacionales exclusivamente bajo el régimen de <strong>Ciencia Abierta Custodiada</strong>: finalidad 100% formativa y no punitiva, anonimización rigurosa por número de lista y compromiso explícito del Investigador Principal (IP) de interpretar las dinámicas como <em>fenómenos termodinámicos estrictamente colectivos</em>, garantizando la protección de la autoestima personal de cada participante.
+      </div>
+    </div>
+    <div class="ethics-badges">
+      <span class="ethics-badge">✓ RGPD / Privacy by Design</span>
+      <span class="ethics-badge">✓ Custodia IP Acreditada</span>
+      <span class="ethics-badge">✓ No Punitivo</span>
+    </div>
+  </section>
+
+  <!-- KPI DASHBOARD: QUÓRUM Y MONITOREO -->
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Quórum de Participación</span>
+        <span style="color:var(--accent-cyan);">👥 N Grupal</span>
+      </div>
+      <div class="kpi-value"><span id="kpiReceived">0</span> / <span id="kpiExpected">15</span></div>
+      <div class="kpi-sub" id="kpiQuorumPercent">0% Completado</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="kpiProgressBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Auditoría Ética</span>
+        <span style="color:var(--accent-neon);">🛡️ Canon 21</span>
+      </div>
+      <div class="kpi-value" id="kpiEthicalCount" style="color:var(--accent-neon);">0</div>
+      <div class="kpi-sub">Consentimientos Deontológicos Registrados</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill complete" id="kpiEthicalBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Sondas Hexádicas M³-AΩ</span>
+        <span style="color:var(--accent-gold);">📐 6 Ejes</span>
+      </div>
+      <div class="kpi-value" id="kpiProbesCount">0</div>
+      <div class="kpi-sub">Total Estimaciones Atributivas Válidas</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width: 100%; background:var(--accent-gold);"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Estado del Pipeline</span>
+        <span style="color:var(--accent-coral);">⚙️ Motor</span>
+      </div>
+      <div class="kpi-value" id="kpiEngineStatus" style="font-size:1.15rem; color:#94A3B8;">A la espera</div>
+      <div class="kpi-sub" id="kpiEngineSub">Carga respuestas para consolidar</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="kpiEngineBar" style="width: 15%; background:#334155;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECK 1: INGESTIÓN DE RESPUESTAS (DRAG & DROP, LOCALSTORAGE, DEMO N=15) -->
+  <section class="deck-section">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>📥 Ingestión de Respuestas y Carga de Datos</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">Admite archivos individuales descargados (.json, .csv) o lote completo</span>
+      </div>
+      <div class="action-button-row">
+        <button class="btn-action demo" onclick="loadMasterUBDemo()" title="Carga inmediata de la simulación canónica Máster UB N=15">
+          ⭐ Cargar Demo Máster UB (N=15)
+        </button>
+        <button class="btn-action" onclick="importFromLocalStorage()" title="Recupera respuestas guardadas previamente en este navegador">
+          🔄 Cargar de LocalStorage
+        </button>
+        <button class="btn-action danger" onclick="clearAllData()" title="Limpiar todas las respuestas cargadas en memoria">
+          🧹 Vaciar Respuestas
+        </button>
+      </div>
+    </div>
+
+    <!-- DRAG AND DROP ZONE -->
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileUploadInput').click()">
+      <div class="drop-zone-icon">📁</div>
+      <div class="drop-zone-title">Arrastra y suelta aquí los archivos de respuestas (.json o .csv)</div>
+      <div class="drop-zone-sub">O haz clic para seleccionar múltiples archivos desde tu ordenador (puedes seleccionar todos los alumnos de una sola vez)</div>
+      <input type="file" id="fileUploadInput" multiple accept=".json,.csv" style="display:none;" onchange="handleFilesUpload(event)">
+    </div>
+  </section>
+
+  <!-- DECK 2: MATRIZ DE AUDITORÍA Y MONITOREO DE QUÓRUM (N=15) -->
+  <section class="deck-section">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>👥 Matriz de Quórum y Auditoría Individual</span>
+        <span style="font-size:0.78rem; color:var(--text-muted); font-weight:normal;" id="matrixSub">Censo Grupo: Máster UB (N=15)</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="searchTableInput" placeholder="🔍 Filtrar alumno..." oninput="filterTable()" style="background:#090F1F; border:1px solid #1C2D5A; color:#FFF; font-size:0.75rem; padding:6px 12px; border-radius:6px; outline:none; font-family:'Roboto Mono',monospace;">
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="auditTable">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Participante</th>
+            <th>Estado</th>
+            <th>Ética</th>
+            <th>+Proximidad (p1..p4)</th>
+            <th>+Distancia (d1..d4)</th>
+            <th>Referentes Contorno</th>
+            <th>Atribuciones</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="auditTableBody">
+          <!-- Generado dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- DECK 3: CONSOLIDACIÓN Y CONEXIÓN CON EL MOTOR PYTHON NEXORD -->
+  <section class="deck-section" style="border-color:var(--accent-cyan); background:rgba(14, 23, 46, 0.85);">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span style="color:var(--accent-cyan);">🚀 Consolidación del Corpus y Ejecución en NEXORD Engine</span>
+      </div>
+      <div class="action-button-row">
+        <button class="btn-action consolidate" id="btnConsolidateJSON" onclick="downloadConsolidatedJSON()">
+          📥 Descargar CORPUS_M3_CONSOLIDADO.json
+        </button>
+        <button class="btn-action" onclick="downloadConsolidatedCSV()">
+          📊 Descargar Matriz CSV
+        </button>
+      </div>
+    </div>
+
+    <div style="font-size:0.84rem; color:var(--text-muted); line-height:1.5; margin-bottom:12px;">
+      Al pulsar <strong>Descargar CORPUS_M3_CONSOLIDADO.json</strong>, se genera el payload unificado estandarizado con la estructura diádica de elecciones directas, los 6 referentes de contorno y las baterías de atribución probables. Este archivo se ingesta de forma directa en el motor nativo de cálculo:
+    </div>
+
+    <!-- TERMINAL SNIPPET -->
+    <div class="terminal-box">
+      <div class="terminal-topbar">
+        <div class="terminal-title">
+          <span>💻 Terminal de Ejecución NEXORD Engine</span>
+        </div>
+        <button class="btn-row-action" onclick="copyTerminalCommand()" title="Copiar comando al portapapeles">📋 Copiar Comando</button>
+      </div>
+      <div class="terminal-code" id="terminalCommand">python3 00_Metapercepcion_Triádica/NEXORD_M3_Alfa_Omega.py CORPUS_M3_CONSOLIDADO.json -o RESULTADOS_M3AO/</div>
+    </div>
+
+    <div style="margin-top:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px;">
+      <div style="background:#090F1F; border:1px solid #1A284A; border-radius:6px; padding:10px 12px; font-size:0.75rem; color:#94A3B8;">
+        <strong style="color:var(--accent-neon);">✓ 5 Atlas Cartográficos:</strong> Expansividad, Prestigio Atribuido, Consenso/Exactitud, Descomposición de Halo y Radiografía Relacional.
+      </div>
+      <div style="background:#090F1F; border:1px solid #1A284A; border-radius:6px; padding:10px 12px; font-size:0.75rem; color:#94A3B8;">
+        <strong style="color:var(--accent-cyan);">✓ Radiografía Hexádica:</strong> 6 Sondas (Estrato I Extremos, Estrato II Pivotes, Estrato III Fronteras) calculadas con métricas canónicas.
+      </div>
+      <div style="background:#090F1F; border:1px solid #1A284A; border-radius:6px; padding:10px 12px; font-size:0.75rem; color:#94A3B8;">
+        <strong style="color:var(--accent-gold);">✓ Auditoría Hash SHA-256:</strong> Blindaje de trazabilidad metodológica para anexos y memorias técnicas formales.
+      </div>
+    </div>
+  </section>
+
+  <!-- SCRIPT CENTRALIZADOR & CONSOLIDADOR -->
+  <script>
+    // =========================================================================
+    // 1. CENSO CANÓNICO BASE (MÁSTER UB N=15)
+    // =========================================================================
+    const CANONICAL_ROSTER = [
+      { num: 1,  nombre: "Anna G",  rol: "Alumna", subgrupo: "A" },
+      { num: 2,  nombre: "Anna P",  rol: "Alumna", subgrupo: "B" },
+      { num: 3,  nombre: "Arnau",   rol: "Alumno", subgrupo: "B" },
+      { num: 4,  nombre: "Clara",   rol: "Alumna", subgrupo: "A" },
+      { num: 5,  nombre: "Dani",    rol: "Alumno", subgrupo: "EXT" },
+      { num: 6,  nombre: "Emma",    rol: "Alumna", subgrupo: "B" },
+      { num: 7,  nombre: "Irene",   rol: "Alumna", subgrupo: "A" },
+      { num: 8,  nombre: "Meri",    rol: "Alumna", subgrupo: "B" },
+      { num: 9,  nombre: "Miguel",  rol: "Alumno", subgrupo: "A" },
+      { num: 10, nombre: "Oscar",   rol: "Alumno", subgrupo: "A" },
+      { num: 11, nombre: "Pep",     rol: "Alumno", subgrupo: "B" },
+      { num: 12, nombre: "Roberto", rol: "Alumno", subgrupo: "A" },
+      { num: 13, nombre: "Saber",   rol: "Alumno", subgrupo: "B" },
+      { num: 14, nombre: "Sandra",  rol: "Alumna", subgrupo: "B" },
+      { num: 15, nombre: "Sara",    rol: "Alumna", subgrupo: "A" }
+    ];
+
+    let groupMeta = {
+      nombre: "Máster en Análisis y Conducción de Grupos UB",
+      codigo: "MASTER_UB_N15",
+      edicion: "Promoción 2025-2026",
+      criterio: "Afinidad y Convivencia",
+      n_total: 15
+    };
+
+    // Almacén central de respuestas indexado por número de alumno
+    let corpusResponses = {};
+
+    // =========================================================================
+    // 2. INICIALIZACIÓN
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      initDropZone();
+      renderAuditTable();
+      updateDashboardKPIs();
+    });
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById("toastMsg");
+      const icon = document.getElementById("toastIcon");
+      const text = document.getElementById("toastText");
+      if (!toast) return;
+      icon.textContent = isSuccess ? "✓" : "⚠️";
+      toast.style.borderColor = isSuccess ? "var(--accent-neon)" : "#EF4444";
+      text.textContent = msg;
+      toast.style.display = "flex";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+
+    // =========================================================================
+    // 3. DROP ZONE CONFIGURATION
+    // =========================================================================
+    function initDropZone() {
+      const dropZone = document.getElementById("dropZone");
+      if (!dropZone) return;
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('dragover');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('dragover');
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+          processFileList(files);
+        }
+      });
+    }
+
+    function handleFilesUpload(e) {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        processFileList(files);
+      }
+    }
+
+    function processFileList(files) {
+      let filesProcessed = 0;
+      const total = files.length;
+      for (let i = 0; i < total; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const content = ev.target.result;
+            if (file.name.endsWith(".json")) {
+              ingestJsonContent(JSON.parse(content));
+            } else if (file.name.endsWith(".csv")) {
+              ingestCsvContent(content);
+            }
+          } catch (err) {
+            console.warn("Error leyendo archivo:", file.name, err);
+          }
+          filesProcessed++;
+          if (filesProcessed === total) {
+            renderAuditTable();
+            updateDashboardKPIs();
+            showToast(`Se han procesado ${total} archivo(s) correctamente.`);
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // =========================================================================
+    // 4. PARSERS DE INGESTIÓN (JSON & CSV)
+    // =========================================================================
+    function ingestJsonContent(payload) {
+      if (!payload) return;
+      // Caso 1: Lote con array de respuestas
+      if (Array.isArray(payload)) {
+        payload.forEach(item => ingestSingleParticipant(item));
+      } else if (payload.respuestas && Array.isArray(payload.respuestas)) {
+        payload.respuestas.forEach(item => ingestSingleParticipant(item));
+      } else if (payload.participantes && typeof payload.participantes === "object") {
+        Object.values(payload.participantes).forEach(item => ingestSingleParticipant(item));
+      } else if (payload.emisor || payload.elecciones_directas || payload.id) {
+        // Caso 2: Objeto individual
+        ingestSingleParticipant(payload);
+      }
+    }
+
+    function ingestSingleParticipant(data) {
+      let num = null;
+      let nombre = "Participante";
+      if (data.emisor && data.emisor.num) {
+        num = parseInt(data.emisor.num, 10);
+        nombre = data.emisor.nombre || `Alumno ${num}`;
+      } else if (data.num) {
+        num = parseInt(data.num, 10);
+        nombre = data.nombre || `Alumno ${num}`;
+      } else if (data.id) {
+        const d = String(data.id).match(/\d+/);
+        if (d) num = parseInt(d[0], 10);
+      }
+
+      if (!num || isNaN(num)) return;
+
+      // Normalizar estructura interna
+      corpusResponses[num] = {
+        emisor: { num: num, nombre: nombre },
+        consentimiento_etico: data.consentimiento_etico !== false,
+        fecha_consentimiento: data.fecha_consentimiento || data.timestamp || new Date().toISOString(),
+        elecciones_directas: data.elecciones_directas || { proximidad: [], distancia: [] },
+        referentes_contorno: data.referentes_contorno || data.referentes || {},
+        atribuciones_probablemente: data.atribuciones_probablemente || data.atribuciones || {},
+        raw: data
+      };
+    }
+
+    function ingestCsvContent(csvText) {
+      // Ingestión de CSV generado por exportaciones individuales o por la hoja A4
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) return;
+      const header = lines[0].split(",").map(h => h.trim().toUpperCase());
+
+      // Verificar formato estandar
+      lines.slice(1).forEach(line => {
+        const cols = line.split(",").map(c => c.replace(/^"|"$/g, "").trim());
+        if (cols.length >= 7) {
+          const seccion = cols[0];
+          const refRol = cols[1];
+          const emisorNum = parseInt(cols[2], 10);
+          const emisorNombre = cols[3];
+          const orden = parseInt(cols[4], 10);
+          const elegidoNum = parseInt(cols[5], 10);
+          const elegidoNombre = cols[6];
+
+          if (!emisorNum || isNaN(emisorNum)) return;
+          if (!corpusResponses[emisorNum]) {
+            corpusResponses[emisorNum] = {
+              emisor: { num: emisorNum, nombre: emisorNombre },
+              consentimiento_etico: true,
+              fecha_consentimiento: new Date().toISOString(),
+              elecciones_directas: { proximidad: [], distancia: [] },
+              referentes_contorno: {},
+              atribuciones_probablemente: {}
+            };
+          }
+
+          const cr = corpusResponses[emisorNum];
+          if (seccion === "DIRECTA") {
+            if (refRol === "PROXIMIDAD") {
+              cr.elecciones_directas.proximidad.push({ orden: orden, num: elegidoNum, nombre: elegidoNombre });
+            } else if (refRol === "DISTANCIA") {
+              cr.elecciones_directas.distancia.push({ orden: orden, num: elegidoNum, nombre: elegidoNombre });
+            }
+          } else if (seccion === "ATRIBUCION") {
+            if (!cr.atribuciones_probablemente[refRol]) cr.atribuciones_probablemente[refRol] = [];
+            cr.atribuciones_probablemente[refRol].push({ orden: orden, num: elegidoNum, nombre: elegidoNombre });
+          }
+        }
+      });
+    }
+
+    // =========================================================================
+    // 5. LOCALSTORAGE IMPORT & CANONICAL SIMULATION DEMO
+    // =========================================================================
+    function importFromLocalStorage() {
+      let count = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith("NEXORD_BATCH_") || key.includes("MASTER_UB") || key.includes("RESPUESTA"))) {
+          try {
+            const raw = JSON.parse(localStorage.getItem(key));
+            ingestJsonContent(raw);
+            count++;
+          } catch (e) {}
+        }
+      }
+      renderAuditTable();
+      updateDashboardKPIs();
+      if (count > 0) {
+        showToast(`Se han cargado registros desde LocalStorage.`);
+      } else {
+        showToast("No se encontraron respuestas previas en el almacenamiento local.", false);
+      }
+    }
+
+    function loadMasterUBDemo() {
+      // Carga canónica de simulación para los 15 participantes del Máster UB
+      const demoData = generateMasterUBResponses();
+      demoData.forEach(item => ingestSingleParticipant(item));
+      renderAuditTable();
+      updateDashboardKPIs();
+      showToast("✓ Simulación canónica Máster UB N=15 cargada al 100%.");
+    }
+
+    function clearAllData() {
+      if (Object.keys(corpusResponses).length === 0) return;
+      if (confirm("¿Estás seguro de vaciar todas las respuestas cargadas en memoria?")) {
+        corpusResponses = {};
+        renderAuditTable();
+        updateDashboardKPIs();
+        showToast("Todas las respuestas han sido vaciadas.", false);
+      }
+    }
+
+    // =========================================================================
+    // 6. RENDERIZADO DE TABLA DE AUDITORÍA
+    // =========================================================================
+    function renderAuditTable() {
+      const tbody = document.getElementById("auditTableBody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      CANONICAL_ROSTER.forEach(person => {
+        const resp = corpusResponses[person.num];
+        const isComplete = !!resp;
+        const tr = document.createElement("tr");
+
+        // Nº
+        const tdNum = document.createElement("td");
+        tdNum.innerHTML = `<strong style="font-family:'Roboto Mono',monospace; color:var(--accent-cyan);">${person.num}</strong>`;
+
+        // Participante
+        const tdName = document.createElement("td");
+        tdName.innerHTML = `<div><strong>${person.nombre}</strong> <span style="font-size:0.7rem; color:var(--text-dim);">(${person.subgrupo})</span></div>`;
+
+        // Estado
+        const tdStatus = document.createElement("td");
+        tdStatus.innerHTML = isComplete
+          ? `<span class="status-badge complete">✓ Ingestado</span>`
+          : `<span class="status-badge pending">⏳ Pendiente</span>`;
+
+        // Ética
+        const tdEthics = document.createElement("td");
+        tdEthics.innerHTML = (isComplete && resp.consentimiento_etico)
+          ? `<span style="color:var(--accent-neon); font-size:0.75rem;">✓ Acreditado</span>`
+          : `<span style="color:var(--text-dim); font-size:0.75rem;">—</span>`;
+
+        // Proximidad
+        const tdProx = document.createElement("td");
+        if (isComplete && resp.elecciones_directas && resp.elecciones_directas.proximidad.length > 0) {
+          const chips = resp.elecciones_directas.proximidad.slice(0, 4).map(p => {
+            const n = typeof p === 'object' ? p.num : p;
+            return `<span class="mini-chip prox">${n}</span>`;
+          }).join("");
+          tdProx.innerHTML = `<div class="choices-pill-row">${chips}</div>`;
+        } else {
+          tdProx.innerHTML = `<span style="color:var(--text-dim);">—</span>`;
+        }
+
+        // Distancia
+        const tdDist = document.createElement("td");
+        if (isComplete && resp.elecciones_directas && resp.elecciones_directas.distancia.length > 0) {
+          const chips = resp.elecciones_directas.distancia.slice(0, 4).map(d => {
+            const n = typeof d === 'object' ? d.num : d;
+            return `<span class="mini-chip dist">${n}</span>`;
+          }).join("");
+          tdDist.innerHTML = `<div class="choices-pill-row">${chips}</div>`;
+        } else {
+          tdDist.innerHTML = `<span style="color:var(--text-dim);">—</span>`;
+        }
+
+        // Referentes
+        const tdRef = document.createElement("td");
+        if (isComplete && resp.referentes_contorno) {
+          const r = resp.referentes_contorno;
+          const p1 = r.P1 ? (r.P1.num || r.P1) : "—";
+          const d1 = r.D1 ? (r.D1.num || r.D1) : "—";
+          tdRef.innerHTML = `<span style="font-size:0.75rem; font-family:'Roboto Mono',monospace;"><strong style="color:var(--accent-neon);">α:</strong> ${p1} &bull; <strong style="color:var(--accent-coral);">ω:</strong> ${d1}</span>`;
+        } else {
+          tdRef.innerHTML = `<span style="color:var(--text-dim);">—</span>`;
+        }
+
+        // Atribuciones
+        const tdAtrib = document.createElement("td");
+        if (isComplete && resp.atribuciones_probablemente) {
+          let count = 0;
+          Object.values(resp.atribuciones_probablemente).forEach(arr => {
+            if (Array.isArray(arr)) count += arr.length;
+          });
+          tdAtrib.innerHTML = `<span style="font-family:'Roboto Mono',monospace; color:var(--accent-gold);">${count} est.</span>`;
+        } else {
+          tdAtrib.innerHTML = `<span style="color:var(--text-dim);">—</span>`;
+        }
+
+        // Acciones
+        const tdActions = document.createElement("td");
+        if (isComplete) {
+          tdActions.innerHTML = `
+            <div style="display:flex; gap:6px;">
+              <button class="btn-row-action" onclick="openJsonModal(${person.num})" title="Inspeccionar JSON de este participante">🔍 Ver</button>
+              <button class="btn-row-action" onclick="deleteParticipantResponse(${person.num})" style="color:#FCA5A5;" title="Eliminar respuesta">🗑</button>
+            </div>
+          `;
+        } else {
+          tdActions.innerHTML = `<span style="color:var(--text-dim); font-size:0.75rem;">Sin datos</span>`;
+        }
+
+        tr.appendChild(tdNum);
+        tr.appendChild(tdName);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdEthics);
+        tr.appendChild(tdProx);
+        tr.appendChild(tdDist);
+        tr.appendChild(tdRef);
+        tr.appendChild(tdAtrib);
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterTable() {
+      const q = document.getElementById("searchTableInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#auditTableBody tr");
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(q) ? "" : "none";
+      });
+    }
+
+    // =========================================================================
+    // 7. ACTUALIZACIÓN DE KPIS DE QUÓRUM
+    // =========================================================================
+    function updateDashboardKPIs() {
+      const totalExpected = CANONICAL_ROSTER.length;
+      const received = Object.keys(corpusResponses).length;
+      const percent = Math.round((received / totalExpected) * 100);
+
+      document.getElementById("kpiReceived").innerText = received;
+      document.getElementById("kpiExpected").innerText = totalExpected;
+      document.getElementById("kpiQuorumPercent").innerText = `${percent}% del quórum alcanzado`;
+
+      const pBar = document.getElementById("kpiProgressBar");
+      if (pBar) {
+        pBar.style.width = `${percent}%`;
+        pBar.classList.toggle("complete", percent === 100);
+      }
+
+      // Consentimiento ético
+      let ethicalCount = 0;
+      let probesTotal = 0;
+      Object.values(corpusResponses).forEach(r => {
+        if (r.consentimiento_etico) ethicalCount++;
+        if (r.atribuciones_probablemente) {
+          Object.values(r.atribuciones_probablemente).forEach(a => {
+            if (Array.isArray(a)) probesTotal += a.length;
+          });
+        }
+      });
+      document.getElementById("kpiEthicalCount").innerText = `${ethicalCount} / ${totalExpected}`;
+      const ethicalBar = document.getElementById("kpiEthicalBar");
+      if (ethicalBar) {
+        ethicalBar.style.width = `${Math.round((ethicalCount / totalExpected) * 100)}%`;
+      }
+
+      document.getElementById("kpiProbesCount").innerText = probesTotal;
+
+      // Estado del motor
+      const statusEl = document.getElementById("kpiEngineStatus");
+      const subEl = document.getElementById("kpiEngineSub");
+      const barEl = document.getElementById("kpiEngineBar");
+      const btnConsolidate = document.getElementById("btnConsolidateJSON");
+
+      if (received === 0) {
+        statusEl.innerText = "A la espera";
+        statusEl.style.color = "#94A3B8";
+        subEl.innerText = "Carga respuestas para consolidar";
+        barEl.style.width = "10%";
+        barEl.style.background = "#334155";
+      } else if (received < totalExpected) {
+        statusEl.innerText = "Quórum Parcial";
+        statusEl.style.color = "var(--accent-gold)";
+        subEl.innerText = `Faltan ${totalExpected - received} participantes`;
+        barEl.style.width = `${percent}%`;
+        barEl.style.background = "var(--accent-gold)";
+      } else {
+        statusEl.innerText = "¡Quórum Óptimo!";
+        statusEl.style.color = "var(--accent-neon)";
+        subEl.innerText = "Listo para ingesta directa en NEXORD Engine";
+        barEl.style.width = "100%";
+        barEl.style.background = "var(--accent-neon)";
+      }
+    }
+
+    function openJsonModal(num) {
+      const resp = corpusResponses[num];
+      if (!resp) return;
+      document.getElementById("modalParticipantTitle").innerText = `Respuesta Alumno Nº ${num}: ${resp.emisor ? resp.emisor.nombre : ''}`;
+      document.getElementById("modalJsonContent").innerText = JSON.stringify(resp, null, 2);
+      document.getElementById("jsonInspectModal").classList.add("open");
+    }
+
+    function closeJsonModal() {
+      document.getElementById("jsonInspectModal").classList.remove("open");
+    }
+
+    function deleteParticipantResponse(num) {
+      if (confirm(`¿Eliminar la respuesta registrada para el Alumno Nº ${num}?`)) {
+        delete corpusResponses[num];
+        renderAuditTable();
+        updateDashboardKPIs();
+        showToast(`Respuesta de alumno ${num} eliminada.`, false);
+      }
+    }
+
+    // =========================================================================
+    // 8. CONSOLIDACIÓN Y EXPORTACIÓN DEL CORPUS
+    // =========================================================================
+    function getConsolidatedPayload() {
+      return {
+        corpus_info: {
+          titulo: "Corpus Consolidado de Metapercepciones Triádicas M3-AΩ",
+          protocolo: "M3-AΩ-Hexadico",
+          grupo: groupMeta.nombre,
+          codigo_grupo: groupMeta.codigo,
+          criterio: groupMeta.criterio,
+          edicion: groupMeta.edicion,
+          n_esperado: groupMeta.n_total,
+          n_recibido: Object.keys(corpusResponses).length,
+          quorum_completo: Object.keys(corpusResponses).length === groupMeta.n_total,
+          fecha_consolidacion: new Date().toISOString(),
+          protocolo_etico: "Cánones 21 y 22 NEXORD (Uso exclusivamente formativo, confidencial y no punitivo)",
+          investigador_principal: "Custodiado bajo acreditación académica e institucional"
+        },
+        participantes: corpusResponses
+      };
+    }
+
+    function downloadConsolidatedJSON() {
+      const count = Object.keys(corpusResponses).length;
+      if (count === 0) {
+        showToast("No hay respuestas para consolidar. Carga archivos o usa la demo.", false);
+        return;
+      }
+
+      const payload = getConsolidatedPayload();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `CORPUS_M3_CONSOLIDADO_${groupMeta.codigo}.json`;
+      a.click();
+      showToast(`✓ Descargado: CORPUS_M3_CONSOLIDADO (${count} participantes)`);
+    }
+
+    function downloadConsolidatedCSV() {
+      const count = Object.keys(corpusResponses).length;
+      if (count === 0) {
+        showToast("No hay respuestas para exportar.", false);
+        return;
+      }
+
+      let csv = "ID_EMISOR,NOMBRE_EMISOR,TIPO_REGISTRO,ROL_SONDA,ORDEN,ID_DESTINO,NOMBRE_DESTINO\n";
+      Object.values(corpusResponses).forEach(resp => {
+        const em = resp.emisor || {};
+        // Proximidad directa
+        (resp.elecciones_directas.proximidad || []).forEach((item, idx) => {
+          const num = typeof item === 'object' ? item.num : item;
+          const nom = typeof item === 'object' ? item.nombre : '';
+          csv += `${em.num},"${em.nombre}",DIRECTA,PROXIMIDAD,${idx+1},${num},"${nom}"\n`;
+        });
+        // Distancia directa
+        (resp.elecciones_directas.distancia || []).forEach((item, idx) => {
+          const num = typeof item === 'object' ? item.num : item;
+          const nom = typeof item === 'object' ? item.nombre : '';
+          csv += `${em.num},"${em.nombre}",DIRECTA,DISTANCIA,${idx+1},${num},"${nom}"\n`;
+        });
+        // Atribuciones probables
+        const at = resp.atribuciones_probablemente || {};
+        Object.keys(at).forEach(probeKey => {
+          (at[probeKey] || []).forEach((item, idx) => {
+            const num = typeof item === 'object' ? item.num : item;
+            const nom = typeof item === 'object' ? item.nombre : '';
+            csv += `${em.num},"${em.nombre}",ATRIBUCION,${probeKey},${idx+1},${num},"${nom}"\n`;
+          });
+        });
+      });
+
+      const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `MATRIZ_CONSOLIDADA_${groupMeta.codigo}.csv`;
+      a.click();
+      showToast(`✓ Descargada Matriz CSV consolidada (${count} registros)`);
+    }
+
+    function copyTerminalCommand() {
+      const cmd = document.getElementById("terminalCommand").innerText;
+      navigator.clipboard.writeText(cmd).then(() => {
+        showToast("✓ Comando copiado al portapapeles.");
+      }).catch(() => {
+        showToast("Error copiando comando. Selecciónalo manualmente.", false);
+      });
+    }
+
+    // =========================================================================
+    // 9. GENERADOR DE DEMO MÁSTER UB N=15
+    // =========================================================================
+    function generateMasterUBResponses() {
+      // Sociomatriz representativa con estructura grupal coherente (Subgrupo A, B y Externo)
+      const list = [];
+      const n = CANONICAL_ROSTER.length;
+
+      CANONICAL_ROSTER.forEach(em => {
+        const others = CANONICAL_ROSTER.filter(p => p.num !== em.num);
+        // Ordenación de afinidad: prefieren compañeros del mismo subgrupo
+        const sameSub = others.filter(p => p.subgrupo === em.subgrupo);
+        const diffSub = others.filter(p => p.subgrupo !== em.subgrupo);
+        const ordered = [...sameSub, ...diffSub];
+
+        const prox = ordered.slice(0, 4);
+        const dist = ordered.slice(-4).reverse();
+
+        const p1 = prox[0];
+        const p3 = prox[2] || prox[1];
+        const px = prox[prox.length - 1];
+        const d1 = dist[0];
+        const d3 = dist[2] || dist[1];
+        const dx = dist[dist.length - 1];
+
+        // Atribuciones estimadas coherentes
+        const genAttribs = (ref) => {
+          const pool = CANONICAL_ROSTER.filter(p => p.num !== ref.num);
+          return [pool[0], pool[1], pool[2]].map(x => ({ num: x.num, nombre: x.nombre }));
+        };
+
+        list.push({
+          protocolo: "M3-AΩ-Hexadico",
+          protocolo_etico: "Cánones 21 y 22 NEXORD (Uso exclusivamente formativo, confidencial y no punitivo)",
+          consentimiento_etico: true,
+          fecha_consentimiento: new Date().toISOString(),
+          timestamp: new Date().toISOString(),
+          grupo: groupMeta.nombre,
+          criterio: groupMeta.criterio,
+          emisor: { num: em.num, nombre: em.nombre, subgrupo: em.subgrupo, rol: em.rol },
+          elecciones_directas: {
+            proximidad: prox.map(p => ({ num: p.num, nombre: p.nombre })),
+            distancia: dist.map(p => ({ num: p.num, nombre: p.nombre }))
+          },
+          referentes_contorno: {
+            P1: { num: p1.num, nombre: p1.nombre },
+            P3: { num: p3.num, nombre: p3.nombre },
+            Px: { num: px.num, nombre: px.nombre },
+            D1: { num: d1.num, nombre: d1.nombre },
+            D3: { num: d3.num, nombre: d3.nombre },
+            Dx: { num: dx.num, nombre: dx.nombre }
+          },
+          atribuciones_probablemente: {
+            P1: genAttribs(p1),
+            P3: genAttribs(p3),
+            Px: genAttribs(px),
+            D1: genAttribs(d1),
+            D3: genAttribs(d3),
+            Dx: genAttribs(dx)
+          }
+        });
+      });
+
+      return list;
+    }
+  </script>
+</body>
+</html>

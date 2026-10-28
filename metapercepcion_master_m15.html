@@ -1116,7 +1116,9 @@
     <div class="admin-btns">
       <button class="btn-top orla-btn" id="btnOpenOrla" onclick="openOrlaModal()">🎓 Ver Orla del Grupo</button>
       <button class="btn-top active-action" id="btnOpenConfig" onclick="openConfigModal()">📁 Cargar .JSON / .CSV</button>
-      <a class="btn-top" href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" target="_blank">📄 Imprimir Papel A4</a>
+      <a class="btn-top" href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" target="_blank" title="Hoja de Respuestas Papel A4 Oficial">📄 Formulario Papel A4</a>
+      <a class="btn-top" href="HOJA_DE_RESPUESTAS_PAPEL_A4.pdf" target="_blank" title="Descargar PDF Oficial Imprimible">📥 Descargar PDF A4</a>
+      <a class="btn-top" href="centralizador_metapercepcion.html" title="Centralizador de Corpus e Ingestión NEXORD">📊 Centralizador NEXORD</a>
       <button class="btn-top" onclick="exportBatchJSON()" title="Exportar todas las respuestas recopiladas">💾 Respuestas (<span id="savedCountBadge">0</span>)</button>
     </div>
   </div>
@@ -1175,8 +1177,23 @@
       <div class="identity-grid" id="identityGrid">
         <!-- Generado dinámicamente -->
       </div>
+      <!-- PROTOCOLO DEONTOLÓGICO Y CONSENTIMIENTO INFORMADO (CÁNONES 21 Y 22 NEXORD) -->
+      <div class="deontological-box" style="margin-top:16px; background:#0B1728; border:1px solid #1E3A5F; border-left:4px solid #00FF87; border-radius:8px; padding:14px 18px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="font-size:1.2rem;">🛡️</span>
+          <strong style="color:#00FF87; font-size:0.92rem; font-family:'Roboto Mono',monospace; letter-spacing:0.5px;">PROTOCOLO ÉTICO Y DE PROTECCIÓN DEL PARTICIPANTE (Cánones 21 y 22 NEXORD)</strong>
+        </div>
+        <p style="font-size:0.83rem; color:#CBD5E1; line-height:1.45; margin-bottom:10px;">
+          En cumplimiento del marco deontológico de la investigación de campo en sociometría relacional, se hace constar que los datos recabados en este protocolo tienen <strong>finalidad exclusivamente formativa, diagnóstica y de investigación científica abierta</strong>.
+          Queda <strong>terminantemente proscrito cualquier uso punitivo, evaluativo o laboral sancionador</strong>. El análisis socio-termodinámico identifica corrientes colectivas de interacción y fenómenos relacionales grupales, <strong>nunca defectos intrínsecos de la personalidad individual</strong>. La custodia de datos se realiza bajo riguroso protocolo de confidencialidad y anonimización por código de lista.
+        </p>
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:0.85rem; color:#F8FAFC; font-weight:600; background:#070E20; padding:10px 14px; border-radius:6px; border:1px solid #1C2D5A;">
+          <input type="checkbox" id="chkEthicalConsent" onchange="checkIdentityAndConsent()" style="width:18px; height:18px; accent-color:#00FF87; cursor:pointer;">
+          <span>He leído y acepto el protocolo deontológico de participación formativa y custodia confidencial.</span>
+        </label>
+      </div>
       <div class="step-nav-footer">
-        <span style="font-size:0.85rem; color:var(--text-muted);" id="identityStatus">Selecciona tu identidad para continuar...</span>
+        <span style="font-size:0.85rem; color:var(--text-muted);" id="identityStatus">Selecciona tu identidad y acepta el protocolo para continuar...</span>
         <button class="btn-nav primary" id="btnNext0" onclick="goToStep(1)" disabled>Continuar al Paso 1 ➔</button>
       </div>
     </div>
@@ -1727,6 +1744,9 @@
     };
     activeStep = 0;
     activeRefKey = "P1";
+    const chk = document.getElementById("chkEthicalConsent");
+    if (chk) chk.checked = false;
+    checkIdentityAndConsent();
     updateStepperNav();
   }
 
@@ -1838,6 +1858,26 @@
     });
   }
 
+  function checkIdentityAndConsent() {
+    const chk = document.getElementById("chkEthicalConsent");
+    const hasConsent = chk ? chk.checked : true;
+    const hasSelf = responses.self !== null;
+    const btn = document.getElementById("btnNext0");
+    if (btn) {
+      btn.disabled = !(hasSelf && hasConsent);
+    }
+    const status = document.getElementById("identityStatus");
+    if (status) {
+      if (!hasSelf) {
+        status.innerHTML = "Selecciona tu identidad y acepta el protocolo para continuar...";
+      } else if (!hasConsent) {
+        status.innerHTML = `Identidad seleccionada: <strong style="color:var(--accent-neon);">${responses.self.nombre} (Nº ${responses.self.num})</strong>. <span style="color:#FCA5A5;">Por favor, acepta el protocolo deontológico para continuar.</span>`;
+      } else {
+        status.innerHTML = `Identidad confirmada: <strong style="color:var(--accent-neon);">${responses.self.nombre} (Nº ${responses.self.num})</strong> · Protocolo deontológico aceptado ✓`;
+      }
+    }
+  }
+
   function selectSelf(person) {
     responses.self = person;
     // Si cambian la identidad, limpiamos las listas que pudieran incluir al nuevo emisor
@@ -1850,8 +1890,7 @@
       window.event.currentTarget.classList.add("selected-identity");
     }
 
-    document.getElementById("identityStatus").innerHTML = `Identidad seleccionada: <strong style="color:var(--accent-neon);">${person.nombre} (Nº ${person.num})</strong>`;
-    document.getElementById("btnNext0").disabled = false;
+    checkIdentityAndConsent();
   }
 
   // ===========================================================================
@@ -2681,6 +2720,9 @@
   function getPayloadObject() {
     return {
       protocolo: "M3-AΩ-Hexadico",
+      protocolo_etico: "Cánones 21 y 22 NEXORD (Uso exclusivamente formativo, confidencial y no punitivo)",
+      consentimiento_etico: document.getElementById("chkEthicalConsent") ? document.getElementById("chkEthicalConsent").checked : true,
+      fecha_consentimiento: new Date().toISOString(),
       timestamp: new Date().toISOString(),
       grupo: currentGroup.nombre,
       criterio: currentGroup.criterio,
@@ -2713,6 +2755,12 @@
   // ===========================================================================
   function runInteractiveValidationAudit() {
     const errors = [];
+
+    // 0. Consentimiento Deontológico (Cánones 21 y 22 NEXORD)
+    const chkConsent = document.getElementById("chkEthicalConsent");
+    if (chkConsent && !chkConsent.checked) {
+      errors.push({ step: 0, msg: "Debes aceptar el Protocolo Deontológico y de Custodia Confidencial (Cánones 21 y 22 NEXORD)." });
+    }
 
     // 1. Identificación
     if (!responses.self || !responses.self.num) {
