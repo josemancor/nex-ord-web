@@ -446,6 +446,60 @@
       background: #070E20;
     }
 
+    /* DRAG ORDER MODAL ROWS */
+    .paper-drag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: #111E3D;
+      border: 1px solid #1C2D5A;
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: grab;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .paper-drag-row:hover {
+      background: #162447;
+      border-color: #38BDF8;
+    }
+    .paper-drag-row.is-dragging {
+      opacity: 0.4;
+      background: #0B132B;
+      border: 1px dashed #00FF87;
+    }
+    .paper-drag-row.drag-over {
+      border-color: #00FF87;
+      box-shadow: 0 0 8px rgba(0,255,135,0.4);
+    }
+    .paper-drag-row.prox-zone { border-left: 3px solid #00FF87; }
+    .paper-drag-row.dist-zone { border-left: 3px solid #FF7043; }
+    .paper-drag-row.neutral-zone { border-left: 3px solid #475569; }
+    .btn-paper-drag {
+      background: #0E1833;
+      border: 1px solid #1C2D5A;
+      color: #94A3B8;
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      font-size: 6.5pt;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .btn-paper-drag:hover:not(:disabled) {
+      background: #1E293B;
+      color: #FFFFFF;
+      border-color: #38BDF8;
+    }
+    .btn-paper-drag:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
     @media print {
       .print-bar { display: none !important; }
       .floating-roster-btn { display: none !important; }
@@ -806,6 +860,7 @@
   <div class="print-bar-right">
     <button class="btn-action" id="btnUndo" onclick="undoLastAction()" title="Deshacer última acción (Ctrl+Z)" disabled>↩ Deshacer (Ctrl+Z)</button>
     <button class="btn-action" onclick="toggleModalOrla()">📋 Orla / Lista (L)</button>
+    <button class="btn-action" id="btnOpenDragOrder" onclick="openDragOrderModal()" title="Ordenar la lista completa del grupo arrastrando filas">↕ Ordenar Grupo (Drag & Drop)</button>
     <button class="btn-action" onclick="resetAllFields()">🧹 Reiniciar</button>
     <button class="btn-save" id="btnValidateAndSave" onclick="validateAndSaveResponses()">💾 Validar y Guardar</button>
     <button class="btn-print" onclick="window.print()">🖨 Imprimir Hoja Oficial (1 Página A4)</button>
@@ -1316,6 +1371,48 @@
     </div>
     <div class="validation-modal-footer" id="validationModalFooter">
       <!-- Botones de acción dinámicos -->
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE ORDENACIÓN TOTAL ARRASTRANDO (DRAG & DROP) -->
+<div class="validation-modal-overlay" id="modalDragOrder" onclick="if(event.target===this) closeDragOrderModal()">
+  <div class="validation-modal-content" style="max-width:540px;">
+    <div class="validation-modal-header" style="background:#0F291E; border-bottom:1px solid #00FF87;">
+      <strong style="font-size:0.95rem; color:#00FF87;">↕ Ordenación Total del Grupo (Preguntas 1 y 2 en 1 Paso)</strong>
+      <button class="modal-close-btn" onclick="closeDragOrderModal()" title="Cerrar modal">✕</button>
+    </div>
+    <div class="validation-modal-body" style="padding:12px;">
+      <div style="font-size:7.5pt; color:#CBD5E1; margin-bottom:10px; line-height:1.35;">
+        Arrastra las filas arriba o abajo con el ratón o dedo para ordenar a tus compañeros/as de <strong>mayor afinidad (arriba)</strong> a <strong>mayor distanciamiento (abajo)</strong>. Al pulsar <em>Volcar a la Hoja</em>, se rellenarán automáticamente las casillas de Proximidad, Distancia y Referentes.
+      </div>
+
+      <!-- Barra de umbrales -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0B132B; border:1px solid #1C2D5A; border-radius:6px; padding:6px 10px; margin-bottom:10px; font-size:7.2pt;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:#00FF87; font-weight:700;">🟢 +Proximidad a volcar:</span>
+          <button class="btn-action" style="padding:1px 6px; font-size:8pt;" onclick="changePaperProxThresh(-1)">-</button>
+          <strong id="paperProxThreshVal" style="color:#00FF87; font-size:9pt;">4</strong>
+          <button class="btn-action" style="padding:1px 6px; font-size:8pt;" onclick="changePaperProxThresh(1)">+</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:#FF7043; font-weight:700;">🔴 +Distancia a volcar:</span>
+          <button class="btn-action" style="padding:1px 6px; font-size:8pt;" onclick="changePaperDistThresh(-1)">-</button>
+          <strong id="paperDistThreshVal" style="color:#FF7043; font-size:9pt;">4</strong>
+          <button class="btn-action" style="padding:1px 6px; font-size:8pt;" onclick="changePaperDistThresh(1)">+</button>
+        </div>
+      </div>
+
+      <!-- Lista arrastrable -->
+      <div id="paperDragListContainer" style="display:flex; flex-direction:column; gap:4px; max-height:360px; overflow-y:auto; padding-right:4px;">
+        <!-- Generado dinámicamente -->
+      </div>
+    </div>
+    <div class="validation-modal-footer">
+      <button class="btn-action" onclick="closeDragOrderModal()">Cancelar</button>
+      <button class="btn-save" style="background:#00FF87; color:#0B132B; border-color:#00FF87; font-weight:800;" onclick="applyDragOrderToPaper()">
+        ✓ Volcar a la Hoja Oficial (P1, P2 y P3)
+      </button>
     </div>
   </div>
 </div>
@@ -2169,6 +2266,175 @@
   }
 
   // =========================================================================
+  // ORDENACIÓN TOTAL ARRASTRANDO PARA LA HOJA OFICIAL A4
+  // =========================================================================
+  let paperDragState = {
+    list: [],
+    proxThreshold: 4,
+    distThreshold: 4
+  };
+
+  function openDragOrderModal() {
+    const selfVal = document.getElementById('slot_self')?.value.trim();
+    // Excluir self si está indicado
+    paperDragState.list = CENSO.filter(c => c.num.toString() !== selfVal);
+    renderPaperDragList();
+    const m = document.getElementById('modalDragOrder');
+    if (m) m.classList.add('open');
+  }
+
+  function closeDragOrderModal() {
+    const m = document.getElementById('modalDragOrder');
+    if (m) m.classList.remove('open');
+  }
+
+  function changePaperProxThresh(delta) {
+    const total = paperDragState.list.length;
+    const max = Math.max(3, total - paperDragState.distThreshold);
+    const nextVal = paperDragState.proxThreshold + delta;
+    if (nextVal >= 3 && nextVal <= max) {
+      paperDragState.proxThreshold = nextVal;
+      const el = document.getElementById('paperProxThreshVal');
+      if (el) el.innerText = nextVal;
+      renderPaperDragList();
+    }
+  }
+
+  function changePaperDistThresh(delta) {
+    const total = paperDragState.list.length;
+    const max = Math.max(3, total - paperDragState.proxThreshold);
+    const nextVal = paperDragState.distThreshold + delta;
+    if (nextVal >= 3 && nextVal <= max) {
+      paperDragState.distThreshold = nextVal;
+      const el = document.getElementById('paperDistThreshVal');
+      if (el) el.innerText = nextVal;
+      renderPaperDragList();
+    }
+  }
+
+  let paperDraggedIdx = null;
+
+  function renderPaperDragList() {
+    const container = document.getElementById('paperDragListContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    const list = paperDragState.list;
+    const total = list.length;
+    const kProx = paperDragState.proxThreshold;
+    const kDist = paperDragState.distThreshold;
+
+    list.forEach((person, idx) => {
+      let zoneClass = 'neutral-zone';
+      let tagText = `#${idx + 1}`;
+      let tagCol = '#94A3B8';
+
+      if (idx < kProx) {
+        zoneClass = 'prox-zone';
+        tagText = idx === 0 ? 'p1º (Cenit α)' : (idx === 2 ? 'p3º (Pivote)' : `p${idx + 1}º`);
+        tagCol = '#00FF87';
+      } else if (idx >= total - kDist) {
+        zoneClass = 'dist-zone';
+        const dRank = total - idx;
+        tagText = dRank === 1 ? 'd1º (Nadir ω)' : (dRank === 3 ? 'd3º (Pivote)' : `d${dRank}º`);
+        tagCol = '#FF7043';
+      }
+
+      const row = document.createElement('div');
+      row.className = `paper-drag-row ${zoneClass}`;
+      row.setAttribute('draggable', 'true');
+      row.setAttribute('data-index', idx);
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+          <span style="color:#64748B; font-size:9pt; cursor:grab; line-height:1;">⠿</span>
+          <span style="font-size:6.8pt; font-weight:800; color:${tagCol}; min-width:72px;">${tagText}</span>
+          <span style="font-size:7.2pt; font-weight:700; color:#FFFFFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            [ Nº ${person.num} ] ${person.name}
+          </span>
+        </div>
+        <div style="display:flex; align-items:center; gap:3px;">
+          <button class="btn-paper-drag" onclick="movePaperRow(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲</button>
+          <button class="btn-paper-drag" onclick="movePaperRow(${idx}, 1)" ${idx === total - 1 ? 'disabled' : ''}>▼</button>
+          <button class="btn-paper-drag" style="font-size:6pt; width:24px; color:#00FF87;" onclick="movePaperRowToTop(${idx})" title="Al Cenit">Top</button>
+          <button class="btn-paper-drag" style="font-size:6pt; width:24px; color:#FF7043;" onclick="movePaperRowToBottom(${idx})" title="Al Nadir">Fondo</button>
+        </div>
+      `;
+
+      row.ondragstart = (e) => {
+        paperDraggedIdx = idx;
+        row.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', idx);
+      };
+      row.ondragover = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+      row.ondragenter = () => row.classList.add('drag-over');
+      row.ondragleave = () => row.classList.remove('drag-over');
+      row.ondrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        row.classList.remove('drag-over');
+        if (paperDraggedIdx !== null && paperDraggedIdx !== idx) {
+          reorderPaperList(paperDraggedIdx, idx);
+        }
+      };
+      row.ondragend = () => {
+        row.classList.remove('is-dragging');
+        document.querySelectorAll('.paper-drag-row').forEach(r => r.classList.remove('drag-over'));
+      };
+
+      container.appendChild(row);
+    });
+  }
+
+  function reorderPaperList(fromIdx, toIdx) {
+    if (fromIdx < 0 || fromIdx >= paperDragState.list.length) return;
+    if (toIdx < 0 || toIdx >= paperDragState.list.length) return;
+    const moved = paperDragState.list.splice(fromIdx, 1)[0];
+    paperDragState.list.splice(toIdx, 0, moved);
+    renderPaperDragList();
+  }
+  function movePaperRow(idx, dir) { reorderPaperList(idx, idx + dir); }
+  function movePaperRowToTop(idx) { reorderPaperList(idx, 0); }
+  function movePaperRowToBottom(idx) { reorderPaperList(idx, paperDragState.list.length - 1); }
+
+  function applyDragOrderToPaper() {
+    const kProx = paperDragState.proxThreshold;
+    const kDist = paperDragState.distThreshold;
+    const list = paperDragState.list;
+    const total = list.length;
+
+    // Limpiar slots de proximidad y distancia
+    for (let i = 1; i <= 8; i++) {
+      const sp = document.getElementById('slot_p' + i);
+      if (sp) { sp.value = ''; delete sp.dataset.manual; }
+      const sd = document.getElementById('slot_d' + i);
+      if (sd) { sd.value = ''; delete sd.dataset.manual; }
+    }
+
+    // Volcar Proximidad (primeros kProx)
+    for (let i = 0; i < kProx; i++) {
+      const sp = document.getElementById('slot_p' + (i + 1));
+      if (sp && list[i]) {
+        sp.value = list[i].num.toString();
+        recordChange(sp, '', sp.value);
+      }
+    }
+
+    // Volcar Distancia (últimos kDist, donde el último de la lista es d1 Nadir)
+    for (let i = 0; i < kDist; i++) {
+      const sd = document.getElementById('slot_d' + (i + 1));
+      const person = list[total - 1 - i];
+      if (sd && person) {
+        sd.value = person.num.toString();
+        recordChange(sd, '', sd.value);
+      }
+    }
+
+    autoSyncStep3();
+    closeDragOrderModal();
+    showToast('✓ Preguntas 1, 2 y 3 volcadas automáticamente desde la ordenación total', 'success');
+  }
+
+  // =========================================================================
   // MODAL ORLA
   // =========================================================================
   function renderModalOrla(filter = "") {
@@ -2229,6 +2495,8 @@
       if (m1 && m1.classList.contains('open')) m1.classList.remove('open');
       const m2 = document.getElementById('modalValidationAudit');
       if (m2 && m2.classList.contains('open')) m2.classList.remove('open');
+      const m3 = document.getElementById('modalDragOrder');
+      if (m3 && m3.classList.contains('open')) m3.classList.remove('open');
     } else if ((e.key === 'l' || e.key === 'L') && !e.target.matches('input, textarea')) {
       e.preventDefault();
       toggleModalOrla();

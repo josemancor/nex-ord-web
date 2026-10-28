@@ -696,6 +696,286 @@
       color: var(--text-dim);
     }
 
+    /* =========================================================================
+       MODO ORDENACIÓN TOTAL ARRASTRANDO (DRAG & DROP)
+       ========================================================================= */
+    .ordering-mode-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-mode-tab {
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-mode-tab:hover {
+      background: #152449;
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .btn-mode-tab.active {
+      background: linear-gradient(135deg, #1C2D5A 0%, #152449 100%);
+      color: var(--accent-neon);
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 12px rgba(0, 255, 135, 0.25);
+    }
+
+    .drag-threshold-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .thresh-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #CBD5E1;
+    }
+    .thresh-pill.prox { color: var(--accent-neon); }
+    .thresh-pill.dist { color: var(--accent-orange); }
+    .btn-thresh {
+      background: #1E293B;
+      border: 1px solid var(--border-card);
+      color: #FFFFFF;
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-thresh:hover {
+      background: var(--accent-cyan);
+      color: #0B132B;
+    }
+    .thresh-num {
+      font-size: 1rem;
+      font-weight: 900;
+      min-width: 20px;
+      text-align: center;
+    }
+    .thresh-pill.prox .thresh-num { color: var(--accent-neon); }
+    .thresh-pill.dist .thresh-num { color: var(--accent-orange); }
+
+    .drag-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .drag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 8px 14px;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      cursor: grab;
+      user-select: none;
+    }
+    .drag-row:hover {
+      border-color: var(--accent-cyan);
+      background: #152449;
+    }
+    .drag-row.is-dragging {
+      opacity: 0.45;
+      background: #0B132B;
+      border: 1.5px dashed var(--accent-neon);
+      cursor: grabbing;
+    }
+    .drag-row.drag-over {
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.4);
+      transform: scale(1.01);
+    }
+    .drag-row.prox-zone {
+      border-left: 4px solid var(--accent-neon);
+    }
+    .drag-row.dist-zone {
+      border-left: 4px solid var(--accent-orange);
+    }
+    .drag-row.neutral-zone {
+      border-left: 4px solid #475569;
+    }
+
+    .drag-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-grow: 1;
+      min-width: 0;
+    }
+    .drag-handle {
+      font-size: 1.25rem;
+      color: #64748B;
+      cursor: grab;
+      line-height: 1;
+      padding: 2px 4px;
+    }
+    .drag-row:hover .drag-handle {
+      color: var(--accent-cyan);
+    }
+    .drag-pos-badge {
+      min-width: 110px;
+    }
+    .drag-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #1C2D5A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .drag-person-info {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .drag-person-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .drag-person-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .drag-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .btn-drag-move {
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-drag-move:hover:not(:disabled) {
+      background: #1E293B;
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .btn-drag-move:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .btn-drag-quick {
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-drag-quick.top {
+      color: var(--accent-neon);
+      border-color: rgba(0, 255, 135, 0.4);
+    }
+    .btn-drag-quick.top:hover {
+      background: var(--accent-neon);
+      color: #0B132B;
+    }
+    .btn-drag-quick.btm {
+      color: var(--accent-orange);
+      border-color: rgba(255, 112, 67, 0.4);
+    }
+    .btn-drag-quick.btm:hover {
+      background: var(--accent-orange);
+      color: #0B132B;
+    }
+
+    /* TARJETA DE DEDUCCIÓN EN TIEMPO REAL */
+    .live-deduction-card {
+      background: #0B132B;
+      border: 1.5px solid var(--border-card);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .live-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #162447;
+      padding-bottom: 8px;
+    }
+    .live-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .live-box {
+      background: #111E3D;
+      border-radius: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-card);
+    }
+    .live-box.prox { border-color: rgba(0, 255, 135, 0.35); }
+    .live-box.dist { border-color: rgba(255, 112, 67, 0.35); }
+    .live-box.ref { border-color: rgba(56, 189, 248, 0.35); }
+    .live-box-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .live-box.prox .live-box-label { color: var(--accent-neon); }
+    .live-box.dist .live-box-label { color: var(--accent-orange); }
+    .live-box.ref .live-box-label { color: var(--accent-cyan); }
+    .live-box-tags {
+      font-size: 0.78rem;
+      color: #FFFFFF;
+      line-height: 1.4;
+    }
+
     /* MODAL DE ORLA DEL GRUPO */
     .modal-overlay {
       position: fixed;
@@ -863,10 +1143,10 @@
       <div class="step-pill-title">Tu Identidad</div>
     </div>
     <div class="step-pill" id="stepPill1" onclick="goToStep(1)">
-      <div class="step-pill-num">Paso 1</div>
-      <div class="step-pill-title">+Proximidad</div>
+      <div class="step-pill-num" id="stepPill1Num">Paso 1 y 2</div>
+      <div class="step-pill-title" id="stepPill1Title">Ordenación Total</div>
     </div>
-    <div class="step-pill" id="stepPill2" onclick="goToStep(2)">
+    <div class="step-pill" id="stepPill2" onclick="goToStep(2)" style="display:none;">
       <div class="step-pill-num">Paso 2</div>
       <div class="step-pill-title">+Distancia</div>
     </div>
@@ -903,44 +1183,130 @@
   </section>
 
   <!-- =========================================================================
-       PASO 1: ELECCIONES DIRECTAS DE PROXIMIDAD
+       PASO 1 (Y 2): ELECCIONES DIRECTAS (ORDENACIÓN TOTAL EN UN SOLO PASO)
        ========================================================================= -->
   <section class="step-screen" id="screen1">
     <div class="card">
-      <div class="card-title green">
-        <span>1) ELECCIONES DIRECTAS DE PROXIMIDAD / AFINIDAD</span>
-        <span class="rank-badge green" id="proxCounterBadge">0 / mín. 3</span>
-      </div>
-      <div class="card-desc">
-        Indica, por orden de afinidad, los compañeros con los que te sientes más próximo, empezando por el más afín:
-        <br><code style="color:var(--accent-neon); font-size:0.78rem;">+Proximidad: p1º__ &nbsp; p2º__ &nbsp; p3º__ &nbsp; p4º.... &nbsp; p5º.... &nbsp; p6º.... &nbsp; p7º.... &nbsp; p8º.... &nbsp; ....</code>
-      </div>
-
-      <div class="dual-pane">
-        <div class="pane-box">
-          <div class="pane-header">
-            <span>Compañeros Disponibles</span>
-            <span style="font-size:0.7rem; color:var(--accent-cyan);">Haz clic para seleccionar</span>
-          </div>
-          <div class="pool-list" id="proxPoolList">
-            <!-- Pool dinámico -->
-          </div>
+      <!-- HEADER CON SELECTOR DE MODO -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:1px solid var(--border-card); padding-bottom:12px;">
+        <div class="card-title cyan" style="margin-bottom:0;">
+          <span>PREGUNTAS 1 Y 2: AFINIDAD (+PROXIMIDAD) Y DISTANCIAMIENTO (+DISTANCIA)</span>
         </div>
-
-        <div class="pane-box">
-          <div class="pane-header">
-            <span>Tu Lista de Proximidad Ordenada</span>
-            <span style="font-size:0.7rem; color:var(--accent-neon);">Mayor a menor afinidad</span>
-          </div>
-          <div class="ranked-list" id="proxRankedList">
-            <!-- Lista elegida -->
-          </div>
+        <div class="ordering-mode-bar" style="margin-bottom:0;">
+          <button class="btn-mode-tab active" id="btnModeDrag" onclick="setOrderingMode('drag')">
+            ↕ Modo 1: Ordenación Total Arrastrando (1 Paso · Recomendado)
+          </button>
+          <button class="btn-mode-tab" id="btnModeClassic" onclick="setOrderingMode('classic')">
+            📋 Modo 2: Selección Clásica por Fichas (2 Pasos)
+          </button>
         </div>
       </div>
 
-      <div class="step-nav-footer">
-        <button class="btn-nav" onclick="goToStep(0)">⬅ Cambiar Identidad</button>
-        <button class="btn-nav primary" id="btnNext1" onclick="goToStep(2)" disabled>Continuar al Paso 2 (+Distancia) ➔</button>
+      <!-- =====================================================================
+           CONTENEDOR MODO 1: ORDENACIÓN TOTAL ARRASTRANDO (DRAG & DROP)
+           ===================================================================== -->
+      <div id="dragOrderingContainer">
+        <div class="card-desc" style="margin-bottom:12px;">
+          <strong>ORDENACIÓN TOTAL EN UN SOLO PASO:</strong> Arrastra las filas arriba o abajo con el ratón o dedo para ordenar a todos tus compañeros/as desde tu <strong>mayor proximidad/afinidad (arriba)</strong> hasta tu <strong>mayor distanciamiento (abajo)</strong>.
+          <div style="margin-top:4px; font-size:0.78rem; color:var(--text-muted);">
+            💡 Las posiciones superiores definen automáticamente tu <strong style="color:var(--accent-neon);">1) +Proximidad</strong> y las inferiores tu <strong style="color:var(--accent-orange);">2) +Distancia</strong>. También puedes usar las flechas <kbd>▲</kbd> <kbd>▼</kbd> o los botones <kbd>🔝 Cenit</kbd> / <kbd>🔻 Nadir</kbd>.
+          </div>
+        </div>
+
+        <!-- UMBRALES DE ELECCIÓN ACTIVA -->
+        <div class="drag-threshold-bar">
+          <div class="thresh-pill prox">
+            <span class="thresh-label">🟢 +Proximidad Activa:</span>
+            <button class="btn-thresh" onclick="changeProxThreshold(-1)" title="Reducir proximidad">-</button>
+            <span class="thresh-num" id="proxThreshNum">4</span>
+            <button class="btn-thresh" onclick="changeProxThreshold(1)" title="Aumentar proximidad">+</button>
+            <span style="font-size:0.75rem; color:#94A3B8;">(p1º a p<span id="proxThreshEnd">4</span>º · mín. 3)</span>
+          </div>
+          <div class="thresh-pill dist">
+            <span class="thresh-label">🔴 +Distancia Activa:</span>
+            <button class="btn-thresh" onclick="changeDistThreshold(-1)" title="Reducir distanciamiento">-</button>
+            <span class="thresh-num" id="distThreshNum">4</span>
+            <button class="btn-thresh" onclick="changeDistThreshold(1)" title="Aumentar distanciamiento">+</button>
+            <span style="font-size:0.75rem; color:#94A3B8;">(d1º a d<span id="distThreshEnd">4</span>º · mín. 3)</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--accent-cyan); display:flex; align-items:center; gap:6px;">
+            <span>Total Grupo: <strong id="totalDragCount">14</strong> compañeros</span>
+          </div>
+        </div>
+
+        <!-- LISTA ARRASTRABLE COMPLETA -->
+        <div class="drag-list-container" id="fullDragListContainer">
+          <!-- Generado dinámicamente -->
+        </div>
+
+        <!-- TARJETA DE DEDUCCIÓN EN TIEMPO REAL -->
+        <div class="live-deduction-card" style="margin-top:16px;">
+          <div class="live-header">
+            <div style="font-size:0.82rem; font-weight:800; color:var(--accent-cyan); display:flex; align-items:center; gap:6px;">
+              <span>⚡ DEDUCCIÓN SIMULTÁNEA EN TIEMPO REAL:</span>
+              <span style="color:var(--accent-neon); font-size:0.75rem;">✓ Preguntas 1, 2 y 3 Resueltas</span>
+            </div>
+            <span style="font-size:0.72rem; color:var(--text-muted);">Actualizado automáticamente según la posición de las filas</span>
+          </div>
+          <div class="live-summary-grid">
+            <div class="live-box prox">
+              <div class="live-box-label">🟢 1) +PROXIMIDAD (<span id="liveProxCountBadge">4</span> elegidos)</div>
+              <div class="live-box-tags" id="liveProxTags"></div>
+            </div>
+            <div class="live-box dist">
+              <div class="live-box-label">🔴 2) +DISTANCIA (<span id="liveDistCountBadge">4</span> elegidos)</div>
+              <div class="live-box-tags" id="liveDistTags"></div>
+            </div>
+            <div class="live-box ref">
+              <div class="live-box-label">🎯 3) REFERENTES DE CONTORNO DEDUCIDOS</div>
+              <div class="live-box-tags" id="liveRefTags"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav-footer" style="margin-top:18px;">
+          <button class="btn-nav" onclick="goToStep(0)">⬅ Cambiar Identidad</button>
+          <button class="btn-nav primary" id="btnNextDrag" onclick="goToStep(3)">
+            Continuar al Paso 3 (Ver Referentes) ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           CONTENEDOR MODO 2: SELECCIÓN CLÁSICA POR FICHAS (2 PASOS)
+           ===================================================================== -->
+      <div id="classicOrderingContainer" style="display:none;">
+        <div class="card-desc">
+          Indica, por orden de afinidad, los compañeros con los que te sientes más próximo, empezando por el más afín:
+          <br><code style="color:var(--accent-neon); font-size:0.78rem;">+Proximidad: p1º__ &nbsp; p2º__ &nbsp; p3º__ &nbsp; p4º.... &nbsp; p5º.... &nbsp; p6º.... &nbsp; p7º.... &nbsp; p8º.... &nbsp; ....</code>
+        </div>
+
+        <div class="dual-pane">
+          <div class="pane-box">
+            <div class="pane-header">
+              <span>Compañeros Disponibles</span>
+              <span style="font-size:0.7rem; color:var(--accent-cyan);">Haz clic para seleccionar</span>
+            </div>
+            <div class="pool-list" id="proxPoolList">
+              <!-- Pool dinámico -->
+            </div>
+          </div>
+
+          <div class="pane-box">
+            <div class="pane-header">
+              <span>Tu Lista de Proximidad Ordenada</span>
+              <span style="font-size:0.7rem; color:var(--accent-neon);">Mayor a menor afinidad</span>
+            </div>
+            <div class="ranked-list" id="proxRankedList">
+              <!-- Lista elegida -->
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav-footer">
+          <button class="btn-nav" onclick="goToStep(0)">⬅ Cambiar Identidad</button>
+          <button class="btn-nav primary" id="btnNext1" onclick="goToStep(2)" disabled>Continuar al Paso 2 (+Distancia) ➔</button>
+        </div>
       </div>
     </div>
   </section>
@@ -1008,7 +1374,7 @@
       </div>
 
       <div class="step-nav-footer">
-        <button class="btn-nav" onclick="goToStep(2)">⬅ Revisar Distancia</button>
+        <button class="btn-nav" onclick="goBackFromStep3()">⬅ Revisar Elecciones Directas</button>
         <button class="btn-nav primary" onclick="goToStep(4)">Comenzar Valoraciones "Probablemente" ➔</button>
       </div>
     </div>
@@ -1218,12 +1584,17 @@
     self: null,          // { num, nombre, id, foto, subgrupo }
     proxList: [],        // array de participantes ordenados p1, p2, p3...
     distList: [],        // array de participantes ordenados d1, d2, d3...
+    fullRankedList: [],  // array completo ordenado de todos los compañeros (1º a N-1º)
+    proxThreshold: 4,    // número de filas asignadas a +Proximidad (mínimo 3)
+    distThreshold: 4,    // número de filas asignadas a +Distancia (mínimo 3)
     referentes: {},      // { P1: obj, P3: obj, Px: obj, D1: obj, D3: obj, Dx: obj }
     atribuciones: {
       P1: [], P3: [], Px: [],
       D1: [], D3: [], Dx: []
     }
   };
+
+  let orderingMode = "drag"; // "drag" (Ordenación total arrastrando) o "classic" (fichas)
 
   let activeStep = 0;
   let activeRefKey = "P1";
@@ -1348,6 +1719,9 @@
       self: null,
       proxList: [],
       distList: [],
+      fullRankedList: [],
+      proxThreshold: 4,
+      distThreshold: 4,
       referentes: {},
       atribuciones: { P1: [], P3: [], Px: [], D1: [], D3: [], Dx: [] }
     };
@@ -1469,20 +1843,374 @@
     // Si cambian la identidad, limpiamos las listas que pudieran incluir al nuevo emisor
     responses.proxList = responses.proxList.filter(p => p.num !== person.num);
     responses.distList = responses.distList.filter(p => p.num !== person.num);
+    initFullRankedList();
 
     document.querySelectorAll(".person-card").forEach(c => c.classList.remove("selected-identity"));
-    event.currentTarget.classList.add("selected-identity");
+    if (window.event && window.event.currentTarget) {
+      window.event.currentTarget.classList.add("selected-identity");
+    }
 
     document.getElementById("identityStatus").innerHTML = `Identidad seleccionada: <strong style="color:var(--accent-neon);">${person.nombre} (Nº ${person.num})</strong>`;
     document.getElementById("btnNext0").disabled = false;
   }
 
   // ===========================================================================
-  // 6. RENDERIZADO: PASO 1 Y 2 (PROXIMIDAD Y DISTANCIA)
+  // 6. ORDENACIÓN TOTAL ARRASTRANDO (PASO 1 Y 2 UNIFICADO) & MODO CLÁSICO
   // ===========================================================================
+  function setOrderingMode(mode) {
+    orderingMode = mode;
+    const btnDrag = document.getElementById("btnModeDrag");
+    const btnClassic = document.getElementById("btnModeClassic");
+    const contDrag = document.getElementById("dragOrderingContainer");
+    const contClassic = document.getElementById("classicOrderingContainer");
+    const pill1Num = document.getElementById("stepPill1Num");
+    const pill1Title = document.getElementById("stepPill1Title");
+    const pill2 = document.getElementById("stepPill2");
+
+    if (mode === "drag") {
+      if (btnDrag) btnDrag.classList.add("active");
+      if (btnClassic) btnClassic.classList.remove("active");
+      if (contDrag) contDrag.style.display = "block";
+      if (contClassic) contClassic.style.display = "none";
+      if (pill1Num) pill1Num.innerText = "Paso 1 y 2";
+      if (pill1Title) pill1Title.innerText = "Ordenación Total";
+      if (pill2) pill2.style.display = "none";
+      renderFullRankedList();
+    } else {
+      if (btnDrag) btnDrag.classList.remove("active");
+      if (btnClassic) btnClassic.classList.add("active");
+      if (contDrag) contDrag.style.display = "none";
+      if (contClassic) contClassic.style.display = "block";
+      if (pill1Num) pill1Num.innerText = "Paso 1";
+      if (pill1Title) pill1Title.innerText = "+Proximidad";
+      if (pill2) pill2.style.display = "flex";
+      renderStep1Classic();
+    }
+  }
+
+  function initFullRankedList() {
+    if (!responses.self) return;
+    const others = currentGroup.participantes.filter(p => p.num !== responses.self.num);
+
+    if (responses.proxList && responses.proxList.length > 0) {
+      const proxNums = new Set(responses.proxList.map(p => p.num));
+      const distNums = new Set((responses.distList || []).map(p => p.num));
+      const mid = others.filter(p => !proxNums.has(p.num) && !distNums.has(p.num));
+      const bottom = [...(responses.distList || [])].reverse();
+      responses.fullRankedList = [...responses.proxList, ...mid, ...bottom];
+    } else {
+      responses.fullRankedList = [...others];
+    }
+
+    responses.proxThreshold = Math.max(3, responses.proxList.length || 4);
+    responses.distThreshold = Math.max(3, responses.distList.length || 4);
+    syncFromFullRankedList();
+  }
+
+  function syncFromFullRankedList() {
+    if (!responses.fullRankedList || responses.fullRankedList.length === 0) return;
+    const total = responses.fullRankedList.length;
+    const kProx = Math.max(3, Math.min(responses.proxThreshold || 4, total));
+    const kDist = Math.max(3, Math.min(responses.distThreshold || 4, total - kProx));
+    responses.proxThreshold = kProx;
+    responses.distThreshold = kDist;
+
+    // 1. Proximidad: primeros kProx elementos
+    responses.proxList = responses.fullRankedList.slice(0, kProx);
+
+    // 2. Distancia: ultimos kDist elementos, invertidos (fondo de lista es d1º Nadir)
+    const distSlice = responses.fullRankedList.slice(total - kDist);
+    responses.distList = [...distSlice].reverse();
+
+    // 3. Referentes de contorno
+    calculateReferents();
+
+    // 4. Actualizar badges clásicos
+    const proxBadge = document.getElementById("proxCounterBadge");
+    if (proxBadge) {
+      proxBadge.innerText = `${responses.proxList.length} / mín. 3`;
+      proxBadge.className = `rank-badge ${responses.proxList.length >= 3 ? "green" : "orange"}`;
+    }
+    const distBadge = document.getElementById("distCounterBadge");
+    if (distBadge) {
+      distBadge.innerText = `${responses.distList.length} / mín. 3`;
+      distBadge.className = `rank-badge ${responses.distList.length >= 3 ? "green" : "orange"}`;
+    }
+    const bNext1 = document.getElementById("btnNext1");
+    if (bNext1) bNext1.disabled = (responses.proxList.length < 3);
+    const bNext2 = document.getElementById("btnNext2");
+    if (bNext2) bNext2.disabled = (responses.distList.length < 3);
+  }
+
+  function changeProxThreshold(delta) {
+    const total = responses.fullRankedList ? responses.fullRankedList.length : 14;
+    const maxProx = Math.max(3, total - (responses.distThreshold || 3));
+    const nextVal = (responses.proxThreshold || 4) + delta;
+    if (nextVal >= 3 && nextVal <= maxProx) {
+      responses.proxThreshold = nextVal;
+      syncFromFullRankedList();
+      renderFullRankedList();
+      renderStep1Classic();
+    }
+  }
+
+  function changeDistThreshold(delta) {
+    const total = responses.fullRankedList ? responses.fullRankedList.length : 14;
+    const maxDist = Math.max(3, total - (responses.proxThreshold || 3));
+    const nextVal = (responses.distThreshold || 4) + delta;
+    if (nextVal >= 3 && nextVal <= maxDist) {
+      responses.distThreshold = nextVal;
+      syncFromFullRankedList();
+      renderFullRankedList();
+      renderStep2();
+    }
+  }
+
+  // GESTIÓN DE EVENTOS DRAG AND DROP
+  let draggedRowIndex = null;
+
+  function handleRowDragStart(e) {
+    draggedRowIndex = parseInt(this.getAttribute("data-index"), 10);
+    this.classList.add("is-dragging");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", draggedRowIndex);
+  }
+
+  function handleRowDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    return false;
+  }
+
+  function handleRowDragEnter(e) {
+    this.classList.add("drag-over");
+  }
+
+  function handleRowDragLeave(e) {
+    this.classList.remove("drag-over");
+  }
+
+  function handleRowDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.remove("drag-over");
+    const targetIdx = parseInt(this.getAttribute("data-index"), 10);
+    if (draggedRowIndex !== null && draggedRowIndex !== targetIdx) {
+      reorderFullList(draggedRowIndex, targetIdx);
+    }
+    return false;
+  }
+
+  function handleRowDragEnd(e) {
+    this.classList.remove("is-dragging");
+    document.querySelectorAll(".drag-row").forEach(r => r.classList.remove("drag-over"));
+    draggedRowIndex = null;
+  }
+
+  // EVENTOS TOUCH PARA MÓVILES Y TABLETS
+  let touchStartY = 0;
+  let touchSrcRow = null;
+
+  function handleRowTouchStart(e) {
+    touchSrcRow = this;
+    touchStartY = e.touches[0].clientY;
+  }
+
+  function handleRowTouchEnd(e) {
+    if (!touchSrcRow) return;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diff = touchEndY - touchStartY;
+    const fromIdx = parseInt(touchSrcRow.getAttribute("data-index"), 10);
+    if (Math.abs(diff) > 35) {
+      const step = diff > 0 ? 1 : -1;
+      reorderFullList(fromIdx, Math.max(0, Math.min(responses.fullRankedList.length - 1, fromIdx + step)));
+    }
+    touchSrcRow = null;
+  }
+
+  function reorderFullList(fromIdx, toIdx) {
+    if (fromIdx < 0 || fromIdx >= responses.fullRankedList.length) return;
+    if (toIdx < 0 || toIdx >= responses.fullRankedList.length) return;
+    const moved = responses.fullRankedList.splice(fromIdx, 1)[0];
+    responses.fullRankedList.splice(toIdx, 0, moved);
+    syncFromFullRankedList();
+    renderFullRankedList();
+    renderStep1Classic();
+    showToastNotification(`✓ ${moved.nombre} situado en la posición #${toIdx + 1}`);
+  }
+
+  function moveFullRow(idx, dir) {
+    reorderFullList(idx, idx + dir);
+  }
+  function moveFullRowToTop(idx) {
+    reorderFullList(idx, 0);
+  }
+  function moveFullRowToBottom(idx) {
+    reorderFullList(idx, responses.fullRankedList.length - 1);
+  }
+
+  function renderFullRankedList() {
+    const container = document.getElementById("fullDragListContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!responses.fullRankedList || responses.fullRankedList.length === 0) {
+      initFullRankedList();
+    }
+
+    const list = responses.fullRankedList;
+    const total = list.length;
+    const kProx = responses.proxThreshold || 4;
+    const kDist = responses.distThreshold || 4;
+
+    const countSpan = document.getElementById("totalDragCount");
+    if (countSpan) countSpan.innerText = total;
+
+    const pNum = document.getElementById("proxThreshNum");
+    const pEnd = document.getElementById("proxThreshEnd");
+    if (pNum) pNum.innerText = kProx;
+    if (pEnd) pEnd.innerText = kProx;
+
+    const dNum = document.getElementById("distThreshNum");
+    const dEnd = document.getElementById("distThreshEnd");
+    if (dNum) dNum.innerText = kDist;
+    if (dEnd) dEnd.innerText = kDist;
+
+    list.forEach((person, idx) => {
+      let zoneClass = "neutral-zone";
+      let badgeClass = "rank-badge slate";
+      let badgeText = `#${idx + 1} (Neutro)`;
+
+      if (idx < kProx) {
+        zoneClass = "prox-zone";
+        if (idx === 0) {
+          badgeClass = "rank-badge green cenit badge-prox";
+          badgeText = "p1º (Cenit α)";
+        } else if (idx === 1) {
+          badgeClass = "rank-badge green badge-prox";
+          badgeText = "p2º";
+        } else if (idx === 2) {
+          badgeClass = "rank-badge cyan pivote badge-prox";
+          badgeText = "p3º (Pivote k=3)";
+        } else {
+          badgeClass = "rank-badge dotted badge-prox";
+          badgeText = `p${idx + 1}º` + (idx === kProx - 1 && kProx > 3 ? " (Px)" : "");
+        }
+      } else if (idx >= total - kDist) {
+        zoneClass = "dist-zone";
+        const dRank = total - idx;
+        if (dRank === 1) {
+          badgeClass = "rank-badge pink nadir badge-dist";
+          badgeText = "d1º (Nadir ω)";
+        } else if (dRank === 2) {
+          badgeClass = "rank-badge orange badge-dist";
+          badgeText = "d2º";
+        } else if (dRank === 3) {
+          badgeClass = "rank-badge orange pivote badge-dist";
+          badgeText = "d3º (Pivote k=3)";
+        } else {
+          badgeClass = "rank-badge dotted badge-dist";
+          badgeText = `d${dRank}º` + (dRank === kDist && kDist > 3 ? " (Dx)" : "");
+        }
+      }
+
+      const row = document.createElement("div");
+      row.className = `drag-row ${zoneClass}`;
+      row.setAttribute("draggable", "true");
+      row.setAttribute("data-index", idx);
+
+      row.innerHTML = `
+        <div class="drag-left">
+          <div class="drag-handle" title="Arrastra para reordenar">⠿</div>
+          <div class="drag-pos-badge">
+            <span class="${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="drag-avatar">${getAvatarHtml(person)}</div>
+          <div class="drag-person-info">
+            <div class="drag-person-name">${person.nombre}</div>
+            <div class="drag-person-sub">[ Nº ${person.num} ] ${person.subgrupo || person.rol || ''}</div>
+          </div>
+        </div>
+        <div class="drag-actions">
+          <button class="btn-drag-move" onclick="moveFullRow(${idx}, -1)" title="Subir una posición" ${idx === 0 ? "disabled" : ""}>▲</button>
+          <button class="btn-drag-move" onclick="moveFullRow(${idx}, 1)" title="Bajar una posición" ${idx === total - 1 ? "disabled" : ""}>▼</button>
+          <button class="btn-drag-quick top" onclick="moveFullRowToTop(${idx})" title="Mover al Cenit (Top 1)">🔝 Cenit</button>
+          <button class="btn-drag-quick btm" onclick="moveFullRowToBottom(${idx})" title="Mover al Nadir (Último)">🔻 Nadir</button>
+        </div>
+      `;
+
+      row.addEventListener("dragstart", handleRowDragStart);
+      row.addEventListener("dragover", handleRowDragOver);
+      row.addEventListener("dragenter", handleRowDragEnter);
+      row.addEventListener("dragleave", handleRowDragLeave);
+      row.addEventListener("drop", handleRowDrop);
+      row.addEventListener("dragend", handleRowDragEnd);
+
+      row.addEventListener("touchstart", handleRowTouchStart, { passive: true });
+      row.addEventListener("touchend", handleRowTouchEnd, { passive: true });
+
+      container.appendChild(row);
+    });
+
+    updateLiveDeductionCard();
+  }
+
+  function updateLiveDeductionCard() {
+    const bProx = document.getElementById("liveProxCountBadge");
+    const bDist = document.getElementById("liveDistCountBadge");
+    if (bProx) bProx.innerText = responses.proxList.length;
+    if (bDist) bDist.innerText = responses.distList.length;
+
+    const elProx = document.getElementById("liveProxTags");
+    const elDist = document.getElementById("liveDistTags");
+    const elRef = document.getElementById("liveRefTags");
+
+    if (elProx) {
+      elProx.innerHTML = responses.proxList.map((p, idx) => `
+        <span style="display:inline-block; margin:2px 4px 2px 0; background:#0F291E; border:1px solid #00FF87; border-radius:4px; padding:2px 6px; font-size:0.75rem;">
+          <strong style="color:#00FF87;">p${idx + 1}º:</strong> ${p.nombre} (Nº ${p.num})
+        </span>
+      `).join("");
+    }
+
+    if (elDist) {
+      elDist.innerHTML = responses.distList.map((p, idx) => `
+        <span style="display:inline-block; margin:2px 4px 2px 0; background:#2A1410; border:1px solid #FF7043; border-radius:4px; padding:2px 6px; font-size:0.75rem;">
+          <strong style="color:#FF7043;">d${idx + 1}º:</strong> ${p.nombre} (Nº ${p.num})
+        </span>
+      `).join("");
+    }
+
+    if (elRef) {
+      const refs = responses.referentes;
+      const refKeys = ['P1', 'P3', 'Px', 'D1', 'D3', 'Dx'];
+      elRef.innerHTML = refKeys.map(k => {
+        const r = refs[k];
+        if (!r) return '';
+        const isP = k.startsWith('P');
+        const col = isP ? '#00FF87' : '#FF7043';
+        const bg = isP ? '#0F291E' : '#2A1410';
+        return `
+          <span style="display:inline-block; margin:2px 4px 2px 0; background:${bg}; border:1px solid ${col}; border-radius:4px; padding:2px 6px; font-size:0.75rem;">
+            <strong style="color:${col};">${k}º:</strong> ${r.nombre} (Nº ${r.num})
+          </span>
+        `;
+      }).filter(Boolean).join("");
+    }
+  }
+
   function renderStep1() {
+    if (!responses.fullRankedList || responses.fullRankedList.length === 0) {
+      initFullRankedList();
+    }
+    renderFullRankedList();
+    renderStep1Classic();
+  }
+
+  function renderStep1Classic() {
     const pool = document.getElementById("proxPoolList");
     const ranked = document.getElementById("proxRankedList");
+    if (!pool || !ranked) return;
     pool.innerHTML = "";
     ranked.innerHTML = "";
 
@@ -1540,9 +2268,12 @@
 
     const count = responses.proxList.length;
     const badge = document.getElementById("proxCounterBadge");
-    badge.innerText = `${count} / mín. 3`;
-    badge.className = `rank-badge ${count >= 3 ? "green" : "orange"}`;
-    document.getElementById("btnNext1").disabled = (count < 3);
+    if (badge) {
+      badge.innerText = `${count} / mín. 3`;
+      badge.className = `rank-badge ${count >= 3 ? "green" : "orange"}`;
+    }
+    const bNext1 = document.getElementById("btnNext1");
+    if (bNext1) bNext1.disabled = (count < 3);
   }
 
   function addProx(p) {
@@ -2184,13 +2915,21 @@
       alert("Por favor, selecciona primero tu identidad.");
       return;
     }
-    if (stepIndex === 2 && responses.proxList.length < 3) {
-      alert("Debes indicar al menos 3 preferencias de proximidad.");
-      return;
+    if (stepIndex === 2) {
+      if (orderingMode === 'drag') {
+        goToStep(3);
+        return;
+      }
+      if (responses.proxList.length < 3) {
+        alert("Debes indicar al menos 3 preferencias de proximidad.");
+        return;
+      }
     }
-    if (stepIndex === 3 && responses.distList.length < 3) {
-      alert("Debes indicar al menos 3 preferencias de distanciamiento.");
-      return;
+    if (stepIndex === 3) {
+      if (responses.distList.length < 3 || responses.proxList.length < 3) {
+        alert("Debes indicar al menos 3 preferencias en proximidad y distanciamiento.");
+        return;
+      }
     }
 
     activeStep = stepIndex;
@@ -2211,6 +2950,11 @@
     else if (stepIndex === 5) renderStep5();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function goBackFromStep3() {
+    if (orderingMode === 'drag') goToStep(1);
+    else goToStep(2);
   }
 
   function updateStepperNav() {
