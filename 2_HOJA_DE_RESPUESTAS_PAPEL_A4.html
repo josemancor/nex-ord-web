@@ -62,6 +62,10 @@
       background: #334155;
       border-color: #64748B;
     }
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     .btn-print {
       background: #00FF87;
       color: #0F172A;
@@ -114,6 +118,28 @@
       color: #FF007F !important;
       border-color: #FF007F !important;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(255, 0, 127, 0.4) !important;
+    }
+
+    /* BOTONES DISCRETOS DE RECTIFICACIÓN POR BLOQUE */
+    .btn-rectify {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: #64748B;
+      font-size: 5.4pt;
+      font-weight: 700;
+      padding: 0.5px 5px;
+      border-radius: 3px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2.5px;
+      transition: all 0.12s ease;
+      line-height: 1.2;
+    }
+    .btn-rectify:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+      border-color: #94A3B8;
     }
 
     /* CASILLAS INTERACTIVAS Y EDITABLES */
@@ -321,6 +347,7 @@
       .floating-roster-btn { display: none !important; }
       .modal-overlay { display: none !important; }
       .transfer-toast { display: none !important; }
+      .btn-rectify { display: none !important; }
       body { padding: 0; margin: 0; }
       .student-card::after { display: none !important; }
       input.slot-interactive {
@@ -669,9 +696,10 @@
 <div class="print-bar">
   <div class="print-bar-left">
     <span>📄 <strong>Protocolo Oficial 1 Página A4:</strong> Censo Lateral con Fotos + Cuestionario Interactivo Ergonómico.</span>
-    <span style="color:#94A3B8; font-size:7.5pt;">(Verificación sobre la marcha: sin duplicados por pregunta)</span>
+    <span style="color:#94A3B8; font-size:7.5pt;">(Doble clic para borrar casilla · Clic repetido desmarca · Ctrl+Z desace)</span>
   </div>
   <div class="print-bar-right">
+    <button class="btn-action" id="btnUndo" onclick="undoLastAction()" title="Deshacer última acción (Ctrl+Z)" disabled>↩ Deshacer (Ctrl+Z)</button>
     <button class="btn-action" onclick="toggleModalOrla()">📋 Orla / Lista (L)</button>
     <button class="btn-action" onclick="resetAllFields()">🧹 Reiniciar</button>
     <button class="btn-print" onclick="window.print()">🖨 Imprimir Hoja Oficial (1 Página A4)</button>
@@ -890,8 +918,11 @@
     <!-- 1) PROXIMIDAD DIRECTA -->
     <section class="block-section" data-question-group="proximidad" data-question-name="1) Proximidad Directa">
       <div class="block-title green">
-        <span>1) ELECCIONES DIRECTAS DE PROXIMIDAD / AFINIDAD</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin repetir número)</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span>1) ELECCIONES DIRECTAS DE PROXIMIDAD / AFINIDAD</span>
+          <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin duplicar)</span>
+        </div>
+        <button class="btn-rectify" onclick="clearQuestionGroup('proximidad')" title="Vaciar y rectificar las casillas de Proximidad">↩ Rectificar</button>
       </div>
       <div class="block-prompt">
         Indica, por orden de afinidad, los <strong>números de lista</strong> de los compañeros con los que te sientes más próximo, empezando por el más afín:
@@ -913,8 +944,11 @@
     <!-- 2) DISTANCIA DIRECTA -->
     <section class="block-section" data-question-group="distancia" data-question-name="2) Distanciamiento Directo">
       <div class="block-title orange">
-        <span>2) ELECCIONES DIRECTAS DE DISTANCIAMIENTO / CONVIVENCIA PAUSADA</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin repetir número)</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span>2) ELECCIONES DIRECTAS DE DISTANCIAMIENTO / CONVIVENCIA PAUSADA</span>
+          <span style="font-weight:normal; font-size:5.8pt;">(mínimo 3, sin límite · sin duplicar)</span>
+        </div>
+        <button class="btn-rectify" onclick="clearQuestionGroup('distancia')" title="Vaciar y rectificar las casillas de Distanciamiento">↩ Rectificar</button>
       </div>
       <div class="block-prompt">
         Indica, por orden de distanciamiento, los <strong>números de lista</strong> de los compañeros con los que te sientes más distante, empezando por el más distante:
@@ -936,8 +970,11 @@
     <!-- 3) TRASLACIÓN DE TUS 6 REFERENTES -->
     <section class="block-section" data-question-group="referentes" data-question-name="3) Referentes de Contorno">
       <div class="block-title blue">
-        <span>3) IDENTIFICACIÓN DE TUS 6 REFERENTES DE CONTORNO (ANCLAJE)</span>
-        <span style="font-weight:normal; font-size:5.8pt;">(Traslada los números anotados en los pasos 1 y 2)</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span>3) IDENTIFICACIÓN DE TUS 6 REFERENTES DE CONTORNO (ANCLAJE)</span>
+          <span style="font-weight:normal; font-size:5.8pt;">(Traslada los números anotados en los pasos 1 y 2)</span>
+        </div>
+        <button class="btn-rectify" onclick="clearQuestionGroup('referentes')" title="Vaciar casillas manuales de Referentes">↩ Rectificar</button>
       </div>
       <div class="referentes-grid">
         <div class="ref-card prox">
@@ -981,7 +1018,10 @@
 
         <div class="atrib-row prox" data-question-group="atrib_p1" data-ref-id="ref_p1" data-question-name="Atribución de P1º">
           <div class="atrib-subject">
-            <strong id="atrib_p1_title">P1º</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_p1_title">P1º</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_p1')" title="Vaciar fila P1º">↩</button>
+            </div>
             <span id="atrib_p1_subtitle">(Tu referente Cenit Alfa)</span>
           </div>
           <div class="atrib-slots">
@@ -999,7 +1039,10 @@
 
         <div class="atrib-row prox" data-question-group="atrib_p3" data-ref-id="ref_p3" data-question-name="Atribución de P3º">
           <div class="atrib-subject">
-            <strong id="atrib_p3_title">P3º</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_p3_title">P3º</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_p3')" title="Vaciar fila P3º">↩</button>
+            </div>
             <span id="atrib_p3_subtitle">(Tu pivote estándar k=3)</span>
           </div>
           <div class="atrib-slots">
@@ -1017,7 +1060,10 @@
 
         <div class="atrib-row prox" data-question-group="atrib_px" data-ref-id="ref_px" data-question-name="Atribución de Pxº">
           <div class="atrib-subject">
-            <strong id="atrib_px_title">Pxº</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_px_title">Pxº</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_px')" title="Vaciar fila Pxº">↩</button>
+            </div>
             <span id="atrib_px_subtitle">(Último Prox. · Vacío si señalaste 3)</span>
           </div>
           <div class="atrib-slots">
@@ -1046,7 +1092,10 @@
 
         <div class="atrib-row dist" data-question-group="atrib_d1" data-ref-id="ref_d1" data-question-name="Atribución de D1º">
           <div class="atrib-subject">
-            <strong id="atrib_d1_title">D1º</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_d1_title">D1º</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_d1')" title="Vaciar fila D1º">↩</button>
+            </div>
             <span id="atrib_d1_subtitle">(Tu referente Nadir Omega)</span>
           </div>
           <div class="atrib-slots">
@@ -1064,7 +1113,10 @@
 
         <div class="atrib-row dist" data-question-group="atrib_d3" data-ref-id="ref_d3" data-question-name="Atribución de D3º">
           <div class="atrib-subject">
-            <strong id="atrib_d3_title">D3º</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_d3_title">D3º</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_d3')" title="Vaciar fila D3º">↩</button>
+            </div>
             <span id="atrib_d3_subtitle">(Tu pivote estándar k=3)</span>
           </div>
           <div class="atrib-slots">
@@ -1082,7 +1134,10 @@
 
         <div class="atrib-row dist" data-question-group="atrib_dx" data-ref-id="ref_dx" data-question-name="Atribución de Dxº">
           <div class="atrib-subject">
-            <strong id="atrib_dx_title">Dxº</strong> habrá preferido a:
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="atrib_dx_title">Dxº</strong>
+              <button class="btn-rectify" onclick="clearQuestionGroup('atrib_dx')" title="Vaciar fila Dxº">↩</button>
+            </div>
             <span id="atrib_dx_subtitle">(Último Dist. · Vacío si señalaste 3)</span>
           </div>
           <div class="atrib-slots">
@@ -1179,6 +1234,45 @@
     }
   });
 
+  // HISTORIAL DE CAMBIOS PARA DESHACER (UNDO)
+  const undoStack = [];
+
+  function recordChange(slot, oldVal, newVal) {
+    if (oldVal === newVal) return;
+    undoStack.push({ id: slot.id, oldVal, newVal });
+    updateUndoButton();
+  }
+
+  function updateUndoButton() {
+    const btn = document.getElementById('btnUndo');
+    if (btn) {
+      btn.disabled = (undoStack.length === 0);
+      btn.style.opacity = undoStack.length === 0 ? '0.5' : '1';
+    }
+  }
+
+  function undoLastAction() {
+    if (undoStack.length === 0) {
+      showToast('No hay acciones previas para deshacer', 'warning');
+      return;
+    }
+    const last = undoStack.pop();
+    const el = document.getElementById(last.id);
+    if (el) {
+      el.value = last.oldVal;
+      el.classList.add('flash-fill');
+      setTimeout(() => el.classList.remove('flash-fill'), 250);
+      el.focus();
+      activeSlot = el;
+
+      const qContainer = getQuestionContainer(el);
+      if (qContainer) recheckGroupDuplicates(qContainer);
+      autoSyncStep3();
+      showToast(`↩ Deshecho: restaurado a "${last.oldVal || '(vacío)'}"`);
+    }
+    updateUndoButton();
+  }
+
   // TOAST DE FEEDBACK DE TRANSFERENCIA Y AVISOS
   function showToast(msg, type = 'success') {
     const toast = document.getElementById('transferToast');
@@ -1268,7 +1362,31 @@
     });
   }
 
-  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR (CON VALIDACIÓN SOBRE LA MARCHA)
+  // VACIAR Y RECTIFICAR UN BLOQUE DE PREGUNTA COMPLETO
+  function clearQuestionGroup(groupKey) {
+    const container = document.querySelector(`[data-question-group="${groupKey}"]`);
+    if (!container) return;
+    const name = container.getAttribute('data-question-name') || groupKey;
+    if (confirm(`¿Deseas vaciar y rectificar las respuestas de "${name}"?`)) {
+      const slots = container.querySelectorAll('input.slot-interactive');
+      slots.forEach(s => {
+        if (s.value) recordChange(s, s.value, '');
+        s.value = '';
+        s.classList.remove('is-duplicate');
+        delete s.dataset.manual;
+      });
+      recheckGroupDuplicates(container);
+      autoSyncStep3();
+      const first = slots[0];
+      if (first) {
+        first.focus();
+        activeSlot = first;
+      }
+      showToast(`↩ "${name}" vaciado para rectificar`);
+    }
+  }
+
+  // FUNCIÓN MAESTRA DE TRANSFERENCIA DE NÚMERO AL CURSOR (CON RECTIFICACIÓN Y BLINDAJE)
   function transferNumber(num, studentName = '') {
     const allSlots = getAllSlots();
     let target = activeSlot;
@@ -1286,6 +1404,19 @@
     const qContainer = getQuestionContainer(target);
     const qName = getQuestionName(target);
     const qGroup = qContainer?.getAttribute('data-question-group');
+
+    // 0. MECANISMO DE RECTIFICACIÓN: Si la casilla activa ya tiene este número, ¡desmarcar / vaciar!
+    if (target.value.trim() === numStr) {
+      recordChange(target, target.value, '');
+      target.value = '';
+      target.classList.remove('is-duplicate');
+      showToast(`↩ Rectificado: Nº ${numStr} (${name}) retirado de la casilla`, 'warning');
+      if (qContainer) recheckGroupDuplicates(qContainer);
+      target.dispatchEvent(new Event('input', { bubbles: true }));
+      target.dispatchEvent(new Event('change', { bubbles: true }));
+      target.focus();
+      return;
+    }
 
     // 1. VERIFICACIÓN DE AUTO-SELECCIÓN (SI NO ES LA CASILLA DE PROPIA IDENTIFICACIÓN)
     if (target.id !== 'slot_self') {
@@ -1325,7 +1456,8 @@
       }
     }
 
-    // 3. ASIGNACIÓN VÁLIDA
+    // 3. ASIGNACIÓN VÁLIDA (CON REGISTRO PARA DESHACER)
+    recordChange(target, target.value, numStr);
     target.value = numStr;
     target.classList.remove('is-duplicate');
 
@@ -1364,8 +1496,45 @@
     });
   });
 
-  // ESCUCHAR ENTRADA DE TECLADO EN CADA CASILLA (VALIDACIÓN SOBRE LA MARCHA)
+  // ESCUCHAR ENTRADA DE TECLADO Y EVENTOS EN CADA CASILLA (RECTIFICACIÓN ERGONÓMICA)
   document.querySelectorAll('input.slot-interactive').forEach(slot => {
+    // Al recibir foco, seleccionar contenido completo para sobreescritura inmediata
+    slot.addEventListener('focus', () => {
+      slot.select();
+    });
+
+    // Doble clic sobre la casilla la vacía para rectificar rápidamente
+    slot.addEventListener('dblclick', () => {
+      if (slot.value) {
+        const old = slot.value;
+        recordChange(slot, old, '');
+        slot.value = '';
+        slot.classList.remove('is-duplicate');
+        showToast(`↩ Casilla vaciada (era Nº ${old})`);
+        const qContainer = getQuestionContainer(slot);
+        if (qContainer) recheckGroupDuplicates(qContainer);
+        slot.dispatchEvent(new Event('input', { bubbles: true }));
+        slot.dispatchEvent(new Event('change', { bubbles: true }));
+        slot.focus();
+      }
+    });
+
+    // Retroceso inteligente: Backspace en casilla vacía retrocede el cursor
+    slot.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !slot.value) {
+        const allSlots = getAllSlots();
+        const idx = allSlots.indexOf(slot);
+        if (idx > 0) {
+          e.preventDefault();
+          const prev = allSlots[idx - 1];
+          prev.focus();
+          prev.select();
+          activeSlot = prev;
+        }
+      }
+    });
+
+    // Validación sobre la marcha al teclear
     slot.addEventListener('input', () => {
       const val = slot.value.trim();
       const qContainer = getQuestionContainer(slot);
@@ -1542,9 +1711,12 @@
     }
   }
 
-  // Atajos de teclado: 'L' para orla, 'Escape' para cerrar modal
+  // Atajos de teclado: 'L' para orla, 'Escape' para cerrar modal, 'Ctrl+Z' para deshacer
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      undoLastAction();
+    } else if (e.key === 'Escape') {
       const m = document.getElementById('modalOrla');
       if (m && m.classList.contains('open')) m.classList.remove('open');
     } else if ((e.key === 'l' || e.key === 'L') && !e.target.matches('input, textarea')) {
@@ -1553,7 +1725,7 @@
     }
   });
 
-  // Reiniciar formulario
+  // Reiniciar formulario completo
   function resetAllFields() {
     if (confirm("¿Deseas reiniciar todas las casillas del cuestionario?")) {
       getAllSlots().forEach(s => {
@@ -1561,6 +1733,8 @@
         s.classList.remove('is-duplicate');
         delete s.dataset.manual;
       });
+      undoStack.length = 0;
+      updateUndoButton();
       updateRefLabels();
       const first = document.getElementById('slot_self');
       if (first) first.focus();

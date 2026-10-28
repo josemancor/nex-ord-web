@@ -1480,7 +1480,17 @@
           <div class="chip-num">Nº ${p.num}</div>
         </div>
       `;
-      chip.onclick = () => addProx(p);
+      chip.onclick = () => {
+        if (isChosen) {
+          const idx = responses.proxList.findIndex(item => item.num === p.num);
+          if (idx !== -1) {
+            removeProx(idx);
+            showToastNotification(`↩ Rectificado: Nº ${p.num} (${p.nombre}) retirado de Proximidad`);
+          }
+        } else {
+          addProx(p);
+        }
+      };
       pool.appendChild(chip);
     });
 
@@ -1561,7 +1571,17 @@
           <div class="chip-num">Nº ${p.num} ${isProx ? '<span style="color:var(--accent-neon); font-size:0.6rem;">(en Prox)</span>' : ''}</div>
         </div>
       `;
-      chip.onclick = () => addDist(p);
+      chip.onclick = () => {
+        if (isChosen) {
+          const idx = responses.distList.findIndex(item => item.num === p.num);
+          if (idx !== -1) {
+            removeDist(idx);
+            showToastNotification(`↩ Rectificado: Nº ${p.num} (${p.nombre}) retirado de Distanciamiento`);
+          }
+        } else {
+          addDist(p);
+        }
+      };
       pool.appendChild(chip);
     });
 
@@ -1757,7 +1777,17 @@
           <div class="chip-num">Nº ${p.num} ${isSelf ? '<span style="color:var(--accent-gold); font-size:0.6rem;">(¡Tú!)</span>' : ''}</div>
         </div>
       `;
-      chip.onclick = () => addAttribution(p);
+      chip.onclick = () => {
+        if (isChosen) {
+          const idx = list.findIndex(item => item.num === p.num);
+          if (idx !== -1) {
+            removeAttribution(idx);
+            showToastNotification(`↩ Rectificado: Nº ${p.num} (${p.nombre}) retirado de ${activeRefKey.toUpperCase()}`);
+          }
+        } else {
+          addAttribution(p);
+        }
+      };
       pool.appendChild(chip);
     });
 
@@ -2188,11 +2218,23 @@
         alert("No puedes seleccionarte a ti mismo en proximidad.");
         return;
       }
+      if (responses.proxList.some(item => item.num === person.num)) {
+        responses.proxList = responses.proxList.filter(item => item.num !== person.num);
+        showToastNotification(`↩ Rectificado: Nº ${person.num} (${person.nombre}) retirado de Proximidad`);
+        renderStep1();
+        return;
+      }
       addProx(person);
       showToastNotification(`✓ Nº ${person.num} (${person.nombre}) añadido a Proximidad`);
     } else if (currentStep === 2) {
       if (responses.self && person.num === responses.self.num) {
         alert("No puedes seleccionarte a ti mismo en distanciamiento.");
+        return;
+      }
+      if (responses.distList.some(item => item.num === person.num)) {
+        responses.distList = responses.distList.filter(item => item.num !== person.num);
+        showToastNotification(`↩ Rectificado: Nº ${person.num} (${person.nombre}) retirado de Distanciamiento`);
+        renderStep2();
         return;
       }
       addDist(person);
@@ -2201,6 +2243,13 @@
       const activeRef = responses.referentes ? responses.referentes[activeRefKey] : null;
       if (activeRef && person.num === activeRef.num) {
         alert(`No puedes atribuir a ${activeRef.nombre} que se elija a sí mismo.`);
+        return;
+      }
+      const list = responses.atribuciones[activeRefKey] || [];
+      if (list.some(item => item.num === person.num)) {
+        responses.atribuciones[activeRefKey] = list.filter(item => item.num !== person.num);
+        showToastNotification(`↩ Rectificado: Nº ${person.num} (${person.nombre}) retirado de ${activeRefKey.toUpperCase()}`);
+        renderStep4();
         return;
       }
       addAttribution(person);
