@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD · Formulario Interactivo Universal de Metapercepción Triádica M3-AΩ</title>
+  <style>
+    :root {
+      --bg-dark: #0B132B;
+      --bg-card: #111E3D;
+      --bg-card-hover: #172852;
+      --border-card: #1C2D5A;
+      --border-active: #38BDF8;
+      --accent-neon: #00FF87;
+      --accent-cyan: #38BDF8;
+      --accent-gold: #FFE600;
+      --accent-orange: #FF9F1C;
+      --accent-pink: #FF007F;
+      --accent-purple: #A855F7;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --danger: #EF4444;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.45;
+      padding: 12px 12px 80px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    /* BARRA SUPERIOR UNIVERSAL (ADMIN & ORLA) */
+    .top-admin-bar {
+      background: rgba(17, 30, 61, 0.95);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 8px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      backdrop-filter: blur(8px);
+    }
+    .group-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+    .group-tag {
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 0.76rem;
+      letter-spacing: 0.3px;
+    }
+    .admin-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-top {
+      background: #1E293B;
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-top:hover {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+    }
+    .btn-top.active-action {
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent-cyan);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+    .btn-top.orla-btn {
+      background: rgba(255, 230, 0, 0.15);
+      color: var(--accent-gold);
+      border-color: rgba(255, 230, 0, 0.4);
+    }
+
+    /* CABECERA PRINCIPAL */
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .badge-protocol {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      padding: 2.5px 10px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: -0.4px;
+      margin-bottom: 3px;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* BANNER MOTIVADOR Y REASEGURADOR */
+    .motivating-box {
+      background: linear-gradient(135deg, rgba(0, 255, 135, 0.08), rgba(56, 189, 248, 0.06));
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      border-left: 4px solid var(--accent-neon);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.83rem;
+      color: #E2E8F0;
+      line-height: 1.45;
+    }
+    .motivating-box strong { color: var(--accent-neon); }
+
+    /* STEPPERS / BARRA DE PROGRESO DE LOS 5 PASOS */
+    .stepper-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .step-pill {
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .step-pill.active {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+    .step-pill.completed {
+      border-color: rgba(0, 255, 135, 0.4);
+      background: rgba(0, 255, 135, 0.06);
+    }
+    .step-pill-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-pill.active .step-pill-num { color: var(--accent-cyan); }
+    .step-pill.completed .step-pill-num { color: var(--accent-neon); }
+    .step-pill-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    /* CONTENEDOR DE PANTALLAS */
+    .step-screen {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    .step-screen.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARD CONTENEDORA */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .card-title.green { color: var(--accent-neon); }
+    .card-title.orange { color: var(--accent-orange); }
+    .card-title.cyan { color: var(--accent-cyan); }
+    .card-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* GRID DE SELECCIÓN DE IDENTIDAD (PASO 0) */
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .person-card {
+      background: #152449;
+      border: 1.5px solid var(--border-card);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      position: relative;
+      user-select: none;
+    }
+    .person-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      background: var(--bg-card-hover);
+    }
+    .person-card.selected-identity {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.14);
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.35);
+    }
+    .avatar-wrap {
+      width: 42px;
+      height: 48px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #1E293B;
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .avatar-svg {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: #FFFFFF;
+      text-transform: uppercase;
+    }
+    .person-meta {
+      overflow: hidden;
+    }
+    .person-num {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      letter-spacing: 0.3px;
+    }
+    .person-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+    .person-sub {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    /* PANELES DE ELECCIÓN / RANKING (PASO 1 Y 2) */
+    .dual-pane {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 14px;
+    }
+    @media (max-width: 800px) {
+      .dual-pane { grid-template-columns: 1fr; }
+    }
+    .pane-box {
+      background: #0E1833;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+    .pane-header {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pool-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 420px;
+      padding-right: 4px;
+    }
+    .pool-chip {
+      background: #152449;
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .pool-chip:hover {
+      border-color: var(--accent-cyan);
+      background: #1D3263;
+      transform: translateX(2px);
+    }
+    .pool-chip.selected-out {
+      opacity: 0.28;
+      pointer-events: none;
+      filter: grayscale(1);
+    }
+    .chip-avatar {
+      width: 26px;
+      height: 30px;
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
+    .chip-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .chip-info { overflow: hidden; line-height: 1.15; }
+    .chip-name { font-size: 0.74rem; font-weight: 700; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip-num { font-size: 0.65rem; color: var(--accent-cyan); font-weight: 800; }
+
+    /* LISTA DE SELECCIONADOS / RANKED */
+    .ranked-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 420px;
+      flex-grow: 1;
+    }
+    .ranked-item {
+      background: #172852;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      animation: slideIn 0.2s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .ranked-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+    }
+    .rank-badge {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      min-width: 30px;
+      text-align: center;
+    }
+    .rank-badge.green { background: rgba(0, 255, 135, 0.18); color: var(--accent-neon); border: 1px solid rgba(0, 255, 135, 0.4); }
+    .rank-badge.orange { background: rgba(255, 159, 28, 0.18); color: var(--accent-orange); border: 1px solid rgba(255, 159, 28, 0.4); }
+    .rank-badge.cyan { background: rgba(56, 189, 248, 0.18); color: var(--accent-cyan); border: 1px solid rgba(56, 189, 248, 0.4); }
+
+    .ranked-actions {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .btn-rank-move {
+      background: #1E293B;
+      color: var(--text-muted);
+      border: 1px solid var(--border-card);
+      border-radius: 4px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+    .btn-rank-move:hover { background: #334155; color: #FFFFFF; }
+    .btn-rank-remove {
+      background: rgba(239, 68, 68, 0.12);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 4px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    .btn-rank-remove:hover { background: #EF4444; color: #FFFFFF; }
+
+    /* PASO 3: TARJETAS DE LOS 6 REFERENTES DE CONTORNO */
+    .referents-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .ref-show-card {
+      background: #152449;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+    .ref-show-card.prox { border-left: 4px solid var(--accent-neon); }
+    .ref-show-card.dist { border-left: 4px solid var(--accent-orange); }
+    .ref-badge-tag {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+    }
+    .ref-badge-tag.green { background: rgba(0, 255, 135, 0.15); color: var(--accent-neon); }
+    .ref-badge-tag.orange { background: rgba(255, 159, 28, 0.15); color: var(--accent-orange); }
+    .ref-avatar-lg {
+      width: 48px;
+      height: 56px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #1E293B;
+      flex-shrink: 0;
+      border: 1.5px solid var(--border-card);
+    }
+    .ref-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+    .ref-title-txt { font-size: 0.78rem; font-weight: 800; color: var(--text-muted); }
+    .ref-name-txt { font-size: 0.95rem; font-weight: 800; color: #FFFFFF; }
+    .ref-sub-txt { font-size: 0.72rem; color: var(--text-dim); }
+
+    /* PASOS 4 Y 5: PROBABLEMENTE (PESTAÑAS DE REFERENTES) */
+    .referent-tab-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .ref-tab-btn {
+      background: #152449;
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .ref-tab-btn:hover { background: #1E3266; color: #FFFFFF; }
+    .ref-tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .ref-tab-btn.completed::after {
+      content: "✓";
+      color: var(--accent-neon);
+      font-weight: 900;
+      margin-left: 2px;
+    }
+
+    /* FOOTER & BOTONES DE NAVEGACIÓN */
+    .step-nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-card);
+    }
+    .btn-nav {
+      background: #1E293B;
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-nav:hover { background: #334155; color: #FFFFFF; }
+    .btn-nav.primary {
+      background: var(--accent-neon);
+      color: #0B132B;
+      border: none;
+      font-weight: 800;
+    }
+    .btn-nav.primary:hover { background: #10B981; color: #FFFFFF; }
+    .btn-nav.secondary {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    /* MODAL DE ORLA DEL GRUPO */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 19, 43, 0.88);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 15px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-content {
+      background: #111E3D;
+      border: 1.5px solid var(--border-card);
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h2 { font-size: 1.15rem; color: #FFFFFF; }
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .btn-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .btn-modal-close:hover { color: #FFFFFF; }
+
+    /* ORLA GRID ESTILO ACADÉMICO */
+    .orla-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .orla-card {
+      background: #152449;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .orla-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+    }
+    .orla-photo {
+      width: 65px;
+      height: 75px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #1E293B;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 6px;
+    }
+    .orla-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .orla-num {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--accent-cyan);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .orla-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+    .orla-role {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    /* MODAL DE CARGA DE ARCHIVO (CONFIGURADOR) */
+    .dropzone-box {
+      border: 2px dashed rgba(56, 189, 248, 0.4);
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      background: rgba(14, 24, 51, 0.6);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 14px;
+    }
+    .dropzone-box:hover, .dropzone-box.dragover {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.05);
+    }
+    .dropzone-icon { font-size: 2rem; margin-bottom: 6px; }
+    .preset-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- =========================================================================
+       BARRA DE GESTIÓN Y FACILITACIÓN (ADMIN, ORLA Y CARGA)
+       ========================================================================= -->
+  <div class="top-admin-bar">
+    <div class="group-pill">
+      <span class="group-tag" id="headerGroupTag">GRUPO ACTIVO</span>
+      <strong id="headerGroupName" style="color:#FFFFFF;">Máster UB (N=15)</strong>
+      <span style="color:var(--text-dim);">· Criterio: <span id="headerCriterio">Afinidad y Convivencia</span></span>
+    </div>
+    <div class="admin-btns">
+      <button class="btn-top orla-btn" id="btnOpenOrla" onclick="openOrlaModal()">🎓 Ver Orla del Grupo</button>
+      <button class="btn-top active-action" id="btnOpenConfig" onclick="openConfigModal()">📁 Cargar .JSON / .CSV</button>
+      <a class="btn-top" href="2_HOJA_DE_RESPUESTAS_PAPEL_A4.html" target="_blank">📄 Imprimir Papel A4</a>
+      <button class="btn-top" onclick="exportBatchJSON()" title="Exportar todas las respuestas recopiladas">💾 Respuestas (<span id="savedCountBadge">0</span>)</button>
+    </div>
+  </div>
+
+  <!-- CABECERA -->
+  <header>
+    <div class="badge-protocol">NEXORD · Formulario Interactivo Universal · Protocolo Clélie</div>
+    <h1 id="mainGroupTitle">EJERCICIO DE METAPERCEPCIONES TRIÁDICAS</h1>
+    <div class="subtitle" id="mainGroupSubtitle">Herramienta Interactiva Dinámica · Compatible con cualquier grupo cargado vía JSON o CSV</div>
+  </header>
+
+  <!-- BANNER MOTIVADOR -->
+  <div class="motivating-box">
+    <span style="font-size:1.3rem; line-height:1;">💡</span>
+    <div>
+      <strong>INSTRUCCIONES Y REASEGURAMIENTO:</strong> Este ejercicio explora cómo percibimos la red socioafectiva del grupo. Las respuestas son <strong>ilimitadas (mantén al menos 3)</strong>. ¡Anímate a dar tantas estimaciones como consideres probables! No es necesario estar completamente seguro/a: nadie conoce con certeza la mente ajena, tu estimación empática es de gran valor. No tienes que escribir nombres: haz clic directamente sobre las tarjetas.
+    </div>
+  </div>
+
+  <!-- STEPPERS DE NAVEGACIÓN -->
+  <nav class="stepper-nav">
+    <div class="step-pill active" id="stepPill0" onclick="goToStep(0)">
+      <div class="step-pill-num">Paso 0</div>
+      <div class="step-pill-title">Tu Identidad</div>
+    </div>
+    <div class="step-pill" id="stepPill1" onclick="goToStep(1)">
+      <div class="step-pill-num">Paso 1</div>
+      <div class="step-pill-title">+Proximidad</div>
+    </div>
+    <div class="step-pill" id="stepPill2" onclick="goToStep(2)">
+      <div class="step-pill-num">Paso 2</div>
+      <div class="step-pill-title">+Distancia</div>
+    </div>
+    <div class="step-pill" id="stepPill3" onclick="goToStep(3)">
+      <div class="step-pill-num">Paso 3</div>
+      <div class="step-pill-title">Tus Referentes</div>
+    </div>
+    <div class="step-pill" id="stepPill4" onclick="goToStep(4)">
+      <div class="step-pill-num">Paso 4 y 5</div>
+      <div class="step-pill-title">Probablemente</div>
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       PASO 0: SELECCIÓN DE IDENTIDAD
+       ========================================================================= -->
+  <section class="step-screen active" id="screen0">
+    <div class="card">
+      <div class="card-title cyan">
+        <span>¿Quién eres tú en la lista del grupo?</span>
+        <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Haz clic en tu propia foto o tarjeta</span>
+      </div>
+      <div class="card-desc">
+        Selecciona tu nombre para personalizar tu hoja de respuestas. Al elegir tu identidad, tu tarjeta se excluirá automáticamente de tus propias elecciones directas.
+      </div>
+      <div class="identity-grid" id="identityGrid">
+        <!-- Generado dinámicamente -->
+      </div>
+      <div class="step-nav-footer">
+        <span style="font-size:0.85rem; color:var(--text-muted);" id="identityStatus">Selecciona tu identidad para continuar...</span>
+        <button class="btn-nav primary" id="btnNext0" onclick="goToStep(1)" disabled>Continuar al Paso 1 ➔</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PASO 1: ELECCIONES DIRECTAS DE PROXIMIDAD
+       ========================================================================= -->
+  <section class="step-screen" id="screen1">
+    <div class="card">
+      <div class="card-title green">
+        <span>1) ELECCIONES DIRECTAS DE PROXIMIDAD / AFINIDAD</span>
+        <span class="rank-badge green" id="proxCounterBadge">0 / mín. 3</span>
+      </div>
+      <div class="card-desc">
+        Indica, por orden de afinidad, los compañeros con los que te sientes más próximo, empezando por el más afín. <strong>Haz clic en una persona para añadirla</strong> a tu lista por orden de prioridad (p1º, p2º, p3º...). Puedes reordenar con las flechas o eliminar con ✕.
+      </div>
+
+      <div class="dual-pane">
+        <div class="pane-box">
+          <div class="pane-header">
+            <span>Compañeros Disponibles</span>
+            <span style="font-size:0.7rem; color:var(--accent-cyan);">Haz clic para seleccionar</span>
+          </div>
+          <div class="pool-list" id="proxPoolList">
+            <!-- Pool dinámico -->
+          </div>
+        </div>
+
+        <div class="pane-box">
+          <div class="pane-header">
+            <span>Tu Lista de Proximidad Ordenada</span>
+            <span style="font-size:0.7rem; color:var(--accent-neon);">Mayor a menor afinidad</span>
+          </div>
+          <div class="ranked-list" id="proxRankedList">
+            <!-- Lista elegida -->
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav-footer">
+        <button class="btn-nav" onclick="goToStep(0)">⬅ Cambiar Identidad</button>
+        <button class="btn-nav primary" id="btnNext1" onclick="goToStep(2)" disabled>Continuar al Paso 2 (+Distancia) ➔</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PASO 2: ELECCIONES DIRECTAS DE DISTANCIA
+       ========================================================================= -->
+  <section class="step-screen" id="screen2">
+    <div class="card">
+      <div class="card-title orange">
+        <span>2) ELECCIONES DIRECTAS DE DISTANCIAMIENTO / CONVIVENCIA PAUSADA</span>
+        <span class="rank-badge orange" id="distCounterBadge">0 / mín. 3</span>
+      </div>
+      <div class="card-desc">
+        Indica, por orden de distanciamiento, los compañeros con los que te sientes más distante o prefieres una interacción pausada, empezando por el más distante (d1º, d2º, d3º...).
+      </div>
+
+      <div class="dual-pane">
+        <div class="pane-box">
+          <div class="pane-header">
+            <span>Compañeros Disponibles</span>
+            <span style="font-size:0.7rem; color:var(--accent-orange);">Haz clic para seleccionar</span>
+          </div>
+          <div class="pool-list" id="distPoolList">
+            <!-- Pool dinámico -->
+          </div>
+        </div>
+
+        <div class="pane-box">
+          <div class="pane-header">
+            <span>Tu Lista de Distancia Ordenada</span>
+            <span style="font-size:0.7rem; color:var(--accent-orange);">Mayor a menor distanciamiento</span>
+          </div>
+          <div class="ranked-list" id="distRankedList">
+            <!-- Lista elegida -->
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav-footer">
+        <button class="btn-nav" onclick="goToStep(1)">⬅ Volver a Proximidad</button>
+        <button class="btn-nav primary" id="btnNext2" onclick="goToStep(3)" disabled>Continuar al Paso 3 (Ver Referentes) ➔</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PASO 3: DEDUCCIÓN DE LOS 6 REFERENTES DE CONTORNO
+       ========================================================================= -->
+  <section class="step-screen" id="screen3">
+    <div class="card">
+      <div class="card-title cyan">
+        <span>3) TUS 6 REFERENTES DE CONTORNO (ANCLAJE DE METAPERCEPCIÓN)</span>
+        <span style="font-size:0.76rem; color:var(--accent-neon); font-weight:normal;">Deducción Automática Canónica</span>
+      </div>
+      <div class="card-desc">
+        A partir de tus respuestas en los pasos 1 y 2, el sistema identifica matemáticamente tus 6 anclas relacionales (3 de proximidad y 3 de distancia). En los pasos siguientes, te asomarás a la mirada de cada una de estas personas.
+      </div>
+
+      <div class="referents-showcase" id="referentsShowcase">
+        <!-- Renderizado dinámico de las 6 tarjetas de referentes -->
+      </div>
+
+      <div class="step-nav-footer">
+        <button class="btn-nav" onclick="goToStep(2)">⬅ Revisar Distancia</button>
+        <button class="btn-nav primary" onclick="goToStep(4)">Comenzar Valoraciones "Probablemente" ➔</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PASO 4 Y 5: PROBABLEMENTE (ATRIBUCIONES EMPÁTICAS A LOS 6 REFERENTES)
+       ========================================================================= -->
+  <section class="step-screen" id="screen4">
+    <div class="card">
+      <div class="card-title green">
+        <span>4 y 5) PROBABLEMENTE, ¿A QUIÉNES HABRÁ PREFERIDO CADA REFERENTE?</span>
+        <span class="rank-badge green" id="globalAttribProgressBadge">0 / 6 Referentes</span>
+      </div>
+      <div class="card-desc">
+        *Protocolo Clélie:* Ponte en los zapatos de cada referente y señala a quiénes crees que elige de forma preferente (mínimo 3 selecciones por referente, ilimitadas).
+      </div>
+
+      <!-- Barra de pestañas de los 6 referentes -->
+      <div class="referent-tab-bar" id="referentTabBar">
+        <!-- Generado dinámicamente -->
+      </div>
+
+      <!-- Panel activo del referente actual -->
+      <div style="background:#0E1833; border:1px solid var(--border-card); border-radius:8px; padding:12px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="avatar-wrap" id="activeRefAvatar"></div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--accent-cyan); font-weight:800;" id="activeRefRole">REFERENTE ALFA (P1)</div>
+              <div style="font-size:1.05rem; font-weight:900; color:#FFFFFF;" id="activeRefName">Nombre</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <span class="rank-badge green" id="activeRefCounterBadge">0 / mín. 3</span>
+          </div>
+        </div>
+
+        <div class="dual-pane">
+          <div class="pane-box">
+            <div class="pane-header">
+              <span>Compañeros Disponibles</span>
+              <span style="font-size:0.7rem; color:var(--accent-cyan);">Haz clic para atribuir preferencia</span>
+            </div>
+            <div class="pool-list" id="attribPoolList">
+              <!-- Pool atribución -->
+            </div>
+          </div>
+
+          <div class="pane-box">
+            <div class="pane-header">
+              <span>Preferencias Atribuidas</span>
+              <span style="font-size:0.7rem; color:var(--accent-neon);">1º, 2º, 3º...</span>
+            </div>
+            <div class="ranked-list" id="attribRankedList">
+              <!-- Lista atribuida -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav-footer">
+        <button class="btn-nav" onclick="prevReferent()">⬅ Referente Anterior</button>
+        <button class="btn-nav secondary" onclick="nextReferent()">Siguiente Referente ➔</button>
+        <button class="btn-nav primary" id="btnFinish" onclick="goToStep(5)" style="display:none;">Ver Hoja de Resumen Final ➔</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PASO 5: RESUMEN Y EXPORTACIÓN
+       ========================================================================= -->
+  <section class="step-screen" id="screen5">
+    <div class="card">
+      <div class="card-title cyan">
+        <span>RESUMEN FINAL DE TU HOJA DE METAPERCEPCIÓN</span>
+        <span class="rank-badge green">Completado al 100%</span>
+      </div>
+      <div class="card-desc">
+        Revisa tus elecciones directas y las estimaciones empáticas asignadas a tus 6 referentes. Puedes descargar tu ficha individual o guardarla en el dispositivo.
+      </div>
+
+      <div id="summaryContainer" style="background:#0E1833; border:1px solid var(--border-card); border-radius:8px; padding:14px; margin-bottom:16px;">
+        <!-- Resumen dinámico -->
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+        <button class="btn-nav primary" onclick="downloadSingleJSON()">💾 Descargar Mi Respuesta (.JSON)</button>
+        <button class="btn-nav secondary" onclick="downloadSingleCSV()">📊 Descargar Mi Respuesta (.CSV)</button>
+        <button class="btn-nav" style="background:rgba(0, 255, 135, 0.15); color:var(--accent-neon); border-color:var(--accent-neon);" onclick="saveToBatchAndReset()">📥 Guardar en Dispositivo y Pasar al Siguiente Alumno</button>
+      </div>
+
+      <div class="step-nav-footer">
+        <button class="btn-nav" onclick="goToStep(4)">⬅ Volver a Editar Valoraciones</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- =========================================================================
+     MODAL 1: ORLA DEL GRUPO (VER ANUARIO / CENSO FOTOGRÁFICO)
+     ========================================================================= -->
+<div class="modal-overlay" id="orlaModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>🎓 Orla Oficial del Grupo (<span id="orlaCountBadge">0</span> Miembros)</h2>
+      <button class="btn-modal-close" onclick="closeOrlaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <input type="text" id="orlaSearchInput" placeholder="Buscar por nombre o número..." oninput="filterOrla()" style="background:#0E1833; border:1px solid var(--border-card); color:#FFFFFF; padding:6px 12px; border-radius:6px; font-size:0.85rem; width:260px;">
+        <span style="font-size:0.75rem; color:var(--text-muted);">Haz clic en un miembro para seleccionarlo como tu identidad</span>
+      </div>
+      <div class="orla-grid" id="orlaGrid">
+        <!-- Renderizado dinámico de la orla -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL 2: CONFIGURACIÓN Y CARGA DE ROSTER (.JSON O .CSV)
+     ========================================================================= -->
+<div class="modal-overlay" id="configModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>📁 Cargar Lista del Grupo (.JSON o .CSV)</h2>
+      <button class="btn-modal-close" onclick="closeConfigModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="dropzone-box" id="dropzone" onclick="document.getElementById('fileInput').click()">
+        <div class="dropzone-icon">📥</div>
+        <div style="font-size:0.95rem; font-weight:800; color:#FFFFFF;">Arrastra aquí tu archivo .json o .csv</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">o haz clic para explorar en tu ordenador</div>
+        <input type="file" id="fileInput" accept=".json,.csv" style="display:none;" onchange="handleFileSelect(event)">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:0.8rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">O carga un grupo de demostración predefinido:</div>
+        <div class="preset-btns">
+          <button class="btn-top" onclick="loadDemoMasterN15()">🎓 Caso Máster UB (N=15)</button>
+          <button class="btn-top" onclick="loadDemoTeamN8()">👥 Caso Equipo Innovación con Fotos (N=8)</button>
+          <button class="btn-top" onclick="loadDemoFamilyN12()">🏠 Caso Familia Multifactorial (N=12)</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:0.8rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">O pega directamente texto CSV o JSON:</div>
+        <textarea id="pasteArea" rows="4" placeholder="num,nombre,foto,subgrupo&#10;1,Persona A,,A&#10;2,Persona B,,B..." style="width:100%; background:#0E1833; border:1px solid var(--border-card); border-radius:6px; color:#FFFFFF; font-family:monospace; font-size:0.76rem; padding:8px;"></textarea>
+        <button class="btn-top active-action" style="margin-top:6px;" onclick="loadPastedData()">Parsear y Cargar Texto</button>
+      </div>
+
+      <div style="background:#0E1833; border:1px solid var(--border-card); border-radius:6px; padding:10px; font-size:0.75rem; color:var(--text-muted);">
+        <strong>Formato CSV admitido:</strong> Encabezados <code>num,nombre,foto,subgrupo,rol</code> (separado por comas o punto y coma). La columna <code>foto</code> es opcional (puede ser URL web o dejarse vacía para usar avatar automático).
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===========================================================================
+  // 1. ESTADO GLOBAL DE LA APLICACIÓN
+  // ===========================================================================
+  let currentGroup = {
+    nombre: "Máster en Análisis y Conducción de Grupos UB",
+    codigo: "MASTER_UB_N15",
+    edicion: "Promoción 2025-2026",
+    criterio: "Afinidad y Convivencia",
+    participantes: []
+  };
+
+  let responses = {
+    self: null,          // { num, nombre, id, foto, subgrupo }
+    proxList: [],        // array de participantes ordenados p1, p2, p3...
+    distList: [],        // array de participantes ordenados d1, d2, d3...
+    referentes: {},      // { P1: obj, P3: obj, Px: obj, D1: obj, D3: obj, Dx: obj }
+    atribuciones: {
+      P1: [], P3: [], Px: [],
+      D1: [], D3: [], Dx: []
+    }
+  };
+
+  let activeStep = 0;
+  let activeRefKey = "P1";
+  const REF_KEYS = ["P1", "P3", "Px", "D1", "D3", "Dx"];
+  const REF_META = {
+    P1: { rol: "1º Proximidad", sub: "Referente Alfa (α) · Cenit", tipo: "PROX", color: "var(--accent-neon)" },
+    P3: { rol: "3º Proximidad", sub: "Pivote Estándar (k=3)",       tipo: "PROX", color: "var(--accent-cyan)" },
+    Px: { rol: "Último Proximidad", sub: "Frontera Círculo Cercano",tipo: "PROX", color: "#818CF8" },
+    D1: { rol: "1º Distancia",   sub: "Referente Omega (ω) · Nadir",tipo: "DIST", color: "var(--accent-orange)" },
+    D3: { rol: "3º Distancia",   sub: "Pivote Estándar (k=3)",       tipo: "DIST", color: "var(--accent-gold)" },
+    Dx: { rol: "Último Distancia", sub: "El Menos Distante / Retorno",tipo: "DIST", color: "#F472B6" }
+  };
+
+  // ===========================================================================
+  // 2. GENERADOR DE AVATARES SVG INTELIGENTES (CUANDO NO HAY FOTO)
+  // ===========================================================================
+  function getAvatarHtml(person, className = "") {
+    if (person && person.foto && person.foto.trim().length > 5) {
+      return `<img src="${person.foto}" alt="${person.nombre}" onerror="this.outerHTML=getSvgAvatarString('${person.nombre}', ${person.num})">`;
+    }
+    return getSvgAvatarString(person ? person.nombre : "?", person ? person.num : 0);
+  }
+
+  function getSvgAvatarString(name, num) {
+    const initials = name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "NN";
+    const hues = [160, 190, 210, 260, 320, 30, 45, 280];
+    const hue = hues[(num || 1) % hues.length];
+    return `
+      <div class="avatar-svg" style="background: linear-gradient(135deg, hsl(${hue}, 65%, 35%), hsl(${hue + 40}, 65%, 20%));">
+        <span>${initials}</span>
+      </div>
+    `;
+  }
+
+  // ===========================================================================
+  // 3. INICIALIZACIÓN POR DEFECTO: MÁSTER UB N=15
+  // ===========================================================================
+  function loadDemoMasterN15() {
+    const raw = [
+      { num: 1,  nombre: "Anna G",  foto: "", subgrupo: "A",   rol: "Alumna" },
+      { num: 2,  nombre: "Anna P",  foto: "", subgrupo: "B",   rol: "Alumna" },
+      { num: 3,  nombre: "Arnau",   foto: "", subgrupo: "B",   rol: "Alumno" },
+      { num: 4,  nombre: "Clara",   foto: "", subgrupo: "A",   rol: "Alumna" },
+      { num: 5,  nombre: "Dani",    foto: "", subgrupo: "EXT", rol: "Alumno" },
+      { num: 6,  nombre: "Emma",    foto: "", subgrupo: "B",   rol: "Alumna" },
+      { num: 7,  nombre: "Irene",   foto: "", subgrupo: "A",   rol: "Alumna" },
+      { num: 8,  nombre: "Meri",    foto: "", subgrupo: "B",   rol: "Alumna" },
+      { num: 9,  nombre: "Miguel",  foto: "", subgrupo: "A",   rol: "Alumno" },
+      { num: 10, nombre: "Oscar",   foto: "", subgrupo: "A",   rol: "Alumno" },
+      { num: 11, nombre: "Pep",     foto: "", subgrupo: "B",   rol: "Alumno" },
+      { num: 12, nombre: "Roberto", foto: "", subgrupo: "A",   rol: "Alumno" },
+      { num: 13, nombre: "Saber",   foto: "", subgrupo: "B",   rol: "Alumno" },
+      { num: 14, nombre: "Sandra",  foto: "", subgrupo: "B",   rol: "Alumna" },
+      { num: 15, nombre: "Sara",    foto: "", subgrupo: "A",   rol: "Alumna" }
+    ];
+    setGroupData("Máster en Análisis y Conducción de Grupos UB", "Afinidad y Convivencia", raw);
+    closeConfigModal();
+  }
+
+  function loadDemoTeamN8() {
+    const raw = [
+      { num: 1, nombre: "Laura Méndez", foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", subgrupo: "Dirección", rol: "Product Lead" },
+      { num: 2, nombre: "Carlos Vega",   foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80", subgrupo: "Backend",   rol: "Tech Lead" },
+      { num: 3, nombre: "Elena Bosch",  foto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", subgrupo: "UX/UI",     rol: "Senior Designer" },
+      { num: 4, nombre: "Marc Soler",   foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80", subgrupo: "Frontend",  rol: "UI Developer" },
+      { num: 5, nombre: "Lucía Ramos",  foto: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80", subgrupo: "Data",      rol: "Data Scientist" },
+      { num: 6, nombre: "Javier Pons",  foto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80", subgrupo: "Backend",   rol: "Systems Eng." },
+      { num: 7, nombre: "Mireia Roca",  foto: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80", subgrupo: "UX/UI",     rol: "User Researcher" },
+      { num: 8, nombre: "David Serra",  foto: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80", subgrupo: "Data",      rol: "ML Engineer" }
+    ];
+    setGroupData("Equipo Innovación Q4 (N=8)", "Sinergia y Cooperación", raw);
+    closeConfigModal();
+  }
+
+  function loadDemoFamilyN12() {
+    const raw = [
+      { num: 1,  nombre: "Antonio (Padre)",   foto: "", subgrupo: "Adultos",  rol: "Padre" },
+      { num: 2,  nombre: "Carmen (Madre)",    foto: "", subgrupo: "Adultos",  rol: "Madre" },
+      { num: 3,  nombre: "Javier (Hijo 1)",   foto: "", subgrupo: "Hijos",    rol: "Hijo Mayor" },
+      { num: 4,  nombre: "Lucía (Hija 2)",    foto: "", subgrupo: "Hijos",    rol: "Hija Mediana" },
+      { num: 5,  nombre: "Marcos (Hijo 3)",   foto: "", subgrupo: "Hijos",    rol: "Hijo Menor" },
+      { num: 6,  nombre: "Rosa (Abuela M)",   foto: "", subgrupo: "Abuelos",  rol: "Abuela" },
+      { num: 7,  nombre: "Pedro (Abuelo M)",  foto: "", subgrupo: "Abuelos",  rol: "Abuelo" },
+      { num: 8,  nombre: "Marta (Tía)",       foto: "", subgrupo: "Parientes",rol: "Tía" },
+      { num: 9,  nombre: "Luis (Tío)",        foto: "", subgrupo: "Parientes",rol: "Tío" },
+      { num: 10, nombre: "Paula (Prima)",     foto: "", subgrupo: "Primos",   rol: "Prima" },
+      { num: 11, nombre: "David (Primo)",     foto: "", subgrupo: "Primos",   rol: "Primo" },
+      { num: 12, nombre: "Nuria (Prima)",     foto: "", subgrupo: "Primos",   rol: "Prima" }
+    ];
+    setGroupData("Familia Multifactorial (N=12)", "Cercanía y Vínculo Afectivo", raw);
+    closeConfigModal();
+  }
+
+  function setGroupData(name, criterio, list) {
+    currentGroup.nombre = name;
+    currentGroup.criterio = criterio;
+    currentGroup.participantes = list.map((p, idx) => ({
+      num: parseInt(p.num) || (idx + 1),
+      nombre: (p.nombre || p.name || `Participante ${idx + 1}`).trim(),
+      foto: (p.foto || p.photo || "").trim(),
+      subgrupo: (p.subgrupo || p.group || "G1").trim(),
+      rol: (p.rol || p.role || "Miembro").trim()
+    }));
+
+    // Actualizar cabeceras
+    document.getElementById("headerGroupName").innerText = `${currentGroup.nombre} (N=${currentGroup.participantes.length})`;
+    document.getElementById("headerCriterio").innerText = currentGroup.criterio;
+    document.getElementById("mainGroupSubtitle").innerText = `${currentGroup.nombre} · ${currentGroup.criterio}`;
+    document.getElementById("orlaCountBadge").innerText = currentGroup.participantes.length;
+
+    // Reset de respuestas
+    resetResponses();
+    renderStep0();
+    renderOrla();
+  }
+
+  function resetResponses() {
+    responses = {
+      self: null,
+      proxList: [],
+      distList: [],
+      referentes: {},
+      atribuciones: { P1: [], P3: [], Px: [], D1: [], D3: [], Dx: [] }
+    };
+    activeStep = 0;
+    activeRefKey = "P1";
+    updateStepperNav();
+  }
+
+  // ===========================================================================
+  // 4. PARSER DE ARCHIVOS (.CSV / .JSON)
+  // ===========================================================================
+  function handleFileSelect(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      parseAndLoadContent(e.target.result, file.name);
+    };
+    reader.readAsText(file);
+  }
+
+  function parseAndLoadContent(content, fileName = "archivo") {
+    try {
+      content = content.trim();
+      if (content.startsWith("{") || content.startsWith("[")) {
+        // Es JSON
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          setGroupData(fileName.replace(/\.[^/.]+$/, ""), "Afinidad y Convivencia", parsed);
+        } else if (parsed.participantes && Array.isArray(parsed.participantes)) {
+          setGroupData(parsed.grupo || fileName, parsed.criterio || "Afinidad y Convivencia", parsed.participantes);
+        } else {
+          alert("El archivo JSON debe contener un array de participantes o un objeto con la propiedad 'participantes'.");
+          return;
+        }
+      } else {
+        // Es CSV
+        const list = parseCSV(content);
+        if (list.length === 0) {
+          alert("No se pudieron extraer participantes del CSV.");
+          return;
+        }
+        setGroupData(fileName.replace(/\.[^/.]+$/, ""), "Afinidad y Convivencia", list);
+      }
+      closeConfigModal();
+    } catch (err) {
+      alert("Error al leer el archivo: " + err.message);
+    }
+  }
+
+  function parseCSV(text) {
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) return [];
+
+    const delimiter = lines[0].includes(";") ? ";" : ",";
+    const headers = lines[0].toLowerCase().split(delimiter).map(h => h.trim().replace(/^["']|["']$/g, ""));
+
+    const numIdx = headers.findIndex(h => h.includes("num") || h.includes("id") || h.includes("nº"));
+    const nameIdx = headers.findIndex(h => h.includes("nom") || h.includes("name") || h.includes("sujeto") || h.includes("alumno"));
+    const photoIdx = headers.findIndex(h => h.includes("fot") || h.includes("pic") || h.includes("img") || h.includes("photo") || h.includes("avatar"));
+    const subIdx = headers.findIndex(h => h.includes("sub") || h.includes("grup") || h.includes("equipo"));
+    const rolIdx = headers.findIndex(h => h.includes("rol") || h.includes("role") || h.includes("cargo"));
+
+    const result = [];
+    for (let i = 1; i < lines.length; i++) {
+      const parts = lines[i].split(delimiter).map(p => p.trim().replace(/^["']|["']$/g, ""));
+      if (parts.length === 0 || (parts.length === 1 && parts[0] === "")) continue;
+
+      const numVal = numIdx >= 0 ? parseInt(parts[numIdx]) || i : i;
+      const nameVal = nameIdx >= 0 ? parts[nameIdx] : (parts[1] || parts[0]);
+      const photoVal = photoIdx >= 0 ? parts[photoIdx] : "";
+      const subVal = subIdx >= 0 ? parts[subIdx] : "A";
+      const rolVal = rolIdx >= 0 ? parts[rolIdx] : "Miembro";
+
+      if (nameVal && nameVal.length > 0) {
+        result.push({ num: numVal, nombre: nameVal, foto: photoVal, subgrupo: subVal, rol: rolVal });
+      }
+    }
+    return result;
+  }
+
+  function loadPastedData() {
+    const txt = document.getElementById("pasteArea").value;
+    if (!txt || txt.trim().length === 0) {
+      alert("Pega texto en el área antes de continuar.");
+      return;
+    }
+    parseAndLoadContent(txt, "Grupo_Personalizado");
+  }
+
+  // ===========================================================================
+  // 5. RENDERIZADO: PASO 0 (IDENTIDAD)
+  // ===========================================================================
+  function renderStep0() {
+    const grid = document.getElementById("identityGrid");
+    grid.innerHTML = "";
+
+    currentGroup.participantes.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "person-card";
+      if (responses.self && responses.self.num === p.num) {
+        card.classList.add("selected-identity");
+      }
+      card.innerHTML = `
+        <div class="avatar-wrap">${getAvatarHtml(p)}</div>
+        <div class="person-meta">
+          <div class="person-num">[ Nº ${p.num} ]</div>
+          <div class="person-name">${p.nombre}</div>
+          <div class="person-sub">${p.subgrupo || ""}</div>
+        </div>
+      `;
+      card.onclick = () => selectSelf(p);
+      grid.appendChild(card);
+    });
+  }
+
+  function selectSelf(person) {
+    responses.self = person;
+    // Si cambian la identidad, limpiamos las listas que pudieran incluir al nuevo emisor
+    responses.proxList = responses.proxList.filter(p => p.num !== person.num);
+    responses.distList = responses.distList.filter(p => p.num !== person.num);
+
+    document.querySelectorAll(".person-card").forEach(c => c.classList.remove("selected-identity"));
+    event.currentTarget.classList.add("selected-identity");
+
+    document.getElementById("identityStatus").innerHTML = `Identidad seleccionada: <strong style="color:var(--accent-neon);">${person.nombre} (Nº ${person.num})</strong>`;
+    document.getElementById("btnNext0").disabled = false;
+  }
+
+  // ===========================================================================
+  // 6. RENDERIZADO: PASO 1 Y 2 (PROXIMIDAD Y DISTANCIA)
+  // ===========================================================================
+  function renderStep1() {
+    const pool = document.getElementById("proxPoolList");
+    const ranked = document.getElementById("proxRankedList");
+    pool.innerHTML = "";
+    ranked.innerHTML = "";
+
+    const available = currentGroup.participantes.filter(p => p.num !== responses.self.num);
+    const chosenNums = new Set(responses.proxList.map(p => p.num));
+
+    available.forEach(p => {
+      const isChosen = chosenNums.has(p.num);
+      const chip = document.createElement("div");
+      chip.className = `pool-chip ${isChosen ? "selected-out" : ""}`;
+      chip.innerHTML = `
+        <div class="chip-avatar">${getAvatarHtml(p)}</div>
+        <div class="chip-info">
+          <div class="chip-name">${p.nombre}</div>
+          <div class="chip-num">Nº ${p.num}</div>
+        </div>
+      `;
+      chip.onclick = () => addProx(p);
+      pool.appendChild(chip);
+    });
+
+    responses.proxList.forEach((p, idx) => {
+      const item = document.createElement("div");
+      item.className = "ranked-item";
+      item.innerHTML = `
+        <div class="ranked-left">
+          <span class="rank-badge green">p${idx + 1}º</span>
+          <div class="chip-avatar">${getAvatarHtml(p)}</div>
+          <div class="chip-info">
+            <div class="chip-name">${p.nombre}</div>
+            <div class="chip-num">Nº ${p.num}</div>
+          </div>
+        </div>
+        <div class="ranked-actions">
+          <button class="btn-rank-move" onclick="moveProx(${idx}, -1)" ${idx === 0 ? "disabled" : ""}>▲</button>
+          <button class="btn-rank-move" onclick="moveProx(${idx}, 1)" ${idx === responses.proxList.length - 1 ? "disabled" : ""}>▼</button>
+          <button class="btn-rank-remove" onclick="removeProx(${idx})">✕</button>
+        </div>
+      `;
+      ranked.appendChild(item);
+    });
+
+    const count = responses.proxList.length;
+    const badge = document.getElementById("proxCounterBadge");
+    badge.innerText = `${count} / mín. 3`;
+    badge.className = `rank-badge ${count >= 3 ? "green" : "orange"}`;
+    document.getElementById("btnNext1").disabled = (count < 3);
+  }
+
+  function addProx(p) {
+    if (responses.proxList.some(item => item.num === p.num)) return;
+    responses.proxList.push(p);
+    // Eliminar de distancia si estuviera ahí
+    responses.distList = responses.distList.filter(item => item.num !== p.num);
+    renderStep1();
+  }
+  function moveProx(idx, dir) {
+    const target = idx + dir;
+    if (target < 0 || target >= responses.proxList.length) return;
+    const temp = responses.proxList[idx];
+    responses.proxList[idx] = responses.proxList[target];
+    responses.proxList[target] = temp;
+    renderStep1();
+  }
+  function removeProx(idx) {
+    responses.proxList.splice(idx, 1);
+    renderStep1();
+  }
+
+  function renderStep2() {
+    const pool = document.getElementById("distPoolList");
+    const ranked = document.getElementById("distRankedList");
+    pool.innerHTML = "";
+    ranked.innerHTML = "";
+
+    const proxNums = new Set(responses.proxList.map(p => p.num));
+    const available = currentGroup.participantes.filter(p => p.num !== responses.self.num);
+    const chosenNums = new Set(responses.distList.map(p => p.num));
+
+    available.forEach(p => {
+      const isChosen = chosenNums.has(p.num);
+      const isProx = proxNums.has(p.num);
+      const chip = document.createElement("div");
+      chip.className = `pool-chip ${isChosen ? "selected-out" : ""}`;
+      if (isProx) chip.style.opacity = "0.5";
+      chip.innerHTML = `
+        <div class="chip-avatar">${getAvatarHtml(p)}</div>
+        <div class="chip-info">
+          <div class="chip-name">${p.nombre}</div>
+          <div class="chip-num">Nº ${p.num} ${isProx ? '<span style="color:var(--accent-neon); font-size:0.6rem;">(en Prox)</span>' : ''}</div>
+        </div>
+      `;
+      chip.onclick = () => addDist(p);
+      pool.appendChild(chip);
+    });
+
+    responses.distList.forEach((p, idx) => {
+      const item = document.createElement("div");
+      item.className = "ranked-item";
+      item.innerHTML = `
+        <div class="ranked-left">
+          <span class="rank-badge orange">d${idx + 1}º</span>
+          <div class="chip-avatar">${getAvatarHtml(p)}</div>
+          <div class="chip-info">
+            <div class="chip-name">${p.nombre}</div>
+            <div class="chip-num">Nº ${p.num}</div>
+          </div>
+        </div>
+        <div class="ranked-actions">
+          <button class="btn-rank-move" onclick="moveDist(${idx}, -1)" ${idx === 0 ? "disabled" : ""}>▲</button>
+          <button class="btn-rank-move" onclick="moveDist(${idx}, 1)" ${idx === responses.distList.length - 1 ? "disabled" : ""}>▼</button>
+          <button class="btn-rank-remove" onclick="removeDist(${idx})">✕</button>
+        </div>
+      `;
+      ranked.appendChild(item);
+    });
+
+    const count = responses.distList.length;
+    const badge = document.getElementById("distCounterBadge");
+    badge.innerText = `${count} / mín. 3`;
+    badge.className = `rank-badge ${count >= 3 ? "green" : "orange"}`;
+    document.getElementById("btnNext2").disabled = (count < 3);
+  }
+
+  function addDist(p) {
+    if (responses.distList.some(item => item.num === p.num)) return;
+    responses.distList.push(p);
+    renderStep2();
+  }
+  function moveDist(idx, dir) {
+    const target = idx + dir;
+    if (target < 0 || target >= responses.distList.length) return;
+    const temp = responses.distList[idx];
+    responses.distList[idx] = responses.distList[target];
+    responses.distList[target] = temp;
+    renderStep2();
+  }
+  function removeDist(idx) {
+    responses.distList.splice(idx, 1);
+    renderStep2();
+  }
+
+  // ===========================================================================
+  // 7. RENDERIZADO: PASO 3 (LOS 6 REFERENTES)
+  // ===========================================================================
+  function calculateReferents() {
+    const p = responses.proxList;
+    const d = responses.distList;
+
+    responses.referentes = {
+      P1: p[0],
+      P3: p[2] || p[p.length - 1],
+      Px: p[p.length - 1],
+      D1: d[0],
+      D3: d[2] || d[d.length - 1],
+      Dx: d[d.length - 1]
+    };
+  }
+
+  function renderStep3() {
+    calculateReferents();
+    const showcase = document.getElementById("referentsShowcase");
+    showcase.innerHTML = "";
+
+    REF_KEYS.forEach(key => {
+      const ref = responses.referentes[key];
+      const meta = REF_META[key];
+      const isProx = meta.tipo === "PROX";
+
+      const card = document.createElement("div");
+      card.className = `ref-show-card ${isProx ? "prox" : "dist"}`;
+      card.innerHTML = `
+        <span class="ref-badge-tag ${isProx ? "green" : "orange"}">${key}º</span>
+        <div class="ref-avatar-lg">${getAvatarHtml(ref)}</div>
+        <div style="overflow:hidden;">
+          <div class="ref-title-txt" style="color:${meta.color};">${meta.rol}</div>
+          <div class="ref-name-txt">${ref ? ref.nombre : "Sin asignar"} <small style="color:var(--accent-cyan); font-size:0.75rem;">(Nº ${ref ? ref.num : ""})</small></div>
+          <div class="ref-sub-txt">${meta.sub}</div>
+        </div>
+      `;
+      showcase.appendChild(card);
+    });
+  }
+
+  // ===========================================================================
+  // 8. RENDERIZADO: PASO 4 Y 5 (PROBABLEMENTE - ATRIBUCIONES)
+  // ===========================================================================
+  function renderStep4() {
+    calculateReferents();
+    renderReferentTabs();
+    renderActiveReferentAttribution();
+    updateGlobalAttributionBadge();
+  }
+
+  function renderReferentTabs() {
+    const bar = document.getElementById("referentTabBar");
+    bar.innerHTML = "";
+
+    REF_KEYS.forEach(key => {
+      const ref = responses.referentes[key];
+      const count = (responses.atribuciones[key] || []).length;
+      const isDone = count >= 3;
+
+      const btn = document.createElement("button");
+      btn.className = `ref-tab-btn ${activeRefKey === key ? "active" : ""} ${isDone ? "completed" : ""}`;
+      btn.innerHTML = `
+        <span style="font-weight:900;">${key}º:</span> ${ref ? ref.nombre : "?"} (${count})
+      `;
+      btn.onclick = () => switchReferentTab(key);
+      bar.appendChild(btn);
+    });
+  }
+
+  function switchReferentTab(key) {
+    activeRefKey = key;
+    renderStep4();
+  }
+
+  function prevReferent() {
+    const idx = REF_KEYS.indexOf(activeRefKey);
+    if (idx > 0) switchReferentTab(REF_KEYS[idx - 1]);
+  }
+  function nextReferent() {
+    const idx = REF_KEYS.indexOf(activeRefKey);
+    if (idx < REF_KEYS.length - 1) switchReferentTab(REF_KEYS[idx + 1]);
+  }
+
+  function renderActiveReferentAttribution() {
+    const ref = responses.referentes[activeRefKey];
+    const meta = REF_META[activeRefKey];
+    const list = responses.atribuciones[activeRefKey] || [];
+
+    document.getElementById("activeRefRole").innerText = `${meta.rol.toUpperCase()} (${activeRefKey}) · ${meta.sub.toUpperCase()}`;
+    document.getElementById("activeRefRole").style.color = meta.color;
+    document.getElementById("activeRefName").innerText = `${ref ? ref.nombre : "?"} (Nº ${ref ? ref.num : ""})`;
+    document.getElementById("activeRefAvatar").innerHTML = getAvatarHtml(ref);
+
+    const pool = document.getElementById("attribPoolList");
+    const ranked = document.getElementById("attribRankedList");
+    pool.innerHTML = "";
+    ranked.innerHTML = "";
+
+    // Excluir al referente mismo (nadie se elige a sí mismo)
+    const available = currentGroup.participantes.filter(p => p.num !== (ref ? ref.num : null));
+    const chosenNums = new Set(list.map(p => p.num));
+
+    available.forEach(p => {
+      const isChosen = chosenNums.has(p.num);
+      const isSelf = responses.self && responses.self.num === p.num;
+
+      const chip = document.createElement("div");
+      chip.className = `pool-chip ${isChosen ? "selected-out" : ""}`;
+      chip.innerHTML = `
+        <div class="chip-avatar">${getAvatarHtml(p)}</div>
+        <div class="chip-info">
+          <div class="chip-name">${p.nombre}</div>
+          <div class="chip-num">Nº ${p.num} ${isSelf ? '<span style="color:var(--accent-gold); font-size:0.6rem;">(¡Tú!)</span>' : ''}</div>
+        </div>
+      `;
+      chip.onclick = () => addAttribution(p);
+      pool.appendChild(chip);
+    });
+
+    list.forEach((p, idx) => {
+      const isSelf = responses.self && responses.self.num === p.num;
+      const item = document.createElement("div");
+      item.className = "ranked-item";
+      item.innerHTML = `
+        <div class="ranked-left">
+          <span class="rank-badge cyan">${idx + 1}º</span>
+          <div class="chip-avatar">${getAvatarHtml(p)}</div>
+          <div class="chip-info">
+            <div class="chip-name">${p.nombre} ${isSelf ? '<span style="color:var(--accent-gold); font-size:0.6rem;">(A ti)</span>' : ''}</div>
+            <div class="chip-num">Nº ${p.num}</div>
+          </div>
+        </div>
+        <div class="ranked-actions">
+          <button class="btn-rank-move" onclick="moveAttribution(${idx}, -1)" ${idx === 0 ? "disabled" : ""}>▲</button>
+          <button class="btn-rank-move" onclick="moveAttribution(${idx}, 1)" ${idx === list.length - 1 ? "disabled" : ""}>▼</button>
+          <button class="btn-rank-remove" onclick="removeAttribution(${idx})">✕</button>
+        </div>
+      `;
+      ranked.appendChild(item);
+    });
+
+    const count = list.length;
+    const badge = document.getElementById("activeRefCounterBadge");
+    badge.innerText = `${count} / mín. 3`;
+    badge.className = `rank-badge ${count >= 3 ? "green" : "orange"}`;
+  }
+
+  function addAttribution(p) {
+    if (!responses.atribuciones[activeRefKey]) responses.atribuciones[activeRefKey] = [];
+    if (responses.atribuciones[activeRefKey].some(item => item.num === p.num)) return;
+    responses.atribuciones[activeRefKey].push(p);
+    renderStep4();
+  }
+  function moveAttribution(idx, dir) {
+    const list = responses.atribuciones[activeRefKey];
+    const target = idx + dir;
+    if (target < 0 || target >= list.length) return;
+    const temp = list[idx];
+    list[idx] = list[target];
+    list[target] = temp;
+    renderStep4();
+  }
+  function removeAttribution(idx) {
+    responses.atribuciones[activeRefKey].splice(idx, 1);
+    renderStep4();
+  }
+
+  function updateGlobalAttributionBadge() {
+    let completedCount = 0;
+    REF_KEYS.forEach(key => {
+      if ((responses.atribuciones[key] || []).length >= 3) completedCount++;
+    });
+
+    const badge = document.getElementById("globalAttribProgressBadge");
+    badge.innerText = `${completedCount} / 6 Referentes`;
+    badge.className = `rank-badge ${completedCount === 6 ? "green" : "orange"}`;
+
+    const btnFinish = document.getElementById("btnFinish");
+    btnFinish.style.display = (completedCount >= 6) ? "inline-flex" : "none";
+  }
+
+  // ===========================================================================
+  // 9. RENDERIZADO: PASO 5 (RESUMEN FINAL)
+  // ===========================================================================
+  function renderStep5() {
+    const container = document.getElementById("summaryContainer");
+    const s = responses.self;
+
+    let html = `
+      <div style="border-bottom:1px solid var(--border-card); padding-bottom:10px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.75rem; color:var(--accent-cyan); font-weight:800;">ALUMNO / EMISOR:</div>
+          <div style="font-size:1.15rem; font-weight:900; color:#FFFFFF;">${s ? s.nombre : "Sin nombre"} <span style="font-size:0.85rem; color:var(--accent-neon);">(Nº ${s ? s.num : ""})</span></div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted); text-align:right;">
+          ${currentGroup.nombre}<br>
+          Criterio: <strong>${currentGroup.criterio}</strong>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+        <div style="background:#152449; padding:10px; border-radius:6px; border:1px solid var(--border-card);">
+          <div style="font-size:0.75rem; font-weight:800; color:var(--accent-neon); margin-bottom:6px;">+PROXIMIDAD DIRECTA:</div>
+          <div style="font-size:0.82rem; color:#FFFFFF;">
+            ${responses.proxList.map((p, i) => `<strong>p${i+1}º:</strong> ${p.nombre} (Nº ${p.num})`).join(" &nbsp;·&nbsp; ")}
+          </div>
+        </div>
+        <div style="background:#152449; padding:10px; border-radius:6px; border:1px solid var(--border-card);">
+          <div style="font-size:0.75rem; font-weight:800; color:var(--accent-orange); margin-bottom:6px;">+DISTANCIA DIRECTA:</div>
+          <div style="font-size:0.82rem; color:#FFFFFF;">
+            ${responses.distList.map((p, i) => `<strong>d${i+1}º:</strong> ${p.nombre} (Nº ${p.num})`).join(" &nbsp;·&nbsp; ")}
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:0.8rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
+        VALORACIONES ATRIBUIDAS ("PROBABLEMENTE"):
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
+    `;
+
+    REF_KEYS.forEach(key => {
+      const ref = responses.referentes[key];
+      const list = responses.atribuciones[key] || [];
+      const meta = REF_META[key];
+      html += `
+        <div style="background:#152449; padding:8px 10px; border-radius:6px; border-left:3px solid ${meta.color};">
+          <div style="font-size:0.75rem; font-weight:800; color:#FFFFFF; margin-bottom:3px;">
+            ${key}º: ${ref ? ref.nombre : "?"} <small style="color:${meta.color};">(${meta.rol})</small>
+          </div>
+          <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.35;">
+            ${list.map((p, idx) => `<strong>${idx+1}º</strong> ${p.nombre} (Nº${p.num})`).join(", ")}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  // ===========================================================================
+  // 10. EXPORTACIÓN Y PERSISTENCIA (JSON Y CSV)
+  // ===========================================================================
+  function getPayloadObject() {
+    return {
+      protocolo: "M3-AΩ-Hexadico",
+      timestamp: new Date().toISOString(),
+      grupo: currentGroup.nombre,
+      criterio: currentGroup.criterio,
+      emisor: responses.self,
+      elecciones_directas: {
+        proximidad: responses.proxList.map(p => ({ num: p.num, nombre: p.nombre })),
+        distancia: responses.distList.map(p => ({ num: p.num, nombre: p.nombre }))
+      },
+      referentes_contorno: {
+        P1: responses.referentes.P1 ? { num: responses.referentes.P1.num, nombre: responses.referentes.P1.nombre } : null,
+        P3: responses.referentes.P3 ? { num: responses.referentes.P3.num, nombre: responses.referentes.P3.nombre } : null,
+        Px: responses.referentes.Px ? { num: responses.referentes.Px.num, nombre: responses.referentes.Px.nombre } : null,
+        D1: responses.referentes.D1 ? { num: responses.referentes.D1.num, nombre: responses.referentes.D1.nombre } : null,
+        D3: responses.referentes.D3 ? { num: responses.referentes.D3.num, nombre: responses.referentes.D3.nombre } : null,
+        Dx: responses.referentes.Dx ? { num: responses.referentes.Dx.num, nombre: responses.referentes.Dx.nombre } : null
+      },
+      atribuciones_probablemente: {
+        P1: (responses.atribuciones.P1 || []).map(p => ({ num: p.num, nombre: p.nombre })),
+        P3: (responses.atribuciones.P3 || []).map(p => ({ num: p.num, nombre: p.nombre })),
+        Px: (responses.atribuciones.Px || []).map(p => ({ num: p.num, nombre: p.nombre })),
+        D1: (responses.atribuciones.D1 || []).map(p => ({ num: p.num, nombre: p.nombre })),
+        D3: (responses.atribuciones.D3 || []).map(p => ({ num: p.num, nombre: p.nombre })),
+        Dx: (responses.atribuciones.Dx || []).map(p => ({ num: p.num, nombre: p.nombre }))
+      }
+    };
+  }
+
+  function downloadSingleJSON() {
+    const payload = getPayloadObject();
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+    const dlAnchor = document.createElement("a");
+    const name = responses.self ? responses.self.nombre.replace(/\s+/g, "_") : "alumno";
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `NEXORD_M3_Respuesta_${name}_N${responses.self ? responses.self.num : "X"}.json`);
+    dlAnchor.click();
+  }
+
+  function downloadSingleCSV() {
+    const p = getPayloadObject();
+    let csv = "SECCION,REFERENTE_ROL,REFERENTE_NUM,REFERENTE_NOMBRE,ORDEN,ELEGIDO_NUM,ELEGIDO_NOMBRE\n";
+
+    // Directas
+    p.elecciones_directas.proximidad.forEach((item, idx) => {
+      csv += `DIRECTA,PROXIMIDAD,${p.emisor.num},"${p.emisor.nombre}",${idx+1},${item.num},"${item.nombre}"\n`;
+    });
+    p.elecciones_directas.distancia.forEach((item, idx) => {
+      csv += `DIRECTA,DISTANCIA,${p.emisor.num},"${p.emisor.nombre}",${idx+1},${item.num},"${item.nombre}"\n`;
+    });
+
+    // Atribuciones
+    REF_KEYS.forEach(key => {
+      const ref = p.referentes_contorno[key];
+      const items = p.atribuciones_probablemente[key] || [];
+      items.forEach((item, idx) => {
+        csv += `ATRIBUCION,${key},${ref ? ref.num : ""},"${ref ? ref.nombre : ""}",${idx+1},${item.num},"${item.nombre}"\n`;
+      });
+    });
+
+    const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+    const dlAnchor = document.createElement("a");
+    const name = responses.self ? responses.self.nombre.replace(/\s+/g, "_") : "alumno";
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `NEXORD_M3_Respuesta_${name}_N${responses.self ? responses.self.num : "X"}.csv`);
+    dlAnchor.click();
+  }
+
+  function saveToBatchAndReset() {
+    const payload = getPayloadObject();
+    const key = `NEXORD_BATCH_${currentGroup.codigo || "GENERIC"}`;
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    // Reemplazar si ya existía el mismo alumno
+    const filtered = existing.filter(item => item.emisor.num !== payload.emisor.num);
+    filtered.push(payload);
+    localStorage.setItem(key, JSON.stringify(filtered));
+
+    updateSavedBadge();
+    alert(`¡Respuesta de ${payload.emisor.nombre} guardada exitosamente! El formulario se reiniciará para el siguiente compañero.`);
+    resetResponses();
+    goToStep(0);
+  }
+
+  function updateSavedBadge() {
+    const key = `NEXORD_BATCH_${currentGroup.codigo || "GENERIC"}`;
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    document.getElementById("savedCountBadge").innerText = `${existing.length} / ${currentGroup.participantes.length}`;
+  }
+
+  function exportBatchJSON() {
+    const key = `NEXORD_BATCH_${currentGroup.codigo || "GENERIC"}`;
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    if (existing.length === 0) {
+      alert("Aún no hay respuestas guardadas en este dispositivo para el grupo activo.");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+      grupo: currentGroup.nombre,
+      criterio: currentGroup.criterio,
+      total_respuestas: existing.length,
+      respuestas: existing
+    }, null, 2));
+    const dlAnchor = document.createElement("a");
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `NEXORD_M3_Lote_Completo_${currentGroup.codigo || "GRUPO"}_N${existing.length}.json`);
+    dlAnchor.click();
+  }
+
+  // ===========================================================================
+  // 11. NAVEGACIÓN ENTRE PANTALLAS
+  // ===========================================================================
+  function goToStep(stepIndex) {
+    if (stepIndex === 1 && !responses.self) {
+      alert("Por favor, selecciona primero tu identidad.");
+      return;
+    }
+    if (stepIndex === 2 && responses.proxList.length < 3) {
+      alert("Debes indicar al menos 3 preferencias de proximidad.");
+      return;
+    }
+    if (stepIndex === 3 && responses.distList.length < 3) {
+      alert("Debes indicar al menos 3 preferencias de distanciamiento.");
+      return;
+    }
+
+    activeStep = stepIndex;
+    updateStepperNav();
+
+    for (let i = 0; i <= 5; i++) {
+      const scr = document.getElementById(`screen${i}`);
+      if (scr) scr.classList.remove("active");
+    }
+    const target = document.getElementById(`screen${stepIndex}`);
+    if (target) target.classList.add("active");
+
+    if (stepIndex === 0) renderStep0();
+    else if (stepIndex === 1) renderStep1();
+    else if (stepIndex === 2) renderStep2();
+    else if (stepIndex === 3) renderStep3();
+    else if (stepIndex === 4) renderStep4();
+    else if (stepIndex === 5) renderStep5();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function updateStepperNav() {
+    for (let i = 0; i <= 4; i++) {
+      const pill = document.getElementById(`stepPill${i}`);
+      if (!pill) continue;
+      pill.classList.remove("active", "completed");
+      if (i === activeStep || (activeStep === 5 && i === 4)) {
+        pill.classList.add("active");
+      } else if (i < activeStep) {
+        pill.classList.add("completed");
+      }
+    }
+  }
+
+  // ===========================================================================
+  // 12. ORLA Y MODALES
+  // ===========================================================================
+  function openOrlaModal() {
+    renderOrla();
+    document.getElementById("orlaModal").classList.add("open");
+  }
+  function closeOrlaModal() {
+    document.getElementById("orlaModal").classList.remove("open");
+  }
+
+  function renderOrla(filter = "") {
+    const grid = document.getElementById("orlaGrid");
+    grid.innerHTML = "";
+    const list = currentGroup.participantes.filter(p => {
+      if (!filter) return true;
+      const f = filter.toLowerCase();
+      return p.nombre.toLowerCase().includes(f) || p.num.toString() === f;
+    });
+
+    list.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "orla-card";
+      card.innerHTML = `
+        <span class="orla-num">Nº ${p.num}</span>
+        <div class="orla-photo">${getAvatarHtml(p)}</div>
+        <div class="orla-name">${p.nombre}</div>
+        <div class="orla-role">${p.subgrupo || p.rol || ""}</div>
+      `;
+      card.onclick = () => {
+        selectSelf(p);
+        closeOrlaModal();
+      };
+      grid.appendChild(card);
+    });
+  }
+
+  function filterOrla() {
+    const val = document.getElementById("orlaSearchInput").value;
+    renderOrla(val);
+  }
+
+  function openConfigModal() {
+    document.getElementById("configModal").classList.add("open");
+  }
+  function closeConfigModal() {
+    document.getElementById("configModal").classList.remove("open");
+  }
+
+  // Drag and drop en dropzone
+  const dz = document.getElementById("dropzone");
+  dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("dragover"); });
+  dz.addEventListener("dragleave", e => { e.preventDefault(); dz.classList.remove("dragover"); });
+  dz.addEventListener("drop", e => {
+    e.preventDefault();
+    dz.classList.remove("dragover");
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      const reader = new FileReader();
+      reader.onload = ev => parseAndLoadContent(ev.target.result, file.name);
+      reader.readAsText(file);
+    }
+  });
+
+  // Cerrar modales con Escape
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      closeOrlaModal();
+      closeConfigModal();
+    }
+  });
+
+  // Inicio automático
+  loadDemoMasterN15();
+  updateSavedBadge();
+</script>
+
+</body>
+</html>
