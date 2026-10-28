@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taller de Metapercepción Triádica M3-AΩ · Máster N=15 · NEXORD</title>
+  <style>
+    :root {
+      --bg-dark: #0B132B;
+      --card-bg: #111E3D;
+      --card-border: #1C2D5A;
+      --accent-neon-green: #00FF87;
+      --accent-cyan: #38BDF8;
+      --accent-magenta: #FF007F;
+      --accent-gold: #FFE600;
+      --accent-orange: #FF9F1C;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      padding: 20px 15px 80px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .badge-master {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* REASSURING ALERT BOX */
+    .reassuring-banner {
+      background: linear-gradient(135deg, rgba(0, 255, 135, 0.1), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 25px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .reassuring-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+    .reassuring-text {
+      font-size: 0.92rem;
+      color: #E2E8F0;
+    }
+    .reassuring-text strong {
+      color: var(--accent-neon-green);
+    }
+
+    /* FACILITATOR BAR / STATUS */
+    .facilitator-bar {
+      background: #0F172A;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .status-counter {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .status-counter span {
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-sm {
+      background: #1E293B;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sm:hover {
+      background: #334155;
+      border-color: var(--accent-cyan);
+    }
+    .btn-download {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--accent-neon-green);
+      border-color: rgba(0, 255, 135, 0.4);
+    }
+    .btn-download:hover {
+      background: rgba(0, 255, 135, 0.25);
+    }
+
+    /* STEP WIZARD CONTAINER */
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: none;
+    }
+    .step-card.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .step-number {
+      background: var(--accent-cyan);
+      color: #070D1E;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .step-prompt {
+      font-size: 1.05rem;
+      color: #E2E8F0;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .step-prompt strong {
+      color: var(--accent-neon-green);
+    }
+    .step-prompt.distance strong {
+      color: var(--accent-orange);
+    }
+
+    .rule-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+
+    /* SELECTION CHIPS POOL */
+    .pool-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .chips-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      border: 1px dashed var(--card-border);
+      min-height: 52px;
+    }
+    .chip {
+      background: #1E293B;
+      color: #F1F5F9;
+      border: 1px solid #334155;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip:hover {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+    .chip.selected {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* ORDERED SELECTION LIST */
+    .ordered-list-box {
+      background: #0B132B;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 22px;
+    }
+    .ordered-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ordered-item {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: slideIn 0.2s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .item-pos {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 12px;
+    }
+    .item-pos.gold {
+      background: rgba(255, 230, 0, 0.15);
+      color: var(--accent-gold);
+    }
+    .item-name {
+      font-weight: 700;
+      flex-grow: 1;
+      font-size: 0.95rem;
+    }
+    .item-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-action {
+      background: transparent;
+      border: 1px solid #475569;
+      color: var(--text-muted);
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+    }
+    .btn-action:hover {
+      background: #334155;
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .btn-action.btn-del:hover {
+      background: rgba(255, 0, 127, 0.2);
+      color: var(--accent-magenta);
+      border-color: var(--accent-magenta);
+    }
+
+    .empty-state {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      text-align: center;
+      padding: 16px;
+      font-style: italic;
+    }
+
+    /* STEP NAVIGATION */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid var(--card-border);
+    }
+    .btn-nav {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-prev {
+      background: #1E293B;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+    .btn-prev:hover {
+      background: #334155;
+      color: #FFFFFF;
+    }
+    .btn-next {
+      background: var(--accent-cyan);
+      color: #070D1E;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+    }
+    .btn-next:hover:not(:disabled) {
+      background: #7DD3FC;
+      transform: translateY(-1px);
+    }
+    .btn-next:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .btn-finish {
+      background: var(--accent-neon-green);
+      color: #070D1E;
+      box-shadow: 0 4px 14px rgba(0, 255, 135, 0.3);
+    }
+    .btn-finish:hover:not(:disabled) {
+      background: #5EEAD4;
+    }
+
+    /* SUMMARY / SUCCESS VIEW */
+    .summary-card {
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+    }
+    .summary-section {
+      margin-bottom: 14px;
+    }
+    .summary-title {
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .summary-list {
+      font-size: 0.95rem;
+      color: #E2E8F0;
+    }
+
+    /* ROSTER MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      padding: 24px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .roster-card {
+      background: #0F172A;
+      border: 1px solid #1E293B;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .roster-card.completed {
+      border-color: rgba(0, 255, 135, 0.4);
+      background: rgba(0, 255, 135, 0.05);
+    }
+    .roster-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #475569;
+    }
+    .roster-card.completed .roster-dot {
+      background: var(--accent-neon-green);
+      box-shadow: 0 0 8px var(--accent-neon-green);
+    }
+    .roster-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header>
+    <div class="badge-master">Máster en Análisis y Conducción de Grupos · UB (2025-2026)</div>
+    <h1>Taller de Metapercepción Triádica (M3-AΩ)</h1>
+    <div class="subtitle">Protocolo de Descentralización Empática y Cartografía Relacional de Grupo (N = 15)</div>
+  </header>
+
+  <!-- REASSURING BANNER -->
+  <div class="reassuring-banner">
+    <div class="reassuring-icon">💡</div>
+    <div class="reassuring-text">
+      <strong>No es necesario que estés del todo seguro/a de tus respuestas:</strong> nadie conoce con certeza matemática absoluta los sentimientos o elecciones de los demás. Se trata simplemente de ofrecer tu <strong>mejor estimación empática</strong> y ponerte por un momento en la perspectiva del compañero. Tus respuestas son estrictamente confidenciales.
+    </div>
+  </div>
+
+  <!-- FACILITATOR BAR -->
+  <div class="facilitator-bar">
+    <div class="status-counter">
+      Progreso de la sesión: <span id="lblCountCompleted">0</span> / 15 participantes completados
+    </div>
+    <div class="btn-group">
+      <a href="protocolo_papel_imprimible_a4.html" target="_blank" class="btn-sm" style="text-decoration:none; display:inline-flex; align-items:center;">📄 Imprimir Papel A4</a>
+      <button class="btn-sm" onclick="abrirModalCenso()">👥 Ver Censo (15)</button>
+      <button class="btn-sm btn-download" onclick="descargarPayloadJSON()">📥 Descargar General JSON</button>
+      <button class="btn-sm" onclick="descargarCSV()">📊 Descargar CSV</button>
+      <button class="btn-sm" onclick="simularRespuestasDemo()">⚡ Cargar Demo N=15</button>
+      <button class="btn-sm" onclick="reiniciarTodo()" style="color:#FF007F;">🗑 Reset</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 0: IDENTIFICACIÓN DEL PARTICIPANTE
+       ========================================================================= -->
+  <div id="step-0" class="step-card active">
+    <div class="step-header">
+      <div class="step-number">0</div>
+      <div class="step-title">Identificación Personal</div>
+    </div>
+    <div class="step-prompt">
+      Para comenzar el ejercicio, por favor <strong>selecciona tu nombre</strong> en el listado oficial de la promoción:
+    </div>
+    <div class="chips-pool" id="pool-identificacion">
+      <!-- Inyectado por JS -->
+    </div>
+    <div id="selected-self-info" style="margin-top:10px; font-weight:700; color:var(--accent-cyan); display:none;">
+      Has seleccionado: <span id="lblSelfName" style="color:#FFF;"></span>
+    </div>
+    <div class="step-nav">
+      <div></div>
+      <button id="btn-next-0" class="btn-nav btn-next" disabled onclick="avanzarPaso(1)">Comenzar Ejercicio ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 1: TU LISTA DE AFINIDAD (CERCANÍA)
+       ========================================================================= -->
+  <div id="step-1" class="step-card">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div class="step-title">Empecemos por ti: Tu mapa de afinidad</div>
+    </div>
+    <div class="step-prompt">
+      <strong>¿Con quiénes sientes mayor sintonía, cercanía o afinidad natural en este grupo del Máster?</strong>
+    </div>
+    <div class="rule-note">
+      Haz clic sobre los nombres para colocarlos por orden (el 1º será tu máximo referente de sintonía). <strong>Selecciona al menos a 3 personas</strong> (puedes incluir a todas las que quieras).
+    </div>
+
+    <div class="pool-label">Compañeros disponibles:</div>
+    <div class="chips-pool" id="pool-step-1"></div>
+
+    <div class="pool-label">Tu lista ordenada de afinidad (Mínimo 3):</div>
+    <div class="ordered-list-box">
+      <div class="ordered-items" id="ordered-step-1">
+        <div class="empty-state">Aún no has seleccionado a ningún compañero. Haz clic arriba para añadirlos.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="avanzarPaso(0)">◀ Cambiar Identidad</button>
+      <button id="btn-next-1" class="btn-nav btn-next" disabled onclick="avanzarPaso(2)">Continuar al Paso 2 ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 2: EN LOS ZAPATOS DE TU 1º DE AFINIDAD (ALFA)
+       ========================================================================= -->
+  <div id="step-2" class="step-card">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div class="step-title">En los ojos de tu primera elección (<span id="title-alpha-name" style="color:var(--accent-gold);"></span>)</div>
+    </div>
+    <div class="step-prompt">
+      Fíjate en <strong id="prompt-alpha-name" style="color:var(--accent-gold);"></strong>, a quien has situado en el 1º lugar de tu lista de afinidad.  
+      Si te asomas por un instante a su mirada: <strong>¿Hacia quiénes crees que orienta sus mayores preferencias, confianza o cercanía en este grupo?</strong>
+    </div>
+    <div class="rule-note">
+      Ofrece tu mejor estimación intuitiva (no te preocupes si no estás seguro/a). Ordénalos de más a menos según lo que tú creas que esa persona siente. <strong>Mínimo 3 personas</strong>.
+    </div>
+
+    <div class="pool-label">Compañeros disponibles:</div>
+    <div class="chips-pool" id="pool-step-2"></div>
+
+    <div class="pool-label">Preferencias que atribuyes a tu 1º (Mínimo 3):</div>
+    <div class="ordered-list-box">
+      <div class="ordered-items" id="ordered-step-2">
+        <div class="empty-state">Haz clic en los compañeros para ordenar las elecciones que atribuyes.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="avanzarPaso(1)">◀ Volver al Paso 1</button>
+      <button id="btn-next-2" class="btn-nav btn-next" disabled onclick="avanzarPaso(3)">Continuar al Paso 3 ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 3: TU LISTA DE DISTANCIA (CONVIVENCIA PAUSADA)
+       ========================================================================= -->
+  <div id="step-3" class="step-card">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div class="step-title">Tu mapa de distancia relacional</div>
+    </div>
+    <div class="step-prompt distance">
+      Todos conectamos de manera diferente en momentos distintos. Sentir menor afinidad o mantener una relación más pausada o distante con alguien es un hecho <strong>completamente natural en cualquier convivencia</strong>; no significa rechazar a nadie.  
+      <br><br>
+      <strong>¿Con quiénes mantienes hoy menor sintonía, mayor distancia o un trato más pausado en el grupo?</strong>
+    </div>
+    <div class="rule-note">
+      Ordénalos empezando por la persona con la que sientes mayor distancia cotidiana (1º) y continúa hacia quienes tengas algo más de trato. <strong>Mínimo 3 personas</strong>.
+    </div>
+
+    <div class="pool-label">Compañeros disponibles:</div>
+    <div class="chips-pool" id="pool-step-3"></div>
+
+    <div class="pool-label">Tu lista ordenada de distancia (Mínimo 3):</div>
+    <div class="ordered-list-box">
+      <div class="ordered-items" id="ordered-step-3">
+        <div class="empty-state">Haz clic arriba para ordenar tu lista de distancia.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="avanzarPaso(2)">◀ Volver al Paso 2</button>
+      <button id="btn-next-3" class="btn-nav btn-next" disabled onclick="avanzarPaso(4)">Continuar al Paso 4 ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 4: EN LOS ZAPATOS DE TU PERSONA MÁS DISTANTE (OMEGA)
+       ========================================================================= -->
+  <div id="step-4" class="step-card">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div class="step-title">En los ojos de tu persona más distante (<span id="title-omega-name" style="color:var(--accent-orange);"></span>)</div>
+    </div>
+    <div class="step-prompt distance">
+      Fíjate ahora en <strong id="prompt-omega-name" style="color:var(--accent-orange);"></strong> (a quien has situado en el primer lugar de la lista de distancia).  
+      Aunque mantengas mayor distancia con ella, haz el esfuerzo de mirar el grupo desde su posición:  
+      <strong>¿Hacia quiénes crees que orienta sus mayores preferencias, afectos o simpatías en este grupo?</strong>
+    </div>
+    <div class="rule-note">
+      Recuerda: no indagues a quién rechaza ella, sino <strong>hacia quién busca conectar positivamente</strong>. Ofrece tu mejor intuición. <strong>Mínimo 3 personas</strong>.
+    </div>
+
+    <div class="pool-label">Compañeros disponibles:</div>
+    <div class="chips-pool" id="pool-step-4"></div>
+
+    <div class="pool-label">Preferencias que atribuyes a tu persona más distante (Mínimo 3):</div>
+    <div class="ordered-list-box">
+      <div class="ordered-items" id="ordered-step-4">
+        <div class="empty-state">Haz clic en los compañeros para atribuir sus afinidades.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="avanzarPaso(3)">◀ Volver al Paso 3</button>
+      <button id="btn-next-4" class="btn-nav btn-next" disabled onclick="evaluarPasoFinal()">Resumen y Finalizar ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO 5 (CONDICIONAL / FLOTANTE): SI ELIGIÓ > 3 EN AFINIDAD
+       ========================================================================= -->
+  <div id="step-5" class="step-card">
+    <div class="step-header">
+      <div class="step-number">5</div>
+      <div class="step-title">Pregunta de Contorno: El límite de tu círculo (<span id="title-tail-name" style="color:var(--accent-cyan);"></span>)</div>
+    </div>
+    <div class="step-prompt">
+      Al haber incluido a más de 3 compañeros en tu lista de afinidad, fíjate en <strong id="prompt-tail-name" style="color:var(--accent-cyan);"></strong> (la última persona que añadiste a tu círculo cercano).  
+      Para cerrar tu mapa: <strong>¿Hacia quiénes crees que orienta ella sus preferencias en este grupo?</strong>
+    </div>
+    <div class="rule-note">
+      Ofrece tu mejor intuición empática. Mínimo 3 personas.
+    </div>
+
+    <div class="pool-label">Compañeros disponibles:</div>
+    <div class="chips-pool" id="pool-step-5"></div>
+
+    <div class="pool-label">Preferencias atribuidas a la persona frontera (Mínimo 3):</div>
+    <div class="ordered-list-box">
+      <div class="ordered-items" id="ordered-step-5">
+        <div class="empty-state">Haz clic en los compañeros para ordenar las elecciones atribuidas.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="avanzarPaso(4)">◀ Volver al Paso 4</button>
+      <button id="btn-next-5" class="btn-nav btn-next" disabled onclick="irAResumen()">Ver Resumen y Guardar ➔</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PASO FINAL: RESUMEN Y GUARDADO
+       ========================================================================= -->
+  <div id="step-final" class="step-card">
+    <div class="step-header">
+      <div class="step-number">✔</div>
+      <div class="step-title">Resumen de tu Ejercicio</div>
+    </div>
+    <div class="step-prompt">
+      Revisa brevemente tus respuestas. Al pulsar <strong>«Confirmar y Guardar»</strong>, tu registro se añadirá al archivo general confidencial del grupo para el análisis de NEXORD.
+    </div>
+
+    <div class="summary-card" id="summary-content">
+      <!-- Inyectado por JS -->
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-nav btn-prev" onclick="volverDesdeResumen()">◀ Modificar Respuestas</button>
+      <button class="btn-nav btn-finish" onclick="guardarRegistroFinal()">✔ Confirmar y Guardar Registro</button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PANTALLA DE ÉXITO
+       ========================================================================= -->
+  <div id="step-success" class="step-card" style="text-align:center; padding:40px 20px;">
+    <div style="font-size:3rem; margin-bottom:12px;">🎉</div>
+    <h2 style="font-size:1.6rem; color:var(--accent-neon-green); margin-bottom:10px;">¡Muchas gracias, <span id="lblSuccessName"></span>!</h2>
+    <p style="color:var(--text-muted); font-size:1rem; max-width:550px; margin:0 auto 25px;">
+      Tus respuestas han sido incorporadas exitosamente al archivo general del Máster bajo secreto relacional absoluto.
+    </p>
+    <div class="btn-group" style="justify-content:center;">
+      <button class="btn-nav btn-next" onclick="siguienteParticipante()">Siguiente Alumno/a ➔</button>
+      <button class="btn-nav btn-prev" onclick="descargarPayloadJSON()">📥 Descargar General JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DEL CENSO -->
+<div class="modal-overlay" id="modalCenso">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Censo Oficial · Máster N=15</div>
+      <button class="btn-action" onclick="cerrarModalCenso()">✕</button>
+    </div>
+    <div class="roster-grid" id="rosterGrid"></div>
+    <div style="text-align:right;">
+      <button class="btn-sm btn-download" onclick="cerrarModalCenso()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===========================================================================
+  // 1. CENSO OFICIAL DEL MÁSTER EN ANÁLISIS Y CONDUCCIÓN DE GRUPOS (UB, N=15)
+  // ===========================================================================
+  const CENSO_ALUMNOS = [
+    { id: "M01", name: "Anna G", sub: "A" },
+    { id: "M02", name: "Anna P", sub: "B" },
+    { id: "M03", name: "Arnau", sub: "B" },
+    { id: "M04", name: "Clara", sub: "A" },
+    { id: "M05", name: "Dani", sub: "EXT" },
+    { id: "M06", name: "Emma", sub: "B" },
+    { id: "M07", name: "Irene", sub: "A" },
+    { id: "M08", name: "Meri", sub: "B" },
+    { id: "M09", name: "Miguel", sub: "A" },
+    { id: "M10", name: "Oscar", sub: "A" },
+    { id: "M11", name: "Pep", sub: "B" },
+    { id: "M12", name: "Roberto", sub: "A" },
+    { id: "M13", name: "Saber", sub: "B" },
+    { id: "M14", name: "Sandra", sub: "B" },
+    { id: "M15", name: "Sara", sub: "A" }
+  ];
+
+  // ESTADO LOCAL DEL PARTICIPANTE EN CURSO
+  let currentParticipant = null;
+  let currentStep = 0;
+  let hasFloatingStep5 = false;
+
+  let responses = {
+    selfId: null,
+    selfName: null,
+    listAfinidad: [],       // [id1, id2, id3, ...]
+    alphaId: null,
+    alphaName: null,
+    listAlphaAttr: [],     // [id1, id2, id3, ...]
+    listDistancia: [],      // [id1, id2, id3, ...]
+    omegaId: null,
+    omegaName: null,
+    listOmegaAttr: [],     // [id1, id2, id3, ...]
+    tailId: null,
+    tailName: null,
+    listTailAttr: []       // Opcional si afinidad > 3
+  };
+
+  // REPOSITORIO GENERAL DE RESPUESTAS (localStorage)
+  const STORAGE_KEY = "NEXORD_M3_MASTER_N15_PAYLOAD";
+
+  function cargarRepositorioGeneral() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : { metadata: getMetadataBase(), participantes: {} };
+    } catch(e) {
+      return { metadata: getMetadataBase(), participantes: {} };
+    }
+  }
+
+  function guardarRepositorioGeneral(repo) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(repo, null, 2));
+    actualizarContadorFacilitador();
+  }
+
+  function getMetadataBase() {
+    return {
+      ecosistema: "NEXORD / VISORD Engine Platinum (v1.0.1)",
+      taller: "Metapercepción Triádica M3-AΩ (Máster N=15)",
+      institucion: "Máster en Análisis y Conducción de Grupos · Universitat de Barcelona (UB)",
+      promocion: "2025-2026",
+      criterio_evaluado: "Afinidad y Convivencia",
+      n_total: CENSO_ALUMNOS.length,
+      timestamp_creacion: new Date().toISOString()
+    };
+  }
+
+  // ===========================================================================
+  // 2. INICIALIZACIÓN DE LA APLICACIÓN
+  // ===========================================================================
+  window.addEventListener("DOMContentLoaded", () => {
+    inicializarPaso0();
+    actualizarContadorFacilitador();
+  });
+
+  function actualizarContadorFacilitador() {
+    const repo = cargarRepositorioGeneral();
+    const count = Object.keys(repo.participantes || {}).length;
+    document.getElementById("lblCountCompleted").innerText = count;
+  }
+
+  // PASO 0: Renderizar lista de alumnos para identificarse
+  function inicializarPaso0() {
+    const pool = document.getElementById("pool-identificacion");
+    pool.innerHTML = "";
+    const repo = cargarRepositorioGeneral();
+
+    CENSO_ALUMNOS.forEach(al => {
+      const isDone = repo.participantes && repo.participantes[al.id];
+      const div = document.createElement("div");
+      div.className = "chip";
+      div.innerHTML = `<span>${isDone ? "✔" : "👤"}</span> ${al.name} <small style="opacity:0.6;">(${al.id})</small>`;
+      div.onclick = () => seleccionarIdentidad(al);
+      pool.appendChild(div);
+    });
+  }
+
+  function seleccionarIdentidad(al) {
+    responses.selfId = al.id;
+    responses.selfName = al.name;
+    currentParticipant = al;
+
+    document.getElementById("lblSelfName").innerText = `${al.name} (${al.id})`;
+    document.getElementById("selected-self-info").style.display = "block";
+    document.getElementById("btn-next-0").removeAttribute("disabled");
+
+    // Destacar chip seleccionado
+    const chips = document.querySelectorAll("#pool-identificacion .chip");
+    chips.forEach(c => {
+      c.style.borderColor = c.innerText.includes(al.name) ? "var(--accent-cyan)" : "#334155";
+      c.style.background = c.innerText.includes(al.name) ? "rgba(56, 189, 248, 0.2)" : "#1E293B";
+    });
+  }
+
+  // ===========================================================================
+  // 3. CONTROL DE PASOS DEL WIZARD
+  // ===========================================================================
+  function avanzarPaso(paso) {
+    // Si pasamos al paso 1, inicializar pool excluyendo al propio alumno
+    if (paso === 1) {
+      renderizarPool(1, responses.listAfinidad);
+    } 
+    else if (paso === 2) {
+      // Fijar Alfa (1º de afinidad)
+      const alphaId = responses.listAfinidad[0];
+      const alphaObj = CENSO_ALUMNOS.find(a => a.id === alphaId);
+      responses.alphaId = alphaId;
+      responses.alphaName = alphaObj ? alphaObj.name : alphaId;
+
+      document.getElementById("title-alpha-name").innerText = responses.alphaName;
+      document.getElementById("prompt-alpha-name").innerText = responses.alphaName;
+      renderizarPool(2, responses.listAlphaAttr, alphaId);
+    }
+    else if (paso === 3) {
+      renderizarPool(3, responses.listDistancia);
+    }
+    else if (paso === 4) {
+      // Fijar Omega (1º de distancia)
+      const omegaId = responses.listDistancia[0];
+      const omegaObj = CENSO_ALUMNOS.find(a => a.id === omegaId);
+      responses.omegaId = omegaId;
+      responses.omegaName = omegaObj ? omegaObj.name : omegaId;
+
+      document.getElementById("title-omega-name").innerText = responses.omegaName;
+      document.getElementById("prompt-omega-name").innerText = responses.omegaName;
+      renderizarPool(4, responses.listOmegaAttr, omegaId);
+    }
+
+    // Ocultar todos y mostrar el paso correspondiente
+    document.querySelectorAll(".step-card").forEach(c => c.classList.remove("active"));
+    const target = document.getElementById(`step-${paso}`);
+    if (target) {
+      target.classList.add("active");
+      currentStep = paso;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  // ===========================================================================
+  // 4. GESTIÓN DE POOL DE CHIPS Y LISTAS ORDENADAS
+  // ===========================================================================
+  function renderizarPool(stepNum, currentList, excludeAnchorId = null) {
+    const pool = document.getElementById(`pool-step-${stepNum}`);
+    pool.innerHTML = "";
+
+    CENSO_ALUMNOS.forEach(al => {
+      // Excluirse a sí mismo
+      if (al.id === responses.selfId) return;
+      // Excluir al ancla si corresponde (no se puede elegir a sí misma)
+      if (excludeAnchorId && al.id === excludeAnchorId) return;
+
+      const isSelected = currentList.includes(al.id);
+      const chip = document.createElement("div");
+      chip.className = `chip ${isSelected ? "selected" : ""}`;
+      chip.innerText = al.name;
+      chip.onclick = () => agregarElemento(stepNum, al.id);
+      pool.appendChild(chip);
+    });
+
+    renderizarListaOrdenada(stepNum);
+  }
+
+  function agregarElemento(stepNum, id) {
+    const list = getListByStep(stepNum);
+    if (!list.includes(id)) {
+      list.push(id);
+      renderizarPool(stepNum, list, getExcludeIdByStep(stepNum));
+    }
+  }
+
+  function removerElemento(stepNum, index) {
+    const list = getListByStep(stepNum);
+    list.splice(index, 1);
+    renderizarPool(stepNum, list, getExcludeIdByStep(stepNum));
+  }
+
+  function moverElemento(stepNum, index, direccion) {
+    const list = getListByStep(stepNum);
+    const newIndex = index + direccion;
+    if (newIndex >= 0 && newIndex < list.length) {
+      const temp = list[index];
+      list[index] = list[newIndex];
+      list[newIndex] = temp;
+      renderizarPool(stepNum, list, getExcludeIdByStep(stepNum));
+    }
+  }
+
+  function renderizarListaOrdenada(stepNum) {
+    const list = getListByStep(stepNum);
+    const container = document.getElementById(`ordered-step-${stepNum}`);
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state">Aún no has seleccionado a ningún compañero. Haz clic arriba para añadirlos.</div>`;
+    } else {
+      list.forEach((id, idx) => {
+        const al = CENSO_ALUMNOS.find(a => a.id === id);
+        const name = al ? al.name : id;
+        const item = document.createElement("div");
+        item.className = "ordered-item";
+        item.innerHTML = `
+          <div style="display:flex; align-items:center;">
+            <span class="item-pos ${idx === 0 ? "gold" : ""}">${idx + 1}º</span>
+            <span class="item-name">${name}</span>
+          </div>
+          <div class="item-actions">
+            ${idx > 0 ? `<button class="btn-action" title="Subir" onclick="moverElemento(${stepNum}, ${idx}, -1)">▲</button>` : ""}
+            ${idx < list.length - 1 ? `<button class="btn-action" title="Bajar" onclick="moverElemento(${stepNum}, ${idx}, 1)">▼</button>` : ""}
+            <button class="btn-action btn-del" title="Eliminar" onclick="removerElemento(${stepNum}, ${idx})">✕</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Validación de botón Siguiente (mínimo 3)
+    const btnNext = document.getElementById(`btn-next-${stepNum}`);
+    if (btnNext) {
+      if (list.length >= 3) {
+        btnNext.removeAttribute("disabled");
+      } else {
+        btnNext.setAttribute("disabled", "true");
+      }
+    }
+  }
+
+  function getListByStep(stepNum) {
+    switch(stepNum) {
+      case 1: return responses.listAfinidad;
+      case 2: return responses.listAlphaAttr;
+      case 3: return responses.listDistancia;
+      case 4: return responses.listOmegaAttr;
+      case 5: return responses.listTailAttr;
+    }
+  }
+
+  function getExcludeIdByStep(stepNum) {
+    if (stepNum === 2) return responses.alphaId;
+    if (stepNum === 4) return responses.omegaId;
+    if (stepNum === 5) return responses.tailId;
+    return null;
+  }
+
+  // ===========================================================================
+  // 5. EVALUACIÓN DE PASO FLOTANTE CONDICIONAL (> 3 EN AFINIDAD)
+  // ===========================================================================
+  function evaluarPasoFinal() {
+    // Si en afinidad eligió a más de 3, activar el paso condicional 5
+    if (responses.listAfinidad.length > 3) {
+      hasFloatingStep5 = true;
+      const tailId = responses.listAfinidad[responses.listAfinidad.length - 1];
+      const tailObj = CENSO_ALUMNOS.find(a => a.id === tailId);
+      responses.tailId = tailId;
+      responses.tailName = tailObj ? tailObj.name : tailId;
+
+      document.getElementById("title-tail-name").innerText = responses.tailName;
+      document.getElementById("prompt-tail-name").innerText = responses.tailName;
+      renderizarPool(5, responses.listTailAttr, tailId);
+      avanzarPaso(5);
+    } else {
+      hasFloatingStep5 = false;
+      irAResumen();
+    }
+  }
+
+  function volverDesdeResumen() {
+    if (hasFloatingStep5) {
+      avanzarPaso(5);
+    } else {
+      avanzarPaso(4);
+    }
+  }
+
+  // ===========================================================================
+  // 6. RESUMEN Y GUARDADO FINAL
+  // ===========================================================================
+  function irAResumen() {
+    const summary = document.getElementById("summary-content");
+    const getNames = (ids) => ids.map((id, i) => `${i+1}º ${CENSO_ALUMNOS.find(a=>a.id===id)?.name || id}`).join(", ");
+
+    let html = `
+      <div class="summary-section">
+        <div class="summary-title">Participante:</div>
+        <div class="summary-list"><strong>${responses.selfName} (${responses.selfId})</strong></div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">1. Tu Lista de Afinidad (${responses.listAfinidad.length} personas):</div>
+        <div class="summary-list">${getNames(responses.listAfinidad)}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">2. Elecciones atribuidas a tu 1º (${responses.alphaName}):</div>
+        <div class="summary-list">${getNames(responses.listAlphaAttr)}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">3. Tu Lista de Distancia (${responses.listDistancia.length} personas):</div>
+        <div class="summary-list">${getNames(responses.listDistancia)}</div>
+      </div>
+      <div class="summary-section">
+        <div class="summary-title">4. Elecciones atribuidas a tu persona más distante (${responses.omegaName}):</div>
+        <div class="summary-list">${getNames(responses.listOmegaAttr)}</div>
+      </div>
+    `;
+
+    if (hasFloatingStep5 && responses.listTailAttr.length > 0) {
+      html += `
+        <div class="summary-section">
+          <div class="summary-title">5. Elecciones atribuidas al límite de afinidad (${responses.tailName}):</div>
+          <div class="summary-list">${getNames(responses.listTailAttr)}</div>
+        </div>
+      `;
+    }
+
+    summary.innerHTML = html;
+
+    document.querySelectorAll(".step-card").forEach(c => c.classList.remove("active"));
+    document.getElementById("step-final").classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function guardarRegistroFinal() {
+    const repo = cargarRepositorioGeneral();
+
+    repo.participantes[responses.selfId] = {
+      id: responses.selfId,
+      nombre: responses.selfName,
+      fecha_utc: new Date().toISOString(),
+      afinidad_propia: responses.listAfinidad,
+      alfa_id: responses.alphaId,
+      alfa_atribuidas: responses.listAlphaAttr,
+      distancia_propia: responses.listDistancia,
+      omega_id: responses.omegaId,
+      omega_atribuidas: responses.listOmegaAttr,
+      frontera_id: responses.tailId || null,
+      frontera_atribuidas: responses.listTailAttr || []
+    };
+
+    guardarRepositorioGeneral(repo);
+
+    document.getElementById("lblSuccessName").innerText = responses.selfName;
+    document.querySelectorAll(".step-card").forEach(c => c.classList.remove("active"));
+    document.getElementById("step-success").classList.add("active");
+  }
+
+  function siguienteParticipante() {
+    // Reset estado del formulario
+    responses = {
+      selfId: null,
+      selfName: null,
+      listAfinidad: [],
+      alphaId: null,
+      alphaName: null,
+      listAlphaAttr: [],
+      listDistancia: [],
+      omegaId: null,
+      omegaName: null,
+      listTailAttr: []
+    };
+    currentParticipant = null;
+    hasFloatingStep5 = false;
+
+    inicializarPaso0();
+    avanzarPaso(0);
+  }
+
+  // ===========================================================================
+  // 7. DESCARGA DE ARCHIVOS GENERALES (JSON / CSV)
+  // ===========================================================================
+  function descargarPayloadJSON() {
+    const repo = cargarRepositorioGeneral();
+    const str = JSON.stringify(repo, null, 2);
+    const blob = new Blob([str], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `RESPUESTAS_GENERAL_MASTER_N15_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function descargarCSV() {
+    const repo = cargarRepositorioGeneral();
+    const parts = repo.participantes || {};
+    let csv = "ID_Emisor,Nombre,Alfa_ID,aE_Atribuidas,Omega_ID,oE_Atribuidas,Afinidad_Propia,Distancia_Propia\n";
+
+    Object.values(parts).forEach(p => {
+      const aE = (p.alfa_atribuidas || []).join(";");
+      const oE = (p.omega_atribuidas || []).join(";");
+      const af = (p.afinidad_propia || []).join(";");
+      const dist = (p.distancia_propia || []).join(";");
+      csv += `"${p.id}","${p.nombre}","${p.alfa_id}","${aE}","${p.omega_id}","${oE}","${af}","${dist}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `RESPUESTAS_GENERAL_MASTER_N15_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===========================================================================
+  // 8. UTILIDADES DEL FACILITADOR (MODAL Y DEMO)
+  // ===========================================================================
+  function abrirModalCenso() {
+    const grid = document.getElementById("rosterGrid");
+    grid.innerHTML = "";
+    const repo = cargarRepositorioGeneral();
+
+    CENSO_ALUMNOS.forEach(al => {
+      const isDone = repo.participantes && repo.participantes[al.id];
+      const card = document.createElement("div");
+      card.className = `roster-card ${isDone ? "completed" : ""}`;
+      card.innerHTML = `
+        <div class="roster-dot"></div>
+        <div>
+          <div class="roster-name">${al.name}</div>
+          <small style="color:var(--text-muted); font-size:0.75rem;">${al.id} · Grupo ${al.sub}</small>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    document.getElementById("modalCenso").style.display = "flex";
+  }
+
+  function cerrarModalCenso() {
+    document.getElementById("modalCenso").style.display = "none";
+  }
+
+  function simularRespuestasDemo() {
+    if (!confirm("¿Deseas precargar una simulación completa de respuestas realistas para los 15 alumnos del Máster?")) return;
+
+    const repo = cargarRepositorioGeneral();
+
+    CENSO_ALUMNOS.forEach((al, idx) => {
+      const others = CENSO_ALUMNOS.filter(o => o.id !== al.id);
+      // Barajar deterministamente según su índice
+      const shuffled = [...others].sort((a,b) => ((a.id.charCodeAt(1) + idx * 7) % 15) - ((b.id.charCodeAt(1) + idx * 7) % 15));
+      
+      const afinidad = shuffled.slice(0, 4).map(o => o.id);
+      const alfaId = afinidad[0];
+      const alfaOthers = CENSO_ALUMNOS.filter(o => o.id !== alfaId && o.id !== al.id);
+      const aE = alfaOthers.slice(0, 3).map(o => o.id);
+
+      const distancia = shuffled.slice(-4).reverse().map(o => o.id);
+      const omegaId = distancia[0];
+      const omegaOthers = CENSO_ALUMNOS.filter(o => o.id !== omegaId && o.id !== al.id);
+      const oE = omegaOthers.slice(0, 3).map(o => o.id);
+
+      repo.participantes[al.id] = {
+        id: al.id,
+        nombre: al.name,
+        fecha_utc: new Date().toISOString(),
+        afinidad_propia: afinidad,
+        alfa_id: alfaId,
+        alfa_atribuidas: aE,
+        distancia_propia: distancia,
+        omega_id: omegaId,
+        omega_atribuidas: oE,
+        frontera_id: afinidad[afinidad.length - 1],
+        frontera_atribuidas: alfaOthers.slice(2, 5).map(o => o.id)
+      };
+    });
+
+    guardarRepositorioGeneral(repo);
+    alert("¡Simulación precargada con éxito para los 15 participantes del Máster!");
+    location.reload();
+  }
+
+  function reiniciarTodo() {
+    if (confirm("¿Estás seguro de que deseas vaciar todos los registros del Máster? Esta acción no se puede deshacer.")) {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  }
+</script>
+</body>
+</html>
