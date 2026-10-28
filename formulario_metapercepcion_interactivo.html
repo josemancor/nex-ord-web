@@ -998,8 +998,9 @@
         <span style="font-size:0.76rem; color:var(--accent-neon); font-weight:normal;">Deducción Automática Canónica</span>
       </div>
       <div class="card-desc">
-        A partir de tus respuestas en los pasos 1 y 2, el sistema identifica matemáticamente tus 6 anclas relacionales:
+        A partir de tus respuestas en los pasos 1 y 2, el sistema identifica matemáticamente tus referentes de contorno:
         <br><code style="color:var(--accent-cyan); font-size:0.76rem;">P1º es el: __ &nbsp; P3º es el: __ &nbsp; Pxº es el: __ &nbsp;|&nbsp; D1º es el: __ &nbsp; D3º es el: __ &nbsp; Dxº es el: __</code>
+        <br><strong style="color:var(--accent-gold); font-size:0.74rem;">* xº es el último señalado, dejarlo vacío si sólo se han señalado 3</strong>
       </div>
 
       <div class="referents-showcase" id="referentsShowcase">
@@ -1618,13 +1619,19 @@
     const d = responses.distList;
 
     responses.referentes = {
-      P1: p[0],
-      P3: p[2] || p[p.length - 1],
-      Px: p[p.length - 1],
-      D1: d[0],
-      D3: d[2] || d[d.length - 1],
-      Dx: d[d.length - 1]
+      P1: p[0] || null,
+      P3: p[2] || null,
+      Px: (p.length > 3) ? p[p.length - 1] : null,
+      D1: d[0] || null,
+      D3: d[2] || null,
+      Dx: (d.length > 3) ? d[d.length - 1] : null
     };
+
+    // Si el activo actual es nulo, posicionar en el primer válido
+    if (!responses.referentes[activeRefKey]) {
+      const valid = REF_KEYS.find(k => responses.referentes[k]);
+      if (valid) activeRefKey = valid;
+    }
   }
 
   function renderStep3() {
@@ -1636,15 +1643,17 @@
       const ref = responses.referentes[key];
       const meta = REF_META[key];
       const isProx = meta.tipo === "PROX";
+      const isNull = !ref;
 
       const card = document.createElement("div");
       card.className = `ref-show-card ${isProx ? "prox" : "dist"}`;
+      if (isNull) card.style.opacity = "0.5";
       card.innerHTML = `
         <span class="ref-badge-tag ${isProx ? "green" : "orange"}">${key}º</span>
         <div class="ref-avatar-lg">${getAvatarHtml(ref)}</div>
         <div style="overflow:hidden;">
-          <div class="ref-title-txt" style="color:${meta.color};">${key}º es el: __ &nbsp;·&nbsp; ${meta.rol}</div>
-          <div class="ref-name-txt">${ref ? ref.nombre : "Sin asignar"} <small style="color:var(--accent-cyan); font-size:0.75rem;">(Nº ${ref ? ref.num : ""})</small></div>
+          <div class="ref-title-txt" style="color:${meta.color};">${key}º es el: ${ref ? `[ Nº ${ref.num} ]` : "__"} &nbsp;·&nbsp; ${meta.rol}</div>
+          <div class="ref-name-txt">${ref ? ref.nombre : '<em style="color:var(--text-dim); font-size:0.8rem;">(Vacío · sólo señalaste 3)</em>'} ${ref ? `<small style="color:var(--accent-cyan); font-size:0.75rem;">(Nº ${ref.num})</small>` : ''}</div>
           <div class="ref-sub-txt">${meta.sub}</div>
         </div>
       `;
@@ -1668,35 +1677,50 @@
 
     REF_KEYS.forEach(key => {
       const ref = responses.referentes[key];
+      const isNull = !ref;
       const count = (responses.atribuciones[key] || []).length;
-      const isDone = count >= 3;
+      const isDone = isNull || count >= 3;
 
       const btn = document.createElement("button");
       btn.className = `ref-tab-btn ${activeRefKey === key ? "active" : ""} ${isDone ? "completed" : ""}`;
+      if (isNull) btn.style.opacity = "0.45";
       btn.innerHTML = `
-        <span style="font-weight:900;">${key}º:</span> ${ref ? ref.nombre : "?"} (${count})
+        <span style="font-weight:900;">${key}º:</span> ${ref ? ref.nombre : "(Vacío · 3 señalados)"} ${!isNull ? `(${count})` : ""}
       `;
-      btn.onclick = () => switchReferentTab(key);
+      btn.onclick = () => {
+        if (!isNull) switchReferentTab(key);
+      };
       bar.appendChild(btn);
     });
   }
 
   function switchReferentTab(key) {
+    if (!responses.referentes[key]) return;
     activeRefKey = key;
     renderStep4();
   }
 
   function prevReferent() {
-    const idx = REF_KEYS.indexOf(activeRefKey);
-    if (idx > 0) switchReferentTab(REF_KEYS[idx - 1]);
+    const validKeys = REF_KEYS.filter(k => responses.referentes[k]);
+    const idx = validKeys.indexOf(activeRefKey);
+    if (idx > 0) switchReferentTab(validKeys[idx - 1]);
   }
   function nextReferent() {
-    const idx = REF_KEYS.indexOf(activeRefKey);
-    if (idx < REF_KEYS.length - 1) switchReferentTab(REF_KEYS[idx + 1]);
+    const validKeys = REF_KEYS.filter(k => responses.referentes[k]);
+    const idx = validKeys.indexOf(activeRefKey);
+    if (idx < validKeys.length - 1) switchReferentTab(validKeys[idx + 1]);
   }
 
   function renderActiveReferentAttribution() {
     const ref = responses.referentes[activeRefKey];
+    if (!ref) {
+      const valid = REF_KEYS.find(k => responses.referentes[k]);
+      if (valid) {
+        activeRefKey = valid;
+        renderActiveReferentAttribution();
+      }
+      return;
+    }
     const meta = REF_META[activeRefKey];
     const list = responses.atribuciones[activeRefKey] || [];
 
@@ -1784,16 +1808,21 @@
 
   function updateGlobalAttributionBadge() {
     let completedCount = 0;
+    let requiredCount = 0;
     REF_KEYS.forEach(key => {
-      if ((responses.atribuciones[key] || []).length >= 3) completedCount++;
+      const ref = responses.referentes[key];
+      if (ref) {
+        requiredCount++;
+        if ((responses.atribuciones[key] || []).length >= 3) completedCount++;
+      }
     });
 
     const badge = document.getElementById("globalAttribProgressBadge");
-    badge.innerText = `${completedCount} / 6 Referentes`;
-    badge.className = `rank-badge ${completedCount === 6 ? "green" : "orange"}`;
+    badge.innerText = `${completedCount} / ${requiredCount} Referentes`;
+    badge.className = `rank-badge ${completedCount === requiredCount ? "green" : "orange"}`;
 
     const btnFinish = document.getElementById("btnFinish");
-    btnFinish.style.display = (completedCount >= 6) ? "inline-flex" : "none";
+    btnFinish.style.display = (completedCount >= requiredCount) ? "inline-flex" : "none";
   }
 
   // ===========================================================================
