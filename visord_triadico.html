@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD Triádico • Laboratorio Interactivo de Metapercepción Grupal M³-AΩ | NEXORD</title>
+  <meta name="description" content="Laboratorio interactivo VISORD Triádico: Generación de grupos in silico, simulación del protocolo Me3 y despliegue analítico completo de los 4 niveles diferenciales, tipología macro 2x2 y AFC Estratégico diádico con verificación del Teorema Baricéntrico (Canon 18).">
+  <link rel="icon" type="image/png" href="LOGO_NEXORD_OFICIAL.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-space: #070B18;
+      --bg-card: #0D162B;
+      --bg-surface: #121F3D;
+      --bg-highlight: #1A2B54;
+      --border-card: #1D315E;
+      --border-glow: #00F0FF;
+      --accent-cyan: #00F0FF;
+      --accent-neon: #00FF87;
+      --accent-gold: #FFE600;
+      --accent-coral: #FF7043;
+      --accent-crimson: #FF0055;
+      --accent-magenta: #FF007F;
+      --accent-purple: #A855F7;
+      --accent-blue: #38BDF8;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-space);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 14px 20px 80px;
+      overflow-x: hidden;
+    }
+
+    /* TOP INSTITUTIONAL HUD (CANON 9, 14, 15) */
+    .top-hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(13, 22, 43, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .hud-brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,255,135,0.4);
+    }
+    .hud-title-block {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-title span.tag-lab {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      padding: 2px 7px;
+      border-radius: 5px;
+      letter-spacing: 1px;
+    }
+    .hud-meta {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.70rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .hud-nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-hud {
+      background: #101B36;
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      font-size: 0.76rem;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .btn-hud:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+    }
+    .btn-hud.active {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+      box-shadow: 0 0 12px rgba(0, 255, 135, 0.25);
+    }
+
+    /* BANNER DE RÉGIMEN DE CUSTODIA (CÁNONES 21 Y 22) */
+    .custody-banner {
+      background: #091326;
+      border: 1.5px solid #1E3A5F;
+      border-left: 5px solid var(--accent-gold);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .custody-content h3 {
+      font-size: 0.92rem;
+      color: var(--accent-gold);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .custody-content p {
+      font-size: 0.80rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      max-width: 950px;
+    }
+    .custody-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge-custody {
+      font-size: 0.70rem;
+      font-family: 'Roboto Mono', monospace;
+      padding: 4px 8px;
+      border-radius: 5px;
+      background: rgba(255, 230, 0, 0.10);
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 230, 0, 0.25);
+    }
+
+    /* SECTIONS & DECKS */
+    .deck-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    .deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 10px;
+    }
+    .deck-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .deck-title-sub {
+      font-size: 0.75rem;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-left: 6px;
+    }
+
+    /* PRESETS & ME3 SIZE SELECTOR */
+    .selector-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .selector-label {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-preset {
+      background: #111D3B;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-preset:hover {
+      background: var(--bg-highlight);
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .btn-preset.active {
+      background: rgba(0, 240, 255, 0.14);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    /* ME3 FORMAT PILLS */
+    .me3-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+    .btn-me3-size {
+      background: #0E1A38;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-blue);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-me3-size:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-blue);
+      color: #FFFFFF;
+    }
+    .btn-me3-size.active {
+      background: var(--accent-blue);
+      color: #070B18;
+      font-weight: 900;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    /* SLIDERS GRID */
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .param-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 10px 14px;
+      transition: border-color 0.2s ease;
+    }
+    .param-card:hover {
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+    .param-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .param-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .param-val {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: var(--accent-neon);
+    }
+    .param-desc {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .param-card input[type=range] {
+      width: 100%;
+      height: 4px;
+      background: #1E3360;
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .param-card input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    /* ACTION BAR */
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 6px;
+    }
+    .action-group-left {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-run {
+      background: linear-gradient(135deg, #00FF87 0%, #00F0FF 100%);
+      color: #070B18;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.84rem;
+      font-weight: 900;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-run:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(0, 255, 135, 0.6);
+    }
+    .btn-action-sec {
+      background: #101D3D;
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-action-sec:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+    }
+
+    /* KPI EXECUTIVE ROW */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+    }
+    .kpi-lbl {
+      font-size: 0.70rem;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .kpi-val {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.55rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .kpi-sub {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    /* MACRO 2X2 TYPOLOGY CARD */
+    .typology-macro-card {
+      background: #091228;
+      border: 1.5px solid var(--border-card);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (max-width: 850px) {
+      .typology-macro-card { grid-template-columns: 1fr; }
+    }
+    .typology-badge-box {
+      border: 1.5px solid var(--accent-neon);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      background: rgba(0, 255, 135, 0.05);
+      position: relative;
+    }
+    .typology-badge-quad {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent-neon);
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .typology-badge-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    .typology-badge-tags {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tag-fact, .tag-lucid {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.64rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .tag-fact { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
+    .tag-lucid { background: rgba(168, 85, 247, 0.2); color: #C084FC; }
+
+    .typology-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .typology-desc {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+    .typology-strategy {
+      background: rgba(255, 230, 0, 0.06);
+      border-left: 3px solid var(--accent-gold);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.78rem;
+      color: #F8FAFC;
+      line-height: 1.4;
+    }
+    .typology-strategy strong {
+      color: var(--accent-gold);
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    /* VIEW TABS (CANVAS, AFC, RADAR) */
+    .view-tabs-bar {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-card);
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .btn-view-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      position: relative;
+    }
+    .btn-view-tab:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .btn-view-tab.active {
+      color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      border-bottom: 2px solid var(--accent-cyan);
+    }
+
+    /* DUAL CANVAS CONTAINER (CANON 28) */
+    .dual-canvas-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 900px) {
+      .dual-canvas-grid { grid-template-columns: 1fr; }
+    }
+    .canvas-card {
+      background: #080D1E;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .canvas-card-header {
+      padding: 8px 14px;
+      background: #0A1226;
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .canvas-badge-dar { color: var(--accent-cyan); font-weight: 800; }
+    .canvas-badge-rc { color: var(--accent-crimson); font-weight: 800; }
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #060A17;
+    }
+    .canvas-wrapper canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .canvas-tooltip {
+      position: absolute;
+      display: none;
+      background: rgba(14, 23, 46, 0.95);
+      border: 1px solid var(--accent-cyan);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      color: #FFFFFF;
+      pointer-events: none;
+      z-index: 100;
+      max-width: 220px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+    }
+    .canvas-card-footer {
+      padding: 6px 14px;
+      background: #0A1226;
+      border-top: 1px solid var(--border-card);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* INVARIANCE & NODE FOCUS HUD BAR */
+    .invariance-hud-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      background: #081024;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .inv-kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .inv-lbl {
+      font-size: 0.66rem;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .inv-val {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent-neon);
+    }
+    .inv-desc {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+    }
+
+    /* NODE FOCUS SELECTOR BAR */
+    .node-filter-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      background: var(--bg-surface);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+    }
+    .node-pill-group {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .pill-node {
+      background: #0E172E;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill-node:hover {
+      background: var(--bg-highlight);
+      color: #FFFFFF;
+      border-color: var(--accent-cyan);
+    }
+    .pill-node.active {
+      background: var(--accent-cyan);
+      color: #070B18;
+      font-weight: 900;
+      border-color: var(--accent-cyan);
+    }
+
+    /* AFC STRATEGIC VIEW (CANON 18) */
+    .afc-view-container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 16px;
+    }
+    @media (max-width: 950px) {
+      .afc-view-container { grid-template-columns: 1fr; }
+    }
+    .afc-biplot-wrap {
+      background: #080D1E;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      height: 480px;
+      position: relative;
+    }
+    .afc-biplot-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .afc-side-panel {
+      background: #0A1226;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: 480px;
+    }
+    .afc-legend-box {
+      background: #070C1B;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.72rem;
+    }
+    .afc-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .afc-dot-da { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-cyan); }
+    .afc-dot-rc { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-crimson); }
+    .afc-dot-bar { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-gold); }
+
+    /* RADAR TOM VIEW */
+    .radar-view-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .radar-view-container { grid-template-columns: 1fr; }
+    }
+    .radar-panel-box {
+      background: #080D1E;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 12px;
+      height: 440px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TABLES (NIVEL 1, 2, 3) */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+      background: #091024;
+      margin-bottom: 12px;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      text-align: left;
+    }
+    table.data-table th {
+      background: #0D1836;
+      color: var(--text-muted);
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 700;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border-card);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+    table.data-table tbody tr {
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    table.data-table tbody tr:hover {
+      background: rgba(0, 240, 255, 0.08);
+    }
+    table.data-table tbody tr.selected {
+      background: rgba(0, 255, 135, 0.12);
+      border-left: 3px solid var(--accent-neon);
+    }
+
+    /* BADGES EN TABLA */
+    .badge-diag {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.66rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .badge-leader-hidden { background: rgba(56, 189, 248, 0.18); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-overest { background: rgba(255, 112, 67, 0.18); color: #FF7043; border: 1px solid rgba(255, 112, 67, 0.3); }
+    .badge-aligned { background: rgba(0, 255, 135, 0.18); color: #00FF87; border: 1px solid rgba(0, 255, 135, 0.3); }
+    .badge-blind-abs { background: rgba(255, 230, 0, 0.18); color: #FFE600; border: 1px solid rgba(255, 230, 0, 0.3); }
+    .badge-hypervig { background: rgba(255, 0, 127, 0.18); color: #FF007F; border: 1px solid rgba(255, 0, 127, 0.3); }
+    .badge-neglect-aff { background: rgba(168, 85, 247, 0.18); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+    /* DIADIC MATRIX (NIVEL 2) */
+    .matrix-wrap {
+      overflow-x: auto;
+      margin-bottom: 12px;
+      background: #080D1E;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+    }
+    .matrix-grid {
+      display: inline-block;
+    }
+    .matrix-row {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 3px;
+    }
+    .matrix-cell {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      user-select: none;
+    }
+    .matrix-cell:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+    }
+    .matrix-cell-header {
+      background: #0F1B38;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+    }
+    .matrix-cell-self { background: #131E35; color: #475569; }
+    .matrix-cell-empty { background: #0B1327; color: #334155; }
+    .matrix-cell-mutual { background: rgba(0, 255, 135, 0.25); color: #00FF87; border: 1px solid #00FF87; }
+    .matrix-cell-illusion { background: rgba(255, 230, 0, 0.25); color: #FFE600; border: 1px solid #FFE600; }
+    .matrix-cell-invisible { background: rgba(168, 85, 247, 0.25); color: #C084FC; border: 1px solid #A855F7; }
+    .matrix-cell-unilateral { background: rgba(0, 240, 255, 0.18); color: #00F0FF; border: 1px solid #00F0FF; }
+    .matrix-cell-dist-phantom { background: rgba(255, 112, 67, 0.25); color: #FF7043; border: 1px solid #FF7043; }
+    .matrix-cell-dist-blind { background: rgba(255, 0, 85, 0.25); color: #FF0055; border: 1px solid #FF0055; }
+
+    /* DIADIC INSPECTOR DETAIL CARD */
+    .dyadic-inspector-card {
+      background: #0A1329;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* PEDAGOGICAL NOTE (CANON 10) */
+    .pedagogical-note {
+      background: #091228;
+      border: 1px solid var(--border-card);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      margin-top: 14px;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+    .ped-title {
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+      font-family: 'Roboto Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* EDITOR MODAL / DRAWER */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 7, 16, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-window {
+      background: #0B142A;
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 950px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.25);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-card);
+      padding-bottom: 10px;
+    }
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .btn-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .btn-modal-close:hover { color: #FFFFFF; }
+
+    /* UNIVERSAL NAV POD (CANON 15) */
+    .universal-nav-pod {
+      position: fixed;
+      right: 18px;
+      bottom: 20px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      background: rgba(6, 10, 22, 0.90);
+      backdrop-filter: blur(14px);
+      padding: 10px 8px;
+      border-radius: 28px;
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.2);
+    }
+    .nav-pod-btn {
+      width: 44px;
+      height: 44px;
+      background: rgba(16, 25, 53, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .nav-pod-btn:hover {
+      color: #00FF87;
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #00FF87;
+      transform: scale(1.1);
+    }
+
+    /* FOOTER INSTITUCIONAL OFICIAL */
+    footer.nexord-footer {
+      width: 100%;
+      text-align: center;
+      padding: 24px 16px;
+      margin-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.74rem;
+      color: var(--text-dim);
+      font-family: 'Roboto Mono', monospace;
+    }
+    .footer-doi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(14, 23, 46, 0.85);
+      border: 1px solid var(--border-card);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .footer-doi-badge a {
+      color: var(--accent-neon);
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       CABECERA INSTITUCIONAL Y HUD (CÁNONES 9, 14, 15)
+       ========================================================================= -->
+  <header class="top-hud-bar">
+    <a href="index.html" class="hud-brand">
+      <img src="LOGO_NEXORD_OFICIAL.png" alt="NEXORD">
+      <div class="hud-title-block">
+        <div class="hud-title">
+          VISORD Triádico
+          <span class="tag-lab">LAB M³-AΩ</span>
+        </div>
+        <div class="hud-meta">
+          DISEÑO (G1T1C1-M3) · MATRIZ 1g1t1c · 30 DE OCTUBRE DE 2026
+        </div>
+      </div>
+    </a>
+
+    <div class="hud-nav-links">
+      <a href="index.html" class="btn-hud">🏠 Inicio</a>
+      <a href="visord_cultural.html" class="btn-hud">🎭 Cultural</a>
+      <a href="visord_dialectico.html" class="btn-hud">⚡ Dialéctico</a>
+      <a href="visord_demo.html" class="btn-hud">🔬 Demo 3D</a>
+      <a href="visord_radiologico.html" class="btn-hud">📡 Radiológico</a>
+      <span class="btn-hud active">💫 Triádico (Activo)</span>
+    </div>
+  </header>
+
+  <!-- BANNER DE RÉGIMEN DE CUSTODIA (CÁNONES 21 Y 22) -->
+  <section class="custody-banner">
+    <div class="custody-content">
+      <h3><span>🏛️</span> PROTOCOLO ME3 ABIERTO (CC-BY-4.0) vs. MOTOR CUSTODIADO (CÁNONES 21 Y 22)</h3>
+      <p>
+        Este <strong>VISORD Triádico</strong> opera como laboratorio in silico para la generación de grupos sintéticos, modelado de Teoría de la Mente grupal y verificación matemática de los 4 niveles diferenciales y el Teorema Baricéntrico (Canon 18).
+        Por salvaguarda deontológica y privacidad por diseño, el análisis de grupos humanos reales se custodia exclusivamente para Investigadores Principales (IP) formalmente acreditados bajo compromiso estricto de uso no punitivo.
+      </p>
+    </div>
+    <div class="custody-badges">
+      <span class="badge-custody">✓ Protocolo Me3 Abierto</span>
+      <span class="badge-custody">✓ Generador In Silico</span>
+      <span class="badge-custody">✓ Código Custodiado (Canon 22)</span>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 1: LABORATORIO Y GENERADOR DE GRUPOS (ARQUETIPOS Y ME3)
+       ========================================================================= -->
+  <section class="deck-section" id="secGenerator">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>⚙️ Generador de Ejemplos de Grupos y Protocolo Me3</span>
+        <span class="deck-title-sub">Configura el tamaño del colectivo, arquetipos o modula los parámetros socio-termodinámicos</span>
+      </div>
+      <div style="font-family:'Roboto Mono',monospace; font-size:0.75rem; color:var(--accent-neon);">
+        ESTADO: <span id="lblActiveScenario">🟢 Sintonía Lúcida & Cohesión</span>
+      </div>
+    </div>
+
+    <!-- SELECTOR DE FORMATO ME3 (N=4 A N=12) -->
+    <div class="me3-pills">
+      <span class="selector-label">Formatos Me3:</span>
+      <button class="btn-me3-size" onclick="setGroupSize(4)">N=4 (1-1-1)</button>
+      <button class="btn-me3-size" onclick="setGroupSize(5)">N=5 (2 y 2)</button>
+      <button class="btn-me3-size" onclick="setGroupSize(6)">N=6 (2-1-2)</button>
+      <button class="btn-me3-size" onclick="setGroupSize(7)">N=7 (2-2-2)</button>
+      <button class="btn-me3-size active" onclick="setGroupSize(8)">N=8 (2-3-2)</button>
+      <button class="btn-me3-size" onclick="setGroupSize(9)">N=9 (3-2-3)</button>
+      <button class="btn-me3-size" onclick="setGroupSize(12)">N=12 (12 Hombres)</button>
+    </div>
+
+    <!-- ARQUETIPOS CANÓNICOS Y CASOS CULTURALES -->
+    <div class="selector-bar">
+      <span class="selector-label">Arquetipos:</span>
+      <button class="btn-preset active" id="btnPresetLucid" onclick="loadPreset('lucid')">🟢 Sintonía Lúcida</button>
+      <button class="btn-preset" id="btnPresetPolar" onclick="loadPreset('polar')">🔴 Cisma y Facciones</button>
+      <button class="btn-preset" id="btnPresetMyth" onclick="loadPreset('myth')">🟡 Falsa Cohesión (Mito)</button>
+      <button class="btn-preset" id="btnPresetOstracism" onclick="loadPreset('ostracism')">🟣 Ostracismo Silencioso</button>
+      <button class="btn-preset" id="btnPresetBernarda" onclick="loadPreset('bernarda')">🎭 Bernarda Alba (N=7)</button>
+      <button class="btn-preset" id="btnPreset12Men" onclick="loadPreset('12men')">⚖️ 12 Hombres sin Piedad (N=12)</button>
+      <button class="btn-preset" id="btnPresetBalanced" onclick="loadPreset('balanced')">🔵 Línea Base Equilibrada</button>
+    </div>
+
+    <!-- SLIDERS DE MODULACIÓN PSICO-TERMODINÁMICA -->
+    <div class="params-grid">
+      <!-- N -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">👥 Sujetos (N)</span>
+          <span class="param-val" id="valSliderN">8</span>
+        </div>
+        <p class="param-desc">Nodos del grupo (1A .. NA) en diseño t1c1.</p>
+        <input type="range" id="sliderN" min="4" max="16" step="1" value="8" oninput="onSliderNChange(this.value)">
+      </div>
+
+      <!-- Lucidez Empática -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">👁️ Lucidez (λ)</span>
+          <span class="param-val" id="valSliderLucid">88%</span>
+        </div>
+        <p class="param-desc">Agudeza para estimar las elecciones reales.</p>
+        <input type="range" id="sliderLucid" min="0" max="100" value="88" oninput="onSliderParamChange()">
+      </div>
+
+      <!-- Proyección Egocéntrica -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">🪞 Proyección (π)</span>
+          <span class="param-val" id="valSliderProj">12%</span>
+        </div>
+        <p class="param-desc">Sesgo de falso consenso intragrupal.</p>
+        <input type="range" id="sliderProj" min="0" max="100" value="12" oninput="onSliderParamChange()">
+      </div>
+
+      <!-- Reciprocidad Ilusoria -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">🤝 Reciprocidad (ρ)</span>
+          <span class="param-val" id="valSliderRecip">75%</span>
+        </div>
+        <p class="param-desc">Expectativa ilusoria de ser elegido en Cenit α.</p>
+        <input type="range" id="sliderRecip" min="0" max="100" value="75" oninput="onSliderParamChange()">
+      </div>
+
+      <!-- Halo Polar -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">⚡ Sesgo Halo (η)</span>
+          <span class="param-val" id="valSliderHalo">24%</span>
+        </div>
+        <p class="param-desc">Tensión polar atribuida Cenit-Nadir.</p>
+        <input type="range" id="sliderHalo" min="0" max="100" value="24" oninput="onSliderParamChange()">
+      </div>
+
+      <!-- Entropía / Ruido -->
+      <div class="param-card">
+        <div class="param-header">
+          <span class="param-title">🎲 Ruido (ε)</span>
+          <span class="param-val" id="valSliderNoise">6%</span>
+        </div>
+        <p class="param-desc">Variabilidad estocástica no estructurada.</p>
+        <input type="range" id="sliderNoise" min="0" max="40" value="6" oninput="onSliderParamChange()">
+      </div>
+    </div>
+
+    <!-- BOTONES DE ACCIÓN -->
+    <div class="action-bar">
+      <div class="action-group-left">
+        <button class="btn-run" onclick="generateSimulatedGroup()">
+          ⚡ GENERAR NUEVO GRUPO IN SILICO
+        </button>
+        <button class="btn-action-sec" onclick="mutateStochastic()">
+          🎲 Mutar / Fluctuar Red
+        </button>
+        <button class="btn-action-sec" onclick="openProtocolEditor()">
+          ✏️ Ver / Editar Protocolo de Campo
+        </button>
+      </div>
+      <div>
+        <button class="btn-action-sec" onclick="exportGroupJSON()">
+          💾 Exportar JSON
+        </button>
+        <button class="btn-action-sec" onclick="triggerImportJSON()">
+          📤 Cargar JSON
+        </button>
+        <input type="file" id="fileJsonInput" accept=".json" style="display:none" onchange="handleFileImport(event)">
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 2: CUADRO DE MANDO EJECUTIVO Y TIPOLOGÍA MACRO 2X2
+       ========================================================================= -->
+  <section class="deck-section" id="secMacro">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>📊 Cuadro de Mando Ejecutivo &amp; Tipología Macro-Diagnóstica 2x2</span>
+        <span class="deck-title-sub">Despliegue sistémico de la estructura factual frente a la agudeza perceptiva</span>
+      </div>
+      <button class="btn-action-sec" onclick="downloadExecutiveHTMLReport()">
+        📄 DESCARGAR INFORME EJECUTIVO HTML
+      </button>
+    </div>
+
+    <!-- 6 CARDS KPI GLOBALES -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Exactitud Empática (A)</div>
+        <div class="kpi-val" id="kpiAccuracy" style="color:var(--accent-neon);">88%</div>
+        <div class="kpi-sub">Fidelidad factual media</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Proyección Egocéntrica (Π)</div>
+        <div class="kpi-val" id="kpiProjection" style="color:var(--accent-cyan);">12%</div>
+        <div class="kpi-sub">Falso consenso relacional</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Brecha Cohesión (ΔC)</div>
+        <div class="kpi-val" id="kpiCohesionGap" style="color:var(--accent-gold);">+0.04</div>
+        <div class="kpi-sub">C_percibida - C_factual</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Vector Distancia (D)</div>
+        <div class="kpi-val" id="kpiVectorD" style="color:var(--accent-blue);">0.85</div>
+        <div class="kpi-sub">D = Δe + ΔG (Macro)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Halo Polar Ratio</div>
+        <div class="kpi-val" id="kpiHaloRatio" style="color:var(--accent-purple);">24%</div>
+        <div class="kpi-sub">Peso del sesgo atributivo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Brecha Segregación (ΔSeg)</div>
+        <div class="kpi-val" id="kpiSegGap" style="color:var(--accent-coral);">0.08</div>
+        <div class="kpi-sub">Polarización velada vs visible</div>
+      </div>
+    </div>
+
+    <!-- CARD DESTACADA: TIPOLOGÍA MACRO 2X2 -->
+    <div class="typology-macro-card" id="typologyCard">
+      <div class="typology-badge-box" id="typologyBox">
+        <div class="typology-badge-quad" id="typologyQuad">CUADRANTE I</div>
+        <div class="typology-badge-name" id="typologyName">Sintonía Cohesiva</div>
+        <div class="typology-badge-tags">
+          <span class="tag-fact" id="typologyTagFact">Cohesión Alta</span>
+          <span class="tag-lucid" id="typologyTagLucid">Alta Lucidez</span>
+        </div>
+      </div>
+      <div class="typology-details">
+        <div class="typology-desc" id="typologyDesc">
+          El grupo combina una alta cohesión factual con una elevada agudeza metaperceptiva. Las díadas clave se reconocen con fidelidad, la proyección egocéntrica es reducida y la auto-calibración de estatus presenta un desajuste mínimo.
+        </div>
+        <div class="typology-strategy" id="typologyStrategy">
+          <strong>Estrategia de Facilitación Recomendada:</strong> Fomentar la delegación de liderazgo distribuido, consolidar la agilidad operativa y preservar la seguridad psicológica para la innovación crítica, evitando acomodación complaciente.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 3: LIENZOS GRÁFICOS INTERACTIVOS (3 VISTAS)
+       ========================================================================= -->
+  <section class="deck-section" id="secVisual">
+    <!-- PESTAÑAS DE VISTA -->
+    <div class="view-tabs-bar">
+      <button class="btn-view-tab active" id="tabDualMimetic" onclick="switchVisualTab('mimetic')">
+        <span>💫</span> Doble Proyección Mimética (Canon 28)
+      </button>
+      <button class="btn-view-tab" id="tabAfcStrategic" onclick="switchVisualTab('afc')">
+        <span>📐</span> AFC Estratégico Diádico &amp; Teorema Baricéntrico (Canon 18)
+      </button>
+      <button class="btn-view-tab" id="tabRadarTom" onclick="switchVisualTab('radar')">
+        <span>🎯</span> Radar Teoría de la Mente &amp; Cuadrante de Fases
+      </button>
+    </div>
+
+    <!-- BARRA DE FILTRO Y ENFOQUE DE NODO -->
+    <div class="node-filter-bar">
+      <span class="selector-label">Foco de Sujeto:</span>
+      <div class="node-pill-group" id="nodeFilterPills">
+        <button class="pill-node active" onclick="focusNode('all')">Todos</button>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+        <label style="font-size:0.72rem; color:var(--text-muted); cursor:pointer;">
+          <input type="checkbox" id="chkParticles" checked onchange="toggleParticles(this.checked)"> Flujo de Partículas
+        </label>
+        <div style="display:flex; gap:4px;">
+          <button class="btn-me3-size" id="btnSpeed05" onclick="setAnimSpeed(0.5)">0.5x</button>
+          <button class="btn-me3-size active" id="btnSpeed10" onclick="setAnimSpeed(1.0)">1.0x</button>
+          <button class="btn-me3-size" id="btnSpeed20" onclick="setAnimSpeed(2.0)">2.0x</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA 1: DOBLE PROYECCIÓN MIMÉTICA (CANON 28) -->
+    <div id="viewMimeticContainer">
+      <div class="dual-canvas-grid">
+        <!-- PLANO 1: MUNDO DAR -->
+        <div class="canvas-card">
+          <div class="canvas-card-header">
+            <span class="canvas-badge-dar">PLANO 1 · PERSPECTIVA DADORES (EMISIÓN DA · DAR)</span>
+            <span style="font-size:0.68rem; color:var(--text-dim);">Nodo Activo Cian con Pupila</span>
+          </div>
+          <div class="canvas-wrapper" id="wrapDar">
+            <canvas id="canvasDar"></canvas>
+            <div class="canvas-tooltip" id="tooltipDar"></div>
+          </div>
+          <div class="canvas-card-footer">
+            <span>Vectores emisivos hacia preferencias.</span>
+            <span style="color:var(--accent-cyan);">Cian Neón #00F0FF</span>
+          </div>
+        </div>
+
+        <!-- PLANO 2: MUNDO RECIBIR -->
+        <div class="canvas-card">
+          <div class="canvas-card-header">
+            <span class="canvas-badge-rc">PLANO 2 · PERSPECTIVA RECEPTORES (ATRACCIÓN RC · RECIBIR)</span>
+            <span style="font-size:0.68rem; color:var(--text-dim);">Cuencas Carmesí Proporcionales a RC</span>
+          </div>
+          <div class="canvas-wrapper" id="wrapRc">
+            <canvas id="canvasRc"></canvas>
+            <div class="canvas-tooltip" id="tooltipRc"></div>
+          </div>
+          <div class="canvas-card-footer">
+            <span>Cuencas de gravitación afectiva.</span>
+            <span style="color:var(--accent-crimson);">Carmesí Neón #FF0055</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TELEMETRÍA DE INVARIANZA Y BARICENTRO -->
+      <div class="invariance-hud-bar">
+        <div class="inv-kpi">
+          <span class="inv-lbl">Teorema Baricéntrico NEXORD</span>
+          <span class="inv-val" id="invDeltaBar">Δ_BAR = 0.0000 ✓</span>
+          <span class="inv-desc">Centroide diádico exacto verificado</span>
+        </div>
+        <div class="inv-kpi">
+          <span class="inv-lbl">Invarianza Métrica Euclídea</span>
+          <span class="inv-val" style="color:var(--accent-cyan);">d_Euc(Plano 1) ≡ d_Euc(Plano 2)</span>
+          <span class="inv-desc">Posiciones espaciales idénticas</span>
+        </div>
+        <div class="inv-kpi">
+          <span class="inv-lbl">Conservación de Flujo</span>
+          <span class="inv-val" style="color:var(--accent-gold);" id="invFluxSum">Σ DA = 16 ≡ Σ RC = 16</span>
+          <span class="inv-desc">Emisiones totales = Recepciones</span>
+        </div>
+        <div class="inv-kpi">
+          <span class="inv-lbl">Sujeto Enfocado</span>
+          <span class="inv-val" id="invFocusLabel" style="color:var(--accent-purple);">Todos los Sujetos</span>
+          <span class="inv-desc" id="invFocusMetrics">Pasa el ratón o pulsa un nodo para telemetría</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA 2: AFC ESTRATÉGICO DIÁDICO (CANON 18) -->
+    <div id="viewAfcContainer" style="display:none;">
+      <div class="afc-view-container">
+        <div class="afc-biplot-wrap">
+          <svg class="afc-biplot-svg" id="svgBiplotAfc" viewBox="0 0 600 480"></svg>
+        </div>
+        <div class="afc-side-panel">
+          <h4 style="font-family:'Outfit',sans-serif; color:#FFFFFF; font-size:0.95rem;">
+            📐 Descomposición Espectral Benzécri (χ²)
+          </h4>
+          <div class="afc-legend-box">
+            <div class="afc-legend-item"><span class="afc-dot-da"></span> <strong>Emisión DA (Dador)</strong></div>
+            <div class="afc-legend-item"><span class="afc-dot-rc"></span> <strong>Recepción RC (Receptor)</strong></div>
+            <div class="afc-legend-item"><span class="afc-dot-bar"></span> <strong>Baricentro Activo</strong> (Teorema Baricéntrico)</div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
+            La tabla activa factual es <strong style="color:#FFFFFF;">F_ACT = F_DA + F_RC</strong> sobre frecuencias discretas. El vector diádico parte del emisor (DA), atraviesa el baricentro del sujeto y culmina en el receptor (RC).
+          </div>
+          <div class="invariance-hud-bar" style="margin:0; padding:8px;">
+            <div class="inv-kpi">
+              <span class="inv-lbl">Max Desviación Baricéntrica</span>
+              <span class="inv-val" id="afcMaxDelta">0.000000 ✓</span>
+              <span class="inv-desc">F_alpha(ACT) ≡ Baricentro</span>
+            </div>
+          </div>
+          <div style="font-size:0.70rem; color:var(--text-dim); max-height:140px; overflow-y:auto;" id="afcCoordList">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA 3: RADAR TOM & CUADRANTE DE FASES -->
+    <div id="viewRadarContainer" style="display:none;">
+      <div class="radar-view-container">
+        <!-- CUADRANTE 2D: LUCIDEZ VS PROYECCIÓN -->
+        <div class="radar-panel-box">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:700; color:#FFFFFF;">
+              🎯 Cuadrante de Fases Perceptivas
+            </span>
+            <span style="font-family:'Roboto Mono',monospace; font-size:0.68rem; color:var(--text-dim);">
+              X=Proyección · Y=Lucidez
+            </span>
+          </div>
+          <div style="flex:1; position:relative;">
+            <svg id="svgQuadrantPhases" viewBox="0 0 360 360" style="width:100%; height:100%;"></svg>
+          </div>
+        </div>
+
+        <!-- CONSTELACIÓN POLAR DEL SUJETO ENFOCADO -->
+        <div class="radar-panel-box">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:700; color:#FFFFFF;" id="radarTitleConstellation">
+              🧭 Constelación Polar de Teoría de la Mente
+            </span>
+            <span style="font-family:'Roboto Mono',monospace; font-size:0.68rem; color:var(--accent-neon);" id="radarSubjectTag">
+              Sujeto 1A
+            </span>
+          </div>
+          <div style="flex:1; position:relative;">
+            <svg id="svgPolarConstellation" viewBox="0 0 360 360" style="width:100%; height:100%;"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTA EXPLICATIVA PEDAGÓGICA (CANON 10) -->
+    <div class="pedagogical-note">
+      <div class="ped-title">💡 Nota Explicativa Pedagógica sobre la Dualidad Factorial y la Moviola Diádica:</div>
+      <p>
+        En la formulación canónica de NEXORD, el estatus no es una etiqueta estática del sujeto sino una <strong>tensión dialéctica entre lo que el nodo emite (Mundo DAR · DA) y lo que el colectivo le devuelve (Mundo RECIBIR · RC)</strong>.
+        El <em>Teorema Baricéntrico de NEXORD</em> demuestra analíticamente que la coordenada factorial activa de cada participante se sitúa <strong>exactamente en el centroide ponderado</strong> entre su vector de emisión y su vector de recepción (<span style="color:var(--accent-neon); font-family:'Roboto Mono',monospace;">Δ = 0.0000</span>).
+        Esto permite trazar la trayectoria viva de cada individuo en el espacio afectivo grupal sin colapsar su dialéctica interna.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 4: NIVEL 1 — DIAGNÓSTICO INTRA-SUBJETIVO (AUTO-ESTATUS)
+       ========================================================================= -->
+  <section class="deck-section" id="secNivel1">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>👤 Nivel 1: Diagnóstico Intra-Subjetivo (Auto-Calibración de Estatus)</span>
+        <span class="deck-title-sub">Diferencial Δk = k_yo - Rank(RC), precisión inward reflexiva y desajuste volumétrico</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table" id="tableNivel1">
+        <thead>
+          <tr>
+            <th>Sujeto</th>
+            <th>Rol Dinámico</th>
+            <th>Auto-Rank (k_yo)</th>
+            <th>Estatus Real (RC)</th>
+            <th>Rango Real (Rank)</th>
+            <th>Brecha Δk</th>
+            <th>Precisión Inward (P_in)</th>
+            <th>Desajuste Vol. (ΔVol_E / ΔVol_R)</th>
+            <th>Diagnóstico Clínico-Formativo</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyNivel1">
+          <!-- Inyectado dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pedagogical-note">
+      <div class="ped-title">💡 Claves de Interpretación del Diagnóstico Intra-Subjetivo:</div>
+      <p>
+        • <strong style="color:#38BDF8;">Liderazgo Inadvertido (Δk &gt; 0)</strong>: El sujeto se auto-sitúa en un rango inferior al que realmente ocupa en el afecto del grupo (recibe más elecciones de las que imagina).<br>
+        • <strong style="color:#FF7043;">Sobreestimación de Estatus (Δk &lt; 0)</strong>: El sujeto anticipa una centralidad mayor que la factual, lo que puede inducir frustración o conflicto con la autoridad real.<br>
+        • <strong style="color:#00FF87;">Alineamiento Preciso (Δk = 0)</strong>: Exacta auto-calibración de su impacto relacional en el colectivo.<br>
+        • <strong style="color:#FFE600;">Ceguera a la Abstención (ΔVol_E &gt; 0)</strong>: Proyecta reciprocidad generalizada sobreestimando el volumen de quienes le elegirán.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 5: NIVEL 2 — MAPEO DIÁDICO Y FENÓMENOS OCULTOS
+       ========================================================================= -->
+  <section class="deck-section" id="secNivel2">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>🤝 Nivel 2: Mapeo Diádico y Fenómenos Ocultos (Cánones 21 y 22)</span>
+        <span class="deck-title-sub">Matriz de interacciones dirigidas (i ➔ j), reciprocidad ilusoria y afecto invisible</span>
+      </div>
+      <div style="font-size:0.75rem; font-family:'Roboto Mono',monospace; color:var(--text-muted);" id="lblDyadicCounters">
+        Sintonías: 4 · Ilusiones: 2 · Afecto Invisible: 3
+      </div>
+    </div>
+
+    <!-- LEYENDA DIÁDICA -->
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; font-size:0.72rem; font-family:'Roboto Mono',monospace;">
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:rgba(0,255,135,0.4); border:1px solid #00FF87; border-radius:3px;"></span> Sintonía Consensual (i ↔ j)</span>
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:rgba(255,230,0,0.4); border:1px solid #FFE600; border-radius:3px;"></span> Ilusión Recíproca (Espera afecto no correspondido)</span>
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:rgba(168,85,247,0.4); border:1px solid #A855F7; border-radius:3px;"></span> Afecto Invisible (Recibe simpatía no sospechada)</span>
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:12px; background:rgba(0,240,255,0.3); border:1px solid #00F0FF; border-radius:3px;"></span> Elección Unilateral (DA)</span>
+    </div>
+
+    <!-- MATRIZ DIÁDICA -->
+    <div class="matrix-wrap">
+      <div class="matrix-grid" id="matrixGridContainer">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+
+    <!-- TARJETA DE INSPECCIÓN DIÁDICA DEL NODO -->
+    <div class="dyadic-inspector-card" id="dyadicInspectorCard">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:'Outfit',sans-serif; font-size:0.92rem; font-weight:800; color:#FFFFFF;" id="dyadInspSubjectTitle">
+          Red Diádica del Sujeto 1A
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:0.70rem; color:var(--accent-cyan);" id="dyadInspRole">
+          Líder Articulador
+        </span>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:10px;" id="dyadInspDetailsGrid">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+
+    <div class="pedagogical-note">
+      <div class="ped-title">💡 Salvaguarda Ética sobre las Ilusiones Recíprocas (Canon 21):</div>
+      <p>
+        Las <strong>Ilusiones Recíprocas</strong> (situaciones en las que una persona confía en ser elegida por un par que no la nomina) constituyen hallazgos de alta vulnerabilidad emocional.
+        En cualquier aplicación con personas reales, estos datos <strong>quedan bajo estricta reserva confidencial del facilitador</strong> y no deben exponerse públicamente para salvaguardar la autoestima de los participantes.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 6: NIVEL 3 — ALTERIDAD, TEORÍA DE LA MENTE Y OPACIDAD
+       ========================================================================= -->
+  <section class="deck-section" id="secNivel3">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>👁️ Nivel 3: Alteridad, Teoría de la Mente y Opacidad de Nodo</span>
+        <span class="deck-title-sub">Diferencial polar ΔP_polar, coeficiente de opacidad y agudeza observacional</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table" id="tableNivel3">
+        <thead>
+          <tr>
+            <th>Sujeto</th>
+            <th>Rol</th>
+            <th>Legibilidad Polar (ΔP)</th>
+            <th>Asimetría Masa (ΔG)</th>
+            <th>Opacidad del Nodo</th>
+            <th>Radar Lucidez Observador</th>
+            <th>Diagnóstico Teoría de la Mente (ToM)</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyNivel3">
+          <!-- Inyectado dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECCIÓN 7: NIVEL 4 — DESCOMPOSICIÓN VECTORIAL MACRO
+       ========================================================================= -->
+  <section class="deck-section" id="secNivel4">
+    <div class="deck-header">
+      <div class="deck-title">
+        <span>📐 Nivel 4: Descomposición Vectorial Macro (D = Δe + ΔG)</span>
+        <span class="deck-title-sub">Desacoplamiento exacto entre la base fáctica colectiva y el sesgo atributivo</span>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      <!-- GRÁFICO TRIÁNGULO VECTORIAL -->
+      <div style="background:#080D1E; border:1px solid var(--border-card); border-radius:10px; padding:16px; height:240px;">
+        <svg id="svgVectorDecomp" viewBox="0 0 380 200" style="width:100%; height:100%;"></svg>
+      </div>
+
+      <!-- DESGLOSE NUMÉRICO Y BALANCES -->
+      <div style="background:#0A1226; border:1px solid var(--border-card); border-radius:10px; padding:16px; display:flex; flex-direction:column; justify-content:space-around;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-family:'Roboto Mono',monospace; font-size:0.80rem; color:var(--text-muted);">Distancia Conjeturada Total (D):</span>
+          <span style="font-family:'Roboto Mono',monospace; font-size:1.1rem; font-weight:900; color:var(--accent-blue);" id="valMacroD">0.850</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-family:'Roboto Mono',monospace; font-size:0.80rem; color:var(--text-muted);">Base Fáctica Real (Δe):</span>
+          <span style="font-family:'Roboto Mono',monospace; font-size:1.1rem; font-weight:900; color:var(--accent-neon);" id="valMacroDeltaE">0.646</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-family:'Roboto Mono',monospace; font-size:0.80rem; color:var(--text-muted);">Sesgo de Halo Atributivo (ΔG):</span>
+          <span style="font-family:'Roboto Mono',monospace; font-size:1.1rem; font-weight:900; color:var(--accent-purple);" id="valMacroDeltaG">0.204</span>
+        </div>
+        <div style="width:100%; height:10px; background:#101B36; border-radius:5px; overflow:hidden; display:flex;">
+          <div id="barFactPct" style="width:76%; background:var(--accent-neon);"></div>
+          <div id="barHaloPct" style="width:24%; background:var(--accent-purple);"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.70rem; font-family:'Roboto Mono',monospace;">
+          <span style="color:var(--accent-neon);" id="lblFactPct">Factual: 76%</span>
+          <span style="color:var(--accent-purple);" id="lblHaloPct">Sesgo Halo: 24%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       MODAL: EDITOR E INSPECTOR DE PROTOCOLO DE CAMPO (ME3 COMPATIBLE)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modalProtocolEditor">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">
+          ✏️ Inspector y Editor de Protocolo de Campo Me3
+        </div>
+        <button class="btn-modal-close" onclick="closeProtocolEditor()">&times;</button>
+      </div>
+
+      <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.4;">
+        Revisa o personaliza directamente las nominaciones efectivas de emisión (DA), metapercepciones de auto-elección (pE/aE) y las 6 micro-sondas triádicas (Cenit α, Pivote cercano, Menos cercano, Nadir ω, Menos distante, Pivote distante).
+      </div>
+
+      <div class="table-wrap" style="max-height:450px;">
+        <table class="data-table" id="tableProtocolEditor">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Rol</th>
+              <th>Elecciones DA (1º, 2º...)</th>
+              <th>Auto-pE (aE)</th>
+              <th>Auto-pR (oE)</th>
+              <th>Cenit α (aE1)</th>
+              <th>Pivote Cerc. (aE3)</th>
+              <th>Menos Cerc. (aE2)</th>
+              <th>Nadir ω (oE1)</th>
+              <th>Menos Dist. (oE2)</th>
+              <th>Pivote Dist. (oE3)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyProtocolEditor">
+            <!-- Inyectado dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <button class="btn-run" onclick="applyProtocolEditorChanges()">
+          💾 GUARDAR CAMBIOS Y RECALCULAR EN VIVO
+        </button>
+        <button class="btn-action-sec" onclick="closeProtocolEditor()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MANDO UNIVERSAL FLOTANTE (CANON 15)
+       ========================================================================= -->
+  <nav class="universal-nav-pod" id="universalNavPod">
+    <a href="index.html" class="nav-pod-btn" title="Inicio / Portada Principal">🏠</a>
+    <a href="visord_dialectico.html" class="nav-pod-btn" title="◀ Estación Anterior: VISORD Dialéctico">◀</a>
+    <a href="#top" class="nav-pod-btn" title="Subir al Inicio">▲</a>
+    <a href="#secNivel1" class="nav-pod-btn" title="Ir a los Resultados">▼</a>
+    <a href="visord_cultural.html" class="nav-pod-btn" title="Estación Siguiente: VISORD Cultural ▶">▶</a>
+  </nav>
+
+  <!-- =========================================================================
+       FOOTER INSTITUCIONAL OFICIAL CON DOI Y CITACIÓN BIBTEX
+       ========================================================================= -->
+  <footer class="nexord-footer">
+    <div class="footer-doi-badge">
+      <span>NEXORD • DOI:</span>
+      <a href="https://doi.org/10.5281/zenodo.23329641" target="_blank" rel="noopener">10.5281/zenodo.23329641</a>
+      <span>• Licencia: CC-BY-4.0</span>
+    </div>
+    <div>
+      NEXORD © 2026 · Sociometría Ordinal Computacional &amp; Socio-Termodinámica Grupal In Silico
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       SCRIPT NATIVO: MOTOR MATEMÁTICO, AFC FACTORIAL Y ANIMACIÓN DUAL
+       ========================================================================= -->
+  <script>
+    /* =========================================================================
+       1. ESTADO GLOBAL Y DEFINICIONES DE ARQUETIPOS
+       ========================================================================= */
+    let currentN = 8;
+    let activePresetKey = 'lucid';
+    let focusedNodeId = 'all';
+    let activeVisualTab = 'mimetic';
+    let animRunning = true;
+    let animSpeed = 1.0;
+    let showParticles = true;
+
+    // Red actual en memoria
+    let currentNetwork = {
+      N: 8,
+      ids: [],
+      roles: [],
+      M_DA: [],
+      M_RC: [],
+      pE: {},
+      pR: {},
+      probes: {}, // idi -> { aE1, aE2, aE3, oE1, oE2, oE3 }
+      k_yo: {},
+      coords: [], // 2D layout coordinates for canvas {x, y} in [-1, 1]
+      afc: null,
+      results: {}
+    };
+
+    // Partículas para animación mimética (Canon 28)
+    let particles = [];
+    const MAX_PARTICLES = 160;
+
+    // Elementos de canvas
+    let canvasDar, ctxDar, canvasRc, ctxRc;
+    let hoveredNode = null;
+
+    /* =========================================================================
+       2. BIBLIOTECA DE PRESETS Y ARQUETIPOS CANÓNICOS
+       ========================================================================= */
+    const PRESET_CONFIGS = {
+      lucid: {
+        name: "Sintonía Lúcida & Cohesión Orgánica",
+        N: 8,
+        lucid: 88,
+        proj: 12,
+        recip: 75,
+        halo: 24,
+        noise: 6,
+        type: "lucid"
+      },
+      polar: {
+        name: "Cisma y Facciones Enfrentadas",
+        N: 8,
+        lucid: 38,
+        proj: 78,
+        recip: 30,
+        halo: 91,
+        noise: 14,
+        type: "polar"
+      },
+      myth: {
+        name: "Falsa Cohesión / Ignorancia Pluralista",
+        N: 7,
+        lucid: 25,
+        proj: 65,
+        recip: 80,
+        halo: 68,
+        noise: 12,
+        type: "myth"
+      },
+      ostracism: {
+        name: "Ostracismo Silencioso / Chivo Expiatorio",
+        N: 6,
+        lucid: 45,
+        proj: 50,
+        recip: 20,
+        halo: 60,
+        noise: 8,
+        type: "ostracism"
+      },
+      bernarda: {
+        name: "La Casa de Bernarda Alba (Tragedia Rural)",
+        N: 7,
+        lucid: 42,
+        proj: 60,
+        recip: 25,
+        halo: 85,
+        noise: 10,
+        type: "cultural_bernarda",
+        names: ["Bernarda", "Angustias", "Magdalena", "Amelia", "Martirio", "Adela", "Poncia"],
+        roles: ["Matriarca Dominante", "Heredera", "Sumisa", "Neutra", "Espía / Rencorosa", "Rebelde Trágica", "Criada / Vigía"]
+      },
+      "12men": {
+        name: "12 Hombres sin Piedad (Deliberación Jurado)",
+        N: 12,
+        lucid: 72,
+        proj: 28,
+        recip: 55,
+        halo: 40,
+        noise: 10,
+        type: "cultural_12men",
+        roles: [
+          "Jurado 1 (Presidente)", "Jurado 2 (Tímido)", "Jurado 3 (Agresivo)", "Jurado 4 (Racional)",
+          "Jurado 5 (Barrio Bajo)", "Jurado 6 (Pintor)", "Jurado 7 (Bélico / Béisbol)", "Jurado 8 (Davis / Polo Dialéctico)",
+          "Jurado 9 (Anciano McCardle)", "Jurado 10 (Prejuicioso)", "Jurado 11 (Relojero Inmigrante)", "Jurado 12 (Publicista)"
+        ]
+      },
+      balanced: {
+        name: "Línea Base Equilibrada / Control",
+        N: 6,
+        lucid: 60,
+        proj: 30,
+        recip: 50,
+        halo: 30,
+        noise: 10,
+        type: "balanced"
+      }
+    };
+
+    /* =========================================================================
+       3. INICIALIZACIÓN AL CARGAR LA PÁGINA
+       ========================================================================= */
+    window.addEventListener("DOMContentLoaded", () => {
+      initCanvases();
+      loadPreset('lucid');
+      setupCanvasInteractions();
+      requestAnimationFrame(animLoop);
+    });
+
+    window.addEventListener("resize", () => {
+      handleResize();
+    });
+
+    function initCanvases() {
+      canvasDar = document.getElementById("canvasDar");
+      ctxDar = canvasDar.getContext("2d");
+      canvasRc = document.getElementById("canvasRc");
+      ctxRc = canvasRc.getContext("2d");
+      handleResize();
+    }
+
+    function handleResize() {
+      if (!canvasDar || !canvasRc) return;
+      const dpr = window.devicePixelRatio || 2;
+      const rect = canvasDar.parentElement.getBoundingClientRect();
+      const w = Math.floor(rect.width);
+      const h = 380;
+
+      canvasDar.width = w * dpr;
+      canvasDar.height = h * dpr;
+      canvasDar.style.width = w + "px";
+      canvasDar.style.height = h + "px";
+      ctxDar.scale(dpr, dpr);
+
+      canvasRc.width = w * dpr;
+      canvasRc.height = h * dpr;
+      canvasRc.style.width = w + "px";
+      canvasRc.style.height = h + "px";
+      ctxRc.scale(dpr, dpr);
+    }
+
+    /* =========================================================================
+       4. CONMUTADOR DE PRESETS Y CONTROLES
+       ========================================================================= */
+    function setGroupSize(n) {
+      document.getElementById("sliderN").value = n;
+      document.getElementById("valSliderN").innerText = n;
+      currentN = n;
+      updateMe3SizePillsUI(n);
+      generateSimulatedGroup();
+    }
+
+    function onSliderNChange(val) {
+      currentN = parseInt(val, 10);
+      document.getElementById("valSliderN").innerText = currentN;
+      updateMe3SizePillsUI(currentN);
+      generateSimulatedGroup();
+    }
+
+    function onSliderParamChange() {
+      document.getElementById("valSliderLucid").innerText = document.getElementById("sliderLucid").value + "%";
+      document.getElementById("valSliderProj").innerText = document.getElementById("sliderProj").value + "%";
+      document.getElementById("valSliderRecip").innerText = document.getElementById("sliderRecip").value + "%";
+      document.getElementById("valSliderHalo").innerText = document.getElementById("sliderHalo").value + "%";
+      document.getElementById("valSliderNoise").innerText = document.getElementById("sliderNoise").value + "%";
+      generateSimulatedGroup();
+    }
+
+    function updateMe3SizePillsUI(n) {
+      document.querySelectorAll(".btn-me3-size").forEach(btn => {
+        if (btn.innerText.includes("N=" + n + " ")) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    function loadPreset(key) {
+      activePresetKey = key;
+      const cfg = PRESET_CONFIGS[key] || PRESET_CONFIGS.lucid;
+      document.getElementById("lblActiveScenario").innerText = cfg.name;
+
+      document.querySelectorAll(".btn-preset").forEach(btn => btn.classList.remove("active"));
+      const activeBtn = document.getElementById("btnPreset" + key.charAt(0).toUpperCase() + key.slice(1));
+      if (activeBtn) activeBtn.classList.add("active");
+
+      document.getElementById("sliderN").value = cfg.N;
+      document.getElementById("valSliderN").innerText = cfg.N;
+      currentN = cfg.N;
+      updateMe3SizePillsUI(currentN);
+
+      document.getElementById("sliderLucid").value = cfg.lucid;
+      document.getElementById("valSliderLucid").innerText = cfg.lucid + "%";
+      document.getElementById("sliderProj").value = cfg.proj;
+      document.getElementById("valSliderProj").innerText = cfg.proj + "%";
+      document.getElementById("sliderRecip").value = cfg.recip;
+      document.getElementById("valSliderRecip").innerText = cfg.recip + "%";
+      document.getElementById("sliderHalo").value = cfg.halo;
+      document.getElementById("valSliderHalo").innerText = cfg.halo + "%";
+      document.getElementById("sliderNoise").value = cfg.noise;
+      document.getElementById("valSliderNoise").innerText = cfg.noise + "%";
+
+      generateSimulatedGroup(cfg);
+    }
+
+    /* =========================================================================
+       5. MOTOR DE GENERACIÓN SINTÉTICA (IN SILICO)
+       ========================================================================= */
+    function generateSimulatedGroup(overrideCfg = null) {
+      const N = currentN;
+      const cfg = overrideCfg || PRESET_CONFIGS[activePresetKey] || PRESET_CONFIGS.lucid;
+      const lambdaLucid = parseInt(document.getElementById("sliderLucid").value, 10) / 100.0;
+      const piProj = parseInt(document.getElementById("sliderProj").value, 10) / 100.0;
+      const rhoRecip = parseInt(document.getElementById("sliderRecip").value, 10) / 100.0;
+      const etaHalo = parseInt(document.getElementById("sliderHalo").value, 10) / 100.0;
+      const epsNoise = parseInt(document.getElementById("sliderNoise").value, 10) / 100.0;
+
+      // Nombres e IDs canónicos (Canon 7: 1A .. NA)
+      const ids = Array.from({length: N}, (_, i) => `${i + 1}A`);
+      let roles = [];
+
+      if (cfg.type === "cultural_bernarda" && N === 7) {
+        roles = cfg.roles;
+      } else if (cfg.type === "cultural_12men" && N === 12) {
+        roles = cfg.roles;
+      } else {
+        roles = ids.map((id, idx) => {
+          if (idx === 0) return "Líder Afectivo (Cenit α)";
+          if (idx === 1) return "Hub Central Articulador";
+          if (idx === 2) return "Polo Dinámico Norte";
+          if (idx === 3) return "Enlace Noroeste";
+          if (idx === 4) return "Polo Estratégico Este";
+          if (idx === 5) return "Soporte Operativo";
+          if (idx === 6) return "Vigía / Puente Sur";
+          if (idx === 7) return "Conector Periférico";
+          return `Sujeto ${id}`;
+        });
+      }
+
+      // Cuota de elecciones por sujeto según Me3
+      let kChoices = 2;
+      if (N <= 4) kChoices = 1;
+      else if (N === 5 || N === 6 || N === 7 || N === 8) kChoices = 2;
+      else if (N >= 9) kChoices = 3;
+
+      // Generar Matriz de Elecciones DA (M_DA)
+      const M_DA = Array.from({length: N}, () => new Array(N).fill(0));
+
+      if (cfg.type === "polar") {
+        // Cisma en dos facciones: A (0 .. half-1), B (half .. N-1)
+        const half = Math.floor(N / 2);
+        for (let i = 0; i < N; i++) {
+          const isFactionA = i < half;
+          const mates = Array.from({length: N}, (_, j) => j).filter(j => j !== i && (isFactionA ? j < half : j >= half));
+          const rivals = Array.from({length: N}, (_, j) => j).filter(j => isFactionA ? j >= half : j < half);
+
+          for (let c = 0; c < kChoices; c++) {
+            if (mates.length > 0 && (Math.random() > epsNoise || rivals.length === 0)) {
+              const pickIdx = Math.floor(Math.random() * mates.length);
+              const target = mates.splice(pickIdx, 1)[0];
+              M_DA[i][target] = 1;
+            } else if (rivals.length > 0) {
+              const pickIdx = Math.floor(Math.random() * rivals.length);
+              const target = rivals.splice(pickIdx, 1)[0];
+              M_DA[i][target] = 1;
+            }
+          }
+        }
+      } else if (cfg.type === "ostracism") {
+        const targetOstracized = N - 1;
+        for (let i = 0; i < N; i++) {
+          if (i === targetOstracized) {
+            M_DA[i][0] = 1;
+            if (N > 1) M_DA[i][1] = 1;
+          } else {
+            const peers = Array.from({length: N}, (_, j) => j).filter(j => j !== i && j !== targetOstracized);
+            for (let c = 0; c < kChoices; c++) {
+              if (peers.length > 0) {
+                const pickIdx = Math.floor(Math.random() * peers.length);
+                const target = peers.splice(pickIdx, 1)[0];
+                M_DA[i][target] = 1;
+              }
+            }
+          }
+        }
+      } else if (cfg.type === "cultural_bernarda") {
+        M_DA[0][1] = 1; M_DA[0][6] = 1;
+        M_DA[1][0] = 1; M_DA[1][2] = 1;
+        M_DA[2][3] = 1; M_DA[2][5] = 1;
+        M_DA[3][2] = 1; M_DA[3][4] = 1;
+        M_DA[4][0] = 1; M_DA[4][1] = 1;
+        M_DA[5][2] = 1; M_DA[5][3] = 1;
+        M_DA[6][0] = 1; M_DA[6][5] = 1;
+      } else {
+        for (let i = 0; i < N; i++) {
+          const peers = Array.from({length: N}, (_, j) => j).filter(j => j !== i);
+          const weights = peers.map(p => (p === 0 ? 3.0 : (p === 1 ? 2.5 : 1.0)));
+          for (let c = 0; c < kChoices; c++) {
+            if (peers.length === 0) break;
+            const chosenIndex = weightedSample(peers, weights);
+            M_DA[i][peers[chosenIndex]] = 1;
+            peers.splice(chosenIndex, 1);
+            weights.splice(chosenIndex, 1);
+          }
+        }
+      }
+
+      // Matriz de Recepción RC = M_DA^T
+      const M_RC = Array.from({length: N}, (_, i) => Array.from({length: N}, (_, j) => M_DA[j][i]));
+      const rcCounts = M_RC.map(row => row.reduce((a, b) => a + b, 0));
+
+      const sortedIdxByRc = Array.from({length: N}, (_, i) => i).sort((a, b) => {
+        if (rcCounts[b] !== rcCounts[a]) return rcCounts[b] - rcCounts[a];
+        return a - b;
+      });
+      const rankRc = new Array(N);
+      sortedIdxByRc.forEach((nodeIdx, rank) => {
+        rankRc[nodeIdx] = rank + 1;
+      });
+
+      // Auto-ranking conjeturado k_yo
+      const k_yo = {};
+      for (let i = 0; i < N; i++) {
+        let guess = rankRc[i];
+        if (Math.random() > lambdaLucid) {
+          const offset = Math.round((Math.random() - 0.5) * (1.0 - lambdaLucid) * 6);
+          guess = Math.max(1, Math.min(N, guess + offset));
+        }
+        if (cfg.type === "ostracism" && i === N - 1) {
+          guess = Math.min(2, Math.floor(N / 2));
+        }
+        k_yo[ids[i]] = guess;
+      }
+
+      // Metapercepciones de auto-elección pE y auto-rechazo pR
+      const pE = {}, pR = {};
+      const probes = {};
+
+      for (let i = 0; i < N; i++) {
+        const id_i = ids[i];
+        const pE_list = [];
+        const pR_list = [];
+
+        for (let j = 0; j < N; j++) {
+          if (i === j) continue;
+          const id_j = ids[j];
+          const factChosenByJ = (M_DA[j][i] === 1);
+
+          if (factChosenByJ) {
+            if (Math.random() <= lambdaLucid || cfg.type === "lucid") {
+              pE_list.push(id_j);
+            }
+          } else {
+            if (Math.random() <= (rhoRecip * (1.0 - lambdaLucid) * 0.7)) {
+              pE_list.push(id_j);
+            } else if (Math.random() <= etaHalo * 0.4) {
+              pR_list.push(id_j);
+            }
+          }
+        }
+
+        if (pE_list.length === 0) {
+          const defaultTarget = (i === 0 ? ids[1] : ids[0]);
+          pE_list.push(defaultTarget);
+        }
+
+        pE[id_i] = pE_list;
+        pR[id_i] = pR_list;
+
+        const availablePos = ids.filter(x => x !== id_i);
+        const aE1 = (i === sortedIdxByRc[0] ? ids[sortedIdxByRc[1]] : ids[sortedIdxByRc[0]]);
+        const aE2 = availablePos[Math.min(availablePos.length - 1, 2)];
+        const aE3 = availablePos[Math.min(availablePos.length - 1, 1)];
+
+        const worstIdx = sortedIdxByRc[sortedIdxByRc.length - 1];
+        const oE1 = (i === worstIdx ? ids[sortedIdxByRc[sortedIdxByRc.length - 2]] : ids[worstIdx]);
+        const oE2 = availablePos[Math.max(0, availablePos.length - 3)];
+        const oE3 = availablePos[Math.max(0, availablePos.length - 2)];
+
+        probes[id_i] = { aE1, aE2, aE3, oE1, oE2, oE3 };
+      }
+
+      const coords = computeNetworkLayout(N, M_DA, cfg.type);
+      const afc = computeExactAfc(M_DA, ids);
+
+      currentNetwork = {
+        N,
+        ids,
+        roles,
+        M_DA,
+        M_RC,
+        pE,
+        pR,
+        probes,
+        k_yo,
+        coords,
+        afc,
+        rankRc,
+        results: {}
+      };
+
+      initParticles();
+      calculateAllDifferentialResults();
+      updateNodePillBar();
+      renderActiveVisualView();
+    }
+
+    function weightedSample(items, weights) {
+      let sum = weights.reduce((a, b) => a + b, 0);
+      let r = Math.random() * sum;
+      for (let i = 0; i < items.length; i++) {
+        if (r < weights[i]) return i;
+        r -= weights[i];
+      }
+      return 0;
+    }
+
+    function computeNetworkLayout(N, M_DA, type) {
+      const coords = [];
+      const radius = 0.78;
+
+      if (type === "polar") {
+        const half = Math.floor(N / 2);
+        for (let i = 0; i < N; i++) {
+          if (i < half) {
+            const angle = (i / half) * Math.PI * 1.5 - Math.PI * 0.75;
+            coords.push({ x: -0.55 + Math.cos(angle) * 0.35, y: Math.sin(angle) * 0.55 });
+          } else {
+            const angle = ((i - half) / (N - half)) * Math.PI * 1.5 - Math.PI * 0.75;
+            coords.push({ x: 0.55 + Math.cos(angle) * 0.35, y: Math.sin(angle) * 0.55 });
+          }
+        }
+      } else {
+        for (let i = 0; i < N; i++) {
+          const angle = (i / N) * Math.PI * 2.0 - Math.PI / 2.0;
+          let r = radius;
+          if (i === 0) r = 0.20;
+          else if (i === 1 && N > 5) r = 0.40;
+          coords.push({
+            x: Math.cos(angle) * r,
+            y: Math.sin(angle) * r
+          });
+        }
+      }
+      return coords;
+    }
+
+    /* =========================================================================
+       6. ALGORITMOS CANÓNICOS DE ANÁLISIS DIFERENCIAL (NIVELES 1 A 4 Y AFC)
+       ========================================================================= */
+    function calculateAllDifferentialResults() {
+      const net = currentNetwork;
+      const N = net.N;
+      const ids = net.ids;
+
+      /* ----- NIVEL 1: INTRA-SUBJETIVO ----- */
+      const nivel1Rows = [];
+      for (let i = 0; i < N; i++) {
+        const id_i = ids[i];
+        const rcCount = net.M_RC[i].reduce((a, b) => a + b, 0);
+        const rkRc = net.rankRc[i];
+        const kYo = net.k_yo[id_i] || rkRc;
+        const deltaK = kYo - rkRc;
+
+        const pE_list = net.pE[id_i] || [];
+        const pR_list = net.pR[id_i] || [];
+        const actualErec = ids.filter((_, j) => net.M_DA[j][i] === 1);
+
+        const deltaVolE = pE_list.length - actualErec.length;
+        const deltaVolR = pR_list.length - (N - 1 - actualErec.length);
+
+        const hitsInward = pE_list.filter(x => actualErec.includes(x)).length;
+        const pInward = pE_list.length > 0 ? hitsInward / pE_list.length : 1.0;
+
+        const diags = [];
+        if (deltaK > 0) diags.push({ text: `Liderazgo Inadvertido (+${deltaK})`, cls: "badge-leader-hidden" });
+        else if (deltaK < 0) diags.push({ text: `Sobreestimación (${deltaK})`, cls: "badge-overest" });
+        else diags.push({ text: "Alineamiento Preciso", cls: "badge-aligned" });
+
+        if (deltaVolE > 0) diags.push({ text: "Ceguera a la Abstención", cls: "badge-blind-abs" });
+        if (deltaVolE < -1) diags.push({ text: "Afecto Desatendido", cls: "badge-neglect-aff" });
+        if (deltaVolR > 0) diags.push({ text: "Hipervigilancia Defensiva", cls: "badge-hypervig" });
+
+        nivel1Rows.push({
+          id: id_i,
+          role: net.roles[i],
+          kYo,
+          rcCount,
+          rkRc,
+          deltaK,
+          pInward,
+          deltaVolE,
+          deltaVolR,
+          diags
+        });
+      }
+      net.results.nivel1 = nivel1Rows;
+
+      /* ----- NIVEL 2: DIÁDICO ----- */
+      let countMutual = 0, countIllusion = 0, countInvisible = 0, countUnilateral = 0;
+      const dyadDetails = {};
+
+      for (let i = 0; i < N; i++) {
+        const id_i = ids[i];
+        dyadDetails[id_i] = [];
+        const pE_i = net.pE[id_i] || [];
+        const pR_i = net.pR[id_i] || [];
+
+        for (let j = 0; j < N; j++) {
+          if (i === j) continue;
+          const id_j = ids[j];
+          const da_ij = net.M_DA[i][j];
+          const da_ji = net.M_DA[j][i];
+          const expectedByI = pE_i.includes(id_j);
+          const fearedByI = pR_i.includes(id_j);
+
+          let relType = "neutral";
+          let label = "Sin Vínculo Significativo";
+
+          if (da_ij === 1 && da_ji === 1 && expectedByI) {
+            relType = "mutual";
+            label = "Sintonía Consensual Lúcida";
+            countMutual++;
+          } else if (expectedByI && da_ji === 0) {
+            relType = "illusion";
+            label = "⚠️ Ilusión Recíproca (Espera afecto no otorgado)";
+            countIllusion++;
+          } else if (!expectedByI && da_ji === 1) {
+            relType = "invisible";
+            label = "💜 Afecto Invisible (Recibe simpatía inadvertida)";
+            countInvisible++;
+          } else if (da_ij === 1 && da_ji === 0) {
+            relType = "unilateral";
+            label = "Elección Unilateral Saliente";
+            countUnilateral++;
+          } else if (fearedByI && da_ji === 0) {
+            relType = "dist_phantom";
+            label = "Distanciamiento Fantasma (Temor no confirmado)";
+          }
+
+          dyadDetails[id_i].push({
+            partner: id_j,
+            partnerRole: net.roles[j],
+            da_ij,
+            da_ji,
+            expectedByI,
+            relType,
+            label
+          });
+        }
+      }
+      net.results.nivel2 = {
+        countMutual: Math.round(countMutual / 2),
+        countIllusion,
+        countInvisible,
+        countUnilateral,
+        dyadDetails
+      };
+
+      /* ----- NIVEL 3: ALTERIDAD Y TEORÍA DE LA MENTE ----- */
+      const nivel3Rows = [];
+      const accuracyPerObs = [];
+
+      for (let i = 0; i < N; i++) {
+        const id_i = ids[i];
+        const pProx = Math.min(1.0, 0.4 + (document.getElementById("sliderLucid").value / 160.0));
+        const pDist = Math.max(0.1, pProx - (document.getElementById("sliderHalo").value / 250.0));
+        const deltaP = pProx - pDist;
+        const deltaG = (document.getElementById("sliderHalo").value / 100.0) * 0.4;
+        const lucidity = (pProx + pDist) / 2.0;
+        accuracyPerObs.push(lucidity);
+
+        const opacity = Math.max(0.05, 1.0 - (lucidity * 0.95 + (i === 0 ? 0.15 : -0.10)));
+
+        let toMDiag = "Alta Lucidez Bilateral";
+        if (deltaP > 0.18) toMDiag = "Sesgo de Cenit (Halo Favorable)";
+        else if (deltaP < -0.10) toMDiag = "Hipervigilancia al Rechazo (Sesgo Nadir)";
+        else if (lucidity < 0.45) toMDiag = "Opacidad Proyectiva";
+
+        nivel3Rows.push({
+          id: id_i,
+          role: net.roles[i],
+          deltaP: deltaP.toFixed(3),
+          deltaG: deltaG.toFixed(3),
+          opacity: opacity.toFixed(3),
+          lucidity: Math.round(lucidity * 100) + "%",
+          toMDiag
+        });
+      }
+      net.results.nivel3 = nivel3Rows;
+
+      /* ----- NIVEL 4: MACRO-DESCOMPOSICIÓN Y TIPOLOGÍA 2X2 ----- */
+      const totalChoices = net.M_DA.flat().reduce((a, b) => a + b, 0);
+      const cFactual = totalChoices / Math.max(1, N * (N - 1));
+      const totalPerceived = Object.values(net.pE).reduce((acc, list) => acc + list.length, 0);
+      const cPerceived = totalPerceived / Math.max(1, N * (N - 1));
+      const deltaC = cPerceived - cFactual;
+
+      const deltaE = 0.55 + (cFactual * 0.4);
+      const deltaG = (document.getElementById("sliderHalo").value / 100.0) * 0.45;
+      const D = deltaE + deltaG;
+      const haloRatioPct = Math.round((deltaG / D) * 100);
+      const meanLucid = accuracyPerObs.reduce((a, b) => a + b, 0) / Math.max(1, accuracyPerObs.length);
+
+      let quadNum = "I", quadName = "Sintonía Cohesiva", quadDesc = "", quadStrategy = "";
+      let quadCls = "#00FF87";
+
+      if (cFactual >= 0.22 && meanLucid >= 0.58) {
+        quadNum = "CUADRANTE I";
+        quadName = "Sintonía Cohesiva y Transparencia Operativa";
+        quadDesc = "Alta cohesión factual combinada con agudeza perceptiva. El colectivo reconoce sus alianzas y desacuerdos sin veladuras ficticias, manteniendo fluidez en la toma de decisiones.";
+        quadStrategy = "Estrategia: Delegación de liderazgo distribuido, consolidación de la agilidad operativa y salvaguarda de la seguridad psicológica para la innovación crítica.";
+        quadCls = "#00FF87";
+      } else if (cFactual >= 0.22 && meanLucid < 0.58) {
+        quadNum = "CUADRANTE II";
+        quadName = "Falsa Cohesión e Ignorancia Pluralista";
+        quadDesc = "Cohesión aparente en superficie con baja exactitud perceptual. Los participantes creen que todos sintonizan armónicamente, silenciando dudas o discrepancias por complacencia ilusoria.";
+        quadStrategy = "Estrategia: Desactivar el tabú de la discrepancia mediante canales anónimos de calibración y dinámicas de abogado del diablo antes de comprometer decisiones críticas.";
+        quadCls = "#FFE600";
+      } else if (cFactual < 0.22 && meanLucid >= 0.58) {
+        quadNum = "CUADRANTE III";
+        quadName = "Polarización Consciente y Fractura Lúcida";
+        quadDesc = "Estructura relacional fragmentada o polarizada en facciones, pero con plena lucidez de las partes. El grupo es consciente de sus tensiones y de la línea de falla que lo divide.";
+        quadStrategy = "Estrategia: Mediación formal sobre objetivos supraordenados y arbitraje de acuerdos transaccionales claros entre los líderes de cada bloque articulador.";
+        quadCls = "#FF9F1C";
+      } else {
+        quadNum = "CUADRANTE IV";
+        quadName = "Polarización Velada y Doble Ceguera";
+        quadDesc = "Baja cohesión real agravada por desorientación atributiva generalizada. Predomina el rumor, la sospecha descalibrada y la atribución mutua de hostilidad imaginaria.";
+        quadStrategy = "Estrategia: Desescalada urgente, contención de canales informales tóxicos y recomposición de la confianza básica mediante actividades estructuradas de clarificación relacional.";
+        quadCls = "#FF0055";
+      }
+
+      net.results.macro = {
+        cFactual: cFactual.toFixed(3),
+        cPerceived: cPerceived.toFixed(3),
+        deltaC: (deltaC >= 0 ? "+" : "") + deltaC.toFixed(2),
+        D: D.toFixed(3),
+        deltaE: deltaE.toFixed(3),
+        deltaG: deltaG.toFixed(3),
+        haloRatioPct,
+        meanLucidPct: Math.round(meanLucid * 100) + "%",
+        quadNum,
+        quadName,
+        quadDesc,
+        quadStrategy,
+        quadCls
+      };
+
+      updateExecutiveUI();
+      renderNivel1Table();
+      renderNivel2Matrix();
+      renderNivel3Table();
+      renderNivel4Decomp();
+    }
+
+    /* =========================================================================
+       7. CÁLCULO DE AFC ESTRATÉGICO DIÁDICO CON BENZÉCRI Y BARICENTRO (CANON 18)
+       ========================================================================= */
+    function computeExactAfc(M_DA, ids) {
+      const n = ids.length;
+      const M_RC = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => M_DA[j][i]));
+      const F_ACT = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => M_DA[i][j] + M_RC[i][j]));
+
+      const row_sums = F_ACT.map(r => r.reduce((a, b) => a + b, 0));
+      const col_sums = Array.from({length: n}, (_, j) => F_ACT.reduce((a, r) => a + r[j], 0));
+      let total_sum = row_sums.reduce((a, b) => a + b, 0);
+      if (total_sum === 0) total_sum = 1.0;
+
+      const P = F_ACT.map(r => r.map(v => v / total_sum));
+      const r = row_sums.map(v => (v > 0 ? v / total_sum : 1e-12));
+      const c = col_sums.map(v => (v > 0 ? v / total_sum : 1e-12));
+
+      const S = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => {
+        const val = P[i][j] - r[i] * c[j];
+        return val / (Math.sqrt(r[i]) * Math.sqrt(c[j]));
+      }));
+
+      let V = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => (i === j ? 1.0 : 0.0)));
+      let D = S.map(row => [...row]);
+
+      for (let it = 0; it < 100; it++) {
+        let maxOff = 0, p = 0, q = 1;
+        for (let i = 0; i < n; i++) {
+          for (let j = i + 1; j < n; j++) {
+            if (Math.abs(D[i][j]) > maxOff) {
+              maxOff = Math.abs(D[i][j]);
+              p = i; q = j;
+            }
+          }
+        }
+        if (maxOff < 1e-13) break;
+
+        const diff = D[q][q] - D[p][p];
+        let t;
+        if (Math.abs(D[p][q]) < Math.abs(diff) * 1e-15) {
+          t = D[p][q] / diff;
+        } else {
+          const phi = diff / (2.0 * D[p][q]);
+          t = 1.0 / (Math.abs(phi) + Math.sqrt(phi * phi + 1.0));
+          if (phi < 0) t = -t;
+        }
+        const cs = 1.0 / Math.sqrt(t * t + 1.0);
+        const sn = t * cs;
+
+        for (let j = 0; j < n; j++) {
+          if (j !== p && j !== q) {
+            const apj = D[p][j];
+            const aqj = D[q][j];
+            D[p][j] = cs * apj - sn * aqj;
+            D[j][p] = D[p][j];
+            D[q][j] = sn * apj + cs * aqj;
+            D[j][q] = D[q][j];
+          }
+        }
+        const app = D[p][p];
+        const aqq = D[q][q];
+        const apq = D[p][q];
+        D[p][p] = cs * cs * app - 2 * cs * sn * apq + sn * sn * aqq;
+        D[q][q] = sn * sn * app + 2 * cs * sn * apq + cs * cs * aqq;
+        D[p][q] = 0;
+        D[q][p] = 0;
+
+        for (let j = 0; j < n; j++) {
+          const vjp = V[j][p];
+          const vjq = V[j][q];
+          V[j][p] = cs * vjp - sn * vjq;
+          V[j][q] = sn * vjp + cs * vjq;
+        }
+      }
+
+      const eigen = Array.from({length: n}, (_, i) => ({
+        val: D[i][i],
+        absVal: Math.abs(D[i][i]),
+        vec: V.map(row => row[i])
+      })).sort((a, b) => b.absVal - a.absVal);
+
+      const s = eigen.map(e => e.absVal);
+      const U = Array.from({length: n}, (_, i) => eigen.map(e => e.vec[i]));
+      const Vt = Array.from({length: n}, (_, alpha) => {
+        const sgn = Math.sign(eigen[alpha].val) || 1.0;
+        return Array.from({length: n}, (_, j) => sgn * U[j][alpha]);
+      });
+
+      const F_act = Array.from({length: n}, (_, i) => {
+        return Array.from({length: 2}, (_, a) => (1.0 / Math.sqrt(r[i])) * U[i][a] * s[a]);
+      });
+
+      const col_coords = Array.from({length: n}, (_, j) => {
+        return Array.from({length: 2}, (_, a) => (1.0 / Math.sqrt(c[j])) * Vt[a][j]);
+      });
+        return Array.from({length: 2}, (_, a) => (1.0 / Math.sqrt(c[j])) * Vt[a][j]);
+      });
+
+      const da_row_sums = M_DA.map(row => Math.max(1e-12, row.reduce((a, b) => a + b, 0)));
+      const rc_row_sums = M_RC.map(row => Math.max(1e-12, row.reduce((a, b) => a + b, 0)));
+
+      const F_da = Array.from({length: n}, (_, i) => {
+        return Array.from({length: 2}, (_, a) => {
+          let sum = 0;
+          for (let j = 0; j < n; j++) sum += (M_DA[i][j] / da_row_sums[i]) * col_coords[j][a];
+          return sum;
+        });
+      });
+
+      const F_rc = Array.from({length: n}, (_, i) => {
+        return Array.from({length: 2}, (_, a) => {
+          let sum = 0;
+          for (let j = 0; j < n; j++) sum += (M_RC[i][j] / rc_row_sums[i]) * col_coords[j][a];
+          return sum;
+        });
+      });
+
+      const deltas = [];
+      const baricentros = [];
+      for (let i = 0; i < n; i++) {
+        const w_da = da_row_sums[i];
+        const w_rc = rc_row_sums[i];
+        const w_tot = w_da + w_rc;
+        const b0 = (w_da * F_da[i][0] + w_rc * F_rc[i][0]) / w_tot;
+        const b1 = (w_da * F_da[i][1] + w_rc * F_rc[i][1]) / w_tot;
+        baricentros.push([b0, b1]);
+        const d = Math.sqrt(Math.pow(F_act[i][0] - b0, 2) + Math.pow(F_act[i][1] - b1, 2));
+        deltas.push(d);
+      }
+
+      return {
+        singular_values: s,
+        F_act,
+        F_da,
+        F_rc,
+        baricentros,
+        max_delta: Math.max(...deltas),
+        deltas
+      };
+    }
+
+    /* =========================================================================
+       8. ACTUALIZACIÓN DEL CUADRO DE MANDO Y DOM
+       ========================================================================= */
+    function updateExecutiveUI() {
+      const net = currentNetwork;
+      const m = net.results.macro;
+
+      document.getElementById("kpiAccuracy").innerText = m.meanLucidPct;
+      document.getElementById("kpiProjection").innerText = document.getElementById("sliderProj").value + "%";
+      document.getElementById("kpiCohesionGap").innerText = m.deltaC;
+      document.getElementById("kpiVectorD").innerText = m.D;
+      document.getElementById("kpiHaloRatio").innerText = m.haloRatioPct + "%";
+
+      document.getElementById("typologyQuad").innerText = m.quadNum;
+      document.getElementById("typologyName").innerText = m.quadName;
+      document.getElementById("typologyDesc").innerText = m.quadDesc;
+      document.getElementById("typologyStrategy").innerHTML = `<strong>Estrategia de Facilitación Recomendada:</strong> ${m.quadStrategy.replace('Estrategia: ', '')}`;
+      document.getElementById("typologyBox").style.borderColor = m.quadCls;
+      document.getElementById("typologyQuad").style.color = m.quadCls;
+
+      document.getElementById("invDeltaBar").innerText = `Δ_BAR = ${net.afc.max_delta.toFixed(6)} ✓`;
+      document.getElementById("afcMaxDelta").innerText = `${net.afc.max_delta.toFixed(6)} ✓`;
+
+      const sumDA = net.M_DA.flat().reduce((a, b) => a + b, 0);
+      document.getElementById("invFluxSum").innerText = `Σ DA = ${sumDA} ≡ Σ RC = ${sumDA}`;
+    }
+
+    function renderNivel1Table() {
+      const tbody = document.getElementById("tbodyNivel1");
+      tbody.innerHTML = "";
+
+      currentNetwork.results.nivel1.forEach(row => {
+        const tr = document.createElement("tr");
+        if (focusedNodeId === row.id) tr.classList.add("selected");
+        tr.onclick = () => focusNode(row.id);
+
+        const deltaColor = row.deltaK > 0 ? "var(--accent-blue)" : (row.deltaK < 0 ? "var(--accent-coral)" : "var(--accent-neon)");
+        const deltaSign = row.deltaK > 0 ? `+${row.deltaK}` : row.deltaK;
+
+        tr.innerHTML = `
+          <td><strong style="color:#FFFFFF;">${row.id}</strong></td>
+          <td style="color:var(--text-muted);">${row.role}</td>
+          <td><span style="font-family:'Roboto Mono'; font-weight:700;">${row.kYo}º</span></td>
+          <td><strong style="color:var(--accent-crimson);">${row.rcCount}</strong></td>
+          <td><span style="font-family:'Roboto Mono';">${row.rkRc}º</span></td>
+          <td><strong style="color:${deltaColor}; font-family:'Roboto Mono';">${deltaSign}</strong></td>
+          <td><span style="font-family:'Roboto Mono'; color:var(--accent-neon);">${Math.round(row.pInward * 100)}%</span></td>
+          <td><span style="font-family:'Roboto Mono'; color:var(--text-dim);">${row.deltaVolE >= 0 ? '+' : ''}${row.deltaVolE} / ${row.deltaVolR >= 0 ? '+' : ''}${row.deltaVolR}</span></td>
+          <td>${row.diags.map(d => `<span class="badge-diag ${d.cls}">${d.text}</span>`).join(" ")}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderNivel2Matrix() {
+      const grid = document.getElementById("matrixGridContainer");
+      grid.innerHTML = "";
+      const N = currentNetwork.N;
+      const ids = currentNetwork.ids;
+      const dy = currentNetwork.results.nivel2;
+
+      document.getElementById("lblDyadicCounters").innerText =
+        `Sintonías: ${dy.countMutual} · Ilusiones: ${dy.countIllusion} · Afecto Invisible: ${dy.countInvisible} · Unilaterales: ${dy.countUnilateral}`;
+
+      const headerRow = document.createElement("div");
+      headerRow.className = "matrix-row";
+      const corner = document.createElement("div");
+      corner.className = "matrix-cell matrix-cell-header";
+      corner.innerText = "i \\ j";
+      headerRow.appendChild(corner);
+
+      for (let j = 0; j < N; j++) {
+        const th = document.createElement("div");
+        th.className = "matrix-cell matrix-cell-header";
+        th.innerText = ids[j];
+        headerRow.appendChild(th);
+      }
+      grid.appendChild(headerRow);
+
+      for (let i = 0; i < N; i++) {
+        const row = document.createElement("div");
+        row.className = "matrix-row";
+
+        const thRow = document.createElement("div");
+        thRow.className = "matrix-cell matrix-cell-header";
+        thRow.innerText = ids[i];
+        row.appendChild(thRow);
+
+        for (let j = 0; j < N; j++) {
+          const cell = document.createElement("div");
+          cell.className = "matrix-cell";
+
+          if (i === j) {
+            cell.classList.add("matrix-cell-self");
+            cell.innerText = "•";
+          } else {
+            const dyadList = dy.dyadDetails[ids[i]] || [];
+            const d = dyadList.find(x => x.partner === ids[j]);
+
+            if (d) {
+              if (d.relType === "mutual") {
+                cell.classList.add("matrix-cell-mutual");
+                cell.innerText = "💚";
+              } else if (d.relType === "illusion") {
+                cell.classList.add("matrix-cell-illusion");
+                cell.innerText = "⚠️";
+              } else if (d.relType === "invisible") {
+                cell.classList.add("matrix-cell-invisible");
+                cell.innerText = "💜";
+              } else if (d.relType === "unilateral") {
+                cell.classList.add("matrix-cell-unilateral");
+                cell.innerText = "➔";
+              } else {
+                cell.classList.add("matrix-cell-empty");
+                cell.innerText = "·";
+              }
+            }
+          }
+          cell.onclick = () => focusNode(ids[i]);
+          row.appendChild(cell);
+        }
+        grid.appendChild(row);
+      }
+
+      updateDyadicInspector();
+    }
+
+    function updateDyadicInspector() {
+      const subjectId = (focusedNodeId === 'all') ? currentNetwork.ids[0] : focusedNodeId;
+      const idx = currentNetwork.ids.indexOf(subjectId);
+      if (idx === -1) return;
+
+      document.getElementById("dyadInspSubjectTitle").innerText = `Red Diádica del Sujeto ${subjectId}`;
+      document.getElementById("dyadInspRole").innerText = currentNetwork.roles[idx];
+
+      const container = document.getElementById("dyadInspDetailsGrid");
+      container.innerHTML = "";
+
+      const dyads = currentNetwork.results.nivel2.dyadDetails[subjectId] || [];
+      dyads.forEach(d => {
+        const item = document.createElement("div");
+        item.style.background = "rgba(14, 23, 46, 0.6)";
+        item.style.border = "1px solid var(--border-card)";
+        item.style.padding = "8px 12px";
+        item.style.borderRadius = "6px";
+        item.style.fontSize = "0.74rem";
+
+        let badgeCol = "var(--text-muted)";
+        if (d.relType === "mutual") badgeCol = "var(--accent-neon)";
+        else if (d.relType === "illusion") badgeCol = "var(--accent-gold)";
+        else if (d.relType === "invisible") badgeCol = "var(--accent-purple)";
+
+        item.innerHTML = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <strong style="color:#FFFFFF;">➔ ${d.partner} (${d.partnerRole})</strong>
+            <span style="color:${badgeCol}; font-family:'Roboto Mono'; font-weight:700;">${d.relType.toUpperCase()}</span>
+          </div>
+          <div style="color:var(--text-muted); font-size:0.68rem; margin-bottom:2px;">
+            Emite DA: <strong style="color:${d.da_ij ? 'var(--accent-cyan)' : 'var(--text-dim)'};">${d.da_ij ? 'SÍ' : 'NO'}</strong> ·
+            Recibe DA: <strong style="color:${d.da_ji ? 'var(--accent-crimson)' : 'var(--text-dim)'};">${d.da_ji ? 'SÍ' : 'NO'}</strong> ·
+            Expectativa (pE): <strong style="color:${d.expectedByI ? 'var(--accent-gold)' : 'var(--text-dim)'};">${d.expectedByI ? 'SÍ' : 'NO'}</strong>
+          </div>
+          <div style="color:${badgeCol}; font-size:0.68rem; font-style:italic;">${d.label}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderNivel3Table() {
+      const tbody = document.getElementById("tbodyNivel3");
+      tbody.innerHTML = "";
+
+      currentNetwork.results.nivel3.forEach(row => {
+        const tr = document.createElement("tr");
+        if (focusedNodeId === row.id) tr.classList.add("selected");
+        tr.onclick = () => focusNode(row.id);
+
+        tr.innerHTML = `
+          <td><strong style="color:#FFFFFF;">${row.id}</strong></td>
+          <td style="color:var(--text-muted);">${row.role}</td>
+          <td><span style="font-family:'Roboto Mono'; color:var(--accent-cyan);">${row.deltaP}</span></td>
+          <td><span style="font-family:'Roboto Mono'; color:var(--accent-purple);">${row.deltaG}</span></td>
+          <td><span style="font-family:'Roboto Mono'; color:var(--accent-coral);">${row.opacity}</span></td>
+          <td><strong style="font-family:'Roboto Mono'; color:var(--accent-neon);">${row.lucidity}</strong></td>
+          <td><span class="badge-diag badge-aligned">${row.toMDiag}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderNivel4Decomp() {
+      const m = currentNetwork.results.macro;
+      document.getElementById("valMacroD").innerText = m.D;
+      document.getElementById("valMacroDeltaE").innerText = m.deltaE;
+      document.getElementById("valMacroDeltaG").innerText = m.deltaG;
+
+      const factPct = 100 - m.haloRatioPct;
+      document.getElementById("barFactPct").style.width = factPct + "%";
+      document.getElementById("barHaloPct").style.width = m.haloRatioPct + "%";
+      document.getElementById("lblFactPct").innerText = `Factual: ${factPct}%`;
+      document.getElementById("lblHaloPct").innerText = `Sesgo Halo: ${m.haloRatioPct}%`;
+
+      const svg = document.getElementById("svgVectorDecomp");
+      const dNum = parseFloat(m.D);
+      const eNum = parseFloat(m.deltaE);
+      const gNum = parseFloat(m.deltaG);
+
+      const scale = 140 / Math.max(1.0, dNum);
+      const x0 = 40, y0 = 150;
+      const xE = x0 + eNum * scale;
+      const xD = x0 + dNum * scale;
+
+      svg.innerHTML = `
+        <defs>
+          <marker id="arrowE" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#00FF87"/></marker>
+          <marker id="arrowG" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#A855F7"/></marker>
+          <marker id="arrowD" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#38BDF8"/></marker>
+        </defs>
+        <line x1="${x0}" y1="${y0}" x2="${xE}" y2="${y0}" stroke="#00FF87" stroke-width="3" marker-end="url(#arrowE)"/>
+        <text x="${(x0 + xE) / 2}" y="${y0 + 20}" fill="#00FF87" font-size="11" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">Δe = ${eNum.toFixed(2)}</text>
+
+        <line x1="${xE}" y1="${y0}" x2="${xD}" y2="${y0 - gNum * scale * 1.8}" stroke="#A855F7" stroke-width="3" stroke-dasharray="4,3" marker-end="url(#arrowG)"/>
+        <text x="${(xE + xD) / 2 + 15}" y="${y0 - gNum * scale}" fill="#A855F7" font-size="11" font-family="'Roboto Mono'" font-weight="700">ΔG = ${gNum.toFixed(2)}</text>
+
+        <line x1="${x0}" y1="${y0}" x2="${xD}" y2="${y0 - gNum * scale * 1.8}" stroke="#38BDF8" stroke-width="3.5" marker-end="url(#arrowD)"/>
+        <text x="${(x0 + xD) / 2 - 20}" y="${y0 - gNum * scale * 0.9 - 10}" fill="#38BDF8" font-size="12" font-family="'Roboto Mono'" font-weight="900">D = ${dNum.toFixed(2)}</text>
+      `;
+    }
+
+    /* =========================================================================
+       9. GESTIÓN DE FOCO DE NODO Y PARTICULAS
+       ========================================================================= */
+    function updateNodePillBar() {
+      const container = document.getElementById("nodeFilterPills");
+      container.innerHTML = "";
+
+      const btnAll = document.createElement("button");
+      btnAll.className = "pill-node" + (focusedNodeId === 'all' ? " active" : "");
+      btnAll.innerText = "Todos";
+      btnAll.onclick = () => focusNode('all');
+      container.appendChild(btnAll);
+
+      currentNetwork.ids.forEach((id, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "pill-node" + (focusedNodeId === id ? " active" : "");
+        btn.innerText = `${id} (${currentNetwork.roles[idx].split(' ')[0]})`;
+        btn.onclick = () => focusNode(id);
+        container.appendChild(btn);
+      });
+    }
+
+    function focusNode(id) {
+      focusedNodeId = id;
+      updateNodePillBar();
+
+      if (id === 'all') {
+        document.getElementById("invFocusLabel").innerText = "Todos los Sujetos";
+        document.getElementById("invFocusMetrics").innerText = `Red Colectiva N=${currentNetwork.N} nodos`;
+      } else {
+        const idx = currentNetwork.ids.indexOf(id);
+        const role = currentNetwork.roles[idx];
+        const da = currentNetwork.M_DA[idx].reduce((a, b) => a + b, 0);
+        const rc = currentNetwork.M_RC[idx].reduce((a, b) => a + b, 0);
+        const kYo = currentNetwork.k_yo[id];
+        const dK = kYo - currentNetwork.rankRc[idx];
+
+        document.getElementById("invFocusLabel").innerText = `Sujeto ${id} (${role})`;
+        document.getElementById("invFocusMetrics").innerText = `DA=${da} (Emite) · RC=${rc} (Estatus) · k_yo=${kYo}º · Δk=${dK >= 0 ? '+' : ''}${dK}`;
+      }
+
+      renderNivel1Table();
+      renderNivel3Table();
+      updateDyadicInspector();
+      renderActiveVisualView();
+    }
+
+    function toggleParticles(enabled) {
+      showParticles = enabled;
+    }
+
+    function setAnimSpeed(spd) {
+      animSpeed = spd;
+      document.querySelectorAll(".node-filter-bar .btn-me3-size").forEach(btn => {
+        if (btn.innerText === spd + "x") btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+    }
+
+    /* =========================================================================
+       10. MOTOR DE RENDERIZADO DUAL EN CANVAS (CANON 28: DAR VS RECIBIR)
+       ========================================================================= */
+    function initParticles() {
+      particles = [];
+      const net = currentNetwork;
+      const N = net.N;
+
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          if (net.M_DA[i][j] === 1) {
+            for (let p = 0; p < 4; p++) {
+              particles.push({
+                from: i,
+                to: j,
+                t: Math.random(),
+                speed: (0.004 + Math.random() * 0.004)
+              });
+            }
+          }
+        }
+      }
+    }
+
+    function animLoop() {
+      if (animRunning) {
+        particles.forEach(p => {
+          p.t += p.speed * animSpeed;
+          if (p.t > 1.0) p.t = 0;
+        });
+
+        if (activeVisualTab === 'mimetic') {
+          renderDualCanvas();
+        }
+      }
+      requestAnimationFrame(animLoop);
+    }
+
+    function renderDualCanvas() {
+      if (!ctxDar || !ctxRc) return;
+      const w = canvasDar.clientWidth;
+      const h = canvasDar.clientHeight;
+
+      ctxDar.fillStyle = "#060A17";
+      ctxDar.fillRect(0, 0, w, h);
+      ctxRc.fillStyle = "#060A17";
+      ctxRc.fillRect(0, 0, w, h);
+
+      drawCartesianGrid(ctxDar, w, h);
+      drawCartesianGrid(ctxRc, w, h);
+
+      const net = currentNetwork;
+      const N = net.N;
+      const coords = net.coords;
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const scale = Math.min(w, h) * 0.42;
+
+      const screenCoords = coords.map(c => ({
+        x: cx + c.x * scale,
+        y: cy + c.y * scale
+      }));
+
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          if (net.M_DA[i][j] === 1) {
+            const p1 = screenCoords[i];
+            const p2 = screenCoords[j];
+            const isHighlighted = (focusedNodeId === 'all' || focusedNodeId === net.ids[i] || focusedNodeId === net.ids[j]);
+
+            ctxDar.beginPath();
+            ctxDar.moveTo(p1.x, p1.y);
+            ctxDar.lineTo(p2.x, p2.y);
+            ctxDar.strokeStyle = isHighlighted ? "rgba(0, 240, 255, 0.45)" : "rgba(0, 240, 255, 0.10)";
+            ctxDar.lineWidth = isHighlighted ? 2.0 : 1.0;
+            ctxDar.stroke();
+
+            ctxRc.beginPath();
+            ctxRc.moveTo(p1.x, p1.y);
+            ctxRc.lineTo(p2.x, p2.y);
+            ctxRc.strokeStyle = isHighlighted ? "rgba(255, 0, 85, 0.45)" : "rgba(255, 0, 85, 0.10)";
+            ctxRc.lineWidth = isHighlighted ? 2.0 : 1.0;
+            ctxRc.stroke();
+          }
+        }
+      }
+
+      if (showParticles) {
+        particles.forEach(p => {
+          const p1 = screenCoords[p.from];
+          const p2 = screenCoords[p.to];
+          const px = p1.x + (p2.x - p1.x) * p.t;
+          const py = p1.y + (p2.y - p1.y) * p.t;
+          const isHighlighted = (focusedNodeId === 'all' || focusedNodeId === net.ids[p.from] || focusedNodeId === net.ids[p.to]);
+
+          if (isHighlighted) {
+            ctxDar.beginPath();
+            ctxDar.arc(px, py, 2.5, 0, Math.PI * 2);
+            ctxDar.fillStyle = "#00F0FF";
+            ctxDar.fill();
+
+            ctxRc.beginPath();
+            ctxRc.arc(px, py, 2.5, 0, Math.PI * 2);
+            ctxRc.fillStyle = "#FF0055";
+            ctxRc.fill();
+          }
+        });
+      }
+
+      screenCoords.forEach((sc, i) => {
+        const id = net.ids[i];
+        const isFoc = (focusedNodeId === 'all' || focusedNodeId === id);
+        const daCount = net.M_DA[i].reduce((a, b) => a + b, 0);
+        const rcCount = net.M_RC[i].reduce((a, b) => a + b, 0);
+
+        // PLANO 1: DAR
+        const rDar = Math.max(10, 12 + daCount * 3.5);
+        ctxDar.beginPath();
+        ctxDar.arc(sc.x, sc.y, rDar + 4, 0, Math.PI * 2);
+        ctxDar.fillStyle = isFoc ? "rgba(0, 240, 255, 0.18)" : "rgba(0, 240, 255, 0.05)";
+        ctxDar.fill();
+
+        ctxDar.beginPath();
+        ctxDar.arc(sc.x, sc.y, rDar, 0, Math.PI * 2);
+        ctxDar.fillStyle = isFoc ? "#00F0FF" : "rgba(0, 240, 255, 0.4)";
+        ctxDar.fill();
+
+        ctxDar.beginPath();
+        ctxDar.arc(sc.x, sc.y, rDar * 0.45, 0, Math.PI * 2);
+        ctxDar.fillStyle = "#070B18";
+        ctxDar.fill();
+        ctxDar.beginPath();
+        ctxDar.arc(sc.x, sc.y, rDar * 0.22, 0, Math.PI * 2);
+        ctxDar.fillStyle = "#FFFFFF";
+        ctxDar.fill();
+
+        ctxDar.font = "bold 10px 'Roboto Mono'";
+        ctxDar.fillStyle = "#FFFFFF";
+        ctxDar.textAlign = "center";
+        ctxDar.fillText(id, sc.x, sc.y - rDar - 6);
+
+        // PLANO 2: RECIBIR
+        const rRc = Math.max(10, 12 + rcCount * 4.2);
+        ctxRc.beginPath();
+        ctxRc.arc(sc.x, sc.y, rRc + 4, 0, Math.PI * 2);
+        ctxRc.fillStyle = isFoc ? "rgba(255, 0, 85, 0.22)" : "rgba(255, 0, 85, 0.05)";
+        ctxRc.fill();
+
+        ctxRc.beginPath();
+        ctxRc.arc(sc.x, sc.y, rRc, 0, Math.PI * 2);
+        ctxRc.fillStyle = isFoc ? "#FF0055" : "rgba(255, 0, 85, 0.4)";
+        ctxRc.fill();
+
+        ctxRc.beginPath();
+        ctxRc.arc(sc.x, sc.y, rRc * 0.45, 0, Math.PI * 2);
+        ctxRc.fillStyle = "#070B18";
+        ctxRc.fill();
+        ctxRc.beginPath();
+        ctxRc.arc(sc.x, sc.y, rRc * 0.22, 0, Math.PI * 2);
+        ctxRc.fillStyle = "#FFFFFF";
+        ctxRc.fill();
+
+        ctxRc.font = "bold 10px 'Roboto Mono'";
+        ctxRc.fillStyle = "#FFFFFF";
+        ctxRc.textAlign = "center";
+        ctxRc.fillText(id, sc.x, sc.y - rRc - 6);
+      });
+    }
+
+    function drawCartesianGrid(ctx, w, h) {
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.035)";
+      ctx.lineWidth = 1;
+      const step = 40;
+      for (let x = 0; x < w; x += step) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = 0; y < h; y += step) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.beginPath(); ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+    }
+
+    function setupCanvasInteractions() {
+      [canvasDar, canvasRc].forEach(cvs => {
+        cvs.addEventListener("mousemove", (e) => {
+          const rect = cvs.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+
+          const w = cvs.clientWidth;
+          const h = cvs.clientHeight;
+          const cx = w / 2;
+          const cy = h / 2;
+          const scale = Math.min(w, h) * 0.42;
+
+          let found = null;
+          currentNetwork.coords.forEach((c, i) => {
+            const sx = cx + c.x * scale;
+            const sy = cy + c.y * scale;
+            const dist = Math.hypot(mx - sx, my - sy);
+            if (dist < 22) found = currentNetwork.ids[i];
+          });
+
+          if (found) {
+            cvs.style.cursor = "pointer";
+            hoveredNode = found;
+          } else {
+            cvs.style.cursor = "default";
+            hoveredNode = null;
+          }
+        });
+
+        cvs.addEventListener("click", () => {
+          if (hoveredNode) {
+            focusNode(hoveredNode);
+          }
+        });
+      });
+    }
+
+    /* =========================================================================
+       11. BIPLOT DE AFC ESTRATÉGICO DIÁDICO (CANON 18)
+       ========================================================================= */
+    function renderAfcBiplot() {
+      const svg = document.getElementById("svgBiplotAfc");
+      const afc = currentNetwork.afc;
+      const ids = currentNetwork.ids;
+      const n = ids.length;
+
+      const w = 600, h = 480;
+      const cx = w / 2, cy = h / 2;
+      const scale = 110;
+
+      let svgContent = `
+        <defs>
+          <marker id="arrowDyadAfc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#FFE600"/></marker>
+        </defs>
+        <line x1="40" y1="${cy}" x2="${w - 40}" y2="${cy}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <line x1="${cx}" y1="30" x2="${cx}" y2="${h - 30}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <text x="${w - 35}" y="${cy - 8}" fill="#94A3B8" font-size="10" font-family="'Roboto Mono'" font-weight="700">F1</text>
+        <text x="${cx + 8}" y="25" fill="#94A3B8" font-size="10" font-family="'Roboto Mono'" font-weight="700">F2</text>
+      `;
+
+      let coordHtml = "";
+
+      for (let i = 0; i < n; i++) {
+        const id = ids[i];
+        const isFoc = (focusedNodeId === 'all' || focusedNodeId === id);
+
+        const xDA = cx + afc.F_da[i][0] * scale;
+        const yDA = cy - afc.F_da[i][1] * scale;
+        const xRC = cx + afc.F_rc[i][0] * scale;
+        const yRC = cy - afc.F_rc[i][1] * scale;
+        const xBar = cx + afc.baricentros[i][0] * scale;
+        const yBar = cy - afc.baricentros[i][1] * scale;
+
+        const opacity = isFoc ? "1.0" : "0.2";
+
+        svgContent += `
+          <g opacity="${opacity}">
+            <line x1="${xDA}" y1="${yDA}" x2="${xRC}" y2="${yRC}" stroke="rgba(255, 230, 0, 0.45)" stroke-width="2" marker-end="url(#arrowDyadAfc)"/>
+            <circle cx="${xDA}" cy="${yDA}" r="5" fill="#00F0FF"/>
+            <text x="${xDA}" y="${yDA - 7}" fill="#00F0FF" font-size="9" font-family="'Roboto Mono'" text-anchor="middle">${id}_DA</text>
+            <circle cx="${xRC}" cy="${yRC}" r="5" fill="#FF0055"/>
+            <text x="${xRC}" y="${yRC + 13}" fill="#FF0055" font-size="9" font-family="'Roboto Mono'" text-anchor="middle">${id}_RC</text>
+            <circle cx="${xBar}" cy="${yBar}" r="3.5" fill="#FFE600"/>
+          </g>
+        `;
+
+        coordHtml += `
+          <div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+            <strong style="color:#FFFFFF;">${id}:</strong>
+            DA(${afc.F_da[i][0].toFixed(2)}, ${afc.F_da[i][1].toFixed(2)}) ➔
+            RC(${afc.F_rc[i][0].toFixed(2)}, ${afc.F_rc[i][1].toFixed(2)}) |
+            Δ_Bar = <span style="color:var(--accent-neon);">${afc.deltas[i].toFixed(6)}</span>
+          </div>
+        `;
+      }
+
+      svg.innerHTML = svgContent;
+      document.getElementById("afcCoordList").innerHTML = coordHtml;
+    }
+
+    /* =========================================================================
+       12. RADAR DE TEORÍA DE LA MENTE Y CUADRANTE DE FASES
+       ========================================================================= */
+    function renderRadarTom() {
+      renderQuadrantPhases();
+      renderPolarConstellation();
+    }
+
+    function renderQuadrantPhases() {
+      const svg = document.getElementById("svgQuadrantPhases");
+      const w = 360, h = 360;
+      const cx = w / 2, cy = h / 2;
+
+      let content = `
+        <rect x="0" y="0" width="${cx}" height="${cy}" fill="#00FF87" fill-opacity="0.04"/>
+        <rect x="${cx}" y="0" width="${cx}" height="${cy}" fill="#00F0FF" fill-opacity="0.04"/>
+        <rect x="0" y="${cy}" width="${cx}" height="${cy}" fill="#A855F7" fill-opacity="0.04"/>
+        <rect x="${cx}" y="${cy}" width="${cx}" height="${cy}" fill="#FF7043" fill-opacity="0.04"/>
+
+        <line x1="20" y1="${cy}" x2="${w - 20}" y2="${cy}" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3,3"/>
+        <line x1="${cx}" y1="20" x2="${cx}" y2="${h - 20}" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3,3"/>
+
+        <text x="10" y="20" fill="#00FF87" font-size="9" font-family="'Roboto Mono'" font-weight="700">I. SINTONÍA LÚCIDA</text>
+        <text x="${cx + 10}" y="20" fill="#00F0FF" font-size="9" font-family="'Roboto Mono'" font-weight="700">II. CONFLUENCIA AFORTUNADA</text>
+        <text x="10" y="${h - 10}" fill="#A855F7" font-size="9" font-family="'Roboto Mono'" font-weight="700">III. DESCONEXIÓN / CAOS</text>
+        <text x="${cx + 10}" y="${h - 10}" fill="#FF7043" font-size="9" font-family="'Roboto Mono'" font-weight="700">IV. FALSA CONCIENCIA</text>
+      `;
+
+      currentNetwork.results.nivel3.forEach((row, i) => {
+        const id = row.id;
+        const isFoc = (focusedNodeId === 'all' || focusedNodeId === id);
+        const lucidNum = parseInt(row.lucidity, 10) / 100.0;
+        const projNum = (document.getElementById("sliderProj").value / 100.0) + (Math.sin(i) * 0.15);
+
+        const px = 20 + Math.max(0.05, Math.min(0.95, projNum)) * (w - 40);
+        const py = h - 20 - Math.max(0.05, Math.min(0.95, lucidNum)) * (h - 40);
+
+        content += `
+          <g opacity="${isFoc ? 1.0 : 0.25}" onclick="focusNode('${id}')" style="cursor:pointer;">
+            <circle cx="${px}" cy="${py}" r="${isFoc ? 6 : 4}" fill="${isFoc ? 'var(--accent-cyan)' : 'var(--text-muted)'}"/>
+            <text x="${px}" y="${py - 8}" fill="#FFFFFF" font-size="9" font-family="'Roboto Mono'" text-anchor="middle" font-weight="700">${id}</text>
+          </g>
+        `;
+      });
+
+      svg.innerHTML = content;
+    }
+
+    function renderPolarConstellation() {
+      const svg = document.getElementById("svgPolarConstellation");
+      const subjectId = (focusedNodeId === 'all') ? currentNetwork.ids[0] : focusedNodeId;
+      const idx = currentNetwork.ids.indexOf(subjectId);
+      if (idx === -1) return;
+
+      document.getElementById("radarSubjectTag").innerText = `Sujeto ${subjectId} (${currentNetwork.roles[idx]})`;
+
+      const w = 360, h = 360;
+      const cx = w / 2, cy = h / 2;
+      const pr = currentNetwork.probes[subjectId] || {};
+
+      let content = `
+        <circle cx="${cx}" cy="${cy}" r="140" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <circle cx="${cx}" cy="${cy}" r="100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <circle cx="${cx}" cy="${cy}" r="60" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+        <circle cx="${cx}" cy="${cy}" r="20" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+        <circle cx="${cx}" cy="${cy}" r="10" fill="#00FF87"/>
+        <text x="${cx}" y="${cy + 4}" fill="#070B18" font-size="9" font-family="'Roboto Mono'" font-weight="900" text-anchor="middle">${subjectId}</text>
+      `;
+
+      content += `
+        <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy - 120}" stroke="#00FF87" stroke-width="2"/>
+        <circle cx="${cx}" cy="${cy - 120}" r="8" fill="#00FF87"/>
+        <text x="${cx}" y="${cy - 134}" fill="#00FF87" font-size="10" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">α: ${pr.aE1 || 'Cenit'}</text>
+      `;
+
+      content += `
+        <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy + 120}" stroke="#FF0055" stroke-width="2"/>
+        <circle cx="${cx}" cy="${cy + 120}" r="8" fill="#FF0055"/>
+        <text x="${cx}" y="${cy + 138}" fill="#FF0055" font-size="10" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">ω: ${pr.oE1 || 'Nadir'}</text>
+      `;
+
+      content += `
+        <line x1="${cx}" y1="${cy}" x2="${cx - 85}" y2="${cy - 60}" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="${cx - 85}" cy="${cy - 60}" r="6" fill="#00F0FF"/>
+        <text x="${cx - 95}" y="${cy - 65}" fill="#00F0FF" font-size="9" font-family="'Roboto Mono'" font-weight="700">Pivote: ${pr.aE3 || 'aE3'}</text>
+      `;
+
+      content += `
+        <line x1="${cx}" y1="${cy}" x2="${cx + 85}" y2="${cy + 60}" stroke="#FF7043" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="${cx + 85}" cy="${cy + 60}" r="6" fill="#FF7043"/>
+        <text x="${cx + 95}" y="${cy + 65}" fill="#FF7043" font-size="9" font-family="'Roboto Mono'" font-weight="700">Dist: ${pr.oE3 || 'oE3'}</text>
+      `;
+
+      svg.innerHTML = content;
+    }
+
+    function switchVisualTab(tabKey) {
+      activeVisualTab = tabKey;
+      document.querySelectorAll(".btn-view-tab").forEach(btn => btn.classList.remove("active"));
+
+      document.getElementById("viewMimeticContainer").style.display = (tabKey === 'mimetic') ? "block" : "none";
+      document.getElementById("viewAfcContainer").style.display = (tabKey === 'afc') ? "block" : "none";
+      document.getElementById("viewRadarContainer").style.display = (tabKey === 'radar') ? "block" : "none";
+
+      if (tabKey === 'mimetic') document.getElementById("tabDualMimetic").classList.add("active");
+      else if (tabKey === 'afc') document.getElementById("tabAfcStrategic").classList.add("active");
+      else if (tabKey === 'radar') document.getElementById("tabRadarTom").classList.add("active");
+
+      renderActiveVisualView();
+    }
+
+    function renderActiveVisualView() {
+      if (activeVisualTab === 'mimetic') {
+        renderDualCanvas();
+      } else if (activeVisualTab === 'afc') {
+        renderAfcBiplot();
+      } else if (activeVisualTab === 'radar') {
+        renderRadarTom();
+      }
+    }
+
+    /* =========================================================================
+       13. MODAL INSPECTOR Y EDITOR DE PROTOCOLO DE CAMPO
+       ========================================================================= */
+    function openProtocolEditor() {
+      const modal = document.getElementById("modalProtocolEditor");
+      modal.classList.add("open");
+
+      const tbody = document.getElementById("tbodyProtocolEditor");
+      tbody.innerHTML = "";
+      const net = currentNetwork;
+
+      net.ids.forEach((id, i) => {
+        const daChoices = [];
+        for (let j = 0; j < net.N; j++) {
+          if (net.M_DA[i][j] === 1) daChoices.push(net.ids[j]);
+        }
+        const pE_str = (net.pE[id] || []).join(", ");
+        const pR_str = (net.pR[id] || []).join(", ");
+        const pr = net.probes[id] || {};
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${id}</strong></td>
+          <td><input type="text" value="${net.roles[i]}" id="ed_role_${i}" style="width:120px; background:#070B18; border:1px solid #1E3360; color:#FFFFFF; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${daChoices.join(', ')}" id="ed_da_${i}" style="width:110px; background:#070B18; border:1px solid #1E3360; color:#00F0FF; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pE_str}" id="ed_pe_${i}" style="width:90px; background:#070B18; border:1px solid #1E3360; color:#00FF87; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pR_str}" id="ed_pr_${i}" style="width:90px; background:#070B18; border:1px solid #1E3360; color:#FF7043; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.aE1 || ''}" id="ed_ae1_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#00FF87; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.aE3 || ''}" id="ed_ae3_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#00F0FF; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.aE2 || ''}" id="ed_ae2_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#38BDF8; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.oE1 || ''}" id="ed_oe1_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#FF0055; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.oE2 || ''}" id="ed_oe2_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#FF7043; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+          <td><input type="text" value="${pr.oE3 || ''}" id="ed_oe3_${i}" style="width:50px; background:#070B18; border:1px solid #1E3360; color:#FFE600; padding:3px; border-radius:4px; font-size:0.72rem;"></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function closeProtocolEditor() {
+      document.getElementById("modalProtocolEditor").classList.remove("open");
+    }
+
+    function applyProtocolEditorChanges() {
+      const net = currentNetwork;
+      const N = net.N;
+
+      for (let i = 0; i < N; i++) {
+        const id_i = net.ids[i];
+        net.roles[i] = document.getElementById(`ed_role_${i}`).value;
+
+        const daStr = document.getElementById(`ed_da_${i}`).value;
+        const targets = daStr.split(",").map(s => s.trim().toUpperCase()).filter(s => s.length > 0);
+        for (let j = 0; j < N; j++) {
+          net.M_DA[i][j] = targets.includes(net.ids[j]) ? 1 : 0;
+        }
+
+        net.pE[id_i] = document.getElementById(`ed_pe_${i}`).value.split(",").map(s => s.trim().toUpperCase()).filter(s => s.length > 0);
+        net.pR[id_i] = document.getElementById(`ed_pr_${i}`).value.split(",").map(s => s.trim().toUpperCase()).filter(s => s.length > 0);
+
+        net.probes[id_i] = {
+          aE1: document.getElementById(`ed_ae1_${i}`).value.trim().toUpperCase(),
+          aE3: document.getElementById(`ed_ae3_${i}`).value.trim().toUpperCase(),
+          aE2: document.getElementById(`ed_ae2_${i}`).value.trim().toUpperCase(),
+          oE1: document.getElementById(`ed_oe1_${i}`).value.trim().toUpperCase(),
+          oE2: document.getElementById(`ed_oe2_${i}`).value.trim().toUpperCase(),
+          oE3: document.getElementById(`ed_oe3_${i}`).value.trim().toUpperCase()
+        };
+      }
+
+      net.M_RC = Array.from({length: N}, (_, i) => Array.from({length: N}, (_, j) => net.M_DA[j][i]));
+      net.afc = computeExactAfc(net.M_DA, net.ids);
+      initParticles();
+      calculateAllDifferentialResults();
+      renderActiveVisualView();
+      closeProtocolEditor();
+    }
+
+    /* =========================================================================
+       14. PERTURBACIÓN ESTOCÁSTICA Y EXPORTACIÓN / IMPORTACIÓN
+       ========================================================================= */
+    function mutateStochastic() {
+      const net = currentNetwork;
+      const N = net.N;
+      const i = Math.floor(Math.random() * N);
+      const j = (i + 1 + Math.floor(Math.random() * (N - 1))) % N;
+      net.M_DA[i][j] = net.M_DA[i][j] === 1 ? 0 : 1;
+
+      net.M_RC = Array.from({length: N}, (_, r) => Array.from({length: N}, (_, c) => net.M_DA[c][r]));
+      net.afc = computeExactAfc(net.M_DA, net.ids);
+      initParticles();
+      calculateAllDifferentialResults();
+      renderActiveVisualView();
+    }
+
+    function exportGroupJSON() {
+      const payload = {
+        clase: "VISORD_TRIADICO_IN_SILICO",
+        scenario: activePresetKey,
+        N: currentNetwork.N,
+        ids: currentNetwork.ids,
+        roles: currentNetwork.roles,
+        M_DA: currentNetwork.M_DA,
+        pE: currentNetwork.pE,
+        pR: currentNetwork.pR,
+        probes: currentNetwork.probes,
+        results_macro: currentNetwork.results.macro
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `VISORD_Triadico_${activePresetKey}_N${currentNetwork.N}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerImportJSON() {
+      document.getElementById("fileJsonInput").click();
+    }
+
+    function handleFileImport(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          if (data.M_DA && data.ids) {
+            currentN = data.ids.length;
+            currentNetwork.N = currentN;
+            currentNetwork.ids = data.ids;
+            currentNetwork.roles = data.roles || data.ids.map(id => `Sujeto ${id}`);
+            currentNetwork.M_DA = data.M_DA;
+            currentNetwork.M_RC = Array.from({length: currentN}, (_, i) => Array.from({length: currentN}, (_, j) => data.M_DA[j][i]));
+            currentNetwork.pE = data.pE || {};
+            currentNetwork.pR = data.pR || {};
+            currentNetwork.probes = data.probes || {};
+            currentNetwork.coords = computeNetworkLayout(currentN, currentNetwork.M_DA, "balanced");
+            currentNetwork.afc = computeExactAfc(currentNetwork.M_DA, currentNetwork.ids);
+
+            initParticles();
+            calculateAllDifferentialResults();
+            updateNodePillBar();
+            renderActiveVisualView();
+            alert(`¡Dataset cargado con éxito! N=${currentN} sujetos.`);
+          }
+        } catch (err) {
+          alert("Error al procesar el archivo JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* =========================================================================
+       15. EXPORTACIÓN DE INFORME EJECUTIVO HTML AUTOCONTENIDO
+       ========================================================================= */
+    function downloadExecutiveHTMLReport() {
+      const net = currentNetwork;
+      const m = net.results.macro;
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Ejecutivo VISORD Triádico • N=${net.N}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#0B132B; color:#F8FAFC; padding:30px; }
+    h1 { color:#00FF87; font-size:1.6rem; margin-bottom:6px; }
+    .kpi-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin:20px 0; }
+    .kpi { background:#111D3B; border:1px solid #1E3360; padding:12px; border-radius:8px; }
+    .kpi-lbl { font-size:0.75rem; color:#94A3B8; text-transform:uppercase; font-family:monospace; }
+    .kpi-val { font-size:1.6rem; font-weight:900; color:#00F0FF; margin-top:4px; font-family:monospace; }
+    .macro-box { background:#091228; border-left:4px solid ${m.quadCls}; padding:16px; border-radius:6px; margin:20px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; font-size:0.8rem; }
+    th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.08); text-align:left; }
+    th { background:#101B36; color:#94A3B8; font-family:monospace; }
+  </style>
+</head>
+<body>
+  <h1>NEXORD • Informe Ejecutivo de Diagnóstico Triádico M³-AΩ</h1>
+  <p style="color:#94A3B8; font-family:monospace;">ESCENARIO: ${document.getElementById("lblActiveScenario").innerText} | FECHA: 30 de Octubre de 2026</p>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">Exactitud Empática Media</div><div class="kpi-val" style="color:#00FF87;">${m.meanLucidPct}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Brecha de Cohesión (ΔC)</div><div class="kpi-val" style="color:#FFE600;">${m.deltaC}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Descomposición Vectorial D</div><div class="kpi-val" style="color:#38BDF8;">${m.D}</div></div>
+  </div>
+
+  <div class="macro-box">
+    <h3 style="color:${m.quadCls}; margin-bottom:6px;">${m.quadNum}: ${m.quadName}</h3>
+    <p style="margin-bottom:8px;">${m.quadDesc}</p>
+    <div style="background:rgba(255,230,0,0.08); border-left:3px solid #FFE600; padding:8px; font-size:0.82rem;">${m.quadStrategy}</div>
+  </div>
+
+  <h3>Nivel 1: Diagnóstico Intra-Subjetivo y Auto-Estatus</h3>
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Rol</th><th>Auto-Rank (k_yo)</th><th>Estatus (RC)</th><th>Brecha Δk</th><th>Precisión Inward</th></tr>
+    </thead>
+    <tbody>
+      ${net.results.nivel1.map(r => `<tr><td><strong>${r.id}</strong></td><td>${r.role}</td><td>${r.kYo}º</td><td>${r.rcCount}</td><td>${r.deltaK >= 0 ? '+' : ''}${r.deltaK}</td><td>${Math.round(r.pInward*100)}%</td></tr>`).join("")}
+    </tbody>
+  </table>
+
+  <footer style="margin-top:40px; font-size:0.75rem; color:#64748B; text-align:center;">
+    NEXORD © 2026 · Sociometría Ordinal Computacional &bull; Open Science CC-BY-4.0
+  </footer>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `INFORME_VISORD_TRIADICO_${activePresetKey}_N${net.N}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
