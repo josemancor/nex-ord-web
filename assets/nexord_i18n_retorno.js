@@ -35,6 +35,8 @@
 
       personal_title: 'Tu Ficha de Autoconocimiento y Fortalezas',
       personal_intro: 'Esta sección es estrictamente confidencial. Refleja tu huella positiva y las percepciones compartidas que enriquecen tu desarrollo personal dentro del colectivo.',
+      personal_reflection_title: '💡 Reflexión Metaperceptiva Personal',
+      personal_reflection_text: '¿En qué indicios cotidianos te apoyas para anticipar cómo te perciben tus compañeros? Las mismas conductas admiten interpretaciones distintas (ritmos de tarea, timidez o sobrecarga). Contrastar la expectativa propia con el retorno recibido permite calibrar el vínculo con serenidad y sin juzgarse.',
       ethical_title: '🛡️ Garantía Deontológica (Regla 21):',
       ethical_text: 'Los datos sociométricos se procesan con fines exclusivamente formativos y no punitivos. Queda terminantemente proscrito cualquier uso disciplinario o lesivo de la autoestima personal.'
     },
@@ -63,6 +65,8 @@
 
       personal_title: 'Your Self-Knowledge & Strengths Profile',
       personal_intro: 'This section is strictly confidential. It highlights your positive imprint and shared strengths that nurture your growth within the collective.',
+      personal_reflection_title: '💡 Personal Metaperceptive Reflection',
+      personal_reflection_text: 'What everyday cues do you rely on to anticipate how others perceive you? Remember that the same behaviors allow different interpretations (work paces, reserve, or workload). Contrasting one\'s own expectation with received feedback helps calibrate relational understanding calmly and without self-judgment.',
       ethical_title: '🛡️ Deontological Guarantee (Rule 21):',
       ethical_text: 'Sociometric data is processed exclusively for formative, non-punitive development. Any disciplinary usage or damage to individual self-esteem is strictly prohibited.'
     }
@@ -133,6 +137,11 @@
     // Tab 2 (Personal)
     const perTitle = document.querySelector('#tab-personal .section-title');
     if (perTitle) perTitle.innerHTML = '<span>👤</span> ' + d.personal_title;
+
+    const refTitle = document.getElementById('personal-reflection-title');
+    if (refTitle && d.personal_reflection_title) refTitle.textContent = d.personal_reflection_title;
+    const refText = document.getElementById('personal-reflection-text');
+    if (refText && d.personal_reflection_text) refText.textContent = d.personal_reflection_text;
 
     // Ethical banner
     const ethH4 = document.querySelector('.ethical-banner h4');
