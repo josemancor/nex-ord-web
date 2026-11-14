@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD NUCLEAR · Recogida Factual Díada N=2 (Nuria & Xavier)</title>
+  
+  <!-- Dependencia SheetJS para exportación e importación binaria de archivos Excel (.xlsx) -->
+  <script src="lib/xlsx.full.min.js"></script>
+  <!-- Respaldo CDN si se abre online y no encuentra la ruta relativa local -->
+  <script>
+    if (typeof XLSX === 'undefined') {
+      const cdnScript = document.createElement('script');
+      cdnScript.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+      document.head.appendChild(cdnScript);
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-dark: #0B132B;
+      --bg-card: #111E3D;
+      --bg-card-hover: #172852;
+      --border-card: #1C2D5A;
+      --border-active: #38BDF8;
+      --accent-neon: #00FF87;
+      --accent-cyan: #38BDF8;
+      --accent-gold: #FFE600;
+      --accent-orange: #FF9F1C;
+      --accent-pink: #FF007F;
+      --accent-purple: #A855F7;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --danger: #EF4444;
+      --success: #10B981;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      padding: 16px 16px 80px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* CABECERA INSTITUCIONAL */
+    .header-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-card);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-badge {
+      background: linear-gradient(135deg, #1E3A8A, #0284C7);
+      color: #FFF;
+      font-weight: 900;
+      font-size: 1.15rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      letter-spacing: 0.08em;
+      border: 1px solid var(--accent-cyan);
+    }
+
+    .brand-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .study-badge {
+      background: #0F172A;
+      border: 1px solid var(--border-active);
+      color: var(--accent-neon);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    /* CLÁUSULA DEONTOLÓGICA SUPREMA (CANON 21) */
+    .deontology-box {
+      background: rgba(239, 68, 68, 0.08);
+      border-left: 4px solid var(--danger);
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      color: #FECACA;
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    .deontology-box strong {
+      color: #F87171;
+    }
+
+    /* BARRA DE SESIÓN INDIVIDUAL / ENRUTAMIENTO */
+    .session-bar {
+      background: #111C3A;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .session-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .session-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1E3A8A, #0284C7);
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      border: 1px solid var(--accent-cyan);
+    }
+
+    .session-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .session-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .session-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .session-nav-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-chip {
+      background: #0B132B;
+      color: var(--text-muted);
+      border: 1px solid var(--border-card);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-chip:hover {
+      background: var(--bg-card-hover);
+      color: #FFF;
+      border-color: var(--accent-cyan);
+    }
+
+    .btn-chip.active {
+      background: var(--accent-cyan);
+      color: #0B132B;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-chip.gold {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .btn-chip.gold.active {
+      background: var(--accent-gold);
+      color: #0B132B;
+    }
+
+    /* PROGRESS WIZARD */
+    .wizard-steps {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+
+    .step-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .step-pill.active {
+      background: #1E3A8A;
+      border-color: var(--accent-cyan);
+      color: #FFF;
+    }
+
+    .step-pill.completed {
+      border-color: var(--accent-neon);
+      color: var(--accent-neon);
+    }
+
+    /* CARD DE CONTENIDO */
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+
+    .step-header {
+      margin-bottom: 20px;
+    }
+
+    .step-tag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .criterion-badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .random-badge {
+      font-size: 0.75rem;
+      background: rgba(255, 230, 0, 0.12);
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 230, 0, 0.35);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .criterion-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 8px;
+    }
+
+    /* ENUNCIADO BREVE Y CLARO DEL CRITERIO */
+    .criterion-prompt-box {
+      background: #0B132B;
+      border-left: 4px solid var(--accent-neon);
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin: 12px 0 24px 0;
+      font-size: 0.96rem;
+      color: #F1F5F9;
+      line-height: 1.45;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .criterion-prompt-box strong {
+      color: var(--accent-neon);
+      display: block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    /* CONTENEDOR DRAG & DROP */
+    .drag-box {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 22px;
+    }
+
+    .drag-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .drag-box-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-quick-swap {
+      background: #1E293B;
+      border: 1px solid var(--border-card);
+      color: var(--accent-cyan);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-quick-swap:hover {
+      background: var(--accent-cyan);
+      color: #0B132B;
+    }
+
+    .sortable-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .drag-item {
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .drag-item:active {
+      cursor: grabbing;
+    }
+
+    .drag-item.dragging {
+      opacity: 0.4;
+      border-color: var(--accent-cyan);
+      transform: scale(0.98);
+    }
+
+    .drag-item.drag-over {
+      border: 2px dashed var(--accent-neon);
+      background: rgba(0, 255, 135, 0.05);
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .rank-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #1E293B;
+      color: var(--accent-neon);
+      font-weight: 900;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 255, 135, 0.35);
+    }
+
+    .rank-number.rank-2 {
+      color: var(--text-muted);
+      border-color: var(--border-card);
+    }
+
+    .item-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1E3A8A, #0284C7);
+      color: #FFF;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent-cyan);
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-self {
+      background: rgba(255, 230, 0, 0.15);
+      border: 1px solid rgba(255, 230, 0, 0.4);
+      color: var(--accent-gold);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .item-tag {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-move {
+      background: #1E293B;
+      border: 1px solid var(--border-card);
+      color: #CBD5E1;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-move:hover {
+      background: var(--accent-cyan);
+      color: #0B132B;
+      border-color: var(--accent-cyan);
+    }
+
+    .drag-handle {
+      color: var(--text-dim);
+      font-size: 1.3rem;
+      padding: 0 4px;
+      cursor: grab;
+    }
+
+    /* VARIABLES V10 & A16 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .form-group {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-select {
+      width: 100%;
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      color: #FFF;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .form-select:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .a16-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .a16-card {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+
+    .a16-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #FFF;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .a16-chips {
+      display: flex;
+      justify-content: space-between;
+      gap: 3px;
+    }
+
+    .chip-btn {
+      flex: 1;
+      background: #111E3D;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 6px 0;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--accent-cyan);
+      color: #FFF;
+    }
+
+    .chip-btn.active {
+      background: var(--accent-neon);
+      color: #0B132B;
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
+    }
+
+    /* CONTROLES DE NAVEGACIÓN INFERIOR */
+    .controls-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-card);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-main {
+      background: var(--accent-neon);
+      color: #0B132B;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-main:hover {
+      background: #00E676;
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.4);
+    }
+
+    .btn-sec {
+      background: #1E293B;
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-sec:hover {
+      background: #334155;
+    }
+
+    /* PANEL DEL IP / RESULTADOS CONSOLIDADOS */
+    .results-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 26px;
+      margin-top: 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+
+    .ip-summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 16px 0 24px 0;
+    }
+
+    .ip-card {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ip-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ip-status-badge {
+      font-size: 0.74rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .ip-status-badge.ok {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .ip-status-badge.pending {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: #F87171;
+    }
+
+    .matrix-display-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .matrix-box {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .matrix-box-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    .matrix-table th, .matrix-table td {
+      border: 1px solid var(--border-card);
+      padding: 7px;
+      text-align: center;
+    }
+
+    .matrix-table th {
+      background: #111E3D;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .matrix-table td.pos {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--accent-neon);
+      font-weight: 800;
+    }
+
+    .matrix-table td.neg {
+      background: rgba(255, 0, 127, 0.15);
+      color: var(--accent-pink);
+      font-weight: 800;
+    }
+
+    .payload-pre {
+      background: #050B1A;
+      border: 1px solid #1C2D5A;
+      border-radius: 8px;
+      padding: 14px;
+      color: #38BDF8;
+      font-family: ui-monospace, monospace;
+      font-size: 0.78rem;
+      max-height: 260px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+
+    /* MODAL DE BIENVENIDA / ENRUTAMIENTO */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-active);
+      border-radius: 14px;
+      max-width: 620px;
+      width: 100%;
+      padding: 26px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid var(--border-card);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .access-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .access-card {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .access-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+    }
+
+    .dropzone-box {
+      border: 2px dashed var(--border-card);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #0B132B;
+      margin-top: 8px;
+    }
+
+    .dropzone-box:hover {
+      border-color: var(--accent-cyan);
+      background: #111E3D;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- CABECERA INSTITUCIONAL -->
+  <div class="header-panel">
+    <div class="header-top">
+      <div class="brand-title">
+        <span class="brand-logo-badge">VISORD</span>
+        <div>
+          <div class="brand-name">NEXORD NUCLEAR · Recogida Factual Díada N=2</div>
+          <div class="brand-sub">Módulo de Pequeña Escala · Pareja (G1T1C5 · Nuria & Xavier)</div>
+        </div>
+      </div>
+      <div class="study-badge">
+        PROPIO-AA-G1-T1-C5-V10-A16-NUCLEAR-ES-2
+      </div>
+    </div>
+
+    <div style="font-size: 0.88rem; color: var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+      <div>
+        <strong>Investigador Principal (IP):</strong> Estudio encargado para 1A: <em>Nuria</em> (<span style="color:var(--accent-cyan);">nuria@gmail.com</span>) y 2A: <em>Xavier</em> (<span style="color:var(--accent-cyan);">xavier@gmail.com</span>).
+      </div>
+      <div style="color:var(--accent-gold); font-weight:700;">
+        10 Sociomatrices (10, 2, 2) + V10 + A16
+      </div>
+    </div>
+
+    <!-- ALERTA DEONTOLÓGICA SUPREMA (CANON 21) -->
+    <div class="deontology-box">
+      <strong>🛡️ Compromiso Deontológico Supremo (Regla 21):</strong> NEXORD nunca sustituye al terapeuta, mediador de pareja ni al Investigador Principal (IP). Se limita estricta y rigurosamente a procesar y describir los aspectos estructurales del sistema relacional de preferencias ordinales sin invadir la intimidad personal de los participantes.
+    </div>
+  </div>
+
+  <!-- BARRA DE SESIÓN INDIVIDUAL Y ENRUTAMIENTO -->
+  <div class="session-bar" id="sessionBar">
+    <div class="session-user-info">
+      <div class="session-avatar" id="sessionAvatar">N</div>
+      <div class="session-details">
+        <div class="session-name" id="sessionName">Sesión Privada: Nuria (1A)</div>
+        <div class="session-meta" id="sessionMeta">Invitación personal · nuria@gmail.com</div>
+      </div>
+    </div>
+    <div class="session-nav-actions">
+      <button class="btn-chip" onclick="abrirModalAcceso()" title="Cambiar usuario o simular enlaces de e-mail">
+        <span>🔄</span> Cambiar Acceso / Enlaces
+      </button>
+      <button class="btn-chip gold" id="btnIrIP" onclick="mostrarConsolidacionIP()">
+        <span>📊</span> Consola del IP (10 Matrices)
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN PASO A PASO DEL WIZARD (8 PASOS) -->
+  <div class="wizard-steps" id="wizardSteps">
+    <div class="step-pill active" onclick="irAlPaso(0)">1. V10</div>
+    <div class="step-pill" onclick="irAlPaso(1)">2. C1 Refugio</div>
+    <div class="step-pill" onclick="irAlPaso(2)">3. C2 Criterio</div>
+    <div class="step-pill" onclick="irAlPaso(3)">4. C3 Mediación</div>
+    <div class="step-pill" onclick="irAlPaso(4)">5. C4 Operativa</div>
+    <div class="step-pill" onclick="irAlPaso(5)">6. C5 Proyecto</div>
+    <div class="step-pill" onclick="irAlPaso(6)">7. A16</div>
+    <div class="step-pill" onclick="irAlPaso(7)">8. Guardar</div>
+  </div>
+
+  <!-- CONTENEDOR DINÁMICO DEL FORMULARIO -->
+  <div class="step-card" id="stepContentCard">
+    <!-- El contenido del paso se inyecta dinámicamente vía JS -->
+  </div>
+
+  <!-- PANEL DE CONSOLIDACIÓN Y AUDITORÍA DEL IP (10 SOCIOMATRICES) -->
+  <div class="results-panel" id="resultsPanel" style="display: none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+      <div>
+        <h3 style="color: #FFF; font-size: 1.3rem; font-weight: 800;">
+          📊 Consola del IP: Tensor de 10 Sociomatrices (10, 2, 2) + V10 + A16
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Consolidación factual de las 5 matrices directas ($DA$) y las 5 matrices atribuidas ($p\_DA$) de la pareja.
+        </p>
+      </div>
+      <div>
+        <button class="btn-sec" onclick="volverAlCuestionario()">⬅ Volver al Cuestionario</button>
+      </div>
+    </div>
+
+    <!-- TARJETAS DE ESTADO DE CADA PARTICIPANTE -->
+    <div class="ip-summary-cards">
+      <div class="ip-card">
+        <div class="ip-card-header">
+          <div style="font-weight:800; font-size:0.95rem; color:#FFF;">Nuria (1A)</div>
+          <span class="ip-status-badge ok" id="badgeNuria">✓ Completado</span>
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">nuria@gmail.com</div>
+        <div style="font-size:0.75rem; color:var(--text-dim);" id="nuriaResumen">V10: Registrado · C1..C5: Registrado · A16: Registrado</div>
+        <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px; margin-top:4px;" onclick="descargarExcelIndividual('1A')">
+          📥 Descargar Excel de Nuria (.xlsx)
+        </button>
+      </div>
+
+      <div class="ip-card">
+        <div class="ip-card-header">
+          <div style="font-weight:800; font-size:0.95rem; color:#FFF;">Xavier (2A)</div>
+          <span class="ip-status-badge ok" id="badgeXavier">✓ Completado</span>
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">xavier@gmail.com</div>
+        <div style="font-size:0.75rem; color:var(--text-dim);" id="xavierResumen">V10: Registrado · C1..C5: Registrado · A16: Registrado</div>
+        <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px; margin-top:4px;" onclick="descargarExcelIndividual('2A')">
+          📥 Descargar Excel de Xavier (.xlsx)
+        </button>
+      </div>
+
+      <div class="ip-card" style="border-color:var(--accent-cyan);">
+        <div class="ip-card-header">
+          <div style="font-weight:800; font-size:0.95rem; color:var(--accent-cyan);">Consolidación y Fusión</div>
+          <span class="ip-status-badge ok">Listo para Exportar</span>
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">
+          Importar archivos Excel externos o simular datos de muestra:
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+          <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px;" onclick="cargarDatosMuestraFactuales()">
+            ⚡ Cargar Datos de Muestra
+          </button>
+          <label class="btn-sec" style="font-size:0.75rem; padding:4px 8px; cursor:pointer;">
+            📂 Subir .xlsx
+            <input type="file" id="fileInputXlsx" accept=".xlsx" style="display:none;" onchange="importarArchivoExcel(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTONES PRINCIPALES DE EXPORTACIÓN -->
+    <div style="background:#0F172A; border:1px solid var(--border-active); border-radius:10px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <div style="font-size:0.95rem; font-weight:800; color:#FFF;">Libro Maestro Oficial para PLATINUM_ORCHESTRATOR (.xlsx)</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Hojas canónicas <code>1g1t1c</code> a <code>1g1t5c</code>, <code>10_Sociomatrices_SMIb</code>, <code>Metadatos</code>, <code>V10</code> y <code>A16</code>.</div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn-main" onclick="descargarLibroMaestroExcel()">
+          📥 Descargar Libro Maestro Oficial (.xlsx)
+        </button>
+        <button class="btn-sec" onclick="descargarJSON()">
+          💾 Payload JSON (VISORD)
+        </button>
+        <button class="btn-sec" onclick="descargarTXTManual()">
+          📄 TXT Ingestor
+        </button>
+      </div>
+    </div>
+
+    <!-- DESPLIEGUE DE LAS 10 SOCIOMATRICES EN CUADRÍCULA -->
+    <div class="matrix-display-grid" id="matrixGridContainer">
+      <!-- Se inyectan las 10 matrices 2x2 -->
+    </div>
+
+    <!-- PAYLOAD JSON EXPEDIDO -->
+    <div style="margin-top: 18px;">
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">
+        Payload JSON Canónico para VISORD / Análisis:
+      </div>
+      <pre class="payload-pre" id="payloadDisplay"></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL DE ENRUTAMIENTO / SIMULACIÓN DE ENLACES DE E-MAIL -->
+<div class="modal-overlay" id="modalAcceso">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">✉️ Enlaces de Invitación por E-mail y Enrutamiento</div>
+    </div>
+    <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:14px;">
+      En el despliegue de NEXORD_NUCLEAR, cada miembro de la pareja recibe un correo individual con un enlace autenticado privado. Selecciona cómo deseas acceder a la plataforma:
+    </p>
+
+    <div class="access-cards-grid">
+      <!-- ACCESO NURIA -->
+      <div class="access-card" onclick="conectarComo('1A')">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="session-avatar">N</div>
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#FFF;">Nuria (1A)</div>
+            <div style="font-size:0.75rem; color:var(--accent-cyan);">nuria@gmail.com</div>
+          </div>
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">
+          Enlace privado: <code>?user=1A</code><br>
+          Responde su V10, C1..C5 y A16 de forma independiente.
+        </div>
+        <button class="btn-sec" style="margin-top:6px; font-size:0.8rem; justify-content:center;">Entrar como Nuria ➔</button>
+      </div>
+
+      <!-- ACCESO XAVIER -->
+      <div class="access-card" onclick="conectarComo('2A')">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="session-avatar" style="background:linear-gradient(135deg, #0284C7, #0D9488);">X</div>
+          <div>
+            <div style="font-weight:800; font-size:1rem; color:#FFF;">Xavier (2A)</div>
+            <div style="font-size:0.75rem; color:var(--accent-cyan);">xavier@gmail.com</div>
+          </div>
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">
+          Enlace privado: <code>?user=2A</code><br>
+          Responde su V10, C1..C5 y A16 de forma independiente.
+        </div>
+        <button class="btn-sec" style="margin-top:6px; font-size:0.8rem; justify-content:center;">Entrar como Xavier ➔</button>
+      </div>
+    </div>
+
+    <div style="background:#0F172A; border:1px solid var(--border-card); border-radius:8px; padding:12px; margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-size:0.82rem; color:var(--text-muted);">
+        <strong>Consola de Administración del IP:</strong> Fusionar y compilar las 10 matrices.
+      </div>
+      <button class="btn-chip gold" onclick="mostrarConsolidacionIP(); cerrarModalAcceso();">
+        Ver Consolidación del IP ➔
+      </button>
+    </div>
+
+    <div style="text-align:right; margin-top:16px;">
+      <button class="btn-sec" onclick="cerrarModalAcceso()">Cerrar Ventana</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// METADATOS Y CONSTANTES DEL ESTUDIO
+// =============================================================================
+const ESTUDIO_ID = "PROPIO-AA-G1-T1-C5-V10-A16-NUCLEAR-ES-2";
+
+const PARTICIPANTES = {
+  "1A": { id: "1A", code: "1A1a", num: 1, nombre: "Nuria", email: "nuria@gmail.com", avatar: "N" },
+  "2A": { id: "2A", code: "2A1a", num: 2, nombre: "Xavier", email: "xavier@gmail.com", avatar: "X" }
+};
+
+// FORMULACIÓN BREVE Y CLARA DE LOS 5 CRITERIOS EN LA MISMA PÁGINA
+const CRITERIOS = [
+  {
+    codigo: "C1", tag: "1c",
+    nombre: "C1 · Refugio Afectivo y Apoyo en Crisis",
+    prompt: "Ante una crisis personal o momento difícil, ¿a quién acudes en primer lugar como refugio y apoyo emocional prioritario?"
+  },
+  {
+    codigo: "C2", tag: "2c",
+    nombre: "C2 · Criterio Técnico y Decisión Práctica",
+    prompt: "Ante una decisión práctica compleja (finanzas, hogar o logística), ¿quién tiene mayor capacidad resolutiva y liderazgo?"
+  },
+  {
+    codigo: "C3", tag: "3c",
+    nombre: "C3 · Mediación y Gestión de Conflictos",
+    prompt: "Ante una discrepancia o desacuerdo de pareja, ¿quién muestra mayor habilidad para serenar los ánimos y pactar soluciones justas?"
+  },
+  {
+    codigo: "C4", tag: "4c",
+    nombre: "C4 · Carga Operativa y Convivencia",
+    prompt: "En las tareas cotidianas y el sostenimiento del día a día, ¿quién asume y sostiene con mayor rigor la carga de trabajo?"
+  },
+  {
+    codigo: "C5", tag: "5c",
+    nombre: "C5 · Proyecto Común y Visión de Futuro",
+    prompt: "En la visión de futuro, el compromiso a largo plazo y la lealtad al vínculo, ¿quién tracciona con más fuerza e ilusión?"
+  }
+];
+
+// 10 VARIABLES COMPLEMENTARIAS V10 (RESPONDIDAS UNA SOLA VEZ)
+const VARIABLES_V10_DEF = [
+  { cod: "SX", nom: "Sexo / Género", mods: ["1=Hombre", "2=Mujer", "3=Mixto / No binario"], def: { "1A": 2, "2A": 1 } },
+  { cod: "ED", nom: "Rango Etario", mods: ["1=Junior (<30)", "2=Mid (30-45)", "3=Senior (>45)"], def: { "1A": 2, "2A": 2 } },
+  { cod: "ORIG", nom: "Ámbito / Disciplina", mods: ["1=Técnico / STEM", "2=Gestión / Empresa", "3=Humanidades / Salud"], def: { "1A": 3, "2A": 1 } },
+  { cod: "ANT", nom: "Antigüedad del Vínculo", mods: ["1=< 2 años", "2=2 - 7 años", "3=> 7 años"], def: { "1A": 2, "2A": 2 } },
+  { cod: "ORIEN", nom: "Orientación Vital", mods: ["1=Foco Profesión / Logro", "2=Foco Vínculo / Familia", "3=Foco Equilibrio / Futuro"], def: { "1A": 2, "2A": 1 } },
+  { cod: "IMPL", nom: "Implicación Declarada", mods: ["1=Básica / Funcional", "2=Alta / Comprometida", "3=Plena / Vanguardia"], def: { "1A": 3, "2A": 3 } },
+  { cod: "PRES", nom: "Estilo Relacional", mods: ["1=Discreto / Reflexivo", "2=Dialógico / Empático", "3=Visible / Asertivo"], def: { "1A": 2, "2A": 2 } },
+  { cod: "ROL", nom: "Rol Funcional", mods: ["1=Especialista Operativo", "2=Coordinador / Mediador", "3=Impulsor Emocional"], def: { "1A": 2, "2A": 1 } },
+  { cod: "REND", nom: "Eficacia Convivencial", mods: ["1=Estándar", "2=Alta", "3=Sobresaliente"], def: { "1A": 2, "2A": 2 } },
+  { cod: "COM", nom: "Comunicación Afectiva", mods: ["1=Reservada", "2=Fluida / Directa", "3=Profunda / Empática"], def: { "1A": 3, "2A": 2 } }
+];
+
+// 16 ADJETIVOS NORMATIVOS AAG16 (RESPONDIDOS UNA SOLA VEZ, ESCALA 1 A 8)
+const ADJETIVOS_AAG16 = [
+  { cod: "claro", factor: "TEMA" }, { cod: "coherente", factor: "TEMA" }, { cod: "flexible", factor: "TEMA" }, { cod: "consensuado", factor: "TEMA" },
+  { cod: "productivo", factor: "FUNC" }, { cod: "ordenado", factor: "FUNC" }, { cod: "activo", factor: "FUNC" }, { cod: "ejemplar", factor: "FUNC" },
+  { cod: "abierto", factor: "COGN" }, { cod: "crítico", factor: "COGN" }, { cod: "perceptivo", factor: "COGN" }, { cod: "expresivo", factor: "COGN" },
+  { cod: "amistoso", factor: "AFEC" }, { cod: "leal", factor: "AFEC" }, { cod: "colaborador", factor: "AFEC" }, { cod: "tolerante", factor: "AFEC" }
+];
+
+// =============================================================================
+// ALMACÉN GLOBAL DE RESPUESTAS FACTUALES
+// =============================================================================
+let currentParticipant = "1A"; // '1A' (Nuria) o '2A' (Xavier)
+let currentStep = 0; // 0 = V10, 1..5 = C1..C5, 6 = A16, 7 = Guardar
+
+const respuestas = {
+  "1A": {
+    completado: true,
+    v10: { SX: 2, ED: 2, ORIG: 3, ANT: 2, ORIEN: 2, IMPL: 3, PRES: 2, ROL: 2, REND: 2, COM: 3 },
+    criterios: {
+      C1: { direct: ["1A", "2A"], attr: ["2A", "1A"] },
+      C2: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C3: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C4: { direct: ["2A", "1A"], attr: ["1A", "2A"] },
+      C5: { direct: ["1A", "2A"], attr: ["2A", "1A"] }
+    },
+    a16: {
+      claro: 7, coherente: 6, flexible: 6, consensuado: 6,
+      productivo: 8, ordenado: 7, activo: 7, ejemplar: 7,
+      abierto: 6, crítico: 6, perceptivo: 7, expresivo: 6,
+      amistoso: 8, leal: 8, colaborador: 7, tolerante: 6
+    }
+  },
+  "2A": {
+    completado: true,
+    v10: { SX: 1, ED: 2, ORIG: 1, ANT: 2, ORIEN: 1, IMPL: 3, PRES: 2, ROL: 1, REND: 2, COM: 2 },
+    criterios: {
+      C1: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C2: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C3: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C4: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C5: { direct: ["2A", "1A"], attr: ["1A", "2A"] }
+    },
+    a16: {
+      claro: 6, coherente: 7, flexible: 5, consensuado: 6,
+      productivo: 7, ordenado: 8, activo: 8, ejemplar: 7,
+      abierto: 6, crítico: 7, perceptivo: 6, expresivo: 5,
+      amistoso: 7, leal: 8, colaborador: 8, tolerante: 6
+    }
+  }
+};
+
+// Registro de orden aleatorio inicial por criterio para cada participante
+const randomizedInitOrder = {
+  "1A": {},
+  "2A": {}
+};
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  if (Math.random() < 0.5) {
+    return [a[1], a[0]];
+  }
+  return [a[0], a[1]];
+}
+
+function inicializarAleatorizacionCriterios() {
+  ["1A", "2A"].forEach(p => {
+    CRITERIOS.forEach(c => {
+      randomizedInitOrder[p][c.codigo] = shuffleArray(["1A", "2A"]);
+    });
+  });
+}
+inicializarAleatorizacionCriterios();
+
+// =============================================================================
+// DETECCIÓN Y ENRUTAMIENTO DE USUARIO POR URL (?user=1A o ?user=2A)
+// =============================================================================
+function initSessionFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const userParam = (params.get("user") || params.get("id") || params.get("email") || "").toLowerCase();
+  const modeParam = (params.get("mode") || "").toLowerCase();
+
+  // Intentar cargar de localStorage si existen datos guardados
+  cargarRespuestasLocalStorage();
+
+  if (modeParam === "ip" || modeParam === "admin" || modeParam === "consolidar") {
+    mostrarConsolidacionIP();
+    return;
+  }
+
+  if (userParam.includes("1a") || userParam.includes("nuria")) {
+    conectarComo("1A");
+  } else if (userParam.includes("2a") || userParam.includes("xavier")) {
+    conectarComo("2A");
+  } else {
+    // Si no hay parámetro, mostrar modal de bienvenida / selección
+    conectarComo("1A");
+    abrirModalAcceso();
+  }
+}
+
+function conectarComo(pId) {
+  currentParticipant = pId;
+  const p = PARTICIPANTES[pId];
+
+  document.getElementById("sessionAvatar").textContent = p.avatar;
+  document.getElementById("sessionAvatar").style.background = pId === "1A" 
+    ? "linear-gradient(135deg, #1E3A8A, #0284C7)" 
+    : "linear-gradient(135deg, #0284C7, #0D9488)";
+  document.getElementById("sessionName").textContent = `Sesión Privada: ${p.nombre} (${p.id})`;
+  document.getElementById("sessionMeta").textContent = `Invitación personal · ${p.email}`;
+
+  cerrarModalAcceso();
+  volverAlCuestionario();
+  irAlPaso(0);
+}
+
+function abrirModalAcceso() {
+  document.getElementById("modalAcceso").classList.add("active");
+}
+
+function cerrarModalAcceso() {
+  document.getElementById("modalAcceso").classList.remove("active");
+}
+
+function volverAlCuestionario() {
+  document.getElementById("resultsPanel").style.display = "none";
+  document.getElementById("stepContentCard").style.display = "block";
+  document.getElementById("wizardSteps").style.display = "grid";
+  document.getElementById("btnIrIP").classList.remove("active");
+  renderStep();
+}
+
+function mostrarConsolidacionIP() {
+  document.getElementById("resultsPanel").style.display = "block";
+  document.getElementById("stepContentCard").style.display = "none";
+  document.getElementById("wizardSteps").style.display = "none";
+  document.getElementById("btnIrIP").classList.add("active");
+  renderConsolidacionIP();
+}
+
+// =============================================================================
+// NAVEGACIÓN Y RENDERIZADO DEL WIZARD (8 PASOS)
+// =============================================================================
+function irAlPaso(stepIdx) {
+  currentStep = stepIdx;
+  document.querySelectorAll(".step-pill").forEach((el, idx) => {
+    el.classList.toggle("active", idx === stepIdx);
+  });
+  renderStep();
+}
+
+function renderStep() {
+  const card = document.getElementById("stepContentCard");
+  const p = PARTICIPANTES[currentParticipant];
+
+  // PASO 0: VARIABLES V10 (UNA SOLA VEZ)
+  if (currentStep === 0) {
+    let html = `
+      <div class="step-header">
+        <div class="step-tag-row">
+          <span class="criterion-badge">Paso 1 de 8 · Contexto Individual</span>
+          <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Se responde 1 sola vez</span>
+        </div>
+        <h2 class="criterion-title">Perfil Complementario V10 de ${p.nombre} (${p.id})</h2>
+        <p style="font-size:0.88rem; color:var(--text-muted);">
+          Batería normativa de 10 variables discretas en 3 modalidades canónicas (Canon 13).
+        </p>
+      </div>
+
+      <div class="form-grid">
+    `;
+
+    VARIABLES_V10_DEF.forEach(v => {
+      const curVal = respuestas[currentParticipant].v10[v.cod] !== undefined 
+        ? respuestas[currentParticipant].v10[v.cod] 
+        : v.def[currentParticipant];
+      html += `
+        <div class="form-group">
+          <label class="form-label">${v.cod} — ${v.nom}</label>
+          <select class="form-select" onchange="actualizarV10('${v.cod}', this.value)">
+            ${v.mods.map(m => {
+              const valNum = parseInt(m.split("=")[0]);
+              return `<option value="${valNum}" ${valNum === curVal ? 'selected' : ''}>${m}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+      <div class="controls-footer">
+        <div></div>
+        <button class="btn-main" onclick="irAlPaso(1)">Siguiente: C1 Refugio en Crisis ➔</button>
+      </div>
+    `;
+    card.innerHTML = html;
+    return;
+  }
+
+  // PASOS 1 A 5: CRITERIOS C1 A C5 (ARRASTRE + ALEATORIZACIÓN)
+  if (currentStep >= 1 && currentStep <= 5) {
+    const cIdx = currentStep - 1;
+    const crit = CRITERIOS[cIdx];
+    const cData = respuestas[currentParticipant].criterios[crit.codigo];
+    const otherP = currentParticipant === "1A" ? PARTICIPANTES["2A"] : PARTICIPANTES["1A"];
+
+    let html = `
+      <div class="step-header">
+        <div class="step-tag-row">
+          <span class="criterion-badge">Criterio ${crit.codigo} · ${cIdx + 1} de 5</span>
+          <span class="random-badge">🎲 Lista de Presentación Aleatorizada</span>
+        </div>
+        <h2 class="criterion-title">${crit.nombre}</h2>
+        
+        <!-- ENUNCIADO BREVE Y CLARO DIRECTAMENTE EN LA MISMA PÁGINA -->
+        <div class="criterion-prompt-box">
+          <strong>Enunciado Factual del Criterio:</strong>
+          «${crit.prompt}»
+        </div>
+      </div>
+
+      <!-- BLOQUE 1: ELECCIÓN DIRECTA EFECTIVA (DA) -->
+      <div class="drag-box">
+        <div class="drag-box-header">
+          <div class="drag-box-title">
+            <span style="color:var(--accent-neon); font-size:1.1rem;">①</span>
+            <span>Preferencia Directa Propia (DA):</span>
+            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">¿Cómo ordenas a los dos miembros de la pareja?</span>
+          </div>
+          <button class="btn-quick-swap" onclick="intercambiarOrden('direct', '${crit.codigo}')">
+            ⇅ Invertir Orden (1º ⇄ 2º)
+          </button>
+        </div>
+        <div class="sortable-list" id="list_direct">
+          ${renderSortableItems(cData.direct, 'direct', crit.codigo)}
+        </div>
+      </div>
+
+      <!-- BLOQUE 2: EXPECTATIVA ATRIBUIDA METAPERCEPTIVA (p_DA) -->
+      <div class="drag-box">
+        <div class="drag-box-header">
+          <div class="drag-box-title">
+            <span style="color:var(--accent-cyan); font-size:1.1rem;">②</span>
+            <span>Expectativa Atribuida (p_DA):</span>
+            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">¿Cómo crees que ordenará <strong>${otherP.nombre}</strong> esta misma lista?</span>
+          </div>
+          <button class="btn-quick-swap" onclick="intercambiarOrden('attr', '${crit.codigo}')">
+            ⇅ Invertir Orden (1º ⇄ 2º)
+          </button>
+        </div>
+        <div class="sortable-list" id="list_attr">
+          ${renderSortableItems(cData.attr, 'attr', crit.codigo)}
+        </div>
+      </div>
+
+      <div class="controls-footer">
+        <button class="btn-sec" onclick="irAlPaso(${currentStep - 1})">⬅ Anterior</button>
+        <button class="btn-main" onclick="irAlPaso(${currentStep + 1})">
+          ${currentStep === 5 ? 'Siguiente: A16 Adjetivos ➔' : `Siguiente: C${currentStep + 1} ➔`}
+        </button>
+      </div>
+    `;
+
+    card.innerHTML = html;
+    initDragEvents();
+    return;
+  }
+
+  // PASO 6: ADJETIVOS A16 (UNA SOLA VEZ)
+  if (currentStep === 6) {
+    let html = `
+      <div class="step-header">
+        <div class="step-tag-row">
+          <span class="criterion-badge">Paso 7 de 8 · Atribución Adjetival Grupal AAG16</span>
+          <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Se responde 1 sola vez</span>
+        </div>
+        <h2 class="criterion-title">Evaluación de los 16 Adjetivos Normativos</h2>
+        <p style="font-size:0.88rem; color:var(--text-muted);">
+          Valora a la pareja en cada adjetivo en escala continua par de <strong>1 (Mínimo) a 8 (Máximo)</strong>. Norma de Hölder $p=2.0$ (Canon 13).
+        </p>
+      </div>
+
+      <div class="a16-grid">
+    `;
+
+    ADJETIVOS_AAG16.forEach(adj => {
+      const curScore = respuestas[currentParticipant].a16[adj.cod] || 6;
+      html += `
+        <div class="a16-card">
+          <div class="a16-name">
+            <span>${adj.cod}</span>
+            <span style="color:var(--accent-neon); font-size:0.75rem; font-weight:800;">[${adj.factor}]</span>
+          </div>
+          <div class="a16-chips">
+            ${[1,2,3,4,5,6,7,8].map(score => `
+              <div class="chip-btn ${score === curScore ? 'active' : ''}" 
+                   onclick="actualizarA16('${adj.cod}', ${score})">${score}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+      <div class="controls-footer">
+        <button class="btn-sec" onclick="irAlPaso(5)">⬅ Anterior (C5)</button>
+        <button class="btn-main" onclick="irAlPaso(7)">
+          Siguiente: Finalizar y Guardar ➔
+        </button>
+      </div>
+    `;
+    card.innerHTML = html;
+    return;
+  }
+
+  // PASO 7: CONFIRMACIÓN Y DESCARGA INDIVIDUAL EXCEL (.xlsx)
+  if (currentStep === 7) {
+    guardarEnLocalStorage();
+    let html = `
+      <div class="step-header">
+        <div class="step-tag-row">
+          <span class="criterion-badge">Paso 8 de 8 · Confirmación y Descarga</span>
+          <span style="color:var(--accent-neon); font-size:0.82rem; font-weight:800;">✓ Formulario Completado</span>
+        </div>
+        <h2 class="criterion-title">¡Muchas gracias, ${p.nombre}!</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:18px;">
+          Tus respuestas han sido verificadas y registradas con éxito para el estudio <code>${ESTUDIO_ID}</code>.
+        </p>
+      </div>
+
+      <div style="background:#0B132B; border:1px solid var(--border-card); border-radius:10px; padding:20px; margin-bottom:20px;">
+        <h4 style="color:#FFF; font-size:1rem; font-weight:800; margin-bottom:12px;">Resumen de tus Registros:</h4>
+        <ul style="font-size:0.86rem; color:var(--text-muted); line-height:1.8; margin-left:20px;">
+          <li><strong>Perfil V10:</strong> 10 variables complementarias registradas (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM).</li>
+          <li><strong>5 Criterios (C1..C5):</strong> Preferencias directas efectivas (DA) y expectativas atribuidas (p_DA) ordenadas.</li>
+          <li><strong>Batería A16:</strong> 16 adjetivos normativos evaluados en los factores TEMA, FUNC, COGN y AFEC.</li>
+        </ul>
+      </div>
+
+      <div style="background:#0F172A; border:1px solid var(--border-active); border-radius:10px; padding:20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+          <div style="font-size:1.05rem; font-weight:800; color:#FFF;">Descarga tu Ficha de Respuestas en Excel (.xlsx)</div>
+          <div style="font-size:0.82rem; color:var(--text-muted);">
+            Guarda este archivo en tu dispositivo y envíalo al Investigador Principal (IP) si así te ha sido requerido.
+          </div>
+        </div>
+        <button class="btn-main" onclick="descargarExcelIndividual('${currentParticipant}')">
+          💾 Guardar y Descargar mi Respuesta (.xlsx)
+        </button>
+      </div>
+
+      <div class="controls-footer">
+        <button class="btn-sec" onclick="irAlPaso(6)">⬅ Revisar Adjetivos A16</button>
+        <button class="btn-chip gold" onclick="mostrarConsolidacionIP()">
+          📊 Ir a la Consola del IP (Ver 10 Sociomatrices) ➔
+        </button>
+      </div>
+    `;
+    card.innerHTML = html;
+  }
+}
+
+// =============================================================================
+// RENDERIZADO DE ITEMS ORDENABLES (DRAG AND DROP)
+// =============================================================================
+function renderSortableItems(orderArray, listType, critCode) {
+  return orderArray.map((candId, idx) => {
+    const cand = PARTICIPANTES[candId];
+    const isSelf = candId === currentParticipant;
+    return `
+      <div class="drag-item" draggable="true" data-type="${listType}" data-crit="${critCode}" data-id="${candId}" data-idx="${idx}">
+        <div class="item-left">
+          <div class="drag-handle" title="Arrastra para reordenar">⠿</div>
+          <div class="rank-number ${idx === 1 ? 'rank-2' : ''}">${idx + 1}º</div>
+          <div class="item-avatar" style="background:${candId === '1A' ? 'linear-gradient(135deg, #1E3A8A, #0284C7)' : 'linear-gradient(135deg, #0284C7, #0D9488)'};">
+            ${cand.avatar}
+          </div>
+          <div class="item-info">
+            <div class="item-name">
+              ${cand.nombre}
+              ${isSelf ? '<span class="badge-self">Yo</span>' : ''}
+            </div>
+            <div class="item-tag">${cand.code} · ${cand.email}</div>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-move" title="Intercambiar puesto con el otro participante" onclick="intercambiarOrden('${listType}', '${critCode}')">
+            ⇅
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// =============================================================================
+// GESTIÓN DE EVENTOS DRAG AND DROP
+// =============================================================================
+function initDragEvents() {
+  document.querySelectorAll(".drag-item").forEach(item => {
+    item.addEventListener("dragstart", handleDragStart);
+    item.addEventListener("dragover", handleDragOver);
+    item.addEventListener("dragleave", handleDragLeave);
+    item.addEventListener("drop", handleDrop);
+    item.addEventListener("dragend", handleDragEnd);
+  });
+}
+
+let draggedItem = null;
+
+function handleDragStart(e) {
+  draggedItem = this;
+  this.classList.add("dragging");
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData("text/plain", this.getAttribute("data-id"));
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  if (!draggedItem || draggedItem === this) return;
+  if (draggedItem.getAttribute("data-type") !== this.getAttribute("data-type")) return;
+  this.classList.add("drag-over");
+}
+
+function handleDragLeave(e) {
+  this.classList.remove("drag-over");
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  this.classList.remove("drag-over");
+  if (!draggedItem || draggedItem === this) return;
+
+  const listType = this.getAttribute("data-type");
+  const critCode = this.getAttribute("data-crit");
+  intercambiarOrden(listType, critCode);
+}
+
+function handleDragEnd(e) {
+  this.classList.remove("dragging");
+  document.querySelectorAll(".drag-item").forEach(i => i.classList.remove("drag-over"));
+  draggedItem = null;
+}
+
+function intercambiarOrden(listType, critCode) {
+  const currentOrder = respuestas[currentParticipant].criterios[critCode][listType];
+  respuestas[currentParticipant].criterios[critCode][listType] = [currentOrder[1], currentOrder[0]];
+  guardarEnLocalStorage();
+  renderStep();
+}
+
+function actualizarV10(cod, val) {
+  respuestas[currentParticipant].v10[cod] = parseInt(val, 10);
+  guardarEnLocalStorage();
+}
+
+function actualizarA16(cod, val) {
+  respuestas[currentParticipant].a16[cod] = val;
+  guardarEnLocalStorage();
+  renderStep();
+}
+
+// =============================================================================
+// CÁLCULO EXACTO DEL TENSOR DE 10 SOCIOMATRICES (10, 2, 2)
+// =============================================================================
+function calcularTensor10Matrices() {
+  const tensor = [];
+
+  CRITERIOS.forEach(c => {
+    // 1. Matriz Directa Factual DA (2x2)
+    // Fila 0: Nuria (1A) ordena a [1A, 2A]
+    // Fila 1: Xavier (2A) ordena a [1A, 2A]
+    const m_da = [[0, 0], [0, 0]];
+    const n_dir = respuestas["1A"].criterios[c.codigo].direct;
+    const x_dir = respuestas["2A"].criterios[c.codigo].direct;
+
+    // Nuria
+    m_da[0][0] = n_dir.indexOf("1A") + 1; // 1º o 2º
+    m_da[0][1] = n_dir.indexOf("2A") + 1;
+    // Xavier
+    m_da[1][0] = x_dir.indexOf("1A") + 1;
+    m_da[1][1] = x_dir.indexOf("2A") + 1;
+
+    tensor.push({
+      id: `${c.codigo}_DA`,
+      tagSheet: `1g1t${c.tag}`,
+      tipo: "Directa Factual (DA)",
+      criterio: c.codigo,
+      nombreCriterio: c.nombre,
+      prompt: c.prompt,
+      matriz: m_da
+    });
+
+    // 2. Matriz Atribuida Metaperceptiva p_DA (2x2)
+    // Fila 0: Lo que Nuria (1A) cree que ordenará Xavier (2A)
+    // Fila 1: Lo que Xavier (2A) cree que ordenará Nuria (1A)
+    const m_pda = [[0, 0], [0, 0]];
+    const n_attr = respuestas["1A"].criterios[c.codigo].attr;
+    const x_attr = respuestas["2A"].criterios[c.codigo].attr;
+
+    m_pda[0][0] = n_attr.indexOf("1A") + 1;
+    m_pda[0][1] = n_attr.indexOf("2A") + 1;
+    m_pda[1][0] = x_attr.indexOf("1A") + 1;
+    m_pda[1][1] = x_attr.indexOf("2A") + 1;
+
+    tensor.push({
+      id: `${c.codigo}_pDA`,
+      tagSheet: `1g1t${c.tag}_pDA`,
+      tipo: "Atribuida Metaperceptiva (p_DA)",
+      criterio: c.codigo,
+      nombreCriterio: c.nombre,
+      prompt: c.prompt,
+      matriz: m_pda
+    });
+  });
+
+  return tensor;
+}
+
+// =============================================================================
+// RENDERIZADO DE LA CONSOLA DEL IP (10 SOCIOMATRICES)
+// =============================================================================
+function renderConsolidacionIP() {
+  const tensor = calcularTensor10Matrices();
+  const grid = document.getElementById("matrixGridContainer");
+  grid.innerHTML = "";
+
+  tensor.forEach((matObj, idx) => {
+    const isDA = matObj.tipo.includes("Directa");
+    const m = matObj.matriz;
+
+    const box = document.createElement("div");
+    box.className = "matrix-box";
+    box.innerHTML = `
+      <div class="matrix-box-title">
+        <span>Matriz #${idx + 1}: ${matObj.id}</span>
+        <span style="color:${isDA ? 'var(--accent-neon)' : 'var(--accent-cyan)'}; font-size:0.75rem;">
+          ${isDA ? 'DIRECTA (DA)' : 'ATRIBUIDA (p_DA)'}
+        </span>
+      </div>
+      <div style="font-size:0.76rem; color:var(--text-dim); margin-bottom:8px;">${matObj.nombreCriterio}</div>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Emisor \\ Destino</th>
+            <th>1A (Nuria)</th>
+            <th>2A (Xavier)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1A (Nuria)</th>
+            <td class="${m[0][0] === 1 ? 'pos' : 'neg'}">${m[0][0]}º</td>
+            <td class="${m[0][1] === 1 ? 'pos' : 'neg'}">${m[0][1]}º</td>
+          </tr>
+          <tr>
+            <th>2A (Xavier)</th>
+            <td class="${m[1][0] === 1 ? 'pos' : 'neg'}">${m[1][0]}º</td>
+            <td class="${m[1][1] === 1 ? 'pos' : 'neg'}">${m[1][1]}º</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    grid.appendChild(box);
+  });
+
+  const payload = generarPayloadCompleto();
+  document.getElementById("payloadDisplay").textContent = JSON.stringify(payload, null, 2);
+}
+
+// =============================================================================
+// EXPORTACIÓN A EXCEL (.XLSX) VIA SHEETJS
+// =============================================================================
+
+// 1. EXPORTACIÓN DEL LIBRO MAESTRO OFICIAL CONSOLIDADO (PARA ORQUESTADOR)
+function descargarLibroMaestroExcel() {
+  if (typeof XLSX === 'undefined') {
+    alert("Cargando librería SheetJS... Por favor reintente en 2 segundos.");
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  const tensor = calcularTensor10Matrices();
+
+  // Para cada uno de los 5 criterios (C1..C5), generar la hoja canónica '1g1t1c' a '1g1t5c'
+  CRITERIOS.forEach((crit, cIdx) => {
+    const daMat = tensor[cIdx * 2].matriz;
+    const pdaMat = tensor[cIdx * 2 + 1].matriz;
+
+    const headers = [
+      'Nom', 'IDi', 'IDm', 'Criterio', '1º', '2º', 
+      'E', 'R', 'pE', 'pR', 'αE', 'ωE', 
+      'SX', 'ED', 'ORIG', 'ANT', 'ORIEN', 'IMPL', 'PRES', 'ROL', 'REND', 'COM', 
+      'claro', 'coherente', 'flexible', 'consensuado', 'productivo', 'ordenado', 
+      'activo', 'ejemplar', 'abierto', 'crítico', 'perceptivo', 'expresivo', 
+      'amistoso', 'leal', 'colaborador', 'tolerante'
+    ];
+
+    // Fila 1: Nuria (1A)
+    // 1º = quién puso de 1º (1=Nuria, 2=Xavier)
+    const n_1o = daMat[0][0] === 1 ? 1 : 2;
+    const n_2o = daMat[0][0] === 1 ? 2 : 1;
+    const n_E = n_1o;
+    const n_R = n_2o;
+    const n_pE = pdaMat[0][0] === 1 ? 1 : 2;
+    const n_pR = pdaMat[0][0] === 1 ? 2 : 1;
+
+    const rowNuria = [
+      '1A1a', '1A1a', 1, cIdx + 1, n_1o, n_2o,
+      String(n_E), String(n_R), String(n_pE), String(n_pR), String(n_pE), String(n_pR),
+      respuestas["1A"].v10.SX, respuestas["1A"].v10.ED, respuestas["1A"].v10.ORIG, respuestas["1A"].v10.ANT,
+      respuestas["1A"].v10.ORIEN, respuestas["1A"].v10.IMPL, respuestas["1A"].v10.PRES, respuestas["1A"].v10.ROL,
+      respuestas["1A"].v10.REND, respuestas["1A"].v10.COM,
+      respuestas["1A"].a16.claro, respuestas["1A"].a16.coherente, respuestas["1A"].a16.flexible, respuestas["1A"].a16.consensuado,
+      respuestas["1A"].a16.productivo, respuestas["1A"].a16.ordenado, respuestas["1A"].a16.activo, respuestas["1A"].a16.ejemplar,
+      respuestas["1A"].a16.abierto, respuestas["1A"].a16.crítico, respuestas["1A"].a16.perceptivo, respuestas["1A"].a16.expresivo,
+      respuestas["1A"].a16.amistoso, respuestas["1A"].a16.leal, respuestas["1A"].a16.colaborador, respuestas["1A"].a16.tolerante
+    ];
+
+    // Fila 2: Xavier (2A)
+    const x_1o = daMat[1][0] === 1 ? 1 : 2;
+    const x_2o = daMat[1][0] === 1 ? 2 : 1;
+    const x_E = x_1o;
+    const x_R = x_2o;
+    const x_pE = pdaMat[1][0] === 1 ? 1 : 2;
+    const x_pR = pdaMat[1][0] === 1 ? 2 : 1;
+
+    const rowXavier = [
+      '2A1a', '2A1a', 2, cIdx + 1, x_1o, x_2o,
+      String(x_E), String(x_R), String(x_pE), String(x_pR), String(x_pE), String(x_pR),
+      respuestas["2A"].v10.SX, respuestas["2A"].v10.ED, respuestas["2A"].v10.ORIG, respuestas["2A"].v10.ANT,
+      respuestas["2A"].v10.ORIEN, respuestas["2A"].v10.IMPL, respuestas["2A"].v10.PRES, respuestas["2A"].v10.ROL,
+      respuestas["2A"].v10.REND, respuestas["2A"].v10.COM,
+      respuestas["2A"].a16.claro, respuestas["2A"].a16.coherente, respuestas["2A"].a16.flexible, respuestas["2A"].a16.consensuado,
+      respuestas["2A"].a16.productivo, respuestas["2A"].a16.ordenado, respuestas["2A"].a16.activo, respuestas["2A"].a16.ejemplar,
+      respuestas["2A"].a16.abierto, respuestas["2A"].a16.crítico, respuestas["2A"].a16.perceptivo, respuestas["2A"].a16.expresivo,
+      respuestas["2A"].a16.amistoso, respuestas["2A"].a16.leal, respuestas["2A"].a16.colaborador, respuestas["2A"].a16.tolerante
+    ];
+
+    const sheetData = [headers, rowNuria, rowXavier];
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    XLSX.utils.book_append_sheet(wb, ws, `1g1t${crit.tag}`);
+  });
+
+  // Hoja adicional: '10_Sociomatrices_SMIb'
+  const matRows = [
+    ['NEXORD NUCLEAR · TENSOR DE 10 SOCIOMATRICES (10, 2, 2)', '', '', ''],
+    ['Estudio:', ESTUDIO_ID, 'Diseño:', 'G1T1C5'],
+    ['Sujetos:', '1A: Nuria, 2A: Xavier', 'Fecha:', new Date().toISOString()],
+    []
+  ];
+
+  tensor.forEach((matObj, idx) => {
+    matRows.push([`MATRIZ #${idx + 1}: ${matObj.id}`, `TIPO: ${matObj.tipo}`, `CRITERIO: ${matObj.nombreCriterio}`, '']);
+    matRows.push(['Emisor \\ Destino', '1A (Nuria)', '2A (Xavier)', '']);
+    matRows.push(['1A (Nuria)', matObj.matriz[0][0], matObj.matriz[0][1], '']);
+    matRows.push(['2A (Xavier)', matObj.matriz[1][0], matObj.matriz[1][1], '']);
+    matRows.push([]);
+  });
+
+  const wsMat = XLSX.utils.aoa_to_sheet(matRows);
+  XLSX.utils.book_append_sheet(wb, wsMat, '10_Sociomatrices_SMIb');
+
+  // Hoja 'Metadatos'
+  const metaRows = [
+    ['CLAVE_ESTUDIO', ESTUDIO_ID],
+    ['DISENO', 'G1T1C5'],
+    ['N_SUJETOS', 2],
+    ['MODULO', 'NEXORD_NUCLEAR'],
+    ['SUJETO_1A', 'Nuria', 'nuria@gmail.com'],
+    ['SUJETO_2A', 'Xavier', 'xavier@gmail.com'],
+    ['FECHA_CONSOLIDACION', new Date().toISOString()],
+    ['CANON_DEONTOLOGICO', 'Regla 21: Preservación estricta de intimidad y no sustitución clínica']
+  ];
+  const wsMeta = XLSX.utils.aoa_to_sheet(metaRows);
+  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadatos');
+
+  // Hoja 'Diccionario' y 'Parámetros'
+  const wsDic = XLSX.utils.aoa_to_sheet([
+    ['Variable', 'Tipo', 'Modalidades'],
+    ['SX', 'Nominal', '1=Hombre, 2=Mujer, 3=Mixto'],
+    ['ED', 'Ordinal', '1=Junior, 2=Mid, 3=Senior'],
+    ['AAG16', 'Métrica continua par', 'Escala 1 a 8']
+  ]);
+  XLSX.utils.book_append_sheet(wb, wsDic, 'Diccionario');
+
+  const wsPar = XLSX.utils.aoa_to_sheet([
+    ['Parámetro', 'Valor'],
+    ['ARQUETIPO_BASE', 'NUCLEAR_DIADA'],
+    ['NORMA_HOLDER_AAG', 2.0],
+    ['DOMINIO_ESPECTRAL', 'Gr(1, 2)']
+  ]);
+  XLSX.utils.book_append_sheet(wb, wsPar, 'Parámetros');
+
+  // Generar y descargar el archivo binario
+  XLSX.writeFile(wb, `PROPIO_${ESTUDIO_ID}.xlsx`);
+}
+
+// 2. EXPORTACIÓN DE LA FICHA INDIVIDUAL DE RESPUESTAS (.XLSX)
+function descargarExcelIndividual(pId) {
+  if (typeof XLSX === 'undefined') {
+    alert("Cargando librería SheetJS... Por favor reintente en 2 segundos.");
+    return;
+  }
+
+  const p = PARTICIPANTES[pId];
+  const pData = respuestas[pId];
+  const wb = XLSX.utils.book_new();
+
+  // Hoja 1: Criterios
+  const critRows = [
+    ['Criterio', 'Nombre_Criterio', 'Preferencia_1º', 'Preferencia_2º', 'Expectativa_1º', 'Expectativa_2º']
+  ];
+
+  CRITERIOS.forEach(c => {
+    const d = pData.criterios[c.codigo].direct;
+    const a = pData.criterios[c.codigo].attr;
+    critRows.push([
+      c.codigo,
+      c.nombre,
+      PARTICIPANTES[d[0]].nombre,
+      PARTICIPANTES[d[1]].nombre,
+      PARTICIPANTES[a[0]].nombre,
+      PARTICIPANTES[a[1]].nombre
+    ]);
+  });
+  const wsCrit = XLSX.utils.aoa_to_sheet(critRows);
+  XLSX.utils.book_append_sheet(wb, wsCrit, 'Respuestas_Criterios');
+
+  // Hoja 2: V10
+  const v10Rows = [['Variable', 'Nombre', 'Modalidad_Seleccionada']];
+  VARIABLES_V10_DEF.forEach(v => {
+    const val = pData.v10[v.cod];
+    v10Rows.push([v.cod, v.nom, val]);
+  });
+  const wsV10 = XLSX.utils.aoa_to_sheet(v10Rows);
+  XLSX.utils.book_append_sheet(wb, wsV10, 'Variables_V10');
+
+  // Hoja 3: A16
+  const a16Rows = [['Adjetivo', 'Factor', 'Puntuacion_1_a_8']];
+  ADJETIVOS_AAG16.forEach(adj => {
+    a16Rows.push([adj.cod, adj.factor, pData.a16[adj.cod]]);
+  });
+  const wsA16 = XLSX.utils.aoa_to_sheet(a16Rows);
+  XLSX.utils.book_append_sheet(wb, wsA16, 'Adjetivos_A16');
+
+  // Hoja 4: Metadatos
+  const metaRows = [
+    ['CAMPO', 'VALOR'],
+    ['ESTUDIO_ID', ESTUDIO_ID],
+    ['ID_PARTICIPANTE', p.id],
+    ['NOMBRE', p.nombre],
+    ['EMAIL', p.email],
+    ['FECHA_RESPUESTA', new Date().toISOString()]
+  ];
+  const wsMeta = XLSX.utils.aoa_to_sheet(metaRows);
+  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadatos');
+
+  XLSX.writeFile(wb, `RESPUESTA_NEXORD_NUCLEAR_${p.id}_${p.nombre.toUpperCase()}.xlsx`);
+}
+
+// 3. IMPORTAR ARCHIVO EXCEL DE RESPUESTA
+function importarArchivoExcel(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      
+      // Buscar hoja de metadatos o detectar participante
+      let pId = "1A";
+      if (workbook.Sheets['Metadatos']) {
+        const metaArr = XLSX.utils.sheet_to_json(workbook.Sheets['Metadatos'], { header: 1 });
+        metaArr.forEach(row => {
+          if (row[0] === 'ID_PARTICIPANTE' && String(row[1]).includes('2A')) {
+            pId = "2A";
+          }
+        });
+      } else if (file.name.toUpperCase().includes("2A") || file.name.toUpperCase().includes("XAVIER")) {
+        pId = "2A";
+      }
+
+      // Importar V10
+      if (workbook.Sheets['Variables_V10']) {
+        const v10Arr = XLSX.utils.sheet_to_json(workbook.Sheets['Variables_V10'], { header: 1 });
+        v10Arr.slice(1).forEach(row => {
+          if (row[0] && row[2]) respuestas[pId].v10[row[0]] = parseInt(row[2], 10);
+        });
+      }
+
+      // Importar A16
+      if (workbook.Sheets['Adjetivos_A16']) {
+        const a16Arr = XLSX.utils.sheet_to_json(workbook.Sheets['Adjetivos_A16'], { header: 1 });
+        a16Arr.slice(1).forEach(row => {
+          if (row[0] && row[2]) respuestas[pId].a16[row[0]] = parseInt(row[2], 10);
+        });
+      }
+
+      guardarEnLocalStorage();
+      renderConsolidacionIP();
+      alert(`¡Archivo de ${PARTICIPANTES[pId].nombre} (${pId}) importado con éxito!`);
+    } catch (err) {
+      alert("Error al procesar el archivo Excel: " + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// 4. GENERAR PAYLOAD JSON
+function generarPayloadCompleto() {
+  const tensor = calcularTensor10Matrices();
+  return {
+    estudio_id: ESTUDIO_ID,
+    diseno: "G1T1C5",
+    modulo: "NEXORD_NUCLEAR",
+    n: 2,
+    participantes: PARTICIPANTES,
+    tensor_10_sociomatrices_2x2: tensor,
+    variables_v10: {
+      "1A": respuestas["1A"].v10,
+      "2A": respuestas["2A"].v10
+    },
+    adjetivos_aag16: {
+      "1A": respuestas["1A"].a16,
+      "2A": respuestas["2A"].a16
+    },
+    deontologia: "Regla 21: Preservación de intimidad y no sustitución de criterio clínico",
+    fecha_consolidacion: new Date().toISOString()
+  };
+}
+
+function descargarJSON() {
+  const payload = generarPayloadCompleto();
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+  const a = document.createElement("a");
+  a.setAttribute("href", dataStr);
+  a.setAttribute("download", `PAYLOAD_${ESTUDIO_ID}.json`);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function descargarTXTManual() {
+  const tensor = calcularTensor10Matrices();
+  let txt = `# =============================================================================\n`;
+  txt += `# RECOGIDA FACTUAL NEXORD NUCLEAR · DIADA (N=2 · G1T1C5)\n`;
+  txt += `# Estudio: ${ESTUDIO_ID}\n`;
+  txt += `# Sujetos: 1A (Nuria) y 2A (Xavier)\n`;
+  txt += `# =============================================================================\n\n`;
+  txt += `CLAVE: G1T1C5\nESTUDIO_ID: ${ESTUDIO_ID}\nN_SUJETOS: 2\nNOMBRES: Nuria, Xavier\n\n`;
+
+  CRITERIOS.forEach((c, idx) => {
+    const da = tensor[idx * 2].matriz;
+    txt += `[1g1t${c.tag}]\n`;
+    txt += `# Fila 1 (Nuria): ${da[0][0]}º, ${da[0][1]}º\n`;
+    txt += `${da[0][0]} ${da[0][1]}\n`;
+    txt += `# Fila 2 (Xavier): ${da[1][0]}º, ${da[1][1]}º\n`;
+    txt += `${da[1][0]} ${da[1][1]}\n\n`;
+  });
+
+  const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(txt);
+  const a = document.createElement("a");
+  a.setAttribute("href", dataStr);
+  a.setAttribute("download", `PROPIO_${ESTUDIO_ID}.txt`);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// 5. LOCALSTORAGE PERSISTENCE
+function guardarEnLocalStorage() {
+  try {
+    localStorage.setItem("nexord_nuclear_respuestas", JSON.stringify(respuestas));
+  } catch(e) {}
+}
+
+function cargarRespuestasLocalStorage() {
+  try {
+    const data = localStorage.getItem("nexord_nuclear_respuestas");
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (parsed["1A"]) respuestas["1A"] = parsed["1A"];
+      if (parsed["2A"]) respuestas["2A"] = parsed["2A"];
+    }
+  } catch(e) {}
+}
+
+function cargarDatosMuestraFactuales() {
+  respuestas["1A"] = {
+    completado: true,
+    v10: { SX: 2, ED: 2, ORIG: 3, ANT: 2, ORIEN: 2, IMPL: 3, PRES: 2, ROL: 2, REND: 2, COM: 3 },
+    criterios: {
+      C1: { direct: ["1A", "2A"], attr: ["2A", "1A"] },
+      C2: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C3: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C4: { direct: ["2A", "1A"], attr: ["1A", "2A"] },
+      C5: { direct: ["1A", "2A"], attr: ["2A", "1A"] }
+    },
+    a16: {
+      claro: 7, coherente: 6, flexible: 6, consensuado: 6,
+      productivo: 8, ordenado: 7, activo: 7, ejemplar: 7,
+      abierto: 6, crítico: 6, perceptivo: 7, expresivo: 6,
+      amistoso: 8, leal: 8, colaborador: 7, tolerante: 6
+    }
+  };
+  respuestas["2A"] = {
+    completado: true,
+    v10: { SX: 1, ED: 2, ORIG: 1, ANT: 2, ORIEN: 1, IMPL: 3, PRES: 2, ROL: 1, REND: 2, COM: 2 },
+    criterios: {
+      C1: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C2: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C3: { direct: ["1A", "2A"], attr: ["1A", "2A"] },
+      C4: { direct: ["2A", "1A"], attr: ["2A", "1A"] },
+      C5: { direct: ["2A", "1A"], attr: ["1A", "2A"] }
+    },
+    a16: {
+      claro: 6, coherente: 7, flexible: 5, consensuado: 6,
+      productivo: 7, ordenado: 8, activo: 8, ejemplar: 7,
+      abierto: 6, crítico: 7, perceptivo: 6, expresivo: 5,
+      amistoso: 7, leal: 8, colaborador: 8, tolerante: 6
+    }
+  };
+  guardarEnLocalStorage();
+  renderConsolidacionIP();
+  alert("¡Datos de muestra factuales cargados con éxito para Nuria y Xavier!");
+}
+
+// INICIALIZACIÓN AL CARGAR LA PÁGINA
+window.addEventListener("DOMContentLoaded", () => {
+  initSessionFromURL();
+});
+</script>
+
+</body>
+</html>
