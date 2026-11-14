@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXORD NUCLEAR · Recogida Factual Díada N=2 (Nuria & Xavier)</title>
+  <title>NEXORD NUCLEAR · Recogida Factual Escala Pequeña N ∈ [2, 7]</title>
   
   <!-- Dependencia SheetJS para exportación e importación binaria de archivos Excel (.xlsx) -->
   <script src="lib/xlsx.full.min.js"></script>
@@ -23,6 +23,16 @@
       --bg-card-hover: #172852;
       --border-card: #1C2D5A;
       --border-active: #38BDF8;
+      
+      /* CÓDIGOS DE COLOR CANÓNICOS PARA POSICIONES ORDINALES 1º A 7º */
+      --rank-1: #00FF87; /* Verde Neón / Oro Alfa */
+      --rank-2: #38BDF8; /* Cian Neón */
+      --rank-3: #FF9F1C; /* Naranja / Ámbar */
+      --rank-4: #A855F7; /* Púrpura Neón */
+      --rank-5: #EC4899; /* Rosa Neón */
+      --rank-6: #94A3B8; /* Gris Acero */
+      --rank-7: #64748B; /* Gris Pizarra / Nadir Omega */
+
       --accent-neon: #00FF87;
       --accent-cyan: #38BDF8;
       --accent-gold: #FFE600;
@@ -115,6 +125,58 @@
       border-radius: 6px;
     }
 
+    /* SELECTOR DINÁMICO DE TAMAÑO NUCLEAR (N=2 A N=7) */
+    .scale-selector-bar {
+      background: #0F172A;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .scale-label {
+      font-size: 0.82rem;
+      color: var(--accent-gold);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .scale-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-scale {
+      background: #111E3D;
+      color: var(--text-muted);
+      border: 1px solid var(--border-card);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-scale:hover {
+      border-color: var(--accent-cyan);
+      color: #FFF;
+    }
+
+    .btn-scale.active {
+      background: var(--accent-cyan);
+      color: #0B132B;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+
     /* CLÁUSULA DEONTOLÓGICA SUPREMA (CANON 21) */
     .deontology-box {
       background: rgba(239, 68, 68, 0.08);
@@ -124,7 +186,7 @@
       font-size: 0.84rem;
       color: #FECACA;
       line-height: 1.45;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .deontology-box strong {
@@ -314,7 +376,6 @@
       margin-bottom: 8px;
     }
 
-    /* AVISO METODOLÓGICO DE CONTROL ANTIAQUIESCENCIA */
     .anti-acquiescence-banner {
       background: rgba(255, 159, 28, 0.1);
       border-left: 4px solid var(--accent-orange);
@@ -328,7 +389,6 @@
       gap: 8px;
     }
 
-    /* ENUNCIADO BREVE Y CLARO DEL CRITERIO */
     .criterion-prompt-box {
       background: #0B132B;
       border-left: 4px solid var(--accent-neon);
@@ -350,25 +410,25 @@
       margin-bottom: 4px;
     }
 
-    /* CONTENEDOR DRAG & DROP CON CONTROL DE DELIBERACIÓN */
+    /* CONTENEDOR DRAG & DROP */
     .drag-box {
       background: #0B132B;
       border: 1px solid var(--border-card);
       border-radius: 12px;
       padding: 18px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
       transition: all 0.3s ease;
     }
 
     .drag-box.editing-box {
-      border-color: rgba(255, 159, 28, 0.4);
+      border-color: rgba(255, 159, 28, 0.45);
       box-shadow: 0 0 14px rgba(255, 159, 28, 0.08);
     }
 
     .drag-box.confirmed-box {
-      border-color: rgba(0, 255, 135, 0.5);
+      border-color: rgba(0, 255, 135, 0.55);
       background: linear-gradient(180deg, #0B132B 0%, #081B26 100%);
-      box-shadow: 0 0 16px rgba(0, 255, 135, 0.1);
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.12);
     }
 
     .drag-box-header {
@@ -381,7 +441,7 @@
     }
 
     .drag-box-title {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
@@ -411,51 +471,44 @@
       color: var(--accent-neon);
     }
 
-    /* BARRA DE HERRAMIENTAS DE DELIBERACIÓN Y MOVIMIENTOS */
-    .deliberation-toolbar {
+    /* RUTA VISUAL ORDINAL SUPERIOR (1º ➔ 2º ➔ 3º ...) */
+    .ordinal-track-bar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      background: #111E3D;
-      padding: 8px 12px;
+      gap: 6px;
+      background: #060D1E;
+      border: 1px solid var(--border-card);
       border-radius: 8px;
-      border: 1px solid var(--border-card);
-      flex-wrap: wrap;
-      gap: 8px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      overflow-x: auto;
     }
 
-    .mod-counter-text {
-      font-size: 0.78rem;
-      color: var(--text-muted);
+    .ordinal-track-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
     }
 
-    .mod-counter-text strong {
-      color: var(--accent-gold);
-    }
-
-    .btn-quick-swap {
-      background: #1E293B;
-      border: 1px solid var(--border-card);
-      color: var(--accent-cyan);
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 5px 12px;
+    .track-pill {
+      font-family: ui-monospace, monospace;
+      font-size: 0.76rem;
+      font-weight: 900;
+      padding: 3px 8px;
       border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid;
     }
 
-    .btn-quick-swap:hover:not(:disabled) {
-      background: var(--accent-cyan);
-      color: #0B132B;
+    .track-arrow {
+      color: var(--text-dim);
+      font-size: 0.75rem;
     }
 
-    .btn-quick-swap:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
+    /* LISTA DE ITEMS DRAGGABLE */
     .sortable-list {
       display: flex;
       flex-direction: column;
@@ -465,7 +518,7 @@
     .drag-item {
       background: #111E3D;
       border: 1px solid var(--border-card);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px 18px;
       display: flex;
       align-items: center;
@@ -473,6 +526,7 @@
       cursor: grab;
       user-select: none;
       transition: all 0.2s ease;
+      position: relative;
     }
 
     .drag-item:active {
@@ -487,7 +541,7 @@
 
     .drag-item.drag-over {
       border: 2px dashed var(--accent-neon);
-      background: rgba(0, 255, 135, 0.05);
+      background: rgba(0, 255, 135, 0.06);
     }
 
     .item-left {
@@ -496,33 +550,88 @@
       gap: 14px;
     }
 
-    .rank-number {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #1E293B;
-      color: var(--accent-neon);
-      font-weight: 900;
-      font-size: 1.05rem;
+    /* PILAR ORDINAL GIGANTE Y ULTRA-NÍTIDO (1º A 7º) */
+    .rank-pillar {
+      width: 58px;
+      height: 58px;
+      border-radius: 12px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(0, 255, 135, 0.35);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 900;
+      border: 2px solid;
+      flex-shrink: 0;
+      transition: all 0.2s;
     }
 
-    .rank-number.rank-2 {
-      color: var(--text-muted);
-      border-color: var(--border-card);
+    .rank-pillar-1 {
+      background: rgba(0, 255, 135, 0.16);
+      color: var(--rank-1);
+      border-color: var(--rank-1);
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.28);
+    }
+
+    .rank-pillar-2 {
+      background: rgba(56, 189, 248, 0.16);
+      color: var(--rank-2);
+      border-color: var(--rank-2);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.22);
+    }
+
+    .rank-pillar-3 {
+      background: rgba(255, 159, 28, 0.16);
+      color: var(--rank-3);
+      border-color: var(--rank-3);
+      box-shadow: 0 0 10px rgba(255, 159, 28, 0.18);
+    }
+
+    .rank-pillar-4 {
+      background: rgba(168, 85, 247, 0.16);
+      color: var(--rank-4);
+      border-color: var(--rank-4);
+    }
+
+    .rank-pillar-5 {
+      background: rgba(236, 72, 153, 0.16);
+      color: var(--rank-5);
+      border-color: var(--rank-5);
+    }
+
+    .rank-pillar-6 {
+      background: rgba(148, 163, 184, 0.16);
+      color: var(--rank-6);
+      border-color: var(--rank-6);
+    }
+
+    .rank-pillar-7 {
+      background: rgba(71, 85, 105, 0.16);
+      color: var(--rank-7);
+      border-color: var(--rank-7);
+    }
+
+    .rank-pillar .rank-txt {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .rank-pillar .rank-sub {
+      font-size: 0.62rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-top: 3px;
     }
 
     .item-avatar {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: linear-gradient(135deg, #1E3A8A, #0284C7);
       color: #FFF;
       font-weight: 800;
-      font-size: 1rem;
+      font-size: 1.05rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -535,7 +644,7 @@
     }
 
     .item-name {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #FFF;
       display: flex;
@@ -558,35 +667,41 @@
       color: var(--text-dim);
     }
 
+    .rank-feedback-line {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
     .item-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .btn-move {
+    .btn-step-move {
       background: #1E293B;
       border: 1px solid var(--border-card);
       color: #CBD5E1;
-      width: 34px;
-      height: 34px;
+      padding: 6px 10px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 4px;
       transition: all 0.15s;
     }
 
-    .btn-move:hover:not(:disabled) {
+    .btn-step-move:hover:not(:disabled) {
       background: var(--accent-cyan);
       color: #0B132B;
       border-color: var(--accent-cyan);
     }
 
-    .btn-move:disabled {
-      opacity: 0.3;
+    .btn-step-move:disabled {
+      opacity: 0.25;
       cursor: not-allowed;
     }
 
@@ -600,7 +715,7 @@
     /* ZONA DE CONFIRMACIÓN Y FIJACIÓN DEL ORDEN */
     .confirm-bar {
       margin-top: 14px;
-      padding-top: 12px;
+      padding-top: 14px;
       border-top: 1px solid var(--border-card);
       display: flex;
       justify-content: space-between;
@@ -613,10 +728,10 @@
       background: linear-gradient(135deg, #059669, #10B981);
       color: #FFF;
       border: 1px solid var(--accent-neon);
-      padding: 8px 18px;
+      padding: 9px 20px;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -852,12 +967,6 @@
       color: var(--success);
     }
 
-    .ip-status-badge.pending {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid var(--danger);
-      color: #F87171;
-    }
-
     .matrix-display-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -949,7 +1058,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border-active);
       border-radius: 14px;
-      max-width: 620px;
+      max-width: 660px;
       width: 100%;
       padding: 26px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.6);
@@ -972,18 +1081,20 @@
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 14px;
       margin: 18px 0;
+      max-height: 380px;
+      overflow-y: auto;
     }
 
     .access-card {
       background: #0B132B;
       border: 1px solid var(--border-card);
       border-radius: 10px;
-      padding: 16px;
+      padding: 14px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .access-card:hover {
@@ -1027,27 +1138,33 @@
       <div class="brand-title">
         <span class="brand-logo-badge">VISORD</span>
         <div>
-          <div class="brand-name">NEXORD NUCLEAR · Recogida Factual Díada N=2</div>
-          <div class="brand-sub">Módulo de Pequeña Escala · Pareja (G1T1C5 · Nuria & Xavier)</div>
+          <div class="brand-name">NEXORD NUCLEAR · Recogida Factual de Datos</div>
+          <div class="brand-sub">Módulo de Pequeña Escala · Grupos Nucleares N ∈ [2, 7]</div>
         </div>
       </div>
-      <div class="study-badge">
+      <div class="study-badge" id="studyBadge">
         PROPIO-AA-G1-T1-C5-V10-A16-NUCLEAR-ES-2
       </div>
     </div>
 
-    <div style="font-size: 0.88rem; color: var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-      <div>
-        <strong>Investigador Principal (IP):</strong> Estudio encargado para 1A: <em>Nuria</em> (<span style="color:var(--accent-cyan);">nuria@gmail.com</span>) y 2A: <em>Xavier</em> (<span style="color:var(--accent-cyan);">xavier@gmail.com</span>).
+    <!-- SELECTOR DE TAMAÑO NUCLEAR N = 2 A 7 -->
+    <div class="scale-selector-bar">
+      <div class="scale-label">
+        <span>👥</span> Tamaño del Grupo Nuclear:
       </div>
-      <div style="color:var(--accent-gold); font-weight:700;">
-        10 Sociomatrices (10, 2, 2) + V10 + A16
+      <div class="scale-btn-group">
+        <button class="btn-scale active" id="scaleBtn2" onclick="cambiarTamanoNuclear(2)">N = 2 (Pareja)</button>
+        <button class="btn-scale" id="scaleBtn3" onclick="cambiarTamanoNuclear(3)">N = 3 (Tríada)</button>
+        <button class="btn-scale" id="scaleBtn4" onclick="cambiarTamanoNuclear(4)">N = 4</button>
+        <button class="btn-scale" id="scaleBtn5" onclick="cambiarTamanoNuclear(5)">N = 5</button>
+        <button class="btn-scale" id="scaleBtn6" onclick="cambiarTamanoNuclear(6)">N = 6</button>
+        <button class="btn-scale" id="scaleBtn7" onclick="cambiarTamanoNuclear(7)">N = 7 (Máx Nuclear)</button>
       </div>
     </div>
 
     <!-- ALERTA DEONTOLÓGICA SUPREMA (CANON 21) -->
     <div class="deontology-box">
-      <strong>🛡️ Compromiso Deontológico Supremo (Regla 21):</strong> NEXORD nunca sustituye al terapeuta, mediador de pareja ni al Investigador Principal (IP). Se limita estricta y rigurosamente a procesar y describir los aspectos estructurales del sistema relacional de preferencias ordinales sin invadir la intimidad personal de los participantes.
+      <strong>🛡️ Compromiso Deontológico Supremo (Regla 21):</strong> NEXORD nunca sustituye al terapeuta, mediador ni al Investigador Principal (IP). Se limita estricta y rigurosamente a procesar y describir los aspectos estructurales del sistema relacional de preferencias ordinales sin invadir la intimidad personal de los participantes.
     </div>
   </div>
 
@@ -1062,7 +1179,7 @@
     </div>
     <div class="session-nav-actions">
       <button class="btn-chip" onclick="abrirModalAcceso()" title="Cambiar usuario o simular enlaces de e-mail">
-        <span>🔄</span> Cambiar Acceso / Enlaces
+        <span>🔄</span> Cambiar Acceso / Participante
       </button>
       <button class="btn-chip gold" id="btnIrIP" onclick="mostrarConsolidacionIP()">
         <span>📊</span> Consola del IP (10 Matrices)
@@ -1092,10 +1209,10 @@
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
       <div>
         <h3 style="color: #FFF; font-size: 1.3rem; font-weight: 800;">
-          📊 Consola del IP: Tensor de 10 Sociomatrices (10, 2, 2) + V10 + A16
+          📊 Consola del IP: Tensor de 10 Sociomatrices (10, <span id="ipNSizeMat">2</span>, <span id="ipNSizeMat2">2</span>) + V10 + A16
         </h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);">
-          Consolidación factual de las 5 matrices directas ($DA$) y las 5 matrices atribuidas ($p\_DA$) de la pareja con trazabilidad antiaquiescencia.
+          Consolidación factual de las 5 matrices directas ($DA$) y las 5 matrices atribuidas ($p\_DA$) del grupo nuclear con trazabilidad antiaquiescencia.
         </p>
       </div>
       <div>
@@ -1104,49 +1221,8 @@
     </div>
 
     <!-- TARJETAS DE ESTADO DE CADA PARTICIPANTE -->
-    <div class="ip-summary-cards">
-      <div class="ip-card">
-        <div class="ip-card-header">
-          <div style="font-weight:800; font-size:0.95rem; color:#FFF;">Nuria (1A)</div>
-          <span class="ip-status-badge ok" id="badgeNuria">✓ Completado y Validado</span>
-        </div>
-        <div style="font-size:0.8rem; color:var(--text-muted);">nuria@gmail.com</div>
-        <div style="font-size:0.75rem; color:var(--text-dim);" id="nuriaResumen">V10: Registrado · C1..C5: 5/5 Confirmados · A16: Registrado</div>
-        <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px; margin-top:4px;" onclick="descargarExcelIndividual('1A')">
-          📥 Descargar Excel de Nuria (.xlsx)
-        </button>
-      </div>
-
-      <div class="ip-card">
-        <div class="ip-card-header">
-          <div style="font-weight:800; font-size:0.95rem; color:#FFF;">Xavier (2A)</div>
-          <span class="ip-status-badge ok" id="badgeXavier">✓ Completado y Validado</span>
-        </div>
-        <div style="font-size:0.8rem; color:var(--text-muted);">xavier@gmail.com</div>
-        <div style="font-size:0.75rem; color:var(--text-dim);" id="xavierResumen">V10: Registrado · C1..C5: 5/5 Confirmados · A16: Registrado</div>
-        <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px; margin-top:4px;" onclick="descargarExcelIndividual('2A')">
-          📥 Descargar Excel de Xavier (.xlsx)
-        </button>
-      </div>
-
-      <div class="ip-card" style="border-color:var(--accent-cyan);">
-        <div class="ip-card-header">
-          <div style="font-weight:800; font-size:0.95rem; color:var(--accent-cyan);">Consolidación y Fusión</div>
-          <span class="ip-status-badge ok">Listo para Exportar</span>
-        </div>
-        <div style="font-size:0.78rem; color:var(--text-muted);">
-          Importar archivos Excel externos o simular datos de muestra:
-        </div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-          <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px;" onclick="cargarDatosMuestraFactuales()">
-            ⚡ Cargar Datos de Muestra
-          </button>
-          <label class="btn-sec" style="font-size:0.75rem; padding:4px 8px; cursor:pointer;">
-            📂 Subir .xlsx
-            <input type="file" id="fileInputXlsx" accept=".xlsx" style="display:none;" onchange="importarArchivoExcel(event)">
-          </label>
-        </div>
-      </div>
+    <div class="ip-summary-cards" id="ipSummaryCardsContainer">
+      <!-- Se inyectan dinámicamente según N -->
     </div>
 
     <!-- BOTONES PRINCIPALES DE EXPORTACIÓN -->
@@ -1170,7 +1246,7 @@
 
     <!-- DESPLIEGUE DE LAS 10 SOCIOMATRICES EN CUADRÍCULA -->
     <div class="matrix-display-grid" id="matrixGridContainer">
-      <!-- Se inyectan las 10 matrices 2x2 -->
+      <!-- Se inyectan las 10 matrices N x N -->
     </div>
 
     <!-- PAYLOAD JSON EXPEDIDO -->
@@ -1197,41 +1273,11 @@
       <div class="modal-title">✉️ Enlaces de Invitación por E-mail y Enrutamiento</div>
     </div>
     <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:14px;">
-      En el despliegue de NEXORD_NUCLEAR, cada miembro de la pareja recibe un correo individual con un enlace autenticado privado. Selecciona cómo deseas acceder a la plataforma:
+      En el despliegue de NEXORD_NUCLEAR, cada participante del grupo recibe un correo individual con su enlace autenticado privado. Selecciona con qué miembro deseas interactuar:
     </p>
 
-    <div class="access-cards-grid">
-      <!-- ACCESO NURIA -->
-      <div class="access-card" onclick="conectarComo('1A')">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="session-avatar">N</div>
-          <div>
-            <div style="font-weight:800; font-size:1rem; color:#FFF;">Nuria (1A)</div>
-            <div style="font-size:0.75rem; color:var(--accent-cyan);">nuria@gmail.com</div>
-          </div>
-        </div>
-        <div style="font-size:0.78rem; color:var(--text-muted);">
-          Enlace privado: <code>?user=1A</code><br>
-          Responde su V10, C1..C5 y A16 de forma independiente.
-        </div>
-        <button class="btn-sec" style="margin-top:6px; font-size:0.8rem; justify-content:center;">Entrar como Nuria ➔</button>
-      </div>
-
-      <!-- ACCESO XAVIER -->
-      <div class="access-card" onclick="conectarComo('2A')">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="session-avatar" style="background:linear-gradient(135deg, #0284C7, #0D9488);">X</div>
-          <div>
-            <div style="font-weight:800; font-size:1rem; color:#FFF;">Xavier (2A)</div>
-            <div style="font-size:0.75rem; color:var(--accent-cyan);">xavier@gmail.com</div>
-          </div>
-        </div>
-        <div style="font-size:0.78rem; color:var(--text-muted);">
-          Enlace privado: <code>?user=2A</code><br>
-          Responde su V10, C1..C5 y A16 de forma independiente.
-        </div>
-        <button class="btn-sec" style="margin-top:6px; font-size:0.8rem; justify-content:center;">Entrar como Xavier ➔</button>
-      </div>
+    <div class="access-cards-grid" id="accessCardsContainer">
+      <!-- Se inyectan según N -->
     </div>
 
     <div style="background:#0F172A; border:1px solid var(--border-card); border-radius:8px; padding:12px; margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
@@ -1251,16 +1297,35 @@
 
 <script>
 // =============================================================================
-// METADATOS Y CONSTANTES DEL ESTUDIO
+// POOL TOTAL DE SUJETOS NUCLEARES (N=2 A N=7)
 // =============================================================================
-const ESTUDIO_ID = "PROPIO-AA-G1-T1-C5-V10-A16-NUCLEAR-ES-2";
+let currentN = 2; // Por defecto Díada (Nuria y Xavier)
 
-const PARTICIPANTES = {
-  "1A": { id: "1A", code: "1A1a", num: 1, nombre: "Nuria", email: "nuria@gmail.com", avatar: "N" },
-  "2A": { id: "2A", code: "2A1a", num: 2, nombre: "Xavier", email: "xavier@gmail.com", avatar: "X" }
-};
+const PARTICIPANTES_POOL = [
+  { id: "1A", code: "1A1a", num: 1, nombre: "Nuria", email: "nuria@gmail.com", avatar: "N", rol: "Impulsora" },
+  { id: "2A", code: "2A1a", num: 2, nombre: "Xavier", email: "xavier@gmail.com", avatar: "X", rol: "Especialista" },
+  { id: "3A", code: "3A1a", num: 3, nombre: "Clara", email: "clara@gmail.com", avatar: "C", rol: "Mediadora" },
+  { id: "4A", code: "4A1a", num: 4, nombre: "David", email: "david@gmail.com", avatar: "D", rol: "Coordinador" },
+  { id: "5A", code: "5A1a", num: 5, nombre: "Elena", email: "elena@gmail.com", avatar: "E", rol: "Operativa" },
+  { id: "6A", code: "6A1a", num: 6, nombre: "Ferran", email: "ferran@gmail.com", avatar: "F", rol: "Estratégico" },
+  { id: "7A", code: "7A1a", num: 7, nombre: "Gemma", email: "gemma@gmail.com", avatar: "G", rol: "Afectiva" }
+];
 
-// FORMULACIÓN BREVE Y CLARA DE LOS 5 CRITERIOS EN LA MISMA PÁGINA
+// Retorna el diccionario activo de participantes según currentN
+function getParticipantesActivos() {
+  const dict = {};
+  for (let i = 0; i < currentN; i++) {
+    const p = PARTICIPANTES_POOL[i];
+    dict[p.id] = p;
+  }
+  return dict;
+}
+
+function getEstudioID() {
+  return `PROPIO-AA-G1-T1-C5-V10-A16-NUCLEAR-ES-${currentN}`;
+}
+
+// FORMULACIÓN BREVE Y CLARA DE LOS 5 CRITERIOS
 const CRITERIOS = [
   {
     codigo: "C1", tag: "1c",
@@ -1270,12 +1335,12 @@ const CRITERIOS = [
   {
     codigo: "C2", tag: "2c",
     nombre: "C2 · Criterio Técnico y Decisión Práctica",
-    prompt: "Ante una decisión práctica compleja (finanzas, hogar o logística), ¿quién tiene mayor capacidad resolutiva y liderazgo?"
+    prompt: "Ante una decisión práctica compleja (finanzas, tareas o logística), ¿quién tiene mayor capacidad resolutiva y liderazgo?"
   },
   {
     codigo: "C3", tag: "3c",
     nombre: "C3 · Mediación y Gestión de Conflictos",
-    prompt: "Ante una discrepancia o desacuerdo de pareja, ¿quién muestra mayor habilidad para serenar los ánimos y pactar soluciones justas?"
+    prompt: "Ante una discrepancia o desacuerdo grupal, ¿quién muestra mayor habilidad para serenar los ánimos y pactar soluciones justas?"
   },
   {
     codigo: "C4", tag: "4c",
@@ -1289,21 +1354,20 @@ const CRITERIOS = [
   }
 ];
 
-// 10 VARIABLES COMPLEMENTARIAS V10 (RESPONDIDAS UNA SOLA VEZ)
+// VARIABLES V10 Y ADJETIVOS A16
 const VARIABLES_V10_DEF = [
-  { cod: "SX", nom: "Sexo / Género", mods: ["1=Hombre", "2=Mujer", "3=Mixto / No binario"], def: { "1A": 2, "2A": 1 } },
-  { cod: "ED", nom: "Rango Etario", mods: ["1=Junior (<30)", "2=Mid (30-45)", "3=Senior (>45)"], def: { "1A": 2, "2A": 2 } },
-  { cod: "ORIG", nom: "Ámbito / Disciplina", mods: ["1=Técnico / STEM", "2=Gestión / Empresa", "3=Humanidades / Salud"], def: { "1A": 3, "2A": 1 } },
-  { cod: "ANT", nom: "Antigüedad del Vínculo", mods: ["1=< 2 años", "2=2 - 7 años", "3=> 7 años"], def: { "1A": 2, "2A": 2 } },
-  { cod: "ORIEN", nom: "Orientación Vital", mods: ["1=Foco Profesión / Logro", "2=Foco Vínculo / Familia", "3=Foco Equilibrio / Futuro"], def: { "1A": 2, "2A": 1 } },
-  { cod: "IMPL", nom: "Implicación Declarada", mods: ["1=Básica / Funcional", "2=Alta / Comprometida", "3=Plena / Vanguardia"], def: { "1A": 3, "2A": 3 } },
-  { cod: "PRES", nom: "Estilo Relacional", mods: ["1=Discreto / Reflexivo", "2=Dialógico / Empático", "3=Visible / Asertivo"], def: { "1A": 2, "2A": 2 } },
-  { cod: "ROL", nom: "Rol Funcional", mods: ["1=Especialista Operativo", "2=Coordinador / Mediador", "3=Impulsor Emocional"], def: { "1A": 2, "2A": 1 } },
-  { cod: "REND", nom: "Eficacia Convivencial", mods: ["1=Estándar", "2=Alta", "3=Sobresaliente"], def: { "1A": 2, "2A": 2 } },
-  { cod: "COM", nom: "Comunicación Afectiva", mods: ["1=Reservada", "2=Fluida / Directa", "3=Profunda / Empática"], def: { "1A": 3, "2A": 2 } }
+  { cod: "SX", nom: "Sexo / Género", mods: ["1=Hombre", "2=Mujer", "3=Mixto / No binario"], def: { "1A": 2, "2A": 1, "3A": 2, "4A": 1, "5A": 2, "6A": 1, "7A": 2 } },
+  { cod: "ED", nom: "Rango Etario", mods: ["1=Junior (<30)", "2=Mid (30-45)", "3=Senior (>45)"], def: { "1A": 2, "2A": 2, "3A": 1, "4A": 2, "5A": 3, "6A": 2, "7A": 1 } },
+  { cod: "ORIG", nom: "Ámbito / Disciplina", mods: ["1=Técnico / STEM", "2=Gestión / Empresa", "3=Humanidades / Salud"], def: { "1A": 3, "2A": 1, "3A": 2, "4A": 1, "5A": 3, "6A": 1, "7A": 3 } },
+  { cod: "ANT", nom: "Antigüedad del Vínculo", mods: ["1=< 2 años", "2=2 - 7 años", "3=> 7 años"], def: { "1A": 2, "2A": 2, "3A": 2, "4A": 2, "5A": 3, "6A": 1, "7A": 2 } },
+  { cod: "ORIEN", nom: "Orientación Vital", mods: ["1=Foco Profesión / Logro", "2=Foco Vínculo / Familia", "3=Foco Equilibrio / Futuro"], def: { "1A": 2, "2A": 1, "3A": 2, "4A": 1, "5A": 3, "6A": 1, "7A": 2 } },
+  { cod: "IMPL", nom: "Implicación Declarada", mods: ["1=Básica / Funcional", "2=Alta / Comprometida", "3=Plena / Vanguardia"], def: { "1A": 3, "2A": 3, "3A": 2, "4A": 3, "5A": 2, "6A": 2, "7A": 3 } },
+  { cod: "PRES", nom: "Estilo Relacional", mods: ["1=Discreto / Reflexivo", "2=Dialógico / Empático", "3=Visible / Asertivo"], def: { "1A": 2, "2A": 2, "3A": 2, "4A": 3, "5A": 1, "6A": 3, "7A": 2 } },
+  { cod: "ROL", nom: "Rol Funcional", mods: ["1=Especialista Operativo", "2=Coordinador / Mediador", "3=Impulsor Emocional"], def: { "1A": 3, "2A": 1, "3A": 2, "4A": 2, "5A": 1, "6A": 1, "7A": 3 } },
+  { cod: "REND", nom: "Eficacia Convivencial", mods: ["1=Estándar", "2=Alta", "3=Sobresaliente"], def: { "1A": 2, "2A": 2, "3A": 2, "4A": 3, "5A": 2, "6A": 2, "7A": 2 } },
+  { cod: "COM", nom: "Comunicación Afectiva", mods: ["1=Reservada", "2=Fluida / Directa", "3=Profunda / Empática"], def: { "1A": 3, "2A": 2, "3A": 3, "4A": 2, "5A": 1, "6A": 2, "7A": 3 } }
 ];
 
-// 16 ADJETIVOS NORMATIVOS AAG16 (RESPONDIDOS UNA SOLA VEZ, ESCALA 1 A 8)
 const ADJETIVOS_AAG16 = [
   { cod: "claro", factor: "TEMA" }, { cod: "coherente", factor: "TEMA" }, { cod: "flexible", factor: "TEMA" }, { cod: "consensuado", factor: "TEMA" },
   { cod: "productivo", factor: "FUNC" }, { cod: "ordenado", factor: "FUNC" }, { cod: "activo", factor: "FUNC" }, { cod: "ejemplar", factor: "FUNC" },
@@ -1312,79 +1376,140 @@ const ADJETIVOS_AAG16 = [
 ];
 
 // =============================================================================
-// ALMACÉN GLOBAL DE RESPUESTAS CON REGISTRO DE DELIBERACIÓN Y CONTROL ANTIAQUIESCENCIA
+// ALMACÉN GLOBAL DE RESPUESTAS DINÁMICO
 // =============================================================================
-let currentParticipant = "1A"; // '1A' (Nuria) o '2A' (Xavier)
+let currentParticipant = "1A"; // Sujeto actual
 let currentStep = 0; // 0 = V10, 1..5 = C1..C5, 6 = A16, 7 = Guardar
-let stepStartTime = Date.now(); // Cronómetro de deliberación en cada paso
+let stepStartTime = Date.now();
 
-function crearEstructuraCriterioVacia(initDirect, initAttr) {
-  return {
-    direct: [...initDirect],
-    attr: [...initAttr],
-    direct_confirmed: false,
-    attr_confirmed: false,
-    direct_mods: 0,
-    attr_mods: 0,
-    direct_initial: [...initDirect],
-    attr_initial: [...initAttr],
-    tiempo_deliberacion_seg: 0
-  };
-}
+// Almacén dinámico
+const respuestas = {};
 
 function shuffleArray(arr) {
   const a = [...arr];
-  if (Math.random() < 0.5) {
-    return [a[1], a[0]];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return [a[0], a[1]];
+  return a;
 }
 
-// Estructura de respuestas por participante
-const respuestas = {
-  "1A": {
-    completado: false,
-    v10: { SX: 2, ED: 2, ORIG: 3, ANT: 2, ORIEN: 2, IMPL: 3, PRES: 2, ROL: 2, REND: 2, COM: 3 },
-    criterios: {},
-    a16: {
-      claro: 7, coherente: 6, flexible: 6, consensuado: 6,
-      productivo: 8, ordenado: 7, activo: 7, ejemplar: 7,
-      abierto: 6, crítico: 6, perceptivo: 7, expresivo: 6,
-      amistoso: 8, leal: 8, colaborador: 7, tolerante: 6
-    }
-  },
-  "2A": {
-    completado: false,
-    v10: { SX: 1, ED: 2, ORIG: 1, ANT: 2, ORIEN: 1, IMPL: 3, PRES: 2, ROL: 1, REND: 2, COM: 2 },
-    criterios: {},
-    a16: {
-      claro: 6, coherente: 7, flexible: 5, consensuado: 6,
-      productivo: 7, ordenado: 8, activo: 8, ejemplar: 7,
-      abierto: 6, crítico: 7, perceptivo: 6, expresivo: 5,
-      amistoso: 7, leal: 8, colaborador: 8, tolerante: 6
-    }
-  }
-};
+function inicializarAlmacenRespuestas() {
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
 
-// Inicializar ordenaciones iniciales aleatorizadas para C1 a C5
-function inicializarAleatorizacionCriterios() {
-  ["1A", "2A"].forEach(p => {
+  ids.forEach(pId => {
+    if (!respuestas[pId]) {
+      respuestas[pId] = {
+        completado: false,
+        v10: {},
+        criterios: {},
+        a16: {}
+      };
+      // Inicializar V10
+      VARIABLES_V10_DEF.forEach(v => {
+        respuestas[pId].v10[v.cod] = v.def[pId] || 2;
+      });
+      // Inicializar A16
+      ADJETIVOS_AAG16.forEach(adj => {
+        respuestas[pId].a16[adj.cod] = 6;
+      });
+    }
+
+    // Inicializar Criterios C1 a C5
     CRITERIOS.forEach(c => {
-      const rndDirect = shuffleArray(["1A", "2A"]);
-      const rndAttr = shuffleArray(["1A", "2A"]);
-      respuestas[p].criterios[c.codigo] = crearEstructuraCriterioVacia(rndDirect, rndAttr);
+      if (!respuestas[pId].criterios[c.codigo]) {
+        const initDirect = shuffleArray(ids);
+        const initAttr = shuffleArray(ids);
+        respuestas[pId].criterios[c.codigo] = {
+          direct: [...initDirect],
+          attr: [...initAttr],
+          direct_confirmed: false,
+          attr_confirmed: false,
+          direct_mods: 0,
+          attr_mods: 0,
+          direct_initial: [...initDirect],
+          attr_initial: [...initAttr],
+          tiempo_deliberacion_seg: 0
+        };
+      } else {
+        // Asegurar que contenga los ids activos
+        const curDirect = respuestas[pId].criterios[c.codigo].direct.filter(id => ids.includes(id));
+        ids.forEach(id => { if (!curDirect.includes(id)) curDirect.push(id); });
+        respuestas[pId].criterios[c.codigo].direct = curDirect;
+
+        const curAttr = respuestas[pId].criterios[c.codigo].attr.filter(id => ids.includes(id));
+        ids.forEach(id => { if (!curAttr.includes(id)) curAttr.push(id); });
+        respuestas[pId].criterios[c.codigo].attr = curAttr;
+      }
     });
   });
 }
-inicializarAleatorizacionCriterios();
+inicializarAlmacenRespuestas();
+
+// CAMBIO DE TAMAÑO NUCLEAR (N=2 A 7)
+function cambiarTamanoNuclear(newN) {
+  currentN = newN;
+  document.querySelectorAll(".btn-scale").forEach(b => {
+    b.classList.toggle("active", b.id === `scaleBtn${newN}`);
+  });
+
+  document.getElementById("studyBadge").textContent = getEstudioID();
+  document.getElementById("ipNSizeMat").textContent = newN;
+  document.getElementById("ipNSizeMat2").textContent = newN;
+
+  inicializarAlmacenRespuestas();
+
+  // Si el participante actual ya no está en el rango activo, resetear a 1A
+  const parts = getParticipantesActivos();
+  if (!parts[currentParticipant]) {
+    conectarComo("1A");
+  } else {
+    conectarComo(currentParticipant);
+  }
+
+  showToast(`Tamaño nuclear actualizado a N = ${newN}. Rango de ordenación: 1º a ${newN}º.`, "👥");
+}
 
 // =============================================================================
-// DETECCIÓN Y ENRUTAMIENTO DE USUARIO POR URL (?user=1A o ?user=2A)
+// SUB-ETIQUETAS ORDINALES SEGÚN PUESTO (1º A 7º)
+// =============================================================================
+function getRankSubLabel(rankNum, totalN) {
+  if (rankNum === 1) return "ALFA / 1º";
+  if (rankNum === 2) return "2º LUGAR";
+  if (rankNum === 3) return "3º LUGAR";
+  if (rankNum === 4) return "4º LUGAR";
+  if (rankNum === 5) return "5º LUGAR";
+  if (rankNum === 6) return "6º LUGAR";
+  if (rankNum === 7 || rankNum === totalN) return "OMEGA / NADIR";
+  return `${rankNum}º LUGAR`;
+}
+
+function getRankColorHex(rankNum) {
+  const map = {
+    1: "#00FF87",
+    2: "#38BDF8",
+    3: "#FF9F1C",
+    4: "#A855F7",
+    5: "#EC4899",
+    6: "#94A3B8",
+    7: "#64748B"
+  };
+  return map[rankNum] || "#94A3B8";
+}
+
+// =============================================================================
+// DETECCIÓN Y ENRUTAMIENTO DE USUARIO POR URL (?user=1A ...)
 // =============================================================================
 function initSessionFromURL() {
   const params = new URLSearchParams(window.location.search);
   const userParam = (params.get("user") || params.get("id") || params.get("email") || "").toLowerCase();
   const modeParam = (params.get("mode") || "").toLowerCase();
+  const nParam = parseInt(params.get("n"), 10);
+
+  if (nParam && nParam >= 2 && nParam <= 7) {
+    cambiarTamanoNuclear(nParam);
+  }
 
   cargarRespuestasLocalStorage();
 
@@ -1393,24 +1518,25 @@ function initSessionFromURL() {
     return;
   }
 
-  if (userParam.includes("1a") || userParam.includes("nuria")) {
-    conectarComo("1A");
-  } else if (userParam.includes("2a") || userParam.includes("xavier")) {
-    conectarComo("2A");
-  } else {
-    conectarComo("1A");
+  let foundId = "1A";
+  PARTICIPANTES_POOL.forEach(p => {
+    if (userParam.includes(p.id.toLowerCase()) || userParam.includes(p.nombre.toLowerCase())) {
+      foundId = p.id;
+    }
+  });
+
+  conectarComo(foundId);
+  if (!userParam && !modeParam) {
     abrirModalAcceso();
   }
 }
 
 function conectarComo(pId) {
   currentParticipant = pId;
-  const p = PARTICIPANTES[pId];
+  const parts = getParticipantesActivos();
+  const p = parts[pId] || parts["1A"];
 
   document.getElementById("sessionAvatar").textContent = p.avatar;
-  document.getElementById("sessionAvatar").style.background = pId === "1A" 
-    ? "linear-gradient(135deg, #1E3A8A, #0284C7)" 
-    : "linear-gradient(135deg, #0284C7, #0D9488)";
   document.getElementById("sessionName").textContent = `Sesión Privada: ${p.nombre} (${p.id})`;
   document.getElementById("sessionMeta").textContent = `Invitación personal · ${p.email}`;
 
@@ -1420,6 +1546,32 @@ function conectarComo(pId) {
 }
 
 function abrirModalAcceso() {
+  const container = document.getElementById("accessCardsContainer");
+  container.innerHTML = "";
+  const parts = getParticipantesActivos();
+
+  Object.values(parts).forEach(p => {
+    const card = document.createElement("div");
+    card.className = "access-card";
+    card.onclick = () => conectarComo(p.id);
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="session-avatar" style="background:${p.id === '1A' ? 'linear-gradient(135deg, #1E3A8A, #0284C7)' : 'linear-gradient(135deg, #0284C7, #0D9488)'};">
+          ${p.avatar}
+        </div>
+        <div>
+          <div style="font-weight:800; font-size:1rem; color:#FFF;">${p.nombre} (${p.id})</div>
+          <div style="font-size:0.75rem; color:var(--accent-cyan);">${p.email}</div>
+        </div>
+      </div>
+      <div style="font-size:0.76rem; color:var(--text-muted); margin-top:4px;">
+        Enlace privado: <code>?user=${p.id}</code> · Rol: ${p.rol}
+      </div>
+      <button class="btn-sec" style="margin-top:6px; font-size:0.78rem; justify-content:center;">Entrar como ${p.nombre} ➔</button>
+    `;
+    container.appendChild(card);
+  });
+
   document.getElementById("modalAcceso").classList.add("active");
 }
 
@@ -1457,12 +1609,13 @@ function showToast(msg, icon = "💡") {
 // NAVEGACIÓN Y RENDERIZADO DEL WIZARD (8 PASOS)
 // =============================================================================
 function irAlPaso(stepIdx) {
-  // Registrar tiempo transcurrido en el paso actual si es criterio
   if (currentStep >= 1 && currentStep <= 5) {
     const cIdx = currentStep - 1;
     const cCode = CRITERIOS[cIdx].codigo;
     const elapsed = Math.round((Date.now() - stepStartTime) / 1000);
-    respuestas[currentParticipant].criterios[cCode].tiempo_deliberacion_seg += elapsed;
+    if (respuestas[currentParticipant].criterios[cCode]) {
+      respuestas[currentParticipant].criterios[cCode].tiempo_deliberacion_seg += elapsed;
+    }
   }
 
   currentStep = stepIdx;
@@ -1477,7 +1630,6 @@ function actualizarIndicadoresPasos() {
   document.querySelectorAll(".step-pill").forEach((el, idx) => {
     el.classList.toggle("active", idx === currentStep);
     
-    // Marcar como completado
     if (idx === 0) {
       el.classList.add("completed");
     } else if (idx >= 1 && idx <= 5) {
@@ -1493,7 +1645,8 @@ function actualizarIndicadoresPasos() {
 
 function renderStep() {
   const card = document.getElementById("stepContentCard");
-  const p = PARTICIPANTES[currentParticipant];
+  const parts = getParticipantesActivos();
+  const p = parts[currentParticipant] || parts["1A"];
   const pData = respuestas[currentParticipant];
 
   // PASO 0: VARIABLES V10 (UNA SOLA VEZ)
@@ -1514,7 +1667,7 @@ function renderStep() {
     `;
 
     VARIABLES_V10_DEF.forEach(v => {
-      const curVal = pData.v10[v.cod] !== undefined ? pData.v10[v.cod] : v.def[currentParticipant];
+      const curVal = pData.v10[v.cod] !== undefined ? pData.v10[v.cod] : (v.def[currentParticipant] || 2);
       html += `
         <div class="form-group">
           <label class="form-label">${v.cod} — ${v.nom}</label>
@@ -1539,27 +1692,25 @@ function renderStep() {
     return;
   }
 
-  // PASOS 1 A 5: CRITERIOS C1 A C5 (CONTROL ANTIAQUIESCENCIA Y MODIFICACIÓN DELIBERADA)
+  // PASOS 1 A 5: CRITERIOS C1 A C5 (CON RANURAS ORDINALES 1º A 7º MARCADAS CON MÁXIMA CLARIDAD)
   if (currentStep >= 1 && currentStep <= 5) {
     const cIdx = currentStep - 1;
     const crit = CRITERIOS[cIdx];
     const cData = pData.criterios[crit.codigo];
-    const otherP = currentParticipant === "1A" ? PARTICIPANTES["2A"] : PARTICIPANTES["1A"];
 
     const isDirectConfirmed = cData.direct_confirmed;
     const isAttrConfirmed = cData.attr_confirmed;
     const bothConfirmed = isDirectConfirmed && isAttrConfirmed;
 
-    const nomDirect1 = PARTICIPANTES[cData.direct[0]].nombre;
-    const nomDirect2 = PARTICIPANTES[cData.direct[1]].nombre;
-    const nomAttr1 = PARTICIPANTES[cData.attr[0]].nombre;
-    const nomAttr2 = PARTICIPANTES[cData.attr[1]].nombre;
+    // Resumen de la cadena ordenada de nombres
+    const strCadenaDirect = cData.direct.map((id, idx) => `${idx + 1}º ${parts[id].nombre}`).join('  ➔  ');
+    const strCadenaAttr = cData.attr.map((id, idx) => `${idx + 1}º ${parts[id].nombre}`).join('  ➔  ');
 
     let html = `
       <div class="step-header">
         <div class="step-tag-row">
           <span class="criterion-badge">Criterio ${crit.codigo} · ${cIdx + 1} de 5</span>
-          <span class="random-badge">🎲 Lista de Presentación Aleatorizada</span>
+          <span class="random-badge">🎲 Lista de Presentación Aleatorizada (${currentN} Puestos: 1º a ${currentN}º)</span>
         </div>
         <h2 class="criterion-title">${crit.nombre}</h2>
         
@@ -1569,11 +1720,11 @@ function renderStep() {
           «${crit.prompt}»
         </div>
 
-        <!-- AVISO DE CONTROL ANTIAQUIESCENCIA -->
+        <!-- AVISO DE CONTROL ANTIAQUIESCENCIA Y TIEMPO DE DELIBERACIÓN -->
         <div class="anti-acquiescence-banner">
           <span>⚠️</span>
           <div>
-            <strong>Precaución de Calidad Psicométrica:</strong> El orden inicial de las tarjetas es aleatorio para evitar sesgos de anclaje. Mueve las posiciones o intercámbialas hasta reflejar fielmente tu criterio, y pulsa <em>«Aceptar orden final»</em> en ambos bloques antes de continuar. Tómate todo el tiempo que necesites.
+            <strong>Marcado Ordinal Obligatorio:</strong> Cada posición de la lista está claramente señalada de <strong>1º a ${currentN}º</strong>. Mueve las tarjetas con el ratón o con los botones <strong>[▲ Subir]</strong> y <strong>[▼ Bajar]</strong> hasta fijar la jerarquía exacta, y pulsa <em>«Aceptar orden final»</em> en ambos bloques.
           </div>
         </div>
       </div>
@@ -1582,9 +1733,9 @@ function renderStep() {
       <div class="drag-box ${isDirectConfirmed ? 'confirmed-box' : 'editing-box'}">
         <div class="drag-box-header">
           <div class="drag-box-title">
-            <span style="color:var(--accent-neon); font-size:1.1rem;">①</span>
+            <span style="color:var(--accent-neon); font-size:1.15rem;">①</span>
             <span>Preferencia Directa Propia (DA):</span>
-            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">¿Cómo ordenas a los dos miembros de la pareja?</span>
+            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">Ordena del 1º (máxima afinidad) al ${currentN}º (menor afinidad)</span>
           </div>
           <div>
             ${isDirectConfirmed 
@@ -1593,21 +1744,10 @@ function renderStep() {
           </div>
         </div>
 
-        <div class="deliberation-toolbar">
-          <div class="mod-counter-text">
-            ${cData.direct_mods === 0 
-              ? '<span>Orden inicial mostrado. Mueve las tarjetas o invierte:</span>' 
-              : `<span>Modificaciones realizadas: <strong>${cData.direct_mods}</strong> cambio(s)</span>`}
-          </div>
-          <div>
-            ${!isDirectConfirmed ? `
-              <button class="btn-quick-swap" onclick="intercambiarOrden('direct', '${crit.codigo}')">
-                ⇅ Invertir Orden (1º ⇄ 2º)
-              </button>
-            ` : `
-              <span style="font-size:0.75rem; color:var(--accent-neon);">Posición 1º fijada: <strong>${nomDirect1}</strong></span>
-            `}
-          </div>
+        <!-- RUTA VISUAL ORDINAL SUPERIOR -->
+        <div class="ordinal-track-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Secuencia:</span>
+          ${renderTrackBar(cData.direct, parts)}
         </div>
 
         <div class="sortable-list" id="list_direct">
@@ -1618,14 +1758,14 @@ function renderStep() {
         <div class="confirm-bar">
           ${!isDirectConfirmed ? `
             <div style="font-size:0.8rem; color:var(--text-muted);">
-              Verifica detenidamente las posiciones 1º y 2º antes de fijar:
+              Revisa con calma cada uno de los <strong>${currentN} puestos</strong> antes de fijar:
             </div>
             <button class="btn-confirm-order" onclick="confirmarOrden('direct', '${crit.codigo}')">
-              ✓ Aceptar y Fijar este Orden Final (1º: ${nomDirect1} · 2º: ${nomDirect2})
+              ✓ Aceptar y Fijar este Orden Final (${strCadenaDirect})
             </button>
           ` : `
-            <div style="font-size:0.82rem; color:var(--accent-neon); font-weight:700;">
-              ✓ Orden aceptado deliberadamente: 1º ${nomDirect1} y 2º ${nomDirect2} (${cData.direct_mods} cambios)
+            <div style="font-size:0.84rem; color:var(--accent-neon); font-weight:700;">
+              ✓ Orden aceptado deliberadamente: ${strCadenaDirect} (${cData.direct_mods} cambios)
             </div>
             <button class="btn-reedit" onclick="desbloquearParaModificar('direct', '${crit.codigo}')">
               ✏️ Desbloquear para Modificar
@@ -1638,9 +1778,9 @@ function renderStep() {
       <div class="drag-box ${isAttrConfirmed ? 'confirmed-box' : 'editing-box'}">
         <div class="drag-box-header">
           <div class="drag-box-title">
-            <span style="color:var(--accent-cyan); font-size:1.1rem;">②</span>
+            <span style="color:var(--accent-cyan); font-size:1.15rem;">②</span>
             <span>Expectativa Atribuida (p_DA):</span>
-            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">¿Cómo crees que ordenará <strong>${otherP.nombre}</strong> esta misma lista?</span>
+            <span style="font-weight:400; color:var(--text-muted); font-size:0.84rem;">¿Cómo crees que ordenará el grupo / tu partner esta misma lista?</span>
           </div>
           <div>
             ${isAttrConfirmed 
@@ -1649,21 +1789,10 @@ function renderStep() {
           </div>
         </div>
 
-        <div class="deliberation-toolbar">
-          <div class="mod-counter-text">
-            ${cData.attr_mods === 0 
-              ? '<span>Expectativa inicial mostrada. Mueve las tarjetas o invierte:</span>' 
-              : `<span>Modificaciones realizadas: <strong>${cData.attr_mods}</strong> cambio(s)</span>`}
-          </div>
-          <div>
-            ${!isAttrConfirmed ? `
-              <button class="btn-quick-swap" onclick="intercambiarOrden('attr', '${crit.codigo}')">
-                ⇅ Invertir Orden (1º ⇄ 2º)
-              </button>
-            ` : `
-              <span style="font-size:0.75rem; color:var(--accent-cyan);">Expectativa 1º fijada: <strong>${nomAttr1}</strong></span>
-            `}
-          </div>
+        <!-- RUTA VISUAL ORDINAL SUPERIOR -->
+        <div class="ordinal-track-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Secuencia:</span>
+          ${renderTrackBar(cData.attr, parts)}
         </div>
 
         <div class="sortable-list" id="list_attr">
@@ -1674,14 +1803,14 @@ function renderStep() {
         <div class="confirm-bar">
           ${!isAttrConfirmed ? `
             <div style="font-size:0.8rem; color:var(--text-muted);">
-              Verifica qué espera ${otherP.nombre} antes de fijar:
+              Revisa la expectativa atribuida antes de fijar:
             </div>
             <button class="btn-confirm-order" onclick="confirmarOrden('attr', '${crit.codigo}')">
-              ✓ Aceptar y Fijar este Orden Final (1º: ${nomAttr1} · 2º: ${nomAttr2})
+              ✓ Aceptar y Fijar este Orden Final (${strCadenaAttr})
             </button>
           ` : `
-            <div style="font-size:0.82rem; color:var(--accent-cyan); font-weight:700;">
-              ✓ Expectativa aceptada deliberadamente: 1º ${nomAttr1} y 2º ${nomAttr2} (${cData.attr_mods} cambios)
+            <div style="font-size:0.84rem; color:var(--accent-cyan); font-weight:700;">
+              ✓ Expectativa aceptada deliberadamente: ${strCadenaAttr} (${cData.attr_mods} cambios)
             </div>
             <button class="btn-reedit" onclick="desbloquearParaModificar('attr', '${crit.codigo}')">
               ✏️ Desbloquear para Modificar
@@ -1722,7 +1851,7 @@ function renderStep() {
         </div>
         <h2 class="criterion-title">Evaluación de los 16 Adjetivos Normativos</h2>
         <p style="font-size:0.88rem; color:var(--text-muted);">
-          Valora a la pareja en cada adjetivo en escala continua par de <strong>1 (Mínimo) a 8 (Máximo)</strong>. Norma de Hölder $p=2.0$ (Canon 13).
+          Valora al grupo en cada adjetivo en escala continua par de <strong>1 (Mínimo) a 8 (Máximo)</strong>. Norma de Hölder $p=2.0$ (Canon 13).
         </p>
       </div>
 
@@ -1774,7 +1903,7 @@ function renderStep() {
         </div>
         <h2 class="criterion-title">¡Muchas gracias, ${p.nombre}!</h2>
         <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:18px;">
-          Tus respuestas han sido verificadas y registradas con éxito para el estudio <code>${ESTUDIO_ID}</code> con total garantía de deliberación consciente.
+          Tus respuestas han sido verificadas y registradas con éxito para el estudio <code>${getEstudioID()}</code> con jerarquía ordinal estricta de <strong>1º a ${currentN}º</strong>.
         </p>
       </div>
 
@@ -1782,7 +1911,7 @@ function renderStep() {
         <h4 style="color:#FFF; font-size:1rem; font-weight:800; margin-bottom:12px;">Auditoría de Verificación y Deliberación Factual:</h4>
         <ul style="font-size:0.86rem; color:var(--text-muted); line-height:1.8; margin-left:20px;">
           <li><strong>Perfil V10:</strong> 10 variables complementarias registradas (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM).</li>
-          <li><strong>5 Criterios (C1..C5):</strong> Los 5 criterios han sido deliberados y confirmados explícitamente en Preferencia Directa ($DA$) y Expectativa Atribuida ($p\_DA$).</li>
+          <li><strong>5 Criterios (C1..C5):</strong> Los 5 criterios han sido ordenados deliberadamente en el espectro completo de <strong>1º a ${currentN}º</strong>.</li>
           <li><strong>Batería A16:</strong> 16 adjetivos normativos evaluados en los factores TEMA, FUNC, COGN y AFEC.</li>
           <li><strong>Control Antiaquiescencia:</strong> Superado al 100% mediante orden aleatorio inicial y aceptación explícita de cada orden final.</li>
         </ul>
@@ -1812,32 +1941,68 @@ function renderStep() {
   }
 }
 
-// =============================================================================
-// RENDERIZADO DE ITEMS ORDENABLES (DRAG AND DROP)
-// =============================================================================
+// RUTA VISUAL ORDINAL SUPERIOR (MINIATURAS 1º A 7º)
+function renderTrackBar(orderArray, parts) {
+  return orderArray.map((id, idx) => {
+    const rankNum = idx + 1;
+    const p = parts[id];
+    const colorHex = getRankColorHex(rankNum);
+    return `
+      <div class="ordinal-track-item">
+        <span class="track-pill" style="border-color:${colorHex}; color:${colorHex}; background:${colorHex}18;">
+          ${rankNum}º ${p.nombre}
+        </span>
+        ${idx < orderArray.length - 1 ? '<span class="track-arrow">➔</span>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// RENDERIZADO DE ITEMS ORDENABLES CON PILAR ORDINAL CLARO
 function renderSortableItems(orderArray, listType, critCode, isLocked) {
+  const parts = getParticipantesActivos();
+  const totalN = orderArray.length;
+
   return orderArray.map((candId, idx) => {
-    const cand = PARTICIPANTES[candId];
+    const rankNum = idx + 1;
+    const cand = parts[candId] || { nombre: candId, code: candId, email: "", avatar: "?" };
     const isSelf = candId === currentParticipant;
+    const colorHex = getRankColorHex(rankNum);
+
     return `
       <div class="drag-item" ${!isLocked ? 'draggable="true"' : ''} data-type="${listType}" data-crit="${critCode}" data-id="${candId}" data-idx="${idx}">
         <div class="item-left">
-          ${!isLocked ? '<div class="drag-handle" title="Arrastra para reordenar">⠿</div>' : '<div style="color:var(--accent-neon); font-size:1rem;">🔒</div>'}
-          <div class="rank-number ${idx === 1 ? 'rank-2' : ''}">${idx + 1}º</div>
+          ${!isLocked ? '<div class="drag-handle" title="Arrastra para reordenar">⠿</div>' : '<div style="color:var(--accent-neon); font-size:1.1rem;">🔒</div>'}
+          
+          <!-- PILAR ORDINAL VISIBLE Y DESTACADO -->
+          <div class="rank-pillar rank-pillar-${rankNum}">
+            <div class="rank-txt">${rankNum}º</div>
+            <div class="rank-sub">${getRankSubLabel(rankNum, totalN)}</div>
+          </div>
+
           <div class="item-avatar" style="background:${candId === '1A' ? 'linear-gradient(135deg, #1E3A8A, #0284C7)' : 'linear-gradient(135deg, #0284C7, #0D9488)'};">
             ${cand.avatar}
           </div>
+
           <div class="item-info">
             <div class="item-name">
               ${cand.nombre}
               ${isSelf ? '<span class="badge-self">Yo</span>' : ''}
             </div>
             <div class="item-tag">${cand.code} · ${cand.email}</div>
+            <div class="rank-feedback-line">
+              Puesto asignado: <strong style="color:${colorHex}; font-size:0.86rem;">${rankNum}º Lugar</strong>
+            </div>
           </div>
         </div>
+
         <div class="item-actions">
-          <button class="btn-move" ${isLocked ? 'disabled' : ''} title="Intercambiar puesto con el otro participante" onclick="intercambiarOrden('${listType}', '${critCode}')">
-            ⇅
+          <!-- BOTONES DE SUBIR Y BAJAR PUESTO DIRECTOS -->
+          <button class="btn-step-move" ${isLocked || idx === 0 ? 'disabled' : ''} title="Subir al puesto anterior (${idx}º)" onclick="moverPaso('${listType}', '${critCode}', ${idx}, -1)">
+            ▲ Subir
+          </button>
+          <button class="btn-step-move" ${isLocked || idx === totalN - 1 ? 'disabled' : ''} title="Bajar al puesto siguiente (${idx + 2}º)" onclick="moverPaso('${listType}', '${critCode}', ${idx}, 1)">
+            ▼ Bajar
           </button>
         </div>
       </div>
@@ -1846,7 +2011,7 @@ function renderSortableItems(orderArray, listType, critCode, isLocked) {
 }
 
 // =============================================================================
-// GESTIÓN DE EVENTOS DRAG AND DROP Y ACCIONES DE DELIBERACIÓN
+// EVENTOS DRAG AND DROP Y ACCIONES DE DELIBERACIÓN
 // =============================================================================
 function initDragEvents() {
   document.querySelectorAll(".drag-item[draggable='true']").forEach(item => {
@@ -1885,7 +2050,12 @@ function handleDrop(e) {
 
   const listType = this.getAttribute("data-type");
   const critCode = this.getAttribute("data-crit");
-  intercambiarOrden(listType, critCode);
+  const fromIdx = parseInt(draggedItem.getAttribute("data-idx"), 10);
+  const toIdx = parseInt(this.getAttribute("data-idx"), 10);
+
+  if (fromIdx !== toIdx) {
+    reordenarListaIndices(listType, critCode, fromIdx, toIdx);
+  }
 }
 
 function handleDragEnd(e) {
@@ -1894,17 +2064,25 @@ function handleDragEnd(e) {
   draggedItem = null;
 }
 
-function intercambiarOrden(listType, critCode) {
+function moverPaso(listType, critCode, idx, delta) {
+  const newIdx = idx + delta;
+  reordenarListaIndices(listType, critCode, idx, newIdx);
+}
+
+function reordenarListaIndices(listType, critCode, fromIdx, toIdx) {
   const cData = respuestas[currentParticipant].criterios[critCode];
-  const currentOrder = cData[listType];
+  const list = [...cData[listType]];
   
-  // Intercambiar (en díada N=2 es alternar [1A, 2A] <-> [2A, 1A])
-  cData[listType] = [currentOrder[1], currentOrder[0]];
-  
-  // Incrementar contador de modificaciones y desbloquear confirmación
+  if (fromIdx < 0 || fromIdx >= list.length || toIdx < 0 || toIdx >= list.length) return;
+
+  const [movedItem] = list.splice(fromIdx, 1);
+  list.splice(toIdx, 0, movedItem);
+
+  cData[listType] = list;
+
   if (listType === 'direct') {
     cData.direct_mods++;
-    cData.direct_confirmed = false; // Al mover, debe volver a confirmar conscientemente
+    cData.direct_confirmed = false;
   } else {
     cData.attr_mods++;
     cData.attr_confirmed = false;
@@ -1912,7 +2090,7 @@ function intercambiarOrden(listType, critCode) {
 
   guardarEnLocalStorage();
   renderStep();
-  showToast(`Orden modificado (${listType === 'direct' ? 'Preferencia Directa' : 'Expectativa'}). Pulsa "Aceptar orden final" cuando estés seguro/a.`, "🔄");
+  showToast(`Posición actualizada a ${toIdx + 1}º Lugar. Recuerda confirmar al finalizar.`, "🔄");
 }
 
 function confirmarOrden(listType, critCode) {
@@ -1938,7 +2116,7 @@ function desbloquearParaModificar(listType, critCode) {
 
   guardarEnLocalStorage();
   renderStep();
-  showToast(`Desbloqueado para modificaciones. Ajusta el orden y vuelve a aceptar cuando lo decidas.`, "✏️");
+  showToast(`Desbloqueado para modificaciones. Ajusta los puestos y vuelve a aceptar.`, "✏️");
 }
 
 function avisarConfirmacionPendiente(critCode) {
@@ -1947,7 +2125,7 @@ function avisarConfirmacionPendiente(critCode) {
   if (!cData.direct_confirmed) faltan.push("① Preferencia Directa (DA)");
   if (!cData.attr_confirmed) faltan.push("② Expectativa Atribuida (p_DA)");
 
-  alert(`⚠️ Precaución de Rigor Metodológico:\n\nDebes revisar y pulsar "Aceptar y Fijar este Orden Final" en:\n- ${faltan.join("\n- ")}\n\nEsto garantiza que has deliberado conscientemente tu decisión final antes de pasar al siguiente criterio.`);
+  alert(`⚠️ Precaución de Rigor Metodológico:\n\nDebes revisar los puestos 1º a ${currentN}º y pulsar "Aceptar y Fijar este Orden Final" en:\n- ${faltan.join("\n- ")}\n\nEsto certifica que has deliberado conscientemente el orden antes de avanzar.`);
 }
 
 function actualizarV10(cod, val) {
@@ -1962,25 +2140,24 @@ function actualizarA16(cod, val) {
 }
 
 // =============================================================================
-// CÁLCULO EXACTO DEL TENSOR DE 10 SOCIOMATRICES (10, 2, 2)
+// CÁLCULO EXACTO DEL TENSOR DE 10 SOCIOMATRICES (10, N, N)
 // =============================================================================
 function calcularTensor10Matrices() {
   const tensor = [];
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
 
   CRITERIOS.forEach(c => {
-    // 1. Matriz Directa Factual DA (2x2)
-    // Fila 0: Nuria (1A) ordena a [1A, 2A]
-    // Fila 1: Xavier (2A) ordena a [1A, 2A]
-    const m_da = [[0, 0], [0, 0]];
-    const n_dir = respuestas["1A"].criterios[c.codigo].direct;
-    const x_dir = respuestas["2A"].criterios[c.codigo].direct;
-
-    // Nuria
-    m_da[0][0] = n_dir.indexOf("1A") + 1; // 1º o 2º
-    m_da[0][1] = n_dir.indexOf("2A") + 1;
-    // Xavier
-    m_da[1][0] = x_dir.indexOf("1A") + 1;
-    m_da[1][1] = x_dir.indexOf("2A") + 1;
+    // 1. Matriz Directa Factual DA (N x N)
+    const m_da = [];
+    ids.forEach(emisorId => {
+      const row = [];
+      const dirList = respuestas[emisorId] ? respuestas[emisorId].criterios[c.codigo].direct : ids;
+      ids.forEach(destId => {
+        row.push(dirList.indexOf(destId) + 1); // 1º a Nº
+      });
+      m_da.push(row);
+    });
 
     tensor.push({
       id: `${c.codigo}_DA`,
@@ -1992,17 +2169,16 @@ function calcularTensor10Matrices() {
       matriz: m_da
     });
 
-    // 2. Matriz Atribuida Metaperceptiva p_DA (2x2)
-    // Fila 0: Lo que Nuria (1A) cree que ordenará Xavier (2A)
-    // Fila 1: Lo que Xavier (2A) cree que ordenará Nuria (1A)
-    const m_pda = [[0, 0], [0, 0]];
-    const n_attr = respuestas["1A"].criterios[c.codigo].attr;
-    const x_attr = respuestas["2A"].criterios[c.codigo].attr;
-
-    m_pda[0][0] = n_attr.indexOf("1A") + 1;
-    m_pda[0][1] = n_attr.indexOf("2A") + 1;
-    m_pda[1][0] = x_attr.indexOf("1A") + 1;
-    m_pda[1][1] = x_attr.indexOf("2A") + 1;
+    // 2. Matriz Atribuida Metaperceptiva p_DA (N x N)
+    const m_pda = [];
+    ids.forEach(emisorId => {
+      const row = [];
+      const attrList = respuestas[emisorId] ? respuestas[emisorId].criterios[c.codigo].attr : ids;
+      ids.forEach(destId => {
+        row.push(attrList.indexOf(destId) + 1);
+      });
+      m_pda.push(row);
+    });
 
     tensor.push({
       id: `${c.codigo}_pDA`,
@@ -2023,6 +2199,57 @@ function calcularTensor10Matrices() {
 // =============================================================================
 function renderConsolidacionIP() {
   const tensor = calcularTensor10Matrices();
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
+
+  // Tarjetas de estado
+  const cardCont = document.getElementById("ipSummaryCardsContainer");
+  cardCont.innerHTML = "";
+
+  ids.forEach(pId => {
+    const p = parts[pId];
+    const isOk = respuestas[pId] && respuestas[pId].completado;
+    const card = document.createElement("div");
+    card.className = "ip-card";
+    card.innerHTML = `
+      <div class="ip-card-header">
+        <div style="font-weight:800; font-size:0.95rem; color:#FFF;">${p.nombre} (${p.id})</div>
+        <span class="ip-status-badge ${isOk ? 'ok' : 'pending'}">${isOk ? '✓ Validado' : '⚠️ Pendiente'}</span>
+      </div>
+      <div style="font-size:0.8rem; color:var(--text-muted);">${p.email}</div>
+      <div style="font-size:0.75rem; color:var(--text-dim);">Puestos 1º a ${currentN}º · V10 & A16</div>
+      <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px; margin-top:4px;" onclick="descargarExcelIndividual('${p.id}')">
+        📥 Descargar Excel de ${p.nombre} (.xlsx)
+      </button>
+    `;
+    cardCont.appendChild(card);
+  });
+
+  // Tarjeta de simulación / carga
+  const simCard = document.createElement("div");
+  simCard.className = "ip-card";
+  simCard.style.borderColor = "var(--accent-cyan)";
+  simCard.innerHTML = `
+    <div class="ip-card-header">
+      <div style="font-weight:800; font-size:0.95rem; color:var(--accent-cyan);">Consolidación y Fusión</div>
+      <span class="ip-status-badge ok">Listo N = ${currentN}</span>
+    </div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">
+      Simular respuestas completas de los ${currentN} participantes:
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+      <button class="btn-sec" style="font-size:0.75rem; padding:4px 8px;" onclick="cargarDatosMuestraFactuales()">
+        ⚡ Simular Datos N=${currentN}
+      </button>
+      <label class="btn-sec" style="font-size:0.75rem; padding:4px 8px; cursor:pointer;">
+        📂 Subir .xlsx
+        <input type="file" id="fileInputXlsx" accept=".xlsx" style="display:none;" onchange="importarArchivoExcel(event)">
+      </label>
+    </div>
+  `;
+  cardCont.appendChild(simCard);
+
+  // Cuadrícula de 10 matrices
   const grid = document.getElementById("matrixGridContainer");
   grid.innerHTML = "";
 
@@ -2032,6 +2259,17 @@ function renderConsolidacionIP() {
 
     const box = document.createElement("div");
     box.className = "matrix-box";
+    
+    let thCols = ids.map(id => `<th>${parts[id].id} (${parts[id].nombre})</th>`).join('');
+    let trRows = ids.map((emId, rIdx) => {
+      let tds = ids.map((destId, cIdx) => {
+        const val = m[rIdx][cIdx];
+        const colorHex = getRankColorHex(val);
+        return `<td style="color:${colorHex}; font-weight:800;">${val}º</td>`;
+      }).join('');
+      return `<tr><th>${parts[emId].id} (${parts[emId].nombre})</th>${tds}</tr>`;
+    }).join('');
+
     box.innerHTML = `
       <div class="matrix-box-title">
         <span>Matriz #${idx + 1}: ${matObj.id}</span>
@@ -2044,21 +2282,11 @@ function renderConsolidacionIP() {
         <thead>
           <tr>
             <th>Emisor \\ Destino</th>
-            <th>1A (Nuria)</th>
-            <th>2A (Xavier)</th>
+            ${thCols}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>1A (Nuria)</th>
-            <td class="${m[0][0] === 1 ? 'pos' : 'neg'}">${m[0][0]}º</td>
-            <td class="${m[0][1] === 1 ? 'pos' : 'neg'}">${m[0][1]}º</td>
-          </tr>
-          <tr>
-            <th>2A (Xavier)</th>
-            <td class="${m[1][0] === 1 ? 'pos' : 'neg'}">${m[1][0]}º</td>
-            <td class="${m[1][1] === 1 ? 'pos' : 'neg'}">${m[1][1]}º</td>
-          </tr>
+          ${trRows}
         </tbody>
       </table>
     `;
@@ -2073,7 +2301,6 @@ function renderConsolidacionIP() {
 // EXPORTACIÓN A EXCEL (.XLSX) VIA SHEETJS
 // =============================================================================
 
-// 1. EXPORTACIÓN DEL LIBRO MAESTRO OFICIAL CONSOLIDADO (PARA ORQUESTADOR)
 function descargarLibroMaestroExcel() {
   if (typeof XLSX === 'undefined') {
     alert("Cargando librería SheetJS... Por favor reintente en 2 segundos.");
@@ -2082,216 +2309,190 @@ function descargarLibroMaestroExcel() {
 
   const wb = XLSX.utils.book_new();
   const tensor = calcularTensor10Matrices();
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
 
-  // Para cada uno de los 5 criterios (C1..C5), generar la hoja canónica '1g1t1c' a '1g1t5c'
+  // Columnas canónicas según N
+  const rankHeaders = [];
+  for (let i = 1; i <= currentN; i++) {
+    rankHeaders.push(`${i}º`);
+  }
+
+  const baseHeaders = [
+    'Nom', 'IDi', 'IDm', 'Criterio', ...rankHeaders,
+    'E', 'R', 'pE', 'pR', 'αE', 'ωE', 
+    'SX', 'ED', 'ORIG', 'ANT', 'ORIEN', 'IMPL', 'PRES', 'ROL', 'REND', 'COM', 
+    'claro', 'coherente', 'flexible', 'consensuado', 'productivo', 'ordenado', 
+    'activo', 'ejemplar', 'abierto', 'crítico', 'perceptivo', 'expresivo', 
+    'amistoso', 'leal', 'colaborador', 'tolerante'
+  ];
+
   CRITERIOS.forEach((crit, cIdx) => {
     const daMat = tensor[cIdx * 2].matriz;
     const pdaMat = tensor[cIdx * 2 + 1].matriz;
 
-    const headers = [
-      'Nom', 'IDi', 'IDm', 'Criterio', '1º', '2º', 
-      'E', 'R', 'pE', 'pR', 'αE', 'ωE', 
-      'SX', 'ED', 'ORIG', 'ANT', 'ORIEN', 'IMPL', 'PRES', 'ROL', 'REND', 'COM', 
-      'claro', 'coherente', 'flexible', 'consensuado', 'productivo', 'ordenado', 
-      'activo', 'ejemplar', 'abierto', 'crítico', 'perceptivo', 'expresivo', 
-      'amistoso', 'leal', 'colaborador', 'tolerante'
-    ];
+    const sheetRows = [baseHeaders];
 
-    // Fila 1: Nuria (1A)
-    const n_1o = daMat[0][0] === 1 ? 1 : 2;
-    const n_2o = daMat[0][0] === 1 ? 2 : 1;
-    const n_E = n_1o;
-    const n_R = n_2o;
-    const n_pE = pdaMat[0][0] === 1 ? 1 : 2;
-    const n_pR = pdaMat[0][0] === 1 ? 2 : 1;
+    ids.forEach((pId, rIdx) => {
+      const p = parts[pId];
+      const pData = respuestas[pId] || { v10: {}, a16: {} };
+      
+      const ranksRow = [];
+      const dirList = pData.criterios[crit.codigo] ? pData.criterios[crit.codigo].direct : ids;
+      for (let i = 0; i < currentN; i++) {
+        // En cada posición 1º a Nº, qué IDm quedó asignado
+        const candId = dirList[i];
+        ranksRow.push(parts[candId] ? parts[candId].num : i + 1);
+      }
 
-    const rowNuria = [
-      '1A1a', '1A1a', 1, cIdx + 1, n_1o, n_2o,
-      String(n_E), String(n_R), String(n_pE), String(n_pR), String(n_pE), String(n_pR),
-      respuestas["1A"].v10.SX, respuestas["1A"].v10.ED, respuestas["1A"].v10.ORIG, respuestas["1A"].v10.ANT,
-      respuestas["1A"].v10.ORIEN, respuestas["1A"].v10.IMPL, respuestas["1A"].v10.PRES, respuestas["1A"].v10.ROL,
-      respuestas["1A"].v10.REND, respuestas["1A"].v10.COM,
-      respuestas["1A"].a16.claro, respuestas["1A"].a16.coherente, respuestas["1A"].a16.flexible, respuestas["1A"].a16.consensuado,
-      respuestas["1A"].a16.productivo, respuestas["1A"].a16.ordenado, respuestas["1A"].a16.activo, respuestas["1A"].a16.ejemplar,
-      respuestas["1A"].a16.abierto, respuestas["1A"].a16.crítico, respuestas["1A"].a16.perceptivo, respuestas["1A"].a16.expresivo,
-      respuestas["1A"].a16.amistoso, respuestas["1A"].a16.leal, respuestas["1A"].a16.colaborador, respuestas["1A"].a16.tolerante
-    ];
+      const p1Num = ranksRow[0];
+      const pLastNum = ranksRow[currentN - 1];
 
-    // Fila 2: Xavier (2A)
-    const x_1o = daMat[1][0] === 1 ? 1 : 2;
-    const x_2o = daMat[1][0] === 1 ? 2 : 1;
-    const x_E = x_1o;
-    const x_R = x_2o;
-    const x_pE = pdaMat[1][0] === 1 ? 1 : 2;
-    const x_pR = pdaMat[1][0] === 1 ? 2 : 1;
+      const attrList = pData.criterios[crit.codigo] ? pData.criterios[crit.codigo].attr : ids;
+      const attr1Num = parts[attrList[0]] ? parts[attrList[0]].num : 1;
+      const attrLastNum = parts[attrList[currentN - 1]] ? parts[attrList[currentN - 1]].num : currentN;
 
-    const rowXavier = [
-      '2A1a', '2A1a', 2, cIdx + 1, x_1o, x_2o,
-      String(x_E), String(x_R), String(x_pE), String(x_pR), String(x_pE), String(x_pR),
-      respuestas["2A"].v10.SX, respuestas["2A"].v10.ED, respuestas["2A"].v10.ORIG, respuestas["2A"].v10.ANT,
-      respuestas["2A"].v10.ORIEN, respuestas["2A"].v10.IMPL, respuestas["2A"].v10.PRES, respuestas["2A"].v10.ROL,
-      respuestas["2A"].v10.REND, respuestas["2A"].v10.COM,
-      respuestas["2A"].a16.claro, respuestas["2A"].a16.coherente, respuestas["2A"].a16.flexible, respuestas["2A"].a16.consensuado,
-      respuestas["2A"].a16.productivo, respuestas["2A"].a16.ordenado, respuestas["2A"].a16.activo, respuestas["2A"].a16.ejemplar,
-      respuestas["2A"].a16.abierto, respuestas["2A"].a16.crítico, respuestas["2A"].a16.perceptivo, respuestas["2A"].a16.expresivo,
-      respuestas["2A"].a16.amistoso, respuestas["2A"].a16.leal, respuestas["2A"].a16.colaborador, respuestas["2A"].a16.tolerante
-    ];
+      const row = [
+        p.code, p.code, p.num, cIdx + 1, ...ranksRow,
+        String(p1Num), String(pLastNum), String(attr1Num), String(attrLastNum), String(attr1Num), String(attrLastNum),
+        pData.v10.SX || 2, pData.v10.ED || 2, pData.v10.ORIG || 2, pData.v10.ANT || 2,
+        pData.v10.ORIEN || 2, pData.v10.IMPL || 3, pData.v10.PRES || 2, pData.v10.ROL || 1,
+        pData.v10.REND || 2, pData.v10.COM || 2,
+        pData.a16.claro || 6, pData.a16.coherente || 6, pData.a16.flexible || 6, pData.a16.consensuado || 6,
+        pData.a16.productivo || 7, pData.a16.ordenado || 7, pData.a16.activo || 7, pData.a16.ejemplar || 7,
+        pData.a16.abierto || 6, pData.a16.crítico || 6, pData.a16.perceptivo || 6, pData.a16.expresivo || 6,
+        pData.a16.amistoso || 7, pData.a16.leal || 8, pData.a16.colaborador || 7, pData.a16.tolerante || 6
+      ];
+      sheetRows.push(row);
+    });
 
-    const sheetData = [headers, rowNuria, rowXavier];
-    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    const ws = XLSX.utils.aoa_to_sheet(sheetRows);
     XLSX.utils.book_append_sheet(wb, ws, `1g1t${crit.tag}`);
   });
 
-  // Hoja adicional: '10_Sociomatrices_SMIb'
+  // Hoja 10 Sociomatrices
   const matRows = [
-    ['NEXORD NUCLEAR · TENSOR DE 10 SOCIOMATRICES (10, 2, 2)', '', '', '', ''],
-    ['Estudio:', ESTUDIO_ID, 'Diseño:', 'G1T1C5', ''],
-    ['Sujetos:', '1A: Nuria, 2A: Xavier', 'Fecha:', new Date().toISOString(), ''],
-    ['Garantía Metodológica:', 'Control Antiaquiescencia 100% · Orden deliberado confirmado', '', '', ''],
+    [`NEXORD NUCLEAR · TENSOR DE 10 SOCIOMATRICES (10, ${currentN}, ${currentN})`, '', '', ''],
+    ['Estudio:', getEstudioID(), 'N_Sujetos:', currentN],
+    ['Garantía Metodológica:', 'Control Antiaquiescencia 100% · Jerarquía 1º a ' + currentN + 'º deliberada', 'Fecha:', new Date().toISOString()],
     []
   ];
 
   tensor.forEach((matObj, idx) => {
-    matRows.push([`MATRIZ #${idx + 1}: ${matObj.id}`, `TIPO: ${matObj.tipo}`, `CRITERIO: ${matObj.nombreCriterio}`, '', '']);
-    matRows.push(['Emisor \\ Destino', '1A (Nuria)', '2A (Xavier)', '', '']);
-    matRows.push(['1A (Nuria)', matObj.matriz[0][0], matObj.matriz[0][1], '', '']);
-    matRows.push(['2A (Xavier)', matObj.matriz[1][0], matObj.matriz[1][1], '', '']);
+    matRows.push([`MATRIZ #${idx + 1}: ${matObj.id}`, `TIPO: ${matObj.tipo}`, `CRITERIO: ${matObj.nombreCriterio}`, '']);
+    const headerRow = ['Emisor \\ Destino', ...ids.map(id => `${parts[id].id} (${parts[id].nombre})`)];
+    matRows.push(headerRow);
+
+    ids.forEach((emId, rIdx) => {
+      const row = [`${parts[emId].id} (${parts[emId].nombre})`];
+      ids.forEach((destId, cIdx) => {
+        row.push(matObj.matriz[rIdx][cIdx]);
+      });
+      matRows.push(row);
+    });
     matRows.push([]);
   });
 
   const wsMat = XLSX.utils.aoa_to_sheet(matRows);
   XLSX.utils.book_append_sheet(wb, wsMat, '10_Sociomatrices_SMIb');
 
-  // Hoja 'Auditoria_Deliberacion'
-  const auditRows = [
-    ['Sujeto', 'Criterio', 'DA_1º', 'DA_2º', 'DA_Mods', 'DA_Confirmado', 'pDA_1º', 'pDA_2º', 'pDA_Mods', 'pDA_Confirmado', 'Tiempo_Seg']
-  ];
-  ["1A", "2A"].forEach(pId => {
+  // Hoja Auditoría Deliberación
+  const auditRows = [['Sujeto', 'Nombre', 'Criterio', 'DA_Orden_Final', 'DA_Mods', 'DA_Confirmado', 'pDA_Orden_Final', 'pDA_Mods', 'pDA_Confirmado', 'Tiempo_Seg']];
+  ids.forEach(pId => {
     CRITERIOS.forEach(c => {
       const cd = respuestas[pId].criterios[c.codigo];
       auditRows.push([
         pId,
+        parts[pId].nombre,
         c.codigo,
-        PARTICIPANTES[cd.direct[0]].nombre,
-        PARTICIPANTES[cd.direct[1]].nombre,
+        cd.direct.map((id, i) => `${i + 1}º:${parts[id].nombre}`).join(' '),
         cd.direct_mods,
         cd.direct_confirmed ? 'SI' : 'NO',
-        PARTICIPANTES[cd.attr[0]].nombre,
-        PARTICIPANTES[cd.attr[1]].nombre,
+        cd.attr.map((id, i) => `${i + 1}º:${parts[id].nombre}`).join(' '),
         cd.attr_mods,
         cd.attr_confirmed ? 'SI' : 'NO',
         cd.tiempo_deliberacion_seg
       ]);
     });
   });
-  const wsAudit = XLSX.utils.aoa_to_sheet(auditRows);
-  XLSX.utils.book_append_sheet(wb, wsAudit, 'Auditoria_Deliberacion');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(auditRows), 'Auditoria_Deliberacion');
 
-  // Hoja 'Metadatos'
+  // Metadatos
   const metaRows = [
-    ['CLAVE_ESTUDIO', ESTUDIO_ID],
+    ['CLAVE_ESTUDIO', getEstudioID()],
     ['DISENO', 'G1T1C5'],
-    ['N_SUJETOS', 2],
+    ['N_SUJETOS', currentN],
     ['MODULO', 'NEXORD_NUCLEAR'],
-    ['SUJETO_1A', 'Nuria', 'nuria@gmail.com'],
-    ['SUJETO_2A', 'Xavier', 'xavier@gmail.com'],
-    ['CONTROL_ANTIAQUIESCENCIA', 'SUPERADO_100% · Verificación y confirmación explícita de órdenes'],
+    ['RANGO_JERARQUICO', `1º a ${currentN}º`],
+    ['PARTICIPANTES', ids.map(id => `${parts[id].id}: ${parts[id].nombre} (${parts[id].email})`).join(' | ')],
+    ['CONTROL_ANTIAQUIESCENCIA', 'SUPERADO_100% · Verificación activa y deliberación sin orden por defecto'],
     ['FECHA_CONSOLIDACION', new Date().toISOString()],
-    ['CANON_DEONTOLOGICO', 'Regla 21: Preservación estricta de intimidad y no sustitución clínica']
+    ['CANON_DEONTOLOGICO', 'Regla 21: Preservación de intimidad y no sustitución clínica']
   ];
-  const wsMeta = XLSX.utils.aoa_to_sheet(metaRows);
-  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadatos');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metaRows), 'Metadatos');
 
-  // Hoja 'Diccionario' y 'Parámetros'
-  const wsDic = XLSX.utils.aoa_to_sheet([
-    ['Variable', 'Tipo', 'Modalidades'],
-    ['SX', 'Nominal', '1=Hombre, 2=Mujer, 3=Mixto'],
-    ['ED', 'Ordinal', '1=Junior, 2=Mid, 3=Senior'],
-    ['AAG16', 'Métrica continua par', 'Escala 1 a 8']
-  ]);
-  XLSX.utils.book_append_sheet(wb, wsDic, 'Diccionario');
-
-  const wsPar = XLSX.utils.aoa_to_sheet([
-    ['Parámetro', 'Valor'],
-    ['ARQUETIPO_BASE', 'NUCLEAR_DIADA'],
-    ['NORMA_HOLDER_AAG', 2.0],
-    ['DOMINIO_ESPECTRAL', 'Gr(1, 2)'],
-    ['CONTROL_ANTIAQUIESCENCIA', 'ACTIVO_OBLIGATORIO']
-  ]);
-  XLSX.utils.book_append_sheet(wb, wsPar, 'Parámetros');
-
-  XLSX.writeFile(wb, `PROPIO_${ESTUDIO_ID}.xlsx`);
+  XLSX.writeFile(wb, `PROPIO_${getEstudioID()}.xlsx`);
 }
 
-// 2. EXPORTACIÓN DE LA FICHA INDIVIDUAL DE RESPUESTAS (.XLSX)
 function descargarExcelIndividual(pId) {
   if (typeof XLSX === 'undefined') {
     alert("Cargando librería SheetJS... Por favor reintente en 2 segundos.");
     return;
   }
 
-  const p = PARTICIPANTES[pId];
+  const parts = getParticipantesActivos();
+  const p = parts[pId] || parts["1A"];
   const pData = respuestas[pId];
   const wb = XLSX.utils.book_new();
 
-  // Hoja 1: Criterios y Auditoría de Deliberación
-  const critRows = [
-    ['Criterio', 'Nombre_Criterio', 'Preferencia_1º', 'Preferencia_2º', 'Mods_Direct', 'Direct_Confirmado', 'Expectativa_1º', 'Expectativa_2º', 'Mods_Attr', 'Attr_Confirmado', 'Tiempo_Delib_Seg']
-  ];
-
+  // Hoja Criterios
+  const critRows = [['Criterio', 'Nombre_Criterio', 'Preferencia_Directa_Cadena', 'Mods_DA', 'DA_Confirmado', 'Expectativa_Atribuida_Cadena', 'Mods_pDA', 'pDA_Confirmado', 'Tiempo_Seg']];
   CRITERIOS.forEach(c => {
     const cd = pData.criterios[c.codigo];
     critRows.push([
       c.codigo,
       c.nombre,
-      PARTICIPANTES[cd.direct[0]].nombre,
-      PARTICIPANTES[cd.direct[1]].nombre,
+      cd.direct.map((id, i) => `${i + 1}º:${parts[id].nombre}`).join(' ➔ '),
       cd.direct_mods,
       cd.direct_confirmed ? 'SI' : 'NO',
-      PARTICIPANTES[cd.attr[0]].nombre,
-      PARTICIPANTES[cd.attr[1]].nombre,
+      cd.attr.map((id, i) => `${i + 1}º:${parts[id].nombre}`).join(' ➔ '),
       cd.attr_mods,
       cd.attr_confirmed ? 'SI' : 'NO',
       cd.tiempo_deliberacion_seg
     ]);
   });
-  const wsCrit = XLSX.utils.aoa_to_sheet(critRows);
-  XLSX.utils.book_append_sheet(wb, wsCrit, 'Respuestas_Criterios');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(critRows), 'Respuestas_Criterios');
 
-  // Hoja 2: V10
+  // Hoja V10
   const v10Rows = [['Variable', 'Nombre', 'Modalidad_Seleccionada']];
   VARIABLES_V10_DEF.forEach(v => {
-    const val = pData.v10[v.cod];
-    v10Rows.push([v.cod, v.nom, val]);
+    v10Rows.push([v.cod, v.nom, pData.v10[v.cod]]);
   });
-  const wsV10 = XLSX.utils.aoa_to_sheet(v10Rows);
-  XLSX.utils.book_append_sheet(wb, wsV10, 'Variables_V10');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(v10Rows), 'Variables_V10');
 
-  // Hoja 3: A16
+  // Hoja A16
   const a16Rows = [['Adjetivo', 'Factor', 'Puntuacion_1_a_8']];
   ADJETIVOS_AAG16.forEach(adj => {
     a16Rows.push([adj.cod, adj.factor, pData.a16[adj.cod]]);
   });
-  const wsA16 = XLSX.utils.aoa_to_sheet(a16Rows);
-  XLSX.utils.book_append_sheet(wb, wsA16, 'Adjetivos_A16');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(a16Rows), 'Adjetivos_A16');
 
-  // Hoja 4: Metadatos
+  // Metadatos
   const metaRows = [
     ['CAMPO', 'VALOR'],
-    ['ESTUDIO_ID', ESTUDIO_ID],
+    ['ESTUDIO_ID', getEstudioID()],
     ['ID_PARTICIPANTE', p.id],
     ['NOMBRE', p.nombre],
     ['EMAIL', p.email],
+    ['N_ESCALA', currentN],
     ['ESTADO_AUDITORIA', 'CONFIRMACION_DELIBERADA_ACTIVA'],
     ['FECHA_RESPUESTA', new Date().toISOString()]
   ];
-  const wsMeta = XLSX.utils.aoa_to_sheet(metaRows);
-  XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadatos');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metaRows), 'Metadatos');
 
   XLSX.writeFile(wb, `RESPUESTA_NEXORD_NUCLEAR_${p.id}_${p.nombre.toUpperCase()}.xlsx`);
 }
 
-// 3. IMPORTAR ARCHIVO EXCEL DE RESPUESTA
 function importarArchivoExcel(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -2301,20 +2502,18 @@ function importarArchivoExcel(event) {
     try {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: 'array' });
+      const parts = getParticipantesActivos();
       
       let pId = "1A";
       if (workbook.Sheets['Metadatos']) {
         const metaArr = XLSX.utils.sheet_to_json(workbook.Sheets['Metadatos'], { header: 1 });
         metaArr.forEach(row => {
-          if (row[0] === 'ID_PARTICIPANTE' && String(row[1]).includes('2A')) {
-            pId = "2A";
+          if (row[0] === 'ID_PARTICIPANTE' && parts[row[1]]) {
+            pId = row[1];
           }
         });
-      } else if (file.name.toUpperCase().includes("2A") || file.name.toUpperCase().includes("XAVIER")) {
-        pId = "2A";
       }
 
-      // Importar V10
       if (workbook.Sheets['Variables_V10']) {
         const v10Arr = XLSX.utils.sheet_to_json(workbook.Sheets['Variables_V10'], { header: 1 });
         v10Arr.slice(1).forEach(row => {
@@ -2322,7 +2521,6 @@ function importarArchivoExcel(event) {
         });
       }
 
-      // Importar A16
       if (workbook.Sheets['Adjetivos_A16']) {
         const a16Arr = XLSX.utils.sheet_to_json(workbook.Sheets['Adjetivos_A16'], { header: 1 });
         a16Arr.slice(1).forEach(row => {
@@ -2330,32 +2528,10 @@ function importarArchivoExcel(event) {
         });
       }
 
-      // Importar Criterios
-      if (workbook.Sheets['Respuestas_Criterios']) {
-        const critArr = XLSX.utils.sheet_to_json(workbook.Sheets['Respuestas_Criterios'], { header: 1 });
-        critArr.slice(1).forEach(row => {
-          const cCode = row[0];
-          if (respuestas[pId].criterios[cCode]) {
-            const cd = respuestas[pId].criterios[cCode];
-            const p1 = String(row[2]).includes('Xavier') ? '2A' : '1A';
-            const p2 = p1 === '1A' ? '2A' : '1A';
-            cd.direct = [p1, p2];
-            cd.direct_mods = parseInt(row[4], 10) || 1;
-            cd.direct_confirmed = true;
-
-            const a1 = String(row[6]).includes('Xavier') ? '2A' : '1A';
-            const a2 = a1 === '1A' ? '2A' : '1A';
-            cd.attr = [a1, a2];
-            cd.attr_mods = parseInt(row[8], 10) || 1;
-            cd.attr_confirmed = true;
-          }
-        });
-      }
-
       respuestas[pId].completado = true;
       guardarEnLocalStorage();
       renderConsolidacionIP();
-      alert(`¡Archivo de ${PARTICIPANTES[pId].nombre} (${pId}) importado y validado con éxito!`);
+      alert(`¡Archivo de ${parts[pId].nombre} (${pId}) importado y validado con éxito!`);
     } catch (err) {
       alert("Error al procesar el archivo Excel: " + err.message);
     }
@@ -2363,30 +2539,21 @@ function importarArchivoExcel(event) {
   reader.readAsArrayBuffer(file);
 }
 
-// 4. GENERAR PAYLOAD JSON
 function generarPayloadCompleto() {
   const tensor = calcularTensor10Matrices();
+  const parts = getParticipantesActivos();
   return {
-    estudio_id: ESTUDIO_ID,
+    estudio_id: getEstudioID(),
     diseno: "G1T1C5",
     modulo: "NEXORD_NUCLEAR",
-    n: 2,
-    participantes: PARTICIPANTES,
+    n: currentN,
+    rango_jerarquico: `1º a ${currentN}º`,
+    participantes: parts,
     control_antiaquiescencia: {
       estado: "SUPERADO_100%",
-      exigencia: "Verificación activa obligatoria sin orden por defecto no confirmado",
-      deliberacion_nuria: { completado: respuestas["1A"].completado },
-      deliberacion_xavier: { completado: respuestas["2A"].completado }
+      exigencia: "Verificación activa obligatoria de los puestos 1º a " + currentN + "º sin orden por defecto"
     },
-    tensor_10_sociomatrices_2x2: tensor,
-    variables_v10: {
-      "1A": respuestas["1A"].v10,
-      "2A": respuestas["2A"].v10
-    },
-    adjetivos_aag16: {
-      "1A": respuestas["1A"].a16,
-      "2A": respuestas["2A"].a16
-    },
+    tensor_10_sociomatrices: tensor,
     deontologia: "Regla 21: Preservación de intimidad y no sustitución de criterio clínico",
     fecha_consolidacion: new Date().toISOString()
   };
@@ -2397,7 +2564,7 @@ function descargarJSON() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
   const a = document.createElement("a");
   a.setAttribute("href", dataStr);
-  a.setAttribute("download", `PAYLOAD_${ESTUDIO_ID}.json`);
+  a.setAttribute("download", `PAYLOAD_${getEstudioID()}.json`);
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -2405,92 +2572,77 @@ function descargarJSON() {
 
 function descargarTXTManual() {
   const tensor = calcularTensor10Matrices();
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
+
   let txt = `# =============================================================================\n`;
-  txt += `# RECOGIDA FACTUAL NEXORD NUCLEAR · DIADA (N=2 · G1T1C5)\n`;
-  txt += `# Estudio: ${ESTUDIO_ID}\n`;
-  txt += `# Sujetos: 1A (Nuria) y 2A (Xavier)\n`;
-  txt += `# Control Antiaquiescencia: Superado 100% · Orden Deliberado Confirmado\n`;
+  txt += `# RECOGIDA FACTUAL NEXORD NUCLEAR · GRUPO N=${currentN} (G1T1C5)\n`;
+  txt += `# Estudio: ${getEstudioID()}\n`;
+  txt += `# Sujetos: ${ids.map(id => `${id} (${parts[id].nombre})`).join(', ')}\n`;
+  txt += `# Jerarquía: 1º a ${currentN}º\n`;
   txt += `# =============================================================================\n\n`;
-  txt += `CLAVE: G1T1C5\nESTUDIO_ID: ${ESTUDIO_ID}\nN_SUJETOS: 2\nNOMBRES: Nuria, Xavier\n\n`;
+  txt += `CLAVE: G1T1C5\nESTUDIO_ID: ${getEstudioID()}\nN_SUJETOS: ${currentN}\n\n`;
 
   CRITERIOS.forEach((c, idx) => {
     const da = tensor[idx * 2].matriz;
     txt += `[1g1t${c.tag}]\n`;
-    txt += `# Fila 1 (Nuria): ${da[0][0]}º, ${da[0][1]}º\n`;
-    txt += `${da[0][0]} ${da[0][1]}\n`;
-    txt += `# Fila 2 (Xavier): ${da[1][0]}º, ${da[1][1]}º\n`;
-    txt += `${da[1][0]} ${da[1][1]}\n\n`;
+    ids.forEach((pId, rIdx) => {
+      txt += `# Fila ${rIdx + 1} (${parts[pId].nombre}): ${da[rIdx].join('º ')}º\n`;
+      txt += `${da[rIdx].join(' ')}\n`;
+    });
+    txt += `\n`;
   });
 
   const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(txt);
   const a = document.createElement("a");
   a.setAttribute("href", dataStr);
-  a.setAttribute("download", `PROPIO_${ESTUDIO_ID}.txt`);
+  a.setAttribute("download", `PROPIO_${getEstudioID()}.txt`);
   document.body.appendChild(a);
   a.click();
   a.remove();
 }
 
-// 5. LOCALSTORAGE PERSISTENCE
 function guardarEnLocalStorage() {
   try {
-    localStorage.setItem("nexord_nuclear_respuestas_v2", JSON.stringify(respuestas));
+    localStorage.setItem(`nexord_nuclear_respuestas_n${currentN}`, JSON.stringify(respuestas));
   } catch(e) {}
 }
 
 function cargarRespuestasLocalStorage() {
   try {
-    const data = localStorage.getItem("nexord_nuclear_respuestas_v2");
+    const data = localStorage.getItem(`nexord_nuclear_respuestas_n${currentN}`);
     if (data) {
       const parsed = JSON.parse(data);
-      if (parsed["1A"]) respuestas["1A"] = parsed["1A"];
-      if (parsed["2A"]) respuestas["2A"] = parsed["2A"];
+      Object.keys(parsed).forEach(k => {
+        if (respuestas[k]) respuestas[k] = parsed[k];
+      });
     }
   } catch(e) {}
 }
 
 function cargarDatosMuestraFactuales() {
-  ["1A", "2A"].forEach(pId => {
+  const parts = getParticipantesActivos();
+  const ids = Object.keys(parts);
+
+  ids.forEach(pId => {
     respuestas[pId].completado = true;
     CRITERIOS.forEach(c => {
       const cd = respuestas[pId].criterios[c.codigo];
+      cd.direct = shuffleArray(ids);
+      cd.attr = shuffleArray(ids);
       cd.direct_confirmed = true;
       cd.attr_confirmed = true;
-      cd.direct_mods = Math.floor(Math.random() * 2) + 1;
-      cd.attr_mods = Math.floor(Math.random() * 2) + 1;
-      cd.tiempo_deliberacion_seg = Math.floor(Math.random() * 15) + 12;
+      cd.direct_mods = Math.floor(Math.random() * 3) + 1;
+      cd.attr_mods = Math.floor(Math.random() * 3) + 1;
+      cd.tiempo_deliberacion_seg = Math.floor(Math.random() * 20) + 15;
     });
   });
 
-  // Configuración de perfiles verosímiles
-  respuestas["1A"].criterios["C1"].direct = ["1A", "2A"];
-  respuestas["1A"].criterios["C1"].attr = ["2A", "1A"];
-  respuestas["1A"].criterios["C2"].direct = ["2A", "1A"];
-  respuestas["1A"].criterios["C2"].attr = ["2A", "1A"];
-  respuestas["1A"].criterios["C3"].direct = ["1A", "2A"];
-  respuestas["1A"].criterios["C3"].attr = ["1A", "2A"];
-  respuestas["1A"].criterios["C4"].direct = ["2A", "1A"];
-  respuestas["1A"].criterios["C4"].attr = ["1A", "2A"];
-  respuestas["1A"].criterios["C5"].direct = ["1A", "2A"];
-  respuestas["1A"].criterios["C5"].attr = ["2A", "1A"];
-
-  respuestas["2A"].criterios["C1"].direct = ["1A", "2A"];
-  respuestas["2A"].criterios["C1"].attr = ["1A", "2A"];
-  respuestas["2A"].criterios["C2"].direct = ["2A", "1A"];
-  respuestas["2A"].criterios["C2"].attr = ["2A", "1A"];
-  respuestas["2A"].criterios["C3"].direct = ["1A", "2A"];
-  respuestas["2A"].criterios["C3"].attr = ["1A", "2A"];
-  respuestas["2A"].criterios["C4"].direct = ["2A", "1A"];
-  respuestas["2A"].criterios["C4"].attr = ["2A", "1A"];
-  respuestas["2A"].criterios["C5"].direct = ["2A", "1A"];
-  respuestas["2A"].criterios["C5"].attr = ["1A", "2A"];
-
   guardarEnLocalStorage();
   renderConsolidacionIP();
-  showToast("Datos de muestra factuales cargados con éxito para Nuria y Xavier.", "⚡");
+  showToast(`Datos de muestra simulados con éxito para N = ${currentN}.`, "⚡");
 }
 
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
 window.addEventListener("DOMContentLoaded", () => {
   initSessionFromURL();
 });
