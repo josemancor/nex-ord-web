@@ -288,12 +288,18 @@
       color: #0B132B;
     }
 
-    /* PROGRESS WIZARD */
+    /* PROGRESS WIZARD (9 PASOS) */
     .wizard-steps {
       display: grid;
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(9, 1fr);
       gap: 6px;
       margin-bottom: 22px;
+    }
+
+    @media (max-width: 900px) {
+      .wizard-steps {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
     }
 
     .step-pill {
@@ -302,7 +308,7 @@
       border-radius: 6px;
       padding: 8px 4px;
       text-align: center;
-      font-size: 0.74rem;
+      font-size: 0.73rem;
       font-weight: 700;
       color: var(--text-dim);
       cursor: pointer;
@@ -318,6 +324,59 @@
     .step-pill.completed {
       border-color: var(--accent-neon);
       color: var(--accent-neon);
+    }
+
+    /* ESTILOS DE INTRODUCCIÓN Y CONFIDENCIALIDAD */
+    .intro-hero {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.28) 0%, rgba(11, 19, 43, 0.8) 100%);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 22px rgba(56, 189, 248, 0.1);
+    }
+
+    .confidentiality-card {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      border-left: 5px solid var(--accent-neon);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 22px;
+    }
+
+    .phases-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .phases-overview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .phase-card {
+      background: #0B132B;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     /* CARD DE CONTENIDO */
@@ -1187,16 +1246,17 @@
     </div>
   </div>
 
-  <!-- NAVEGACIÓN PASO A PASO DEL WIZARD (8 PASOS) -->
+  <!-- NAVEGACIÓN PASO A PASO DEL WIZARD (9 PASOS) -->
   <div class="wizard-steps" id="wizardSteps">
-    <div class="step-pill active" onclick="irAlPaso(0)">1. V10</div>
-    <div class="step-pill" onclick="irAlPaso(1)">2. C1 Refugio</div>
-    <div class="step-pill" onclick="irAlPaso(2)">3. C2 Criterio</div>
-    <div class="step-pill" onclick="irAlPaso(3)">4. C3 Mediación</div>
-    <div class="step-pill" onclick="irAlPaso(4)">5. C4 Operativa</div>
-    <div class="step-pill" onclick="irAlPaso(5)">6. C5 Proyecto</div>
-    <div class="step-pill" onclick="irAlPaso(6)">7. A16</div>
-    <div class="step-pill" onclick="irAlPaso(7)">8. Guardar</div>
+    <div class="step-pill active" onclick="irAlPaso(0)">🛡️ Inicio</div>
+    <div class="step-pill" onclick="irAlPaso(1)">1. C1 Refugio</div>
+    <div class="step-pill" onclick="irAlPaso(2)">2. C2 Criterio</div>
+    <div class="step-pill" onclick="irAlPaso(3)">3. C3 Mediación</div>
+    <div class="step-pill" onclick="irAlPaso(4)">4. C4 Operativa</div>
+    <div class="step-pill" onclick="irAlPaso(5)">5. C5 Proyecto</div>
+    <div class="step-pill" onclick="irAlPaso(6)">6. A16</div>
+    <div class="step-pill" onclick="irAlPaso(7)">7. V10</div>
+    <div class="step-pill" onclick="irAlPaso(8)">8. Guardar</div>
   </div>
 
   <!-- CONTENEDOR DINÁMICO DEL FORMULARIO -->
@@ -1379,7 +1439,7 @@ const ADJETIVOS_AAG16 = [
 // ALMACÉN GLOBAL DE RESPUESTAS DINÁMICO
 // =============================================================================
 let currentParticipant = "1A"; // Sujeto actual
-let currentStep = 0; // 0 = V10, 1..5 = C1..C5, 6 = A16, 7 = Guardar
+let currentStep = 0; // 0 = Inicio/Confidencialidad, 1..5 = C1..C5, 6 = A16, 7 = V10, 8 = Guardar
 let stepStartTime = Date.now();
 
 // Almacén dinámico
@@ -1606,7 +1666,7 @@ function showToast(msg, icon = "💡") {
 }
 
 // =============================================================================
-// NAVEGACIÓN Y RENDERIZADO DEL WIZARD (8 PASOS)
+// NAVEGACIÓN Y RENDERIZADO DEL WIZARD (9 PASOS)
 // =============================================================================
 function irAlPaso(stepIdx) {
   if (currentStep >= 1 && currentStep <= 5) {
@@ -1638,6 +1698,12 @@ function actualizarIndicadoresPasos() {
       const ok = c && c.direct_confirmed && c.attr_confirmed;
       el.classList.toggle("completed", ok);
     } else if (idx === 6) {
+      const a16Keys = Object.keys(pData.a16 || {});
+      el.classList.toggle("completed", a16Keys.length >= 16);
+    } else if (idx === 7) {
+      const v10Keys = Object.keys(pData.v10 || {});
+      el.classList.toggle("completed", v10Keys.length >= 10);
+    } else if (idx === 8) {
       el.classList.toggle("completed", pData.completado);
     }
   });
@@ -1649,46 +1715,101 @@ function renderStep() {
   const p = parts[currentParticipant] || parts["1A"];
   const pData = respuestas[currentParticipant];
 
-  // PASO 0: VARIABLES V10 (UNA SOLA VEZ)
+  // PASO 0: INICIO, CONTEXTUALIZACIÓN Y COMPROMISO ÉTICO DE CONFIDENCIALIDAD TOTAL (CANON 21)
   if (currentStep === 0) {
     let html = `
       <div class="step-header">
         <div class="step-tag-row">
-          <span class="criterion-badge">Paso 1 de 8 · Contexto Individual</span>
-          <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Se responde 1 sola vez</span>
+          <span class="criterion-badge" style="border-color:var(--accent-neon); color:var(--accent-neon);">🛡️ Protocolo Deontológico Canónico (Canon 21)</span>
+          <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Sesión Individual y Privada</span>
         </div>
-        <h2 class="criterion-title">Perfil Complementario V10 de ${p.nombre} (${p.id})</h2>
-        <p style="font-size:0.88rem; color:var(--text-muted);">
-          Batería normativa de 10 variables discretas en 3 modalidades canónicas (Canon 13).
+        <h2 class="criterion-title">Estudio Sociométrico Ordinal de Dinámica Relacional y Vínculo</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted);">
+          Bienvenida/o a tu sesión individual, <strong>${p.nombre} (${p.id})</strong> · <code>${p.email}</code>
         </p>
       </div>
 
-      <div class="form-grid">
-    `;
-
-    VARIABLES_V10_DEF.forEach(v => {
-      const curVal = pData.v10[v.cod] !== undefined ? pData.v10[v.cod] : (v.def[currentParticipant] || 2);
-      html += `
-        <div class="form-group">
-          <label class="form-label">${v.cod} — ${v.nom}</label>
-          <select class="form-select" onchange="actualizarV10('${v.cod}', this.value)">
-            ${v.mods.map(m => {
-              const valNum = parseInt(m.split("=")[0]);
-              return `<option value="${valNum}" ${valNum === curVal ? 'selected' : ''}>${m}</option>`;
-            }).join('')}
-          </select>
+      <!-- CAJA 1: CONTEXTUALIZACIÓN DEL EJERCICIO -->
+      <div class="intro-hero">
+        <h3 style="color:#FFF; font-size:1.15rem; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+          <span style="color:var(--accent-cyan);">💡</span> Contexto y Propósito del Ejercicio
+        </h3>
+        <p style="font-size:0.92rem; color:#E2E8F0; line-height:1.6; margin-bottom:12px;">
+          Este ejercicio forma parte de una investigación orientada a mapear las corrientes cotidianas de afinidad, apoyo mutuo, comunicación y proyectos compartidos en el seno de la pareja y el grupo nuclear.
+        </p>
+        <div style="background:rgba(11, 19, 43, 0.65); border-radius:8px; padding:12px 16px; font-size:0.88rem; color:#CBD5E1; line-height:1.5; border-left:3px solid var(--accent-gold);">
+          <strong style="color:var(--accent-gold);">📌 Nota Metodológica Esencial:</strong>
+          <strong>No es un test psicológico evaluativo, ni una prueba diagnóstica o patologizante.</strong>
+          No existen respuestas «buenas», «malas» ni «esperadas». Cada vínculo tiene su propia ecología relacional y sus equilibrios singulares. El verdadero valor de este estudio reside en la espontaneidad y honestidad con la que expreses cómo percibes la convivencia cotidiana y cómo crees que la percibe tu partner.
         </div>
-      `;
-    });
-
-    html += `
       </div>
-      <div class="controls-footer">
-        <div></div>
-        <button class="btn-main" onclick="irAlPaso(1)">Siguiente: C1 Refugio en Crisis ➔</button>
+
+      <!-- CAJA 2: COMPROMISO ÉTICO DE CONFIDENCIALIDAD TOTAL (CANON 21) -->
+      <div class="confidentiality-card">
+        <h3 style="color:#FFF; font-size:1.12rem; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+          <span style="color:var(--accent-neon);">🔒</span> Garantía Inviolable de Total Confidencialidad y Anonimato
+        </h3>
+        <p style="font-size:0.9rem; color:#D1FAE5; line-height:1.55; margin-bottom:14px;">
+          Tu participación está amparada por las directrices de la Ciencia Abierta, el Secreto Profesional y el <strong>Canon 21 de Protección Deontológica del Participante</strong> de la plataforma NEXORD:
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+          <div style="background:rgba(11, 19, 43, 0.55); border-radius:8px; padding:12px 14px; border:1px solid rgba(16, 185, 129, 0.25);">
+            <div style="font-size:0.86rem; font-weight:800; color:var(--accent-neon); margin-bottom:4px;">🛡️ Anonimización Matricial</div>
+            <div style="font-size:0.82rem; color:#CBD5E1; line-height:1.45;">
+              Tus datos se procesan codificados mediante identificadores matriciales canónicos (<code>${p.id}</code>). Tu identidad legal y correo se disocian del corpus científico de análisis.
+            </div>
+          </div>
+          <div style="background:rgba(11, 19, 43, 0.55); border-radius:8px; padding:12px 14px; border:1px solid rgba(16, 185, 129, 0.25);">
+            <div style="font-size:0.86rem; font-weight:800; color:var(--accent-cyan); margin-bottom:4px;">🤐 Secreto de Respuestas Diádicas</div>
+            <div style="font-size:0.82rem; color:#CBD5E1; line-height:1.45;">
+              Tus ordenaciones individuales <strong>nunca se revelan de forma aislada a tu pareja ni a terceros</strong>. El sistema procesa exclusivamente matrices algebraicas tensoriales agregadas.
+            </div>
+          </div>
+          <div style="background:rgba(11, 19, 43, 0.55); border-radius:8px; padding:12px 14px; border:1px solid rgba(16, 185, 129, 0.25);">
+            <div style="font-size:0.86rem; font-weight:800; color:var(--accent-gold); margin-bottom:4px;">🤝 Enfoque Formativo y No Punitivo</div>
+            <div style="font-size:0.82rem; color:#CBD5E1; line-height:1.45;">
+              La investigación busca comprender las corrientes de afinidad y equilibrio estructural, preservando en todo momento la autoestima personal y la dignidad del vínculo.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAJA 3: ESTRUCTURA DEL CUESTIONARIO EN 3 ETAPAS -->
+      <div style="margin-bottom:24px;">
+        <h4 style="color:#FFF; font-size:1rem; font-weight:800; margin-bottom:12px;">Estructura del Recorrido (en 3 etapas fluidas):</h4>
+        <div class="phases-overview-grid">
+          <div class="phase-card">
+            <span class="phase-badge" style="background:rgba(56, 189, 248, 0.15); color:var(--accent-cyan); border:1px solid var(--accent-cyan);">Etapa 1 · Lo Relacional</span>
+            <div style="font-size:0.92rem; font-weight:800; color:#FFF;">5 Criterios de Pareja</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45;">
+              Ordena de <strong>1º a ${currentN}º</strong> tus prioridades directas (<em>DA</em>) y cómo crees que ordenará tu pareja (<em>p_DA</em>). Podrás arrastrar tarjetas o usar los botones subir/bajar y confirmar tu orden final.
+            </div>
+          </div>
+          <div class="phase-card">
+            <span class="phase-badge" style="background:rgba(0, 255, 135, 0.15); color:var(--accent-neon); border:1px solid var(--accent-neon);">Etapa 2 · El Clima</span>
+            <div style="font-size:0.92rem; font-weight:800; color:#FFF;">Batería A16 Adjetivos</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45;">
+              Valora la atmósfera relacional en <strong>16 adjetivos normativos</strong> (escala par del 1 al 8) en los factores de Tarea, Organización, Apertura y Afecto.
+            </div>
+          </div>
+          <div class="phase-card">
+            <span class="phase-badge" style="background:rgba(255, 230, 0, 0.15); color:var(--accent-gold); border:1px solid var(--accent-gold);">Etapa 3 · El Contexto</span>
+            <div style="font-size:0.92rem; font-weight:800; color:#FFF;">Perfil V10 Variables</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45;">
+              10 preguntas breves y objetivas sobre convivencia, roles y trayectoria para contextualizar el estudio.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-footer" style="justify-content:flex-end;">
+        <button class="btn-main" style="padding:14px 28px; font-size:1.05rem;" onclick="irAlPaso(1)">
+          Comenzar el Ejercicio: C1 Refugio en Crisis ➔
+        </button>
       </div>
     `;
     card.innerHTML = html;
+    actualizarIndicadoresPasos();
     return;
   }
 
@@ -1820,7 +1941,9 @@ function renderStep() {
       </div>
 
       <div class="controls-footer">
-        <button class="btn-sec" onclick="irAlPaso(${currentStep - 1})">⬅ Anterior</button>
+        <button class="btn-sec" onclick="irAlPaso(${currentStep === 1 ? 0 : currentStep - 1})">
+          ⬅ ${currentStep === 1 ? 'Inicio y Confidencialidad' : `Anterior (C${currentStep - 1})`}
+        </button>
         <div>
           ${bothConfirmed ? `
             <button class="btn-main" onclick="irAlPaso(${currentStep + 1})">
@@ -1841,17 +1964,17 @@ function renderStep() {
     return;
   }
 
-  // PASO 6: ADJETIVOS A16 (UNA SOLA VEZ)
+  // PASO 6: ADJETIVOS A16 (UNA SOLA VEZ, ANTES DE V10)
   if (currentStep === 6) {
     let html = `
       <div class="step-header">
         <div class="step-tag-row">
-          <span class="criterion-badge">Paso 7 de 8 · Atribución Adjetival Grupal AAG16</span>
+          <span class="criterion-badge">Paso 7 de 9 · Atribución Adjetival Grupal AAG16</span>
           <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Se responde 1 sola vez</span>
         </div>
-        <h2 class="criterion-title">Evaluación de los 16 Adjetivos Normativos</h2>
+        <h2 class="criterion-title">Evaluación de los 16 Adjetivos Normativos (A16)</h2>
         <p style="font-size:0.88rem; color:var(--text-muted);">
-          Valora al grupo en cada adjetivo en escala continua par de <strong>1 (Mínimo) a 8 (Máximo)</strong>. Norma de Hölder $p=2.0$ (Canon 13).
+          Valora la atmósfera del grupo/pareja en cada adjetivo en escala continua par de <strong>1 (Mínimo) a 8 (Máximo)</strong>. Ponderación multifactorial no lineal de Hölder $p=2.0$ (Canon 13).
         </p>
       </div>
 
@@ -1879,9 +2002,9 @@ function renderStep() {
     html += `
       </div>
       <div class="controls-footer">
-        <button class="btn-sec" onclick="irAlPaso(5)">⬅ Anterior (C5)</button>
+        <button class="btn-sec" onclick="irAlPaso(5)">⬅ Anterior (C5 Proyecto)</button>
         <button class="btn-main" onclick="irAlPaso(7)">
-          Siguiente: Finalizar y Guardar ➔
+          Siguiente: Perfil de Contexto V10 ➔
         </button>
       </div>
     `;
@@ -1890,15 +2013,59 @@ function renderStep() {
     return;
   }
 
-  // PASO 7: CONFIRMACIÓN Y DESCARGA INDIVIDUAL EXCEL (.xlsx)
+  // PASO 7: VARIABLES V10 (UNA SOLA VEZ, TRAS A16)
   if (currentStep === 7) {
+    let html = `
+      <div class="step-header">
+        <div class="step-tag-row">
+          <span class="criterion-badge">Paso 8 de 9 · Contexto y Convivencia V10</span>
+          <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;">★ Se responde 1 sola vez</span>
+        </div>
+        <h2 class="criterion-title">Perfil Complementario V10 de ${p.nombre} (${p.id})</h2>
+        <p style="font-size:0.88rem; color:var(--text-muted);">
+          Batería normativa de 10 variables discretas en 3 modalidades canónicas para contextualizar la convivencia y trayectoria (Canon 13).
+        </p>
+      </div>
+
+      <div class="form-grid">
+    `;
+
+    VARIABLES_V10_DEF.forEach(v => {
+      const curVal = pData.v10[v.cod] !== undefined ? pData.v10[v.cod] : (v.def[currentParticipant] || 2);
+      html += `
+        <div class="form-group">
+          <label class="form-label">${v.cod} — ${v.nom}</label>
+          <select class="form-select" onchange="actualizarV10('${v.cod}', this.value)">
+            ${v.mods.map(m => {
+              const valNum = parseInt(m.split("=")[0]);
+              return `<option value="${valNum}" ${valNum === curVal ? 'selected' : ''}>${m}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+      <div class="controls-footer">
+        <button class="btn-sec" onclick="irAlPaso(6)">⬅ Anterior (A16 Adjetivos)</button>
+        <button class="btn-main" onclick="irAlPaso(8)">Siguiente: Finalizar y Guardar ➔</button>
+      </div>
+    `;
+    card.innerHTML = html;
+    actualizarIndicadoresPasos();
+    return;
+  }
+
+  // PASO 8: CONFIRMACIÓN Y DESCARGA INDIVIDUAL EXCEL (.xlsx)
+  if (currentStep === 8) {
     pData.completado = true;
     guardarEnLocalStorage();
 
     let html = `
       <div class="step-header">
         <div class="step-tag-row">
-          <span class="criterion-badge">Paso 8 de 8 · Confirmación y Descarga</span>
+          <span class="criterion-badge">Paso 9 de 9 · Confirmación y Descarga</span>
           <span style="color:var(--accent-neon); font-size:0.82rem; font-weight:800;">✓ Formulario Completado</span>
         </div>
         <h2 class="criterion-title">¡Muchas gracias, ${p.nombre}!</h2>
@@ -1910,10 +2077,10 @@ function renderStep() {
       <div style="background:#0B132B; border:1px solid var(--border-card); border-radius:10px; padding:20px; margin-bottom:20px;">
         <h4 style="color:#FFF; font-size:1rem; font-weight:800; margin-bottom:12px;">Auditoría de Verificación y Deliberación Factual:</h4>
         <ul style="font-size:0.86rem; color:var(--text-muted); line-height:1.8; margin-left:20px;">
-          <li><strong>Perfil V10:</strong> 10 variables complementarias registradas (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM).</li>
-          <li><strong>5 Criterios (C1..C5):</strong> Los 5 criterios han sido ordenados deliberadamente en el espectro completo de <strong>1º a ${currentN}º</strong>.</li>
+          <li><strong>Contextualización y Confidencialidad:</strong> Protocolo deontológico aceptado conforme al Canon 21.</li>
+          <li><strong>5 Criterios (C1..C5):</strong> Los 5 criterios han sido ordenados deliberadamente en el espectro completo de <strong>1º a ${currentN}º</strong> con control antiaquiescencia superado.</li>
           <li><strong>Batería A16:</strong> 16 adjetivos normativos evaluados en los factores TEMA, FUNC, COGN y AFEC.</li>
-          <li><strong>Control Antiaquiescencia:</strong> Superado al 100% mediante orden aleatorio inicial y aceptación explícita de cada orden final.</li>
+          <li><strong>Perfil V10:</strong> 10 variables complementarias registradas (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM).</li>
         </ul>
       </div>
 
@@ -1930,7 +2097,7 @@ function renderStep() {
       </div>
 
       <div class="controls-footer">
-        <button class="btn-sec" onclick="irAlPaso(6)">⬅ Revisar Adjetivos A16</button>
+        <button class="btn-sec" onclick="irAlPaso(7)">⬅ Revisar Perfil V10</button>
         <button class="btn-chip gold" onclick="mostrarConsolidacionIP()">
           📊 Ir a la Consola del IP (Ver 10 Sociomatrices) ➔
         </button>
@@ -2463,19 +2630,19 @@ function descargarExcelIndividual(pId) {
   });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(critRows), 'Respuestas_Criterios');
 
-  // Hoja V10
-  const v10Rows = [['Variable', 'Nombre', 'Modalidad_Seleccionada']];
-  VARIABLES_V10_DEF.forEach(v => {
-    v10Rows.push([v.cod, v.nom, pData.v10[v.cod]]);
-  });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(v10Rows), 'Variables_V10');
-
-  // Hoja A16
+  // Hoja A16 (Se responde en 2º lugar tras los criterios)
   const a16Rows = [['Adjetivo', 'Factor', 'Puntuacion_1_a_8']];
   ADJETIVOS_AAG16.forEach(adj => {
     a16Rows.push([adj.cod, adj.factor, pData.a16[adj.cod]]);
   });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(a16Rows), 'Adjetivos_A16');
+
+  // Hoja V10 (Se responde al final del ejercicio)
+  const v10Rows = [['Variable', 'Nombre', 'Modalidad_Seleccionada']];
+  VARIABLES_V10_DEF.forEach(v => {
+    v10Rows.push([v.cod, v.nom, pData.v10[v.cod]]);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(v10Rows), 'Variables_V10');
 
   // Metadatos
   const metaRows = [
