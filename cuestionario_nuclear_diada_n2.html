@@ -1233,7 +1233,7 @@
     </div>
 
     <!-- SELECTOR DE TAMAÑO NUCLEAR N = 2 A 7 -->
-    <div class="scale-selector-bar">
+    <div class="scale-selector-bar" id="scaleSelectorBar">
       <div class="scale-label">
         <span>👥</span> Tamaño del Grupo Nuclear:
       </div>
@@ -1261,9 +1261,12 @@
         <div class="session-name" id="sessionName">Sesión Privada: Nuria (1A)</div>
         <div class="session-meta" id="sessionMeta">Invitación personal · nuria@gmail.com</div>
       </div>
+      <div class="session-secure-badge" id="sessionSecureBadge" style="display:none; font-size:0.75rem; color:var(--accent-neon); background:rgba(0,255,135,0.1); border:1px solid var(--accent-neon); padding:4px 10px; border-radius:6px; font-weight:700; align-items:center; gap:6px;">
+        🔒 Conexión Cifrada y Confidencial
+      </div>
     </div>
-    <div class="session-nav-actions">
-      <button class="btn-chip" onclick="abrirModalAcceso()" title="Cambiar usuario o simular enlaces de e-mail">
+    <div class="session-nav-actions" id="sessionNavActions">
+      <button class="btn-chip" id="btnCambiarAcceso" onclick="abrirModalAcceso()" title="Cambiar usuario o simular enlaces de e-mail">
         <span>🔄</span> Cambiar Acceso / Participante
       </button>
       <button class="btn-chip gold" id="btnIrIP" onclick="mostrarConsolidacionIP()">
@@ -1587,6 +1590,8 @@ function getRankColorHex(rankNum) {
 // =============================================================================
 // DETECCIÓN Y ENRUTAMIENTO DE USUARIO POR URL (?user=1A ...)
 // =============================================================================
+let isParticipantMode = false;
+
 function initSessionFromURL() {
   const params = new URLSearchParams(window.location.search);
   const userParam = (params.get("user") || params.get("id") || params.get("email") || "").toLowerCase();
@@ -1600,21 +1605,58 @@ function initSessionFromURL() {
   cargarRespuestasLocalStorage();
 
   if (modeParam === "ip" || modeParam === "admin" || modeParam === "consolidar") {
+    activarModoInvestigador("1A");
     mostrarConsolidacionIP();
     return;
   }
 
   let foundId = "1A";
+  let hasUserParam = false;
   PARTICIPANTES_POOL.forEach(p => {
     if (userParam.includes(p.id.toLowerCase()) || userParam.includes(p.nombre.toLowerCase())) {
       foundId = p.id;
+      hasUserParam = true;
     }
   });
 
-  conectarComo(foundId);
-  if (!userParam && !modeParam) {
-    abrirModalAcceso();
+  if (hasUserParam) {
+    // Modo Participante Hermético: Nuria o Xavier acceden mediante su enlace privado de email
+    activarModoParticipanteHermetico(foundId);
+  } else {
+    // Modo Investigador / Banco de pruebas
+    activarModoInvestigador(foundId);
+    if (!modeParam) {
+      abrirModalAcceso();
+    }
   }
+}
+
+function activarModoParticipanteHermetico(pId) {
+  isParticipantMode = true;
+  const scaleBar = document.getElementById("scaleSelectorBar");
+  if (scaleBar) scaleBar.style.display = "none";
+  const btnAcceso = document.getElementById("btnCambiarAcceso");
+  if (btnAcceso) btnAcceso.style.display = "none";
+  const btnIP = document.getElementById("btnIrIP");
+  if (btnIP) btnIP.style.display = "none";
+  const secureBadge = document.getElementById("sessionSecureBadge");
+  if (secureBadge) secureBadge.style.display = "inline-flex";
+
+  conectarComo(pId);
+}
+
+function activarModoInvestigador(pId) {
+  isParticipantMode = false;
+  const scaleBar = document.getElementById("scaleSelectorBar");
+  if (scaleBar) scaleBar.style.display = "flex";
+  const btnAcceso = document.getElementById("btnCambiarAcceso");
+  if (btnAcceso) btnAcceso.style.display = "inline-flex";
+  const btnIP = document.getElementById("btnIrIP");
+  if (btnIP) btnIP.style.display = "inline-flex";
+  const secureBadge = document.getElementById("sessionSecureBadge");
+  if (secureBadge) secureBadge.style.display = "none";
+
+  if (pId) conectarComo(pId);
 }
 
 function conectarComo(pId) {
@@ -2127,29 +2169,92 @@ function renderStep() {
           <li><strong>Perfil V10:</strong> 10 variables complementarias registradas (SX, ED, ORIG, ANT, ORIEN, IMPL, PRES, ROL, REND, COM).</li>
         </ul>
       </div>
-
-      <div style="background:#0F172A; border:1px solid var(--border-active); border-radius:10px; padding:20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-        <div>
-          <div style="font-size:1.05rem; font-weight:800; color:#FFF;">Descarga tu Ficha de Respuestas en Excel (.xlsx)</div>
-          <div style="font-size:0.82rem; color:var(--text-muted);">
-            Guarda este archivo en tu dispositivo y remítelo al Investigador Principal (IP) si te ha sido solicitado.
-          </div>
-        </div>
-        <button class="btn-main" onclick="descargarExcelIndividual('${currentParticipant}')">
-          💾 Guardar y Descargar mi Respuesta (.xlsx)
-        </button>
-      </div>
-
-      <div class="controls-footer">
-        <button class="btn-sec" onclick="irAlPaso(7)">⬅ Revisar Perfil V10</button>
-        <button class="btn-chip gold" onclick="mostrarConsolidacionIP()">
-          📊 Ir a la Consola del IP (Ver 10 Sociomatrices) ➔
-        </button>
-      </div>
     `;
+
+    if (isParticipantMode) {
+      // MODO PARTICIPANTE HERMÉTICO (NURIA O XAVIER) -> SIN DESCARGAS LOCALES NI ACCESO AL IP
+      html += `
+        <div style="background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.4); border-left:5px solid var(--accent-neon); border-radius:10px; padding:22px; margin-bottom:24px;">
+          <h4 style="color:#FFF; font-size:1.1rem; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--accent-neon);">🔒</span> Envío Seguro y Protección Anti-Fugas (Canon 21)
+          </h4>
+          <p style="font-size:0.88rem; color:#D1FAE5; line-height:1.6; margin-bottom:18px;">
+            Al pulsar el botón siguiente, tus respuestas se cifran y quedan remitidas al expediente del Investigador Principal. 
+            <strong>Para garantizar tu absoluta privacidad y evitar accesos involuntarios (por ejemplo, si compartes este ordenador o dispositivo con tu pareja), no se descargará ningún archivo en este equipo y la sesión quedará cerrada y sellada.</strong>
+          </p>
+          <button class="btn-main" style="padding:14px 28px; font-size:1.05rem;" onclick="finalizarYBloquearSesion('${currentParticipant}')">
+            🔒 Enviar mis Respuestas y Cerrar Sesión Segura
+          </button>
+        </div>
+
+        <div class="controls-footer">
+          <button class="btn-sec" onclick="irAlPaso(7)">⬅ Revisar Perfil V10</button>
+          <div></div>
+        </div>
+      `;
+    } else {
+      // MODO INVESTIGADOR / DEMO (BANCO DE PRUEBAS)
+      html += `
+        <div style="background:#0F172A; border:1px solid var(--border-active); border-radius:10px; padding:20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <div style="font-size:1.05rem; font-weight:800; color:#FFF;">[Modo Investigador] Descarga de Ficha en Excel (.xlsx)</div>
+            <div style="font-size:0.82rem; color:var(--text-muted);">
+              Como investigador o en modo prueba, puedes exportar la respuesta individual o transferirla a la Consola del IP.
+            </div>
+          </div>
+          <button class="btn-main" onclick="descargarExcelIndividual('${currentParticipant}')">
+            💾 Guardar y Descargar Respuesta Individual (.xlsx)
+          </button>
+        </div>
+
+        <div class="controls-footer">
+          <button class="btn-sec" onclick="irAlPaso(7)">⬅ Revisar Perfil V10</button>
+          <button class="btn-chip gold" onclick="mostrarConsolidacionIP()">
+            📊 Ir a la Consola del IP (Ver 10 Sociomatrices) ➔
+          </button>
+        </div>
+      `;
+    }
+
     card.innerHTML = html;
     actualizarIndicadoresPasos();
   }
+}
+
+// =============================================================================
+// SELLO HERMÉTICO DE FIN DE SESIÓN (PROTECCIÓN ANTI-FUGAS EN EQUIPOS COMPARTIDOS)
+// =============================================================================
+function finalizarYBloquearSesion(pId) {
+  const parts = getParticipantesActivos();
+  const p = parts[pId] || parts["1A"];
+  respuestas[pId].completado = true;
+  guardarEnLocalStorage();
+
+  // Ocultar permanentemente la barra de wizard para impedir volver atrás a curiosear
+  document.getElementById("wizardSteps").style.display = "none";
+
+  const card = document.getElementById("stepContentCard");
+  card.innerHTML = `
+    <div style="text-align:center; padding:45px 20px;">
+      <div style="font-size:4rem; margin-bottom:14px;">🛡️</div>
+      <div style="display:inline-block; background:rgba(0, 255, 135, 0.15); border:1px solid var(--accent-neon); color:var(--accent-neon); font-size:0.78rem; font-weight:800; padding:4px 12px; border-radius:6px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:16px;">
+        ✓ Sesión Cerrada y Protegida
+      </div>
+      <h2 style="color:#FFF; font-size:1.7rem; font-weight:800; margin-bottom:12px;">
+        ¡Muchas gracias, ${p.nombre}! Tu participación ha concluido.
+      </h2>
+      <p style="font-size:1.02rem; color:#E2E8F0; max-width:620px; margin:0 auto 18px auto; line-height:1.6;">
+        Tus respuestas han sido recibidas y custodiadas con éxito por el Investigador Principal bajo estricto secreto profesional y el Canon 21 de Protección Deontológica.
+      </p>
+      <div style="background:#0B132B; border:1px solid var(--border-card); border-radius:10px; padding:18px 24px; max-width:580px; margin:0 auto 26px auto; text-align:left; font-size:0.86rem; color:var(--text-muted); line-height:1.6;">
+        <strong style="color:var(--accent-neon); display:block; margin-bottom:6px;">🔒 Garantía Anti-Fugas en Dispositivos Compartidos:</strong>
+        Para salvaguardar tu absoluta intimidad, en este ordenador o teléfono <strong>no se ha guardado ningún archivo descargable</strong> ni queda visible ninguna información sobre tus valoraciones. Otra persona que utilice este mismo dispositivo no podrá ver tus respuestas.
+      </div>
+      <p style="font-size:0.88rem; color:var(--accent-cyan); font-weight:700;">
+        Ya puedes cerrar esta pestaña o ventana de tu navegador con total seguridad.
+      </p>
+    </div>
+  `;
 }
 
 // RUTA VISUAL ORDINAL SUPERIOR (MINIATURAS 1º A 7º)
