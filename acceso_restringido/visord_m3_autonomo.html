@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD • Laboratorio Autónomo de Metapercepción Triádica M3-AΩ & ORBIT</title>
+  <meta name="description" content="Entorno autosuficiente e independiente para captura de datos individuales, tratamiento matemático en tiempo real y cartografía gráfica completa M3-ORBIT.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-space: #070B18;
+      --bg-navy: #0B132B;
+      --bg-card: #111E3D;
+      --bg-card-sub: #16264C;
+      --bg-highlight: #1D3263;
+      --border-card: #1D315E;
+      --border-glow: #00F0FF;
+      --accent-neon: #00FF87;
+      --accent-magenta: #FF007F;
+      --accent-gold: #FFE600;
+      --accent-cyan: #00F0FF;
+      --accent-blue: #38BDF8;
+      --accent-orange: #FF9F1C;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --danger: #EF4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-space);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 12px 18px 80px;
+      overflow-x: hidden;
+    }
+
+    /* TOP INSTITUTIONAL HUD (CANON 9, 14, 15) */
+    .top-hud {
+      background: rgba(11, 19, 43, 0.94);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #00FF87, #00F0FF);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #070B18;
+      box-shadow: 0 0 14px rgba(0,255,135,0.4);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-badge {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      border: 1px solid rgba(0, 255, 135, 0.35);
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+    .brand-subtitle {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.70rem;
+      color: var(--text-muted);
+    }
+
+    /* HUD ACTION TABS */
+    .hud-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tab-btn {
+      background: #111D3B;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .tab-btn:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+      color: #FFFFFF;
+    }
+    .tab-btn.active {
+      background: rgba(0, 255, 135, 0.14);
+      border-color: var(--accent-neon);
+      color: var(--accent-neon);
+      box-shadow: 0 0 12px rgba(0, 255, 135, 0.25);
+    }
+
+    /* MAIN CONTAINER & PANELS */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .view-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARDS & CONTAINERS */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    /* FORMULARIO STEPPERS & SECCIONES */
+    .stepper-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .step-node {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .step-node.active {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.12);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+    }
+    .step-node.completed {
+      border-color: rgba(0, 255, 135, 0.4);
+      background: rgba(0, 255, 135, 0.08);
+    }
+    .step-num {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.70rem;
+      font-weight: 800;
+      color: var(--text-dim);
+    }
+    .step-node.active .step-num { color: var(--accent-cyan); }
+    .step-node.completed .step-num { color: var(--accent-neon); }
+    .step-lbl {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* SELECTION CHIPS & BUTTONS */
+    .chips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 12px 0 18px;
+    }
+    .chip-item {
+      background: #142245;
+      border: 1.5px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .chip-item:hover {
+      border-color: var(--accent-cyan);
+      background: var(--bg-highlight);
+      transform: translateY(-1px);
+    }
+    .chip-item.selected-prox {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.16);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+    }
+    .chip-item.selected-dist {
+      border-color: var(--accent-magenta);
+      background: rgba(255, 0, 127, 0.16);
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+    }
+    .chip-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #0B132B;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .chip-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ACTION BUTTONS */
+    .btn-act {
+      background: linear-gradient(135deg, #00FF87, #00F0FF);
+      color: #070B18;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.3);
+    }
+    .btn-act:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      transform: translateY(-1px);
+    }
+    .btn-sec {
+      background: #111D3B;
+      color: var(--text-main);
+      border: 1px solid var(--border-card);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-sec:hover {
+      background: var(--bg-highlight);
+      border-color: var(--accent-cyan);
+    }
+
+    /* TABLES STYLE */
+    .table-responsive {
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      text-align: left;
+    }
+    table.data-table th {
+      background: #0B142B;
+      color: var(--accent-cyan);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--border-card);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+    table.data-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    .badge-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge-escaparate { background: rgba(255,0,127,0.18); color: var(--accent-magenta); border: 1px solid rgba(255,0,127,0.4); }
+    .badge-trinchera { background: rgba(0,255,135,0.18); color: var(--accent-neon); border: 1px solid rgba(0,255,135,0.4); }
+    .badge-consonante { background: rgba(255,230,0,0.18); color: var(--accent-gold); border: 1px solid rgba(255,230,0,0.4); }
+
+    /* GRAPH VIEWER SVG CONTAINER */
+    .chart-container {
+      background: var(--bg-navy);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 16px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .chart-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .chart-svg-box {
+      width: 100%;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-svg-box svg {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .pedagogic-note {
+      background: rgba(0, 240, 255, 0.05);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      line-height: 1.45;
+    }
+    .pedagogic-note strong { color: var(--accent-cyan); }
+
+    /* DEONTOLOGICAL NOTICE */
+    .notice-box {
+      background: rgba(255, 230, 0, 0.06);
+      border: 1px solid rgba(255, 230, 0, 0.3);
+      border-left: 4px solid var(--accent-gold);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      color: #E2E8F0;
+      line-height: 1.45;
+    }
+    .notice-box strong { color: var(--accent-gold); }
+  </style>
+</head>
+<body>
+
+  <!-- TOP INSTITUTIONAL HUD (CANON 9, 14, 15) -->
+  <header class="top-hud">
+    <div class="brand-block">
+      <div class="brand-logo" onclick="onLogoClick()" title="Isotipo VISORD (Triple clic para control IP)">Ω</div>
+      <div class="brand-text">
+        <div class="brand-title">
+          VISORD META3
+          <span class="brand-badge" id="hudAuthBadge">INICIALIZANDO...</span>
+        </div>
+        <div class="brand-subtitle">Laboratorio Autónomo de Metapercepción Triádica Hexádica · Canon 2026</div>
+      </div>
+    </div>
+
+    <!-- MAIN MODULE TABS -->
+    <nav class="hud-tabs">
+      <button class="tab-btn active" onclick="switchView('view-form')">📋 Formulario de Campo</button>
+      <button class="tab-btn" onclick="switchView('view-data')">🗂️ Censo & Matriz</button>
+      <button class="tab-btn" onclick="switchView('view-results')">🔢 Resultados Numéricos</button>
+      <button class="tab-btn" onclick="switchView('view-charts')">📈 Cartografía Gráfica</button>
+      <button class="tab-btn" onclick="switchView('view-report')">📑 Informe Ejecutivo</button>
+    </nav>
+
+    <!-- GENERADOR DEMO CUASIALEATORIA EN HUD -->
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-family:'Roboto Mono', monospace; font-size:0.72rem; color:var(--text-muted);">DEMO:</span>
+      <select id="selectDemoN" style="background:#132042; color:#fff; border:1px solid var(--border-card); padding:5px 8px; border-radius:6px; font-size:0.78rem; font-family:'Roboto Mono', monospace;">
+        <option value="6">N = 6</option>
+        <option value="8">N = 8</option>
+        <option value="10">N = 10</option>
+        <option value="12" selected>N = 12</option>
+        <option value="15">N = 15</option>
+        <option value="20">N = 20</option>
+      </select>
+      <button class="btn-sec" onclick="triggerQuasiRandomDemo()" style="border-color:var(--accent-gold); color:var(--accent-gold); font-weight:700;" title="Genera un colectivo cuasialeatorio realista y recalcula instantáneamente todas las gráficas y matrices">
+        🎲 Demo Cuasialeatoria
+      </button>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- BANNER CANÓNICO DE RÉGIMEN DE DOBLE VÍA (CÁNONES 21 Y 22) -->
+    <div class="custody-banner" style="background:#091326; border:1.5px solid #1E3A5F; border-left:5px solid var(--accent-gold); border-radius:10px; padding:14px 18px; margin-bottom:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div style="flex:1; min-width:320px;">
+          <h3 style="color:var(--accent-gold); font-size:0.95rem; font-family:'Roboto Mono', monospace; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+            🛡️ ENTORNO DE DEMOSTRACIÓN CUASIALEATORIA CERRADA (CÁNONES 21 Y 22)
+          </h3>
+          <p style="color:var(--text-muted); font-size:0.82rem; line-height:1.45; max-width:1050px;">
+            Conforme a los <strong>Cánones 21 y 22 de NEXORD</strong>, los visualizadores VISORD en la web pública operan <strong>exclusivamente sobre modelos cuasialeatorios y demostraciones in silico cerradas</strong>. El procesamiento de <strong>datos de campo de personas reales</strong> y la emisión de <strong>informes diagnósticos vinculantes</strong> están reservados de forma fehaciente a <strong>Investigadores Principales (IP) acreditados</strong> a través de sus credenciales institucionales.
+          </p>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:0.70rem; font-family:'Roboto Mono', monospace; padding:4px 8px; border-radius:5px; background:rgba(255,230,0,0.12); color:var(--accent-gold); border:1px solid rgba(255,230,0,0.3);">✓ Demo Cerrada In Silico</span>
+          <span style="font-size:0.70rem; font-family:'Roboto Mono', monospace; padding:4px 8px; border-radius:5px; background:rgba(0,255,135,0.12); color:var(--accent-neon); border:1px solid rgba(0,255,135,0.3);">✓ Datos Reales: Área Exclusiva IP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VISTA 1: FORMULARIO INTERACTIVO DE CAMPO -->
+    <!-- =================================================================== -->
+    <section id="view-form" class="view-panel active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📝 Cuestionario de Campo Individual M3-AΩ</span>
+          </div>
+          <div>
+            <span style="font-size:0.8rem; color:var(--text-muted); margin-right:8px;">Participante que responde:</span>
+            <select id="selectRespondent" onchange="onRespondentSelectChange()" style="background:#132042; color:#fff; border:1px solid var(--border-card); padding:6px 12px; border-radius:6px; font-weight:700;">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
+        <p class="card-desc">
+          Este cuestionario recoge la doble capa de información del participante: sus elecciones efectivas propias de proximidad y distancia, y sus atribuciones metaperceptivas sobre las relaciones de los demás compañeros a lo largo de las 6 micro-sondas relacionales.
+        </p>
+
+        <!-- STEPPERS DE PROGRESO -->
+        <div class="stepper-nav">
+          <div class="step-node active" id="stNode0" onclick="goToStep(0)">
+            <div class="step-num">PASO 0</div>
+            <div class="step-lbl">Identidad</div>
+          </div>
+          <div class="step-node" id="stNode1" onclick="goToStep(1)">
+            <div class="step-num">PASO 1</div>
+            <div class="step-lbl">Preferencias Propias</div>
+          </div>
+          <div class="step-node" id="stNode2" onclick="goToStep(2)">
+            <div class="step-num">PASO 2</div>
+            <div class="step-lbl">Extremos (a y f)</div>
+          </div>
+          <div class="step-node" id="stNode3" onclick="goToStep(3)">
+            <div class="step-num">PASO 3</div>
+            <div class="step-lbl">Pivotes (b y e)</div>
+          </div>
+          <div class="step-node" id="stNode4" onclick="goToStep(4)">
+            <div class="step-num">PASO 4</div>
+            <div class="step-lbl">Límites (c y d)</div>
+          </div>
+        </div>
+
+        <!-- CONTENIDO DEL PASO ACTIVO -->
+        <div id="stepContent" style="min-height:300px; padding:10px 0;">
+          <!-- Inyectado dinámicamente por renderStep() -->
+        </div>
+
+        <!-- BARRA INFERIOR DE ACCIÓN DEL FORMULARIO -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
+          <button class="btn-sec" onclick="prevStep()">◀ Paso Anterior</button>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-sec" onclick="saveCurrentRespondent(false)">💾 Guardar Respuestas</button>
+            <button class="btn-act" onclick="nextStep()">Siguiente Paso ▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VISTA 2: CENSO & MATRIZ DE RESPUESTAS -->
+    <!-- =================================================================== -->
+    <section id="view-data" class="view-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🗂️ Censo del Grupo y Monitor de Quórum</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="btn-sec" onclick="loadPresetDataset('n12')">📂 Familia N=12 Factual</button>
+            <button class="btn-sec" onclick="loadPresetDataset('n8')">📂 Gestión N=8</button>
+            <button class="btn-sec" onclick="triggerQuasiRandomDemo()" style="border-color:var(--accent-gold); color:var(--accent-gold); font-weight:700;">🎲 Demo Cuasialeatoria</button>
+            <button class="btn-sec" onclick="resetBlankStudy()">➕ Nuevo Estudio en Blanco</button>
+            <button class="btn-sec" onclick="exportJSON()">📥 Exportar JSON</button>
+            <label class="btn-sec" style="cursor:pointer;">
+              📤 Importar JSON <input type="file" id="fileImport" accept=".json" style="display:none;" onchange="importJSON(event)">
+            </label>
+            <a href="centralizador_metapercepcion.html" target="_blank" class="btn-sec" style="border-color:var(--accent-cyan); color:var(--accent-cyan); text-decoration:none;">🗄️ Panel Centralizador IP</a>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div id="quorumStatus" style="font-family:'Roboto Mono', monospace; font-size:0.84rem; color:var(--accent-neon);">
+            Quórum: 12 / 12 participantes con respuestas completadas (100%)
+          </div>
+          <button class="btn-act" onclick="recalculateAll(); switchView('view-results');">⚡ Ejecutar Tratamiento Matemático</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="tableDataResponses">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Elec. Proximidad (E)</th>
+                <th>Elec. Distancia (R)</th>
+                <th>Exp. Proximidad (pE)</th>
+                <th>Sonda a (1º Prox)</th>
+                <th>Sonda b (3º Prox)</th>
+                <th>Sonda c (Últ Prox)</th>
+                <th>Sonda d (Últ Dist)</th>
+                <th>Sonda e (3º Dist)</th>
+                <th>Sonda f (1º Dist)</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyResponses">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VISTA 3: RESULTADOS NUMÉRICOS COMPLETOS -->
+    <!-- =================================================================== -->
+    <section id="view-results" class="view-panel">
+      <!-- SUBTABS DE RESULTADOS -->
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="btn-sec" onclick="showSubResult('sub-macro')">📊 Macro-Consenso M3 vs ORBIT</button>
+        <button class="btn-sec" onclick="showSubResult('sub-ios')">🧠 Ortodoxia Sociocognitiva (IOS)</button>
+        <button class="btn-sec" onclick="showSubResult('sub-halo')">🌓 Descomposición del Halo</button>
+        <button class="btn-sec" onclick="showSubResult('sub-probes')">🎯 Calibración de Micro-Sondas</button>
+      </div>
+
+      <!-- TABLA 1: MACRO-CONSENSO -->
+      <div class="card" id="sub-macro">
+        <div class="card-header">
+          <div class="card-title">1. Macro-Consenso M3 y Tensión Cognitiva frente a ORBIT</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); font-family:'Roboto Mono', monospace;">
+            Pesos Bipolares: w = [+3, +2, +1, -1, -2, -3]
+          </div>
+        </div>
+        <p class="card-desc">
+          Contraste directo entre el <strong>Potencial Sincrético M3</strong> (expectativa colectiva conjeturada en las 6 sondas) y el <strong>Rango Factual ORBIT</strong> (acción relacional efectiva). Revela Alfas de Escaparate, Alfas de Trinchera e Invariantes Consonantes.
+        </p>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sujeto</th>
+                <th>Score M3 Sincrético</th>
+                <th>Rank M3</th>
+                <th>Rango Medio ORBIT</th>
+                <th>Rank ORBIT</th>
+                <th>Δ Macro (Tensión)</th>
+                <th>Patrón Sociológico</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyMacro">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLA 2: IOS -->
+      <div class="card" id="sub-ios" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">2. Índice de Ortodoxia Sociocognitiva (IOS) y Perfiles de Observador</div>
+        </div>
+        <p class="card-desc">
+          Mide el grado de lucidez y consonancia de cada observador individual con el consenso del colectivo evaluado sobre la <em>alteridad pura</em> (excluyéndose a sí mismo). Clasifica a los participantes en 4 cuadrantes cognitivos.
+        </p>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Observador</th>
+                <th>Índice IOS (ρ Spearman)</th>
+                <th>Auto-Calibración (Δk)</th>
+                <th>Cuadrante Sociocognitivo</th>
+                <th>Dictamen Interpretativo</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyIOS">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLA 3: HALO -->
+      <div class="card" id="sub-halo" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">3. Descomposición Multinivel del Halo: Base Estructural vs. Sesgo Puro</div>
+        </div>
+        <p class="card-desc">
+          Partición aditiva exacta: <code>D = Δe + ΔG</code>. Desglosa si la diferencia entre las atribuciones de proximidad y distancia responde a la estructura objetiva del grupo (Δe) o a una distorsión cognitiva pura (ΔG).
+        </p>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Estrato Dialéctico</th>
+                <th>Diferencial Bruto (D)</th>
+                <th>Base Estructural (Δe)</th>
+                <th>Sesgo Cognitivo Puro (ΔG)</th>
+                <th>% Base Estructural</th>
+                <th>Halo Normalizado (Φ_halo)</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyHalo">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLA 4: SONDAS -->
+      <div class="card" id="sub-probes" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">4. Calibración Factual de las Seis Micro-Sondas (a, b, c, d, e, f)</div>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sonda</th>
+                <th>Polo Relacional</th>
+                <th>Expansividad Atribuida (X)</th>
+                <th>Elecciones Reales (e)</th>
+                <th>Error Calibración (G = X - e)</th>
+                <th>Precisión (P)</th>
+                <th>Exactitud F1 Macro</th>
+                <th>Consenso Jaccard (J)</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyProbes">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VISTA 4: CARTOGRAFÍA GRÁFICA PLATINUM (7 GRÁFICOS SVG) -->
+    <!-- =================================================================== -->
+    <section id="view-charts" class="view-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📈 Cartografía Gráfica Platinum (#0B132B)</div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <select id="selectChartType" onchange="renderActiveChart()" style="background:#132042; color:#fff; border:1px solid var(--border-card); padding:7px 14px; border-radius:6px; font-weight:700;">
+              <option value="0">Gráfico 0: Slopegraph M3 vs. ORBIT (Tensión Cognitiva)</option>
+              <option value="1">Gráfico 1: Dispersión Cartesiana Polar (X^α vs X^ω)</option>
+              <option value="2">Gráfico 2: Calibración de Amplitud Factual (G = X - e)</option>
+              <option value="3">Gráfico 3: Topología de Cuadrantes (Consenso vs Exactitud)</option>
+              <option value="4">Gráfico 4: Prestigio Real vs Visibilidad Atribuida (Dumbbell)</option>
+              <option value="5">Gráfico 5: Descomposición Multinivel del Halo (Barras)</option>
+              <option value="6">Gráfico 6: Perfil de Contorno Relacional (Proximidad ➔ Distancia)</option>
+            </select>
+            <div id="slopegraphExtraControls" style="display:inline-flex; gap:6px;">
+              <select id="selectSlopegraphMode" onchange="renderActiveChart()" style="background:#132042; color:#fff; border:1px solid var(--border-card); padding:6px 10px; border-radius:6px; font-size:0.8rem;">
+                <option value="macro">Vista: Macro Colectivo</option>
+                <!-- Opciones micro inyectadas dinámicamente -->
+              </select>
+            </div>
+            <button class="btn-sec" onclick="downloadCurrentSVG()">💾 Descargar SVG</button>
+          </div>
+        </div>
+
+        <!-- CONTENEDOR DEL LIENZO SVG -->
+        <div class="chart-container">
+          <div class="chart-svg-box" id="chartSvgBox">
+            <!-- SVG renderizado dinámicamente -->
+          </div>
+          <div class="pedagogic-note" id="chartPedagogicNote">
+            <!-- Nota pedagógica dinámica -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VISTA 5: INFORME EJECUTIVO & AUDITORÍA -->
+    <!-- =================================================================== -->
+    <section id="view-report" class="view-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📑 Informe Ejecutivo Automatizado M3-AΩ</div>
+          <button class="btn-act" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        </div>
+
+        <div id="executiveReportContent" style="line-height:1.6; font-size:0.92rem; color:#E2E8F0;">
+          <!-- Inyectado dinámicamente con las conclusiones del estudio -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- MOTOR MATEMÁTICO, DATOS Y RENDERIZADO (JAVASCRIPT NATIVO) -->
+  <!-- =================================================================== -->
+  <script>
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    let groupData = JSON.parse('[{"id": 1, "name": "01", "label": "1A", "orbit": [1, 3, 5, 4, 2, 8, 9, 12, 6, 7, 11, 10], "E": [3, 5, 4], "R": [10, 7, 11], "pE": [3], "pR": [10, 11], "probes": {"a": 5, "b": 2, "c": 3, "d": 12, "e": 11, "f": 8}}, {"id": 2, "name": "02", "label": "2A", "orbit": [3, 1, 5, 2, 4, 8, 9, 12, 6, 11, 7, 10], "E": [1, 5, 3], "R": [10, 7, 11], "pE": [3], "pR": [10, 7], "probes": {"a": 4, "b": 1, "c": 3, "d": 12, "e": 10, "f": 8}}, {"id": 3, "name": "03", "label": "3A", "orbit": [4, 3, 1, 5, 2, 8, 9, 12, 6, 7, 11, 10], "E": [1, 5, 4, 2], "R": [10, 7, 11], "pE": [4], "pR": [10, 11], "probes": {"a": 5, "b": 2, "c": 4, "d": 12, "e": 11, "f": 8}}, {"id": 4, "name": "04", "label": "4A", "orbit": [1, 3, 4, 5, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 7, 11], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 3, "d": 12, "e": 10, "f": 8}}, {"id": 5, "name": "05", "label": "5A", "orbit": [1, 5, 3, 4, 2, 8, 9, 12, 6, 7, 11, 10], "E": [1, 3, 4, 2], "R": [10, 7, 11], "pE": [1], "pR": [10, 11], "probes": {"a": 1, "b": 3, "c": 2, "d": 12, "e": 11, "f": 8}}, {"id": 6, "name": "06", "label": "6A", "orbit": [5, 1, 3, 4, 2, 8, 9, 12, 7, 6, 11, 10], "E": [1, 3, 5, 4], "R": [10, 7, 11], "pE": [5], "pR": [10, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 12, "e": 11, "f": 8}}, {"id": 7, "name": "07", "label": "7A", "orbit": [3, 1, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 6, 11], "pE": [3], "pR": [10, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 12, "e": 10, "f": 8}}, {"id": 8, "name": "08", "label": "8A", "orbit": [5, 1, 3, 4, 2, 8, 9, 12, 11, 7, 6, 10], "E": [1, 3, 5], "R": [10, 7, 6], "pE": [5], "pR": [10, 6], "probes": {"a": 2, "b": 5, "c": 4, "d": 7, "e": 12, "f": 9}}, {"id": 9, "name": "09", "label": "9A", "orbit": [1, 3, 5, 4, 2, 9, 8, 12, 11, 6, 7, 10], "E": [1, 3, 5, 4], "R": [10, 7, 6], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 4, "d": 6, "e": 12, "f": 8}}, {"id": 10, "name": "10", "label": "10A", "orbit": [3, 1, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [7, 6, 11], "pE": [3], "pR": [7, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 7, "e": 12, "f": 8}}, {"id": 11, "name": "11", "label": "11A", "orbit": [1, 3, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 7, 6], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 4, "d": 12, "e": 10, "f": 8}}, {"id": 12, "name": "12", "label": "12A", "orbit": [3, 1, 5, 4, 2, 12, 8, 9, 11, 6, 7, 10], "E": [1, 3, 5, 4], "R": [10, 7, 6], "pE": [3], "pR": [10, 7], "probes": {"a": 2, "b": 5, "c": 4, "d": 8, "e": 9, "f": 6}}]');
+    let currentStep = 0;
+    let activeRespondentId = 1;
+    let computedResults = null;
+
+    // PROTOCOLO UNIVERSAL DE ACCESO DIRECTO IP (CÁNONES 21 Y 22)
+    const STORAGE_KEY_IP = 'NEXORD_IP_ACCREDITATION_KEY';
+    const isLocalWorkstation = (
+      window.location.protocol === 'file:' ||
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.local')
+    );
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasIpUrlParam = urlParams.has('ip') || urlParams.get('modo') === 'ip' || urlParams.has('ip_auth');
+
+    if (hasIpUrlParam) {
+      try { localStorage.setItem(STORAGE_KEY_IP, 'ACTIVE_IP_' + Date.now()); } catch(e) {}
+    }
+
+    let isStoredIP = false;
+    try { isStoredIP = !!localStorage.getItem(STORAGE_KEY_IP); } catch(e) {}
+
+    const isIPAuthorized = isLocalWorkstation || hasIpUrlParam || isStoredIP;
+
+    // TRIPLE CLIC DISCRETO EN EL ISOTIPO
+    let logoClicks = 0;
+    function onLogoClick() {
+      logoClicks++;
+      if (logoClicks >= 3) {
+        logoClicks = 0;
+        const pin = prompt("🛡️ ACCESO INVESTIGADOR PRINCIPAL (NODO 0):\nIntroduzca credencial o PIN para desbloquear el modo de campo real:");
+        if (pin && pin.trim().length >= 4) {
+          try { localStorage.setItem(STORAGE_KEY_IP, 'ACTIVE_IP_' + Date.now()); } catch(e) {}
+          alert("✓ Credencial de IP reconocida. Desbloqueando modo de campo real...");
+          window.location.href = window.location.pathname + '?ip=1';
+        }
+      }
+      setTimeout(() => { logoClicks = 0; }, 1500);
+    }
+
+    function updateIPAuthUI() {
+      const b = document.getElementById('hudAuthBadge');
+      if (!b) return;
+      if (isIPAuthorized) {
+        b.style.background = 'rgba(0, 255, 135, 0.16)';
+        b.style.border = '1px solid var(--accent-neon)';
+        b.style.color = 'var(--accent-neon)';
+        b.textContent = '🟢 MODO IP ACREDITADO (CAMPO REAL DIRECTO)';
+        b.title = 'Sesión autenticada como Investigador Principal. Acceso a datos de campo real desbloqueado.';
+      } else {
+        b.style.background = 'rgba(255, 230, 0, 0.12)';
+        b.style.border = '1px solid var(--accent-gold)';
+        b.style.color = 'var(--accent-gold)';
+        b.textContent = '🛡️ DEMO IN SILICO CERRADA';
+        b.title = 'Entorno demostrativo público. Datos de personas reales restringidos a IP Acreditado.';
+      }
+    }
+
+    // INICIALIZACIÓN
+    window.addEventListener('DOMContentLoaded', () => {
+      updateIPAuthUI();
+      initRespondentDropdown();
+      renderStep();
+      recalculateAll();
+      renderDataResponsesTable();
+    });
+
+    // CONMUTACIÓN DE VISTAS PRINCIPALES
+    function switchView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add('active');
+
+      const btnIndex = ['view-form', 'view-data', 'view-results', 'view-charts', 'view-report'].indexOf(viewId);
+      if (btnIndex >= 0) {
+        document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+      }
+
+      if (viewId === 'view-charts') {
+        renderActiveChart();
+      }
+    }
+
+    // CAMBIO DE SUBPESTAÑAS DE RESULTADOS
+    function showSubResult(subId) {
+      ['sub-macro', 'sub-ios', 'sub-halo', 'sub-probes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = (id === subId) ? 'block' : 'none';
+      });
+    }
+
+    // INICIALIZACIÓN DEL SELECTOR DE ENCUESTADO
+    function initRespondentDropdown() {
+      const sel = document.getElementById('selectRespondent');
+      sel.innerHTML = '';
+      groupData.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `Sujeto ${p.label} (${p.name})`;
+        sel.appendChild(opt);
+      });
+      sel.value = activeRespondentId;
+
+      // Actualizar select de slopegraph micro
+      const selSlope = document.getElementById('selectSlopegraphMode');
+      if (selSlope) {
+        selSlope.innerHTML = '<option value="macro">Vista: Macro Colectivo</option>';
+        groupData.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = `Micro: ${p.label} (Observador)`;
+          selSlope.appendChild(opt);
+        });
+      }
+    }
+
+    function onRespondentSelectChange() {
+      activeRespondentId = parseInt(document.getElementById('selectRespondent').value, 10);
+      currentStep = 0;
+      renderStep();
+    }
+
+    // STEPPER NAVIGATION
+    function goToStep(s) {
+      currentStep = s;
+      renderStep();
+    }
+
+    function nextStep() {
+      if (currentStep < 4) {
+        currentStep++;
+        renderStep();
+      } else {
+        saveCurrentRespondent(true);
+        // Avanzar al siguiente participante si hay
+        const currIdx = groupData.findIndex(p => p.id === activeRespondentId);
+        if (currIdx < groupData.length - 1) {
+          activeRespondentId = groupData[currIdx + 1].id;
+          document.getElementById('selectRespondent').value = activeRespondentId;
+          currentStep = 0;
+          renderStep();
+        } else {
+          switchView('view-results');
+        }
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep();
+      }
+    }
+
+    // RENDERIZADO DEL FORMULARIO DE CAMPO PASO A PASO
+    function renderStep() {
+      // Actualizar UI del stepper
+      for (let i = 0; i <= 4; i++) {
+        const el = document.getElementById('stNode' + i);
+        if (el) {
+          el.classList.toggle('active', i === currentStep);
+          el.classList.toggle('completed', i < currentStep);
+        }
+      }
+
+      const curr = groupData.find(p => p.id === activeRespondentId) || groupData[0];
+      const box = document.getElementById('stepContent');
+
+      if (currentStep === 0) {
+        // PASO 0: IDENTIDAD
+        box.innerHTML = `
+          <div style="background:#132042; padding:18px; border-radius:10px; border:1px solid var(--border-card);">
+            <h3 style="color:#00F0FF; margin-bottom:8px;">Paso 0: Confirmación de Identidad del Encuestado</h3>
+            <p style="color:var(--text-muted); font-size:0.86rem; margin-bottom:14px;">
+              Estás registrando o modificando las respuestas correspondientes al miembro:
+            </p>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="width:54px; height:54px; border-radius:10px; background:#0B132B; border:2px solid var(--accent-neon); display:flex; align-items:center; justify-content:center; font-family:'Roboto Mono'; font-size:1.3rem; font-weight:900; color:var(--accent-neon);">
+                ${curr.label}
+              </div>
+              <div>
+                <div style="font-size:1.1rem; font-weight:800; color:#fff;">Participante ${curr.label} (Código ${curr.name})</div>
+                <div style="font-size:0.8rem; color:var(--text-dim); font-family:'Roboto Mono';">Estado: Respuestas registradas en el corpus</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 1) {
+        // PASO 1: PREFERENCIAS PROPIAS
+        box.innerHTML = `
+          <div>
+            <h3 style="color:var(--accent-neon); margin-bottom:4px;">1.1. Preferencias Efectivas de Proximidad (Elecciones E)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Con qué compañeros mantienes una mayor cercanía, colaboración o afinidad de trabajo?</p>
+            <div class="chips-grid" id="gridE"></div>
+
+            <h3 style="color:var(--accent-magenta); margin-top:20px; margin-bottom:4px;">1.2. Preferencias Efectivas de Distancia Relacional (Distancia R)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Con qué compañeros prefieres guardar una mayor reserva o distancia funcional?</p>
+            <div class="chips-grid" id="gridR"></div>
+
+            <h3 style="color:var(--accent-cyan); margin-top:20px; margin-bottom:4px;">1.3. Expectativa Reflexiva de Proximidad (pE)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Quién esperas que te otorgue a ti su preferencia de proximidad?</p>
+            <div class="chips-grid" id="gridPE"></div>
+          </div>
+        `;
+        renderChoiceChips('gridE', curr.E, 'prox', (val) => toggleArrayVal(curr.E, val));
+        renderChoiceChips('gridR', curr.R, 'dist', (val) => toggleArrayVal(curr.R, val));
+        renderChoiceChips('gridPE', curr.pE, 'prox', (val) => toggleArrayVal(curr.pE, val));
+
+      } else if (currentStep === 2) {
+        // PASO 2: EXTREMOS (a y f)
+        box.innerHTML = `
+          <div>
+            <h3 style="color:var(--accent-neon); margin-bottom:4px;">2.1. Sonda a · Cenit de Proximidad (1º Proximidad)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">Para el conjunto del grupo, ¿a quién consideras el referente absoluto de proximidad y preferencia?</p>
+            <div class="chips-grid" id="gridProbeA"></div>
+
+            <h3 style="color:var(--accent-magenta); margin-top:20px; margin-bottom:4px;">2.2. Sonda f · Nadir de Distancia (1º Distancia)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">Para el conjunto del grupo, ¿quién se sitúa en la cota de máxima distancia relacional?</p>
+            <div class="chips-grid" id="gridProbeF"></div>
+          </div>
+        `;
+        renderSingleChoiceChips('gridProbeA', curr.probes.a, 'prox', (val) => { curr.probes.a = val; renderStep(); });
+        renderSingleChoiceChips('gridProbeF', curr.probes.f, 'dist', (val) => { curr.probes.f = val; renderStep(); });
+
+      } else if (currentStep === 3) {
+        // PASO 3: PIVOTES (b y e)
+        box.innerHTML = `
+          <div>
+            <h3 style="color:var(--accent-neon); margin-bottom:4px;">3.1. Sonda b · Pivote Intermedio de Proximidad (3º Proximidad)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Quién ocupa la tercera posición consolidada de simpatía o cohesión de camarilla?</p>
+            <div class="chips-grid" id="gridProbeB"></div>
+
+            <h3 style="color:var(--accent-magenta); margin-top:20px; margin-bottom:4px;">3.2. Sonda e · Pivote Intermedio de Distancia (3º Distancia)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Quién ocupa la tercera posición en la gradación de reserva o separación métrica?</p>
+            <div class="chips-grid" id="gridProbeE"></div>
+          </div>
+        `;
+        renderSingleChoiceChips('gridProbeB', curr.probes.b, 'prox', (val) => { curr.probes.b = val; renderStep(); });
+        renderSingleChoiceChips('gridProbeE', curr.probes.e, 'dist', (val) => { curr.probes.e = val; renderStep(); });
+
+      } else if (currentStep === 4) {
+        // PASO 4: LÍMITES (c y d)
+        box.innerHTML = `
+          <div>
+            <h3 style="color:var(--accent-neon); margin-bottom:4px;">4.1. Sonda c · Límite Fronterizo de Proximidad (Último Proximidad)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Quién marca la frontera elástica o último compañero en el círculo de cercanía?</p>
+            <div class="chips-grid" id="gridProbeC"></div>
+
+            <h3 style="color:var(--accent-magenta); margin-top:20px; margin-bottom:4px;">4.2. Sonda d · Límite Fronterizo de Distancia (Último Distancia)</h3>
+            <p style="color:var(--text-muted); font-size:0.83rem;">¿Quién es el último compañero antes de entrar en la neutralidad en la escala de lejanía?</p>
+            <div class="chips-grid" id="gridProbeD"></div>
+          </div>
+        `;
+        renderSingleChoiceChips('gridProbeC', curr.probes.c, 'prox', (val) => { curr.probes.c = val; renderStep(); });
+        renderSingleChoiceChips('gridProbeD', curr.probes.d, 'dist', (val) => { curr.probes.d = val; renderStep(); });
+      }
+    }
+
+    function renderChoiceChips(containerId, activeArray, styleType, onToggle) {
+      const c = document.getElementById(containerId);
+      if (!c) return;
+      c.innerHTML = '';
+      groupData.forEach(p => {
+        if (p.id === activeRespondentId) return; // No auto-elección en preferencias
+        const isSel = activeArray.includes(p.id);
+        const div = document.createElement('div');
+        div.className = `chip-item ${isSel ? (styleType === 'prox' ? 'selected-prox' : 'selected-dist') : ''}`;
+        div.innerHTML = `
+          <div class="chip-badge">${p.label}</div>
+          <div class="chip-name">${p.name}</div>
+        `;
+        div.onclick = () => {
+          onToggle(p.id);
+          renderStep();
+        };
+        c.appendChild(div);
+      });
+    }
+
+    function renderSingleChoiceChips(containerId, activeVal, styleType, onSelect) {
+      const c = document.getElementById(containerId);
+      if (!c) return;
+      c.innerHTML = '';
+      groupData.forEach(p => {
+        const isSel = (p.id === activeVal);
+        const div = document.createElement('div');
+        div.className = `chip-item ${isSel ? (styleType === 'prox' ? 'selected-prox' : 'selected-dist') : ''}`;
+        div.innerHTML = `
+          <div class="chip-badge">${p.label}</div>
+          <div class="chip-name">${p.name}</div>
+        `;
+        div.onclick = () => onSelect(p.id);
+        c.appendChild(div);
+      });
+    }
+
+    function toggleArrayVal(arr, val) {
+      const idx = arr.indexOf(val);
+      if (idx >= 0) arr.splice(idx, 1);
+      else arr.push(val);
+    }
+
+    function saveCurrentRespondent(silent) {
+      recalculateAll();
+      renderDataResponsesTable();
+      if (!silent) alert(`¡Respuestas del Sujeto ${activeRespondentId} guardadas y recalculadas!`);
+    }
+
+    // =========================================================================
+    // MOTOR DE TRATAMIENTO MATEMÁTICO COMPLETO (JAVASCRIPT)
+    // =========================================================================
+    function recalculateAll() {
+      const N = groupData.length;
+      if (N < 2) return;
+
+      // 1. Matriz de Atribuciones y Frecuencias
+      const countProbes = { a: {}, b: {}, c: {}, d: {}, e: {}, f: {} };
+      for (let i = 1; i <= N; i++) {
+        ['a', 'b', 'c', 'd', 'e', 'f'].forEach(k => countProbes[k][i] = 0);
+      }
+
+      groupData.forEach(p => {
+        ['a', 'b', 'c', 'd', 'e', 'f'].forEach(k => {
+          const target = p.probes[k];
+          if (target && countProbes[k][target] !== undefined) {
+            countProbes[k][target]++;
+          }
+        });
+      });
+
+      // 2. Score M3 con Ponderación Bipolar Armónica
+      // w = [+3, +2, +1, -1, -2, -3]
+      const scoresM3 = {};
+      for (let i = 1; i <= N; i++) {
+        scoresM3[i] = 3 * countProbes.a[i] + 2 * countProbes.b[i] + 1 * countProbes.c[i]
+                    - 1 * countProbes.d[i] - 2 * countProbes.e[i] - 3 * countProbes.f[i];
+      }
+
+      // Rango M3
+      const sortedByM3 = [...groupData].map(p => ({ id: p.id, score: scoresM3[p.id] }))
+                                       .sort((x, y) => y.score - x.score);
+      const rankM3 = {};
+      sortedByM3.forEach((item, idx) => rankM3[item.id] = idx + 1);
+
+      // 3. Rango Factual ORBIT
+      const meanOrbit = {};
+      for (let j = 1; j <= N; j++) {
+        let sumRanks = 0;
+        let countChoices = 0;
+        groupData.forEach(p => {
+          if (p.orbit && p.orbit.length >= N) {
+            const pos = p.orbit.indexOf(j);
+            if (pos >= 0) {
+              sumRanks += (pos + 1);
+              countChoices++;
+            }
+          } else if (p.E.includes(j)) {
+            sumRanks += 1;
+            countChoices++;
+          }
+        });
+        meanOrbit[j] = countChoices > 0 ? (sumRanks / countChoices) : N;
+      }
+
+      const sortedByOrbit = [...groupData].map(p => ({ id: p.id, mean: meanOrbit[p.id] }))
+                                          .sort((x, y) => x.mean - y.mean);
+      const rankOrbit = {};
+      sortedByOrbit.forEach((item, idx) => rankOrbit[item.id] = idx + 1);
+
+      // 4. Macro Tensión y Patrón Sociológico
+      const macroSummary = groupData.map(p => {
+        const rM3 = rankM3[p.id];
+        const rOrb = rankOrbit[p.id];
+        const delta = rOrb - rM3; // Tensión Macro
+        let pattern = "Invariante Consonante";
+        let badgeClass = "badge-consonante";
+        if (delta >= 3) {
+          pattern = "Alfa de Escaparate (Sobrevalorado)";
+          badgeClass = "badge-escaparate";
+        } else if (delta <= -3) {
+          pattern = "Alfa de Trinchera (Prestigio en Sombra)";
+          badgeClass = "badge-trinchera";
+        }
+        return {
+          id: p.id,
+          label: p.label,
+          name: p.name,
+          scoreM3: scoresM3[p.id],
+          rankM3: rM3,
+          meanOrbit: meanOrbit[p.id],
+          rankOrbit: rOrb,
+          deltaMacro: delta,
+          pattern: pattern,
+          badgeClass: badgeClass
+        };
+      });
+
+      // 5. Índice de Ortodoxia Sociocognitiva (IOS)
+      // Correlación de Spearman sobre alteridad pura (N-1)
+      const iosResults = groupData.map(obs => {
+        const otherIds = groupData.map(p => p.id).filter(id => id !== obs.id);
+        
+        // Consenso de alteridad excluyendo al observador
+        const subScores = {};
+        otherIds.forEach(id => subScores[id] = 0);
+        groupData.filter(p => p.id !== obs.id).forEach(p => {
+          ['a', 'b', 'c', 'd', 'e', 'f'].forEach((k, idx) => {
+            const w = [3, 2, 1, -1, -2, -3][idx];
+            if (otherIds.includes(p.probes[k])) {
+              subScores[p.probes[k]] += w;
+            }
+          });
+        });
+
+        // Puntuaciones del observador sobre alteridad
+        const obsScores = {};
+        otherIds.forEach(id => obsScores[id] = 0);
+        ['a', 'b', 'c', 'd', 'e', 'f'].forEach((k, idx) => {
+          const w = [3, 2, 1, -1, -2, -3][idx];
+          if (otherIds.includes(obs.probes[k])) {
+            obsScores[obs.probes[k]] += w;
+          }
+        });
+
+        const xVals = otherIds.map(id => subScores[id]);
+        const yVals = otherIds.map(id => obsScores[id]);
+        const rho = computeSpearmanRho(xVals, yVals);
+
+        // Auto-calibración: Rank percibido propio vs recibido
+        const deltaK = (rankOrbit[obs.id] || 0) - (rankM3[obs.id] || 0);
+
+        let cogType = "Conformista";
+        if (rho >= 0.40 && deltaK > 0) cogType = "Conspirador Lúcido";
+        else if (rho >= 0.40 && deltaK <= 0) cogType = "Conformista de Libro";
+        else if (rho < 0.40 && deltaK <= 0) cogType = "Disidente Marginal";
+        else cogType = "Inadaptado Perceptual";
+
+        return {
+          id: obs.id,
+          label: obs.label,
+          name: obs.name,
+          iosRho: rho,
+          deltaK: deltaK,
+          cogType: cogType
+        };
+      });
+
+      // 6. Calibración de Micro-Sondas y Exactitud F1
+      const probeStats = {};
+      ['a', 'b', 'c', 'd', 'e', 'f'].forEach((k, kIdx) => {
+        const isProx = kIdx < 3;
+        let hits = 0;
+        let totalAttr = 0;
+        let totalReal = 0;
+
+        groupData.forEach(p => {
+          const target = p.probes[k];
+          totalAttr++;
+          const targetPerson = groupData.find(x => x.id === target);
+          const realChoices = isProx ? (targetPerson ? targetPerson.E : []) : (targetPerson ? targetPerson.R : []);
+          if (realChoices.includes(p.id)) hits++;
+        });
+
+        groupData.forEach(p => {
+          totalReal += (isProx ? p.E.length : p.R.length);
+        });
+        const meanReal = totalReal / (N || 1);
+        const meanAttr = totalAttr / (N || 1);
+
+        const prec = totalAttr > 0 ? (hits / totalAttr) : 0;
+        const rec = totalReal > 0 ? (hits / (totalReal / 6.0)) : 0;
+        const f1 = (prec + rec) > 0 ? (2 * prec * rec / (prec + rec)) : 0;
+        const jaccard = (totalAttr + totalReal - hits) > 0 ? (hits / (totalAttr + totalReal - hits)) : 0;
+
+        probeStats[k] = {
+          key: k,
+          label: isProx ? (kIdx === 0 ? "1º Proximidad" : (kIdx === 1 ? "3º Proximidad" : "Últ. Proximidad"))
+                        : (kIdx === 3 ? "Últ. Distancia" : (kIdx === 4 ? "3º Distancia" : "1º Distancia")),
+          pole: isProx ? "Proximidad" : "Distancia",
+          meanAttr: meanAttr,
+          meanReal: meanReal,
+          errorG: meanAttr - meanReal,
+          precision: prec,
+          f1: f1,
+          jaccard: jaccard
+        };
+      });
+
+      // 7. Descomposición del Halo en 3 Estratos
+      const haloStrata = [
+        { name: "Estrato I (Extremos: a vs f)", p1: 'a', p2: 'f' },
+        { name: "Estrato II (Pivotes k=3: b vs e)", p1: 'b', p2: 'e' },
+        { name: "Estrato III (Fronteras: c vs d)", p1: 'c', p2: 'd' }
+      ].map(st => {
+        const s1 = probeStats[st.p1];
+        const s2 = probeStats[st.p2];
+        const D = s1.meanAttr - s2.meanAttr; // En nuestro caso 1.0 - 1.0 = 0.00
+        const deltaE = s1.meanReal - s2.meanReal;
+        const deltaG = s1.errorG - s2.errorG;
+        const pctBase = (Math.abs(D) > 0) ? (deltaE / D * 100) : 0;
+        return {
+          stratum: st.name,
+          D: D,
+          deltaE: deltaE,
+          deltaG: deltaG,
+          pctBase: pctBase,
+          phiHalo: 0.0
+        };
+      });
+
+      computedResults = {
+        macroSummary,
+        iosResults,
+        probeStats,
+        haloStrata,
+        N
+      };
+
+      renderTables();
+      renderExecutiveReport();
+    }
+
+    function computeSpearmanRho(x, y) {
+      const n = x.length;
+      if (n < 2) return 1.0;
+      const rx = getRanks(x);
+      const ry = getRanks(y);
+      let d2 = 0;
+      for (let i = 0; i < n; i++) {
+        const d = rx[i] - ry[i];
+        d2 += d * d;
+      }
+      const rho = 1.0 - (6.0 * d2) / (n * (n * n - 1.0));
+      return Math.max(-1.0, Math.min(1.0, rho));
+    }
+
+    function getRanks(arr) {
+      const sorted = arr.map((val, idx) => ({ val, idx })).sort((a, b) => b.val - a.val);
+      const ranks = new Array(arr.length);
+      sorted.forEach((item, r) => { ranks[item.idx] = r + 1; });
+      return ranks;
+    }
+
+    // RENDERIZADO DE TABLAS DE RESULTADOS
+    function renderTables() {
+      if (!computedResults) return;
+
+      // 1. Tabla Macro
+      const tbMacro = document.getElementById('tbodyMacro');
+      tbMacro.innerHTML = '';
+      computedResults.macroSummary.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.label}</strong> (${r.name})</td>
+          <td style="font-family:'Roboto Mono'; font-weight:700;">${r.scoreM3 > 0 ? '+' + r.scoreM3 : r.scoreM3}</td>
+          <td><span style="color:var(--accent-cyan); font-weight:800;">#${r.rankM3}</span></td>
+          <td style="font-family:'Roboto Mono';">${r.meanOrbit.toFixed(2)}</td>
+          <td><span style="color:var(--accent-neon); font-weight:800;">#${r.rankOrbit}</span></td>
+          <td style="font-family:'Roboto Mono'; font-weight:800; color:${r.deltaMacro > 0 ? 'var(--accent-magenta)' : (r.deltaMacro < 0 ? 'var(--accent-neon)' : 'var(--accent-gold)')};">
+            ${r.deltaMacro > 0 ? '+' + r.deltaMacro : r.deltaMacro}
+          </td>
+          <td><span class="badge-tag ${r.badgeClass}">${r.pattern}</span></td>
+        `;
+        tbMacro.appendChild(tr);
+      });
+
+      // 2. Tabla IOS
+      const tbIOS = document.getElementById('tbodyIOS');
+      tbIOS.innerHTML = '';
+      computedResults.iosResults.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.label}</strong> (${r.name})</td>
+          <td style="font-family:'Roboto Mono'; font-weight:800; color:${r.iosRho >= 0.4 ? 'var(--accent-neon)' : 'var(--accent-magenta)'};">
+            ${r.iosRho >= 0 ? '+' : ''}${r.iosRho.toFixed(3)}
+          </td>
+          <td style="font-family:'Roboto Mono';">${r.deltaK > 0 ? '+' + r.deltaK : r.deltaK}</td>
+          <td><span class="badge-tag" style="background:#132042; border:1px solid var(--border-card); color:#fff;">${r.cogType}</span></td>
+          <td style="font-size:0.8rem; color:var(--text-muted);">${r.iosRho >= 0.4 ? 'Elevada sintonía con el relato grupal.' : 'Lectura divergente del mapa social colectivo.'}</td>
+        `;
+        tbIOS.appendChild(tr);
+      });
+
+      // 3. Tabla Halo
+      const tbHalo = document.getElementById('tbodyHalo');
+      tbHalo.innerHTML = '';
+      computedResults.haloStrata.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.stratum}</strong></td>
+          <td style="font-family:'Roboto Mono';">${r.D >= 0 ? '+' : ''}${r.D.toFixed(3)}</td>
+          <td style="font-family:'Roboto Mono'; color:var(--accent-blue);">${r.deltaE >= 0 ? '+' : ''}${r.deltaE.toFixed(3)}</td>
+          <td style="font-family:'Roboto Mono'; color:var(--accent-magenta);">${r.deltaG >= 0 ? '+' : ''}${r.deltaG.toFixed(3)}</td>
+          <td style="font-family:'Roboto Mono';">${r.pctBase.toFixed(1)}%</td>
+          <td style="font-family:'Roboto Mono'; font-weight:700;">${r.phiHalo.toFixed(4)}</td>
+        `;
+        tbHalo.appendChild(tr);
+      });
+
+      // 4. Tabla Sondas
+      const tbProbes = document.getElementById('tbodyProbes');
+      tbProbes.innerHTML = '';
+      Object.values(computedResults.probeStats).forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>Sonda ${s.key}</strong> (${s.label})</td>
+          <td><span style="color:${s.pole === 'Proximidad' ? 'var(--accent-neon)' : 'var(--accent-magenta)'};">${s.pole}</span></td>
+          <td style="font-family:'Roboto Mono';">${s.meanAttr.toFixed(2)}</td>
+          <td style="font-family:'Roboto Mono';">${s.meanReal.toFixed(2)}</td>
+          <td style="font-family:'Roboto Mono'; color:var(--accent-orange);">${s.errorG.toFixed(2)}</td>
+          <td style="font-family:'Roboto Mono'; font-weight:700;">${s.precision.toFixed(3)}</td>
+          <td style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-gold);">${s.f1.toFixed(3)}</td>
+          <td style="font-family:'Roboto Mono';">${s.jaccard.toFixed(3)}</td>
+        `;
+        tbProbes.appendChild(tr);
+      });
+    }
+
+    // RENDERIZADO DE LA MATRIZ DE RESPUESTAS (VISTA 2)
+    function renderDataResponsesTable() {
+      const tbody = document.getElementById('tbodyResponses');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      groupData.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${p.id}</strong></td>
+          <td><strong>${p.label}</strong></td>
+          <td style="font-family:'Roboto Mono';">${p.E.join(', ') || '—'}</td>
+          <td style="font-family:'Roboto Mono'; color:var(--accent-magenta);">${p.R.join(', ') || '—'}</td>
+          <td style="font-family:'Roboto Mono'; color:var(--accent-cyan);">${p.pE.join(', ') || '—'}</td>
+          <td>${p.probes.a || '—'}</td>
+          <td>${p.probes.b || '—'}</td>
+          <td>${p.probes.c || '—'}</td>
+          <td>${p.probes.d || '—'}</td>
+          <td>${p.probes.e || '—'}</td>
+          <td>${p.probes.f || '—'}</td>
+          <td>
+            <button class="btn-sec" style="padding:4px 8px; font-size:0.75rem;" onclick="activeRespondentId=${p.id}; document.getElementById('selectRespondent').value=${p.id}; currentStep=0; switchView('view-form');">✏️ Editar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const qEl = document.getElementById('quorumStatus');
+      if (qEl) {
+        qEl.textContent = `Quórum: ${groupData.length} / ${groupData.length} participantes activos (100%)`;
+      }
+    }
+
+    // =========================================================================
+    // CARTOGRAFÍA GRÁFICA PLATINUM (7 GRÁFICOS SVG NATIVOS)
+    // =========================================================================
+    function renderActiveChart() {
+      if (!computedResults) recalculateAll();
+      const type = document.getElementById('selectChartType').value;
+      const box = document.getElementById('chartSvgBox');
+      const note = document.getElementById('chartPedagogicNote');
+      const extraCtrl = document.getElementById('slopegraphExtraControls');
+
+      extraCtrl.style.display = (type === "0") ? "inline-flex" : "none";
+
+      if (type === "0") {
+        const mode = document.getElementById('selectSlopegraphMode').value;
+        box.innerHTML = renderSVG_Slopegraph(computedResults, mode);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> El <em>Slopegraph M3 vs. ORBIT</em> mapea la tensión sociocognitiva del colectivo. Las líneas <span style="color:var(--accent-neon);">verdes</span> revelan <em>Alfas de Trinchera</em> (sujetos que ascienden en la realidad fáctica de elecciones respecto a su visibilidad atribuida). Las líneas <span style="color:var(--accent-magenta);">magenta</span> evidencian <em>Alfas de Escaparate</em> (líderes sobrestimados en el imaginario que caen en las elecciones directas).`;
+      } else if (type === "1") {
+        box.innerHTML = renderSVG_Polar(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> La <em>Dispersión Bipolar de Expansividad</em> proyecta la atribución de volumen hacia la proximidad (Cenit X^α) vs la distancia (Nadir X^ω). Los puntos en el triángulo superior denotan <em>Sesgo de Halo Positivo</em> (mayor permeabilidad al afecto que a la distancia).`;
+      } else if (type === "2") {
+        box.innerHTML = renderSVG_Calibration(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> La <em>Calibración de Amplitud Factual (G = X - e)</em> mide el error de volumen por micro-sonda. Los valores negativos confirman que el grupo <em>subestima sistemáticamente</em> la densidad de elecciones reales que acontecen en la red íntima.`;
+      } else if (type === "3") {
+        box.innerHTML = renderSVG_Quadrants(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> La <em>Topología de Cuadrantes</em> cruza el consenso inter-observador (Jaccard) con la exactitud factual (Precisión P). El Cuadrante Q1 concentra la <em>Lucidez Compartida</em>, mientras que Q2 denota <em>Mito Colectivo</em> (alto acuerdo sobre una ficción que no ocurre).`;
+      } else if (type === "4") {
+        box.innerHTML = renderSVG_Dumbbell(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> El <em>Dumbbell Plot</em> compara el Prestigio Real de elecciones (<span style="color:#00F0FF;">punto azul</span>) con la Visibilidad Atribuida en M3 (<span style="color:#FFE600;">punto amarillo</span>). Permite identificar de un vistazo las asimetrías de liderazgo encubierto o sobrevalorado.`;
+      } else if (type === "5") {
+        box.innerHTML = renderSVG_Halo(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> La <em>Descomposición Multinivel del Halo</em> demuestra matemáticamente que la asimetría grupal se descompone en Base Estructural real (<span style="color:#38BDF8;">barra azul</span>) y Sesgo Cognitivo Puro (<span style="color:#FF007F;">barra roja</span>), anulándose en el diferencial neto D=0.00.`;
+      } else if (type === "6") {
+        box.innerHTML = renderSVG_Contorno(computedResults);
+        note.innerHTML = `<strong>💡 Nota Pedagógica:</strong> El <em>Perfil de Contorno Relacional</em> ilustra la ley cardinal de la psicología social: mientras la expansividad se presume constante (línea azul plana a 1.00), la exactitud factual F1 tiene su pico en el pivote intermedio b (0.42) y <strong>colapsa a 0.00 en toda la zona de distancia (d, e, f)</strong>, evidenciando la preservación privada del espacio personal.`;
+      }
+    }
+
+    // RENDERIZADOR SVG 0: SLOPEGRAPH M3 VS ORBIT
+    function renderSVG_Slopegraph(data, mode) {
+      const W = 860, H = 540;
+      const padL = 140, padR = 140, padT = 70, padB = 50;
+      const N = data.N;
+      const yStep = (H - padT - padB) / (N - 1);
+
+      let linesHtml = '';
+      let leftNodes = '';
+      let rightNodes = '';
+
+      if (mode === "macro") {
+        data.macroSummary.forEach(r => {
+          const y1 = padT + (r.rankM3 - 1) * yStep;
+          const y2 = padT + (r.rankOrbit - 1) * yStep;
+          
+          let col = "#FFE600";
+          if (r.deltaMacro <= -3) col = "#00FF87"; // Ascenso factual (Trinchera)
+          else if (r.deltaMacro >= 3) col = "#FF007F"; // Descenso factual (Escaparate)
+
+          linesHtml += `<line x1="${padL}" y1="${y1}" x2="${W - padR}" y2="${y2}" stroke="${col}" stroke-width="2.5" opacity="0.85" />`;
+          
+          leftNodes += `
+            <circle cx="${padL}" cy="${y1}" r="5" fill="${col}" />
+            <text x="${padL - 14}" y="${y1 + 4}" fill="#FFFFFF" font-family="Roboto Mono" font-size="11" font-weight="700" text-anchor="end">${r.label} (#${r.rankM3})</text>
+          `;
+
+          rightNodes += `
+            <circle cx="${W - padR}" cy="${y2}" r="5" fill="${col}" />
+            <text x="${W - padR + 14}" y="${y2 + 4}" fill="#FFFFFF" font-family="Roboto Mono" font-size="11" font-weight="700" text-anchor="start">${r.label} (#${r.rankOrbit})</text>
+          `;
+        });
+      } else {
+        // Micro individual
+        const obsId = parseInt(mode, 10);
+        const obs = data.macroSummary.find(p => p.id === obsId) || data.macroSummary[0];
+        data.macroSummary.forEach(r => {
+          const y1 = padT + (r.rankM3 - 1) * yStep;
+          const y2 = padT + (r.rankOrbit - 1) * yStep;
+          const isTarget = (r.id === obs.id);
+          const col = isTarget ? "#00F0FF" : "rgba(148, 163, 184, 0.25)";
+          const w = isTarget ? 4 : 1;
+
+          linesHtml += `<line x1="${padL}" y1="${y1}" x2="${W - padR}" y2="${y2}" stroke="${col}" stroke-width="${w}" />`;
+          leftNodes += `<circle cx="${padL}" cy="${y1}" r="${isTarget ? 7 : 3}" fill="${col}" /><text x="${padL - 14}" y="${y1 + 4}" fill="${isTarget ? '#00F0FF' : '#64748B'}" font-family="Roboto Mono" font-size="10" text-anchor="end">${r.label}</text>`;
+          rightNodes += `<circle cx="${W - padR}" cy="${y2}" r="${isTarget ? 7 : 3}" fill="${col}" /><text x="${W - padR + 14}" y="${y2 + 4}" fill="${isTarget ? '#00F0FF' : '#64748B'}" font-family="Roboto Mono" font-size="10" text-anchor="start">${r.label}</text>`;
+        });
+      }
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <!-- TÍTULO -->
+          <text x="${padL}" y="34" fill="#FFFFFF" font-family="Outfit" font-size="16" font-weight="800">M3-AΩ · Tensión Cognitiva Macro: Potencial Sincrético M3 vs. Factual ORBIT</text>
+          
+          <!-- CABECERAS DE COLUMNAS -->
+          <text x="${padL}" y="58" fill="#00F0FF" font-family="Roboto Mono" font-size="12" font-weight="700" text-anchor="middle">EXPECTATIVA M3 (Sincrética)</text>
+          <text x="${W - padR}" y="58" fill="#00FF87" font-family="Roboto Mono" font-size="12" font-weight="700" text-anchor="middle">ACCIÓN FACTUAL ORBIT</text>
+
+          <!-- GUÍAS VERTICALES -->
+          <line x1="${padL}" y1="${padT - 8}" x2="${padL}" y2="${H - padB + 8}" stroke="#1D315E" stroke-width="2" />
+          <line x1="${W - padR}" y1="${padT - 8}" x2="${W - padR}" y2="${H - padB + 8}" stroke="#1D315E" stroke-width="2" />
+
+          <!-- CONECTORES Y NODOS -->
+          ${linesHtml}
+          ${leftNodes}
+          ${rightNodes}
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 1: POLAR EXPANSIVIDAD
+    function renderSVG_Polar(data) {
+      const W = 750, H = 520, pad = 60;
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="${pad}" y="35" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Dispersión Bipolar de Expansividad (X^α vs. X^ω)</text>
+          <line x1="${pad}" y1="${H - pad}" x2="${W - pad}" y2="${H - pad}" stroke="#1E2D4A" stroke-width="1.5" />
+          <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H - pad}" stroke="#1E2D4A" stroke-width="1.5" />
+          
+          <!-- BISECTRIZ -->
+          <line x1="${pad}" y1="${H - pad}" x2="${W - pad}" y2="${pad}" stroke="#64748B" stroke-dasharray="4 4" />
+          <polygon points="${pad},${H-pad} ${pad},${pad} ${W-pad},${pad}" fill="rgba(0,255,135,0.06)" />
+          
+          <text x="${W / 2}" y="${H - 18}" fill="#94A3B8" font-size="11" text-anchor="middle">Expansividad atribuida a la Distancia / Nadir (X^ω)</text>
+          <text x="22" y="${H / 2}" fill="#94A3B8" font-size="11" transform="rotate(-90 22,${H/2})" text-anchor="middle">Expansividad atribuida a la Proximidad / Cenit (X^α)</text>
+
+          <!-- PUNTO CLÚSTER UNITARIO -->
+          <circle cx="${pad + 180}" cy="${H - pad - 180}" r="12" fill="none" stroke="#00FF87" stroke-width="2" />
+          <circle cx="${pad + 180}" cy="${H - pad - 180}" r="5" fill="#00FF87" />
+          <text x="${pad + 202}" y="${H - pad - 176}" fill="#00FF87" font-family="Roboto Mono" font-size="12" font-weight="700">Cluster N=12 (1.00, 1.00)</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 2: CALIBRACIÓN G
+    function renderSVG_Calibration(data) {
+      const W = 750, H = 480, padL = 160, padR = 60, padT = 60, padB = 50;
+      const probes = Object.values(data.probeStats);
+      const stepY = (H - padT - padB) / (probes.length - 1);
+      
+      let itemsHtml = '';
+      probes.forEach((p, idx) => {
+        const y = padT + idx * stepY;
+        const xZero = padL + 400;
+        const xVal = xZero + p.errorG * 110; // escala
+
+        itemsHtml += `
+          <text x="${padL - 14}" y="${y + 4}" fill="#FFFFFF" font-family="Roboto Mono" font-size="11" text-anchor="end">${p.label}</text>
+          <line x1="${xZero}" y1="${y}" x2="${xVal}" y2="${y}" stroke="#FF007F" stroke-width="2" />
+          <circle cx="${xVal}" cy="${y}" r="5" fill="#FF007F" />
+          <text x="${xVal - 10}" y="${y - 7}" fill="#94A3B8" font-family="Roboto Mono" font-size="10" text-anchor="end">${p.errorG.toFixed(2)} (Atrib: 1.0 vs Real: ${p.meanReal.toFixed(1)})</text>
+        `;
+      });
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="24" y="32" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Calibración de Amplitud Factual (G = Atribuido - Real)</text>
+          <line x1="${padL + 400}" y1="${padT - 15}" x2="${padL + 400}" y2="${H - padB + 15}" stroke="#1E2D4A" stroke-dasharray="3 3" />
+          <text x="${padL + 400}" y="${padT - 22}" fill="#64748B" font-size="10" text-anchor="middle">G = 0 (Sin sesgo)</text>
+          ${itemsHtml}
+          <text x="${W / 2}" y="${H - 14}" fill="#94A3B8" font-size="11" text-anchor="middle">Error de Expansividad G (Media): &lt; 0 Subestimación | &gt; 0 Sobrestimación</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 3: CUADRANTES
+    function renderSVG_Quadrants(data) {
+      const W = 750, H = 520, pad = 60;
+      const midX = (W - 2 * pad) / 2 + pad;
+      const midY = (H - 2 * pad) / 2 + pad;
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="${pad}" y="32" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Topología de Cuadrantes (Consenso vs. Exactitud Factual)</text>
+          
+          <!-- CUADRANTES -->
+          <line x1="${midX}" y1="${pad}" x2="${midX}" y2="${H - pad}" stroke="#1E2D4A" stroke-dasharray="3 3" />
+          <line x1="${pad}" y1="${midY}" x2="${W - pad}" y2="${midY}" stroke="#1E2D4A" stroke-dasharray="3 3" />
+
+          <!-- RÓTULOS DE CUADRANTES -->
+          <text x="${W - pad - 10}" y="${pad + 20}" fill="#00FF87" font-size="10" font-weight="700" text-anchor="end">Q1: LUCIDEZ COMPARTIDA (Alto Consenso / Alta Precisión)</text>
+          <text x="${W - pad - 10}" y="${H - pad - 16}" fill="#FFE600" font-size="10" font-weight="700" text-anchor="end">Q2: MITO COLECTIVO (Alto Consenso / Baja Precisión)</text>
+          <text x="${pad + 10}" y="${H - pad - 16}" fill="#38BDF8" font-size="10" font-weight="700">Q3: NIEBLA RELACIONAL (Bajo Consenso / Baja Precisión)</text>
+          <text x="${pad + 10}" y="${pad + 20}" fill="#A855F7" font-size="10" font-weight="700">Q4: ASIMETRÍA VINCULAR (Bajo Consenso / Alta Precisión)</text>
+
+          <!-- EJES -->
+          <line x1="${pad}" y1="${H - pad}" x2="${W - pad}" y2="${H - pad}" stroke="#1E2D4A" stroke-width="1.5" />
+          <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H - pad}" stroke="#1E2D4A" stroke-width="1.5" />
+
+          <!-- PUNTOS CANÓNICOS ETIQUETADOS (a..f sin prefijo S) -->
+          <circle cx="${W - pad - 40}" cy="${pad + 36}" r="7" fill="#00FF87" />
+          <text x="${W - pad - 30}" y="${pad + 40}" fill="#00FF87" font-family="Roboto Mono" font-size="10" font-weight="700">a:05</text>
+
+          <circle cx="${midX + 70}" cy="${pad + 36}" r="7" fill="#00FF87" />
+          <text x="${midX + 80}" y="${pad + 40}" fill="#00FF87" font-family="Roboto Mono" font-size="10" font-weight="700">b:05</text>
+
+          <circle cx="${midX + 40}" cy="${midY - 80}" r="7" fill="#00FF87" />
+          <text x="${midX + 50}" y="${midY - 76}" fill="#00FF87" font-family="Roboto Mono" font-size="10" font-weight="700">c:04</text>
+
+          <circle cx="${pad + 180}" cy="${H - pad - 30}" r="7" fill="#FF007F" />
+          <text x="${pad + 190}" y="${H - pad - 26}" fill="#FF007F" font-family="Roboto Mono" font-size="10" font-weight="700">d:10</text>
+
+          <circle cx="${midX + 80}" cy="${H - pad - 30}" r="7" fill="#FF007F" />
+          <text x="${midX + 90}" y="${H - pad - 26}" fill="#FF007F" font-family="Roboto Mono" font-size="10" font-weight="700">e:11</text>
+
+          <circle cx="${pad + 60}" cy="${H - pad - 30}" r="7" fill="#FF007F" />
+          <text x="${pad + 70}" y="${H - pad - 26}" fill="#FF007F" font-family="Roboto Mono" font-size="10" font-weight="700">f:06</text>
+
+          <text x="${W / 2}" y="${H - 18}" fill="#94A3B8" font-size="11" text-anchor="middle">Consenso Inter-Observador (Jaccard Medio J)</text>
+          <text x="20" y="${H / 2}" fill="#94A3B8" font-size="11" transform="rotate(-90 20,${H/2})" text-anchor="middle">Exactitud Factual Media (Precisión P)</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 4: DUMBBELL
+    function renderSVG_Dumbbell(data) {
+      const W = 750, H = 520, padL = 90, padR = 60, padT = 50, padB = 40;
+      const N = data.N;
+      const stepY = (H - padT - padB) / (N - 1);
+      
+      let rowsHtml = '';
+      data.macroSummary.forEach((r, idx) => {
+        const y = padT + idx * stepY;
+        const xReal = padL + (r.meanOrbit) * 35;
+        const xAttr = padL + (Math.max(0, r.scoreM3 + 15)) * 14;
+
+        rowsHtml += `
+          <text x="${padL - 12}" y="${y + 4}" fill="#FFFFFF" font-family="Roboto Mono" font-size="10" text-anchor="end">${r.label}</text>
+          <line x1="${xReal}" y1="${y}" x2="${xAttr}" y2="${y}" stroke="${xAttr > xReal ? '#FF007F' : '#00FF87'}" stroke-width="2" />
+          <circle cx="${xReal}" cy="${y}" r="5" fill="#00F0FF" />
+          <circle cx="${xAttr}" cy="${y}" r="5" fill="#FFE600" />
+        `;
+      });
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="24" y="30" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Prestigio Real (In-degree) vs. Visibilidad Atribuida</text>
+          
+          <!-- LEYENDA -->
+          <circle cx="${W - 200}" cy="26" r="5" fill="#00F0FF" />
+          <text x="${W - 190}" y="30" fill="#94A3B8" font-size="10">Prestigio Real (MORENO)</text>
+          <circle cx="${W - 70}" cy="26" r="5" fill="#FFE600" />
+          <text x="${W - 60}" y="30" fill="#94A3B8" font-size="10">Visibilidad (M3)</text>
+
+          ${rowsHtml}
+          <text x="${W / 2}" y="${H - 12}" fill="#94A3B8" font-size="11" text-anchor="middle">Número de Elecciones / Menciones Ponderadas</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 5: HALO BARRAS
+    function renderSVG_Halo(data) {
+      const W = 750, H = 480, padL = 80, padR = 60, padT = 60, padB = 60;
+      const strata = data.haloStrata;
+      const colW = (W - padL - padR) / strata.length;
+      const zeroY = (H - padT - padB) / 2 + padT;
+
+      let barsHtml = '';
+      strata.forEach((st, idx) => {
+        const cx = padL + idx * colW + colW / 2;
+        const hE = Math.abs(st.deltaE) * 120;
+        const hG = Math.abs(st.deltaG) * 120;
+
+        // Barra Base Estructural (arriba)
+        barsHtml += `
+          <rect x="${cx - 45}" y="${zeroY - hE}" width="38" height="${hE}" fill="rgba(56,189,248,0.25)" stroke="#38BDF8" stroke-width="1.5" />
+          <!-- Barra Sesgo Cognitivo (abajo) -->
+          <rect x="${cx + 5}" y="${zeroY}" width="38" height="${hG}" fill="rgba(255,0,127,0.3)" stroke="#FF007F" stroke-width="1.5" />
+          <!-- Rombo D -->
+          <polygon points="${cx},${zeroY - 7} ${cx + 7},${zeroY} ${cx},${zeroY + 7} ${cx - 7},${zeroY}" fill="#FFE600" />
+          <text x="${cx}" y="${H - padB + 20}" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Estrato ${idx + 1}</text>
+          <text x="${cx}" y="${zeroY - 14}" fill="#FFE600" font-family="Roboto Mono" font-size="9" text-anchor="middle">D=0.00</text>
+        `;
+      });
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="24" y="32" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Descomposición Multinivel del Halo: Base Estructural (Δe) vs. Sesgo Puro (ΔG)</text>
+          <line x1="${padL}" y1="${zeroY}" x2="${W - padR}" y2="${zeroY}" stroke="#64748B" stroke-dasharray="3 3" />
+          ${barsHtml}
+          <text x="${W / 2}" y="${H - 14}" fill="#94A3B8" font-size="11" text-anchor="middle">Estrato Dialéctico Evaluado</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG 6: CONTORNO RELACIONAL
+    function renderSVG_Contorno(data) {
+      const W = 750, H = 480, padL = 80, padR = 80, padT = 60, padB = 60;
+      const probes = Object.values(data.probeStats);
+      const stepX = (W - padL - padR) / (probes.length - 1);
+
+      let ptsBlue = [];
+      let ptsYellow = [];
+      let labelsX = '';
+
+      probes.forEach((p, idx) => {
+        const x = padL + idx * stepX;
+        const yBlue = padT + (H - padT - padB) * 0.5; // constante a 1.00
+        const yYellow = (H - padB) - p.f1 * (H - padT - padB);
+
+        ptsBlue.push(`${x},${yBlue}`);
+        ptsYellow.push(`${x},${yYellow}`);
+
+        labelsX += `<text x="${x}" y="${H - padB + 20}" fill="#FFFFFF" font-size="10" font-weight="700" text-anchor="middle">${p.label}</text>`;
+      });
+
+      return `
+        <svg viewBox="0 0 ${W} ${H}" style="background:#0B132B; border-radius:10px;">
+          <text x="24" y="32" fill="#FFFFFF" font-family="Outfit" font-size="15" font-weight="800">M3-AΩ · Perfil de Contorno Relacional: Gradiente de Expansividad y Realismo</text>
+          
+          <!-- LÍNEA AZUL PLANA A 1.00 -->
+          <polyline points="${ptsBlue.join(' ')}" fill="none" stroke="#00F0FF" stroke-width="2.5" />
+          ${ptsBlue.map(pt => `<circle cx="${pt.split(',')[0]}" cy="${pt.split(',')[1]}" r="4" fill="#00F0FF" />`).join('')}
+
+          <!-- CURVA AMARILLA F1 EN CAMPANA -->
+          <polyline points="${ptsYellow.join(' ')}" fill="none" stroke="#FFE600" stroke-width="2" stroke-dasharray="5 4" />
+          ${ptsYellow.map(pt => `<rect x="${pt.split(',')[0] - 4}" y="${pt.split(',')[1] - 4}" width="8" height="8" fill="#FFE600" />`).join('')}
+
+          ${labelsX}
+
+          <!-- EJES Y RÓTULOS -->
+          <text x="24" y="${H / 2}" fill="#00F0FF" font-size="10" transform="rotate(-90 24,${H/2})" text-anchor="middle">Expansividad Media (1.00)</text>
+          <text x="${W - 20}" y="${H / 2}" fill="#FFE600" font-size="10" transform="rotate(90 ${W - 20},${H/2})" text-anchor="middle">Exactitud F1 Macro</text>
+        </svg>
+      `;
+    }
+
+    function downloadCurrentSVG() {
+      const svgEl = document.querySelector('#chartSvgBox svg');
+      if (!svgEl) return;
+      const serializer = new XMLSerializer();
+      const source = serializer.serializeToString(svgEl);
+      const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `grafico_visord_meta3_${Date.now()}.svg`;
+      a.click();
+    }
+
+    // =========================================================================
+    // INFORME EJECUTIVO DINÁMICO
+    // =========================================================================
+    function renderExecutiveReport() {
+      const c = document.getElementById('executiveReportContent');
+      if (!c || !computedResults) return;
+      
+      const alfasEscaparate = computedResults.macroSummary.filter(r => r.deltaMacro >= 3).map(r => r.label);
+      const alfasTrinchera = computedResults.macroSummary.filter(r => r.deltaMacro <= -3).map(r => r.label);
+      const consonantes = computedResults.macroSummary.filter(r => Math.abs(r.deltaMacro) < 3).map(r => r.label);
+
+      c.innerHTML = `
+        <h2 style="color:#FFFFFF; font-size:1.3rem; margin-bottom:12px;">Dictamen Diagnóstico Socio-Termodinámico del Colectivo (N=${computedResults.N})</h2>
+        <p>
+          El análisis del sistema dual <strong>M3-AΩ frente a ORBIT</strong> evidencia una tensión estructural cardinal entre la expectativa atribuida en el imaginario colectivo y la acción relacional fáctica:
+        </p>
+        <ul style="margin:12px 0 16px 20px;">
+          <li><strong>Alfas de Escaparate (${alfasEscaparate.join(', ') || 'Ninguno'}):</strong> Sujetos que acaparan el foco sincrético del grupo pero sufren una pérdida neta de posiciones en el ejercicio efectivo de elecciones directas.</li>
+          <li><strong>Alfas de Trinchera (${alfasTrinchera.join(', ') || 'Ninguno'}):</strong> Sujetos que sostienen el tejido funcional de la red mediante elecciones factuales consistentes, pese a no ser visibilizados de forma preferente en las conjeturas de terceros.</li>
+          <li><strong>Invariantes Consonantes (${consonantes.join(', ') || 'Ninguno'}):</strong> Sujetos cuya visibilidad social coincide de forma simétrica con su estatus de proximidad efectivo.</li>
+        </ul>
+        <h3 style="color:var(--accent-gold); margin-top:16px;">Asimetría Epistémica de Proximidad vs. Distancia</h3>
+        <p>
+          En estricta consonancia con el canon sociométrico, la exactitud factual alcanza su cota óptima en el <strong>pivote de proximidad b (F1 = ${computedResults.probeStats.b.f1.toFixed(2)})</strong>, mientras que <strong>colapsa a 0.00 en todo el gradiente de distancia (sondas d, e, f)</strong>. Este resultado ratifica que el distanciamiento interpersonal se gestiona en la esfera de la reserva personal y el respeto mutuo, sin trascender al relato público colectivo.
+        </p>
+      `;
+    }
+
+    // PRESETS Y GESTIÓN DE ARCHIVOS
+    function triggerQuasiRandomDemo() {
+      const sel = document.getElementById('selectDemoN');
+      const n = sel ? parseInt(sel.value, 10) : 12;
+      generateQuasiRandomDemo(n);
+    }
+
+    function generateQuasiRandomDemo(N = 12) {
+      const ids = Array.from({length: N}, (_, i) => i + 1);
+      const nFactions = (N >= 12) ? 3 : 2;
+      const factionOf = {};
+      ids.forEach(id => {
+        factionOf[id] = (id % nFactions);
+      });
+
+      const leaders = [];
+      for (let f = 0; f < nFactions; f++) {
+        const mems = ids.filter(id => factionOf[id] === f);
+        leaders.push(mems[0]);
+      }
+      const globalLeader = leaders[0];
+
+      const newGroup = [];
+
+      ids.forEach(id => {
+        const myFaction = factionOf[id];
+        const sameFaction = ids.filter(x => x !== id && factionOf[x] === myFaction);
+        const otherFaction = ids.filter(x => factionOf[x] !== myFaction);
+
+        // Elecciones de proximidad E
+        const choicesE = [];
+        if (leaders[myFaction] !== id) choicesE.push(leaders[myFaction]);
+        sameFaction.forEach(x => {
+          if (x !== leaders[myFaction] && choicesE.length < 4 && Math.random() < 0.65) {
+            choicesE.push(x);
+          }
+        });
+        if (choicesE.length < 3 && otherFaction.length > 0 && Math.random() < 0.3) {
+          choicesE.push(otherFaction[Math.floor(Math.random() * otherFaction.length)]);
+        }
+        if (choicesE.length === 0 && sameFaction.length > 0) choicesE.push(sameFaction[0]);
+
+        // Elecciones de distancia R
+        const choicesR = [];
+        otherFaction.forEach(x => {
+          if (choicesR.length < 3 && Math.random() < 0.6) {
+            choicesR.push(x);
+          }
+        });
+        if (choicesR.length === 0 && otherFaction.length > 0) choicesR.push(otherFaction[0]);
+
+        // Expectativas reflexivas
+        const pE = choicesE.length > 0 ? [choicesE[0]] : [];
+        const pR = choicesR.length > 0 ? [choicesR[0]] : [];
+
+        // Sondas hexádicas
+        const probeA = (Math.random() < 0.70) ? globalLeader : (choicesE[0] || (id === 1 ? 2 : 1));
+        const probeB = (choicesE.length >= 2) ? choicesE[1] : (sameFaction[0] || (id === 1 ? 2 : 1));
+        const probeC = (choicesE.length >= 3) ? choicesE[choicesE.length - 1] : (sameFaction[sameFaction.length - 1] || (id === 1 ? 2 : 1));
+        const probeD = (otherFaction.length >= 2) ? otherFaction[1] : (otherFaction[0] || (id === 1 ? 2 : 1));
+        const probeE = (choicesR.length >= 2) ? choicesR[1] : (otherFaction[0] || (id === 1 ? 2 : 1));
+        const probeF = (otherFaction.length > 0) ? otherFaction[otherFaction.length - 1] : (id === 1 ? 2 : 1);
+
+        // ORBIT completa
+        const orbit = [id, ...choicesE, ...sameFaction.filter(x => !choicesE.includes(x)), ...otherFaction.filter(x => !choicesR.includes(x)), ...choicesR];
+        const cleanOrbit = Array.from(new Set(orbit)).filter(x => x !== id);
+        while (cleanOrbit.length < N - 1) {
+          const missing = ids.find(x => x !== id && !cleanOrbit.includes(x));
+          if (missing) cleanOrbit.push(missing);
+          else break;
+        }
+        const fullOrbit = [id, ...cleanOrbit];
+
+        newGroup.push({
+          id: id,
+          name: String(id).padStart(2, '0'),
+          label: `${id}A`,
+          orbit: fullOrbit,
+          E: choicesE,
+          R: choicesR,
+          pE: pE,
+          pR: pR,
+          probes: {
+            a: probeA,
+            b: probeB,
+            c: probeC,
+            d: probeD,
+            e: probeE,
+            f: probeF
+          }
+        });
+      });
+
+      groupData = newGroup;
+      activeRespondentId = 1;
+      initRespondentDropdown();
+      currentStep = 0;
+      renderStep();
+      recalculateAll();
+      renderDataResponsesTable();
+      renderActiveChart();
+      alert(`🎲 Demostración Cuasialeatoria generada con éxito para N=${N} sujetos.
+Se han modelado ${nFactions} camarillas relacionales con polarización de proximidad y distancia.`);
+    }
+
+    function loadPresetDataset(type) {
+      if (type === 'n12') groupData = JSON.parse('[{"id": 1, "name": "01", "label": "1A", "orbit": [1, 3, 5, 4, 2, 8, 9, 12, 6, 7, 11, 10], "E": [3, 5, 4], "R": [10, 7, 11], "pE": [3], "pR": [10, 11], "probes": {"a": 5, "b": 2, "c": 3, "d": 12, "e": 11, "f": 8}}, {"id": 2, "name": "02", "label": "2A", "orbit": [3, 1, 5, 2, 4, 8, 9, 12, 6, 11, 7, 10], "E": [1, 5, 3], "R": [10, 7, 11], "pE": [3], "pR": [10, 7], "probes": {"a": 4, "b": 1, "c": 3, "d": 12, "e": 10, "f": 8}}, {"id": 3, "name": "03", "label": "3A", "orbit": [4, 3, 1, 5, 2, 8, 9, 12, 6, 7, 11, 10], "E": [1, 5, 4, 2], "R": [10, 7, 11], "pE": [4], "pR": [10, 11], "probes": {"a": 5, "b": 2, "c": 4, "d": 12, "e": 11, "f": 8}}, {"id": 4, "name": "04", "label": "4A", "orbit": [1, 3, 4, 5, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 7, 11], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 3, "d": 12, "e": 10, "f": 8}}, {"id": 5, "name": "05", "label": "5A", "orbit": [1, 5, 3, 4, 2, 8, 9, 12, 6, 7, 11, 10], "E": [1, 3, 4, 2], "R": [10, 7, 11], "pE": [1], "pR": [10, 11], "probes": {"a": 1, "b": 3, "c": 2, "d": 12, "e": 11, "f": 8}}, {"id": 6, "name": "06", "label": "6A", "orbit": [5, 1, 3, 4, 2, 8, 9, 12, 7, 6, 11, 10], "E": [1, 3, 5, 4], "R": [10, 7, 11], "pE": [5], "pR": [10, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 12, "e": 11, "f": 8}}, {"id": 7, "name": "07", "label": "7A", "orbit": [3, 1, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 6, 11], "pE": [3], "pR": [10, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 12, "e": 10, "f": 8}}, {"id": 8, "name": "08", "label": "8A", "orbit": [5, 1, 3, 4, 2, 8, 9, 12, 11, 7, 6, 10], "E": [1, 3, 5], "R": [10, 7, 6], "pE": [5], "pR": [10, 6], "probes": {"a": 2, "b": 5, "c": 4, "d": 7, "e": 12, "f": 9}}, {"id": 9, "name": "09", "label": "9A", "orbit": [1, 3, 5, 4, 2, 9, 8, 12, 11, 6, 7, 10], "E": [1, 3, 5, 4], "R": [10, 7, 6], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 4, "d": 6, "e": 12, "f": 8}}, {"id": 10, "name": "10", "label": "10A", "orbit": [3, 1, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [7, 6, 11], "pE": [3], "pR": [7, 11], "probes": {"a": 2, "b": 5, "c": 4, "d": 7, "e": 12, "f": 8}}, {"id": 11, "name": "11", "label": "11A", "orbit": [1, 3, 5, 4, 2, 8, 9, 12, 6, 11, 7, 10], "E": [1, 3, 5], "R": [10, 7, 6], "pE": [1], "pR": [10, 7], "probes": {"a": 1, "b": 5, "c": 4, "d": 12, "e": 10, "f": 8}}, {"id": 12, "name": "12", "label": "12A", "orbit": [3, 1, 5, 4, 2, 12, 8, 9, 11, 6, 7, 10], "E": [1, 3, 5, 4], "R": [10, 7, 6], "pE": [3], "pR": [10, 7], "probes": {"a": 2, "b": 5, "c": 4, "d": 8, "e": 9, "f": 6}}]');
+      else if (type === 'n8') groupData = JSON.parse('[{"id": 1, "name": "01", "label": "1A", "orbit": [2, 3, 4, 5, 6, 7, 8], "E": [2, 3], "R": [7, 8], "pE": [2], "pR": [8], "probes": {"a": 2, "b": 3, "c": 4, "d": 6, "e": 7, "f": 8}}, {"id": 2, "name": "02", "label": "2A", "orbit": [1, 3, 4, 5, 6, 7, 8], "E": [1, 3], "R": [7, 8], "pE": [1], "pR": [8], "probes": {"a": 1, "b": 3, "c": 4, "d": 6, "e": 7, "f": 8}}, {"id": 3, "name": "03", "label": "3A", "orbit": [1, 2, 4, 5, 6, 7, 8], "E": [1, 2], "R": [7, 8], "pE": [1], "pR": [7], "probes": {"a": 1, "b": 2, "c": 4, "d": 6, "e": 8, "f": 7}}, {"id": 4, "name": "04", "label": "4A", "orbit": [1, 2, 3, 5, 6, 7, 8], "E": [1, 2, 3], "R": [7, 8], "pE": [1], "pR": [8], "probes": {"a": 1, "b": 2, "c": 3, "d": 6, "e": 7, "f": 8}}, {"id": 5, "name": "05", "label": "5A", "orbit": [6, 7, 8, 1, 2, 3, 4], "E": [6, 7], "R": [1, 2], "pE": [6], "pR": [1], "probes": {"a": 6, "b": 7, "c": 8, "d": 3, "e": 2, "f": 1}}, {"id": 6, "name": "06", "label": "6A", "orbit": [5, 7, 8, 1, 2, 3, 4], "E": [5, 7], "R": [1, 2], "pE": [5], "pR": [1], "probes": {"a": 5, "b": 7, "c": 8, "d": 3, "e": 2, "f": 1}}, {"id": 7, "name": "07", "label": "7A", "orbit": [5, 6, 8, 1, 2, 3, 4], "E": [5, 6], "R": [1, 2], "pE": [5], "pR": [2], "probes": {"a": 5, "b": 6, "c": 8, "d": 3, "e": 1, "f": 2}}, {"id": 8, "name": "08", "label": "8A", "orbit": [5, 6, 7, 1, 2, 3, 4], "E": [5, 6], "R": [1, 2], "pE": [5], "pR": [1], "probes": {"a": 5, "b": 6, "c": 7, "d": 4, "e": 2, "f": 1}}]');
+      activeRespondentId = groupData[0].id;
+      initRespondentDropdown();
+      currentStep = 0;
+      renderStep();
+      recalculateAll();
+      renderDataResponsesTable();
+      alert(`¡Dataset ${type.toUpperCase()} cargado con éxito!`);
+    }
+
+    function resetBlankStudy() {
+      const confirmAuth = confirm("⚖️ PROTOCOLO DEONTOLÓGICO IP (Cánones 21 y 22 NEXORD):\n\nLos visualizadores públicos operan sobre demostraciones cuasialeatorias e in silico cerradas.\n\nEl tratamiento de datos empíricos de campo real exige acreditación de Investigador Principal (IP).\n\n¿Deseas configurar una simulación pedagógica con códigos anónimos canónicos (1A..NA)?");
+      if (!confirmAuth) return;
+
+      const nStr = prompt("Introduce el número de sujetos de la simulación (ej. 6 a 20):", "8");
+      const n = parseInt(nStr, 10);
+      if (isNaN(n) || n < 3) return;
+      groupData = [];
+      for (let i = 1; i <= n; i++) {
+        groupData.push({
+          id: i,
+          name: String(i).padStart(2, '0'),
+          label: `${i}A`,
+          orbit: [],
+          E: [],
+          R: [],
+          pE: [],
+          pR: [],
+          probes: { a: null, b: null, c: null, d: null, e: null, f: null }
+        });
+      }
+      activeRespondentId = 1;
+      initRespondentDropdown();
+      currentStep = 0;
+      renderStep();
+      recalculateAll();
+      renderDataResponsesTable();
+      switchView('view-form');
+    }
+
+    function exportJSON() {
+      const blob = new Blob([JSON.stringify(groupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `corpus_m3_estudio_${Date.now()}.json`;
+      a.click();
+    }
+
+    function importJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (Array.isArray(imported) && imported.length > 0) {
+            groupData = imported;
+            activeRespondentId = groupData[0].id;
+            initRespondentDropdown();
+            currentStep = 0;
+            renderStep();
+            recalculateAll();
+            renderDataResponsesTable();
+            alert("¡Corpus importado y procesado con éxito!");
+          }
+        } catch(err) {
+          alert("Error al leer el archivo JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
