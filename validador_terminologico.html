@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validador y Corrector Terminológico Canónico &bull; NEXORD / VISORD</title>
+  <meta name="description" content="Herramienta de auditoría lingüística y reemplazo canónico para informes psicosociales y sociométricos según el Diccionario NEXORD 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0B132B;
+      --card-bg: rgba(18, 28, 54, 0.88);
+      --card-border: rgba(0, 255, 135, 0.22);
+      --neon-green: #00FF87;
+      --neon-pink: #FF007F;
+      --neon-orange: #FF9F1C;
+      --neon-gold: #FFE600;
+      --text-main: #E2E8F0;
+      --text-muted: #94A3B8;
+      --font-mono: 'Roboto Mono', monospace;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(0, 255, 135, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(255, 0, 127, 0.04) 0%, transparent 40%);
+      padding-bottom: 60px;
+    }
+
+    .top-header {
+      background: rgba(11, 19, 43, 0.95);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      color: var(--neon-green);
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+    }
+
+    .badge-canon {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 32px auto;
+      padding: 0 24px;
+    }
+
+    .hero-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .hero-title h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #FFFFFF 40%, var(--neon-green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title p {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .grid-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 980px) {
+      .grid-panels { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .example-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .example-btn:hover {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+    }
+
+    textarea {
+      width: 100%;
+      height: 250px;
+      background: rgba(11, 19, 43, 0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      padding: 14px;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
+    }
+
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-audit {
+      background: var(--neon-green);
+      color: #0B132B;
+    }
+
+    .btn-audit:hover {
+      box-shadow: 0 0 16px rgba(0, 255, 135, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-canonize {
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+    }
+
+    .btn-canonize:hover {
+      background: var(--neon-green);
+      color: #0B132B;
+    }
+
+    .btn-copy {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Score meter */
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: rgba(11, 19, 43, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+    }
+
+    .score-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.25rem;
+      border: 3px solid var(--neon-green);
+      color: var(--neon-green);
+      flex-shrink: 0;
+    }
+
+    .score-circle.bad {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+
+    .score-circle.warning {
+      border-color: var(--neon-orange);
+      color: var(--neon-orange);
+    }
+
+    .score-info h4 {
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .score-info p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Findings list */
+    .findings-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 480px;
+      padding-right: 6px;
+    }
+
+    .finding-card {
+      background: rgba(11, 19, 43, 0.7);
+      border-left: 4px solid var(--neon-pink);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+
+    .finding-card.fisico { border-left-color: #38BDF8; }
+    .finding-card.psiquiatrico { border-left-color: var(--neon-pink); }
+    .finding-card.eufemismo { border-left-color: var(--neon-orange); }
+    .finding-card.jerga { border-left-color: var(--neon-gold); }
+
+    .finding-badge {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    .finding-badge.fisico { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+    .finding-badge.psiquiatrico { background: rgba(255, 0, 127, 0.15); color: var(--neon-pink); }
+    .finding-badge.eufemismo { background: rgba(255, 159, 28, 0.15); color: var(--neon-orange); }
+    .finding-badge.jerga { background: rgba(255, 230, 0, 0.15); color: var(--neon-gold); }
+
+    .term-detected {
+      color: var(--neon-pink);
+      font-weight: 700;
+      text-decoration: line-through;
+    }
+
+    .term-replacement {
+      color: var(--neon-green);
+      font-weight: 700;
+    }
+
+    .finding-reason {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      stroke: var(--neon-green);
+      margin-bottom: 12px;
+    }
+
+    .canonical-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag-can {
+      background: rgba(0, 255, 135, 0.1);
+      color: var(--neon-green);
+      border: 1px solid rgba(0, 255, 135, 0.25);
+      border-radius: 4px;
+      font-size: 0.76rem;
+      padding: 2px 8px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--neon-green);
+      color: #0B132B;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <a href="glosario.html" class="brand">
+      <span class="brand-tag">NEXORD</span>
+      <span style="color:#64748B;">/</span>
+      <span style="font-weight:600; font-size:0.95rem;">VISORD Engine</span>
+      <span class="badge-canon">LINTER CANÓNICO 2026</span>
+    </a>
+    <div style="font-size: 0.85rem; color: var(--text-muted);">
+      Refrendado por: <a href="glosario.html" style="color:var(--neon-green); text-decoration:none;">Diccionario Canónico Psicosocial</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero-title">
+      <h1>Validador y Corrector de Vocabulario Diagnóstico</h1>
+      <p>Comprueba si el texto de tus informes, devoluciones o notas pedagógicas cumple rigurosamente con el canon psicosocial de NEXORD, sustituyendo etiquetas estigmatizantes o metáforas físicas por un lenguaje factual, sereno y validado.</p>
+    </div>
+
+    <div class="grid-panels">
+      <!-- PANEL IZQUIERDO: ENTRADA Y ACCIONES -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📝</span> Borrador del Informe o Texto
+          </div>
+          <span style="font-size:0.8rem; color:var(--text-muted);" id="word-count">0 palabras</span>
+        </div>
+
+        <div class="quick-examples">
+          <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">Cargar ejemplo:</span>
+          <button class="example-btn" onclick="loadExample('desvios')">Texto con desvíos y etiquetas</button>
+          <button class="example-btn" onclick="loadExample('fisico')">Metáforas biomecánicas</button>
+          <button class="example-btn" onclick="loadExample('canonico')">Informe canónico homologado</button>
+        </div>
+
+        <textarea id="input-text" placeholder="Pega aquí el borrador de tu informe, diagnóstico de equipo o pauta orientadora..."></textarea>
+
+        <div class="actions-bar">
+          <button class="btn btn-audit" onclick="performAudit()">
+            <span>🔍</span> Auditar Vocabulario
+          </button>
+          <button class="btn btn-canonize" onclick="performCanonize()">
+            <span>⚡</span> Canonizar y Reemplazar
+          </button>
+          <button class="btn btn-copy" onclick="copyToClipboard('input-text')">
+            <span>📋</span> Copiar Texto
+          </button>
+        </div>
+      </section>
+
+      <!-- PANEL DERECHO: DICTAMEN DE AUDITORÍA -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📊</span> Dictamen de Homologación Canónica
+          </div>
+          <span class="badge-canon" id="status-badge">ESPERANDO ANÁLISIS</span>
+        </div>
+
+        <div class="metric-card">
+          <div class="score-circle" id="score-circle">--</div>
+          <div class="score-info">
+            <h4 id="score-title">Adherencia Canónica al Diccionario</h4>
+            <p id="score-desc">Pega un texto y haz clic en "Auditar Vocabulario" para obtener la validación.</p>
+          </div>
+        </div>
+
+        <div class="findings-container" id="findings-container">
+          <div class="empty-state">
+            <p>Introduce un fragmento de informe a la izquierda para evaluar si su terminología está refrendada por el Diccionario NEXORD 2026.</p>
+          </div>
+        </div>
+
+        <div id="canon-section" style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; display:none;">
+          <span style="font-size:0.8rem; font-weight:600; color:var(--neon-green);">Términos canónicos refrendados detectados:</span>
+          <div class="canonical-tags" id="canonical-tags"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Copiado al portapapeles</div>
+
+  <!-- MOTOR CLIENTE DE REGLAS BASADO EN DICCIONARIO CANÓNICO 2026 -->
+  <script>
+    const CORRECTION_RULES = [
+      { pattern: /v[oó]rtice\s+centr[ií]peto\s+gravitatorio|v[oó]rtice\s+gravitatorio/gi, replacement: "preferencia compartida y foco de elección mayoritaria", category: "fisico", label: "Físico-Biomecánico", reason: "Metáfora gravitacional que oscurece el fenómeno psicosocial de atracción consensual (§ 2 y § 3.2)." },
+      { pattern: /v[ií]nculos?\s+covalentes?|enlaces?\s+covalentes?/gi, replacement: "vínculo de alta reciprocidad y elecciones mutuas estables", category: "fisico", label: "Físico-Biomecánico", reason: "Terminología de química molecular innecesaria en la descripción de acuerdos interpersonales (§ 2 y § 3.3.1)." },
+      { pattern: /vac[ií]o\s+t[eé]rmico|estado\s+gaseoso|[aá]tomo\s+neutro/gi, replacement: "baja participación y distancia interpersonal transitoria", category: "fisico", label: "Físico-Biomecánico", reason: "Metáfora termodinámica que cosifica la posición de sujetos con escasas elecciones (§ 2 y § 3.2.1)." },
+      { pattern: /cizalladura\s+tensorial|fricci[oó]n\s+t[eé]rmica|fricci[oó]n\s+cal[oó]rica|ruido\s+t[eé]rmico/gi, replacement: "desacuerdo explícito y tensión vincular activa", category: "fisico", label: "Físico-Biomecánico", reason: "Jerga de ingeniería de materiales que dramatiza los desacuerdos cotidianos (§ 2 y § 3.3.1)." },
+      { pattern: /fractura\s+de\s+fases|bifurcaci[oó]n\s+de\s+plasma/gi, replacement: "subgrupos diferenciados y falta de comunicación transversal", category: "fisico", label: "Físico-Biomecánico", reason: "Neologismo físico que disfraza la simple formación de bloques de afinidad (§ 2 y § 3.3.2)." },
+      { pattern: /cristalizaci[oó]n\s+molecular|cristalizaci[oó]n\s+relacional/gi, replacement: "alta cohesión grupal y clima de cooperación estable", category: "fisico", label: "Físico-Biomecánico", reason: "Metáfora cristalográfica que sugiere rigidez inerte frente a la plasticidad viva (§ 2 y § 3.3.2)." },
+      { pattern: /focos?\s+t[oó]xicos?|personas?\s+t[oó]xicas?|conductas?\s+t[oó]xicas?|v[ií]nculos?\s+t[oó]xicos?|\bt[oó]xico\b/gi, replacement: "relación de alta fricción o desacuerdo recurrente", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Término pseudoclínico punitivo y estigmatizante proscrito en NEXORD (Canon Deontológico 21)." },
+      { pattern: /patolog[ií]a\s+grupal|grupo\s+enfermo|miembro\s+enfermo/gi, replacement: "dinámica relacional bloqueada o con necesidad de reencuadre", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Invasión biomédica que trata las dificultades de convivencia como patologías clínicas (§ 1 y § 2)." },
+      { pattern: /rechazo\s+paranoide|paranoide/gi, replacement: "cautela defensiva y recelo manifiesto hacia ciertas propuestas", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Diagnóstico nosológico psiquiátrico proyectado indebidamente sobre una discrepancia grupal (§ 1 y § 2)." },
+      { pattern: /delirio\s+narcisista(?:\s+de\s+grandeza)?|delirio\s+de\s+estatus|ego\s+inflado/gi, replacement: "sobreestimación marcada de apoyos respecto a las preferencias reales", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Etiquetado psiquiátrico ofensivo para un desajuste perceptivo ordinario (§ 2, § 3.4 y § 6.4)." },
+      { pattern: /guerra\s+fr[ií]a\s+grupal|clanes\s+hostiles/gi, replacement: "polarización en dos bloques distanciados con escasa interacción", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Lenguaje bélico que dramatiza e intensifica artificialmente la fragmentación (§ 1 y § 3.3.2)." },
+      { pattern: /aislado\s+cr[oó]nico|anomia\s+individual|sujeto\s+invisible/gi, replacement: "integrante situado actualmente en la periferia sin menciones de elección", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Condena identitaria irreversible que ignora la temporalidad y plasticidad de la red (§ 2, § 3.2.1 y § 3.7.1)." },
+      { pattern: /deliciosamente\s+atemperado/gi, replacement: "clima relacional sereno, distendido y seguro", category: "eufemismo", label: "Eufemismo Almibarado", reason: "Afectación lírica empalagosa impropia de un informe técnico riguroso (§ 1 y § 2)." },
+      { pattern: /foco\s+de\s+amor\s+radiante|luz\s+comunitaria/gi, replacement: "referente principal de apoyo socioemocional y escucha", category: "eufemismo", label: "Eufemismo Almibarado", reason: "Retórica místico-espiritualista que desvirtúa la medición objetiva del rol (§ 2 y § 4)." },
+      { pattern: /desatendido|desatendidos/gi, replacement: "de baja visibilidad sociométrica (o con escasas menciones)", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Traducción errónea de 'neglected': sugiere que los compañeros cometen negligencia culposa (§ 3.2)." },
+      { pattern: /camarilla|camarillas/gi, replacement: "subgrupo denso o burbuja cerrada de colaboración", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Traducción peyorativa y estigmatizante del término técnico 'clique' (§ 3.2 y § 3.3.2)." },
+      { pattern: /conflictivo|conflictivos/gi, replacement: "perfil polarizador (o sujeto de valoración dividida)", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Traducción deformada de 'controversial': describe la división de opiniones del grupo, no la moral del sujeto (§ 3.2)." },
+      { pattern: /mediocre|mediocres/gi, replacement: "posición relacional intermedia o integrada de visibilidad moderada", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Traducción insultante de 'average' (posición no extrema equilibrada) (§ 3.2 y § 3.2.1)." },
+      { pattern: /es\s+un\s+aislado|son\s+aislados|(?:el|la)\s+aislado\/a/gi, replacement: "no recibió elecciones para esta tarea en la medición actual", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Cosificación del sujeto como identidad sustantiva en lugar de registrar el dato fáctico temporal (§ 3.2 y § 3.7.1)." },
+      { pattern: /es\s+un\s+rechazado|son\s+rechazados|(?:el|la)\s+rechazado\/a/gi, replacement: "recibió un número elevado de elecciones negativas en este criterio", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Etiqueta identitaria punitiva; debe expresarse el hecho factual temporal (§ 3.2 y § 3.7)." },
+      { pattern: /es\s+el\s+l[ií]der\s+del\s+grupo|l[ií]der\s+indiscutible/gi, replacement: "recibe muchas elecciones como referente de tarea y coordinación", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Sobrecarga interpretativa no contrastada empíricamente (§ 3.2 y § 3.7)." },
+      { pattern: /depende\s+t[oó]xicamente\s+de/gi, replacement: "declaró necesitar apoyo frecuente de... sin identificar alternativas", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "La dependencia relacional exige especificar el recurso y las alternativas disponibles (§ 3.5 y § 3.7)." },
+      { pattern: /sat[eé]lite\s+de|adherente\s+de/gi, replacement: "miembro en órbita de apoyo y búsqueda de amparo hacia un referente", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Metáfora astronómica de Bastin que debe expresarse como relación de apoyo unívoco (§ 3.8.5)." },
+      { pattern: /par\s+aislado|pareja\s+aislada/gi, replacement: "núcleo diádico encapsulado con elección mutua cerrada", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Expresión de Bastin; conviene describir la díada encapsulada sin estigmatizar (§ 3.8.5)." },
+      { pattern: /clan\s+cerrado|clanes\s+cerrados|facci[oó]n\s+cerrada/gi, replacement: "subgrupo denso con cierre faccional e intensa lealtad endogrupal", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Describe la dinámica de lealtad endogrupal y rechazo exogrupal (Arruga/Bastin § 3.8.5)." },
+      { pattern: /recelo\s+persecutorio/gi, replacement: "subestimación defensiva y anticipación de distanciamiento inexistente", category: "psiquiatrico", label: "Psiquiátrico / Patologizante", reason: "Término psiquiátrico de Portuondo sustituido por desajuste perceptivo defensivo (§ 3.8.1)." },
+      { pattern: /ilusi[oó]n\s+de\s+popularidad/gi, replacement: "sobreestimación marcada de apoyos respecto al consenso real", category: "jerga", label: "Jerga Tradicional Desaconsejada", reason: "Expresión de Portuondo reconducida a la métrica de ajuste perceptivo (Sensor IDA § 3.8.1)." }
+    ];
+
+    const CANONICAL_TERMS = [
+      "alta aceptación", "baja visibilidad sociométrica", "valoración dividida", "posición intermedia",
+      "integrado de visibilidad moderada", "persona de alta convergencia", "referente espontáneo",
+      "iniciador activo de vínculos", "focalizado en el contacto", "sintonía mutua", "alianza compartida",
+      "desconexión funcional", "incompatibilidad mutua", "atracción competitiva", "burbuja cerrada",
+      "núcleo cohesionado", "subgrupo denso", "fractura en bandos", "conector transversal", "mediador natural",
+      "tejido de confianza", "inercia relacional", "plasticidad vincular", "claridad de lectura social",
+      "previsibilidad conductual", "sintonía de intenciones", "meta-metapercepción", "transparencia percibida",
+      "sintonía transparente", "disonancia de expectativa", "incomprensión sentida", "incertidumbre relacional atribuida",
+      "exactitud de meta-metapercepción", "apoyo emocional", "apoyo práctico",
+      "apoyo tangible", "apoyo informativo", "apoyo de pertenencia", "apoyo percibido", "desajuste de apoyo",
+      "sobrecarga del proveedor", "reciprocidad directa", "reciprocidad complementaria", "reciprocidad indirecta",
+      "acción mínima eficaz", "autorregulación grupal", "baricentro", "tetragrama", "sociometría ordinal",
+      "criterio afectivo", "criterio funcional", "criterio de tarea", "análisis de motivos", "sociograma en diana",
+      "círculos concéntricos", "pareja simétrica", "pareja antagónica", "díada simétrica", "realismo perceptivo",
+      "estructura oficial", "estructura espontánea", "líder de simpatía", "líder de rendimiento", "aislado voluntario",
+      "aislado involuntario", "reagrupamiento sociométrico", "consonancia perceptiva", "grado de entrada",
+      "grado de salida", "red de apoyo formal", "red de apoyo informal", "malla abierta", "malla cerrada",
+      "homofilia relacional", "multiplexidad del apoyo", "díada encapsulada"
+    ];
+
+    function performAudit() {
+      const text = document.getElementById("input-text").value;
+      const findings = [];
+      const lowerText = text.toLowerCase();
+
+      CORRECTION_RULES.forEach(rule => {
+        let match;
+        const regex = new RegExp(rule.pattern.source, "gi");
+        while ((match = regex.exec(text)) !== null) {
+          findings.push({
+            original: match[0],
+            replacement: rule.replacement,
+            category: rule.category,
+            label: rule.label,
+            reason: rule.reason,
+            index: match.index
+          });
+        }
+      });
+
+      // Canon terms found
+      const canonFound = CANONICAL_TERMS.filter(term => lowerText.includes(term.toLowerCase()));
+
+      // Update Word Count
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      document.getElementById("word-count").textContent = words + " palabras";
+
+      // Calculate score
+      const bannedCount = findings.length;
+      let score = Math.max(0, 100 - (bannedCount * 15));
+      if (bannedCount === 0 && text.trim().length > 20) {
+        score = Math.min(100, 85 + (canonFound.length * 3));
+      }
+      if (text.trim().length === 0) score = 0;
+
+      // Render Circle
+      const circle = document.getElementById("score-circle");
+      circle.textContent = Math.round(score) + "%";
+      circle.className = "score-circle" + (score >= 80 ? "" : (score >= 50 ? " warning" : " bad"));
+
+      const badge = document.getElementById("status-badge");
+      if (score >= 80 && bannedCount === 0) {
+        badge.textContent = "🟢 HOMOLOGADO";
+        badge.style.color = "var(--neon-green)";
+        badge.style.borderColor = "var(--neon-green)";
+      } else if (bannedCount > 0) {
+        badge.textContent = "🔴 REQUIERE CORRECCIÓN";
+        badge.style.color = "var(--neon-pink)";
+        badge.style.borderColor = "var(--neon-pink)";
+      } else {
+        badge.textContent = "🟡 EVALUANDO";
+        badge.style.color = "var(--neon-orange)";
+        badge.style.borderColor = "var(--neon-orange)";
+      }
+
+      // Render Findings
+      const container = document.getElementById("findings-container");
+      container.innerHTML = "";
+
+      if (findings.length === 0 && text.trim().length > 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h3 style="color:#fff; margin-bottom:6px;">¡Texto Plenamente Refrendado!</h3>
+            <p>No se han detectado neologismos físicos, etiquetas patologizantes ni jerga desaconsejada. El texto respeta el estándar psicosocial factual de NEXORD.</p>
+          </div>
+        `;
+      } else if (findings.length > 0) {
+        findings.forEach((f, idx) => {
+          const card = document.createElement("div");
+          card.className = "finding-card " + f.category;
+          card.innerHTML = `
+            <span class="finding-badge ${f.category}">[${idx+1}] ${f.label}</span>
+            <div><span class="term-detected">"${f.original}"</span> &rarr; <span class="term-replacement">"${f.replacement}"</span></div>
+            <div class="finding-reason"><strong>Fundamento:</strong> ${f.reason}</div>
+          `;
+          container.appendChild(card);
+        });
+      } else {
+        container.innerHTML = `<div class="empty-state"><p>Pega un texto a la izquierda para ver el dictamen.</p></div>`;
+      }
+
+      // Render Canon Tags
+      const canonSection = document.getElementById("canon-section");
+      const tagsContainer = document.getElementById("canonical-tags");
+      tagsContainer.innerHTML = "";
+      if (canonFound.length > 0) {
+        canonSection.style.display = "block";
+        canonFound.forEach(t => {
+          const span = document.createElement("span");
+          span.className = "tag-can";
+          span.textContent = "✓ " + t;
+          tagsContainer.appendChild(span);
+        });
+      } else {
+        canonSection.style.display = "none";
+      }
+    }
+
+    function performCanonize() {
+      let text = document.getElementById("input-text").value;
+      if (!text.trim()) return;
+
+      CORRECTION_RULES.forEach(rule => {
+        text = text.replace(rule.pattern, (match) => {
+          if (match && match[0] === match[0].toUpperCase()) {
+            return rule.replacement.charAt(0).toUpperCase() + rule.replacement.slice(1);
+          }
+          return rule.replacement;
+        });
+      });
+
+      document.getElementById("input-text").value = text;
+      performAudit();
+      showToast("Texto canonizado con éxito");
+    }
+
+    function loadExample(type) {
+      if (type === 'desvios') {
+        document.getElementById("input-text").value = 
+          "El clima del equipo está deliciosamente atemperado con enlaces covalentes entre sus miembros.\n" +
+          "Sin embargo, el sujeto S04 es un aislado crónico y un foco tóxico que genera rechazo paranoide.\n" +
+          "Existe una camarilla cerrada de tres personas que actúa como clanes hostiles, creando una fractura de fases.\n" +
+          "El orientador considera que S07 es mediocre, mientras que S02 es un alumno conflictivo y desatendido por el grupo.\n" +
+          "Se observa además un delirio narcisista en el líder indiscutible del grupo.";
+      } else if (type === 'fisico') {
+        document.getElementById("input-text").value = 
+          "El grupo experimenta un vacío térmico en su periferia, mientras que el núcleo presenta cristalización molecular y vórtice centrípeto gravitatorio.\n" +
+          "Se aprecia cizalladura tensorial entre las facciones debido a una exponencial de Lie en el semigrupo de fase.";
+      } else if (type === 'canonico') {
+        document.getElementById("input-text").value = 
+          "El grupo presenta un clima de alta cohesión y confianza mutua, caracterizado por una elevada tasa de sintonía mutua y elecciones recíprocas en las tareas cotidianas.\n" +
+          "S07 no recibió elecciones para trabajar en equipo en T1, pero recibió dos elecciones para compartir ocio, situándose en una posición integrada de visibilidad moderada.\n" +
+          "Se aprecian dos bloques de afinidad bien articulados gracias a la presencia de un conector transversal que actúa como puente relacional fluido.";
+      }
+      performAudit();
+    }
+
+    function copyToClipboard(id) {
+      const el = document.getElementById(id);
+      navigator.clipboard.writeText(el.value).then(() => {
+        showToast("Texto copiado al portapapeles");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // Auto-audit on input
+    document.getElementById("input-text").addEventListener("input", () => {
+      clearTimeout(window._auditTimeout);
+      window._auditTimeout = setTimeout(performAudit, 300);
+    });
+  </script>
+</body>
+</html>

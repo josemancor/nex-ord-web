@@ -1484,6 +1484,98 @@
             border-color: rgba(255, 255, 255, 0.04) !important;
         }
 
+    
+        /* =========================================================================
+           CANON DE DISTINCIÓN VISUAL: BOTONES ACTUADORES vs TEXTOS INERTES
+           ========================================================================= */
+        /* 1. Botones Actuadores de Pantalla Central (Cámara, Topología, Capas) */
+        .btn-ctrl {
+            padding: 7px 13px !important;
+            border-radius: 8px !important;
+            font-family: 'Roboto Mono', monospace !important;
+            font-size: 0.76rem !important;
+            font-weight: 800 !important;
+            background: rgba(15, 23, 42, 0.92) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1.2px solid rgba(56, 189, 248, 0.38) !important;
+            color: #F1F5F9 !important;
+            cursor: pointer !important;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-align: left !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+        .btn-ctrl:hover {
+            background: rgba(30, 41, 59, 0.98) !important;
+            border-color: #38BDF8 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.45) !important;
+            transform: translateY(-1px) scale(1.02) !important;
+        }
+        .btn-ctrl.active {
+            border-color: #00FF87 !important;
+            color: #00FF87 !important;
+            background: rgba(0, 255, 135, 0.22) !important;
+            box-shadow: 0 0 14px rgba(0, 255, 135, 0.45), inset 0 0 6px rgba(0, 255, 135, 0.2) !important;
+            font-weight: 900 !important;
+        }
+
+        /* 2. Modos de Grupo (Ambos, G1, G2 - Actuadores del Subespacio) */
+        .btn-group-mode {
+            padding: 6px 14px !important;
+            border-radius: 8px !important;
+            font-family: 'Roboto Mono', monospace !important;
+            font-size: 0.76rem !important;
+            font-weight: 800 !important;
+            background: rgba(15, 23, 42, 0.90) !important;
+            border: 1.2px solid rgba(255, 255, 255, 0.20) !important;
+            color: #CBD5E1 !important;
+            cursor: pointer !important;
+            transition: all 0.18s ease !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+        }
+        .btn-group-mode:hover {
+            color: #FFFFFF !important;
+            border-color: #38BDF8 !important;
+            background: rgba(30, 41, 59, 0.98) !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4) !important;
+            transform: translateY(-1px) scale(1.02) !important;
+        }
+        .btn-group-mode.active {
+            background: rgba(56, 189, 248, 0.25) !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.5) !important;
+            font-weight: 900 !important;
+        }
+        .btn-group-mode.g1.active {
+            background: rgba(0, 255, 135, 0.25) !important;
+            border-color: #00FF87 !important;
+            color: #00FF87 !important;
+            box-shadow: 0 0 14px rgba(0, 255, 135, 0.5) !important;
+        }
+        .btn-group-mode.g2.active {
+            background: rgba(255, 0, 127, 0.25) !important;
+            border-color: #FF007F !important;
+            color: #FF007F !important;
+            box-shadow: 0 0 14px rgba(255, 0, 127, 0.5) !important;
+        }
+
+        /* 3. Textos Explicativos Inertes (Encabezados y Lecturas de Métricas) */
+        .controls-panel > div[style*="font-size:0.67rem"] {
+            cursor: default !important;
+            user-select: none !important;
+            pointer-events: none !important;
+            letter-spacing: 0.8px !important;
+            text-transform: uppercase !important;
+        }
+        .metric-label, .time-badge {
+            cursor: default !important;
+            user-select: text !important;
+        }
+
     </style>
   <link rel="stylesheet" href="mobile_responsive_engine.css">
   <!-- =======================================================================
@@ -1529,7 +1621,7 @@
 
         <!-- CLUSTER DE NAVEGACIÓN COMPACTO OFICIAL (1..8, FLECHAS Y CASITA) CENTRADO EN LA CABECERA -->
         <nav class="hud-nav-cluster" aria-label="Navegación de Vistas">
-            <button class="hud-arrow-btn" id="hud-arrow-prev" title="Vista anterior (◀)">◀</button>
+            <button class="hud-arrow-btn" id="hud-arrow-prev" onclick="window.navigateMainView(-1)" title="Vista anterior (◀)">◀</button>
             <div class="hud-numbers-row">
                 <button class="hud-num-btn active" data-view="view-3d" data-step="1" title="1 · Escenario 3D / Moviola">
                     <span class="hud-num-char">1</span>
@@ -1564,13 +1656,13 @@
                     <span class="hud-num-word">DOSSIER</span>
                 </button>
             </div>
-            <button class="hud-arrow-btn" id="hud-arrow-next" title="Vista siguiente (▶)">▶</button>
+            <button class="hud-arrow-btn" id="hud-arrow-next" onclick="window.navigateMainView(1)" title="Vista siguiente (▶)">▶</button>
             <a href="index.html" class="hud-home-btn" title="Inicio (Portada Principal)">🏠</a>
         </nav>
 
         <div class="header-right-group" style="display:flex; align-items:center; gap:12px;">
             <div class="header-actions">
-                <button class="btn-action" id="btn-open-nota">💡 Nota Explicativa</button>
+                <button class="btn-action" id="btn-open-nota" onclick="document.getElementById('modal-nota').style.display='flex'">💡 Nota Explicativa</button>
                 <a href="suite_g2t1c1.html" class="btn-action" style="text-decoration:none;" title="Abrir Suite Diagnóstica G2T1C1">🗂️ Suite Diagnóstica</a>
                 <a href="visord_g2t2c2.html" class="btn-action" style="text-decoration:none;" title="Explorar Hipercubo Multidimensional G2T2C2">🧊 Hipercubo G2T2C2</a>
                 <button type="button" class="btn-action" onclick="openCockpitModal()" style="background:linear-gradient(135deg, rgba(0,229,255,0.25), rgba(0,162,255,0.35)); border:1px solid #00E5FF; color:#00E5FF; font-weight:800;" title="Abrir Cockpit Sociométrico 4 Pantallas">
@@ -1588,7 +1680,7 @@
     <nav id="vertical-main-nav" class="vertical-dock-nav" aria-label="Menú General Vertical">
         <div class="vertical-dock-header">
             <span class="dock-hdr-title">EXPLORADOR G2T1C1</span>
-            <button id="btn-toggle-vnav" class="btn-dock-collapse" title="Minimizar / Desplegar Menú">☰</button>
+            <button id="btn-toggle-vnav" class="btn-dock-collapse" onclick="document.getElementById('vertical-main-nav').classList.toggle('collapsed')" title="Minimizar / Desplegar Menú">☰</button>
         </div>
         <div class="vertical-dock-items">
             <button class="vnav-btn active" data-view="view-3d">
@@ -1698,8 +1790,8 @@
             <button class="btn-ctrl" id="btn-toggle-speed" style="padding:4px 10px; font-size:0.75rem;">⚡ Vel: 1x</button>
         </div>
         <div class="moviola-controls">
-            <button class="btn-play-pause" id="btn-play-pause" title="Reproducir / Pausar" style="background:#00FF87; color:#0B132B; border-color:#00FF87; font-weight:900; box-shadow:0 0 12px rgba(0,255,135,0.4); min-width:36px;">⏸</button>
-            <button class="btn-reset-t" id="btn-reset-t" title="Reiniciar a t=0">⏮</button>
+            <button class="btn-play-pause" id="btn-play-pause" onclick="window.toggleMoviolaPlay()" title="Reproducir / Pausar" style="background:#00FF87; color:#0B132B; border-color:#00FF87; font-weight:900; box-shadow:0 0 12px rgba(0,255,135,0.4); min-width:36px;">⏸</button>
+            <button class="btn-reset-t" id="btn-reset-t" onclick="window.resetMoviolaTimeline()" title="Reiniciar a t=0">⏮</button>
             <div class="time-slider-wrap">
                 <input type="range" id="timeline-slider" min="0" max="1" step="0.005" value="0.00">
                 <span class="time-badge" id="time-display">t=0.00</span>
@@ -2062,7 +2154,7 @@
             <p>&bull; <strong>Grupo 1 (Cohesión):</strong> Existen elecciones recíprocas (&lt;Ee&gt;) que articulan dos subgrupos integrados: el núcleo {1A, 2A, 3A} con 2A como referente, y el subgrupo {4A, 5A}. Los rechazos se reparten de forma simétrica sin aislar a nadie (densidad neta SDR = -0,91).</p>
             <p>&bull; <strong>Grupo 2 (Exclusión / Ostracismo):</strong> Los cuatro compañeros (1B, 2B, 3B, 4B) rechazan en última posición (5º lugar) a <strong>5B</strong>, quien no recibe ninguna elección. Este rechazo unánime genera un desajuste extremo (Dif-DR = 133,00) que aísla a la persona en la periferia del grupo.</p>
             <p><strong>Espacio de Grassmann Gr(2, 5):</strong> La distancia geodésica entre ambos colectivos es de <em>1,455 rad (83,37°)</em>, muy próxima a la perpendicularidad (90° = 1,57 rad). Esto demuestra matemáticamente que la cohesión y la exclusión representan estados sociométricos cualitativamente independientes.</p>
-            <button class="btn-close-modal" id="btn-close-nota">Entendido</button>
+            <button class="btn-close-modal" id="btn-close-nota" onclick="document.getElementById('modal-nota').style.display='none'">Entendido</button>
         </div>
     </div>
 
@@ -5709,12 +5801,56 @@
             }
         }
 
+                window.toggleEleccionesLayer = function() {
+            showElecciones = !showElecciones;
+            const btn = document.getElementById('btn-toggle-e');
+            if (btn) btn.classList.toggle('active', showElecciones);
+            updateTimelineState(currentT);
+        };
+        window.toggleRechazosLayer = function() {
+            showRechazos = !showRechazos;
+            const btn = document.getElementById('btn-toggle-r');
+            if (btn) btn.classList.toggle('active', showRechazos);
+            updateTimelineState(currentT);
+        };
+        window.toggleVectorsLayer = function() {
+            showCentroidsVectors = !showCentroidsVectors;
+            const btn = document.getElementById('btn-toggle-vectors');
+            if (btn) btn.classList.toggle('active', showCentroidsVectors);
+            updateTimelineState(currentT);
+        };
+        window.toggleGrassmannLayer = function() {
+            showGrassmannArc = !showGrassmannArc;
+            const btn = document.getElementById('btn-toggle-grassmann');
+            if (btn) btn.classList.toggle('active', showGrassmannArc);
+            updateTimelineState(currentT);
+        };
+        window.toggleMoviolaPlay = function() {
+            isPlaying = !isPlaying;
+            const playBtn = document.getElementById('btn-play-pause');
+            if (playBtn) playBtn.textContent = isPlaying ? "⏸" : "▶";
+            const podIcon = document.getElementById('nav-pod-play-icon');
+            if (podIcon) podIcon.textContent = isPlaying ? "⏸" : "▶";
+        };
+        window.resetMoviolaTimeline = function() {
+            isPlaying = false;
+            const playBtn = document.getElementById('btn-play-pause');
+            if (playBtn) playBtn.textContent = "▶";
+            const podIcon = document.getElementById('nav-pod-play-icon');
+            if (podIcon) podIcon.textContent = "▶";
+            updateTimelineState(0.0);
+        };
+
         function setGroupMode(mode) {
             activeGroupMode = mode;
             document.querySelectorAll('.btn-group-mode').forEach(b => {
                 b.classList.remove('active');
                 if (b.getAttribute('data-mode') === mode) b.classList.add('active');
             });
+
+            // Anular inmediatamente cualquier foco individual previo para no tener vistas conflictivas
+            if (typeof closeSubjectDossier === 'function') closeSubjectDossier();
+            if (typeof resetEgoIsolation === 'function') resetEgoIsolation();
 
             if (mode === "g1") {
                 targetCamPos.set(-9.5, 0.0, 16);
@@ -5727,7 +5863,8 @@
                 targetLookAt.set(2.5, 0.0, 0);
             }
 
-            updateTimelineState(0.00);
+            // Actualizar en el instante actual de la Moviola sin salto a t=0
+            updateTimelineState(currentT);
         }
 
         const raycaster = new THREE.Raycaster();
@@ -5891,28 +6028,28 @@
             btnE?.addEventListener('click', () => {
                 showElecciones = !showElecciones;
                 btnE.classList.toggle('active', showElecciones);
-                updateTimelineState(0.00);
+                updateTimelineState(currentT);
             });
 
             const btnR = document.getElementById('btn-toggle-r');
             btnR?.addEventListener('click', () => {
                 showRechazos = !showRechazos;
                 btnR.classList.toggle('active', showRechazos);
-                updateTimelineState(0.00);
+                updateTimelineState(currentT);
             });
 
             const btnV = document.getElementById('btn-toggle-vectors');
             btnV?.addEventListener('click', () => {
                 showCentroidsVectors = !showCentroidsVectors;
                 btnV.classList.toggle('active', showCentroidsVectors);
-                updateTimelineState(0.00);
+                updateTimelineState(currentT);
             });
 
             const btnG = document.getElementById('btn-toggle-grassmann');
             btnG?.addEventListener('click', () => {
                 showGrassmannArc = !showGrassmannArc;
                 btnG.classList.toggle('active', showGrassmannArc);
-                updateTimelineState(0.00);
+                updateTimelineState(currentT);
             });
 
             // Director de Cámara Presets
@@ -10343,5 +10480,6 @@ function copyActiveCitation() {
 
   <script src="assets/nexord_i18n_visord.js"></script>
   <script src="nexord_dial_nav.js" defer></script>
+<script src="js/visord-bus.js"></script>
 </body>
 </html>

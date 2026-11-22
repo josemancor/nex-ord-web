@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISORD · Plano de los 4 Cuadrantes: Acción vs. Expectativas (Canon 2026)</title>
+<style>
+  :root {
+    --bg-deep: #0B132B;
+    --bg-card: #111D4A;
+    --border: #1E293B;
+    --accent: #38BDF8;
+    --green: #00FF87;
+    --pink: #FF007F;
+    --orange: #F97316;
+    --gold: #FFD700;
+    --text: #E2E8F0;
+    --muted: #94A3B8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: rgba(11, 19, 43, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .title-wrap h1 {
+    font-size: 1.15rem;
+    color: #fff;
+    font-weight: 700;
+  }
+  .title-wrap span {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-family: monospace;
+  }
+  .controls-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  select, button {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  button:hover {
+    background: var(--accent);
+    color: #0B132B;
+  }
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 18px;
+    padding: 20px;
+    flex: 1;
+  }
+  @media (max-width: 1024px) {
+    .main-layout { grid-template-columns: 1fr; }
+  }
+  .canvas-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  svg#cuadrantes-svg {
+    width: 100%;
+    max-width: 680px;
+    height: auto;
+    max-height: 580px;
+  }
+  .side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .card-box h3 {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 0.9rem;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .kpi-row .val { font-weight: bold; }
+  .cuadrante-pill {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  .c-I { background: rgba(0, 255, 135, 0.12); border-left: 4px solid var(--green); }
+  .c-II { background: rgba(255, 215, 0, 0.12); border-left: 4px solid var(--gold); }
+  .c-III { background: rgba(249, 115, 22, 0.12); border-left: 4px solid var(--orange); }
+  .c-IV { background: rgba(255, 0, 127, 0.12); border-left: 4px solid var(--pink); }
+  .tooltip {
+    position: fixed;
+    background: rgba(11, 19, 43, 0.95);
+    border: 1px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.8rem;
+    font-family: monospace;
+    pointer-events: none;
+    display: none;
+    z-index: 1000;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-wrap">
+    <h1>VISORD · Plano de los 4 Cuadrantes de la Condición Humana</h1>
+    <span>Eje Horizontal: Acción Factual ($S_F$) · Eje Vertical: Expectativas ($S_P$)</span>
+  </div>
+  <div class="controls-bar">
+    <select id="time-select" onchange="setTime(parseInt(this.value))">
+      <option value="1">Ola T1: Monopolio Culpable (11-1)</option>
+      <option value="2" selected>Ola T2: Votación Secreta & Vórtice (10-2)</option>
+      <option value="3">Ola T3: Cisma Bipolar Simétrico (6-6)</option>
+      <option value="4">Ola T4: Cerco a la Resistencia (1-11)</option>
+      <option value="5">Ola T5: Consenso Unánime (0-12)</option>
+    </select>
+    <button onclick="toggleKinematicTrail()" id="btn-trail">Estela Cinemática: ON</button>
+    <a href="nexord_visor_universal.html" target="_blank" style="text-decoration:none;"><button>🪐 Estación Espectral ↗</button></a>
+  </div>
+</header>
+
+<div class="main-layout">
+  <!-- LIENZO PRINCIPAL SVG -->
+  <div class="canvas-card">
+    <svg id="cuadrantes-svg" viewBox="-240 -240 480 480"></svg>
+  </div>
+
+  <!-- PANEL LATERAL DIAGNÓSTICO -->
+  <div class="side-panel">
+    <div class="card-box">
+      <h3>Diagnóstico de Fase Grupal</h3>
+      <div id="cuadrante-desc-box" class="cuadrante-pill c-II">
+        <strong id="cuadrante-name">Cuadrante II: Vórtice de Sospecha & Duda</strong><br>
+        <span id="cuadrante-detail">Coexisten altas expectativas morales con polarización en la acción fáctica. Desajuste cognitivo elevado.</span>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3>Métricas de Tensión & Cizalladura</h3>
+      <div class="kpi-row">
+        <span>Tensión Global (Ω_FP):</span>
+        <span class="val" id="kpi-cizalla" style="color:var(--orange);">0.342</span>
+      </div>
+      <div class="kpi-row">
+        <span>Índice de Cristalización (η):</span>
+        <span class="val" id="kpi-eta" style="color:var(--green);">68.8%</span>
+      </div>
+      <div class="kpi-row">
+        <span>Vorticidad Rotacional (Ω_rot):</span>
+        <span class="val" id="kpi-vort" style="color:var(--pink);">0.285</span>
+      </div>
+      <div class="kpi-row">
+        <span>Reciprocidad Diádica (ρ):</span>
+        <span class="val" id="kpi-rho" style="color:var(--accent);">+0.38</span>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3>Doctrina del Iceberg (3 Niveles)</h3>
+      <p style="font-size:0.8rem; color:var(--muted); line-height:1.45;">
+        <strong>1. Superficie:</strong> El grupo no está roto, pero desconfía de la intención del otro.<br>
+        <strong>2. Clínico:</strong> Separar la verificación de hechos del juicio de intenciones para evitar acusaciones en bucle.<br>
+        <strong>3. Rigor:</strong> La cizalladura $\tau_{ij} = (S_F - S_P)/\sqrt{2}$ cuantifica la distancia entre el tensor fáctico y el perceptual.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip" class="tooltip"></div>
+
+<script src="js/visord-bus.js"></script>
+<script>
+// DATOS LONGITUDINALES DE LOS 12 HOMBRES (Posiciones promedio en el espacio Acción vs. Expectativas)
+const WAVES_DATA = {
+  1: {
+    name: "T1: Monopolio Culpable (11-1)",
+    nodes: [
+      { id: "J8", name: "Davis", x: -0.65, y: +0.20, role: "Disidente lúcido" },
+      { id: "J3", name: "Antagonista", x: +0.55, y: +0.50, role: "Líder agresivo" },
+      { id: "J4", name: "Corredor", x: +0.70, y: +0.65, role: "Racional formal" },
+      { id: "J9", name: "McArdle", x: -0.15, y: +0.10, role: "Observador ético" },
+      { id: "J10", name: "Comerciante", x: +0.40, y: +0.30, role: "Prejuicioso" },
+      { id: "J1", name: "Presidente", x: +0.45, y: +0.40, role: "Moderador" }
+    ],
+    omega_fp: 0.185, eta: 0.69, vort: 0.070, rho: 0.385,
+    qName: "Cuadrante III / I: Monopolio Rígido",
+    qDesc: "Consenso forzado de culpabilidad. El grupo cree estar en armonía porque 11 comparten la misma acción.",
+    qClass: "c-I"
+  },
+  2: {
+    name: "T2: Votación Secreta & Vórtice (10-2)",
+    nodes: [
+      { id: "J8", name: "Davis", x: +0.45, y: +0.60, role: "Faro emergente" },
+      { id: "J3", name: "Antagonista", x: -0.15, y: +0.40, role: "Paranoico / sospecha" },
+      { id: "J4", name: "Corredor", x: +0.60, y: +0.55, role: "Centro de gravedad" },
+      { id: "J9", name: "McArdle", x: +0.35, y: +0.50, role: "Aliado ético" },
+      { id: "J10", name: "Comerciante", x: -0.70, y: -0.10, role: "Rechazado" },
+      { id: "J1", name: "Presidente", x: +0.20, y: +0.25, role: "Institucional" }
+    ],
+    omega_fp: 0.342, eta: 0.688, vort: 0.285, rho: 0.376,
+    qName: "Cuadrante II: Vórtice de Sospecha & Duda",
+    qDesc: "Irrupción de la duda razonable. Incertidumbre rotacional: alta sospecha entre miembros sobre quién rompió el consenso.",
+    qClass: "c-II"
+  },
+  3: {
+    name: "T3: Cisma Bipolar Simétrico (6-6)",
+    nodes: [
+      { id: "J8", name: "Davis", x: +0.60, y: +0.65, role: "Líder Bloque Inocente" },
+      { id: "J3", name: "Antagonista", x: -0.40, y: -0.45, role: "Líder Bloque Culpable" },
+      { id: "J4", name: "Corredor", x: +0.45, y: +0.35, role: "Árbitro lógico" },
+      { id: "J9", name: "McArdle", x: +0.50, y: +0.55, role: "Apoyo ético" },
+      { id: "J10", name: "Comerciante", x: -0.55, y: -0.50, role: "Trinchera hostil" },
+      { id: "J1", name: "Presidente", x: +0.10, y: +0.05, role: "Bloque neutro" }
+    ],
+    omega_fp: 0.220, eta: 0.711, vort: 0.000, rho: 0.422,
+    qName: "Cuadrante I vs. IV: Cisma Bipolar Puro",
+    qDesc: "Escisión simétrica frontal 6 vs 6. Los autovalores imaginarios colapsan a cero: conflicto estructurado entre dos bloques limpios.",
+    qClass: "c-III"
+  },
+  4: {
+    name: "T4: Cerco a la Resistencia (1-11)",
+    nodes: [
+      { id: "J8", name: "Davis", x: +0.75, y: +0.80, role: "Atractor de consenso" },
+      { id: "J3", name: "Antagonista", x: -0.85, y: -0.70, role: "Aislado obstinado" },
+      { id: "J4", name: "Corredor", x: +0.65, y: +0.70, role: "Convencido por lógica" },
+      { id: "J9", name: "McArdle", x: +0.60, y: +0.65, role: "Prestigio moral" },
+      { id: "J10", name: "Comerciante", x: -0.60, y: -0.55, role: "Aislado socialmente" },
+      { id: "J1", name: "Presidente", x: +0.30, y: +0.30, role: "Adhesión formal" }
+    ],
+    omega_fp: 0.410, eta: 0.581, vort: 0.000, rho: 0.161,
+    qName: "Cuadrante IV: Cerco Unilateral Asimétrico",
+    qDesc: "Máxima asimetría de poder. El colectivo vuelca todo su peso sobre el último reducto obstinado (J3).",
+    qClass: "c-IV"
+  },
+  5: {
+    name: "T5: Consenso Unánime (0-12)",
+    nodes: [
+      { id: "J8", name: "Davis", x: +0.90, y: +0.95, role: "Consenso unánime" },
+      { id: "J3", name: "Antagonista", x: +0.30, y: +0.35, role: "Reconciliado / catarsis" },
+      { id: "J4", name: "Corredor", x: +0.75, y: +0.80, role: "Racional satisfecho" },
+      { id: "J9", name: "McArdle", x: +0.70, y: +0.75, role: "Fuerza moral" },
+      { id: "J10", name: "Comerciante", x: +0.10, y: +0.10, role: "Silenciado / pacificado" },
+      { id: "J1", name: "Presidente", x: +0.40, y: +0.40, role: "Acta final cerrada" }
+    ],
+    omega_fp: 0.080, eta: 0.654, vort: 0.000, rho: 0.308,
+    qName: "Cuadrante I: Consenso Armónico Estacionario",
+    qDesc: "Extinción de la tensión negativa. El antagonista llora y cede, Davis le entrega el abrigo. Pacificación completa.",
+    qClass: "c-I"
+  }
+};
+
+let currentT = 2;
+let showTrail = true;
+const svg = document.getElementById('cuadrantes-svg');
+const scale = 180;
+
+function renderCuadrantes() {
+  svg.innerHTML = '';
+  const d = WAVES_DATA[currentT];
+
+  // Fondos de Cuadrantes
+  svg.innerHTML += `
+    <!-- Cuadrante I (+X, +Y): Resonancia Sintonizada -->
+    <rect x="0" y="-200" width="200" height="200" fill="var(--green)" opacity="0.06"/>
+    <!-- Cuadrante II (-X, +Y): Vórtice de Complacencia -->
+    <rect x="-200" y="-200" width="200" height="200" fill="var(--gold)" opacity="0.06"/>
+    <!-- Cuadrante III (+X, -Y): Pacto Cínico / Tensión -->
+    <rect x="0" y="0" width="200" height="200" fill="var(--orange)" opacity="0.06"/>
+    <!-- Cuadrante IV (-X, -Y): Ruptura / Conflicto -->
+    <rect x="-200" y="0" width="200" height="200" fill="var(--pink)" opacity="0.06"/>
+
+    <!-- Ejes cartesianos -->
+    <line x1="-210" y1="0" x2="210" y2="0" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+    <line x1="0" y1="-210" x2="0" y2="210" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+
+    <!-- Línea de Coherencia Fáctico-Perceptual (Diagonal 45º) -->
+    <line x1="-200" y1="200" x2="200" y2="-200" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+    <!-- Rótulos de Cuadrantes -->
+    <text x="180" y="-180" fill="var(--green)" font-size="9" font-weight="bold" text-anchor="end">I. RESONANCIA (+Acción, +Expectativas)</text>
+    <text x="-180" y="-180" fill="var(--gold)" font-size="9" font-weight="bold" text-anchor="start">II. VÓRTICE / COMPLACENCIA (-Acción, +Expectativas)</text>
+    <text x="180" y="190" fill="var(--orange)" font-size="9" font-weight="bold" text-anchor="end">III. PACTO CÍNICO (+Acción, -Expectativas)</text>
+    <text x="-180" y="190" fill="var(--pink)" font-size="9" font-weight="bold" text-anchor="start">IV. RUPTURA / CONFLICTO (-Acción, -Expectativas)</text>
+
+    <!-- Rótulos de Ejes -->
+    <text x="215" y="4" fill="#FFF" font-size="9" font-weight="bold">+Acción</text>
+    <text x="-215" y="4" fill="#94A3B8" font-size="9" text-anchor="end">-Acción</text>
+    <text x="0" y="-215" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">+Expectativas</text>
+    <text x="0" y="225" fill="#94A3B8" font-size="9" text-anchor="middle">-Expectativas</text>
+  `;
+
+  // Estelas cinemáticas si están activas
+  if (showTrail && currentT > 1) {
+    const prevT = currentT - 1;
+    const prevD = WAVES_DATA[prevT];
+    d.nodes.forEach(n => {
+      const pn = prevD.nodes.find(p => p.id === n.id);
+      if (pn) {
+        const x1 = pn.x * scale, y1 = -pn.y * scale;
+        const x2 = n.x * scale, y2 = -n.y * scale;
+        svg.innerHTML += `
+          <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(56, 189, 248, 0.4)" stroke-width="2" stroke-dasharray="2,3"/>
+        `;
+      }
+    });
+  }
+
+  // Nodos de los sujetos
+  d.nodes.forEach(node => {
+    const cx = node.x * scale;
+    const cy = -node.y * scale; // Invertir Y para SVG
+
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.style.cursor = "pointer";
+
+    g.innerHTML = `
+      <circle cx="${cx}" cy="${cy}" r="12" fill="rgba(56, 189, 248, 0.2)"/>
+      <circle cx="${cx}" cy="${cy}" r="6.5" fill="${node.id === 'J8' ? 'var(--green)' : (node.id === 'J3' ? 'var(--pink)' : '#38BDF8')}" stroke="#FFF" stroke-width="1.5"/>
+      <text x="${cx + 9}" y="${cy + 4}" fill="#FFF" font-size="10" font-family="monospace" font-weight="bold">${node.id}</text>
+    `;
+
+    g.addEventListener('mouseenter', (e) => {
+      const tip = document.getElementById('tooltip');
+      tip.style.display = 'block';
+      tip.style.left = (e.clientX + 14) + 'px';
+      tip.style.top = (e.clientY + 14) + 'px';
+      tip.innerHTML = `
+        <strong>${node.id} (${node.name}):</strong><br>
+        Acción (S_F): ${node.x > 0 ? '+' : ''}${node.x.toFixed(2)}<br>
+        Expectativas (S_P): ${node.y > 0 ? '+' : ''}${node.y.toFixed(2)}<br>
+        Rol: ${node.role}
+      `;
+    });
+    g.addEventListener('mouseleave', () => {
+      document.getElementById('tooltip').style.display = 'none';
+    });
+    g.addEventListener('click', () => {
+      if (window.VisordBus) VisordBus.selectNode(node.id, 'cuadrantes');
+    });
+
+    svg.appendChild(g);
+  });
+
+  // Actualizar KPIs laterales
+  document.getElementById('kpi-cizalla').innerText = d.omega_fp.toFixed(3);
+  document.getElementById('kpi-eta').innerText = Math.round(d.eta * 100) + '%';
+  document.getElementById('kpi-vort').innerText = d.vort.toFixed(3);
+  document.getElementById('kpi-rho').innerText = (d.rho >= 0 ? '+' : '') + d.rho.toFixed(2);
+
+  const box = document.getElementById('cuadrante-desc-box');
+  box.className = `cuadrante-pill ${d.qClass}`;
+  document.getElementById('cuadrante-name').innerText = d.qName;
+  document.getElementById('cuadrante-detail').innerText = d.qDesc;
+}
+
+function setTime(t) {
+  currentT = t;
+  document.getElementById('time-select').value = t;
+  renderCuadrantes();
+  if (window.VisordBus) {
+    const d = WAVES_DATA[t];
+    VisordBus.setTime(t, 5, 'cuadrantes');
+    VisordBus.updateRegime({
+      name: d.qName,
+      rho: d.rho,
+      eta: d.eta,
+      omega_rot: d.vort
+    });
+  }
+}
+
+function toggleKinematicTrail() {
+  showTrail = !showTrail;
+  document.getElementById('btn-trail').innerText = `Estela Cinemática: ${showTrail ? 'ON' : 'OFF'}`;
+  renderCuadrantes();
+}
+
+// Reactividad con VisordBus si otras vistas mueven el tiempo
+if (window.VisordBus) {
+  VisordBus.on('TIME_CHANGE', (d) => {
+    if (d.origin !== 'cuadrantes' && d.t && d.t !== currentT) {
+      setTime(d.t);
+    }
+  });
+}
+
+window.onload = () => {
+  setTime(2);
+};
+</script>
+</body>
+</html>

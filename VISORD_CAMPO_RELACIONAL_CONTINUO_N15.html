@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISORD / NEXORD · El Campo Relacional Continuo: Topología Cuadripolar (N=15)</title>
+  <style>
+    :root {
+      --bg-canvas: #0B132B;
+      --bg-card: #111E3D;
+      --bg-panel: #162447;
+      --border-col: #1E2D5A;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      
+      --c-node1: #FF5722;
+      --c-node2: #00E5FF;
+      --c-node3: #D500F9;
+      --c-node4: #1DE9B6;
+      --c-node5: #FFEA00;
+      --c-node6: #FF1744;
+      --c-node7: #76FF03;
+      --c-node8: #3D5AFE;
+      --c-node9: #FF9100;
+      --c-node10: #E040FB;
+      --c-node11: #00B0FF;
+      --c-node12: #FF6D00;
+      --c-node13: #A7FFEB;
+      --c-node14: #F50057;
+      --c-node15: #69F0AE;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1260px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Cabecera Canónica (Canon 9, 14, 16, 29) */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-col);
+      border-radius: 10px;
+      padding: 14px 22px;
+    }
+    .header-title h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+    .header-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .header-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+    }
+    .badge-code {
+      font-family: "Roboto Mono", monospace;
+      font-size: 0.8rem;
+      background: rgba(0, 255, 135, 0.12);
+      color: #00FF87;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 255, 135, 0.3);
+      font-weight: 600;
+    }
+    .badge-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* CANON 19: 1) PRIMERO GRÁFICO PRINCIPAL BIEN VISIBLE */
+    .viewport-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-col);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .viewport-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-col);
+    }
+    .viewport-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .viewport-status {
+      font-size: 0.82rem;
+      color: #38BDF8;
+      font-family: "Roboto Mono", monospace;
+      font-weight: 600;
+    }
+
+    .svg-container {
+      width: 100%;
+      height: 840px;
+      position: relative;
+      background: var(--bg-canvas);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-col);
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* CANON 19: 2) DESPUÉS CONTROLES Y BOTONES DE ACCIÓN */
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-col);
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .chips-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-right: 4px;
+      font-weight: 600;
+    }
+
+    .chip-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-col);
+      color: var(--text-muted);
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: "Roboto Mono", monospace;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chip-btn:hover {
+      border-color: #38BDF8;
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+    .chip-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--chip-color, #00FF87);
+      color: var(--text-main);
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
+    }
+    .chip-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--chip-color, #00FF87);
+    }
+
+    .actions-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-action {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-col);
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: #1c2e5c;
+      color: var(--text-main);
+    }
+    .btn-action.active-layer {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--layer-color, #38BDF8);
+      color: #F8FAFC;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .slider-group input[type=range] {
+      width: 120px;
+      accent-color: #00FF87;
+      cursor: pointer;
+    }
+
+    /* CANON 19: 3) DESPUÉS EXPLICACIONES CONCISAS Y BIEN ESTRUCTURADAS */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-col);
+      border-radius: 10px;
+      padding: 14px;
+      border-left: 4px solid var(--card-accent, #38BDF8);
+    }
+    .detail-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .detail-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .detail-card .verts {
+      margin-top: 8px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 0.75rem;
+      color: var(--card-accent);
+      background: rgba(0,0,0,0.25);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Tooltip */
+    .tooltip-box {
+      position: absolute;
+      background: rgba(11, 19, 43, 0.96);
+      border: 1px solid #38BDF8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    /* Nota Pedagógica (Canon 10 y Canon 29) */
+    .pedagogical-note {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      line-height: 1.5;
+    }
+    .pedagogical-note strong {
+      color: #38BDF8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- CABECERA INSTITUCIONAL CANÓNICA -->
+    <header class="header-bar">
+      <div class="header-title">
+        <h1>NEXORD / VISORD · EL CAMPO RELACIONAL CONTINUO (N=15)</h1>
+        <p>Topología Cuadripolar: Envolvente Grupal HG (Alcance Relacional Observado), 15 Campos Fi y Zona de Copresencia KG</p>
+      </div>
+      <div class="header-badge">
+        <span class="badge-code">TRIADICO-AA-G1-T1-C1-V10-A16-ES-15</span>
+        <span class="badge-date">Grupo N=15 · 31 de Octubre de 2026</span>
+      </div>
+    </header>
+
+    <!-- 1) GRÁFICO PRINCIPAL BIEN VISIBLE (CANON 19) -->
+    <div class="viewport-card">
+      <div class="viewport-header">
+        <h2>
+          <span>El Campo Relacional Continuo · Topología Cuadripolar y Zona de Copresencia</span>
+        </h2>
+        <div class="viewport-status" id="view-status">
+          15 Campos Individuales Activos | Envolvente HG (Alcance Observado) | Zona KG
+        </div>
+      </div>
+
+      <div class="svg-container" id="svg-wrap">
+        <svg id="canvas" viewBox="0 0 1100 840">
+          <defs>
+            <filter id="glow-node" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#94A3B8" opacity="0.8" />
+            </marker>
+          </defs>
+
+          <!-- FONDOS Y CUADRANTES BASE -->
+          <g id="panels-bg"></g>
+
+          <!-- ENVOLVENTE MACRO-CONVEX HULL GRUPAL (60 PUNTOS) -->
+          <g id="macro-hull-layer"></g>
+
+          <!-- CUENCAS DE ISOPRESENCIA (K60, K80) -->
+          <g id="k60-layer"></g>
+          <g id="k80-layer"></g>
+
+          <!-- CAMPOS INDIVIDUALES POR SUJETO (CRUZAN ENTRE CUADRANTES) -->
+          <g id="field-polys-layer"></g>
+
+          <!-- NÚCLEO DE CO-PRESENCIA ESMERALDA (K100 / UNANIMIDAD) -->
+          <g id="core-layer"></g>
+
+          <!-- EJES, LÍNEAS GUÍA Y UMBRALES DE CADA CUADRANTE -->
+          <g id="axes-layer"></g>
+
+          <!-- NODOS FACTUALES EN LOS 4 CUADRANTES (Z-ORDER SUPREMACY) -->
+          <g id="nodes-layer"></g>
+
+          <!-- ETIQUETAS Y RÓTULOS CANÓNICOS -->
+          <g id="labels-layer"></g>
+        </svg>
+
+        <!-- Tooltip Flotante -->
+        <div class="tooltip-box" id="tooltip"></div>
+      </div>
+    </div>
+
+    <!-- 2) CONTROLES Y BOTONES DE ACCIÓN (CANON 19) -->
+    <div class="controls-panel">
+      <!-- Chips de los 15 Sujetos -->
+      <div class="chips-group" id="chips-container">
+        <span class="chips-title">Sujetos (1-15):</span>
+        <!-- Se insertan dinámicamente -->
+      </div>
+
+      <!-- Presets de Rol -->
+      <div class="actions-group">
+        <button class="btn-action" onclick="setPreset('all')">Todos (15)</button>
+        <button class="btn-action" onclick="setPreset('none')">Ninguno</button>
+        <button class="btn-action" onclick="setPreset('leaders')">Líderes (10, 6, 3, 8)</button>
+        <button class="btn-action" onclick="setPreset('tension')">Foco Tensión (4, 14, 1)</button>
+        <button class="btn-action" onclick="setPreset('balance')">Equilibrio (11, 13, 7)</button>
+        <button class="btn-action" onclick="setPreset('periphery')">Periferia (2, 5, 12, 15)</button>
+      </div>
+
+      <!-- Control de Opacidad -->
+      <div class="slider-group">
+        <span>Opacidad Campos:</span>
+        <input type="range" id="opacity-slider" min="0.04" max="0.30" step="0.01" value="0.18" oninput="updateOpacity(this.value)">
+        <span id="opacity-val" style="font-family:'Roboto Mono'; font-weight:bold; color:#00FF87;">18%</span>
+      </div>
+
+      <!-- Selector de Capas de Isopresencia (Canon 29) -->
+      <div class="actions-group" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 4px;">
+        <span class="chips-title" style="color: #38BDF8;">Escáner de Copresencia:</span>
+        <button class="btn-action active-layer" id="btn-layer-hull" style="--layer-color: #38BDF8;" onclick="toggleLayer('hull')">Envolvente HG (50.4%)</button>
+        <button class="btn-action active-layer" id="btn-layer-polys" style="--layer-color: #A7FFEB;" onclick="toggleLayer('polys')">Campos Fi (Polígonos)</button>
+        <button class="btn-action active-layer" id="btn-layer-k100" style="--layer-color: #00FF87;" onclick="toggleLayer('k100')">Núcleo K100 (Unanimidad · 0.6%)</button>
+        <button class="btn-action" id="btn-layer-k80" style="--layer-color: #FF007F;" onclick="toggleLayer('k80')">Cuenca K80 (Consenso ≥ 80% · 9.5%)</button>
+        <button class="btn-action" id="btn-layer-k60" style="--layer-color: #FFE600;" onclick="toggleLayer('k60')">Cuenca K60 (Mayoría ≥ 60% · 19.3%)</button>
+      </div>
+
+      <!-- Inspector de Resiliencia Jackknife -->
+      <div id="jackknife-banner" style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: rgba(11, 19, 43, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 8px 14px; margin-top: 6px; font-size: 0.84rem;">
+        <div>
+          <span style="color: #94A3B8;">Auditoría de Sensibilidad Jackknife:</span>
+          <span id="jackknife-info" style="color: #00FF87; font-weight: bold; margin-left: 8px;">Haz clic o pasa el ratón sobre cualquier sujeto para evaluar su impacto.</span>
+        </div>
+        <div id="jackknife-badge" style="font-family: 'Roboto Mono', monospace; font-size: 0.78rem; background: rgba(0, 255, 135, 0.15); border: 1px solid #00FF87; color: #00FF87; padding: 3px 8px; border-radius: 4px;">
+          Núcleo Base: 2.847 px
+        </div>
+      </div>
+    </div>
+
+    <!-- 3) EXPLICACIONES CONCISAS Y BIEN ESTRUCTURADAS (CANON 19) -->
+    <div class="details-grid">
+      <div class="detail-card" style="--card-accent: #E040FB;">
+        <h3>
+          <span>Sujeto 10: Líder Hegemónico Absoluto</span>
+          <span style="color: #E040FB;">Violeta</span>
+        </h3>
+        <p>Máximo atractor grupal (RC=6). Modestia autoevaluativa pronunciada (Δk=+5). Baja tensión diádica (||v||=0.42) y anclaje gravitatorio central en el AFC.</p>
+        <div class="verts">Atractor Gravitatorio Principal</div>
+      </div>
+
+      <div class="detail-card" style="--card-accent: #1DE9B6;">
+        <h3>
+          <span>Sujeto 4: Puente Diádico y Máxima Tensión</span>
+          <span style="color: #1DE9B6;">Turquesa</span>
+        </h3>
+        <p>Equilibrio neto de flujo (RC=3, DA=3, Bal=0) pero con la máxima tensión vectorial de la red (||v||=1.463). Emite hacia un polo factorial y recibe del polo opuesto.</p>
+        <div class="verts">Puente Inter-Facciones (Tensión Máxima)</div>
+      </div>
+
+      <div class="detail-card" style="--card-accent: #00B0FF;">
+        <h3>
+          <span>Sujeto 11: Centroide Homeostático</span>
+          <span style="color: #00B0FF;">Azul Cielo</span>
+        </h3>
+        <p>Tensión diádica rigurosamente nula (||v||=0.000). Calibración perceptiva exacta (Δk=0) y alta lucidez afín (λα=75%). Actúa como el centroide de estabilidad del grupo.</p>
+        <div class="verts">Equilibrio Diádico Puro (||v||=0.000)</div>
+      </div>
+
+      <div class="detail-card" style="--card-accent: #00E5FF;">
+        <h3>
+          <span>Sujeto 2: Aislamiento Estructural</span>
+          <span style="color: #00E5FF;">Cian</span>
+        </h3>
+        <p>Cero elecciones recibidas (RC=0, Bal=-3). Fuerte distorsión autoevaluativa (Δk=-9) con emisión sin retorno. Diana prioritaria de intervención clínica.</p>
+        <div class="verts">Polo Dialéctico Desconectado</div>
+      </div>
+    </div>
+
+    <!-- NOTA EXPLICATIVA PEDAGÓGICA (Canon 10 y Canon 29) -->
+    <div class="pedagogical-note">
+      <strong>💡 Formulación Canónica (Canon 29 · Mapa de Profundidad y Copresencia Relacional · N=15):</strong><br>
+      La envolvente resume el alcance de las posiciones observadas. El mapa de profundidad representa la proporción de campos individuales que cubre cada región, distinguiendo las zonas de copresencia del 60 %, 80 % y 100 %. Estas geometrías dependen de la normalización declarada y su interpretación como espacio vital colectivo constituye una propuesta teórica pendiente de validación nula, de estabilidad y conductual.
+    </div>
+
+  </div>
+
+  <script>
+    /* =========================================================================
+       NEXORD / VISORD PLATINUM · EL CAMPO RELACIONAL CONTINUO (N=15)
+       ========================================================================= */
+    const subjects = [
+      {
+        id: "1", col: "#FF5722", name: "Sujeto 1",
+        rc: 1, k_yo: 6, delta_k: -8, da: 3, bal: -2, tension: 0.937,
+        lambda_a: 0.0, lambda_w: 1.0, delta_lambda: -1.0,
+        afc: { abs_f1: 1.006, f2: -1.125 },
+        desc: "Periferia Externa · Ilusión de Estatus (Δk=-8). Emisor sin correspondencia (Bal=-2). Vigilancia sobre el distante (Δλ=-1.0)."
+      },
+      {
+        id: "2", col: "#00E5FF", name: "Sujeto 2",
+        rc: 0, k_yo: 6, delta_k: -9, da: 3, bal: -3, tension: 0.937,
+        lambda_a: 0.0, lambda_w: 0.25, delta_lambda: -0.25,
+        afc: { abs_f1: 0.623, f2: +0.700 },
+        desc: "Aislamiento Estructural Absoluto (RC=0, Bal=-3). Fuerte desconexión autoevaluativa (Δk=-9). Polo pasivo sin atracción."
+      },
+      {
+        id: "3", col: "#D500F9", name: "Sujeto 3",
+        rc: 4, k_yo: 6, delta_k: +3, da: 3, bal: +1, tension: 0.415,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 1.064, f2: +0.482 },
+        desc: "Consolidado Positivo · Atractor técnico de alta cohesión (RC=4, Δk=+3). Baja tensión diádica (0.415)."
+      },
+      {
+        id: "4", col: "#1DE9B6", name: "Sujeto 4",
+        rc: 3, k_yo: 6, delta_k: 0, da: 3, bal: 0, tension: 1.463,
+        lambda_a: 0.5, lambda_w: 1.0, delta_lambda: -0.5,
+        afc: { abs_f1: 0.955, f2: -0.308 },
+        desc: "Puente Diádico Intermedio · Máxima Tensión Diádica de la Red (||v||=1.463). Equilibrio de flujo (Bal=0) con alta fricción polar."
+      },
+      {
+        id: "5", col: "#FFEA00", name: "Sujeto 5",
+        rc: 2, k_yo: 6, delta_k: -5, da: 3, bal: -1, tension: 0.344,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 1.203, f2: -0.717 },
+        desc: "Perfil Intermedio Moderado (RC=2, Bal=-1). Baja tensión diádica (0.344). Posición moderada en el flanco gravitatorio."
+      },
+      {
+        id: "6", col: "#FF1744", name: "Sujeto 6",
+        rc: 5, k_yo: 6, delta_k: +4, da: 3, bal: +2, tension: 0.450,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 0.163, f2: +1.040 },
+        desc: "Co-Líder Operativo (RC=5). Elevada prudencia autoevaluativa (Δk=+4). Gravitación central y cénit en F2 (+1.04)."
+      },
+      {
+        id: "7", col: "#76FF03", name: "Sujeto 7",
+        rc: 3, k_yo: 6, delta_k: 0, da: 3, bal: 0, tension: 0.395,
+        lambda_a: 0.75, lambda_w: 0.0, delta_lambda: +0.75,
+        afc: { abs_f1: 0.307, f2: +0.435 },
+        desc: "Pivote Central Lúcido · Calibración perfecta (Δk=0). Sesgo afín positivo pronunciado (λα=75%, Δλ=+0.75)."
+      },
+      {
+        id: "8", col: "#3D5AFE", name: "Sujeto 8",
+        rc: 4, k_yo: 6, delta_k: +3, da: 3, bal: +1, tension: 0.566,
+        lambda_a: 0.0, lambda_w: 0.25, delta_lambda: -0.25,
+        afc: { abs_f1: 1.146, f2: +0.671 },
+        desc: "Atractor Técnico Secundario (RC=4, Δk=+3). Fuerte inserción en el núcleo de co-presencia con moderada tensión."
+      },
+      {
+        id: "9", col: "#FF9100", name: "Sujeto 9",
+        rc: 3, k_yo: 6, delta_k: 0, da: 3, bal: 0, tension: 0.750,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 0.355, f2: -1.353 },
+        desc: "Nodo Dinámico de Diferenciación F2 (-1.35). Realismo perceptivo exacto (Δk=0) y equilibrio de flujos (Bal=0)."
+      },
+      {
+        id: "10", col: "#E040FB", name: "Sujeto 10",
+        rc: 6, k_yo: 6, delta_k: +5, da: 3, bal: +3, tension: 0.416,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 0.284, f2: -0.564 },
+        desc: "Líder Hegemónico Absoluto (RC=6, Bal=+3). Máxima prudencia y modestia (Δk=+5). Atractor gravitatorio central."
+      },
+      {
+        id: "11", col: "#00B0FF", name: "Sujeto 11",
+        rc: 3, k_yo: 6, delta_k: 0, da: 3, bal: 0, tension: 0.000,
+        lambda_a: 0.75, lambda_w: 0.0, delta_lambda: +0.75,
+        afc: { abs_f1: 0.031, f2: +0.376 },
+        desc: "Equilibrio Diádico Puro (||v||=0.000). Calibración perfecta (Δk=0). Centroide homeostático y alta lucidez afín (λα=75%)."
+      },
+      {
+        id: "12", col: "#FF6D00", name: "Sujeto 12",
+        rc: 2, k_yo: 6, delta_k: -5, da: 3, bal: -1, tension: 0.653,
+        lambda_a: 0.50, lambda_w: 0.0, delta_lambda: +0.50,
+        afc: { abs_f1: 0.997, f2: -0.042 },
+        desc: "Miembro de Apoyo (RC=2, Bal=-1). Lucidez focal moderada (λα=50%). Posición periférica simétrica."
+      },
+      {
+        id: "13", col: "#A7FFEB", name: "Sujeto 13",
+        rc: 3, k_yo: 6, delta_k: 0, da: 3, bal: 0, tension: 0.245,
+        lambda_a: 1.00, lambda_w: 0.25, delta_lambda: +0.75,
+        afc: { abs_f1: 0.049, f2: -0.733 },
+        desc: "Máxima Clarividencia Triádica (λα=100%). Equilibrio perfecto de flujo (Bal=0) y bajísima tensión diádica (0.245)."
+      },
+      {
+        id: "14", col: "#F50057", name: "Sujeto 14",
+        rc: 4, k_yo: 6, delta_k: +3, da: 3, bal: +1, tension: 1.144,
+        lambda_a: 0.0, lambda_w: 0.0, delta_lambda: 0.0,
+        afc: { abs_f1: 1.130, f2: -0.358 },
+        desc: "Fuerte Polarización Afectiva (RC=4, Δk=+3). Elevada tensión diádica (||v||=1.144) por disparidad emisión/recepción."
+      },
+      {
+        id: "15", col: "#69F0AE", name: "Sujeto 15",
+        rc: 2, k_yo: 6, delta_k: -5, da: 3, bal: -1, tension: 0.423,
+        lambda_a: 0.0, lambda_w: 0.50, delta_lambda: -0.50,
+        afc: { abs_f1: 0.936, f2: +1.378 },
+        desc: "Polo Cénit F2 (+1.38). Integración periférica con dependencia estructural del núcleo gravitatorio."
+      }
+    ];
+
+    const xMid = 550;
+    const yMid = 420;
+
+    let activeSubjects = {};
+    subjects.forEach(s => activeSubjects[s.id] = true);
+    let currentOpacity = 0.18;
+    let hoveredSubject = null;
+
+    // Estado del Escáner de Copresencia e Isopresencia (Canon 29)
+    const layerStates = {
+      hull: true,
+      polys: true,
+      k100: true,
+      k80: false,
+      k60: false
+    };
+
+    // Contornos de Isopresencia Vectorial (1100 x 840)
+    const k60_svg_pts = "352.5,198.8 370.0,200.0 390.0,201.2 407.5,203.8 425.0,206.2 442.5,207.5 460.0,210.0 477.5,212.5 495.0,215.0 512.5,220.0 527.5,222.5 545.0,225.0 562.5,227.5 572.5,240.0 572.5,260.0 572.5,277.5 590.0,275.0 610.0,275.0 630.0,275.0 647.5,277.5 665.0,275.0 680.8,280.0 680.0,297.5 680.0,317.5 682.5,335.0 682.5,355.0 690.0,365.0 710.0,365.0 730.0,367.5 725.0,382.5 720.0,397.5 715.0,412.5 707.5,427.5 702.5,440.0 697.5,455.0 687.5,467.5 680.0,477.5 672.5,490.0 672.5,510.0 670.0,527.5 670.0,547.5 655.0,555.0 642.5,562.5 625.0,565.0 610.0,570.0 595.0,575.0 580.0,580.0 572.5,582.5 557.5,586.2 542.5,582.5 527.5,582.5 512.5,582.5 502.5,572.5 492.5,565.0 480.0,557.5 470.0,547.5 462.5,535.0 455.0,523.8 447.5,510.0 440.0,497.5 435.0,485.0 427.5,470.0 420.0,457.5 415.0,445.0 407.5,430.0 401.2,417.5 395.0,403.8 388.8,390.0 390.0,372.5 390.0,357.5 385.0,342.5 377.5,330.0 372.5,317.5 365.0,302.5 357.5,290.0 352.5,277.5 345.0,262.5 340.0,250.0 337.5,235.0 342.5,220.0 348.8,205.0";
+
+    const k80_svg_pts = "557.5,285.0 572.5,290.0 572.5,307.5 572.5,325.0 575.0,340.0 587.5,337.5 605.0,337.5 620.0,335.0 620.0,350.0 617.5,365.0 630.0,367.5 647.5,367.5 662.5,367.5 670.0,372.5 670.0,390.0 667.5,405.0 665.0,420.0 662.5,435.0 660.0,452.5 660.0,467.5 655.0,482.5 637.5,482.5 620.0,482.5 602.5,482.5 595.0,490.0 592.5,505.0 590.0,520.0 582.5,532.5 578.8,545.0 570.0,552.5 557.5,560.0 542.5,557.5 525.0,556.2 512.5,556.2 507.5,547.5 500.0,537.5 495.0,525.0 490.0,515.0 482.5,502.5 477.5,490.0 472.5,477.5 467.5,467.5 462.5,455.0 455.0,442.5 450.0,430.0 445.0,417.5 440.0,407.5 435.0,395.0 427.5,382.5 422.5,370.0 417.5,357.5 412.5,347.5 406.2,335.0 402.5,320.0 405.0,305.0 415.0,296.2 432.5,295.0 447.5,293.8 465.0,292.5 480.0,291.2 497.5,290.0 515.0,290.0 530.0,287.5 547.5,287.5";
+
+    // Datos Factuales de Sensibilidad Jackknife (ΔK-i)
+    const jackknifeData = {
+      "1":  { area: 9911.4,  ratio: 1.73, status: "Constrictor Crítico", desc: "Su exclusión expande el núcleo K100 en +73% (+4.197 px). Ejerce un estrechamiento perimetral severo." },
+      "2":  { area: 12181.5, ratio: 2.13, status: "Constrictor Crítico", desc: "Su exclusión más que duplica el núcleo K100 (+113%, +6.467 px). Es el principal reductor de copresencia de la red." },
+      "3":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo de copresencia K100 (ratio 1.00x). Inserción armónica." },
+      "4":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). A pesar de su alta tensión, su campo envuelve el núcleo." },
+      "5":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Inserción armónica sin constricción de frontera." },
+      "6":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). El co-líder engloba plenamente el centroide común." },
+      "7":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Pivote central plenamente integrado." },
+      "8":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Atractor armónico." },
+      "9":  { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Inserción armónica." },
+      "10": { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). El líder hegemónico abraza holgadamente el consenso." },
+      "11": { area: 9130.2,  ratio: 1.60, status: "Constrictor Crítico", desc: "Su exclusión expande el núcleo K100 en +60% (+3.416 px). Actúa como frontera constrictora en el cuadrante III." },
+      "12": { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Inserción armónica." },
+      "13": { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Clarividencia triádica armónica." },
+      "14": { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Inserción armónica." },
+      "15": { area: 5714.3,  ratio: 1.00, status: "Neutro / Invariante", desc: "Su exclusión no altera el núcleo K100 (ratio 1.00x). Inserción armónica." }
+    };
+
+    function toggleLayer(layerKey) {
+      layerStates[layerKey] = !layerStates[layerKey];
+      const btn = document.getElementById(`btn-layer-${layerKey}`);
+      if (btn) {
+        if (layerStates[layerKey]) {
+          btn.classList.add("active-layer");
+        } else {
+          btn.classList.remove("active-layer");
+        }
+      }
+      renderFieldsAndNodes();
+    }
+
+    function updateJackknifeInspector(subjId) {
+      const infoEl = document.getElementById("jackknife-info");
+      const badgeEl = document.getElementById("jackknife-badge");
+      if (!subjId) {
+        infoEl.innerHTML = "Haz clic o pasa el ratón sobre cualquier sujeto para evaluar su impacto.";
+        badgeEl.style.background = "rgba(0, 255, 135, 0.15)";
+        badgeEl.style.borderColor = "#00FF87";
+        badgeEl.style.color = "#00FF87";
+        badgeEl.innerText = "Núcleo Base: 5.714 px";
+        return;
+      }
+      const jk = jackknifeData[subjId];
+      if (!jk) return;
+
+      const color = (jk.ratio > 1.35) ? "#FF007F" : ((jk.ratio > 1.10) ? "#FF9F1C" : "#00FF87");
+      infoEl.innerHTML = `<span style="color:${color}; font-weight:bold;">Sujeto ${subjId}:</span> ${jk.status} (${jk.ratio}x núcleo base). ${jk.desc}`;
+      badgeEl.style.background = (jk.ratio > 1.10) ? "rgba(255, 0, 127, 0.18)" : "rgba(0, 255, 135, 0.15)";
+      badgeEl.style.borderColor = color;
+      badgeEl.style.color = color;
+      badgeEl.innerText = `Área sin ${subjId}: ${Math.round(jk.area)} px (${jk.ratio}x)`;
+    }
+
+    // Dispersión testimonial precisa para que los 15 sujetos sean 100% visibles e independientes
+    const dispA = {
+      "1": { rc: 1.00, val: -8.00 },
+      "2": { rc: 0.00, val: -9.00 },
+      "3": { rc: 4.20, val: +3.35 },
+      "4": { rc: 3.30, val: +0.35 },
+      "5": { rc: 2.15, val: -4.65 },
+      "6": { rc: 5.00, val: +4.00 },
+      "7": { rc: 2.70, val: +0.35 },
+      "8": { rc: 3.80, val: +3.00 },
+      "9": { rc: 3.30, val: -0.35 },
+      "10": { rc: 6.00, val: +5.00 },
+      "11": { rc: 3.00, val: 0.00 },
+      "12": { rc: 1.85, val: -5.35 },
+      "13": { rc: 2.70, val: -0.35 },
+      "14": { rc: 4.20, val: +2.65 },
+      "15": { rc: 2.15, val: -5.35 }
+    };
+
+    const dispB = {
+      "1": { rc: 0.937, val: -2.00 },
+      "2": { rc: 0.937, val: -3.00 },
+      "3": { rc: 0.415, val: +1.00 },
+      "4": { rc: 1.463, val: +0.00 },
+      "5": { rc: 0.344, val: -1.00 },
+      "6": { rc: 0.450, val: +2.00 },
+      "7": { rc: 0.395, val: +0.00 },
+      "8": { rc: 0.566, val: +1.00 },
+      "9": { rc: 0.750, val: +0.00 },
+      "10": { rc: 0.416, val: +3.00 },
+      "11": { rc: 0.000, val: +0.00 },
+      "12": { rc: 0.653, val: -1.00 },
+      "13": { rc: 0.245, val: +0.00 },
+      "14": { rc: 1.144, val: +1.00 },
+      "15": { rc: 0.423, val: -1.00 }
+    };
+
+    const dispC = {
+      "1": { x: 0.06, val: -1.00 },
+      "2": { x: 0.06, val: -0.25 },
+      "3": { x: 0.06, val: +0.10 },
+      "4": { x: 0.50, val: -0.50 },
+      "5": { x: 0.10, val: -0.10 },
+      "6": { x: 0.08, val: +0.15 },
+      "7": { x: 0.75, val: +0.75 },
+      "8": { x: 0.08, val: -0.30 },
+      "9": { x: 0.12, val: +0.06 },
+      "10": { x: 0.04, val: -0.06 },
+      "11": { x: 0.75, val: +0.75 },
+      "12": { x: 0.50, val: +0.50 },
+      "13": { x: 1.00, val: +0.75 },
+      "14": { x: 0.10, val: +0.08 },
+      "15": { x: 0.06, val: -0.50 }
+    };
+
+    const dispD = {
+      "1": { x: 1.006, val: -1.125 },
+      "2": { x: 0.623, val: +0.700 },
+      "3": { x: 1.064, val: +0.482 },
+      "4": { x: 0.955, val: -0.308 },
+      "5": { x: 1.203, val: -0.717 },
+      "6": { x: 0.163, val: +1.040 },
+      "7": { x: 0.307, val: +0.435 },
+      "8": { x: 1.146, val: +0.671 },
+      "9": { x: 0.355, val: -1.353 },
+      "10": { x: 0.284, val: -0.564 },
+      "11": { x: 0.031, val: +0.376 },
+      "12": { x: 0.997, val: -0.042 },
+      "13": { x: 0.049, val: -0.733 },
+      "14": { x: 1.130, val: -0.358 },
+      "15": { x: 0.936, val: +1.378 }
+    };
+
+    // Funciones de mapeo a coordenadas SVG (1100 x 840)
+    // Q1: Top-Left (x: 40..530, y: 40..400)
+    function mapQ1(rc, val) {
+      const x = xMid - 20 - (rc / 7.2) * 470;
+      const y = yMid - 20 - ((val - (-10.5)) / (6.5 - (-10.5))) * 340;
+      return [x, y];
+    }
+
+    // Q2: Top-Right (x: 570..1060, y: 40..400)
+    function mapQ2(tension, bal) {
+      const x = xMid + 20 + (tension / 1.65) * 470;
+      const y = yMid - 20 - ((bal - (-3.8)) / (3.8 - (-3.8))) * 340;
+      return [x, y];
+    }
+
+    // Q3: Bottom-Left (x: 40..530, y: 440..800)
+    function mapQ3(la, dlambda) {
+      const x = xMid - 20 - (la / 1.10) * 470;
+      const y = yMid + 20 + ((dlambda - (-1.3)) / (1.3 - (-1.3))) * 340;
+      return [x, y];
+    }
+
+    // Q4: Bottom-Right (x: 570..1060, y: 440..800)
+    function mapQ4(f1, f2) {
+      const x = xMid + 20 + (f1 / 1.35) * 470;
+      const y = yMid + 20 + ((f2 - (-1.55)) / (1.55 - (-1.55))) * 340;
+      return [x, y];
+    }
+
+    // Sutherland-Hodgman Polygon Clipping en JavaScript
+    function clipPolygon(poly, p1, p2) {
+      function isInside(p) {
+        return (p2[0] - p1[0]) * (p[1] - p1[1]) - (p2[1] - p1[1]) * (p[0] - p1[0]) >= -1e-7;
+      }
+      function intersection(cp1, cp2) {
+        const dc = [cp1[0] - cp2[0], cp1[1] - cp2[1]];
+        const dp = [p1[0] - p2[0], p1[1] - p2[1]];
+        const n1 = cp1[0] * cp2[1] - cp1[1] * cp2[0];
+        const n2 = p1[0] * p2[1] - p1[1] * p2[0];
+        const denom = dc[0] * dp[1] - dc[1] * dp[0];
+        if (Math.abs(denom) < 1e-12) return cp1;
+        return [(n1 * dp[0] - n2 * dc[0]) / denom, (n1 * dp[1] - n2 * dc[1]) / denom];
+      }
+      const outputList = [];
+      if (!poly || poly.length === 0) return outputList;
+      let s = poly[poly.length - 1];
+      for (let i = 0; i < poly.length; i++) {
+        const e = poly[i];
+        if (isInside(e)) {
+          if (!isInside(s)) outputList.push(intersection(s, e));
+          outputList.push(e);
+        } else if (isInside(s)) {
+          outputList.push(intersection(s, e));
+        }
+        s = e;
+      }
+      return outputList;
+    }
+
+    function polygonIntersection(polys) {
+      if (!polys || polys.length === 0) return [];
+      function makeCCW(p) {
+        let area = 0;
+        for (let i = 0; i < p.length; i++) {
+          const j = (i + 1) % p.length;
+          area += p[i][0] * p[j][1] - p[j][0] * p[i][1];
+        }
+        return area < 0 ? p.slice().reverse() : p.slice();
+      }
+      let res = makeCCW(polys[0]);
+      for (let k = 1; k < polys.length; k++) {
+        const polyCCW = makeCCW(polys[k]);
+        for (let i = 0; i < polyCCW.length; i++) {
+          const p1 = polyCCW[i];
+          const p2 = polyCCW[(i + 1) % polyCCW.length];
+          res = clipPolygon(res, p1, p2);
+          if (res.length === 0) return [];
+        }
+      }
+      return res;
+    }
+
+    // Algoritmo Convex Hull (Monotone Chain)
+    function convexHull(points) {
+      const pts = points.slice().sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+      function cross(o, a, b) {
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+      }
+      const lower = [];
+      for (let p of pts) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+          lower.pop();
+        }
+        lower.push(p);
+      }
+      const upper = [];
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+          upper.pop();
+        }
+        upper.push(p);
+      }
+      upper.pop();
+      lower.pop();
+      return lower.concat(upper);
+    }
+
+    // Inicializar visualización
+    function init() {
+      renderPanels();
+      renderAxes();
+      renderChips();
+      renderFieldsAndNodes();
+    }
+
+    function renderPanels() {
+      const g = document.getElementById("panels-bg");
+      g.innerHTML = `
+        <!-- Fondo Canvas -->
+        <rect x="0" y="0" width="1100" height="840" fill="#0B132B" />
+        
+        <!-- Tarjetas de los 4 Cuadrantes -->
+        <rect x="40" y="40" width="490" height="360" rx="8" fill="#111E3D" stroke="#1E2D5A" stroke-width="1.5" />
+        <rect x="570" y="40" width="490" height="360" rx="8" fill="#111E3D" stroke="#1E2D5A" stroke-width="1.5" />
+        <rect x="40" y="440" width="490" height="360" rx="8" fill="#111E3D" stroke="#1E2D5A" stroke-width="1.5" />
+        <rect x="570" y="440" width="490" height="360" rx="8" fill="#111E3D" stroke="#1E2D5A" stroke-width="1.5" />
+      `;
+    }
+
+    function renderAxes() {
+      const g = document.getElementById("axes-layer");
+      let html = "";
+
+      // Eje Cero Cuadrante I (Auto-Estatus: Δk = 0)
+      const q1ZeroY = mapQ1(0, 0)[1];
+      html += `<line x1="40" y1="${q1ZeroY}" x2="530" y2="${q1ZeroY}" stroke="#00FF87" stroke-width="1.5" opacity="0.85" />`;
+      html += `<text x="50" y="${q1ZeroY - 6}" fill="#00FF87" font-size="10" font-weight="bold">Calibración Exacta (Δk = 0)</text>`;
+
+      // Eje Cero Cuadrante II (Balance Diádico: Bal = 0)
+      const q2ZeroY = mapQ2(0, 0)[1];
+      html += `<line x1="570" y1="${q2ZeroY}" x2="1060" y2="${q2ZeroY}" stroke="#00FF87" stroke-width="1.5" opacity="0.85" />`;
+      html += `<text x="580" y="${q2ZeroY - 6}" fill="#00FF87" font-size="10" font-weight="bold">Equilibrio Diádico (RC = DA = 0)</text>`;
+
+      // Eje Cero Cuadrante III (Sesgo Alteridad: Δλ = 0)
+      const q3ZeroY = mapQ3(0, 0)[1];
+      html += `<line x1="40" y1="${q3ZeroY}" x2="530" y2="${q3ZeroY}" stroke="#00FF87" stroke-width="1.5" opacity="0.85" />`;
+      html += `<text x="50" y="${q3ZeroY - 6}" fill="#00FF87" font-size="10" font-weight="bold">Isotropía Empática (λα = λω)</text>`;
+
+      // Eje Cero Cuadrante IV (Factorial F2: F2 = 0)
+      const q4ZeroY = mapQ4(0, 0)[1];
+      html += `<line x1="570" y1="${q4ZeroY}" x2="1060" y2="${q4ZeroY}" stroke="#00FF87" stroke-width="1.5" opacity="0.85" />`;
+      html += `<text x="580" y="${q4ZeroY - 6}" fill="#00FF87" font-size="10" font-weight="bold">Eje Factorial Neutro (F2 = 0.00)</text>`;
+
+      // Rótulos Canónicos de los 4 Cuadrantes en Esquinas Exteriores (Canon 29)
+      html += `
+        <!-- I. AUTO-ESTATUS -->
+        <g transform="translate(52, 56)">
+          <rect x="0" y="0" width="130" height="26" rx="5" fill="#0B132B" stroke="#FFE600" stroke-width="1.2" />
+          <text x="65" y="17" fill="#FFE600" font-size="11" font-weight="bold" text-anchor="middle">I. AUTO-ESTATUS</text>
+        </g>
+        
+        <!-- II. BALANCE DIÁDICO -->
+        <g transform="translate(908, 56)">
+          <rect x="0" y="0" width="142" height="26" rx="5" fill="#0B132B" stroke="#FF007F" stroke-width="1.2" />
+          <text x="71" y="17" fill="#FF007F" font-size="11" font-weight="bold" text-anchor="middle">II. BALANCE DIÁDICO</text>
+        </g>
+        
+        <!-- III. PRÓXIMO - DISTANTE -->
+        <g transform="translate(52, 762)">
+          <rect x="0" y="0" width="168" height="26" rx="5" fill="#0B132B" stroke="#38BDF8" stroke-width="1.2" />
+          <text x="84" y="17" fill="#38BDF8" font-size="11" font-weight="bold" text-anchor="middle">III. PRÓXIMO - DISTANTE</text>
+        </g>
+        
+        <!-- IV. EXTREMOS -->
+        <g transform="translate(938, 762)">
+          <rect x="0" y="0" width="112" height="26" rx="5" fill="#0B132B" stroke="#00FF87" stroke-width="1.2" />
+          <text x="56" y="17" fill="#00FF87" font-size="11" font-weight="bold" text-anchor="middle">IV. EXTREMOS</text>
+        </g>
+      `;
+
+      g.innerHTML = html;
+    }
+
+    function renderChips() {
+      const container = document.getElementById("chips-container");
+      let html = `<span class="chips-title">Sujetos (1-15):</span>`;
+      subjects.forEach(s => {
+        html += `
+          <button class="chip-btn active" id="chip-${s.id}" style="--chip-color: ${s.col};"
+                  onclick="toggleSubject('${s.id}')"
+                  onmouseenter="highlightSubject('${s.id}')"
+                  onmouseleave="unhighlightSubject()">
+            <span class="chip-indicator"></span>
+            <span>${s.id}</span>
+          </button>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderFieldsAndNodes() {
+      const gMacro = document.getElementById("macro-hull-layer");
+      const gK60   = document.getElementById("k60-layer");
+      const gK80   = document.getElementById("k80-layer");
+      const gPolys = document.getElementById("field-polys-layer");
+      const gCore  = document.getElementById("core-layer");
+      const gNodes = document.getElementById("nodes-layer");
+
+      gMacro.innerHTML = "";
+      if (gK60) gK60.innerHTML = "";
+      if (gK80) gK80.innerHTML = "";
+      gPolys.innerHTML = "";
+      gCore.innerHTML  = "";
+      gNodes.innerHTML = "";
+
+      const activeSubjectList = subjects.filter(s => activeSubjects[s.id]);
+      const allActiveVerts = [];
+      const activePolys = [];
+
+      // 1. Calcular Vértices y Polígonos de los Sujetos Activos
+      activeSubjectList.forEach(s => {
+        const p1 = mapQ1(dispA[s.id].rc, dispA[s.id].val);
+        const p2 = mapQ2(dispB[s.id].rc, dispB[s.id].val);
+        const p4 = mapQ4(dispD[s.id].x, dispD[s.id].val);
+        const p3 = mapQ3(dispC[s.id].x, dispC[s.id].val);
+
+        const poly = [p1, p2, p4, p3]; // orden horario
+        activePolys.push(poly);
+        allActiveVerts.push(p1, p2, p4, p3);
+
+        const isHovered = (hoveredSubject === s.id);
+        const op = isHovered ? Math.min(currentOpacity * 2.2, 0.65) : currentOpacity;
+        const strokeW = isHovered ? "2.6" : "1.8";
+        const strokeOp = isHovered ? "1.0" : "0.75";
+
+        if (layerStates.polys) {
+          const ptsStr = `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p3[0]},${p3[1]}`;
+          gPolys.innerHTML += `
+            <polygon points="${ptsStr}" fill="${s.col}" fill-opacity="${op}"
+                     stroke="${s.col}" stroke-width="${strokeW}" stroke-opacity="${strokeOp}"
+                     onmouseenter="highlightSubject('${s.id}')" onmouseleave="unhighlightSubject()"
+                     onclick="highlightSubject('${s.id}')" />
+          `;
+        }
+      });
+
+      // 2. Envolvente del Campo Grupal (Convex Hull - HG)
+      if (layerStates.hull && allActiveVerts.length >= 3) {
+        const hull = convexHull(allActiveVerts);
+        const hullStr = hull.map(p => `${p[0]},${p[1]}`).join(" ");
+        gMacro.innerHTML = `
+          <polygon points="${hullStr}" fill="#1E2D5A" fill-opacity="0.30"
+                   stroke="#38BDF8" stroke-width="1.8" stroke-dasharray="6,4" />
+        `;
+      }
+
+      // 2b. Cuencas de Isopresencia Vectorial (K60 y K80)
+      if (gK60 && layerStates.k60) {
+        gK60.innerHTML = `
+          <polygon points="${k60_svg_pts}" fill="#FFE600" fill-opacity="0.18"
+                   stroke="#FFE600" stroke-width="2.0" stroke-dasharray="6,3" />
+        `;
+      }
+      if (gK80 && layerStates.k80) {
+        gK80.innerHTML = `
+          <polygon points="${k80_svg_pts}" fill="#FF007F" fill-opacity="0.25"
+                   stroke="#FF007F" stroke-width="2.2" stroke-dasharray="5,2" />
+        `;
+      }
+
+      // 3. Núcleo de Co-Presencia Unánime (K100 - Sutherland-Hodgman)
+      if (layerStates.k100 && activePolys.length >= 2) {
+        const corePts = polygonIntersection(activePolys);
+        if (corePts.length >= 3) {
+          const coreStr = corePts.map(p => `${p[0]},${p[1]}`).join(" ");
+          gCore.innerHTML = `
+            <polygon points="${coreStr}" fill="#00FF87" fill-opacity="0.55"
+                     stroke="#00FF87" stroke-width="2.6" />
+          `;
+        }
+      }
+
+      // 4. Nodos Factuales y Etiquetas (Z-Order Supremacy 25-27)
+      subjects.forEach(s => {
+        const isActive = activeSubjects[s.id];
+        const isHovered = (hoveredSubject === s.id);
+        const nodeOp = isActive ? (isHovered ? 1.0 : 0.95) : 0.20;
+        const r = isHovered ? 11 : 9.5;
+
+        const pts = [
+          mapQ1(dispA[s.id].rc, dispA[s.id].val),
+          mapQ2(dispB[s.id].rc, dispB[s.id].val),
+          mapQ3(dispC[s.id].x, dispC[s.id].val),
+          mapQ4(dispD[s.id].x, dispD[s.id].val)
+        ];
+
+        pts.forEach(p => {
+          gNodes.innerHTML += `
+            <g transform="translate(${p[0]}, ${p[1]})" opacity="${nodeOp}" style="cursor: pointer;"
+               onmouseenter="showTooltip(event, '${s.id}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()"
+               onclick="highlightSubject('${s.id}')">
+              <circle r="${r}" fill="${s.col}" stroke="#FFFFFF" stroke-width="1.8" />
+              <text y="3.5" fill="#FFFFFF" font-size="9" font-weight="bold" text-anchor="middle" font-family="'Roboto Mono', monospace">${s.id}</text>
+            </g>
+          `;
+        });
+      });
+
+      // Actualizar status
+      const count = activeSubjectList.length;
+      document.getElementById("view-status").innerText = 
+        `${count} de 15 Campos Individuales Activos | Cobertura ${count * 4} Puntos Factuales`;
+    }
+
+    // Interacciones
+    function toggleSubject(id) {
+      activeSubjects[id] = !activeSubjects[id];
+      const btn = document.getElementById(`chip-${id}`);
+      if (activeSubjects[id]) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+      renderFieldsAndNodes();
+    }
+
+    function setPreset(type) {
+      subjects.forEach(s => activeSubjects[s.id] = false);
+      if (type === 'all') {
+        subjects.forEach(s => activeSubjects[s.id] = true);
+      } else if (type === 'leaders') {
+        ["10", "6", "3", "8"].forEach(id => activeSubjects[id] = true);
+      } else if (type === 'tension') {
+        ["4", "14", "1"].forEach(id => activeSubjects[id] = true);
+      } else if (type === 'balance') {
+        ["11", "13", "7"].forEach(id => activeSubjects[id] = true);
+      } else if (type === 'periphery') {
+        ["2", "5", "12", "15"].forEach(id => activeSubjects[id] = true);
+      }
+      subjects.forEach(s => {
+        const btn = document.getElementById(`chip-${s.id}`);
+        if (activeSubjects[s.id]) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+      renderFieldsAndNodes();
+    }
+
+    function updateOpacity(val) {
+      currentOpacity = parseFloat(val);
+      document.getElementById("opacity-val").innerText = Math.round(currentOpacity * 100) + "%";
+      renderFieldsAndNodes();
+    }
+
+    function highlightSubject(id) {
+      hoveredSubject = id;
+      updateJackknifeInspector(id);
+      renderFieldsAndNodes();
+    }
+    function unhighlightSubject() {
+      hoveredSubject = null;
+      updateJackknifeInspector(null);
+      renderFieldsAndNodes();
+    }
+
+    // Tooltip
+    const tooltip = document.getElementById("tooltip");
+    function showTooltip(e, id) {
+      const s = subjects.find(x => x.id === id);
+      if (!s) return;
+      highlightSubject(id);
+      tooltip.style.display = "block";
+      tooltip.innerHTML = `
+        <div style="font-weight: bold; color: ${s.col}; font-size: 0.95rem; margin-bottom: 4px;">Sujeto ${s.id}</div>
+        <div style="font-size: 0.78rem; color: #E2E8F0; margin-bottom: 6px;">${s.desc}</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.74rem; color: #94A3B8;">
+          <div>I. Auto-Estatus: <span style="color:#FFF;">RC=${s.rc}, Δk=${s.delta_k}</span></div>
+          <div>II. Balance: <span style="color:#FFF;">Bal=${s.bal}, ||v||=${s.tension}</span></div>
+          <div>III. Lucidez: <span style="color:#FFF;">λα=${s.lambda_a}, Δλ=${s.delta_lambda}</span></div>
+          <div>IV. AFC: <span style="color:#FFF;">|F1|=${s.afc.abs_f1}, F2=${s.afc.f2}</span></div>
+        </div>
+      `;
+      moveTooltip(e);
+    }
+    function moveTooltip(e) {
+      const wrap = document.getElementById("svg-wrap").getBoundingClientRect();
+      const x = e.clientX - wrap.left + 15;
+      const y = e.clientY - wrap.top + 15;
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
+    }
+    function hideTooltip() {
+      tooltip.style.display = "none";
+      unhighlightSubject();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

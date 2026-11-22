@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXORD · ORBIT Asistido | Motor de Conversión ORBIT -> MORENO y Síntesis Matricial (Canon 2026)</title>
+
+  <!-- SheetJS para exportación binaria Excel (.xlsx) -->
+  <script src="lib/xlsx.full.min.js"></script>
+  <script>
+    if (typeof XLSX === 'undefined') {
+      const cdnScript = document.createElement('script');
+      cdnScript.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+      document.head.appendChild(cdnScript);
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-deep: #080D1A;
+      --bg-card: #0B132B;
+      --bg-surface: #111D42;
+      --border-card: rgba(56, 189, 248, 0.25);
+      --border-active: #38BDF8;
+      --accent-neon: #00FF87;
+      --accent-pink: #FF007F;
+      --accent-orange: #FF9F1C;
+      --accent-gold: #FFE600;
+      --accent-cyan: #38BDF8;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --font-mono: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html, body {
+      height: 100%;
+      background: var(--bg-deep);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* TOP HUD BAR */
+    .app-top-hud {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 54px;
+      background: rgba(11, 19, 43, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      height: 36px;
+      width: 36px;
+      border-radius: 6px;
+      border: 1px solid var(--accent-neon);
+      background: #0B132B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: var(--accent-neon);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.25);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scale-selector-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scale-selector-btn:hover, .scale-selector-btn.active {
+      border-color: var(--accent-neon);
+      background: rgba(0, 255, 135, 0.15);
+      color: #FFF;
+    }
+
+    .btn-export {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--accent-neon);
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--accent-neon);
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-export:hover {
+      background: var(--accent-neon);
+      color: #000;
+      box-shadow: 0 0 12px rgba(0, 255, 135, 0.4);
+    }
+
+    /* MAIN CONTAINER */
+    .main-layout {
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* BANNER METODOLÓGICO */
+    .method-banner {
+      background: linear-gradient(135deg, rgba(11, 19, 43, 0.85), rgba(17, 29, 66, 0.85));
+      border: 1px solid var(--border-card);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .method-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 4px;
+    }
+
+    .method-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      max-width: 950px;
+      line-height: 1.45;
+    }
+
+    .method-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    .pill-green { background: rgba(0, 255, 135, 0.15); border-color: var(--accent-neon); color: var(--accent-neon); }
+    .pill-pink { background: rgba(255, 0, 127, 0.15); border-color: var(--accent-pink); color: var(--accent-pink); }
+    .pill-gold { background: rgba(255, 230, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); }
+    .pill-cyan { background: rgba(56, 189, 248, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+    /* GRID DE DOS COLUMNAS: WIZARD DE PANTALLAS / MATRICES */
+    .interactive-grid {
+      display: grid;
+      grid-template-columns: 520px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 1200px) {
+      .interactive-grid { grid-template-columns: 1fr; }
+    }
+
+    /* CARD CONTENEDORA */
+    .card-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 10px;
+    }
+
+    .card-heading {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* SELECTOR DE PARTICIPANTE */
+    .participant-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .p-tab-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .p-tab-btn.active {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.2);
+      color: #FFF;
+    }
+
+    /* PASOS DEL WIZARD */
+    .wizard-steps-nav {
+      display: flex;
+      gap: 6px;
+      background: rgba(17, 29, 66, 0.6);
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .wizard-step-btn {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .wizard-step-btn.active {
+      background: var(--bg-card);
+      border-color: var(--accent-cyan);
+      color: #FFF;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .wizard-step-btn.completed {
+      color: var(--accent-neon);
+    }
+
+    /* BANDAS DE SUJETOS (BANDAS HORIZONTALES DINÁMICAS) */
+    .tray-band {
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tray-band-positive {
+      background: rgba(0, 255, 135, 0.05);
+      border: 1px solid rgba(0, 255, 135, 0.3);
+    }
+
+    .tray-band-negative {
+      background: rgba(255, 0, 127, 0.05);
+      border: 1px solid rgba(255, 0, 127, 0.3);
+    }
+
+    .tray-band-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .band-chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 34px;
+      align-items: center;
+    }
+
+    .chip-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      animation: chipPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes chipPop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .chip-item-pos {
+      background: rgba(0, 255, 135, 0.18);
+      border: 1px solid var(--accent-neon);
+      color: #FFF;
+    }
+
+    .chip-item-pos:hover { background: rgba(0, 255, 135, 0.35); }
+
+    .chip-item-neg {
+      background: rgba(255, 0, 127, 0.18);
+      border: 1px solid var(--accent-pink);
+      color: #FFF;
+    }
+
+    .chip-item-neg:hover { background: rgba(255, 0, 127, 0.35); }
+
+    .chip-remove-x {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+
+    /* BANDEJA DE DISPONIBLES */
+    .available-pool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .peer-card {
+      background: rgba(17, 29, 66, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .peer-card:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(17, 29, 66, 0.9);
+    }
+
+    .peer-card-actions {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .btn-action-pos {
+      flex: 1;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-neon);
+      background: rgba(0, 255, 135, 0.15);
+      color: var(--accent-neon);
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-action-pos:hover { background: var(--accent-neon); color: #000; }
+
+    .btn-action-neg {
+      flex: 1;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-pink);
+      background: rgba(255, 0, 127, 0.15);
+      color: var(--accent-pink);
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-action-neg:hover { background: var(--accent-pink); color: #FFF; }
+
+    /* CASILLAS DE ORDENACIÓN EN PANTALLA 2 Y 3 */
+    .slots-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 8px 2px;
+      align-items: center;
+    }
+
+    .slot-box {
+      min-width: 90px;
+      flex: 1;
+      background: #091024;
+      border: 1.5px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-height: 80px;
+      transition: all 0.2s;
+    }
+
+    .slot-box.filled {
+      border-style: solid;
+      background: rgba(11, 19, 43, 0.85);
+      cursor: pointer;
+    }
+
+    .slot-box.complementary {
+      border-color: var(--accent-gold);
+    }
+
+    .slot-box.filled.pos-filled { border-color: var(--accent-neon); }
+    .slot-box.filled.neg-filled { border-color: var(--accent-pink); }
+
+    .slot-rank-tag {
+      font-size: 0.74rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .slot-candidate-name {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .slot-stepper-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11, 19, 43, 0.7);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+
+    .btn-step-adjust {
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-step-adjust:hover:not(:disabled) {
+      border-color: var(--accent-cyan);
+      color: #FFF;
+    }
+
+    .btn-step-adjust:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* PESTAÑAS MATRICIALES */
+    .matrix-nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-card);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover { background: rgba(56, 189, 248, 0.15); }
+    .tab-btn.active {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.25);
+      color: #FFF;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    /* TABLAS MATRICIALES */
+    .matrix-viewport {
+      overflow-x: auto;
+      max-height: 520px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    .matrix-table th, .matrix-table td {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      white-space: nowrap;
+    }
+
+    .matrix-table th {
+      background: #091024;
+      color: var(--accent-cyan);
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .matrix-table td.header-col {
+      background: #091024;
+      color: #FFF;
+      font-weight: 800;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      text-align: left;
+    }
+
+    .matrix-table tr:hover td {
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    .cell-ee { color: var(--accent-neon); font-weight: 800; background: rgba(0, 255, 135, 0.08); }
+    .cell-rr { color: var(--accent-pink); font-weight: 800; background: rgba(255, 0, 127, 0.08); }
+    .cell-opp { color: var(--accent-orange); font-weight: 700; }
+    .cell-neutral { color: var(--accent-gold); }
+    .cell-diag { color: var(--text-muted); opacity: 0.5; }
+
+    /* GUÍA DE PASO EN PANTALLA (INSTRUCCIONES CLARAS) */
+    .step-guide-box {
+      background: rgba(17, 29, 66, 0.65);
+      border: 1px solid var(--border-card);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 8px;
+      padding: 11px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .step-guide-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .step-guide-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(0, 255, 135, 0.15);
+      border: 1px solid var(--accent-neon);
+      color: var(--accent-neon);
+    }
+
+    .step-guide-text {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    /* MODAL DE INSTRUCCIONES PREVIAS (TEXTO PREVIO APARTE) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(8, 13, 26, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: #0B132B;
+      border: 1px solid var(--border-active);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(56, 189, 248, 0.2);
+      border-radius: 14px;
+      max-width: 840px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      background: rgba(17, 29, 66, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      color: #FFF;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-body {
+      padding: 22px 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      line-height: 1.55;
+      font-size: 0.88rem;
+      color: #E2E8F0;
+    }
+
+    .modal-footer {
+      padding: 14px 24px;
+      background: rgba(17, 29, 66, 0.7);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .instruction-step-card {
+      background: rgba(17, 29, 66, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .instruction-step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .instruction-step-content h4 {
+      font-size: 0.92rem;
+      color: #FFF;
+      margin-bottom: 4px;
+      font-weight: 800;
+    }
+
+    .instruction-step-content p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* TOAST DE FEEDBACK */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: #0F172A;
+      border: 1px solid var(--accent-neon);
+      color: #FFF;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HUD BAR -->
+  <header class="app-top-hud">
+    <div class="brand-group">
+      <div class="brand-logo">N</div>
+      <div>
+        <div class="brand-title">NEXORD · ORBIT ASISTIDO (CANON 2026)</div>
+      </div>
+      <span class="brand-badge">SÍNTESIS MATRICIAL DIRECTA</span>
+    </div>
+
+    <div class="hud-controls">
+      <a href="index_promocional.html" class="scale-selector-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; border-color:rgba(255,255,255,0.25); color:var(--text-muted);" title="Volver al Portal Promocional">🏠 Web</a>
+      <a href="cuestionario_web.html" class="scale-selector-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; border-color:var(--accent-neon); color:var(--accent-neon);" title="Abrir Cuestionario M³-AΩ">📝 Cuestionario M³</a>
+
+      <button class="scale-selector-btn" style="border-color:var(--accent-cyan); color:#FFF; background:rgba(56,189,248,0.22); font-weight:800;" onclick="abrirModalInstrucciones()">
+        📖 Instrucciones de Uso
+      </button>
+
+      <span style="font-size:0.78rem; color:var(--text-muted); font-weight:700; margin-left:4px;">Tamaño:</span>
+      <button class="scale-selector-btn active" onclick="cambiarEscala(7)">N = 7 (Nuclear)</button>
+      <button class="scale-selector-btn" onclick="cambiarEscala(12)">N = 12 (Estándar)</button>
+      <button class="scale-selector-btn" onclick="cambiarEscala(24)">N = 24 (Gran Tamaño)</button>
+
+      <button class="btn-export" onclick="descargarExcelCompleto()">
+        📥 Descargar Libro Maestro (.xlsx)
+      </button>
+      <button class="btn-export" style="border-color:var(--accent-cyan); color:var(--accent-cyan); background:rgba(56,189,248,0.12);" onclick="descargarJSON()">
+        💾 Exportar JSON
+      </button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    
+    <!-- BANNER METODOLÓGICO -->
+    <div class="method-banner">
+      <div>
+        <div class="method-title">Protocolo ORBIT · Ordenación Relacional Asistida (Canon 2026)</div>
+        <div class="method-desc">
+          Procedimiento interactivo guiado en 3 pasos esenciales: preselección ágil a simple vista, ordenación de casillas prioritarias y confirmación, con cálculo matricial inmediato en el navegador.
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button class="scale-selector-btn" style="border-color:var(--accent-cyan); color:var(--accent-cyan); background:rgba(56,189,248,0.14); font-weight:800; padding:6px 14px;" onclick="abrirModalInstrucciones()">
+          📖 Ver Guía Completa de Movimientos
+        </button>
+        <div class="method-pills">
+          <span class="pill pill-green">✓ E{} Preferidos</span>
+          <span class="pill pill-pink">✓ R{} Menos Preferidos</span>
+          <span class="pill pill-gold">✓ 0 = Neutralidad</span>
+          <span class="pill pill-cyan">🛡️ pR: No Medido (Canon 21)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRID PRINCIPAL -->
+    <div class="interactive-grid">
+      
+      <!-- COLUMNA IZQUIERDA: WIZARD GUIADO DEL EVALUADOR SELECCIONADO -->
+      <div class="card-panel">
+        <div class="card-header-row">
+          <div class="card-heading">
+            <span>👤 Evaluador Activo:</span>
+            <span id="activeSubjectBadge" class="brand-badge" style="border-color:var(--accent-neon); color:var(--accent-neon);">1A</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Flujo Asistido Dinámico</span>
+        </div>
+
+        <!-- SELECTOR DE PARTICIPANTE -->
+        <div class="participant-tabs" id="participantTabsContainer">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+        <!-- WIZARD STEPS NAV -->
+        <div class="wizard-steps-nav">
+          <button class="wizard-step-btn active" id="wzStepBtn1" onclick="irAlPasoWizard(1)">1. A primera vista</button>
+          <button class="wizard-step-btn" id="wzStepBtn2" onclick="irAlPasoWizard(2)">2. Más preferidos</button>
+          <button class="wizard-step-btn" id="wzStepBtn3" onclick="irAlPasoWizard(3)">3. Menos preferidos</button>
+          <button class="wizard-step-btn" id="wzStepBtn4" onclick="irAlPasoWizard(4)">4. Resumen</button>
+        </div>
+
+        <!-- CONTENIDO DINÁMICO DEL WIZARD (PANTALLAS 1, 2, 3, 4) -->
+        <div id="wizardStepContent">
+          <!-- Inyectado dinámicamente según wizardStep -->
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA: TENSOR DE MATRICES EN TIEMPO REAL -->
+      <div class="card-panel">
+        <div class="card-header-row">
+          <div class="card-heading">
+            <span>📊 Síntesis Matricial Inmediata (Cliente JS)</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--accent-neon); font-weight:700;">
+            ✓ Calculado en memoria en tiempo real
+          </div>
+        </div>
+
+        <!-- PESTAÑAS MATRICIALES -->
+        <div class="matrix-nav-tabs">
+          <button class="tab-btn active" onclick="cambiarPestanaMatriz('tabA')">1. Matriz A(i, k) = j</button>
+          <button class="tab-btn" onclick="cambiarPestanaMatriz('tabB')">2. Matriz B(i, j) = k</button>
+          <button class="tab-btn" onclick="cambiarPestanaMatriz('tabMoreno')">3. Vectores MORENO (E, R, pE)</button>
+          <button class="tab-btn" onclick="cambiarPestanaMatriz('tabSMIa')">4. Sociomatriz SMIa (Figuras)</button>
+          <button class="tab-btn" onclick="cambiarPestanaMatriz('tabSMIb')">5. Sociomatriz SMIb [A1..A4]</button>
+        </div>
+
+        <!-- VIEWPORT DE TABLAS -->
+        <div class="matrix-viewport" id="matrixViewport">
+          <!-- Inyectado dinámicamente según la pestaña activa -->
+        </div>
+
+        <!-- LEYENDA PEDAGÓGICA -->
+        <div id="matrixLegend" style="font-size:0.76rem; color:var(--text-muted); line-height:1.5; border-top:1px solid rgba(255,255,255,0.06); padding-top:8px;">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-pill" id="toastPill"></div>
+
+  <!-- MODAL DE INSTRUCCIONES PREVIAS (TEXTO PREVIO APARTE) -->
+  <div class="modal-overlay" id="modalInstrucciones" onclick="cerrarModalSiBackdrop(event)">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📖</span>
+          <span>Protocolo ORBIT · Instrucciones de Funcionamiento</span>
+        </div>
+        <button class="modal-close-btn" onclick="cerrarModalInstrucciones()" title="Cerrar ventana">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background:rgba(56, 189, 248, 0.08); border-left:4px solid var(--accent-cyan); border-radius:6px; padding:12px 16px; font-size:0.88rem; color:#E2E8F0; line-height:1.5;">
+          <strong>Bienvenido al protocolo de ordenación asistida de NEXORD.</strong><br>
+          Este cuestionario te permite expresar tus preferencias de interacción y afinidad con tus compañeros de forma ágil, cómoda y natural, sin la rigidez ni la fatiga de las listas exhaustivas tradicionales.
+        </div>
+
+        <div style="font-size:0.86rem; font-weight:800; color:var(--accent-neon); text-transform:uppercase; letter-spacing:0.05em; margin-top:2px;">
+          ✦ Principios Fundamentales del Protocolo
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="background:rgba(17, 29, 66, 0.5); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; color:#FFF; margin-bottom:4px; font-size:0.85rem;">🌱 Sin presiones ni decisiones definitivas</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+              No es un examen ni una elección irrevocable. Es solo una primera aproximación espontánea para ordenar prioridades de afinidad.
+            </div>
+          </div>
+          <div style="background:rgba(17, 29, 66, 0.5); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; color:var(--accent-gold); margin-bottom:4px; font-size:0.85rem;">🕊️ Ausencia de fricción (0 desafecciones)</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+              Si no experimentas incomodidad o fricción con nadie, tu lista de menor preferencia permanece estrictamente en cero (0). Nunca se te forzará a rechazar.
+            </div>
+          </div>
+          <div style="background:rgba(17, 29, 66, 0.5); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; color:var(--accent-cyan); margin-bottom:4px; font-size:0.85rem;">⚪ Neutralidad como norma</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+              La mayoría de los compañeros se sitúan en una posición intermedia o neutra natural. Quienes no señales se ubican automáticamente allí.
+            </div>
+          </div>
+          <div style="background:rgba(17, 29, 66, 0.5); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; color:var(--accent-neon); margin-bottom:4px; font-size:0.85rem;">🛡️ Privacidad y ética matricial</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+              Tus respuestas se anonimizan en códigos canónicos. El canal de expectativas de rechazo (pR) queda éticamente excluido como no observable (Canon 21).
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:0.86rem; font-weight:800; color:var(--accent-cyan); text-transform:uppercase; letter-spacing:0.05em; margin-top:6px;">
+          ✦ Movimientos Esenciales en 3 Pasos
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="instruction-step-card">
+            <div class="instruction-step-num">1</div>
+            <div class="instruction-step-content">
+              <h4>Paso 1 · A primera vista (Cribado ágil)</h4>
+              <p>
+                Pulsa <strong>[+ Más preferido]</strong> o <strong>[− Menos preferido]</strong> en las tarjetas de tus compañeros disponibles.<br>
+                <em>Movimiento de rectificación:</em> Si cambias de opinión, toca cualquier ficha en las bandejas superiores para devolverla inmediatamente a la lista.
+              </p>
+            </div>
+          </div>
+
+          <div class="instruction-step-card">
+            <div class="instruction-step-num">2</div>
+            <div class="instruction-step-content">
+              <h4>Paso 2 · Ordenar preferencias (Casillas prioritarias)</h4>
+              <p>
+                Toca a tus compañeros preseleccionados en el orden de mayor afinidad para situarlos en las casillas <strong>1º, 2º, 3º...</strong><br>
+                <em>Movimiento de rectificación:</em> Toca cualquier casilla ocupada para retirarlo. Puedes usar <strong>[+ / −]</strong> para calibrar las plazas.
+              </p>
+            </div>
+          </div>
+
+          <div class="instruction-step-card">
+            <div class="instruction-step-num">3</div>
+            <div class="instruction-step-content">
+              <h4>Paso 3 · Menos preferidos (Baja afinidad o 0)</h4>
+              <p>
+                Si señalaste a alguien, asígnalo a las casillas de menor afinidad (1º R, 2º R...). Si tu lista está vacía, el sistema la valida directamente en <strong>0</strong> sin preguntas adicionales.
+              </p>
+            </div>
+          </div>
+
+          <div class="instruction-step-card">
+            <div class="instruction-step-num">4</div>
+            <div class="instruction-step-content">
+              <h4>Paso 4 · Resumen y visualización matricial</h4>
+              <p>
+                Comprueba tu mapa relacional completo. Al confirmar, el sistema actualiza en tiempo real en la columna derecha las 5 matrices sociométricas (A, B, Moreno, SMIa, SMIb).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <label style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="chkNoShowModalAgain" onchange="toggleNoShowModalAgain(this.checked)">
+          No mostrar automáticamente este aviso al iniciar
+        </label>
+        <button class="btn-export" style="padding:8px 22px; font-size:0.88rem;" onclick="cerrarModalInstrucciones()">
+          Comenzar Ejercicio ➔
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    // =========================================================================
+    let currentN = 7;
+    let activeSubject = "1A";
+    let activeMatrixTab = "tabSMIa";
+    let wizardStep = 1; // 1: Preselección, 2: Ordenar Positivos, 3: Ordenar Negativos, 4: Resumen
+
+    // Base de datos de sujetos y respuestas
+    let sujetosLabels = [];
+    let grupoData = {}; // id -> { posList: [], negList: [], eOrder: [], rOrder: [], pE: [], deltaE_adj: 0, deltaR_adj: 0 }
+    let calculosMatriciales = null;
+
+    // =========================================================================
+    // INICIALIZACIÓN
+    // =========================================================================
+    function inicializarGrupo(n) {
+      currentN = n;
+      sujetosLabels = Array.from({ length: n }).map((_, i) => n <= 10 ? `${i + 1}A` : `S${String(i + 1).padStart(2, '0')}`);
+      activeSubject = sujetosLabels[0];
+      wizardStep = 1;
+      grupoData = {};
+
+      const baseKE = currentN <= 5 ? 2 : Math.max(2, Math.min(8, Math.round(currentN * 0.20)));
+      const baseKR = currentN <= 5 ? 1 : Math.max(1, Math.min(6, Math.round(currentN * 0.20)));
+
+      sujetosLabels.forEach((emId, idx) => {
+        const peers = sujetosLabels.filter(x => x !== emId);
+        const shuffled = [...peers].sort(() => Math.random() - 0.5);
+
+        // Preselección inicial realista
+        let numPos = baseKE + (idx % 3 === 0 ? 2 : (idx % 3 === 1 ? 1 : 0));
+        let numNeg = (idx === 1) ? 0 : (baseKR + (idx % 2 === 0 ? 1 : 0)); // idx 1 = pacífico
+        if (numPos + numNeg > peers.length) {
+          numPos = Math.min(numPos, peers.length);
+          numNeg = peers.length - numPos;
+        }
+
+        const posList = shuffled.slice(0, numPos);
+        const negList = shuffled.slice(shuffled.length - numNeg);
+        const peList = posList.slice(0, Math.min(posList.length, Math.max(1, Math.round(baseKE * 0.75))));
+
+        grupoData[emId] = {
+          posList: posList,
+          negList: negList,
+          eOrder: [...posList],
+          rOrder: [...negList],
+          pE: peList,
+          deltaE_adj: 0, // ajuste manual del usuario (-1, 0, +1, +2)
+          deltaR_adj: 0
+        };
+      });
+
+      recalcularTodo();
+      renderUI();
+    }
+
+    function cambiarEscala(n) {
+      document.querySelectorAll(".scale-selector-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.includes(`N = ${n}`));
+      });
+      inicializarGrupo(n);
+      showToast(`Escenario adaptado a N = ${n}`);
+    }
+
+    function irAlPasoWizard(step) {
+      wizardStep = step;
+      document.querySelectorAll(".wizard-step-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === step);
+      });
+      renderWizardContent();
+    }
+
+    function seleccionarSujetoActivo(id) {
+      activeSubject = id;
+      document.getElementById("activeSubjectBadge").textContent = id;
+      renderParticipantTabs();
+      renderWizardContent();
+    }
+
+    function renderParticipantTabs() {
+      const container = document.getElementById("participantTabsContainer");
+      container.innerHTML = sujetosLabels.map(id => `
+        <button class="p-tab-btn ${id === activeSubject ? 'active' : ''}" onclick="seleccionarSujetoActivo('${id}')">
+          ${id}
+        </button>
+      `).join('');
+    }
+
+    // =========================================================================
+    // RENDERIZADO DEL WIZARD (PANTALLAS 1, 2, 3, 4) CON GUÍA EN PANTALLA Y MOVIMIENTOS ESENCIALES
+    // =========================================================================
+    function renderWizardContent() {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const container = document.getElementById("wizardStepContent");
+      const peers = sujetosLabels.filter(x => x !== emId);
+      const baseKE = currentN <= 5 ? 2 : Math.max(2, Math.min(8, Math.round(currentN * 0.20)));
+      const baseKR = currentN <= 5 ? 1 : Math.max(1, Math.min(6, Math.round(currentN * 0.20)));
+
+      // -----------------------------------------------------------------------
+      // PANTALLA 1: PRESELECCIÓN A PRIMERA VISTA (SOLO 1 TOQUE POR COMPAÑERO)
+      // -----------------------------------------------------------------------
+      if (wizardStep === 1) {
+        const unassigned = peers.filter(p => !data.posList.includes(p) && !data.negList.includes(p));
+
+        container.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- GUÍA DE INSTRUCCIONES EN PANTALLA -->
+            <div class="step-guide-box">
+              <div class="step-guide-title">
+                <span>📌 Paso 1: Selección a primera vista</span>
+                <span class="step-guide-tag">Movimiento: 1 toque por compañero</span>
+              </div>
+              <p class="step-guide-text">
+                Pulsa <strong>[+ Más preferido]</strong> o <strong>[− Menos preferido]</strong> en los compañeros disponibles.<br>
+                Quienes no señales quedarán automáticamente en <strong>posición intermedia / neutra</strong>.
+                <span style="color:var(--accent-gold); font-weight:700;">Toca cualquier ficha en las bandejas para devolverla a la lista.</span>
+              </p>
+            </div>
+
+            <!-- BANDA HORIZONTAL DE MÁS PREFERIDOS -->
+            <div class="tray-band tray-band-positive">
+              <div class="tray-band-header">
+                <span style="color:var(--accent-neon);">★ Los Más Preferidos (a primera vista) [${data.posList.length}]</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Estándar base orientativo: ${baseKE}</span>
+              </div>
+              <div class="band-chips-container" id="posBandContainer">
+                ${data.posList.length > 0 ? data.posList.map(p => `
+                  <div class="chip-item chip-item-pos" onclick="quitarDePositivos('${p}')" title="Toca para retirar y devolver a disponibles">
+                    <span>${p}</span>
+                    <span class="chip-remove-x">✕</span>
+                  </div>
+                `).join('') : '<span style="font-size:0.76rem; color:var(--text-muted); font-style:italic;">Bandeja vacía. Pulsa [+ Más preferido] en los compañeros abajo para añadirlos.</span>'}
+              </div>
+            </div>
+
+            <!-- BANDA HORIZONTAL DE MENOS PREFERIDOS -->
+            <div class="tray-band tray-band-negative">
+              <div class="tray-band-header">
+                <span style="color:var(--accent-pink);">★ Los Menos Preferidos (a primera vista) [${data.negList.length}]</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Estándar base orientativo: ${baseKR} (o 0 si no hay fricción)</span>
+              </div>
+              <div class="band-chips-container" id="negBandContainer">
+                ${data.negList.length > 0 ? data.negList.map(p => `
+                  <div class="chip-item chip-item-neg" onclick="quitarDeNegativos('${p}')" title="Toca para retirar y devolver a disponibles">
+                    <span>${p}</span>
+                    <span class="chip-remove-x">✕</span>
+                  </div>
+                `).join('') : '<span style="font-size:0.76rem; color:var(--text-muted); font-style:italic;">Bandeja vacía (0 menos preferidos: si no experimentas fricción con nadie, déjala vacía).</span>'}
+              </div>
+            </div>
+
+            <!-- BANDEJA DE COMPAÑEROS DISPONIBLES (MOVIMIENTO ESENCIAL) -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:0.8rem; font-weight:800; color:#FFF;">Compañeros Disponibles (${unassigned.length}):</span>
+                <span style="font-size:0.73rem; color:var(--accent-gold);">No señalados = Posición Neutra</span>
+              </div>
+              <div class="available-pool-grid">
+                ${unassigned.map(p => `
+                  <div class="peer-card">
+                    <span style="font-size:0.92rem; font-weight:800; color:#FFF; font-family:var(--font-mono);">${p}</span>
+                    <div class="peer-card-actions">
+                      <button type="button" class="btn-action-pos" onclick="marcarComoPositivo('${p}')">+ Más preferido</button>
+                      <button type="button" class="btn-action-neg" onclick="marcarComoNegativo('${p}')">− Menos preferido</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- BOTÓN AVANZAR -->
+            <div style="margin-top:6px;">
+              <button class="btn-export" style="width:100%; justify-content:center; padding:10px; font-size:0.88rem;" onclick="comprobarYContinuarAPaso2()">
+                Continuar al Paso 2: Ordenar Preferencias ➔
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // -----------------------------------------------------------------------
+      // PANTALLA 2: ORDENACIÓN DE MÁS PREFERIDOS (MOVIMIENTO ESENCIAL: TOCAR CASILLA)
+      // -----------------------------------------------------------------------
+      if (wizardStep === 2) {
+        const posCands = data.posList;
+        if (posCands.length === 0) {
+          container.innerHTML = `
+            <div style="background:rgba(255, 230, 0, 0.08); border:1px solid var(--accent-gold); border-radius:8px; padding:16px; text-align:center;">
+              <p style="color:#FFF; font-size:0.9rem; margin-bottom:12px;">No has señalado compañeros en la lista de más preferidos a primera vista.</p>
+              <button class="btn-export" onclick="irAlPasoWizard(1)">⬅ Volver al Paso 1 (Selección)</button>
+            </div>
+          `;
+          return;
+        }
+
+        const maxAllowed = Math.min(posCands.length, baseKE + 2);
+        const minAllowed = Math.max(1, baseKE - 1);
+        let effectiveSlots = Math.min(posCands.length, Math.max(minAllowed, baseKE + data.deltaE_adj));
+
+        const assignedPos = data.eOrder.slice(0, effectiveSlots);
+        const unassignedPos = posCands.filter(p => !assignedPos.includes(p));
+
+        container.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- GUÍA DE INSTRUCCIONES EN PANTALLA -->
+            <div class="step-guide-box">
+              <div class="step-guide-title">
+                <span>📌 Paso 2: Ordena por orden de prioridad</span>
+                <span class="step-guide-tag">Movimiento: Toca para ubicar en casillas</span>
+              </div>
+              <p class="step-guide-text">
+                Toca a tus compañeros preseleccionados abajo en tu orden de mayor afinidad para colocarlos en las casillas (1º, 2º, 3º...).<br>
+                <span style="color:var(--accent-cyan); font-weight:700;">Toca cualquier casilla ocupada para retirarlo y reasignarlo.</span>
+              </p>
+            </div>
+
+            <!-- BARRA DE CALIBRACIÓN DE PLAZAS -->
+            <div class="slot-stepper-bar">
+              <div>
+                <strong style="color:#FFF;">Casillas Activas: ${effectiveSlots}</strong>
+                <span style="font-size:0.75rem; color:var(--accent-cyan); margin-left:6px;">
+                  (Base: ${baseKE} | Calibración: ${data.deltaE_adj >= 0 ? '+' + data.deltaE_adj : data.deltaE_adj})
+                </span>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-step-adjust" onclick="ajustarDeltaE(-1)" ${effectiveSlots <= minAllowed ? 'disabled' : ''} title="Reducir una casilla">
+                  −1 Menos casillas
+                </button>
+                <button class="btn-step-adjust" onclick="ajustarDeltaE(1)" ${effectiveSlots >= maxAllowed ? 'disabled' : ''} title="Añadir una casilla complementaria">
+                  +1 Más casillas
+                </button>
+              </div>
+            </div>
+
+            <!-- CASILLAS HORIZONTALES (SLOTS) -->
+            <div class="slots-row">
+              ${Array.from({ length: effectiveSlots }).map((_, slotIdx) => {
+                const rankNum = slotIdx + 1;
+                const assignedPerson = assignedPos[slotIdx];
+                const isComplementary = slotIdx >= baseKE;
+                if (assignedPerson) {
+                  return `
+                    <div class="slot-box filled pos-filled ${isComplementary ? 'complementary' : ''}" onclick="desasignarSlotPositivo(${slotIdx})" title="Toca para quitar de la casilla">
+                      <span class="slot-rank-tag" style="background:var(--accent-neon); color:#000;">${rankNum}º</span>
+                      <span class="slot-candidate-name">${assignedPerson}</span>
+                      <span style="font-size:0.68rem; color:var(--accent-neon);">w=${(1/rankNum).toFixed(2)}</span>
+                    </div>
+                  `;
+                } else {
+                  return `
+                    <div class="slot-box ${isComplementary ? 'complementary' : ''}">
+                      <span class="slot-rank-tag">${rankNum}º</span>
+                      <span style="font-size:0.7rem; color:var(--text-muted);">${isComplementary ? '+ Complementaria' : 'Vacía (toca abajo)'}</span>
+                    </div>
+                  `;
+                }
+              }).join('')}
+            </div>
+
+            <!-- CANDIDATOS POSITIVOS PENDIENTES -->
+            <div>
+              <span style="font-size:0.78rem; font-weight:700; color:var(--text-muted);">
+                Toca para asignar a la siguiente casilla libre:
+              </span>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                ${unassignedPos.map(p => `
+                  <button type="button" class="chip-item chip-item-pos" onclick="asignarSiguienteSlotPositivo('${p}')">
+                    + ${p}
+                  </button>
+                `).join('')}
+                ${unassignedPos.length === 0 ? '<span style="font-size:0.76rem; color:var(--accent-neon);">✓ Todas las casillas completadas. Los restantes quedan en reserva intermedia (I+).</span>' : ''}
+              </div>
+            </div>
+
+            <!-- BOTONES NAVEGACIÓN -->
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <button class="scale-selector-btn" onclick="irAlPasoWizard(1)">⬅ Volver a Paso 1</button>
+              <button class="btn-export" onclick="irAlPasoWizard(3)">Continuar al Paso 3: Menos Preferidos ➔</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // -----------------------------------------------------------------------
+      // PANTALLA 3: ORDENACIÓN DE MENOS PREFERIDOS (O CONFIRMACIÓN DE 0)
+      // -----------------------------------------------------------------------
+      if (wizardStep === 3) {
+        const negCands = data.negList;
+
+        if (negCands.length === 0) {
+          container.innerHTML = `
+            <div style="background:rgba(0, 255, 135, 0.06); border:1px solid var(--accent-neon); border-radius:10px; padding:18px; text-align:center;">
+              <div style="font-size:1.15rem; color:var(--accent-neon); font-weight:800; margin-bottom:6px;">🕊️ 0 Menos Preferidos Declarados</div>
+              <p style="font-size:0.86rem; color:#E2E8F0; line-height:1.55; margin-bottom:16px;">
+                Has confirmado que a primera vista no experimentas fricción ni rechazo hacia ningún compañero.<br>
+                Tu conjunto de menor preferencia <strong>R permanecerá estrictamente vacío (0)</strong>, sin inventar aversiones ficticias ni forzarte a señalar a nadie.
+              </p>
+              <div style="display:flex; justify-content:space-between; gap:10px;">
+                <button class="scale-selector-btn" onclick="irAlPasoWizard(2)">⬅ Volver a Paso 2</button>
+                <button class="btn-export" onclick="irAlPasoWizard(4)">Continuar al Resumen (Paso 4) ➔</button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        const maxAllowed = Math.min(negCands.length, baseKR + 2);
+        const minAllowed = 1;
+        let effectiveSlots = Math.min(negCands.length, Math.max(minAllowed, baseKR + data.deltaR_adj));
+
+        const assignedNeg = data.rOrder.slice(0, effectiveSlots);
+        const unassignedNeg = negCands.filter(p => !assignedNeg.includes(p));
+
+        container.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- GUÍA DE INSTRUCCIONES EN PANTALLA -->
+            <div class="step-guide-box">
+              <div class="step-guide-title">
+                <span>📌 Paso 3: Ordena por orden de menor afinidad</span>
+                <span class="step-guide-tag">Movimiento: Toca para ubicar en casillas</span>
+              </div>
+              <p class="step-guide-text">
+                Toca a los compañeros abajo para situarlos en las casillas de menor afinidad (1º R, 2º R...).<br>
+                <span style="color:var(--accent-pink); font-weight:700;">Toca cualquier casilla ocupada para retirarlo y reasignarlo.</span>
+              </p>
+            </div>
+
+            <div class="slot-stepper-bar">
+              <div>
+                <strong style="color:#FFF;">Casillas Menos Preferidos: ${effectiveSlots}</strong>
+                <span style="font-size:0.75rem; color:var(--accent-pink); margin-left:6px;">
+                  (Base: ${baseKR} | Calibración: ${data.deltaR_adj >= 0 ? '+' + data.deltaR_adj : data.deltaR_adj})
+                </span>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-step-adjust" onclick="ajustarDeltaR(-1)" ${effectiveSlots <= minAllowed ? 'disabled' : ''}>−1 Menos casillas</button>
+                <button class="btn-step-adjust" onclick="ajustarDeltaR(1)" ${effectiveSlots >= maxAllowed ? 'disabled' : ''}>+1 Más casillas</button>
+              </div>
+            </div>
+
+            <!-- CASILLAS HORIZONTALES NEGATIVAS -->
+            <div class="slots-row">
+              ${Array.from({ length: effectiveSlots }).map((_, slotIdx) => {
+                const rankNum = slotIdx + 1;
+                const assignedPerson = assignedNeg[slotIdx];
+                const isComplementary = slotIdx >= baseKR;
+                if (assignedPerson) {
+                  return `
+                    <div class="slot-box filled neg-filled ${isComplementary ? 'complementary' : ''}" onclick="desasignarSlotNegativo(${slotIdx})" title="Toca para quitar de la casilla">
+                      <span class="slot-rank-tag" style="background:var(--accent-pink); color:#FFF;">${rankNum}º R</span>
+                      <span class="slot-candidate-name">${assignedPerson}</span>
+                      <span style="font-size:0.68rem; color:var(--accent-pink);">w=${(1/rankNum).toFixed(2)}</span>
+                    </div>
+                  `;
+                } else {
+                  return `
+                    <div class="slot-box ${isComplementary ? 'complementary' : ''}">
+                      <span class="slot-rank-tag">${rankNum}º R</span>
+                      <span style="font-size:0.7rem; color:var(--text-muted);">${isComplementary ? '+ Complementaria' : 'Vacía (toca abajo)'}</span>
+                    </div>
+                  `;
+                }
+              }).join('')}
+            </div>
+
+            <!-- CANDIDATOS NEGATIVOS PENDIENTES -->
+            <div>
+              <span style="font-size:0.78rem; font-weight:700; color:var(--text-muted);">Toca para asignar:</span>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                ${unassignedNeg.map(p => `
+                  <button type="button" class="chip-item chip-item-neg" onclick="asignarSiguienteSlotNegativo('${p}')">
+                    − ${p}
+                  </button>
+                `).join('')}
+                ${unassignedNeg.length === 0 ? '<span style="font-size:0.76rem; color:var(--accent-pink);">✓ Asignados. Los no ubicados quedan en reserva intermedia (I−).</span>' : ''}
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <button class="scale-selector-btn" onclick="irAlPasoWizard(2)">⬅ Volver a Paso 2</button>
+              <button class="btn-export" onclick="irAlPasoWizard(4)">Continuar al Resumen (Paso 4) ➔</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // -----------------------------------------------------------------------
+      // PANTALLA 4: RESUMEN Y CONFIRMACIÓN FACTUAL
+      // -----------------------------------------------------------------------
+      if (wizardStep === 4) {
+        const vm = calculosMatriciales.vectoresMoreno[emId];
+
+        container.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- GUÍA DE INSTRUCCIONES EN PANTALLA -->
+            <div class="step-guide-box">
+              <div class="step-guide-title">
+                <span>📌 Paso 4: Resumen y confirmación</span>
+                <span class="step-guide-tag">Movimiento: Revisar y validar</span>
+              </div>
+              <p class="step-guide-text">
+                Comprueba la ordenación consolidada para <strong>${emId}</strong>. Al validar, tus respuestas se sincronizan instantáneamente con las matrices del grupo a la derecha.
+              </p>
+            </div>
+
+            <div style="background:rgba(11, 19, 43, 0.85); border:1px solid var(--border-card); border-radius:10px; padding:16px; display:flex; flex-direction:column; gap:10px;">
+              <div style="font-size:0.95rem; font-weight:800; color:#FFF; display:flex; justify-content:space-between; align-items:center;">
+                <span>✓ Síntesis de Respuestas:</span>
+                <span class="brand-badge" style="border-color:var(--accent-neon); color:var(--accent-neon);">${emId}</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:8px; font-size:0.84rem;">
+                <div style="background:rgba(0, 255, 135, 0.06); border:1px solid rgba(0, 255, 135, 0.2); border-radius:6px; padding:8px 12px;">
+                  <span style="color:var(--accent-neon); font-weight:800;">• Más Preferidos E{} (${vm.E.length}):</span>
+                  <span style="color:#FFF; font-weight:700;">[${vm.E.map((s, idx) => `${idx+1}º:${s}`).join(', ') || '—'}]</span>
+                  ${vm.bE.length > 0 ? `<span style="color:var(--text-muted); font-size:0.75rem; margin-left:6px;">(Reserva I+: ${vm.bE.join(', ')})</span>` : ''}
+                </div>
+
+                <div style="background:rgba(255, 230, 0, 0.05); border:1px solid rgba(255, 230, 0, 0.2); border-radius:6px; padding:8px 12px;">
+                  <span style="color:var(--accent-gold); font-weight:800;">• Posición Neutra / Intermedia (${vm.iZero.length}):</span>
+                  <span style="color:#FFF;">[${vm.iZero.join(', ') || 'Ninguno'}]</span>
+                </div>
+
+                <div style="background:rgba(255, 0, 127, 0.06); border:1px solid rgba(255, 0, 127, 0.2); border-radius:6px; padding:8px 12px;">
+                  <span style="color:var(--accent-pink); font-weight:800;">• Menos Preferidos R{} (${vm.R.length}):</span>
+                  <span style="color:#FFF; font-weight:700;">${vm.R.length > 0 ? `[${vm.R.map((s, idx) => `${idx+1}ºR:${s}`).join(', ')}]` : '0 (Ausencia de fricción)'}</span>
+                  ${vm.bR.length > 0 ? `<span style="color:var(--text-muted); font-size:0.75rem; margin-left:6px;">(Reserva I−: ${vm.bR.join(', ')})</span>` : ''}
+                </div>
+
+                <div style="background:rgba(56, 189, 248, 0.06); border:1px solid rgba(56, 189, 248, 0.2); border-radius:6px; padding:8px 12px;">
+                  <span style="color:var(--accent-cyan); font-weight:800;">• Metapercepción de Elección pE{} (${vm.pE.length}):</span>
+                  <span style="color:#FFF;">[${vm.pE.join(', ') || '—'}]</span>
+                  <span style="color:var(--text-muted); font-size:0.75rem; margin-left:6px;">(Esperas que te elijan)</span>
+                </div>
+
+                <div style="background:rgba(255, 255, 255, 0.03); border:1px solid rgba(255, 255, 255, 0.08); border-radius:6px; padding:8px 12px;">
+                  <span style="color:var(--text-muted); font-weight:800;">• Canal pR (Expectativa de Rechazo):</span>
+                  <span style="color:var(--accent-cyan); font-weight:700;">🛡️ NO_MEDIDO</span>
+                  <span style="color:var(--text-muted); font-size:0.75rem; margin-left:6px;">(Blindaje deontológico Canon 21)</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <button class="scale-selector-btn" onclick="irAlPasoWizard(1)">↺ Volver a Paso 1</button>
+              <button class="btn-export" onclick="showToast('✓ Respuestas fijadas y sincronizadas con éxito en las matrices!')">
+                ✓ Validar y Sincronizar Matrices
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // ACCIONES DE LA PANTALLA 1 (PRESELECCIÓN CON DESAPARICIÓN)
+    // =========================================================================
+    function marcarComoPositivo(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      if (!data.posList.includes(pId)) {
+        data.posList.push(pId);
+        data.negList = data.negList.filter(x => x !== pId);
+        if (!data.eOrder.includes(pId)) data.eOrder.push(pId);
+        data.rOrder = data.rOrder.filter(x => x !== pId);
+      }
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function marcarComoNegativo(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      if (!data.negList.includes(pId)) {
+        data.negList.push(pId);
+        data.posList = data.posList.filter(x => x !== pId);
+        if (!data.rOrder.includes(pId)) data.rOrder.push(pId);
+        data.eOrder = data.eOrder.filter(x => x !== pId);
+      }
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function quitarDePositivos(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      data.posList = data.posList.filter(x => x !== pId);
+      data.eOrder = data.eOrder.filter(x => x !== pId);
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+      showToast(`${pId} devuelto a disponibles`);
+    }
+
+    function quitarDeNegativos(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      data.negList = data.negList.filter(x => x !== pId);
+      data.rOrder = data.rOrder.filter(x => x !== pId);
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+      showToast(`${pId} devuelto a disponibles`);
+    }
+
+    function comprobarYContinuarAPaso2() {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const baseKE = currentN <= 5 ? 2 : Math.max(2, Math.min(8, Math.round(currentN * 0.20)));
+
+      if (data.posList.length === 0) {
+        showToast("⚠️ Selecciona al menos a un compañero entre los más preferidos.");
+        return;
+      }
+
+      if (data.posList.length < baseKE) {
+        const modalHtml = `
+          <div style="background:#0F172A; border:1px solid var(--accent-gold); border-radius:8px; padding:12px 14px; margin-bottom:10px;">
+            <div style="font-weight:800; color:var(--accent-gold); font-size:0.85rem; margin-bottom:4px;">💡 Sugerencia orientativa:</div>
+            <div style="font-size:0.8rem; color:#E2E8F0; line-height:1.45; margin-bottom:10px;">
+              Has señalado a ${data.posList.length} compañero(s) entre los más preferidos (el estándar base orientativo es ${baseKE}).  
+              ¿Deseas añadir a alguno más con quien colaborarías con agrado, o prefieres continuar así?
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="scale-selector-btn" style="font-size:0.76rem; padding:4px 10px;" onclick="renderWizardContent()">Revisar lista</button>
+              <button class="btn-export" style="font-size:0.76rem; padding:4px 12px;" onclick="irAlPasoWizard(2)">Continuar con ${data.posList.length} ➔</button>
+            </div>
+          </div>
+        `;
+        const container = document.getElementById("wizardStepContent");
+        container.insertAdjacentHTML('afterbegin', modalHtml);
+        return;
+      }
+
+      irAlPasoWizard(2);
+    }
+
+    // =========================================================================
+    // ACCIONES DE LA PANTALLA 2 (ORDENAR POSITIVOS CON ±1)
+    // =========================================================================
+    function ajustarDeltaE(diff) {
+      const emId = activeSubject;
+      grupoData[emId].deltaE_adj += diff;
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function asignarSiguienteSlotPositivo(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const baseKE = currentN <= 5 ? 2 : Math.max(2, Math.min(8, Math.round(currentN * 0.20)));
+      const effectiveSlots = Math.min(data.posList.length, Math.max(1, baseKE + data.deltaE_adj));
+
+      // Reemplazar o insertar en eOrder
+      data.eOrder = data.eOrder.filter(x => x !== pId);
+      data.eOrder.splice(effectiveSlots - 1, 0, pId);
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function desasignarSlotPositivo(idx) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const removed = data.eOrder.splice(idx, 1)[0];
+      if (removed) data.eOrder.push(removed); // se mueve al final de la reserva
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    // =========================================================================
+    // ACCIONES DE LA PANTALLA 3 (ORDENAR NEGATIVOS CON ±1)
+    // =========================================================================
+    function ajustarDeltaR(diff) {
+      const emId = activeSubject;
+      grupoData[emId].deltaR_adj += diff;
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function asignarSiguienteSlotNegativo(pId) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const baseKR = currentN <= 5 ? 1 : Math.max(1, Math.min(6, Math.round(currentN * 0.20)));
+      const effectiveSlots = Math.min(data.negList.length, Math.max(1, baseKR + data.deltaR_adj));
+
+      data.rOrder = data.rOrder.filter(x => x !== pId);
+      data.rOrder.splice(effectiveSlots - 1, 0, pId);
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function desasignarSlotNegativo(idx) {
+      const emId = activeSubject;
+      const data = grupoData[emId];
+      const removed = data.rOrder.splice(idx, 1)[0];
+      if (removed) data.rOrder.push(removed);
+      recalcularTodo();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    // =========================================================================
+    // MOTOR DE CÁLCULO MATRICIAL ORBIT -> MORENO
+    // =========================================================================
+    function recalcularTodo() {
+      const N = currentN;
+      const labels = sujetosLabels;
+      const baseKE = N <= 5 ? 2 : Math.max(2, Math.min(8, Math.round(N * 0.20)));
+      const baseKR = N <= 5 ? 1 : Math.max(1, Math.min(6, Math.round(N * 0.20)));
+      const maxDelta = 2;
+
+      const matA = [];
+      const matB = [];
+      const vectoresMoreno = {};
+
+      labels.forEach((emId, i) => {
+        const data = grupoData[emId];
+        const peers = labels.filter(x => x !== emId);
+        
+        // Recomponer ranking ordinal completo 1º..Nº:
+        // 1. Elecciones ordenadas (eOrder)
+        // 2. Reserva positiva (I+)
+        // 3. Neutros (I0)
+        // 4. Reserva negativa (I-)
+        // 5. Rechazos ordenados (rOrder)
+        // 6. Auto-nodo al final
+        const posAssigned = data.eOrder.slice(0, Math.min(data.posList.length, Math.max(1, baseKE + data.deltaE_adj)));
+        const posRest = data.posList.filter(x => !posAssigned.includes(x));
+
+        const negAssigned = data.rOrder.slice(0, Math.min(data.negList.length, Math.max(1, baseKR + data.deltaR_adj)));
+        const negRest = data.negList.filter(x => !negAssigned.includes(x));
+
+        const neutros = peers.filter(p => !data.posList.includes(p) && !data.negList.includes(p));
+
+        const fullRanking = [...posAssigned, ...posRest, ...neutros, ...negRest, ...negAssigned, emId];
+
+        // Llenar Matriz A y B
+        const rowA = [];
+        const rowB = new Array(N).fill(0);
+        fullRanking.forEach((subj, k) => {
+          rowA.push(subj);
+          const jIdx = labels.indexOf(subj);
+          if (jIdx !== -1) rowB[jIdx] = k + 1;
+        });
+        matA.push(rowA);
+        matB.push(rowB);
+
+        // Vectores MORENO
+        const deltaE_eff = posAssigned.length - baseKE;
+        const deltaR_eff = negAssigned.length - baseKR;
+
+        const weightsE = {};
+        posAssigned.forEach((t, idx) => weightsE[t] = +(1 / (idx + 1)).toFixed(3));
+
+        const weightsR = {};
+        negAssigned.forEach((t, idx) => weightsR[t] = +(1 / (idx + 1)).toFixed(3));
+
+        const weightsPE = {};
+        data.pE.forEach((t, idx) => weightsPE[t] = +(1 / (idx + 1)).toFixed(3));
+
+        vectoresMoreno[emId] = {
+          E: posAssigned,
+          R: negAssigned,
+          pE: data.pE,
+          pR_status: "NO_MEDIDO",
+          deltaE: deltaE_eff,
+          deltaR: negAssigned.length === 0 ? 0 : deltaR_eff,
+          bE: posRest,
+          bR: negRest,
+          iPos: posRest,
+          iZero: neutros,
+          iNeg: negRest,
+          weightsE: weightsE,
+          weightsR: weightsR,
+          weightsPE: weightsPE
+        };
+      });
+
+      // 2. Sociomatrices SMIa y SMIb
+      const smia = [];
+      const smib = [];
+
+      labels.forEach((emId, i) => {
+        const rowSMIa = [];
+        const rowSMIb = [];
+        const vm_i = vectoresMoreno[emId];
+        const eSet_i = new Set(vm_i.E);
+        const rSet_i = new Set(vm_i.R);
+        const peSet_i = new Set(vm_i.pE);
+
+        labels.forEach((recId, j) => {
+          if (i === j) {
+            rowSMIa.push("----");
+            rowSMIb.push("0000");
+            return;
+          }
+
+          const vm_j = vectoresMoreno[recId];
+          const eSet_j = new Set(vm_j.E);
+          const rSet_j = new Set(vm_j.R);
+          const peSet_j = new Set(vm_j.pE);
+
+          // SMIa Figurativa
+          const s1 = peSet_i.has(recId) ? '<' : '¡';
+          const s2 = eSet_i.has(recId) ? 'E' : (rSet_i.has(recId) ? 'R' : '?');
+          const s3 = eSet_j.has(emId) ? 'e' : (rSet_j.has(emId) ? 'r' : '?');
+          const s4 = peSet_j.has(emId) ? '>' : '!';
+          rowSMIa.push(`${s1}${s2}${s3}${s4}`);
+
+          // SMIb Numeralizada [A1, A2, A3, A4]
+          const b1 = peSet_i.has(recId) ? '+' : '0';
+          const b2 = eSet_i.has(recId) ? '+' : (rSet_i.has(recId) ? '-' : '0');
+          const b3 = eSet_j.has(emId) ? '+' : (rSet_j.has(emId) ? '-' : '0');
+          const b4 = peSet_j.has(emId) ? '+' : '0';
+          rowSMIb.push(`${b1}${b2}${b3}${b4}`);
+        });
+
+        smia.push(rowSMIa);
+        smib.push(rowSMIb);
+      });
+
+      calculosMatriciales = {
+        N: N,
+        labels: labels,
+        matA: matA,
+        matB: matB,
+        vectoresMoreno: vectoresMoreno,
+        SMIa: smia,
+        SMIb: smib
+      };
+    }
+
+    function renderUI() {
+      renderParticipantTabs();
+      renderWizardContent();
+      renderMatrixTable();
+    }
+
+    function cambiarPestanaMatriz(tabId) {
+      activeMatrixTab = tabId;
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        const tabs = ['tabA', 'tabB', 'tabMoreno', 'tabSMIa', 'tabSMIb'];
+        btn.classList.toggle("active", tabs[idx] === tabId);
+      });
+      renderMatrixTable();
+    }
+
+    function renderMatrixTable() {
+      const viewport = document.getElementById("matrixViewport");
+      const legend = document.getElementById("matrixLegend");
+      const labels = calculosMatriciales.labels;
+      const N = calculosMatriciales.N;
+
+      if (activeMatrixTab === 'tabA') {
+        let html = `<table class="matrix-table"><thead><tr><th style="text-align:left;">Emisor \\ Puesto</th>`;
+        for (let k = 1; k <= N; k++) html += `<th>${k}º</th>`;
+        html += `</tr></thead><tbody>`;
+
+        labels.forEach((emId, i) => {
+          html += `<tr><td class="header-col">${emId}</td>`;
+          for (let k = 0; k < N; k++) {
+            const subj = calculosMatriciales.matA[i][k];
+            const isSelf = subj === emId;
+            html += `<td style="${isSelf ? 'color:var(--text-muted); opacity:0.6;' : 'color:var(--accent-cyan); font-weight:700;'}">${subj}</td>`;
+          }
+          html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+        viewport.innerHTML = html;
+        legend.innerHTML = `💡 <strong>Matriz A(i, k) = j</strong>: Registra para cada emisor $i$ (fila) el identificador del sujeto $j$ que ocupa la posición $k$ ($1º \dots Nº$).`;
+
+      } else if (activeMatrixTab === 'tabB') {
+        let html = `<table class="matrix-table"><thead><tr><th style="text-align:left;">Emisor \\ Destino</th>`;
+        labels.forEach(lbl => html += `<th>${lbl}</th>`);
+        html += `</tr></thead><tbody>`;
+
+        labels.forEach((emId, i) => {
+          html += `<tr><td class="header-col">${emId}</td>`;
+          labels.forEach((destId, j) => {
+            const rank = calculosMatriciales.matB[i][j];
+            const isSelf = i === j;
+            let color = 'color:var(--text-main);';
+            if (!isSelf) {
+              if (rank <= 2) color = 'color:var(--accent-neon); font-weight:800;';
+              else if (rank >= N - 1) color = 'color:var(--accent-pink); font-weight:800;';
+            }
+            html += `<td style="${color}">${rank}</td>`;
+          });
+          html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+        viewport.innerHTML = html;
+        legend.innerHTML = `💡 <strong>Matriz B(i, j) = k</strong>: Registra para cada evaluador $i$ el rango $k$ asignado a $j$. Cumple la biyección exacta $A(i, B(i, j)) \equiv j$.`;
+
+      } else if (activeMatrixTab === 'tabMoreno') {
+        let html = `<table class="matrix-table"><thead><tr>
+          <th style="text-align:left;">Sujeto</th>
+          <th>E{} (Elecciones)</th>
+          <th>δ_E</th>
+          <th>Restos B_E (I+)</th>
+          <th>R{} (Rechazos)</th>
+          <th>δ_R</th>
+          <th>Restos B_R (I−)</th>
+          <th>pE{} (Metapercepción)</th>
+          <th>pR (Canon 21)</th>
+        </tr></thead><tbody>`;
+
+        labels.forEach(emId => {
+          const vm = calculosMatriciales.vectoresMoreno[emId];
+          html += `<tr>
+            <td class="header-col">${emId}</td>
+            <td style="color:var(--accent-neon); font-weight:800;">${vm.E.join(', ') || '—'}</td>
+            <td>${vm.deltaE >= 0 ? '+' + vm.deltaE : vm.deltaE}</td>
+            <td style="color:var(--text-muted);">${vm.bE.join(', ') || '∅'}</td>
+            <td style="color:var(--accent-pink); font-weight:800;">${vm.R.join(', ') || '0 (pacífico)'}</td>
+            <td>${vm.deltaR >= 0 ? '+' + vm.deltaR : vm.deltaR}</td>
+            <td style="color:var(--text-muted);">${vm.bR.join(', ') || '∅'}</td>
+            <td style="color:var(--accent-cyan); font-weight:700;">${vm.pE.join(', ')}</td>
+            <td style="color:var(--text-muted); font-size:0.72rem;">${vm.pR_status}</td>
+          </tr>`;
+        });
+        html += `</tbody></table>`;
+        viewport.innerHTML = html;
+        legend.innerHTML = `💡 <strong>Vectores MORENO Derivados</strong>: Las casillas complementarias permiten calibrar $\\delta \\in \\{-1, 0, +1, +2\\}$. Los no ubicados permanecen en la reserva $I_+$ o $I_-$.`;
+
+      } else if (activeMatrixTab === 'tabSMIa') {
+        let html = `<table class="matrix-table"><thead><tr><th style="text-align:left;">Emisor \\ Destino</th>`;
+        labels.forEach(lbl => html += `<th>${lbl}</th>`);
+        html += `</tr></thead><tbody>`;
+
+        labels.forEach((emId, i) => {
+          html += `<tr><td class="header-col">${emId}</td>`;
+          labels.forEach((destId, j) => {
+            const fig = calculosMatriciales.SMIa[i][j];
+            let cellClass = "cell-neutral";
+            if (i === j) cellClass = "cell-diag";
+            else if (fig.includes("Ee")) cellClass = "cell-ee";
+            else if (fig.includes("Rr")) cellClass = "cell-rr";
+            else if (fig.includes("Er") || fig.includes("Re")) cellClass = "cell-opp";
+            html += `<td class="${cellClass}">${fig}</td>`;
+          });
+          html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+        viewport.innerHTML = html;
+        legend.innerHTML = `💡 <strong>Sociomatriz SMIa (Tetragramas Figurativos)</strong>: <span style="color:var(--accent-neon); font-weight:800;">&lt;Ee&gt; (Elección mutua con expectativa)</span>, <span style="color:var(--accent-pink); font-weight:800;">[Rr] (Rechazo mutuo)</span>, <span style="color:var(--accent-orange); font-weight:700;">&lt;Er] / [Re&gt; (Oposición)</span> y <span style="color:var(--accent-gold); font-weight:700;">¡??! (Neutralidad)</span>.`;
+
+      } else if (activeMatrixTab === 'tabSMIb') {
+        let html = `<table class="matrix-table"><thead><tr><th style="text-align:left;">Emisor \\ Destino</th>`;
+        labels.forEach(lbl => html += `<th>${lbl}</th>`);
+        html += `</tr></thead><tbody>`;
+
+        labels.forEach((emId, i) => {
+          html += `<tr><td class="header-col">${emId}</td>`;
+          labels.forEach((destId, j) => {
+            const smibCode = calculosMatriciales.SMIb[i][j];
+            const isSelf = i === j;
+            let color = "color:var(--accent-gold);";
+            if (!isSelf) {
+              if (smibCode.startsWith("++") || smibCode.endsWith("++")) color = "color:var(--accent-neon); font-weight:800;";
+              else if (smibCode.includes("-")) color = "color:var(--accent-pink); font-weight:800;";
+            } else {
+              color = "color:var(--text-muted); opacity:0.5;";
+            }
+            html += `<td style="${color}">${smibCode}</td>`;
+          });
+          html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+        viewport.innerHTML = html;
+        legend.innerHTML = `💡 <strong>Sociomatriz SMIb [A1, A2, A3, A4]</strong>: Codificación canónica con signo: '+' (Elección/Atracción), '-' (Rechazo), '0' (Neutralidad). A1: p_DA, A2: DA, A3: RECIBE, A4: p_RECIBE.`;
+      }
+    }
+
+    // =========================================================================
+    // EXPORTACIÓN EN LIBRO MAESTRO EXCEL (.XLSX) Y JSON
+    // =========================================================================
+    function descargarExcelCompleto() {
+      if (typeof XLSX === 'undefined') {
+        showToast("⚠️ Librería SheetJS cargando... intente de nuevo en un segundo.");
+        return;
+      }
+
+      const wb = XLSX.utils.book_new();
+      const labels = calculosMatriciales.labels;
+      const N = calculosMatriciales.N;
+
+      const dataA = [["NEXORD · MATRIZ A(i, k) = j (POSICIÓN -> SUJETO)"], []];
+      dataA.push(["Emisor \\ Puesto", ...Array.from({ length: N }).map((_, k) => `${k + 1}º`)]);
+      labels.forEach((emId, i) => {
+        dataA.push([emId, ...calculosMatriciales.matA[i]]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dataA), "01_Matriz_A_Posiciones");
+
+      const dataB = [["NEXORD · MATRIZ B(i, j) = k (SUJETO -> RANGO 1º..Nº)"], []];
+      dataB.push(["Emisor \\ Destino", ...labels]);
+      labels.forEach((emId, i) => {
+        dataB.push([emId, ...calculosMatriciales.matB[i]]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dataB), "02_Matriz_B_Rangos");
+
+      const dataMoreno = [["NEXORD · VECTORES MORENO DERIVADOS SEGÚN CANON 2026"], []];
+      dataMoreno.push(["Sujeto", "E (Elecciones)", "delta_E", "Restos B_E", "R (Rechazos)", "delta_R", "Restos B_R", "pE (Metapercepcion)", "pR (Canon 21)"]);
+      labels.forEach(emId => {
+        const vm = calculosMatriciales.vectoresMoreno[emId];
+        dataMoreno.push([
+          emId,
+          vm.E.join(', '),
+          vm.deltaE,
+          vm.bE.join(', '),
+          vm.R.join(', '),
+          vm.deltaR,
+          vm.bR.join(', '),
+          vm.pE.join(', '),
+          vm.pR_status
+        ]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dataMoreno), "03_Vectores_Moreno_ER");
+
+      const dataSMIa = [["NEXORD · SOCIOMATRIZ SIMBÓLICA CUALITATIVA SMIa"], []];
+      dataSMIa.push(["Emisor \\ Destino", ...labels]);
+      labels.forEach((emId, i) => {
+        dataSMIa.push([emId, ...calculosMatriciales.SMIa[i]]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dataSMIa), "04_Sociomatriz_SMIa");
+
+      const dataSMIb = [["NEXORD · SOCIOMATRIZ NUMERALIZADA CANÓNICA SMIb [A1, A2, A3, A4]"], []];
+      dataSMIb.push(["Emisor \\ Destino", ...labels]);
+      labels.forEach((emId, i) => {
+        dataSMIb.push([emId, ...calculosMatriciales.SMIb[i]]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dataSMIb), "05_Sociomatriz_SMIb");
+
+      XLSX.writeFile(wb, `NEXORD_ORBIT_ASISTIDO_N${N}_MATRICES_CANON_2026.xlsx`);
+      showToast(`✓ Libro Maestro descargado: NEXORD_ORBIT_ASISTIDO_N${N}.xlsx`);
+    }
+
+    function descargarJSON() {
+      const payload = {
+        metadata: {
+          estudio: `PROTOTIPO_ORBIT_N${currentN}`,
+          n_sujetos: currentN,
+          fecha: new Date().toISOString(),
+          doctrina: "NEXORD CANON 2026 · METODOLOGÍA ASISTIDA DE RESTOS Y VALENCIA"
+        },
+        sujetos: calculosMatriciales.labels,
+        matriz_A: calculosMatriciales.matA,
+        matriz_B: calculosMatriciales.matB,
+        vectores_moreno: calculosMatriciales.vectoresMoreno,
+        SMIa: calculosMatriciales.SMIa,
+        SMIb: calculosMatriciales.SMIb
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `PAYLOAD_ORBIT_ASISTIDO_N${currentN}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast("✓ Payload JSON exportado con éxito");
+    }
+
+    function showToast(msg) {
+      const pill = document.getElementById("toastPill");
+      pill.textContent = msg;
+      pill.style.display = "block";
+      setTimeout(() => {
+        pill.style.display = "none";
+      }, 3000);
+    }
+
+    // =========================================================================
+    // CONTROL DEL MODAL DE INSTRUCCIONES PREVIAS (TEXTO PREVIO APARTE)
+    // =========================================================================
+    function abrirModalInstrucciones() {
+      const m = document.getElementById("modalInstrucciones");
+      if (m) m.classList.add("active");
+    }
+
+    function cerrarModalInstrucciones() {
+      const m = document.getElementById("modalInstrucciones");
+      if (m) m.classList.remove("active");
+    }
+
+    function cerrarModalSiBackdrop(e) {
+      if (e.target.id === "modalInstrucciones") {
+        cerrarModalInstrucciones();
+      }
+    }
+
+    function toggleNoShowModalAgain(checked) {
+      try {
+        localStorage.setItem("nexord_orbit_no_modal", checked ? "1" : "0");
+      } catch(e) {}
+    }
+
+    // Inicializar con N=7 al cargar y mostrar texto previo si corresponde
+    document.addEventListener("DOMContentLoaded", () => {
+      inicializarGrupo(7);
+      try {
+        const noModal = localStorage.getItem("nexord_orbit_no_modal");
+        const chk = document.getElementById("chkNoShowModalAgain");
+        if (chk && noModal === "1") chk.checked = true;
+        if (!noModal || noModal !== "1") {
+          abrirModalInstrucciones();
+        }
+      } catch(e) {
+        abrirModalInstrucciones();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        cerrarModalInstrucciones();
+      }
+    });
+  </script>
+</body>
+</html>

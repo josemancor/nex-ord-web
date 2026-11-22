@@ -1,0 +1,9143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- =========================================================================
+       NEXORD OFFICIAL CLEAN BOOT & ANTI-CACHE RESET
+       ========================================================================= -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    (function() {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      try { sessionStorage.clear(); } catch(e) {}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        }).catch(function(){});
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
+        }).catch(function(){});
+      }
+      window.addEventListener('pageshow', function(ev) {
+        if (ev.persisted) { window.location.reload(); }
+      });
+    })();
+  </script>
+
+  <meta charset="UTF-8">
+  <title>VISORD · Sociograma Dual Interactivo & Plano de Interdistancias · NEXORD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #060914;
+      --bg-navy: #0B132B;
+      --bg-surface: #101B38;
+      --panel-bg: rgba(16, 27, 56, 0.94);
+      --border-blue: rgba(56, 189, 248, 0.30);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --border-glow: rgba(0, 255, 135, 0.35);
+
+      --neon-cyan: #38BDF8;
+      --neon-green: #00FF87;
+      --neon-gold: #FFE600;
+      --neon-orange: #FF9F1C;
+      --neon-magenta: #FF007F;
+      --neon-red: #EF4444;
+
+      --da-blue: #2563EB;
+      --rc-green: #059669;
+
+      --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-cinzel: 'Cinzel', serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: #E2E8F0;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(0, 255, 135, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(11, 19, 43, 0.5) 0%, transparent 75%);
+      background-attachment: fixed;
+    }
+
+    /* HEADER */
+    .app-header {
+      background: rgba(7, 12, 28, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1.5px solid var(--border-blue);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-title {
+      font-family: var(--font-cinzel);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-badge {
+      background: rgba(0, 255, 135, 0.12);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 2px 7px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .header-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .suite-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      color: #94A3B8;
+      transition: all 0.2s ease;
+    }
+    .suite-btn:hover {
+      color: #FFF;
+      border-color: var(--neon-cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .suite-btn.active {
+      color: #060914;
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+      font-weight: 800;
+    }
+
+    /* MAIN CONTAINER */
+    .main-wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* CONTROLS RIBBON */
+    .controls-ribbon {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-blue);
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .ribbon-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .control-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    select.styled-select {
+      background: #0B142A;
+      color: #F8FAFC;
+      border: 1px solid var(--border-blue);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    select.styled-select:focus {
+      border-color: var(--neon-green);
+    }
+    .btn-toggle-group {
+      display: flex;
+      background: #090E20;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .toggle-pill {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .toggle-pill:hover {
+      color: #FFF;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .toggle-pill.active {
+      background: var(--neon-cyan);
+      color: #050814;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+    .toggle-pill.active-green {
+      background: var(--neon-green);
+      color: #050814;
+      box-shadow: 0 0 10px rgba(0, 255, 135, 0.4);
+    }
+    .toggle-pill.active-gold {
+      background: var(--neon-gold);
+      color: #050814;
+      box-shadow: 0 0 10px rgba(255, 230, 0, 0.4);
+    }
+
+    /* SUBJECT CHIPS RIBBON */
+    .chips-ribbon {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: rgba(9, 14, 32, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
+    .subj-chip {
+      background: #0B132B;
+      border: 1px solid var(--border-subtle);
+      color: #94A3B8;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .subj-chip:hover {
+      color: #FFF;
+      border-color: var(--neon-cyan);
+    }
+    .subj-chip.active-focal {
+      background: var(--neon-green);
+      color: #050814;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0, 255, 135, 0.5);
+    }
+    .subj-chip.active-multi {
+      background: var(--neon-cyan);
+      color: #050814;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+    .subj-chip.inactive-multi {
+      opacity: 0.5;
+    }
+
+    /* SLIDER & TOGGLES */
+    .slider-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #090E20;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+    }
+    .slider-box input[type="range"] {
+      accent-color: var(--neon-cyan);
+      cursor: pointer;
+      width: 90px;
+    }
+    .slider-val {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      min-width: 28px;
+    }
+    .layer-check {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #94A3B8;
+      cursor: pointer;
+      user-select: none;
+    }
+    .layer-check input {
+      accent-color: var(--neon-green);
+      cursor: pointer;
+    }
+
+    /* WORKSPACE SPLIT */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 1150px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* MAIN STAGE (LEFT) */
+    .stage-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-blue);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+    .stage-tabs {
+      display: flex;
+      background: #080D1D;
+      border-bottom: 1px solid var(--border-blue);
+      padding: 0 12px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 12px 18px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover {
+      color: #FFF;
+    }
+    .tab-btn.active {
+      color: var(--neon-cyan);
+      border-bottom-color: var(--neon-cyan);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .viewport-box {
+      position: relative;
+      height: 640px;
+      background: #080D20;
+      overflow: hidden;
+    }
+    svg#biplot-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* HEATMAP TABLE CONTAINER */
+    .heatmap-wrap {
+      display: none;
+      height: 640px;
+      overflow: auto;
+      padding: 16px;
+      background: #080D20;
+    }
+    .heatmap-wrap.active {
+      display: block;
+    }
+    table.heatmap-table {
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      margin: 0 auto;
+    }
+    table.heatmap-table th, table.heatmap-table td {
+      padding: 8px 10px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+    table.heatmap-table th {
+      background: #0F1A38;
+      color: #FFF;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    table.heatmap-table th.row-header {
+      left: 0;
+      z-index: 3;
+      background: #0F1A38;
+    }
+    table.heatmap-table td {
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    table.heatmap-table td:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 0 10px #000;
+    }
+
+    /* RADAR / GRAPH WRAP */
+    .radial-wrap {
+      display: none;
+      height: 640px;
+      overflow: auto;
+      padding: 20px;
+      background: #080D20;
+    }
+    .radial-wrap.active {
+      display: block;
+    }
+
+    /* RIGHT TELEMETRY SIDEBAR */
+    .telemetry-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .tele-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-blue);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .tele-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .tele-title {
+      font-family: var(--font-cinzel);
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tele-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--neon-cyan);
+      border: 1px solid var(--neon-cyan);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .stat-name {
+      color: #94A3B8;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    .stat-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    /* FOCAL / MULTI DETAILS */
+    .focal-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .focal-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #0F172A;
+      border: 2px solid var(--neon-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 900;
+      color: #FFF;
+      box-shadow: 0 0 14px rgba(0, 255, 135, 0.4);
+    }
+    .focal-desc-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #FFF;
+    }
+    .focal-desc-type {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--neon-cyan);
+    }
+
+    .dist-ranking-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.03);
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+    }
+    .dist-ranking-item.close {
+      border-left: 3px solid var(--neon-green);
+    }
+    .dist-ranking-item.far {
+      border-left: 3px solid var(--neon-red);
+    }
+
+    /* COMPARISON TABLE IN SIDEBAR */
+    table.comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      margin-top: 8px;
+    }
+    table.comp-table th, table.comp-table td {
+      padding: 5px 6px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    table.comp-table th {
+      background: #0A1128;
+      color: var(--neon-cyan);
+      font-weight: 700;
+    }
+
+    /* BOTTOM PEDAGOGICAL BOX */
+    .pedagogical-box {
+      background: var(--panel-bg);
+      border: 1.5px solid rgba(255, 230, 0, 0.35);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    }
+    .ped-title {
+      font-family: var(--font-cinzel);
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--neon-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .ped-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #CBD5E1;
+    }
+    .ped-card {
+      background: rgba(9, 14, 32, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .ped-card-head {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 800;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* FLOATING TOOLTIP */
+    #visord-tooltip {
+      position: absolute;
+      display: none;
+      background: rgba(10, 16, 35, 0.96);
+      border: 1.5px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #F8FAFC;
+      pointer-events: none;
+      z-index: 2000;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      max-width: 290px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header class="app-header">
+    <a href="#" class="brand-section">
+      <span class="brand-title">VISORD INTERDISTANCIAS</span>
+      <span class="brand-badge">SOCIOGRAMA DUAL INTERACTIVO</span>
+    </a>
+    <div class="header-links">
+      <a href="visord_demo.html" class="suite-btn">VISORD 3D</a>
+      <a href="visord_dialectico.html" class="suite-btn">Dialéctico</a>
+      <a href="radiografias_relacionales.html" class="suite-btn">Radiológico</a>
+      <a href="visord_cultural.html" class="suite-btn">Cultural</a>
+      <a href="visord_atlas_tendre.html" class="suite-btn">Atlas Tendre</a>
+      <a href="#" class="suite-btn active">Interdistancias</a>
+    </div>
+  </header>
+
+  <!-- WRAPPER PRINCIPAL -->
+  <div class="main-wrap">
+
+    <!-- BARRA SUPERIOR DE MANDOS Y FILTROS -->
+    <div class="controls-ribbon">
+      
+      <!-- FILA 1: MATRIZ, SELECCIÓN DE SUJETOS Y ALTERNANCIA DE CAPAS -->
+      <div class="ribbon-row">
+        <!-- 1. MATRIZ -->
+        <div class="control-group">
+          <span class="control-label">Matriz:</span>
+          <select id="scenario-select" class="styled-select" onchange="cambiarEscenario(this.value)">
+            <option value="1g1t1c">1g1t1c · G1 · T1 · C1</option>
+            <option value="1g1t2c">1g1t2c · G1 · T1 · C2</option>
+            <option value="1g2t1c">1g2t1c · G1 · T2 · C1</option>
+            <option value="1g2t2c">1g2t2c · G1 · T2 · C2</option>
+            <option value="1g3t1c">1g3t1c · G1 · T3 · C1</option>
+            <option value="1g3t2c">1g3t2c · G1 · T3 · C2</option>
+            <option value="2g1t1c">2g1t1c · G2 · T1 · C1</option>
+            <option value="2g1t2c">2g1t2c · G2 · T1 · C2</option>
+            <option value="2g2t1c">2g2t1c · G2 · T2 · C1</option>
+            <option value="2g2t2c">2g2t2c · G2 · T2 · C2</option>
+            <option value="2g3t1c">2g3t1c · G2 · T3 · C1</option>
+            <option value="2g3t2c">2g3t2c · G2 · T3 · C2</option>
+          </select>
+        </div>
+
+        <!-- 2. ALCANCE DE SELECCIÓN (TODOS, 1 A 1, COMPARAR VARIOS) -->
+        <div class="control-group">
+          <span class="control-label">Sujetos:</span>
+          <div class="btn-toggle-group">
+            <button id="btn-sel-todos" class="toggle-pill active" onclick="setSelectionScope('todos')">
+              🌐 Todos
+            </button>
+            <button id="btn-sel-single" class="toggle-pill" onclick="setSelectionScope('single')">
+              🎯 1 a 1 (Focal)
+            </button>
+            <button id="btn-sel-multi" class="toggle-pill" onclick="setSelectionScope('multi')">
+              👥 Comparar Varios
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. ALTERNANCIA DE CAPAS (COMPLETO, SÓLO BARICENTROS, SÓLO DA, SÓLO RC) -->
+        <div class="control-group">
+          <span class="control-label">Capa:</span>
+          <div class="btn-toggle-group">
+            <button id="btn-layer-completo" class="toggle-pill active" onclick="setDisplayLayer('completo')" title="Dipolos completos: Baricentro + Brazos + DA + RC">
+              🌐 Completo
+            </button>
+            <button id="btn-layer-baricentros" class="toggle-pill" onclick="setDisplayLayer('baricentros')" title="Sólo puntos de Baricentro ontológico (●)">
+              ● Baricentros
+            </button>
+            <button id="btn-layer-da" class="toggle-pill" onclick="setDisplayLayer('solo_da')" title="Sólo puntos de Emisión otorgada (DA, 🟦)">
+              🟦 Sólo DA
+            </button>
+            <button id="btn-layer-rc" class="toggle-pill" onclick="setDisplayLayer('solo_rc')" title="Sólo puntos de Recepción de estatus (RC, 🔺)">
+              🔺 Sólo RC
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILA 2: CHIPS INTERACTIVOS DE SUJETOS Y TOGGLES AUXILIARES -->
+      <div class="ribbon-row">
+        <!-- CHIPS DE SUJETOS (1 a 1 o MULTI-SELECCIÓN) -->
+        <div class="control-group">
+          <span class="control-label" id="chips-label">Selección:</span>
+          <div class="chips-ribbon" id="chips-container">
+            <!-- Rellenado dinámicamente -->
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="filter-chip" onclick="seleccionarTopLideres()" title="Líderes con mayor SRC">👑 Líderes</button>
+            <button class="filter-chip" onclick="seleccionarOpuestos()" title="Sujeto 01 vs Sujeto 10">↔️ Polos</button>
+            <button class="filter-chip" onclick="seleccionarMayorAsimetria()" title="Sujetos con dipolos más largos">⚡ Asimétricos</button>
+          </div>
+        </div>
+
+        <!-- TOGGLES AUXILIARES Y SLIDER -->
+        <div class="control-group">
+          <label class="layer-check">
+            <input type="checkbox" id="chk-ejes" checked onchange="renderizar()"> Ejes (0,0)
+          </label>
+          <label class="layer-check">
+            <input type="checkbox" id="chk-links" checked onchange="renderizar()"> Distancias
+          </label>
+          <div class="slider-box" title="Filtra enlaces según distancia máxima">
+            <span class="control-label">d ≤</span>
+            <input type="range" id="slider-dist" min="0.5" max="4.0" step="0.1" value="2.2" oninput="actualizarSlider(this.value)">
+            <span id="slider-val-txt" class="slider-val">2.2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE PRINCIPAL -->
+    <div class="workspace-grid">
+
+      <!-- STAGE DE VISUALIZACIÓN (IZQUIERDA) -->
+      <div class="stage-card">
+        <div class="stage-tabs">
+          <button class="tab-btn active" id="tab-biplot" onclick="conmutarTab('biplot')">
+            🪐 1. Sociograma Dual (Dipolos & Interdistancias)
+          </button>
+          <button class="tab-btn" id="tab-heatmap" onclick="conmutarTab('heatmap')">
+            📊 2. Matriz Heatmap Interdistancias (N × N)
+          </button>
+          <button class="tab-btn" id="tab-radial" onclick="conmutarTab('radial')">
+            🕸️ 3. Radar de Proximidades y Topología
+          </button>
+        </div>
+
+        <div class="viewport-box" id="viewport-box">
+          <svg id="biplot-svg"></svg>
+          <div class="heatmap-wrap" id="heatmap-wrap"></div>
+          <div class="radial-wrap" id="radial-wrap"></div>
+          <div id="visord-tooltip"></div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR DE TELEMETRÍA (DERECHA) -->
+      <div class="telemetry-sidebar">
+
+        <!-- TARJETA GLOBAL DEL ESCENARIO -->
+        <div class="tele-card">
+          <div class="tele-header">
+            <span class="tele-title">🌐 Métricas Globales</span>
+            <span class="tele-badge" id="badge-escenario">1g1t1c</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Tamaño del Grupo:</span>
+            <span class="stat-val" id="tele-n">12 sujetos</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Varianza Explicada:</span>
+            <span class="stat-val" id="tele-var" style="color:var(--neon-green)">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Distancia Media d̄:</span>
+            <span class="stat-val" id="tele-meandist">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Asimetría Media Δ̄:</span>
+            <span class="stat-val" id="tele-meanasym">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Polarización Relacional:</span>
+            <span class="stat-val" id="tele-polariz" style="color:var(--neon-orange)">--</span>
+          </div>
+        </div>
+
+        <!-- TARJETA DE INSPECCIÓN (DINÁMICA: INDIVIDUAL O COMPARATIVA MULTI) -->
+        <div class="tele-card" id="inspector-card">
+          <!-- Inyectado dinámicamente según scope -->
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- NOTA EXPLICATIVA PEDAGÓGICA CANÓNICA -->
+    <div class="pedagogical-box">
+      <div class="ped-title">
+        💡 Guía Canónica de Interpretación de Ejes y Direcciones en el Sociograma Dual
+      </div>
+      <div class="ped-grid">
+        <div class="ped-card">
+          <div class="ped-card-head" style="color:var(--neon-green)">
+            ▶ Eje X (PC1 · ~47%): Gradiente Gravitatorio de Estatus
+          </div>
+          <p>
+            <strong>Hacia la Derecha (+X):</strong> Núcleo de máxima atracción, cohesión y consenso unánime (<span style="color:var(--neon-green)">SRC ≫ 0</span>). Atractores gravitatorios donde convergen las elecciones de la mayoría.<br>
+            <strong>Hacia la Izquierda (-X):</strong> Periferia de tensión, rechazo colectivo u ostracismo (<span style="color:var(--neon-red)">SRC ≪ 0</span>). Sujetos con acumulación de deselecciones que el grupo expulsa de su centro.
+          </p>
+        </div>
+
+        <div class="ped-card">
+          <div class="ped-card-head" style="color:var(--neon-cyan)">
+            ▲ Eje Y (PC2 · ~18%): Bisección Espectral y Alianzas
+          </div>
+          <p>
+            <strong>Hacia Arriba (+Y):</strong> Núcleo de selectividad concentrada. Sujetos con alianzas internas muy cohesionadas que polarizan tajantemente sus rechazos hacia el bloque opuesto.<br>
+            <strong>Hacia Abajo (-Y):</strong> Vínculos transversales, corrientes difusas o pertenencia al subgrupo complementario. Mide la partición espectral de la red (análogo al vector de Fiedler).
+          </p>
+        </div>
+
+        <div class="ped-card">
+          <div class="ped-card-head" style="color:var(--neon-gold)">
+            ↔️ Vector del Dipolo (DA ──●── RC): Asimetría Diádica
+          </div>
+          <p>
+            <strong>Punto Central (●):</strong> Baricentro neta de la posición social del sujeto (Δ = 0.000).<br>
+            <strong>Brazo Azul (DA):</strong> Expansividad otorgada. <strong>Brazo Verde (RC):</strong> Estatus recibido.<br>
+            <strong>Longitud del Dipolo (||RC - DA||):</strong> Mide la <em>tensión dialéctica o desajuste de rol</em>. Cuanto más largo sea el vector, mayor es el desequilibrio entre lo que el sujeto invierte y lo que el colectivo deposita en él.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT CON DATOS EMBEBIDOS Y MOTOR INTERACTIVO UPGRADE V2 -->
+  <script>
+    const SCENARIOS = {
+  "1g1t1c": {
+    "key": "1g1t1c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      46.68,
+      18.13
+    ],
+    "bar": [
+      [
+        1.414,
+        -0.6071
+      ],
+      [
+        0.7981,
+        0.4657
+      ],
+      [
+        0.135,
+        1.6137
+      ],
+      [
+        0.7323,
+        -0.4456
+      ],
+      [
+        1.4078,
+        -0.4443
+      ],
+      [
+        -0.1218,
+        -0.4145
+      ],
+      [
+        -1.0721,
+        -0.1293
+      ],
+      [
+        -0.054,
+        0.6206
+      ],
+      [
+        0.4868,
+        -0.1263
+      ],
+      [
+        -1.6329,
+        -0.385
+      ],
+      [
+        -0.5829,
+        0.2962
+      ],
+      [
+        -1.5102,
+        -0.4441
+      ]
+    ],
+    "da": [
+      [
+        0.5319,
+        -0.2649
+      ],
+      [
+        0.0257,
+        1.405
+      ],
+      [
+        0.0257,
+        1.405
+      ],
+      [
+        0.7345,
+        -0.3587
+      ],
+      [
+        0.5591,
+        0.1747
+      ],
+      [
+        0.461,
+        0.6826
+      ],
+      [
+        0.0387,
+        0.0957
+      ],
+      [
+        -0.0735,
+        0.6924
+      ],
+      [
+        0.3738,
+        0.5386
+      ],
+      [
+        -0.641,
+        0.6556
+      ],
+      [
+        -0.6552,
+        0.7813
+      ],
+      [
+        0.0375,
+        0.5093
+      ]
+    ],
+    "rc": [
+      [
+        2.296,
+        -0.9493
+      ],
+      [
+        1.5705,
+        -0.4736
+      ],
+      [
+        0.2442,
+        1.8224
+      ],
+      [
+        0.7301,
+        -0.5324
+      ],
+      [
+        2.2565,
+        -1.0633
+      ],
+      [
+        -0.7047,
+        -1.5117
+      ],
+      [
+        -2.1829,
+        -0.3543
+      ],
+      [
+        -0.0345,
+        0.5489
+      ],
+      [
+        0.5998,
+        -0.7912
+      ],
+      [
+        -2.6248,
+        -1.4256
+      ],
+      [
+        -0.5105,
+        -0.189
+      ],
+      [
+        -3.0579,
+        -1.3975
+      ]
+    ],
+    "asimetria": [
+      1.8923,
+      2.4321,
+      0.4711,
+      0.1738,
+      2.1009,
+      2.4847,
+      2.2667,
+      0.1486,
+      1.3488,
+      2.8752,
+      0.981,
+      3.6355
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        1.237,
+        2.563,
+        0.701,
+        0.163,
+        1.548,
+        2.532,
+        1.914,
+        1.044,
+        3.055,
+        2.192,
+        2.929
+      ],
+      [
+        1.237,
+        0.0,
+        1.326,
+        0.914,
+        1.095,
+        1.273,
+        1.963,
+        0.866,
+        0.669,
+        2.576,
+        1.391,
+        2.481
+      ],
+      [
+        2.563,
+        1.326,
+        0.0,
+        2.144,
+        2.42,
+        2.044,
+        2.12,
+        1.011,
+        1.775,
+        2.668,
+        1.5,
+        2.635
+      ],
+      [
+        0.701,
+        0.914,
+        2.144,
+        0.0,
+        0.676,
+        0.855,
+        1.832,
+        1.325,
+        0.403,
+        2.366,
+        1.51,
+        2.242
+      ],
+      [
+        0.163,
+        1.095,
+        2.42,
+        0.676,
+        0.0,
+        1.53,
+        2.5,
+        1.809,
+        0.974,
+        3.041,
+        2.124,
+        2.918
+      ],
+      [
+        1.548,
+        1.273,
+        2.044,
+        0.855,
+        1.53,
+        0.0,
+        0.992,
+        1.037,
+        0.673,
+        1.511,
+        0.847,
+        1.389
+      ],
+      [
+        2.532,
+        1.963,
+        2.12,
+        1.832,
+        2.5,
+        0.992,
+        0.0,
+        1.264,
+        1.559,
+        0.616,
+        0.648,
+        0.539
+      ],
+      [
+        1.914,
+        0.866,
+        1.011,
+        1.325,
+        1.809,
+        1.037,
+        1.264,
+        0.0,
+        0.922,
+        1.872,
+        0.62,
+        1.804
+      ],
+      [
+        1.044,
+        0.669,
+        1.775,
+        0.403,
+        0.974,
+        0.673,
+        1.559,
+        0.922,
+        0.0,
+        2.135,
+        1.15,
+        2.022
+      ],
+      [
+        3.055,
+        2.576,
+        2.668,
+        2.366,
+        3.041,
+        1.511,
+        0.616,
+        1.872,
+        2.135,
+        0.0,
+        1.252,
+        0.136
+      ],
+      [
+        2.192,
+        1.391,
+        1.5,
+        1.51,
+        2.124,
+        0.847,
+        0.648,
+        0.62,
+        1.15,
+        1.252,
+        0.0,
+        1.187
+      ],
+      [
+        2.929,
+        2.481,
+        2.635,
+        2.242,
+        2.918,
+        1.389,
+        0.539,
+        1.804,
+        2.022,
+        0.136,
+        1.187,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        8,
+        5,
+        3,
+        10,
+        0,
+        0,
+        4,
+        4,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        2,
+        7,
+        2,
+        0,
+        9,
+        2,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        8,
+        2,
+        3,
+        10,
+        -2,
+        -7,
+        2,
+        4,
+        -9,
+        -2,
+        -10
+      ],
+      "sdr": [
+        9,
+        8,
+        2,
+        4,
+        10,
+        -1,
+        -6,
+        2,
+        5,
+        -8,
+        -1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "00I0",
+        "CDAA",
+        "00BB",
+        "BA0C",
+        "0aCD",
+        "000I",
+        "ABDE",
+        "00EF",
+        "0bFa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "0B00",
+        "BAAA",
+        "A000",
+        "0CI0",
+        "0DB0",
+        "0000",
+        "0aCb",
+        "00D0",
+        "00E0",
+        "0bFa",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "AAEB",
+        "000A",
+        "0DF0",
+        "0CAC",
+        "0BBD",
+        "00C0",
+        "0aD0",
+        "B000",
+        "C000",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "CCB0",
+        "B00A",
+        "00C0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AA",
+        "0AD0",
+        "CCB0",
+        "0D00",
+        "BBCB",
+        "00E0",
+        "0aF0",
+        "00G0",
+        "00H0",
+        "0bI0",
+        "00J0",
+        "0cK0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "0000",
+        "0B00",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "A00A",
+        "0ae0",
+        "0Bf0",
+        "a0g0",
+        "0b0a",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "000B",
+        "00B0",
+        "0D00",
+        "0000",
+        "0aa0",
+        "BBCC",
+        "00D0",
+        "0b00",
+        "00b0",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "000A",
+        "0000",
+        "0D00",
+        "00A0",
+        "0aB0",
+        "0B00",
+        "0000",
+        "0bC0",
+        "00D0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "0a0a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0000",
+        "a0a0",
+        "0a00",
+        "0B00",
+        "b0b0",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "1g1t2c": {
+    "key": "1g1t2c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      30.26,
+      18.6
+    ],
+    "bar": [
+      [
+        1.0069,
+        0.6101
+      ],
+      [
+        1.1114,
+        0.3711
+      ],
+      [
+        0.5952,
+        -1.4043
+      ],
+      [
+        1.0342,
+        0.3112
+      ],
+      [
+        0.5641,
+        -0.8393
+      ],
+      [
+        -0.1715,
+        -0.279
+      ],
+      [
+        -0.6094,
+        -0.8274
+      ],
+      [
+        -1.4599,
+        0.052
+      ],
+      [
+        0.3409,
+        1.2109
+      ],
+      [
+        -0.3175,
+        0.236
+      ],
+      [
+        -0.5061,
+        0.0311
+      ],
+      [
+        -1.5884,
+        0.5275
+      ]
+    ],
+    "da": [
+      [
+        0.2113,
+        -0.2307
+      ],
+      [
+        0.399,
+        0.0463
+      ],
+      [
+        0.4481,
+        -1.3148
+      ],
+      [
+        0.4724,
+        -0.1772
+      ],
+      [
+        0.3856,
+        -1.3389
+      ],
+      [
+        0.5043,
+        -0.2311
+      ],
+      [
+        0.4983,
+        -0.6911
+      ],
+      [
+        -0.5471,
+        0.0915
+      ],
+      [
+        0.6621,
+        0.0722
+      ],
+      [
+        -0.5939,
+        0.4843
+      ],
+      [
+        -0.7321,
+        -0.0595
+      ],
+      [
+        -0.2682,
+        0.9539
+      ]
+    ],
+    "rc": [
+      [
+        1.8026,
+        1.4509
+      ],
+      [
+        1.8238,
+        0.696
+      ],
+      [
+        0.7423,
+        -1.4938
+      ],
+      [
+        1.596,
+        0.7997
+      ],
+      [
+        0.7427,
+        -0.3398
+      ],
+      [
+        -0.8472,
+        -0.3269
+      ],
+      [
+        -1.7171,
+        -0.9638
+      ],
+      [
+        -2.3728,
+        0.0126
+      ],
+      [
+        0.0198,
+        2.3497
+      ],
+      [
+        -0.0411,
+        -0.0123
+      ],
+      [
+        -0.2801,
+        0.1216
+      ],
+      [
+        -2.9086,
+        0.101
+      ]
+    ],
+    "asimetria": [
+      2.3151,
+      1.5659,
+      0.3444,
+      1.4888,
+      1.061,
+      1.3549,
+      2.2321,
+      1.8274,
+      2.3663,
+      0.743,
+      0.4869,
+      2.7747
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.261,
+        2.056,
+        0.3,
+        1.516,
+        1.476,
+        2.163,
+        2.529,
+        0.897,
+        1.376,
+        1.62,
+        2.597
+      ],
+      [
+        0.261,
+        0.0,
+        1.849,
+        0.098,
+        1.328,
+        1.438,
+        2.097,
+        2.591,
+        1.14,
+        1.435,
+        1.653,
+        2.704
+      ],
+      [
+        2.056,
+        1.849,
+        0.0,
+        1.771,
+        0.566,
+        1.362,
+        1.336,
+        2.519,
+        2.628,
+        1.877,
+        1.809,
+        2.915
+      ],
+      [
+        0.3,
+        0.098,
+        1.771,
+        0.0,
+        1.243,
+        1.342,
+        2.0,
+        2.508,
+        1.136,
+        1.354,
+        1.566,
+        2.631
+      ],
+      [
+        1.516,
+        1.328,
+        0.566,
+        1.243,
+        0.0,
+        0.925,
+        1.174,
+        2.212,
+        2.062,
+        1.391,
+        1.379,
+        2.55
+      ],
+      [
+        1.476,
+        1.438,
+        1.362,
+        1.342,
+        0.925,
+        0.0,
+        0.702,
+        1.33,
+        1.576,
+        0.535,
+        0.456,
+        1.63
+      ],
+      [
+        2.163,
+        2.097,
+        1.336,
+        2.0,
+        1.174,
+        0.702,
+        0.0,
+        1.223,
+        2.249,
+        1.103,
+        0.865,
+        1.672
+      ],
+      [
+        2.529,
+        2.591,
+        2.519,
+        2.508,
+        2.212,
+        1.33,
+        1.223,
+        0.0,
+        2.142,
+        1.157,
+        0.954,
+        0.492
+      ],
+      [
+        0.897,
+        1.14,
+        2.628,
+        1.136,
+        2.062,
+        1.576,
+        2.249,
+        2.142,
+        0.0,
+        1.176,
+        1.452,
+        2.047
+      ],
+      [
+        1.376,
+        1.435,
+        1.877,
+        1.354,
+        1.391,
+        0.535,
+        1.103,
+        1.157,
+        1.176,
+        0.0,
+        0.278,
+        1.304
+      ],
+      [
+        1.62,
+        1.653,
+        1.809,
+        1.566,
+        1.379,
+        0.456,
+        0.865,
+        0.954,
+        1.452,
+        0.278,
+        0.0,
+        1.191
+      ],
+      [
+        2.597,
+        2.704,
+        2.915,
+        2.631,
+        2.55,
+        1.63,
+        1.672,
+        0.492,
+        2.047,
+        1.304,
+        1.191,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        4,
+        0,
+        0,
+        0,
+        6,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        4,
+        7,
+        6,
+        3,
+        0,
+        0,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        3,
+        -4,
+        -7,
+        -6,
+        3,
+        2,
+        0,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -3,
+        -5,
+        -5,
+        4,
+        2,
+        1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0BI0",
+        "ACJI",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "00CD",
+        "0b0J",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "BBEA",
+        "AAAB",
+        "CCD0",
+        "00K0",
+        "00B0",
+        "0000",
+        "0bCb",
+        "0aF0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0A",
+        "0BBB",
+        "0000",
+        "0CC0",
+        "0DDC",
+        "00E0",
+        "00F0",
+        "Bb00",
+        "CaA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0b00",
+        "00D0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "CCD0",
+        "0B00",
+        "BDEB",
+        "0000",
+        "00B0",
+        "0ba0",
+        "0a00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AA00",
+        "0000",
+        "0C00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0ad0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B0b0",
+        "bAc0",
+        "0C00",
+        "00d0",
+        "0B00",
+        "0ae0",
+        "AbfA",
+        "0000",
+        "00aa",
+        "aDg0",
+        "0000",
+        "0ch0"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "00dA",
+        "0B00",
+        "0ae0",
+        "0bc0",
+        "0000",
+        "B00B",
+        "0Df0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BaA",
+        "00b0",
+        "00c0",
+        "00C0",
+        "aa00",
+        "0bD0",
+        "0000",
+        "bD00",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bg0",
+        "00h0",
+        "0Di0",
+        "0000",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "1g2t1c": {
+    "key": "1g2t1c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      46.35,
+      16.47
+    ],
+    "bar": [
+      [
+        1.2068,
+        -0.6592
+      ],
+      [
+        0.9322,
+        0.5188
+      ],
+      [
+        0.1607,
+        1.5552
+      ],
+      [
+        0.6416,
+        -0.3921
+      ],
+      [
+        1.4391,
+        -0.5499
+      ],
+      [
+        -0.6111,
+        0.3929
+      ],
+      [
+        -0.8674,
+        -0.1629
+      ],
+      [
+        0.1725,
+        0.1928
+      ],
+      [
+        0.5484,
+        -0.1555
+      ],
+      [
+        -1.7166,
+        -0.4454
+      ],
+      [
+        -0.4094,
+        0.0457
+      ],
+      [
+        -1.4968,
+        -0.3406
+      ]
+    ],
+    "da": [
+      [
+        0.0727,
+        -0.1135
+      ],
+      [
+        0.1826,
+        1.4504
+      ],
+      [
+        0.1826,
+        1.4504
+      ],
+      [
+        0.6072,
+        -0.3878
+      ],
+      [
+        0.6186,
+        0.3334
+      ],
+      [
+        0.4827,
+        0.9831
+      ],
+      [
+        0.0021,
+        0.3532
+      ],
+      [
+        -0.1239,
+        0.3226
+      ],
+      [
+        0.4929,
+        0.4442
+      ],
+      [
+        -0.6365,
+        -0.0454
+      ],
+      [
+        -0.3547,
+        0.0209
+      ],
+      [
+        0.1857,
+        0.1953
+      ]
+    ],
+    "rc": [
+      [
+        2.3409,
+        -1.2049
+      ],
+      [
+        1.6818,
+        -0.4128
+      ],
+      [
+        0.1389,
+        1.66
+      ],
+      [
+        0.676,
+        -0.3963
+      ],
+      [
+        2.2596,
+        -1.4332
+      ],
+      [
+        -1.705,
+        -0.1972
+      ],
+      [
+        -1.7369,
+        -0.679
+      ],
+      [
+        0.469,
+        0.0631
+      ],
+      [
+        0.6039,
+        -0.7553
+      ],
+      [
+        -2.7967,
+        -0.8454
+      ],
+      [
+        -0.4641,
+        0.0706
+      ],
+      [
+        -3.1792,
+        -0.8765
+      ]
+    ],
+    "asimetria": [
+      2.5171,
+      2.3915,
+      0.2141,
+      0.0693,
+      2.4112,
+      2.4859,
+      2.0223,
+      0.6472,
+      1.2046,
+      2.3035,
+      0.1202,
+      3.5315
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        1.21,
+        2.449,
+        0.625,
+        0.257,
+        2.1,
+        2.133,
+        1.34,
+        0.829,
+        2.931,
+        1.763,
+        2.722
+      ],
+      [
+        1.21,
+        0.0,
+        1.292,
+        0.956,
+        1.183,
+        1.548,
+        1.924,
+        0.827,
+        0.776,
+        2.819,
+        1.423,
+        2.577
+      ],
+      [
+        2.449,
+        1.292,
+        0.0,
+        2.006,
+        2.463,
+        1.395,
+        2.002,
+        1.362,
+        1.754,
+        2.744,
+        1.614,
+        2.518
+      ],
+      [
+        0.625,
+        0.956,
+        2.006,
+        0.0,
+        0.813,
+        1.478,
+        1.526,
+        0.75,
+        0.254,
+        2.359,
+        1.139,
+        2.139
+      ],
+      [
+        0.257,
+        1.183,
+        2.463,
+        0.813,
+        0.0,
+        2.257,
+        2.339,
+        1.468,
+        0.974,
+        3.157,
+        1.942,
+        2.943
+      ],
+      [
+        2.1,
+        1.548,
+        1.395,
+        1.478,
+        2.257,
+        0.0,
+        0.612,
+        0.809,
+        1.283,
+        1.387,
+        0.402,
+        1.15
+      ],
+      [
+        2.133,
+        1.924,
+        2.002,
+        1.526,
+        2.339,
+        0.612,
+        0.0,
+        1.099,
+        1.416,
+        0.895,
+        0.503,
+        0.654
+      ],
+      [
+        1.34,
+        0.827,
+        1.362,
+        0.75,
+        1.468,
+        0.809,
+        1.099,
+        0.0,
+        0.512,
+        1.994,
+        0.6,
+        1.752
+      ],
+      [
+        0.829,
+        0.776,
+        1.754,
+        0.254,
+        0.974,
+        1.283,
+        1.416,
+        0.512,
+        0.0,
+        2.284,
+        0.979,
+        2.054
+      ],
+      [
+        2.931,
+        2.819,
+        2.744,
+        2.359,
+        3.157,
+        1.387,
+        0.895,
+        1.994,
+        2.284,
+        0.0,
+        1.396,
+        0.244
+      ],
+      [
+        1.763,
+        1.423,
+        1.614,
+        1.139,
+        1.942,
+        0.402,
+        0.503,
+        0.6,
+        0.979,
+        1.396,
+        0.0,
+        1.154
+      ],
+      [
+        2.722,
+        2.577,
+        2.518,
+        2.139,
+        2.943,
+        1.15,
+        0.654,
+        1.752,
+        2.054,
+        0.244,
+        1.154,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        9,
+        4,
+        3,
+        10,
+        0,
+        0,
+        4,
+        4,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        5,
+        5,
+        1,
+        0,
+        9,
+        2,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        9,
+        1,
+        3,
+        10,
+        -5,
+        -5,
+        3,
+        4,
+        -9,
+        -2,
+        -10
+      ],
+      "sdr": [
+        9,
+        9,
+        1,
+        4,
+        10,
+        -4,
+        -4,
+        3,
+        5,
+        -8,
+        -1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "0DI0",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "0aCD",
+        "000I",
+        "ABDE",
+        "00EF",
+        "0bFa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "0BI0",
+        "BAAA",
+        "A000",
+        "0CJ0",
+        "0DB0",
+        "0000",
+        "0aCb",
+        "00D0",
+        "00E0",
+        "0bFa",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "AA0B",
+        "000A",
+        "0DE0",
+        "0CAC",
+        "0BBD",
+        "00C0",
+        "0aD0",
+        "B000",
+        "C000",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "CCB0",
+        "B00A",
+        "00C0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AA",
+        "0AD0",
+        "CCB0",
+        "0D00",
+        "BBCB",
+        "00E0",
+        "0aF0",
+        "00G0",
+        "00H0",
+        "0bI0",
+        "00J0",
+        "0cK0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "00c0",
+        "0B00",
+        "0bd0",
+        "00e0",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "A00A",
+        "0a00",
+        "0Be0",
+        "a000",
+        "0b0a",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "000B",
+        "00B0",
+        "0D00",
+        "0a00",
+        "00a0",
+        "BBCC",
+        "00D0",
+        "0b00",
+        "0000",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "000A",
+        "0000",
+        "0D00",
+        "00A0",
+        "0aB0",
+        "0B00",
+        "0000",
+        "0bC0",
+        "00D0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "0af0",
+        "000a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0a00",
+        "a0a0",
+        "0000",
+        "0B00",
+        "b0b0",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "1g2t2c": {
+    "key": "1g2t2c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      30.26,
+      18.6
+    ],
+    "bar": [
+      [
+        1.0069,
+        0.6101
+      ],
+      [
+        1.1114,
+        0.3711
+      ],
+      [
+        0.5952,
+        -1.4043
+      ],
+      [
+        1.0342,
+        0.3112
+      ],
+      [
+        0.5641,
+        -0.8393
+      ],
+      [
+        -0.1715,
+        -0.279
+      ],
+      [
+        -0.6094,
+        -0.8274
+      ],
+      [
+        -1.4599,
+        0.052
+      ],
+      [
+        0.3409,
+        1.2109
+      ],
+      [
+        -0.3175,
+        0.236
+      ],
+      [
+        -0.5061,
+        0.0311
+      ],
+      [
+        -1.5884,
+        0.5275
+      ]
+    ],
+    "da": [
+      [
+        0.2113,
+        -0.2307
+      ],
+      [
+        0.399,
+        0.0463
+      ],
+      [
+        0.4481,
+        -1.3148
+      ],
+      [
+        0.4724,
+        -0.1772
+      ],
+      [
+        0.3856,
+        -1.3389
+      ],
+      [
+        0.5043,
+        -0.2311
+      ],
+      [
+        0.4983,
+        -0.6911
+      ],
+      [
+        -0.5471,
+        0.0915
+      ],
+      [
+        0.6621,
+        0.0722
+      ],
+      [
+        -0.5939,
+        0.4843
+      ],
+      [
+        -0.7321,
+        -0.0595
+      ],
+      [
+        -0.2682,
+        0.9539
+      ]
+    ],
+    "rc": [
+      [
+        1.8026,
+        1.4509
+      ],
+      [
+        1.8238,
+        0.696
+      ],
+      [
+        0.7423,
+        -1.4938
+      ],
+      [
+        1.596,
+        0.7997
+      ],
+      [
+        0.7427,
+        -0.3398
+      ],
+      [
+        -0.8472,
+        -0.3269
+      ],
+      [
+        -1.7171,
+        -0.9638
+      ],
+      [
+        -2.3728,
+        0.0126
+      ],
+      [
+        0.0198,
+        2.3497
+      ],
+      [
+        -0.0411,
+        -0.0123
+      ],
+      [
+        -0.2801,
+        0.1216
+      ],
+      [
+        -2.9086,
+        0.101
+      ]
+    ],
+    "asimetria": [
+      2.3151,
+      1.5659,
+      0.3444,
+      1.4888,
+      1.061,
+      1.3549,
+      2.2321,
+      1.8274,
+      2.3663,
+      0.743,
+      0.4869,
+      2.7747
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.261,
+        2.056,
+        0.3,
+        1.516,
+        1.476,
+        2.163,
+        2.529,
+        0.897,
+        1.376,
+        1.62,
+        2.597
+      ],
+      [
+        0.261,
+        0.0,
+        1.849,
+        0.098,
+        1.328,
+        1.438,
+        2.097,
+        2.591,
+        1.14,
+        1.435,
+        1.653,
+        2.704
+      ],
+      [
+        2.056,
+        1.849,
+        0.0,
+        1.771,
+        0.566,
+        1.362,
+        1.336,
+        2.519,
+        2.628,
+        1.877,
+        1.809,
+        2.915
+      ],
+      [
+        0.3,
+        0.098,
+        1.771,
+        0.0,
+        1.243,
+        1.342,
+        2.0,
+        2.508,
+        1.136,
+        1.354,
+        1.566,
+        2.631
+      ],
+      [
+        1.516,
+        1.328,
+        0.566,
+        1.243,
+        0.0,
+        0.925,
+        1.174,
+        2.212,
+        2.062,
+        1.391,
+        1.379,
+        2.55
+      ],
+      [
+        1.476,
+        1.438,
+        1.362,
+        1.342,
+        0.925,
+        0.0,
+        0.702,
+        1.33,
+        1.576,
+        0.535,
+        0.456,
+        1.63
+      ],
+      [
+        2.163,
+        2.097,
+        1.336,
+        2.0,
+        1.174,
+        0.702,
+        0.0,
+        1.223,
+        2.249,
+        1.103,
+        0.865,
+        1.672
+      ],
+      [
+        2.529,
+        2.591,
+        2.519,
+        2.508,
+        2.212,
+        1.33,
+        1.223,
+        0.0,
+        2.142,
+        1.157,
+        0.954,
+        0.492
+      ],
+      [
+        0.897,
+        1.14,
+        2.628,
+        1.136,
+        2.062,
+        1.576,
+        2.249,
+        2.142,
+        0.0,
+        1.176,
+        1.452,
+        2.047
+      ],
+      [
+        1.376,
+        1.435,
+        1.877,
+        1.354,
+        1.391,
+        0.535,
+        1.103,
+        1.157,
+        1.176,
+        0.0,
+        0.278,
+        1.304
+      ],
+      [
+        1.62,
+        1.653,
+        1.809,
+        1.566,
+        1.379,
+        0.456,
+        0.865,
+        0.954,
+        1.452,
+        0.278,
+        0.0,
+        1.191
+      ],
+      [
+        2.597,
+        2.704,
+        2.915,
+        2.631,
+        2.55,
+        1.63,
+        1.672,
+        0.492,
+        2.047,
+        1.304,
+        1.191,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        4,
+        0,
+        0,
+        0,
+        6,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        4,
+        7,
+        6,
+        3,
+        0,
+        0,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        3,
+        -4,
+        -7,
+        -6,
+        3,
+        2,
+        0,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -3,
+        -5,
+        -5,
+        4,
+        2,
+        1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "ABIJ",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "00CD",
+        "0b0I",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "CBDA",
+        "BAAB",
+        "ACE0",
+        "00K0",
+        "00B0",
+        "0000",
+        "0bCb",
+        "0aF0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0B",
+        "0BBA",
+        "0000",
+        "0CC0",
+        "0DDC",
+        "00E0",
+        "00F0",
+        "Bb00",
+        "CaA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0b00",
+        "00D0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "CCD0",
+        "0B00",
+        "BDEB",
+        "0000",
+        "00B0",
+        "0ba0",
+        "0a00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AA00",
+        "0000",
+        "0C00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0ad0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B0b0",
+        "bAc0",
+        "0C00",
+        "00d0",
+        "0B00",
+        "0ae0",
+        "AbfA",
+        "0000",
+        "00aa",
+        "aDg0",
+        "0000",
+        "0ch0"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "00dA",
+        "0B00",
+        "0ae0",
+        "0bc0",
+        "0000",
+        "B00B",
+        "0Df0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BaA",
+        "00b0",
+        "00c0",
+        "00C0",
+        "aa00",
+        "0bD0",
+        "0000",
+        "bD00",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bg0",
+        "00h0",
+        "0Di0",
+        "0000",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "1g3t1c": {
+    "key": "1g3t1c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      48.02,
+      17.05
+    ],
+    "bar": [
+      [
+        1.5144,
+        -0.7088
+      ],
+      [
+        0.9315,
+        0.5689
+      ],
+      [
+        -0.0012,
+        1.5287
+      ],
+      [
+        0.4223,
+        -0.2248
+      ],
+      [
+        1.4777,
+        -0.4677
+      ],
+      [
+        -0.7038,
+        0.3506
+      ],
+      [
+        -0.7236,
+        -0.3352
+      ],
+      [
+        0.1783,
+        0.3033
+      ],
+      [
+        0.4621,
+        -0.2167
+      ],
+      [
+        -1.6663,
+        -0.5541
+      ],
+      [
+        -0.4103,
+        0.0904
+      ],
+      [
+        -1.4811,
+        -0.3346
+      ]
+    ],
+    "da": [
+      [
+        0.6074,
+        -0.1577
+      ],
+      [
+        0.1091,
+        1.4953
+      ],
+      [
+        0.1091,
+        1.4953
+      ],
+      [
+        0.1227,
+        -0.071
+      ],
+      [
+        0.6111,
+        0.2035
+      ],
+      [
+        0.4434,
+        1.1308
+      ],
+      [
+        0.028,
+        0.1707
+      ],
+      [
+        -0.1327,
+        0.5205
+      ],
+      [
+        0.262,
+        0.3765
+      ],
+      [
+        -0.619,
+        0.0535
+      ],
+      [
+        -0.3532,
+        0.1347
+      ],
+      [
+        0.1378,
+        0.4997
+      ]
+    ],
+    "rc": [
+      [
+        2.4213,
+        -1.2599
+      ],
+      [
+        1.7539,
+        -0.3574
+      ],
+      [
+        -0.1116,
+        1.5621
+      ],
+      [
+        0.7219,
+        -0.3787
+      ],
+      [
+        2.3443,
+        -1.1389
+      ],
+      [
+        -1.8511,
+        -0.4296
+      ],
+      [
+        -1.4751,
+        -0.8412
+      ],
+      [
+        0.4894,
+        0.0861
+      ],
+      [
+        0.6622,
+        -0.81
+      ],
+      [
+        -2.7136,
+        -1.1616
+      ],
+      [
+        -0.4675,
+        0.0461
+      ],
+      [
+        -3.1001,
+        -1.1688
+      ]
+    ],
+    "asimetria": [
+      2.1225,
+      2.4775,
+      0.2306,
+      0.6736,
+      2.1922,
+      2.7748,
+      1.812,
+      0.7588,
+      1.2522,
+      2.4215,
+      0.1447,
+      3.6425
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        1.404,
+        2.702,
+        1.195,
+        0.244,
+        2.458,
+        2.269,
+        1.676,
+        1.162,
+        3.184,
+        2.084,
+        3.019
+      ],
+      [
+        1.404,
+        0.0,
+        1.338,
+        0.943,
+        1.172,
+        1.65,
+        1.886,
+        0.799,
+        0.915,
+        2.83,
+        1.425,
+        2.576
+      ],
+      [
+        2.702,
+        1.338,
+        0.0,
+        1.804,
+        2.485,
+        1.372,
+        1.999,
+        1.238,
+        1.806,
+        2.667,
+        1.495,
+        2.379
+      ],
+      [
+        1.195,
+        0.943,
+        1.804,
+        0.0,
+        1.083,
+        1.265,
+        1.151,
+        0.582,
+        0.041,
+        2.114,
+        0.89,
+        1.907
+      ],
+      [
+        0.244,
+        1.172,
+        2.485,
+        1.083,
+        0.0,
+        2.33,
+        2.205,
+        1.511,
+        1.046,
+        3.145,
+        1.969,
+        2.962
+      ],
+      [
+        2.458,
+        1.65,
+        1.372,
+        1.265,
+        2.33,
+        0.0,
+        0.686,
+        0.883,
+        1.297,
+        1.321,
+        0.392,
+        1.036
+      ],
+      [
+        2.269,
+        1.886,
+        1.999,
+        1.151,
+        2.205,
+        0.686,
+        0.0,
+        1.105,
+        1.192,
+        0.968,
+        0.528,
+        0.758
+      ],
+      [
+        1.676,
+        0.799,
+        1.238,
+        0.582,
+        1.511,
+        0.883,
+        1.105,
+        0.0,
+        0.592,
+        2.034,
+        0.626,
+        1.778
+      ],
+      [
+        1.162,
+        0.915,
+        1.806,
+        0.041,
+        1.046,
+        1.297,
+        1.192,
+        0.592,
+        0.0,
+        2.155,
+        0.925,
+        1.947
+      ],
+      [
+        3.184,
+        2.83,
+        2.667,
+        2.114,
+        3.145,
+        1.321,
+        0.968,
+        2.034,
+        2.155,
+        0.0,
+        1.412,
+        0.287
+      ],
+      [
+        2.084,
+        1.425,
+        1.495,
+        0.89,
+        1.969,
+        0.392,
+        0.528,
+        0.626,
+        0.925,
+        1.412,
+        0.0,
+        1.152
+      ],
+      [
+        3.019,
+        2.576,
+        2.379,
+        1.907,
+        2.962,
+        1.036,
+        0.758,
+        1.778,
+        1.947,
+        0.287,
+        1.152,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        4,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        9,
+        4,
+        3,
+        10,
+        0,
+        0,
+        4,
+        4,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        6,
+        4,
+        1,
+        0,
+        9,
+        2,
+        10
+      ],
+      "sda": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        9,
+        1,
+        3,
+        10,
+        -6,
+        -4,
+        3,
+        4,
+        -9,
+        -2,
+        -10
+      ],
+      "sdr": [
+        10,
+        9,
+        1,
+        3,
+        10,
+        -5,
+        -3,
+        3,
+        5,
+        -8,
+        -1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0000",
+        "0CI0",
+        "CDAA",
+        "00BB",
+        "BA0C",
+        "0aCD",
+        "000I",
+        "ABDE",
+        "00EF",
+        "0bFa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "0BD0",
+        "BAAA",
+        "0000",
+        "0CJ0",
+        "ADB0",
+        "0000",
+        "0aCb",
+        "00E0",
+        "00F0",
+        "0bGa",
+        "00H0",
+        "0cI0"
+      ],
+      [
+        "AADA",
+        "0000",
+        "0DE0",
+        "0C0B",
+        "0BAC",
+        "00B0",
+        "0aC0",
+        "B000",
+        "C000",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "C0B0",
+        "BCCA",
+        "00D0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AB",
+        "0ADA",
+        "CCB0",
+        "0D00",
+        "BBCC",
+        "00E0",
+        "0aF0",
+        "00G0",
+        "00H0",
+        "0bI0",
+        "00J0",
+        "0cK0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "00c0",
+        "0Bd0",
+        "0be0",
+        "00f0",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "A00A",
+        "0a00",
+        "0B00",
+        "a000",
+        "0b0a",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "000B",
+        "00B0",
+        "0D00",
+        "0a00",
+        "00a0",
+        "BBCC",
+        "00D0",
+        "0b00",
+        "0000",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "000A",
+        "0000",
+        "0D00",
+        "0aA0",
+        "00B0",
+        "0B00",
+        "0000",
+        "0bC0",
+        "00D0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "0af0",
+        "000a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0a00",
+        "a0a0",
+        "0000",
+        "0B00",
+        "b0b0",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "1g3t2c": {
+    "key": "1g3t2c",
+    "group": "G1",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      30.26,
+      18.6
+    ],
+    "bar": [
+      [
+        1.0069,
+        0.6101
+      ],
+      [
+        1.1114,
+        0.3711
+      ],
+      [
+        0.5952,
+        -1.4043
+      ],
+      [
+        1.0342,
+        0.3112
+      ],
+      [
+        0.5641,
+        -0.8393
+      ],
+      [
+        -0.1715,
+        -0.279
+      ],
+      [
+        -0.6094,
+        -0.8274
+      ],
+      [
+        -1.4599,
+        0.052
+      ],
+      [
+        0.3409,
+        1.2109
+      ],
+      [
+        -0.3175,
+        0.236
+      ],
+      [
+        -0.5061,
+        0.0311
+      ],
+      [
+        -1.5884,
+        0.5275
+      ]
+    ],
+    "da": [
+      [
+        0.2113,
+        -0.2307
+      ],
+      [
+        0.399,
+        0.0463
+      ],
+      [
+        0.4481,
+        -1.3148
+      ],
+      [
+        0.4724,
+        -0.1772
+      ],
+      [
+        0.3856,
+        -1.3389
+      ],
+      [
+        0.5043,
+        -0.2311
+      ],
+      [
+        0.4983,
+        -0.6911
+      ],
+      [
+        -0.5471,
+        0.0915
+      ],
+      [
+        0.6621,
+        0.0722
+      ],
+      [
+        -0.5939,
+        0.4843
+      ],
+      [
+        -0.7321,
+        -0.0595
+      ],
+      [
+        -0.2682,
+        0.9539
+      ]
+    ],
+    "rc": [
+      [
+        1.8026,
+        1.4509
+      ],
+      [
+        1.8238,
+        0.696
+      ],
+      [
+        0.7423,
+        -1.4938
+      ],
+      [
+        1.596,
+        0.7997
+      ],
+      [
+        0.7427,
+        -0.3398
+      ],
+      [
+        -0.8472,
+        -0.3269
+      ],
+      [
+        -1.7171,
+        -0.9638
+      ],
+      [
+        -2.3728,
+        0.0126
+      ],
+      [
+        0.0198,
+        2.3497
+      ],
+      [
+        -0.0411,
+        -0.0123
+      ],
+      [
+        -0.2801,
+        0.1216
+      ],
+      [
+        -2.9086,
+        0.101
+      ]
+    ],
+    "asimetria": [
+      2.3151,
+      1.5659,
+      0.3444,
+      1.4888,
+      1.061,
+      1.3549,
+      2.2321,
+      1.8274,
+      2.3663,
+      0.743,
+      0.4869,
+      2.7747
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.261,
+        2.056,
+        0.3,
+        1.516,
+        1.476,
+        2.163,
+        2.529,
+        0.897,
+        1.376,
+        1.62,
+        2.597
+      ],
+      [
+        0.261,
+        0.0,
+        1.849,
+        0.098,
+        1.328,
+        1.438,
+        2.097,
+        2.591,
+        1.14,
+        1.435,
+        1.653,
+        2.704
+      ],
+      [
+        2.056,
+        1.849,
+        0.0,
+        1.771,
+        0.566,
+        1.362,
+        1.336,
+        2.519,
+        2.628,
+        1.877,
+        1.809,
+        2.915
+      ],
+      [
+        0.3,
+        0.098,
+        1.771,
+        0.0,
+        1.243,
+        1.342,
+        2.0,
+        2.508,
+        1.136,
+        1.354,
+        1.566,
+        2.631
+      ],
+      [
+        1.516,
+        1.328,
+        0.566,
+        1.243,
+        0.0,
+        0.925,
+        1.174,
+        2.212,
+        2.062,
+        1.391,
+        1.379,
+        2.55
+      ],
+      [
+        1.476,
+        1.438,
+        1.362,
+        1.342,
+        0.925,
+        0.0,
+        0.702,
+        1.33,
+        1.576,
+        0.535,
+        0.456,
+        1.63
+      ],
+      [
+        2.163,
+        2.097,
+        1.336,
+        2.0,
+        1.174,
+        0.702,
+        0.0,
+        1.223,
+        2.249,
+        1.103,
+        0.865,
+        1.672
+      ],
+      [
+        2.529,
+        2.591,
+        2.519,
+        2.508,
+        2.212,
+        1.33,
+        1.223,
+        0.0,
+        2.142,
+        1.157,
+        0.954,
+        0.492
+      ],
+      [
+        0.897,
+        1.14,
+        2.628,
+        1.136,
+        2.062,
+        1.576,
+        2.249,
+        2.142,
+        0.0,
+        1.176,
+        1.452,
+        2.047
+      ],
+      [
+        1.376,
+        1.435,
+        1.877,
+        1.354,
+        1.391,
+        0.535,
+        1.103,
+        1.157,
+        1.176,
+        0.0,
+        0.278,
+        1.304
+      ],
+      [
+        1.62,
+        1.653,
+        1.809,
+        1.566,
+        1.379,
+        0.456,
+        0.865,
+        0.954,
+        1.452,
+        0.278,
+        0.0,
+        1.191
+      ],
+      [
+        2.597,
+        2.704,
+        2.915,
+        2.631,
+        2.55,
+        1.63,
+        1.672,
+        0.492,
+        2.047,
+        1.304,
+        1.191,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        4,
+        0,
+        0,
+        0,
+        6,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        4,
+        7,
+        6,
+        3,
+        0,
+        0,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        3,
+        -4,
+        -7,
+        -6,
+        3,
+        2,
+        0,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -3,
+        -5,
+        -5,
+        4,
+        2,
+        1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "ABIJ",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "00CD",
+        "0b0I",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "CBDA",
+        "BAAB",
+        "ACE0",
+        "00K0",
+        "00B0",
+        "0000",
+        "0bCb",
+        "0aF0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0B",
+        "0BBA",
+        "0000",
+        "0CC0",
+        "0DDC",
+        "00E0",
+        "00F0",
+        "Bb00",
+        "CaA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0b00",
+        "00D0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "CCD0",
+        "0B00",
+        "BDEB",
+        "0000",
+        "00B0",
+        "0ba0",
+        "0a00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AA00",
+        "0000",
+        "0C00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0ad0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B0b0",
+        "bAc0",
+        "0C00",
+        "00d0",
+        "0B00",
+        "0ae0",
+        "AbfA",
+        "0000",
+        "00aa",
+        "aDg0",
+        "0000",
+        "0ch0"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "00dA",
+        "0B00",
+        "0ae0",
+        "0bc0",
+        "0000",
+        "B00B",
+        "0Df0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BaA",
+        "00b0",
+        "00c0",
+        "00C0",
+        "aa00",
+        "0bD0",
+        "0000",
+        "bD00",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bg0",
+        "00h0",
+        "0Di0",
+        "0000",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "2g1t1c": {
+    "key": "2g1t1c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      45.46,
+      15.41
+    ],
+    "bar": [
+      [
+        1.2934,
+        -0.7133
+      ],
+      [
+        0.8108,
+        -0.0165
+      ],
+      [
+        0.0972,
+        1.4131
+      ],
+      [
+        0.312,
+        -0.2816
+      ],
+      [
+        1.1183,
+        -0.3448
+      ],
+      [
+        -0.1622,
+        0.329
+      ],
+      [
+        -1.0886,
+        -0.0451
+      ],
+      [
+        0.2838,
+        0.5138
+      ],
+      [
+        0.7677,
+        -0.242
+      ],
+      [
+        -1.7889,
+        -0.4028
+      ],
+      [
+        -0.282,
+        0.2872
+      ],
+      [
+        -1.3616,
+        -0.497
+      ]
+    ],
+    "da": [
+      [
+        0.3034,
+        -0.1611
+      ],
+      [
+        0.1834,
+        1.2658
+      ],
+      [
+        0.211,
+        1.3612
+      ],
+      [
+        -0.0108,
+        -0.0193
+      ],
+      [
+        0.5903,
+        0.3853
+      ],
+      [
+        0.5572,
+        1.2803
+      ],
+      [
+        0.3963,
+        0.336
+      ],
+      [
+        0.0525,
+        0.8781
+      ],
+      [
+        0.4483,
+        0.6213
+      ],
+      [
+        -0.7649,
+        0.2704
+      ],
+      [
+        -0.1223,
+        0.4273
+      ],
+      [
+        0.0916,
+        0.2561
+      ]
+    ],
+    "rc": [
+      [
+        2.2834,
+        -1.2655
+      ],
+      [
+        1.4382,
+        -1.2988
+      ],
+      [
+        -0.0165,
+        1.465
+      ],
+      [
+        0.6347,
+        -0.5439
+      ],
+      [
+        1.6462,
+        -1.0749
+      ],
+      [
+        -0.8815,
+        -0.6222
+      ],
+      [
+        -2.5736,
+        -0.4262
+      ],
+      [
+        0.5152,
+        0.1494
+      ],
+      [
+        1.0872,
+        -1.1053
+      ],
+      [
+        -2.8129,
+        -1.076
+      ],
+      [
+        -0.4418,
+        0.147
+      ],
+      [
+        -2.8147,
+        -1.2501
+      ]
+    ],
+    "asimetria": [
+      2.2672,
+      2.8551,
+      0.25,
+      0.8318,
+      1.802,
+      2.3852,
+      3.0661,
+      0.8632,
+      1.841,
+      2.4508,
+      0.425,
+      3.2733
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.848,
+        2.44,
+        1.072,
+        0.408,
+        1.79,
+        2.474,
+        1.589,
+        0.706,
+        3.098,
+        1.866,
+        2.664
+      ],
+      [
+        0.848,
+        0.0,
+        1.598,
+        0.565,
+        0.45,
+        1.032,
+        1.9,
+        0.748,
+        0.23,
+        2.628,
+        1.134,
+        2.225
+      ],
+      [
+        2.44,
+        1.598,
+        0.0,
+        1.708,
+        2.033,
+        1.115,
+        1.88,
+        0.918,
+        1.786,
+        2.618,
+        1.188,
+        2.403
+      ],
+      [
+        1.072,
+        0.565,
+        1.708,
+        0.0,
+        0.809,
+        0.773,
+        1.42,
+        0.796,
+        0.457,
+        2.104,
+        0.822,
+        1.687
+      ],
+      [
+        0.408,
+        0.45,
+        2.033,
+        0.809,
+        0.0,
+        1.447,
+        2.227,
+        1.197,
+        0.365,
+        2.908,
+        1.536,
+        2.484
+      ],
+      [
+        1.79,
+        1.032,
+        1.115,
+        0.773,
+        1.447,
+        0.0,
+        0.999,
+        0.483,
+        1.091,
+        1.784,
+        0.127,
+        1.456
+      ],
+      [
+        2.474,
+        1.9,
+        1.88,
+        1.42,
+        2.227,
+        0.999,
+        0.0,
+        1.482,
+        1.867,
+        0.786,
+        0.872,
+        0.528
+      ],
+      [
+        1.589,
+        0.748,
+        0.918,
+        0.796,
+        1.197,
+        0.483,
+        1.482,
+        0.0,
+        0.897,
+        2.266,
+        0.61,
+        1.931
+      ],
+      [
+        0.706,
+        0.23,
+        1.786,
+        0.457,
+        0.365,
+        1.091,
+        1.867,
+        0.897,
+        0.0,
+        2.562,
+        1.176,
+        2.145
+      ],
+      [
+        3.098,
+        2.628,
+        2.618,
+        2.104,
+        2.908,
+        1.784,
+        0.786,
+        2.266,
+        2.562,
+        0.0,
+        1.657,
+        0.438
+      ],
+      [
+        1.866,
+        1.134,
+        1.188,
+        0.822,
+        1.536,
+        0.127,
+        0.872,
+        0.61,
+        1.176,
+        1.657,
+        0.0,
+        1.334
+      ],
+      [
+        2.664,
+        2.225,
+        2.403,
+        1.687,
+        2.484,
+        1.456,
+        0.528,
+        1.931,
+        2.145,
+        0.438,
+        1.334,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2
+      ],
+      "e_rec": [
+        9,
+        8,
+        4,
+        3,
+        9,
+        0,
+        0,
+        4,
+        5,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3,
+        7,
+        0,
+        0,
+        9,
+        2,
+        9
+      ],
+      "sda": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        2,
+        0,
+        1,
+        1,
+        2,
+        2
+      ],
+      "src": [
+        9,
+        8,
+        1,
+        3,
+        9,
+        -3,
+        -7,
+        4,
+        5,
+        -9,
+        -2,
+        -9
+      ],
+      "sdr": [
+        9,
+        8,
+        1,
+        3,
+        9,
+        -2,
+        -5,
+        4,
+        6,
+        -8,
+        0,
+        -7
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "00I0",
+        "CDAH",
+        "00BA",
+        "BA0B",
+        "0aCC",
+        "000I",
+        "ABDD",
+        "00EE",
+        "0bFa",
+        "00GF",
+        "0cHG"
+      ],
+      [
+        "0B00",
+        "ACCA",
+        "B00B",
+        "0AI0",
+        "0DA0",
+        "0000",
+        "0aB0",
+        "00D0",
+        "00E0",
+        "0bFa",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "BADC",
+        "C00B",
+        "ADEA",
+        "0C0D",
+        "00AE",
+        "00B0",
+        "0aC0",
+        "0000",
+        "0B00",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "C0B0",
+        "BCCA",
+        "00D0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AA",
+        "0AC0",
+        "CC00",
+        "0D00",
+        "BBBB",
+        "00D0",
+        "0aE0",
+        "00F0",
+        "00G0",
+        "0bH0",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "0000",
+        "0B00",
+        "0bc0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "B000",
+        "0Aa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "AaeA",
+        "00f0",
+        "0Bg0",
+        "a000",
+        "bbha",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "0000",
+        "00B0",
+        "0D00",
+        "0000",
+        "0a00",
+        "BBCB",
+        "00D0",
+        "0b00",
+        "0000",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "00A0",
+        "0000",
+        "0D00",
+        "00B0",
+        "0aC0",
+        "0B00",
+        "0000",
+        "0bD0",
+        "00E0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "0af0",
+        "000a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0000",
+        "aaaa",
+        "0000",
+        "0B00",
+        "b0b0",
+        "BccA",
+        "0000"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "0000",
+        "BcjA"
+      ]
+    ]
+  },
+  "2g1t2c": {
+    "key": "2g1t2c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      38.38,
+      18.82
+    ],
+    "bar": [
+      [
+        0.9245,
+        -0.1718
+      ],
+      [
+        1.1618,
+        0.2756
+      ],
+      [
+        0.1219,
+        -1.5215
+      ],
+      [
+        1.1192,
+        0.4807
+      ],
+      [
+        0.2588,
+        -0.4932
+      ],
+      [
+        -0.6162,
+        -0.9873
+      ],
+      [
+        -0.7839,
+        0.8278
+      ],
+      [
+        -1.1963,
+        0.8458
+      ],
+      [
+        1.4512,
+        0.512
+      ],
+      [
+        -0.1644,
+        0.2613
+      ],
+      [
+        -0.528,
+        -0.0699
+      ],
+      [
+        -1.7485,
+        0.0405
+      ]
+    ],
+    "da": [
+      [
+        -0.1323,
+        -0.5199
+      ],
+      [
+        0.1222,
+        -0.0222
+      ],
+      [
+        -0.0481,
+        -1.2902
+      ],
+      [
+        0.4171,
+        0.2271
+      ],
+      [
+        0.2748,
+        -1.3318
+      ],
+      [
+        0.3156,
+        -1.2798
+      ],
+      [
+        0.6627,
+        0.599
+      ],
+      [
+        -0.4813,
+        -0.1864
+      ],
+      [
+        0.594,
+        -0.146
+      ],
+      [
+        -0.4059,
+        0.4964
+      ],
+      [
+        -0.6852,
+        -0.3346
+      ],
+      [
+        -0.6878,
+        -0.9702
+      ]
+    ],
+    "rc": [
+      [
+        1.9813,
+        0.1763
+      ],
+      [
+        2.2015,
+        0.5734
+      ],
+      [
+        0.2919,
+        -1.7527
+      ],
+      [
+        1.8212,
+        0.7344
+      ],
+      [
+        0.2429,
+        0.3454
+      ],
+      [
+        -1.548,
+        -0.6948
+      ],
+      [
+        -2.2305,
+        1.0566
+      ],
+      [
+        -1.9114,
+        1.878
+      ],
+      [
+        2.3084,
+        1.1699
+      ],
+      [
+        0.0772,
+        0.0262
+      ],
+      [
+        -0.3708,
+        0.1947
+      ],
+      [
+        -2.8092,
+        1.0511
+      ]
+    ],
+    "asimetria": [
+      2.2253,
+      2.1629,
+      0.574,
+      1.4929,
+      1.6775,
+      1.9533,
+      2.9292,
+      2.5114,
+      2.1612,
+      0.6742,
+      0.6156,
+      2.9301
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.506,
+        1.57,
+        0.681,
+        0.739,
+        1.743,
+        1.979,
+        2.352,
+        0.863,
+        1.172,
+        1.456,
+        2.681
+      ],
+      [
+        0.506,
+        0.0,
+        2.076,
+        0.21,
+        1.186,
+        2.181,
+        2.023,
+        2.426,
+        0.374,
+        1.326,
+        1.725,
+        2.92
+      ],
+      [
+        1.57,
+        2.076,
+        0.0,
+        2.237,
+        1.037,
+        0.911,
+        2.518,
+        2.71,
+        2.429,
+        1.806,
+        1.59,
+        2.437
+      ],
+      [
+        0.681,
+        0.21,
+        2.237,
+        0.0,
+        1.3,
+        2.273,
+        1.934,
+        2.344,
+        0.333,
+        1.302,
+        1.737,
+        2.901
+      ],
+      [
+        0.739,
+        1.186,
+        1.037,
+        1.3,
+        0.0,
+        1.005,
+        1.683,
+        1.978,
+        1.56,
+        0.865,
+        0.893,
+        2.077
+      ],
+      [
+        1.743,
+        2.181,
+        0.911,
+        2.273,
+        1.005,
+        0.0,
+        1.823,
+        1.923,
+        2.554,
+        1.328,
+        0.922,
+        1.529
+      ],
+      [
+        1.979,
+        2.023,
+        2.518,
+        1.934,
+        1.683,
+        1.823,
+        0.0,
+        0.413,
+        2.257,
+        0.84,
+        0.934,
+        1.245
+      ],
+      [
+        2.352,
+        2.426,
+        2.71,
+        2.344,
+        1.978,
+        1.923,
+        0.413,
+        0.0,
+        2.668,
+        1.186,
+        1.134,
+        0.976
+      ],
+      [
+        0.863,
+        0.374,
+        2.429,
+        0.333,
+        1.56,
+        2.554,
+        2.257,
+        2.668,
+        0.0,
+        1.635,
+        2.063,
+        3.234
+      ],
+      [
+        1.172,
+        1.326,
+        1.806,
+        1.302,
+        0.865,
+        1.328,
+        0.84,
+        1.186,
+        1.635,
+        0.0,
+        0.492,
+        1.599
+      ],
+      [
+        1.456,
+        1.725,
+        1.59,
+        1.737,
+        0.893,
+        0.922,
+        0.934,
+        1.134,
+        2.063,
+        0.492,
+        0.0,
+        1.226
+      ],
+      [
+        2.681,
+        2.92,
+        2.437,
+        2.901,
+        2.077,
+        1.529,
+        1.245,
+        0.976,
+        3.234,
+        1.599,
+        1.226,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        3,
+        0,
+        0,
+        0,
+        8,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        6,
+        7,
+        6,
+        1,
+        0,
+        1,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        2,
+        -6,
+        -7,
+        -6,
+        7,
+        2,
+        -1,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -5,
+        -5,
+        -5,
+        8,
+        2,
+        0,
+        -9
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "ABIJ",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "0bCD",
+        "000I",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "CBDA",
+        "BAAB",
+        "ACE0",
+        "00K0",
+        "00B0",
+        "0b00",
+        "0aC0",
+        "00F0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0B",
+        "0BBA",
+        "0000",
+        "0CC0",
+        "00D0",
+        "00EC",
+        "0bF0",
+        "Ba00",
+        "CDA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0000",
+        "0bD0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "0C00",
+        "0B00",
+        "B00B",
+        "0000",
+        "0bB0",
+        "0aa0",
+        "0D00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAd0",
+        "00e0",
+        "CC00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0af0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B000",
+        "0Aa0",
+        "0Cc0",
+        "0000",
+        "0Bd0",
+        "0ae0",
+        "AbfA",
+        "0000",
+        "00ba",
+        "aDg0",
+        "0000",
+        "bch0"
+      ],
+      [
+        "AAa0",
+        "0C00",
+        "00bA",
+        "0Be0",
+        "0ac0",
+        "0bd0",
+        "0000",
+        "B00B",
+        "0Df0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BCA",
+        "00a0",
+        "00D0",
+        "00E0",
+        "aa00",
+        "0bF0",
+        "0000",
+        "bD00",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0ca0"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bga",
+        "00h0",
+        "0Di0",
+        "0000",
+        "0cj0",
+        "B00A"
+      ]
+    ]
+  },
+  "2g2t1c": {
+    "key": "2g2t1c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      47.69,
+      13.51
+    ],
+    "bar": [
+      [
+        1.3344,
+        -0.7086
+      ],
+      [
+        0.8852,
+        0.0812
+      ],
+      [
+        -0.0045,
+        1.4171
+      ],
+      [
+        0.3404,
+        -0.2718
+      ],
+      [
+        1.2403,
+        -0.1574
+      ],
+      [
+        -0.3411,
+        0.0055
+      ],
+      [
+        -0.9167,
+        -0.0258
+      ],
+      [
+        0.221,
+        0.3336
+      ],
+      [
+        0.8473,
+        -0.1345
+      ],
+      [
+        -1.6177,
+        -0.2892
+      ],
+      [
+        -0.4064,
+        0.2748
+      ],
+      [
+        -1.5821,
+        -0.5248
+      ]
+    ],
+    "da": [
+      [
+        0.3409,
+        -0.2157
+      ],
+      [
+        0.0391,
+        1.2044
+      ],
+      [
+        0.09,
+        1.3096
+      ],
+      [
+        -0.0009,
+        0.0797
+      ],
+      [
+        0.6858,
+        0.522
+      ],
+      [
+        0.4493,
+        1.0684
+      ],
+      [
+        0.4279,
+        0.2378
+      ],
+      [
+        -0.1493,
+        0.4822
+      ],
+      [
+        0.2616,
+        0.4866
+      ],
+      [
+        -0.5534,
+        0.5345
+      ],
+      [
+        -0.2308,
+        0.6795
+      ],
+      [
+        0.0342,
+        0.2489
+      ]
+    ],
+    "rc": [
+      [
+        2.3279,
+        -1.2016
+      ],
+      [
+        1.7314,
+        -1.0419
+      ],
+      [
+        -0.099,
+        1.5245
+      ],
+      [
+        0.6817,
+        -0.6234
+      ],
+      [
+        1.7948,
+        -0.8369
+      ],
+      [
+        -1.1314,
+        -1.0575
+      ],
+      [
+        -2.2614,
+        -0.2895
+      ],
+      [
+        0.5912,
+        0.185
+      ],
+      [
+        1.4331,
+        -0.7556
+      ],
+      [
+        -2.6821,
+        -1.1128
+      ],
+      [
+        -0.5821,
+        -0.1299
+      ],
+      [
+        -3.1985,
+        -1.2985
+      ]
+    ],
+    "asimetria": [
+      2.2182,
+      2.8124,
+      0.2862,
+      0.9799,
+      1.754,
+      2.6491,
+      2.7405,
+      0.7979,
+      1.7075,
+      2.6917,
+      0.8823,
+      3.584
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.909,
+        2.512,
+        1.086,
+        0.559,
+        1.821,
+        2.352,
+        1.525,
+        0.753,
+        2.982,
+        1.999,
+        2.922
+      ],
+      [
+        0.909,
+        0.0,
+        1.605,
+        0.649,
+        0.428,
+        1.229,
+        1.805,
+        0.711,
+        0.219,
+        2.53,
+        1.306,
+        2.541
+      ],
+      [
+        2.512,
+        1.605,
+        0.0,
+        1.724,
+        2.007,
+        1.451,
+        1.707,
+        1.107,
+        1.77,
+        2.348,
+        1.211,
+        2.502
+      ],
+      [
+        1.086,
+        0.649,
+        1.724,
+        0.0,
+        0.907,
+        0.736,
+        1.281,
+        0.617,
+        0.525,
+        1.958,
+        0.926,
+        1.939
+      ],
+      [
+        0.559,
+        0.428,
+        2.007,
+        0.907,
+        0.0,
+        1.59,
+        2.161,
+        1.131,
+        0.394,
+        2.861,
+        1.703,
+        2.846
+      ],
+      [
+        1.821,
+        1.229,
+        1.451,
+        0.736,
+        1.59,
+        0.0,
+        0.577,
+        0.651,
+        1.197,
+        1.31,
+        0.277,
+        1.35
+      ],
+      [
+        2.352,
+        1.805,
+        1.707,
+        1.281,
+        2.161,
+        0.577,
+        0.0,
+        1.193,
+        1.767,
+        0.749,
+        0.592,
+        0.832
+      ],
+      [
+        1.525,
+        0.711,
+        1.107,
+        0.617,
+        1.131,
+        0.651,
+        1.193,
+        0.0,
+        0.782,
+        1.941,
+        0.63,
+        1.997
+      ],
+      [
+        0.753,
+        0.219,
+        1.77,
+        0.525,
+        0.394,
+        1.197,
+        1.767,
+        0.782,
+        0.0,
+        2.47,
+        1.319,
+        2.461
+      ],
+      [
+        2.982,
+        2.53,
+        2.348,
+        1.958,
+        2.861,
+        1.31,
+        0.749,
+        1.941,
+        2.47,
+        0.0,
+        1.336,
+        0.238
+      ],
+      [
+        1.999,
+        1.306,
+        1.211,
+        0.926,
+        1.703,
+        0.277,
+        0.592,
+        0.63,
+        1.319,
+        1.336,
+        0.0,
+        1.422
+      ],
+      [
+        2.922,
+        2.541,
+        2.502,
+        1.939,
+        2.846,
+        1.35,
+        0.832,
+        1.997,
+        2.461,
+        0.238,
+        1.422,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        8,
+        4,
+        3,
+        9,
+        0,
+        0,
+        4,
+        6,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3,
+        7,
+        0,
+        0,
+        9,
+        2,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        2,
+        0,
+        1,
+        1,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        8,
+        1,
+        3,
+        9,
+        -3,
+        -7,
+        4,
+        6,
+        -9,
+        -2,
+        -10
+      ],
+      "sdr": [
+        9,
+        8,
+        1,
+        3,
+        10,
+        -2,
+        -5,
+        4,
+        7,
+        -8,
+        -1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "00I0",
+        "CDAA",
+        "00BB",
+        "BA0C",
+        "0aCD",
+        "000I",
+        "ABDE",
+        "00EF",
+        "0bFa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "0B00",
+        "AAAA",
+        "B000",
+        "0CI0",
+        "0DB0",
+        "0000",
+        "0aCb",
+        "00D0",
+        "00E0",
+        "0bFa",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "AADB",
+        "000A",
+        "0DE0",
+        "0C0C",
+        "00AD",
+        "00B0",
+        "0aC0",
+        "B000",
+        "CB00",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "C0B0",
+        "BCCA",
+        "00D0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AA",
+        "0AB0",
+        "CC00",
+        "0D00",
+        "B00B",
+        "00C0",
+        "0aD0",
+        "00E0",
+        "0BF0",
+        "0bG0",
+        "00H0",
+        "0cI0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "00c0",
+        "0B00",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "AaeA",
+        "0000",
+        "0Bf0",
+        "a0g0",
+        "0bha",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "000B",
+        "00B0",
+        "0D00",
+        "0a00",
+        "0000",
+        "BBCC",
+        "00D0",
+        "0b00",
+        "0000",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "00AA",
+        "0000",
+        "0DB0",
+        "00C0",
+        "0aD0",
+        "0B00",
+        "0000",
+        "0bE0",
+        "00F0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "0a0a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0000",
+        "aaa0",
+        "0000",
+        "0B00",
+        "b0b0",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "2g2t2c": {
+    "key": "2g2t2c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      38.39,
+      19.45
+    ],
+    "bar": [
+      [
+        0.8895,
+        -0.1265
+      ],
+      [
+        1.1096,
+        0.1124
+      ],
+      [
+        0.2642,
+        -1.5047
+      ],
+      [
+        1.0567,
+        0.6184
+      ],
+      [
+        0.3159,
+        -0.4671
+      ],
+      [
+        -0.5965,
+        -1.0416
+      ],
+      [
+        -0.7181,
+        0.7364
+      ],
+      [
+        -1.4076,
+        0.7034
+      ],
+      [
+        1.3825,
+        0.6936
+      ],
+      [
+        -0.2033,
+        0.2281
+      ],
+      [
+        -0.4678,
+        -0.05
+      ],
+      [
+        -1.6251,
+        0.0977
+      ]
+    ],
+    "da": [
+      [
+        -0.0484,
+        -0.5563
+      ],
+      [
+        0.1517,
+        -0.3923
+      ],
+      [
+        0.0144,
+        -1.2868
+      ],
+      [
+        0.4853,
+        0.3466
+      ],
+      [
+        0.3372,
+        -1.3137
+      ],
+      [
+        0.3507,
+        -1.2953
+      ],
+      [
+        0.6692,
+        0.6165
+      ],
+      [
+        -0.4863,
+        -0.3269
+      ],
+      [
+        0.6264,
+        -0.0374
+      ],
+      [
+        -0.4815,
+        0.4807
+      ],
+      [
+        -0.6729,
+        -0.4725
+      ],
+      [
+        -0.3524,
+        -0.6861
+      ]
+    ],
+    "rc": [
+      [
+        1.8275,
+        0.3034
+      ],
+      [
+        2.0674,
+        0.617
+      ],
+      [
+        0.5141,
+        -1.7227
+      ],
+      [
+        1.6281,
+        0.8901
+      ],
+      [
+        0.2945,
+        0.3795
+      ],
+      [
+        -1.5438,
+        -0.7878
+      ],
+      [
+        -2.1054,
+        0.8563
+      ],
+      [
+        -2.3289,
+        1.7337
+      ],
+      [
+        2.1387,
+        1.4246
+      ],
+      [
+        0.0749,
+        -0.0246
+      ],
+      [
+        -0.2626,
+        0.3726
+      ],
+      [
+        -2.8979,
+        0.8815
+      ]
+    ],
+    "asimetria": [
+      2.0635,
+      2.1653,
+      0.6632,
+      1.2654,
+      1.6938,
+      1.9614,
+      2.785,
+      2.7643,
+      2.1035,
+      0.7516,
+      0.9394,
+      2.9895
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.325,
+        1.513,
+        0.763,
+        0.667,
+        1.745,
+        1.825,
+        2.442,
+        0.957,
+        1.149,
+        1.359,
+        2.525
+      ],
+      [
+        0.325,
+        0.0,
+        1.825,
+        0.509,
+        0.983,
+        2.06,
+        1.931,
+        2.586,
+        0.642,
+        1.318,
+        1.586,
+        2.735
+      ],
+      [
+        1.513,
+        1.825,
+        0.0,
+        2.266,
+        1.039,
+        0.977,
+        2.447,
+        2.77,
+        2.466,
+        1.795,
+        1.629,
+        2.477
+      ],
+      [
+        0.763,
+        0.509,
+        2.266,
+        0.0,
+        1.314,
+        2.343,
+        1.779,
+        2.466,
+        0.334,
+        1.319,
+        1.665,
+        2.732
+      ],
+      [
+        0.667,
+        0.983,
+        1.039,
+        1.314,
+        0.0,
+        1.078,
+        1.587,
+        2.083,
+        1.576,
+        0.868,
+        0.888,
+        2.022
+      ],
+      [
+        1.745,
+        2.06,
+        0.977,
+        2.343,
+        1.078,
+        0.0,
+        1.782,
+        1.924,
+        2.632,
+        1.329,
+        1.0,
+        1.535
+      ],
+      [
+        1.825,
+        1.931,
+        2.447,
+        1.779,
+        1.587,
+        1.782,
+        0.0,
+        0.69,
+        2.101,
+        0.723,
+        0.825,
+        1.109
+      ],
+      [
+        2.442,
+        2.586,
+        2.77,
+        2.466,
+        2.083,
+        1.924,
+        0.69,
+        0.0,
+        2.79,
+        1.295,
+        1.205,
+        0.644
+      ],
+      [
+        0.957,
+        0.642,
+        2.466,
+        0.334,
+        1.576,
+        2.632,
+        2.101,
+        2.79,
+        0.0,
+        1.653,
+        1.994,
+        3.066
+      ],
+      [
+        1.149,
+        1.318,
+        1.795,
+        1.319,
+        0.868,
+        1.329,
+        0.723,
+        1.295,
+        1.653,
+        0.0,
+        0.384,
+        1.428
+      ],
+      [
+        1.359,
+        1.586,
+        1.629,
+        1.665,
+        0.888,
+        1.0,
+        0.825,
+        1.205,
+        1.994,
+        0.384,
+        0.0,
+        1.167
+      ],
+      [
+        2.525,
+        2.735,
+        2.477,
+        2.732,
+        2.022,
+        1.535,
+        1.109,
+        0.644,
+        3.066,
+        1.428,
+        1.167,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        3,
+        0,
+        0,
+        0,
+        8,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        6,
+        6,
+        7,
+        1,
+        0,
+        0,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        2,
+        -6,
+        -6,
+        -7,
+        7,
+        2,
+        0,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -5,
+        -4,
+        -6,
+        8,
+        2,
+        1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "ABIJ",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "0bCD",
+        "000I",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "CBDA",
+        "BAAB",
+        "ACE0",
+        "00K0",
+        "00B0",
+        "0b00",
+        "00Cb",
+        "0aF0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0B",
+        "0BBA",
+        "0000",
+        "0CC0",
+        "00D0",
+        "00EC",
+        "0bF0",
+        "Ba00",
+        "CDA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0000",
+        "0bD0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "0C00",
+        "0B00",
+        "B00B",
+        "0000",
+        "0bB0",
+        "0aa0",
+        "0D00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAd0",
+        "00e0",
+        "CC00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0af0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bA00",
+        "0Cb0",
+        "0000",
+        "0Bc0",
+        "0ad0",
+        "AbeA",
+        "0000",
+        "00aa",
+        "aDf0",
+        "0000",
+        "0cg0"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "00cA",
+        "0Bf0",
+        "0ad0",
+        "0be0",
+        "0000",
+        "B00B",
+        "0Dg0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BCA",
+        "00a0",
+        "00D0",
+        "00E0",
+        "aa00",
+        "0bF0",
+        "0000",
+        "bD00",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bg0",
+        "00h0",
+        "0Di0",
+        "0000",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "2g3t1c": {
+    "key": "2g3t1c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      46.3,
+      14.6
+    ],
+    "bar": [
+      [
+        1.3036,
+        -0.7142
+      ],
+      [
+        0.8653,
+        -0.1943
+      ],
+      [
+        0.0731,
+        1.3026
+      ],
+      [
+        0.2982,
+        -0.2496
+      ],
+      [
+        1.2577,
+        -0.2102
+      ],
+      [
+        -0.3345,
+        0.7076
+      ],
+      [
+        -0.9034,
+        -0.3606
+      ],
+      [
+        0.1836,
+        0.1163
+      ],
+      [
+        0.8703,
+        -0.0309
+      ],
+      [
+        -1.7299,
+        -0.4772
+      ],
+      [
+        -0.3134,
+        0.4829
+      ],
+      [
+        -1.5707,
+        -0.3725
+      ]
+    ],
+    "da": [
+      [
+        0.2743,
+        -0.1005
+      ],
+      [
+        0.1524,
+        1.2073
+      ],
+      [
+        0.2042,
+        1.2709
+      ],
+      [
+        -0.0611,
+        -0.0491
+      ],
+      [
+        0.7865,
+        0.7569
+      ],
+      [
+        0.56,
+        1.4033
+      ],
+      [
+        0.4192,
+        0.2745
+      ],
+      [
+        -0.205,
+        0.443
+      ],
+      [
+        0.3688,
+        0.6987
+      ],
+      [
+        -0.6957,
+        -0.1334
+      ],
+      [
+        -0.1481,
+        0.698
+      ],
+      [
+        0.0568,
+        0.1449
+      ]
+    ],
+    "rc": [
+      [
+        2.3329,
+        -1.3279
+      ],
+      [
+        1.5783,
+        -1.5958
+      ],
+      [
+        -0.058,
+        1.3344
+      ],
+      [
+        0.6575,
+        -0.4502
+      ],
+      [
+        1.7289,
+        -1.1774
+      ],
+      [
+        -1.2289,
+        0.0118
+      ],
+      [
+        -2.226,
+        -0.9956
+      ],
+      [
+        0.5722,
+        -0.2103
+      ],
+      [
+        1.3717,
+        -0.7605
+      ],
+      [
+        -2.7642,
+        -0.821
+      ],
+      [
+        -0.4787,
+        0.2678
+      ],
+      [
+        -3.1982,
+        -0.8898
+      ]
+    ],
+    "asimetria": [
+      2.3967,
+      3.1449,
+      0.2698,
+      0.8229,
+      2.1517,
+      2.2663,
+      2.9343,
+      1.0153,
+      1.7706,
+      2.1798,
+      0.5425,
+      3.4156
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.68,
+        2.363,
+        1.108,
+        0.506,
+        2.169,
+        2.235,
+        1.394,
+        0.809,
+        3.043,
+        2.012,
+        2.895
+      ],
+      [
+        0.68,
+        0.0,
+        1.694,
+        0.57,
+        0.393,
+        1.501,
+        1.777,
+        0.749,
+        0.163,
+        2.611,
+        1.359,
+        2.443
+      ],
+      [
+        2.363,
+        1.694,
+        0.0,
+        1.569,
+        1.921,
+        0.721,
+        1.929,
+        1.191,
+        1.554,
+        2.534,
+        0.906,
+        2.347
+      ],
+      [
+        1.108,
+        0.57,
+        1.569,
+        0.0,
+        0.96,
+        1.147,
+        1.207,
+        0.383,
+        0.612,
+        2.041,
+        0.954,
+        1.873
+      ],
+      [
+        0.506,
+        0.393,
+        1.921,
+        0.96,
+        0.0,
+        1.838,
+        2.166,
+        1.123,
+        0.427,
+        3.0,
+        1.717,
+        2.833
+      ],
+      [
+        2.169,
+        1.501,
+        0.721,
+        1.147,
+        1.838,
+        0.0,
+        1.21,
+        0.786,
+        1.413,
+        1.831,
+        0.226,
+        1.642
+      ],
+      [
+        2.235,
+        1.777,
+        1.929,
+        1.207,
+        2.166,
+        1.21,
+        0.0,
+        1.187,
+        1.804,
+        0.835,
+        1.029,
+        0.667
+      ],
+      [
+        1.394,
+        0.749,
+        1.191,
+        0.383,
+        1.123,
+        0.786,
+        1.187,
+        0.0,
+        0.702,
+        2.003,
+        0.618,
+        1.821
+      ],
+      [
+        0.809,
+        0.163,
+        1.554,
+        0.612,
+        0.427,
+        1.413,
+        1.804,
+        0.702,
+        0.0,
+        2.638,
+        1.29,
+        2.465
+      ],
+      [
+        3.043,
+        2.611,
+        2.534,
+        2.041,
+        3.0,
+        1.831,
+        0.835,
+        2.003,
+        2.638,
+        0.0,
+        1.711,
+        0.191
+      ],
+      [
+        2.012,
+        1.359,
+        0.906,
+        0.954,
+        1.717,
+        0.226,
+        1.029,
+        0.618,
+        1.29,
+        1.711,
+        0.0,
+        1.521
+      ],
+      [
+        2.895,
+        2.443,
+        2.347,
+        1.873,
+        2.833,
+        1.642,
+        0.667,
+        1.821,
+        2.465,
+        0.191,
+        1.521,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        8,
+        4,
+        3,
+        9,
+        0,
+        0,
+        4,
+        6,
+        0,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        4,
+        6,
+        0,
+        0,
+        9,
+        2,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        2,
+        0,
+        1,
+        1,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        8,
+        1,
+        3,
+        9,
+        -4,
+        -6,
+        4,
+        6,
+        -9,
+        -2,
+        -10
+      ],
+      "sdr": [
+        9,
+        8,
+        1,
+        3,
+        10,
+        -3,
+        -4,
+        4,
+        7,
+        -8,
+        -1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "00I0",
+        "CDAA",
+        "00BB",
+        "BA0C",
+        "0aCD",
+        "000I",
+        "ABDE",
+        "00EF",
+        "0bFa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "0B00",
+        "AAAA",
+        "B000",
+        "0CI0",
+        "0DB0",
+        "0000",
+        "0aCb",
+        "00D0",
+        "00E0",
+        "0bFa",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "AADB",
+        "000A",
+        "0DE0",
+        "0C0C",
+        "00AD",
+        "00B0",
+        "0aC0",
+        "B000",
+        "CB00",
+        "0bca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0DA0",
+        "C0B0",
+        "BCCA",
+        "00D0",
+        "0a00",
+        "0000",
+        "0B00",
+        "0000",
+        "0b00",
+        "0000",
+        "0c00"
+      ],
+      [
+        "A0AA",
+        "0AB0",
+        "CC00",
+        "0D00",
+        "B00B",
+        "00C0",
+        "0aD0",
+        "00E0",
+        "0BF0",
+        "0bG0",
+        "00H0",
+        "0cI0"
+      ],
+      [
+        "AAa0",
+        "0000",
+        "0C00",
+        "00b0",
+        "0D00",
+        "B00A",
+        "0a00",
+        "00c0",
+        "0B00",
+        "0bd0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cb0",
+        "0000",
+        "0Dc0",
+        "00d0",
+        "AaeA",
+        "0000",
+        "0Bf0",
+        "a000",
+        "0bga",
+        "0c00"
+      ],
+      [
+        "AAAA",
+        "0C00",
+        "000B",
+        "00B0",
+        "0D00",
+        "0a00",
+        "0000",
+        "BBCC",
+        "00D0",
+        "0b00",
+        "0000",
+        "0cE0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "00AA",
+        "0000",
+        "0DB0",
+        "00C0",
+        "0aD0",
+        "0B00",
+        "0000",
+        "0bE0",
+        "00F0",
+        "0c00"
+      ],
+      [
+        "aAa0",
+        "bCb0",
+        "ccc0",
+        "00d0",
+        "0De0",
+        "0af0",
+        "000a",
+        "00g0",
+        "0Bh0",
+        "A00A",
+        "0b0b",
+        "00i0"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0000",
+        "0D00",
+        "0000",
+        "aaa0",
+        "0000",
+        "0B00",
+        "b0b0",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "00d0",
+        "0De0",
+        "00f0",
+        "00g0",
+        "0Bh0",
+        "00i0",
+        "0b00",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  },
+  "2g3t2c": {
+    "key": "2g3t2c",
+    "group": "G2",
+    "N": 12,
+    "nodes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12"
+    ],
+    "var_exp": [
+      37.68,
+      19.64
+    ],
+    "bar": [
+      [
+        0.8861,
+        -0.1374
+      ],
+      [
+        1.1152,
+        0.3118
+      ],
+      [
+        0.1986,
+        -1.5371
+      ],
+      [
+        1.0761,
+        0.5145
+      ],
+      [
+        0.2608,
+        -0.5085
+      ],
+      [
+        -0.5814,
+        -1.0526
+      ],
+      [
+        -0.8448,
+        0.732
+      ],
+      [
+        -1.2777,
+        0.7458
+      ],
+      [
+        1.4258,
+        0.5892
+      ],
+      [
+        -0.2001,
+        0.2448
+      ],
+      [
+        -0.4742,
+        -0.0171
+      ],
+      [
+        -1.5845,
+        0.1146
+      ]
+    ],
+    "da": [
+      [
+        -0.138,
+        -0.5639
+      ],
+      [
+        0.1156,
+        -0.052
+      ],
+      [
+        -0.0146,
+        -1.3001
+      ],
+      [
+        0.4165,
+        0.2023
+      ],
+      [
+        0.3088,
+        -1.3507
+      ],
+      [
+        0.3531,
+        -1.294
+      ],
+      [
+        0.6481,
+        0.5864
+      ],
+      [
+        -0.5098,
+        -0.2501
+      ],
+      [
+        0.6176,
+        -0.131
+      ],
+      [
+        -0.4417,
+        0.4931
+      ],
+      [
+        -0.7081,
+        -0.388
+      ],
+      [
+        -0.3119,
+        -0.6448
+      ]
+    ],
+    "rc": [
+      [
+        1.9103,
+        0.2891
+      ],
+      [
+        2.1149,
+        0.6756
+      ],
+      [
+        0.4118,
+        -1.7741
+      ],
+      [
+        1.7356,
+        0.8267
+      ],
+      [
+        0.2129,
+        0.3337
+      ],
+      [
+        -1.516,
+        -0.8113
+      ],
+      [
+        -2.3377,
+        0.8776
+      ],
+      [
+        -2.0456,
+        1.7418
+      ],
+      [
+        2.234,
+        1.3093
+      ],
+      [
+        0.0415,
+        -0.0036
+      ],
+      [
+        -0.2403,
+        0.3538
+      ],
+      [
+        -2.857,
+        0.874
+      ]
+    ],
+    "asimetria": [
+      2.2189,
+      2.1276,
+      0.6376,
+      1.4594,
+      1.6871,
+      1.9304,
+      2.9999,
+      2.5152,
+      2.165,
+      0.6929,
+      0.877,
+      2.9638
+    ],
+    "dist_matrix": [
+      [
+        0.0,
+        0.504,
+        1.559,
+        0.679,
+        0.727,
+        1.73,
+        1.937,
+        2.337,
+        0.905,
+        1.151,
+        1.366,
+        2.483
+      ],
+      [
+        0.504,
+        0.0,
+        2.064,
+        0.206,
+        1.184,
+        2.177,
+        2.005,
+        2.432,
+        0.416,
+        1.317,
+        1.623,
+        2.707
+      ],
+      [
+        1.559,
+        2.064,
+        0.0,
+        2.231,
+        1.03,
+        0.918,
+        2.498,
+        2.719,
+        2.455,
+        1.826,
+        1.662,
+        2.431
+      ],
+      [
+        0.679,
+        0.206,
+        2.231,
+        0.0,
+        1.308,
+        2.281,
+        1.933,
+        2.365,
+        0.358,
+        1.304,
+        1.639,
+        2.69
+      ],
+      [
+        0.727,
+        1.184,
+        1.03,
+        1.308,
+        0.0,
+        1.003,
+        1.662,
+        1.985,
+        1.601,
+        0.883,
+        0.884,
+        1.948
+      ],
+      [
+        1.73,
+        2.177,
+        0.918,
+        2.281,
+        1.003,
+        0.0,
+        1.804,
+        1.929,
+        2.593,
+        1.352,
+        1.041,
+        1.539
+      ],
+      [
+        1.937,
+        2.005,
+        2.498,
+        1.933,
+        1.662,
+        1.804,
+        0.0,
+        0.433,
+        2.275,
+        0.808,
+        0.836,
+        0.963
+      ],
+      [
+        2.337,
+        2.432,
+        2.719,
+        2.365,
+        1.985,
+        1.929,
+        0.433,
+        0.0,
+        2.708,
+        1.188,
+        1.108,
+        0.702
+      ],
+      [
+        0.905,
+        0.416,
+        2.455,
+        0.358,
+        1.601,
+        2.593,
+        2.275,
+        2.708,
+        0.0,
+        1.662,
+        1.994,
+        3.047
+      ],
+      [
+        1.151,
+        1.317,
+        1.826,
+        1.304,
+        0.883,
+        1.352,
+        0.808,
+        1.188,
+        1.662,
+        0.0,
+        0.379,
+        1.39
+      ],
+      [
+        1.366,
+        1.623,
+        1.662,
+        1.639,
+        0.884,
+        1.041,
+        0.836,
+        1.108,
+        1.994,
+        0.379,
+        0.0,
+        1.118
+      ],
+      [
+        2.483,
+        2.707,
+        2.431,
+        2.69,
+        1.948,
+        1.539,
+        0.963,
+        0.702,
+        3.047,
+        1.39,
+        1.118,
+        0.0
+      ]
+    ],
+    "metrics": {
+      "e_emi": [
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4
+      ],
+      "r_emi": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "e_rec": [
+        9,
+        10,
+        6,
+        6,
+        3,
+        0,
+        0,
+        0,
+        8,
+        2,
+        0,
+        0
+      ],
+      "r_rec": [
+        0,
+        0,
+        3,
+        0,
+        1,
+        6,
+        7,
+        6,
+        1,
+        0,
+        0,
+        10
+      ],
+      "sda": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        2,
+        1,
+        1,
+        0,
+        1,
+        2
+      ],
+      "src": [
+        9,
+        10,
+        3,
+        6,
+        2,
+        -6,
+        -7,
+        -6,
+        7,
+        2,
+        0,
+        -10
+      ],
+      "sdr": [
+        9,
+        10,
+        4,
+        6,
+        3,
+        -5,
+        -5,
+        -5,
+        8,
+        2,
+        1,
+        -8
+      ]
+    },
+    "smib": [
+      [
+        "0CJ0",
+        "ABIJ",
+        "C0AA",
+        "00BB",
+        "BA0C",
+        "0bCD",
+        "000I",
+        "0aDE",
+        "0DEF",
+        "00Fa",
+        "00GG",
+        "0cHH"
+      ],
+      [
+        "CBDA",
+        "BAAB",
+        "ACE0",
+        "00K0",
+        "00B0",
+        "0b00",
+        "0aCb",
+        "00F0",
+        "0DG0",
+        "00Ha",
+        "00I0",
+        "0cJ0"
+      ],
+      [
+        "AA0B",
+        "0BBA",
+        "0000",
+        "0CC0",
+        "00D0",
+        "00EC",
+        "0bF0",
+        "Ba00",
+        "CDA0",
+        "00ca",
+        "00b0",
+        "0ca0"
+      ],
+      [
+        "AA00",
+        "0D00",
+        "0CG0",
+        "BBAA",
+        "00B0",
+        "00C0",
+        "0000",
+        "0bD0",
+        "0a00",
+        "0000",
+        "00E0",
+        "0cF0"
+      ],
+      [
+        "A0AA",
+        "0A00",
+        "0C00",
+        "0B00",
+        "B00B",
+        "0000",
+        "0bB0",
+        "0aa0",
+        "0D00",
+        "00C0",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAd0",
+        "00e0",
+        "CC00",
+        "0B00",
+        "0000",
+        "B00A",
+        "0ba0",
+        "0af0",
+        "0D00",
+        "00b0",
+        "00c0",
+        "0c00"
+      ],
+      [
+        "B000",
+        "bAa0",
+        "0Cc0",
+        "0000",
+        "0Bd0",
+        "0ae0",
+        "AbfA",
+        "0000",
+        "00ba",
+        "aDg0",
+        "0000",
+        "0ch0"
+      ],
+      [
+        "AAa0",
+        "0C00",
+        "00bA",
+        "0Be0",
+        "0ac0",
+        "0bd0",
+        "0000",
+        "B00B",
+        "0Df0",
+        "0000",
+        "0000",
+        "0c00"
+      ],
+      [
+        "AAA0",
+        "0CB0",
+        "0BCA",
+        "00a0",
+        "00D0",
+        "00E0",
+        "aa00",
+        "0bF0",
+        "0000",
+        "bD00",
+        "00G0",
+        "0cH0"
+      ],
+      [
+        "aA00",
+        "bC00",
+        "cc00",
+        "0000",
+        "0B00",
+        "0a00",
+        "0bAa",
+        "0000",
+        "00Bb",
+        "ADCA",
+        "0000",
+        "0000"
+      ],
+      [
+        "AA00",
+        "0C00",
+        "0b00",
+        "0B00",
+        "0000",
+        "0a00",
+        "0000",
+        "0000",
+        "0D00",
+        "0000",
+        "B00A",
+        "0c00"
+      ],
+      [
+        "AAa0",
+        "0Cb0",
+        "0ac0",
+        "0Bd0",
+        "00e0",
+        "00f0",
+        "0bg0",
+        "00h0",
+        "0Di0",
+        "0000",
+        "00j0",
+        "BckA"
+      ]
+    ]
+  }
+};
+
+    let currentScenarioKey = '1g1t1c';
+    let selectionScope = 'todos';     // 'todos' | 'single' | 'multi'
+    let displayLayer = 'completo';    // 'completo' | 'baricentros' | 'solo_da' | 'solo_rc'
+    let focalSubjectIdx = 0;          // para modo 'single' (0 .. N-1)
+    let multiSelected = new Set([0, 1, 4]); // para modo 'multi' (ej: 01, 02, 05)
+    let currentTab = 'biplot';         // 'biplot' | 'heatmap' | 'radial'
+    let maxDistThreshold = 2.2;
+
+    const svg = document.getElementById('biplot-svg');
+    const tooltip = document.getElementById('visord-tooltip');
+
+    function init() {
+      cambiarEscenario('1g1t1c');
+    }
+
+    function cambiarEscenario(key) {
+      currentScenarioKey = key;
+      const scen = SCENARIOS[key];
+      document.getElementById('badge-escenario').innerText = key;
+      document.getElementById('tele-n').innerText = scen.N + ' sujetos';
+      document.getElementById('tele-var').innerText = `${scen.var_exp[0]}% + ${scen.var_exp[1]}% (${(scen.var_exp[0]+scen.var_exp[1]).toFixed(1)}%)`;
+      
+      let sumD = 0, countD = 0;
+      for (let i = 0; i < scen.N; i++) {
+        for (let j = i + 1; j < scen.N; j++) {
+          sumD += scen.dist_matrix[i][j];
+          countD++;
+        }
+      }
+      const meanD = (sumD / countD).toFixed(2);
+      const meanA = (scen.asimetria.reduce((a,b)=>a+b,0) / scen.N).toFixed(2);
+      document.getElementById('tele-meandist').innerText = meanD;
+      document.getElementById('tele-meanasym').innerText = meanA;
+      document.getElementById('tele-polariz').innerText = (meanA / meanD).toFixed(3);
+
+      let maxD = 0;
+      for (let i = 0; i < scen.N; i++) {
+        for (let j = 0; j < scen.N; j++) {
+          if (scen.dist_matrix[i][j] > maxD) maxD = scen.dist_matrix[i][j];
+        }
+      }
+      const slider = document.getElementById('slider-dist');
+      slider.max = (Math.ceil(maxD * 10) / 10).toFixed(1);
+      if (parseFloat(slider.value) > maxD) {
+        slider.value = (maxD * 0.65).toFixed(1);
+        maxDistThreshold = parseFloat(slider.value);
+        document.getElementById('slider-val-txt').innerText = slider.value;
+      }
+
+      focalSubjectIdx = 0;
+      multiSelected = new Set([0, 1, Math.min(4, scen.N - 1)]);
+      renderizarChips();
+      actualizarInspector();
+      renderizar();
+    }
+
+    /* ALCANCE DE SELECCIÓN (TODOS, 1 A 1, COMPARAR VARIOS) */
+    function setSelectionScope(scope) {
+      selectionScope = scope;
+      ['todos', 'single', 'multi'].forEach(s => {
+        const btn = document.getElementById('btn-sel-' + s);
+        if (btn) {
+          btn.className = 'toggle-pill ' + (s === scope ? (s === 'single' ? 'active-green' : (s === 'multi' ? 'active-gold' : 'active')) : '');
+        }
+      });
+      renderizarChips();
+      actualizarInspector();
+      renderizar();
+    }
+
+    /* ALTERNANCIA DE CAPAS */
+    function setDisplayLayer(layer) {
+      displayLayer = layer;
+      ['completo', 'baricentros', 'da', 'rc'].forEach(l => {
+        const btn = document.getElementById('btn-layer-' + l);
+        const match = (l === 'completo' && layer === 'completo') ||
+                      (l === 'baricentros' && layer === 'baricentros') ||
+                      (l === 'da' && layer === 'solo_da') ||
+                      (l === 'rc' && layer === 'solo_rc');
+        if (btn) btn.className = 'toggle-pill ' + (match ? 'active' : '');
+      });
+      renderizar();
+    }
+
+    /* RENDERIZADO DE CHIPS DE SUJETOS */
+    function renderizarChips() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const container = document.getElementById('chips-container');
+      let html = '';
+
+      for (let i = 0; i < scen.N; i++) {
+        const tag = scen.nodes[i] || (i + 1);
+        let cls = 'subj-chip';
+        if (selectionScope === 'single') {
+          if (i === focalSubjectIdx) cls += ' active-focal';
+        } else if (selectionScope === 'multi') {
+          if (multiSelected.has(i)) cls += ' active-multi';
+          else cls += ' inactive-multi';
+        }
+        html += `<button class="${cls}" onclick="clickChipSubject(${i})">${tag}</button>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function clickChipSubject(idx) {
+      if (selectionScope === 'todos') {
+        // Si hace clic en un chip estando en 'todos', pasa a 'single' enfocado
+        focalSubjectIdx = idx;
+        setSelectionScope('single');
+      } else if (selectionScope === 'single') {
+        focalSubjectIdx = idx;
+        renderizarChips();
+        actualizarInspector();
+        renderizar();
+      } else if (selectionScope === 'multi') {
+        if (multiSelected.has(idx)) {
+          if (multiSelected.size > 1) multiSelected.delete(idx);
+        } else {
+          multiSelected.add(idx);
+        }
+        renderizarChips();
+        actualizarInspector();
+        renderizar();
+      }
+    }
+
+    function seleccionarTopLideres() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const sorted = scen.nodes.map((n, i) => ({ i, src: scen.metrics.src[i] })).sort((a,b) => b.src - a.src);
+      multiSelected = new Set(sorted.slice(0, 3).map(x => x.i));
+      setSelectionScope('multi');
+    }
+
+    function seleccionarOpuestos() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const sorted = scen.nodes.map((n, i) => ({ i, src: scen.metrics.src[i] })).sort((a,b) => b.src - a.src);
+      multiSelected = new Set([sorted[0].i, sorted[sorted.length - 1].i]);
+      setSelectionScope('multi');
+    }
+
+    function seleccionarMayorAsimetria() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const sorted = scen.asimetria.map((a, i) => ({ i, a })).sort((a,b) => b.a - a.a);
+      multiSelected = new Set(sorted.slice(0, 3).map(x => x.i));
+      setSelectionScope('multi');
+    }
+
+    function actualizarSlider(val) {
+      maxDistThreshold = parseFloat(val);
+      document.getElementById('slider-val-txt').innerText = val;
+      renderizar();
+    }
+
+    function conmutarTab(tab) {
+      currentTab = tab;
+      ['biplot', 'heatmap', 'radial'].forEach(t => {
+        const b = document.getElementById('tab-' + t);
+        if (b) b.className = 'tab-btn ' + (t === tab ? 'active' : '');
+      });
+
+      document.getElementById('biplot-svg').style.display = (tab === 'biplot' ? 'block' : 'none');
+      document.getElementById('heatmap-wrap').className = 'heatmap-wrap ' + (tab === 'heatmap' ? 'active' : '');
+      document.getElementById('radial-wrap').className = 'radial-wrap ' + (tab === 'radial' ? 'active' : '');
+
+      renderizar();
+    }
+
+    /* INSPECTOR DINÁMICO EN SIDEBAR */
+    function actualizarInspector() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const card = document.getElementById('inspector-card');
+
+      if (selectionScope === 'todos') {
+        card.innerHTML = `
+          <div class="tele-header">
+            <span class="tele-title">🌐 Red Completa</span>
+            <span class="tele-badge">VISTA GLOBAL</span>
+          </div>
+          <p style="font-size:12px; color:#94A3B8; margin-bottom:12px;">
+            Visualizando la constelación total de los ${scen.N} sujetos. Todos los baricentros, dipolos y enlaces bajo el umbral actual.
+          </p>
+          <div class="stat-row">
+            <span class="stat-name">Sujetos Activos:</span>
+            <span class="stat-val">${scen.N} de ${scen.N}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Capa Activa:</span>
+            <span class="stat-val" style="color:var(--neon-cyan); text-transform:uppercase;">${displayLayer}</span>
+          </div>
+          <button class="suite-btn" style="width:100%; margin-top:14px; text-align:center;" onclick="setSelectionScope('single')">
+            🎯 Pasar a Vista 1 a 1 (Focal)
+          </button>
+        `;
+      } else if (selectionScope === 'single') {
+        const i = focalSubjectIdx;
+        const tag = scen.nodes[i] || (i + 1);
+        const src = scen.metrics.src[i];
+        const sda = scen.metrics.sda[i];
+        const asym = scen.asimetria[i];
+        const [bx, by] = scen.bar[i];
+
+        let typeStr = 'Sujeto Equilibrado';
+        if (src >= 5) typeStr = 'Líder Atractor Gravitatorio';
+        else if (src <= -5) typeStr = 'Periferia de Ostracismo / Tensión';
+        else if (asym > 2.0) typeStr = 'Tensión Asimétrica de Rol';
+        else if (by > 1.0) typeStr = 'Articulador de Subnúcleo Cohesivo';
+
+        // Distances
+        const distList = [];
+        for (let j = 0; j < scen.N; j++) {
+          if (j === i) continue;
+          distList.push({
+            idx: j,
+            tag: scen.nodes[j] || (j + 1),
+            dist: scen.dist_matrix[i][j],
+            src: scen.metrics.src[j]
+          });
+        }
+        distList.sort((a, b) => a.dist - b.dist);
+
+        let rankingHtml = '<div style="color:var(--neon-green); font-size:10px; margin-bottom:2px; font-weight:700;">MÁS CERCANOS (Mayor Afinidad):</div>';
+        for (let k = 0; k < Math.min(3, distList.length); k++) {
+          const item = distList[k];
+          rankingHtml += `<div class="dist-ranking-item close" onclick="clickChipSubject(${item.idx})" style="cursor:pointer;" title="Clic para enfocar">
+            <span><strong>${item.tag}</strong> (SRC:${item.src > 0 ? '+' : ''}${item.src})</span>
+            <span style="color:var(--neon-green); font-weight:700;">d = ${item.dist.toFixed(2)}</span>
+          </div>`;
+        }
+
+        rankingHtml += '<div style="color:var(--neon-red); font-size:10px; margin-top:8px; margin-bottom:2px; font-weight:700;">MÁS LEJANOS (Antípodas):</div>';
+        for (let k = Math.max(0, distList.length - 3); k < distList.length; k++) {
+          const item = distList[k];
+          rankingHtml += `<div class="dist-ranking-item far" onclick="clickChipSubject(${item.idx})" style="cursor:pointer;" title="Clic para enfocar">
+            <span><strong>${item.tag}</strong> (SRC:${item.src > 0 ? '+' : ''}${item.src})</span>
+            <span style="color:var(--neon-red); font-weight:700;">d = ${item.dist.toFixed(2)}</span>
+          </div>`;
+        }
+
+        card.innerHTML = `
+          <div class="tele-header">
+            <span class="tele-title">🎯 Sujeto Focal</span>
+            <span class="tele-badge" style="background:rgba(0,255,135,0.15); color:var(--neon-green); border-color:var(--neon-green);">1 A 1</span>
+          </div>
+          <div class="focal-badge-row">
+            <div class="focal-circle">${tag}</div>
+            <div>
+              <div class="focal-desc-name">Sujeto ${tag}</div>
+              <div class="focal-desc-type">${typeStr}</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Coordenadas (PC1, PC2):</span>
+            <span class="stat-val">X:${bx > 0 ? '+' : ''}${bx.toFixed(2)}, Y:${by > 0 ? '+' : ''}${by.toFixed(2)}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Estatus Saldo (SRC):</span>
+            <span class="stat-val" style="color:${src > 0 ? 'var(--neon-green)' : (src < 0 ? 'var(--neon-red)' : '#CBD5E1')}">${src > 0 ? '+' : ''}${src} (${scen.metrics.e_rec[i]}E / ${scen.metrics.r_rec[i]}R)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Expansividad (SDA):</span>
+            <span class="stat-val" style="color:var(--neon-cyan)">${sda > 0 ? '+' : ''}${sda} (${scen.metrics.e_emi[i]}E / ${scen.metrics.r_emi[i]}R)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-name">Tensión ||RC-DA||:</span>
+            <span class="stat-val" style="color:${asym > 2.0 ? 'var(--neon-orange)' : '#FFF'}">${asym.toFixed(3)}</span>
+          </div>
+          <div style="margin-top:12px; border-top:1px solid var(--border-subtle); padding-top:8px;">
+            ${rankingHtml}
+          </div>
+          <button class="suite-btn" style="width:100%; margin-top:12px; text-align:center;" onclick="setSelectionScope('todos')">
+            ↺ Volver a Vista de Todos
+          </button>
+        `;
+      } else if (selectionScope === 'multi') {
+        const arr = Array.from(multiSelected);
+        let tableRows = '';
+        arr.forEach(i => {
+          const tag = scen.nodes[i] || (i + 1);
+          const src = scen.metrics.src[i];
+          const asym = scen.asimetria[i];
+          const [bx, by] = scen.bar[i];
+          tableRows += `<tr>
+            <td style="font-weight:800; color:#FFF;">${tag}</td>
+            <td style="color:${src > 0 ? 'var(--neon-green)' : (src < 0 ? 'var(--neon-red)' : '#94A3B8')}">${src > 0 ? '+' : ''}${src}</td>
+            <td>${asym.toFixed(2)}</td>
+            <td>${bx.toFixed(1)}, ${by.toFixed(1)}</td>
+          </tr>`;
+        });
+
+        // Pairwise distances between selected subjects
+        let pairHtml = '';
+        if (arr.length > 1) {
+          pairHtml = '<div style="font-family:var(--font-mono); font-size:10.5px; font-weight:700; color:#94A3B8; margin-top:10px; margin-bottom:4px;">INTERDISTANCIAS DEL SUBCONJUNTO:</div>';
+          for (let a = 0; a < arr.length; a++) {
+            for (let b = a + 1; b < arr.length; b++) {
+              const i = arr[a], j = arr[b];
+              const d = scen.dist_matrix[i][j];
+              const col = d < 1.2 ? 'var(--neon-green)' : (d < 2.2 ? 'var(--neon-cyan)' : 'var(--neon-orange)');
+              pairHtml += `<div class="dist-ranking-item" style="border-left:3px solid ${col};">
+                <span>${scen.nodes[i]} ↔ ${scen.nodes[j]}</span>
+                <span style="color:${col}; font-weight:700;">d = ${d.toFixed(2)}</span>
+              </div>`;
+            }
+          }
+        }
+
+        card.innerHTML = `
+          <div class="tele-header">
+            <span class="tele-title">👥 Comparativa Multi</span>
+            <span class="tele-badge" style="background:rgba(255,230,0,0.15); color:var(--neon-gold); border-color:var(--neon-gold);">${arr.length} SELECCIONADOS</span>
+          </div>
+          <table class="comp-table">
+            <thead>
+              <tr><th>ID</th><th>SRC</th><th>Tensión</th><th>(PC1,PC2)</th></tr>
+            </thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+          ${pairHtml}
+          <button class="suite-btn" style="width:100%; margin-top:14px; text-align:center;" onclick="setSelectionScope('todos')">
+            ↺ Volver a Vista de Todos
+          </button>
+        `;
+      }
+    }
+
+    function renderizar() {
+      if (currentTab === 'biplot') {
+        renderizarBiplot();
+      } else if (currentTab === 'heatmap') {
+        renderizarHeatmap();
+      } else if (currentTab === 'radial') {
+        renderizarRadial();
+      }
+    }
+
+    /* =========================================================================
+       1. RENDERIZADO DEL SOCIOGRAMA DUAL (BIPLOT CON FOCALIZACIÓN Y PIXEL DOTS)
+       ========================================================================= */
+    function renderizarBiplot() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const N = scen.N;
+      const width = svg.clientWidth || 800;
+      const height = svg.clientHeight || 640;
+      const pad = 65;
+
+      let minX = -0.5, maxX = 0.5, minY = -0.5, maxY = 0.5;
+      for (let i = 0; i < N; i++) {
+        const pts = [scen.bar[i], scen.da[i], scen.rc[i]];
+        pts.forEach(([x, y]) => {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        });
+      }
+      const spanX = Math.max(0.1, maxX - minX) * 1.15;
+      const spanY = Math.max(0.1, maxY - minY) * 1.15;
+      const midX = (minX + maxX) / 2;
+      const midY = (minY + maxY) / 2;
+
+      const scaleX = (x) => pad + ((x - (midX - spanX / 2)) / spanX) * (width - 2 * pad);
+      const scaleY = (y) => height - (pad + ((y - (midY - spanY / 2)) / spanY) * (height - 2 * pad));
+
+      const showEjes = document.getElementById('chk-ejes').checked;
+      const showLinks = document.getElementById('chk-links').checked;
+
+      // Determine active / selected set of subjects
+      const isSelected = [];
+      for (let i = 0; i < N; i++) {
+        if (selectionScope === 'todos') isSelected.push(true);
+        else if (selectionScope === 'single') isSelected.push(i === focalSubjectIdx);
+        else if (selectionScope === 'multi') isSelected.push(multiSelected.has(i));
+      }
+
+      let s = '';
+
+      // Defs (Gradients and markers)
+      s += `<defs>
+        <marker id="arrow-da" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+          <polygon points="0 0, 6 3, 0 6" fill="#2563EB" />
+        </marker>
+        <marker id="arrow-rc" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+          <polygon points="0 0, 6 3, 0 6" fill="#059669" />
+        </marker>
+      </defs>`;
+
+      // Background grid
+      const gridSteps = 6;
+      for (let g = 0; g <= gridSteps; g++) {
+        const gx = pad + (g / gridSteps) * (width - 2 * pad);
+        const gy = pad + (g / gridSteps) * (height - 2 * pad);
+        s += `<line x1="${gx}" y1="${pad}" x2="${gx}" y2="${height - pad}" stroke="rgba(255,255,255,0.04)" stroke-dasharray="3,3" />`;
+        s += `<line x1="${pad}" y1="${gy}" x2="${width - pad}" y2="${gy}" stroke="rgba(255,255,255,0.04)" stroke-dasharray="3,3" />`;
+      }
+
+      // Axes (0,0)
+      if (showEjes) {
+        const x0 = scaleX(0);
+        const y0 = scaleY(0);
+        s += `<line x1="${x0}" y1="${pad}" x2="${x0}" y2="${height - pad}" stroke="#475569" stroke-width="1.2" />`;
+        s += `<line x1="${pad}" y1="${y0}" x2="${width - pad}" y2="${y0}" stroke="#475569" stroke-width="1.2" />`;
+        s += `<text x="${width - pad - 10}" y="${y0 - 8}" fill="#94A3B8" font-size="10.5" font-family="JetBrains Mono" font-weight="700" text-anchor="end">PC1 (+Atracción / Consenso)</text>`;
+        s += `<text x="${pad + 10}" y="${y0 - 8}" fill="#94A3B8" font-size="10.5" font-family="JetBrains Mono" font-weight="700" text-anchor="start">(-Rechazo / Tensión)</text>`;
+        s += `<text x="${x0 + 8}" y="${pad + 14}" fill="#94A3B8" font-size="10.5" font-family="JetBrains Mono" font-weight="700">PC2 (+Selectivo / Cohesivo)</text>`;
+        s += `<text x="${x0 + 8}" y="${height - pad - 8}" fill="#94A3B8" font-size="10.5" font-family="JetBrains Mono" font-weight="700">(-Transversal)</text>`;
+      }
+
+      // 1. REGLA CLAVE: UNSELECTED SUBJECTS AS DISCREET PIXEL DOTS AT THEIR BARICENTERS
+      for (let i = 0; i < N; i++) {
+        if (isSelected[i]) continue; // Only unselected here
+        const [bx, by] = scen.bar[i];
+        const sx = scaleX(bx);
+        const sy = scaleY(by);
+        const tag = scen.nodes[i] || (i + 1);
+
+        s += `<g style="cursor:pointer;" onclick="clickMicroDot(${i})" onmouseenter="mostrarTooltip(event, ${i})" onmouseleave="ocultarTooltip()">
+          <circle cx="${sx}" cy="${sy}" r="3.5" fill="#64748B" stroke="#0F172A" stroke-width="1.0" opacity="0.65" />
+          <text x="${sx}" y="${sy - 6}" fill="#64748B" font-size="8.5" font-family="JetBrains Mono" font-weight="600" text-anchor="middle" opacity="0.5">${tag}</text>
+        </g>`;
+      }
+
+      // 2. INTERDISTANCE LINES BETWEEN ACTIVE SUBJECTS
+      if (showLinks) {
+        if (selectionScope === 'single') {
+          // Radial rays from focal to all other subjects (connecting focal to their pixel dots)
+          const fi = focalSubjectIdx;
+          const [fx, fy] = (displayLayer === 'solo_da' ? scen.da[fi] : (displayLayer === 'solo_rc' ? scen.rc[fi] : scen.bar[fi]));
+          const sfx = scaleX(fx), sfy = scaleY(fy);
+
+          for (let j = 0; j < N; j++) {
+            if (j === fi) continue;
+            const d = scen.dist_matrix[fi][j];
+            if (d > maxDistThreshold) continue;
+
+            const [jx, jy] = (displayLayer === 'solo_da' ? scen.da[j] : (displayLayer === 'solo_rc' ? scen.rc[j] : scen.bar[j]));
+            const sjx = scaleX(jx), sjy = scaleY(jy);
+
+            const col = d < 1.2 ? '#00FF87' : (d < 2.2 ? '#38BDF8' : '#FF9F1C');
+            const strokeW = d < 1.2 ? 2.0 : 1.1;
+
+            s += `<line x1="${sfx}" y1="${sfy}" x2="${sjx}" y2="${sjy}" stroke="${col}" stroke-width="${strokeW}" stroke-dasharray="4,3" opacity="0.75" />`;
+            const mx = (sfx + sjx) / 2;
+            const my = (sfy + sjy) / 2;
+            s += `<rect x="${mx - 13}" y="${my - 7}" width="26" height="14" rx="3" fill="#0B132B" stroke="${col}" stroke-width="0.8" opacity="0.9" />`;
+            s += `<text x="${mx}" y="${my + 3}" fill="${col}" font-size="8.5" font-family="JetBrains Mono" font-weight="700" text-anchor="middle">${d.toFixed(1)}</text>`;
+          }
+        } else if (selectionScope === 'multi') {
+          // Direct links between selected subset
+          const arr = Array.from(multiSelected);
+          for (let a = 0; a < arr.length; a++) {
+            for (let b = a + 1; b < arr.length; b++) {
+              const i = arr[a], j = arr[b];
+              const d = scen.dist_matrix[i][j];
+              const [ix, iy] = (displayLayer === 'solo_da' ? scen.da[i] : (displayLayer === 'solo_rc' ? scen.rc[i] : scen.bar[i]));
+              const [jx, jy] = (displayLayer === 'solo_da' ? scen.da[j] : (displayLayer === 'solo_rc' ? scen.rc[j] : scen.bar[j]));
+              const col = d < 1.2 ? '#00FF87' : (d < 2.2 ? '#38BDF8' : '#FF9F1C');
+              const six = scaleX(ix), siy = scaleY(iy);
+              const sjx = scaleX(jx), sjy = scaleY(jy);
+
+              s += `<line x1="${six}" y1="${siy}" x2="${sjx}" y2="${sjy}" stroke="${col}" stroke-width="1.8" stroke-dasharray="4,3" opacity="0.85" />`;
+              const mx = (six + sjx) / 2;
+              const my = (siy + sjy) / 2;
+              s += `<rect x="${mx - 13}" y="${my - 7}" width="26" height="14" rx="3" fill="#0B132B" stroke="${col}" stroke-width="0.8" opacity="0.9" />`;
+              s += `<text x="${mx}" y="${my + 3}" fill="${col}" font-size="8.5" font-family="JetBrains Mono" font-weight="700" text-anchor="middle">${d.toFixed(1)}</text>`;
+            }
+          }
+        } else {
+          // 'todos': network links under threshold
+          for (let i = 0; i < N; i++) {
+            for (let j = i + 1; j < N; j++) {
+              const d = scen.dist_matrix[i][j];
+              if (d <= maxDistThreshold) {
+                const [ix, iy] = (displayLayer === 'solo_da' ? scen.da[i] : (displayLayer === 'solo_rc' ? scen.rc[i] : scen.bar[i]));
+                const [jx, jy] = (displayLayer === 'solo_da' ? scen.da[j] : (displayLayer === 'solo_rc' ? scen.rc[j] : scen.bar[j]));
+                const col = d < 1.2 ? '#00FF87' : (d < 2.0 ? '#38BDF8' : '#64748B');
+                const alpha = d < 1.2 ? 0.55 : 0.25;
+                s += `<line x1="${scaleX(ix)}" y1="${scaleY(iy)}" x2="${scaleX(jx)}" y2="${scaleY(jy)}" stroke="${col}" stroke-width="1.0" opacity="${alpha}" />`;
+              }
+            }
+          }
+        }
+      }
+
+      // 3. RENDERIZADO SEGÚN CAPA ACTIVA (COMPLETO, BARICENTROS, SOLO_DA, SOLO_RC)
+      for (let i = 0; i < N; i++) {
+        if (!isSelected[i]) continue; // Only selected here
+
+        const isFocal = (selectionScope === 'single' && i === focalSubjectIdx);
+        const [bx, by] = scen.bar[i];
+        const [dax, day] = scen.da[i];
+        const [rcx, rcy] = scen.rc[i];
+
+        const sbx = scaleX(bx), sby = scaleY(by);
+        const sdax = scaleX(dax), sday = scaleY(day);
+        const srcx = scaleX(rcx), srcy = scaleY(rcy);
+        const tag = scen.nodes[i] || (i + 1);
+
+        if (displayLayer === 'completo') {
+          // Full Dipole: Arms + DA Terminal + RC Terminal + Baricenter
+          const lw = isFocal ? 2.2 : 1.0;
+          s += `<line x1="${sbx}" y1="${sby}" x2="${sdax}" y2="${sday}" stroke="#2563EB" stroke-width="${lw}" opacity="0.80" />`;
+          s += `<line x1="${sbx}" y1="${sby}" x2="${srcx}" y2="${srcy}" stroke="#059669" stroke-width="${lw}" opacity="0.80" />`;
+
+          // Terminal DA (cuadrado)
+          const sz = isFocal ? 16 : 10;
+          s += `<rect x="${sdax - sz/2}" y="${sday - sz/2}" width="${sz}" height="${sz}" fill="#2563EB" stroke="#93C5FD" stroke-width="0.8" opacity="0.9" title="DA Emisión: ${tag}" />`;
+          // Terminal RC (triángulo)
+          s += `<polygon points="${srcx},${srcy - sz*0.6} ${srcx - sz*0.5},${srcy + sz*0.4} ${srcx + sz*0.5},${srcy + sz*0.4}" fill="#059669" stroke="#6EE7B7" stroke-width="0.8" opacity="0.9" title="RC Recepción: ${tag}" />`;
+
+          // Central Baricenter Badge
+          const r = isFocal ? 18 : 13;
+          const fill = isFocal ? '#00FF87' : '#0F172A';
+          const txtCol = isFocal ? '#050814' : '#FFFFFF';
+          const strokeCol = isFocal ? '#FFFFFF' : (scen.metrics.src[i] > 0 ? '#38BDF8' : '#EF4444');
+          const filterEffect = isFocal ? 'filter="drop-shadow(0 0 10px rgba(0,255,135,0.8))"' : '';
+
+          s += `<g style="cursor:pointer;" onclick="clickActiveSubject(${i})" onmouseenter="mostrarTooltip(event, ${i})" onmouseleave="ocultarTooltip()">
+            <circle cx="${sbx}" cy="${sby}" r="${r}" fill="${fill}" stroke="${strokeCol}" stroke-width="${isFocal ? 2.5 : 1.2}" ${filterEffect} />
+            <text x="${sbx}" y="${sby + 4.5}" fill="${txtCol}" font-size="${isFocal ? '12' : '10'}" font-family="JetBrains Mono" font-weight="900" text-anchor="middle">${tag}</text>
+          </g>`;
+
+        } else if (displayLayer === 'baricentros') {
+          // Sólo Baricentros
+          const r = isFocal ? 18 : 13;
+          const fill = isFocal ? '#00FF87' : '#0F172A';
+          const txtCol = isFocal ? '#050814' : '#FFFFFF';
+          const strokeCol = isFocal ? '#FFFFFF' : (scen.metrics.src[i] > 0 ? '#38BDF8' : '#EF4444');
+          const filterEffect = isFocal ? 'filter="drop-shadow(0 0 10px rgba(0,255,135,0.8))"' : '';
+
+          s += `<g style="cursor:pointer;" onclick="clickActiveSubject(${i})" onmouseenter="mostrarTooltip(event, ${i})" onmouseleave="ocultarTooltip()">
+            <circle cx="${sbx}" cy="${sby}" r="${r}" fill="${fill}" stroke="${strokeCol}" stroke-width="${isFocal ? 2.5 : 1.2}" ${filterEffect} />
+            <text x="${sbx}" y="${sby + 4.5}" fill="${txtCol}" font-size="${isFocal ? '12' : '10'}" font-family="JetBrains Mono" font-weight="900" text-anchor="middle">${tag}</text>
+          </g>`;
+
+        } else if (displayLayer === 'solo_da') {
+          // Sólo DA (Cuadrados Azules de Emisión)
+          const sz = isFocal ? 24 : 18;
+          s += `<g style="cursor:pointer;" onclick="clickActiveSubject(${i})" onmouseenter="mostrarTooltip(event, ${i})" onmouseleave="ocultarTooltip()">
+            <rect x="${sdax - sz/2}" y="${sday - sz/2}" width="${sz}" height="${sz}" rx="3" fill="#2563EB" stroke="#93C5FD" stroke-width="1.5" filter="drop-shadow(0 0 8px rgba(37,99,235,0.6))" />
+            <text x="${sdax}" y="${sday + 4}" fill="#FFFFFF" font-size="${isFocal ? '11' : '9'}" font-family="JetBrains Mono" font-weight="900" text-anchor="middle">${tag}</text>
+            <text x="${sdax}" y="${sday - sz/2 - 4}" fill="#93C5FD" font-size="8" font-family="JetBrains Mono" font-weight="700" text-anchor="middle">DA</text>
+          </g>`;
+
+        } else if (displayLayer === 'solo_rc') {
+          // Sólo RC (Triángulos Verdes de Recepción)
+          const sz = isFocal ? 26 : 20;
+          s += `<g style="cursor:pointer;" onclick="clickActiveSubject(${i})" onmouseenter="mostrarTooltip(event, ${i})" onmouseleave="ocultarTooltip()">
+            <polygon points="${srcx},${srcy - sz*0.6} ${srcx - sz*0.55},${srcy + sz*0.45} ${srcx + sz*0.55},${srcy + sz*0.45}" fill="#059669" stroke="#6EE7B7" stroke-width="1.5" filter="drop-shadow(0 0 8px rgba(5,150,105,0.6))" />
+            <text x="${srcx}" y="${srcy + 3.5}" fill="#FFFFFF" font-size="${isFocal ? '11' : '9'}" font-family="JetBrains Mono" font-weight="900" text-anchor="middle">${tag}</text>
+            <text x="${srcx}" y="${srcy - sz*0.6 - 4}" fill="#6EE7B7" font-size="8" font-family="JetBrains Mono" font-weight="700" text-anchor="middle">RC</text>
+          </g>`;
+        }
+      }
+
+      svg.innerHTML = s;
+    }
+
+    function clickActiveSubject(idx) {
+      if (selectionScope === 'todos') {
+        focalSubjectIdx = idx;
+        setSelectionScope('single');
+      } else if (selectionScope === 'single') {
+        // Si ya está en single, hace foco en el siguiente o mantiene
+        focalSubjectIdx = idx;
+        actualizarInspector();
+        renderizar();
+      } else if (selectionScope === 'multi') {
+        // En multi, clic alterna selección
+        if (multiSelected.has(idx)) {
+          if (multiSelected.size > 1) multiSelected.delete(idx);
+        } else {
+          multiSelected.add(idx);
+        }
+        renderizarChips();
+        actualizarInspector();
+        renderizar();
+      }
+    }
+
+    function clickMicroDot(idx) {
+      if (selectionScope === 'single') {
+        focalSubjectIdx = idx;
+        renderizarChips();
+        actualizarInspector();
+        renderizar();
+      } else if (selectionScope === 'multi') {
+        multiSelected.add(idx);
+        renderizarChips();
+        actualizarInspector();
+        renderizar();
+      } else {
+        focalSubjectIdx = idx;
+        setSelectionScope('single');
+      }
+    }
+
+    /* =========================================================================
+       2. RENDERIZADO DEL HEATMAP DE INTERDISTANCIAS
+       ========================================================================= */
+    function renderizarHeatmap() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const N = scen.N;
+      const wrap = document.getElementById('heatmap-wrap');
+
+      let maxD = 0;
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          if (scen.dist_matrix[i][j] > maxD) maxD = scen.dist_matrix[i][j];
+        }
+      }
+
+      let html = '<table class="heatmap-table"><thead><tr><th class="row-header">D(i,j)</th>';
+      for (let j = 0; j < N; j++) {
+        html += `<th>${scen.nodes[j] || (j+1)}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      for (let i = 0; i < N; i++) {
+        const tagI = scen.nodes[i] || (i+1);
+        html += `<tr><th class="row-header" onclick="clickActiveSubject(${i})" title="Clic para seleccionar">${tagI}</th>`;
+        for (let j = 0; j < N; j++) {
+          const d = scen.dist_matrix[i][j];
+          if (i === j) {
+            html += '<td style="background:#090E20; color:#475569;">0.00</td>';
+          } else {
+            const ratio = d / maxD;
+            let r, g, b;
+            if (ratio < 0.5) {
+              const t = ratio / 0.5;
+              r = Math.round(0 * (1 - t) + 37 * t);
+              g = Math.round(255 * (1 - t) + 99 * t);
+              b = Math.round(135 * (1 - t) + 235 * t);
+            } else {
+              const t = (ratio - 0.5) / 0.5;
+              r = Math.round(37 * (1 - t) + 239 * t);
+              g = Math.round(99 * (1 - t) + 68 * t);
+              b = Math.round(235 * (1 - t) + 68 * t);
+            }
+            const bg = `rgba(${r}, ${g}, ${b}, 0.35)`;
+            const isFocalRow = (selectionScope === 'single' && (i === focalSubjectIdx || j === focalSubjectIdx));
+            const borderStyle = isFocalRow ? 'border:1.5px solid var(--neon-cyan);' : '';
+            html += `<td style="background:${bg}; ${borderStyle}" onclick="clickActiveSubject(${i})" title="Distancia entre ${tagI} y ${scen.nodes[j]}: ${d.toFixed(3)}">${d.toFixed(2)}</td>`;
+          }
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+
+      wrap.innerHTML = html;
+    }
+
+    /* =========================================================================
+       3. RENDERIZADO DEL RADAR TOPOLÓGICO
+       ========================================================================= */
+    function renderizarRadial() {
+      const scen = SCENARIOS[currentScenarioKey];
+      const N = scen.N;
+      const wrap = document.getElementById('radial-wrap');
+      const fi = (selectionScope === 'single' ? focalSubjectIdx : 0);
+      const tagF = scen.nodes[fi] || (fi+1);
+
+      let html = `<div style="max-width:800px; margin:0 auto;">
+        <div style="font-family:var(--font-cinzel); font-size:15px; font-weight:800; color:#FFF; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+          <span>Topología Radial de Proximidad desde Sujeto ${tagF}</span>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--neon-green);">SRC: ${scen.metrics.src[fi] > 0 ? '+' : ''}${scen.metrics.src[fi]}</span>
+        </div>
+        <p style="font-size:12px; color:#94A3B8; margin-bottom:16px;">
+          Distribución de distancias euclídeas ordenadas en el espacio conjunto (DA + RC). Cuanto menor es la barra, mayor es la afinidad estructural con el sujeto focal.
+        </p>`;
+
+      const distList = [];
+      for (let j = 0; j < N; j++) {
+        if (j === fi) continue;
+        distList.push({
+          idx: j,
+          tag: scen.nodes[j] || (j+1),
+          dist: scen.dist_matrix[fi][j],
+          src: scen.metrics.src[j]
+        });
+      }
+      distList.sort((a, b) => a.dist - b.dist);
+      const maxD = Math.max(...distList.map(d => d.dist));
+
+      distList.forEach(item => {
+        const pct = ((item.dist / maxD) * 100).toFixed(1);
+        const col = item.dist < 1.2 ? 'var(--neon-green)' : (item.dist < 2.2 ? 'var(--neon-cyan)' : 'var(--neon-orange)');
+        html += `<div style="display:flex; align-items:center; gap:12px; margin-bottom:8px; font-family:var(--font-mono); font-size:11px;">
+          <div style="width:40px; font-weight:800; color:#FFF; cursor:pointer;" onclick="clickActiveSubject(${item.idx})">${item.tag}</div>
+          <div style="flex:1; background:rgba(255,255,255,0.06); height:22px; border-radius:4px; overflow:hidden; position:relative;">
+            <div style="width:${pct}%; height:100%; background:${col}; opacity:0.85; transition:width 0.3s ease;"></div>
+            <span style="position:absolute; right:8px; top:3px; font-size:10px; font-weight:700; color:#FFF;">d = ${item.dist.toFixed(2)}</span>
+          </div>
+          <div style="width:65px; text-align:right; color:${item.src > 0 ? 'var(--neon-green)' : (item.src < 0 ? 'var(--neon-red)' : '#94A3B8')}">
+            SRC:${item.src > 0 ? '+' : ''}${item.src}
+          </div>
+        </div>`;
+      });
+
+      html += '</div>';
+      wrap.innerHTML = html;
+    }
+
+    /* TOOLTIP */
+    function mostrarTooltip(ev, idx) {
+      const scen = SCENARIOS[currentScenarioKey];
+      const tag = scen.nodes[idx] || (idx + 1);
+      const [bx, by] = scen.bar[idx];
+      const [dax, day] = scen.da[idx];
+      const [rcx, rcy] = scen.rc[idx];
+      const src = scen.metrics.src[idx];
+      const sda = scen.metrics.sda[idx];
+      const asym = scen.asimetria[idx];
+
+      const rect = svg.getBoundingClientRect();
+      const x = ev.clientX - rect.left + 15;
+      const y = ev.clientY - rect.top + 15;
+
+      tooltip.innerHTML = `
+        <div style="font-weight:800; color:var(--neon-green); font-size:12px; margin-bottom:4px;">SUJETO ${tag}</div>
+        <div>Baricentro: <strong>(${bx > 0 ? '+' : ''}${bx.toFixed(2)}, ${by > 0 ? '+' : ''}${by.toFixed(2)})</strong></div>
+        <div>DA (Emisión): <span style="color:#93C5FD">(${dax > 0 ? '+' : ''}${dax.toFixed(2)}, ${day > 0 ? '+' : ''}${day.toFixed(2)})</span></div>
+        <div>RC (Recepción): <span style="color:#6EE7B7">(${rcx > 0 ? '+' : ''}${rcx.toFixed(2)}, ${rcy > 0 ? '+' : ''}${rcy.toFixed(2)})</span></div>
+        <div style="margin-top:4px; border-top:1px solid #334155; padding-top:4px;">
+          <div>Estatus Recibido (SRC): <span style="color:${src > 0 ? 'var(--neon-green)' : '#EF4444'}">${src > 0 ? '+' : ''}${src}</span></div>
+          <div>Expansividad (SDA): <span>${sda > 0 ? '+' : ''}${sda}</span></div>
+          <div>Tensión ||RC-DA||: <strong>${asym.toFixed(3)}</strong></div>
+        </div>
+        <div style="margin-top:6px; color:var(--neon-cyan); font-size:9.5px;">[Clic para interactuar / seleccionar]</div>
+      `;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+      tooltip.style.display = 'block';
+    }
+
+    function ocultarTooltip() {
+      tooltip.style.display = 'none';
+    }
+
+    window.addEventListener('resize', renderizar);
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

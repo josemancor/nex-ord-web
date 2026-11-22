@@ -19,6 +19,19 @@
   const isInSubdir = pathname.includes('/PORTAL_INSTITUCIONAL/') || pathname.includes('/VISORD_demo/') || pathname.includes('/assets/');
   const rootPrefix = isInSubdir ? '../' : '';
 
+  // Auto-inyección de visord-bus.js para sincronización reactiva y Mini-Tacómetro en nav-pod
+  if (!window.VisordBus && !window.__VISORD_BUS_SCRIPT_INJECTED__) {
+    window.__VISORD_BUS_SCRIPT_INJECTED__ = true;
+    const busScript = document.createElement('script');
+    busScript.src = rootPrefix + 'js/visord-bus.js';
+    busScript.onerror = function() {
+      const fallbackScript = document.createElement('script');
+      fallbackScript.src = rootPrefix + 'visord-bus.js';
+      document.head.appendChild(fallbackScript);
+    };
+    document.head.appendChild(busScript);
+  }
+
   // Detección de idioma
   function getCurrentNavLang() {
     try {

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NEXORD Pod — Terminal Táctil ORBIT (N=4..8)</title>
+  <style>
+    :root {
+      --bg-space: #070C1B;
+      --bg-card: #0F172A;
+      --bg-card-hover: #1E293B;
+      --cyan: #00E5FF;
+      --neon-green: #00FF87;
+      --magenta: #FF007F;
+      --gold: #FFE600;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(0, 229, 255, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-space);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Cabecera del Pod */
+    header {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      font-family: "SF Mono", Menlo, monospace;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--neon-green);
+      background: rgba(0, 255, 135, 0.1);
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 255, 135, 0.25);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Barra de Configuración de Laboratorio (Simulador) */
+    .lab-controls {
+      width: 100%;
+      max-width: 520px;
+      background: #0B132B;
+      border: 1px dashed rgba(255, 230, 0, 0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .lab-controls select {
+      background: #1E293B;
+      color: #FFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Caja de Instrucción Inmediata */
+    .instruction-box {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(0, 229, 255, 0.05);
+      border-left: 3px solid var(--cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: #E2E8F0;
+    }
+
+    .instruction-box strong {
+      color: var(--cyan);
+    }
+
+    /* Panel del Indicador Egocéntrico r_ii */
+    .anchor-monitor {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .metric-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .metric-val {
+      font-size: 18px;
+      font-weight: 800;
+      font-family: "SF Mono", monospace;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    /* Contenedor de la Lista ORBIT */
+    .ranking-container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    /* Fila / Tarjeta de Elemento */
+    .rank-slot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: grab;
+      transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .rank-slot:active {
+      cursor: grabbing;
+      transform: scale(1.015);
+      border-color: var(--cyan);
+    }
+
+    .rank-slot.dragging {
+      opacity: 0.4;
+      background: #1E293B;
+      border: 1.5px dashed var(--cyan);
+    }
+
+    .rank-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: "SF Mono", monospace;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .rank-slot.is-self .rank-num {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .node-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .node-ident {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .node-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #1E293B;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: #E2E8F0;
+      letter-spacing: 0.5px;
+    }
+
+    .node-name {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .node-role-tag {
+      font-size: 10px;
+      font-family: monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+
+    /* Estilo Especial para la Ficha del Propio Sujeto (YO) */
+    .rank-slot.is-self {
+      background: linear-gradient(90deg, rgba(0, 229, 255, 0.12) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1.8px solid var(--cyan);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.22);
+    }
+
+    .rank-slot.is-self .node-avatar {
+      background: var(--cyan);
+      color: #070C1B;
+      border-color: #FFF;
+      font-weight: 900;
+    }
+
+    .rank-slot.is-self .node-name {
+      color: #FFF;
+      font-weight: 800;
+    }
+
+    .rank-slot.is-self .node-role-tag {
+      background: rgba(0, 229, 255, 0.25);
+      color: var(--cyan);
+      font-weight: bold;
+      border: 1px solid rgba(0, 229, 255, 0.4);
+    }
+
+    .drag-handle {
+      color: var(--text-muted);
+      font-size: 18px;
+      opacity: 0.5;
+      padding-right: 4px;
+      cursor: grab;
+    }
+
+    /* Botón de Confirmación y Enlace */
+    .action-panel {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-confirm {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00FF87 0%, #00B86B 100%);
+      border: none;
+      border-radius: 12px;
+      color: #070C1B;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0, 255, 135, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-confirm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(0, 255, 135, 0.5);
+    }
+
+    .btn-confirm:active {
+      transform: translateY(1px);
+    }
+
+    /* Modal / Payload Display */
+    .payload-view {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 14px;
+      background: #060A14;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      color: #38BDF8;
+      display: none;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabecera del Pod -->
+  <header>
+    <div class="brand">
+      <span class="brand-logo">NEXORD POD</span>
+      <span style="font-size: 11px; color: var(--text-muted); font-family: monospace;">// LAB-PHYSICAL</span>
+    </div>
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span id="session-tag">ACTIVO · t1c1</span>
+    </div>
+  </header>
+
+  <!-- Barra de Configuración de Laboratorio (Selector de N y Sujeto) -->
+  <div class="lab-controls">
+    <div>
+      <label for="select-n">Tamaño Grupo (N): </label>
+      <select id="select-n" onchange="cambiarN()">
+        <option value="4">N = 4 (Cuarteto)</option>
+        <option value="5" selected>N = 5 (Pentágono Canónico)</option>
+        <option value="6">N = 6 (Hexágono)</option>
+        <option value="7">N = 7 (Heptágono)</option>
+        <option value="8">N = 8 (Octógono)</option>
+      </select>
+    </div>
+    <div>
+      <label for="select-self">Identidad Pod: </label>
+      <select id="select-self" onchange="cambiarSujeto()">
+        <!-- Poblado dinámicamente -->
+      </select>
+    </div>
+  </div>
+
+  <!-- Caja de Instrucción Inmediata -->
+  <div class="instruction-box">
+    <strong>INSTRUCCIÓN DIRECTA:</strong> Desliza las tarjetas verticalmente para ordenar a todo el grupo 
+    en orden de preferencia/contribución (del <strong>1º al <span id="label-n-top">5º</span></strong>). 
+    <strong>¡Inclúyete a ti mismo!</strong> Tu posición <strong>[YO]</strong> define tu auto-ubicación respecto a tus compañeros.
+  </div>
+
+  <!-- Panel del Indicador Egocéntrico r_ii -->
+  <div class="anchor-monitor">
+    <div class="metric-col">
+      <span class="metric-val" id="val-superiores" style="color: var(--gold);">0</span>
+      <span class="metric-label">Superiores a ti</span>
+    </div>
+    <div class="metric-col">
+      <span class="metric-val" id="val-rii" style="color: var(--cyan);">1º</span>
+      <span class="metric-label">Tu Posición (r_ii)</span>
+    </div>
+    <div class="metric-col">
+      <span class="metric-val" id="val-inferiores" style="color: var(--magenta);">4</span>
+      <span class="metric-label">Postergados</span>
+    </div>
+  </div>
+
+  <!-- Contenedor del Ranking ORBIT (Drag & Drop) -->
+  <div class="ranking-container" id="ranking-list">
+    <!-- Generado dinámicamente -->
+  </div>
+
+  <!-- Panel de Acción y Confirmación -->
+  <div class="action-panel">
+    <button class="btn-confirm" onclick="transmitirVoto()">
+      <span>⚡ Confirmar y Enviar Registro ORBIT</span>
+    </button>
+  </div>
+
+  <!-- Telemetría JSON (Para el Investigador / Verificación) -->
+  <pre class="payload-view" id="payload-output"></pre>
+
+  <script>
+    let N = 5;
+    let selfId = "2A";
+    let items = []; // lista de objetos { id, label, isSelf }
+
+    function generarIdentificadores(tam) {
+      const labels = [];
+      for (let i = 1; i <= tam; i++) {
+        labels.push(`${i}A`);
+      }
+      return labels;
+    }
+
+    function initLab() {
+      const selectN = document.getElementById("select-n");
+      N = parseInt(selectN.value);
+      document.getElementById("label-n-top").innerText = `${N}º`;
+
+      // Actualizar selector de identidad
+      const selectSelf = document.getElementById("select-self");
+      selectSelf.innerHTML = "";
+      const ids = generarIdentificadores(N);
+      ids.forEach(id => {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.innerText = `Sujeto ${id}`;
+        if (id === selfId || (!ids.includes(selfId) && id === "1A")) {
+          opt.selected = true;
+          selfId = id;
+        }
+        selectSelf.appendChild(opt);
+      });
+
+      // Crear lista de elementos con Auto-Inclusión
+      items = ids.map(id => ({
+        id: id,
+        label: (id === selfId) ? `YO (${id})` : `Sujeto ${id}`,
+        isSelf: (id === selfId)
+      }));
+
+      // Aleatorización Fisher-Yates inicial
+      shuffle(items);
+
+      renderList();
+      actualizarMetricas();
+    }
+
+    function cambiarN() {
+      initLab();
+    }
+
+    function cambiarSujeto() {
+      selfId = document.getElementById("select-self").value;
+      initLab();
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function renderList() {
+      const container = document.getElementById("ranking-list");
+      container.innerHTML = "";
+
+      items.forEach((item, index) => {
+        const rank = index + 1;
+        const slot = document.createElement("div");
+        slot.className = `rank-slot ${item.isSelf ? 'is-self' : ''}`;
+        slot.setAttribute("draggable", "true");
+        slot.dataset.index = index;
+
+        slot.innerHTML = `
+          <div class="rank-num">${rank}º</div>
+          <div class="node-content">
+            <div class="node-ident">
+              <div class="node-avatar">${item.id}</div>
+              <div>
+                <div class="node-name">${item.label}</div>
+                <div class="node-role-tag">${item.isSelf ? 'AUTO-POSICIÓN' : 'COMPAÑERO'}</div>
+              </div>
+            </div>
+            <div class="drag-handle">☰</div>
+          </div>
+        `;
+
+        // Eventos Drag & Drop nativos
+        slot.addEventListener("dragstart", handleDragStart);
+        slot.addEventListener("dragover", handleDragOver);
+        slot.addEventListener("drop", handleDrop);
+        slot.addEventListener("dragend", handleDragEnd);
+
+        // Soporte táctil básico para móviles/tablets
+        addTouchHandlers(slot);
+
+        container.appendChild(slot);
+      });
+    }
+
+    let dragSrcEl = null;
+
+    function handleDragStart(e) {
+      dragSrcEl = this;
+      this.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/html", this.innerHTML);
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      return false;
+    }
+
+    function handleDrop(e) {
+      if (e.stopPropagation) e.stopPropagation();
+      if (dragSrcEl !== this) {
+        const srcIndex = parseInt(dragSrcEl.dataset.index);
+        const targetIndex = parseInt(this.dataset.index);
+
+        // Reordenar array items
+        const movedItem = items.splice(srcIndex, 1)[0];
+        items.splice(targetIndex, 0, movedItem);
+
+        renderList();
+        actualizarMetricas();
+      }
+      return false;
+    }
+
+    function handleDragEnd() {
+      this.classList.remove("dragging");
+    }
+
+    // Soporte de Arrastre Táctil para Tablets
+    let touchStartY = 0;
+    let touchActiveIndex = null;
+
+    function addTouchHandlers(el) {
+      el.addEventListener("touchstart", function(e) {
+        touchStartY = e.touches[0].clientY;
+        touchActiveIndex = parseInt(this.dataset.index);
+      }, { passive: true });
+
+      el.addEventListener("touchend", function(e) {
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffY = touchEndY - touchStartY;
+        const stepHeight = 52; // altura aprox de cada slot
+        const stepsMoved = Math.round(diffY / stepHeight);
+
+        if (stepsMoved !== 0 && touchActiveIndex !== null) {
+          let newIndex = touchActiveIndex + stepsMoved;
+          if (newIndex < 0) newIndex = 0;
+          if (newIndex >= items.length) newIndex = items.length - 1;
+
+          if (newIndex !== touchActiveIndex) {
+            const moved = items.splice(touchActiveIndex, 1)[0];
+            items.splice(newIndex, 0, moved);
+            renderList();
+            actualizarMetricas();
+          }
+        }
+        touchActiveIndex = null;
+      }, { passive: true });
+    }
+
+    function actualizarMetricas() {
+      const selfIndex = items.findIndex(it => it.isSelf);
+      const r_ii = selfIndex + 1;
+      const superiores = selfIndex;
+      const inferiores = N - r_ii;
+
+      document.getElementById("val-rii").innerText = `${r_ii}º`;
+      document.getElementById("val-superiores").innerText = superiores;
+      document.getElementById("val-inferiores").innerText = inferiores;
+    }
+
+    function transmitirVoto() {
+      const selfIndex = items.findIndex(it => it.isSelf);
+      const r_ii = selfIndex + 1;
+
+      // Generar vector ordinal completo M_ORD[i, :]
+      const vectorOrdinal = {};
+      items.forEach((it, idx) => {
+        vectorOrdinal[it.id] = idx + 1;
+      });
+
+      // Ponderación exponencial W(k) = 2^(1-k)
+      const vectorPesos = {};
+      items.forEach((it, idx) => {
+        vectorPesos[it.id] = Math.pow(2, 1 - (idx + 1));
+      });
+
+      const payload = {
+        meta: {
+          estudio: `LAB-EXP-ORBIT-N${N}`,
+          emisor: selfId,
+          timestamp: new Date().toISOString(),
+          latencia_ms: 18450, // Simulada
+          protocolo: "ORBIT_AUTO_INCLUSION_SMIb"
+        },
+        auto_posicion: {
+          r_ii: r_ii,
+          superiores_a_yo: selfIndex,
+          inferiores_a_yo: N - r_ii,
+          interpretacion: (r_ii === 1) ? "Liderazgo Asumido (Top 1)" : 
+                          (r_ii === N) ? "Auto-Postergación Extrema" : "Posición Intermedia"
+        },
+        vector_ordinal_1_a_N: vectorOrdinal,
+        vector_densidad_W: vectorPesos
+      };
+
+      const out = document.getElementById("payload-output");
+      out.style.display = "block";
+      out.innerText = "// TELEMETRÍA WEBSOCKET TRANSMITIDA AL NEXORD EDGE SERVER:\n" + JSON.stringify(payload, null, 2);
+
+      // Efecto visual de confirmación
+      const btn = document.querySelector(".btn-confirm");
+      btn.innerHTML = "<span>✓ REGISTRO ENVIADO CON ÉXITO</span>";
+      btn.style.background = "#38BDF8";
+      setTimeout(() => {
+        btn.innerHTML = "<span>⚡ Confirmar y Enviar Registro ORBIT</span>";
+        btn.style.background = "linear-gradient(135deg, #00FF87 0%, #00B86B 100%)";
+      }, 2500);
+    }
+
+    // Inicializar al cargar
+    window.onload = initLab;
+  </script>
+</body>
+</html>
