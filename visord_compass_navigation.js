@@ -22,7 +22,7 @@ export class VisordAcousticCompassEngine {
     this.compassId = config.compassGroupId || config.compassId || 'brujula-astrolabio';
     this.toponymsLayerId = config.toponymsLayerId || 'capa-toponimos-dinamicos';
 
-    // Topónimos de los 14 Reinos (escala proyectiva 1000 x 600 px)
+    // Topónimos de los 15 Reinos Teóricos (escala proyectiva 1000 x 600 px)
     this.ANCLAJES_REINOS = {
       TYP_01_DEMOCRATICO:        { x: 500, y: 110, nombre: "Concordia Comcon" },
       TYP_02_AUTOCRATICO:         { x: 250, y: 220, nombre: "Torreón del Ojo Único" },
@@ -36,7 +36,8 @@ export class VisordAcousticCompassEngine {
       TYP_10_CADENA_JERARQUICA:   { x: 200, y: 310, nombre: "Desfiladero Escalonado" },
       TYP_11_CLICAS_EXCLUYENTES:  { x: 800, y: 140, nombre: "Acrópolis de la Oligarquía" },
       TYP_12_LIDER_CONTROVERSIAL: { x: 510, y: 275, nombre: "Vórtice Festinger" },
-      TYP_13_ALEATORIO:           { x: 500, y: 365, nombre: "Llanura de Máxima Entropía" },
+      TYP_00_ALEATORIO:           { x: 500, y: 365, nombre: "Llanura de Máxima Entropía" },
+      TYP_13_INDIFERENCIA_DESAPEGO:{ x: 420, y: 410, nombre: "Archipiélago de las Células Aisladas" },
       TYP_14_CRISIS_TOTAL:        { x: 500, y: 535, nombre: "Sima de la Ruptura W81" }
     };
 
